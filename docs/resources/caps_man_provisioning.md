@@ -1,4 +1,5 @@
 ---
+subcategory: "System & misc"
 page_title: "RouterOS: routeros_caps_man_provisioning"
 description: |-
   RouterOS resource.

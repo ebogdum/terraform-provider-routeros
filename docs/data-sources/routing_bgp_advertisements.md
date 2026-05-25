@@ -1,4 +1,5 @@
 ---
+subcategory: "BGP"
 page_title: "RouterOS: routeros_routing_bgp_advertisements"
 description: |-
   RouterOS resource.

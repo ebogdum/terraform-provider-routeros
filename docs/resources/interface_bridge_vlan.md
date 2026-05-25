@@ -1,4 +1,5 @@
 ---
+subcategory: "Bridge"
 page_title: "RouterOS: routeros_interface_bridge_vlan"
 description: |-
   Auto-test requires a typed-reference precondition (e.g. an existing peer,

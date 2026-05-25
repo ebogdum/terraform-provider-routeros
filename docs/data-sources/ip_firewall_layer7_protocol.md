@@ -1,4 +1,5 @@
 ---
+subcategory: "Firewall"
 page_title: "RouterOS: routeros_ip_firewall_layer7_protocol"
 description: |-
   Layer7 patterns are unique by name; test re-runs trip "already have such name" unless previous artefact is cleaned. Skipped to keep the suite idempotent.

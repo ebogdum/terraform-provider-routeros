@@ -1,4 +1,5 @@
 ---
+subcategory: "Routing"
 page_title: "RouterOS: routeros_routing_route"
 description: |-
   RouterOS resource.

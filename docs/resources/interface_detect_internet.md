@@ -1,4 +1,5 @@
 ---
+subcategory: "Interfaces"
 page_title: "RouterOS: routeros_interface_detect_internet"
 description: |-
   RouterOS resource.

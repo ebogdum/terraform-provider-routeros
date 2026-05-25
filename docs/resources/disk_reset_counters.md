@@ -1,4 +1,5 @@
 ---
+subcategory: "Storage"
 page_title: "RouterOS: routeros_disk_reset_counters"
 description: |-
   Needs disk .id. Skipped.

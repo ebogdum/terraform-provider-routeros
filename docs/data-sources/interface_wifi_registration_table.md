@@ -1,4 +1,5 @@
 ---
+subcategory: "Wireless"
 page_title: "RouterOS: routeros_interface_wifi_registration_table"
 description: |-
   Read-only wireless association table.

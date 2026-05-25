@@ -1,4 +1,5 @@
 ---
+subcategory: "Certificates"
 page_title: "RouterOS: routeros_certificate_sign_certificate_request"
 description: |-
   Needs CA cert .id. Skipped.

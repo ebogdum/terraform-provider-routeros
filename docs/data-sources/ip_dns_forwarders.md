@@ -1,4 +1,5 @@
 ---
+subcategory: "DNS"
 page_title: "RouterOS: routeros_ip_dns_forwarders"
 description: |-
   Discovered; required address must be a valid resolvable IP

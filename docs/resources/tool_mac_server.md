@@ -1,4 +1,5 @@
 ---
+subcategory: "Tools"
 page_title: "RouterOS: routeros_tool_mac_server"
 description: |-
   RouterOS resource.

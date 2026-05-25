@@ -1,4 +1,5 @@
 ---
+subcategory: "System"
 page_title: "RouterOS: routeros_system_ups"
 description: |-
   RouterOS resource.

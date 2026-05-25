@@ -1,4 +1,5 @@
 ---
+subcategory: "OSPF"
 page_title: "RouterOS: routeros_routing_ospf_area"
 description: |-
   Auto-test requires a typed-reference precondition (e.g. an existing peer,

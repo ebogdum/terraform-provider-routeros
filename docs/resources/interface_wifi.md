@@ -1,4 +1,5 @@
 ---
+subcategory: "Wireless"
 page_title: "RouterOS: routeros_interface_wifi"
 description: |-
   WiFi virtual interface needs exactly one of radio-mac or master-interface. Skipped -- requires WiFi-enabled hardware.

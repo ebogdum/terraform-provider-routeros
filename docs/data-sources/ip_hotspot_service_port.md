@@ -1,4 +1,5 @@
 ---
+subcategory: "Hotspot"
 page_title: "RouterOS: routeros_ip_hotspot_service_port"
 description: |-
   RouterOS resource.

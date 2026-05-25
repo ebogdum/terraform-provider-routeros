@@ -1,4 +1,5 @@
 ---
+subcategory: "Tools"
 page_title: "RouterOS: routeros_tool_mac_scan"
 description: |-
   Long-running network scan; REST 60-second cap closes the session.

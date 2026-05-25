@@ -1,4 +1,5 @@
 ---
+subcategory: "System & misc"
 page_title: "RouterOS: routeros_console_settings"
 description: |-
   RouterOS resource.

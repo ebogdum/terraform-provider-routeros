@@ -1,4 +1,5 @@
 ---
+subcategory: "Tools"
 page_title: "RouterOS: routeros_tool_snmp_walk"
 description: |-
   Needs a real SNMP agent. Skipped.

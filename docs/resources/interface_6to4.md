@@ -1,4 +1,5 @@
 ---
+subcategory: "Interfaces"
 page_title: "RouterOS: routeros_interface_6to4"
 description: |-
   6to4 tunnel deletion races on CHR (DELETE returns errors even after success). Skipped from automated acc tests.

@@ -1,4 +1,5 @@
 ---
+subcategory: "IP"
 page_title: "RouterOS: routeros_ip_vrf"
 description: |-
   VRF creation on CHR sometimes returns "interrupted" if attempted alongside other routing changes. Skipped from automated acc tests.

@@ -1,4 +1,5 @@
 ---
+subcategory: "System & misc"
 page_title: "RouterOS: routeros_terminal_inkey"
 description: |-
   Reads a keystroke from interactive terminal. Skipped.

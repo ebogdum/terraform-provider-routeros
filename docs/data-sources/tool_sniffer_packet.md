@@ -1,4 +1,5 @@
 ---
+subcategory: "Tools"
 page_title: "RouterOS: routeros_tool_sniffer_packet"
 description: |-
   RouterOS resource.

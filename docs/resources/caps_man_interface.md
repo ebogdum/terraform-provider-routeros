@@ -1,4 +1,5 @@
 ---
+subcategory: "System & misc"
 page_title: "RouterOS: routeros_caps_man_interface"
 description: |-
   CAPsMAN virtual interfaces are typically created automatically; manual creation collides with the master.

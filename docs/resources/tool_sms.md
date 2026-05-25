@@ -1,4 +1,5 @@
 ---
+subcategory: "Tools"
 page_title: "RouterOS: routeros_tool_sms"
 description: |-
   RouterOS resource.

@@ -1,4 +1,5 @@
 ---
+subcategory: "Certificates"
 page_title: "RouterOS: routeros_certificate"
 description: |-
   Certificate template/store. RouterOS issues self-signed CAs and CA-signed

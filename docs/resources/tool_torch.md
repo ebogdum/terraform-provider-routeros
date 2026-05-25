@@ -1,4 +1,5 @@
 ---
+subcategory: "Tools"
 page_title: "RouterOS: routeros_tool_torch"
 description: |-
   Streaming traffic analyser; REST 60-second cap closes the session.

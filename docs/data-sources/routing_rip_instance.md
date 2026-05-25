@@ -1,4 +1,5 @@
 ---
+subcategory: "RIP"
 page_title: "RouterOS: routeros_routing_rip_instance"
 description: |-
   RouterOS resource.

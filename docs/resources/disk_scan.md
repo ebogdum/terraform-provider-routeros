@@ -1,4 +1,5 @@
 ---
+subcategory: "Storage"
 page_title: "RouterOS: routeros_disk_scan"
 description: |-
   Needs a real disk.

@@ -1,4 +1,5 @@
 ---
+subcategory: "System"
 page_title: "RouterOS: routeros_system_resource_cpu"
 description: |-
   RouterOS resource.

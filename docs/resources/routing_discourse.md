@@ -1,4 +1,5 @@
 ---
+subcategory: "Routing"
 page_title: "RouterOS: routeros_routing_discourse"
 description: |-
   Requires explicit dsts (destinations) list.

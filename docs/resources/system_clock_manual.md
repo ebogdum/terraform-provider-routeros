@@ -1,4 +1,5 @@
 ---
+subcategory: "System"
 page_title: "RouterOS: routeros_system_clock_manual"
 description: |-
   Singleton for manual time configuration. Curl confirms POST /set with an

@@ -1,4 +1,5 @@
 ---
+subcategory: "Routing"
 page_title: "RouterOS: routeros_routing_filter_community_list"
 description: |-
   7.x routing-filter community-list uses 'communities' field and rule chain semantics that vary across releases. Skipped.

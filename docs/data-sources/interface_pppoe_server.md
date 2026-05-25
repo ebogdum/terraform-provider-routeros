@@ -1,4 +1,5 @@
 ---
+subcategory: "Interfaces"
 page_title: "RouterOS: routeros_interface_pppoe_server"
 description: |-
   Needs an interface to bind to, plus auth-stack setup.

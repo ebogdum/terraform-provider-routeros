@@ -1,4 +1,5 @@
 ---
+subcategory: "Certificates"
 page_title: "RouterOS: routeros_certificate_add_scep"
 description: |-
   SCEP enrolment needs a template and CA; cannot be auto-tested without infrastructure.

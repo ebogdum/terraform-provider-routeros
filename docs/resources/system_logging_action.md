@@ -1,4 +1,5 @@
 ---
+subcategory: "System"
 page_title: "RouterOS: routeros_system_logging_action"
 description: |-
   RouterOS rejects hyphens AND underscores in action names on some 7.x versions; not portable.

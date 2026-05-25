@@ -1,4 +1,5 @@
 ---
+subcategory: "Tools"
 page_title: "RouterOS: routeros_tool_romon_port"
 description: |-
   RoMON port references a specific interface; values vary per device. Skipped.

@@ -1,4 +1,5 @@
 ---
+subcategory: "System & misc"
 page_title: "RouterOS: routeros_task_terminate"
 description: |-
   Needs an active task .id. Skipped.

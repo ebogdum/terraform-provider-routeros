@@ -1,4 +1,5 @@
 ---
+subcategory: "Files"
 page_title: "RouterOS: routeros_file_read"
 description: |-
   Needs a specific file.

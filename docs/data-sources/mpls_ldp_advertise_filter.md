@@ -1,4 +1,5 @@
 ---
+subcategory: "MPLS"
 page_title: "RouterOS: routeros_mpls_ldp_advertise_filter"
 description: |-
   RouterOS resource.

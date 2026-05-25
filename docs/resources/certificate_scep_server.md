@@ -1,4 +1,5 @@
 ---
+subcategory: "Certificates"
 page_title: "RouterOS: routeros_certificate_scep_server"
 description: |-
   SCEP server references an existing CA cert. Skipped from automated acc tests.

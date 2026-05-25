@@ -1,4 +1,5 @@
 ---
+subcategory: "Routing"
 page_title: "RouterOS: routeros_routing_pimsm_interface_template"
 description: |-
   Discovered; needs pimsm instance

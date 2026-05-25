@@ -1,4 +1,5 @@
 ---
+subcategory: "Interfaces"
 page_title: "RouterOS: routeros_interface_bonding"
 description: |-
   Auto-test requires a typed-reference precondition (e.g. an existing peer,

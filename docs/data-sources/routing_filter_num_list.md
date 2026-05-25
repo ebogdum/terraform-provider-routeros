@@ -1,4 +1,5 @@
 ---
+subcategory: "Routing"
 page_title: "RouterOS: routeros_routing_filter_num_list"
 description: |-
   7.x routing-filter num-list schema differs across releases. Skipped.

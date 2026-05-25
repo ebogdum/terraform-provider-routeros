@@ -1,4 +1,5 @@
 ---
+subcategory: "Tools"
 page_title: "RouterOS: routeros_tool_ping_speed"
 description: |-
   Long-running; REST 60-second cap closes the session.

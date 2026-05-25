@@ -1,4 +1,5 @@
 ---
+subcategory: "System"
 page_title: "RouterOS: routeros_system_package"
 description: |-
   Installed RouterOS packages. Managed by /system/upgrade and /system/package/update actions, not directly.

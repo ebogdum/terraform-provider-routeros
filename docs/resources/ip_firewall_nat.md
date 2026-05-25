@@ -1,4 +1,5 @@
 ---
+subcategory: "Firewall"
 page_title: "RouterOS: routeros_ip_firewall_nat"
 description: |-
   IP firewall nat rule. Ordered by `position` (sort key, not identity).

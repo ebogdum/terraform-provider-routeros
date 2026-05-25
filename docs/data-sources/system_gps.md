@@ -1,4 +1,5 @@
 ---
+subcategory: "System"
 page_title: "RouterOS: routeros_system_gps"
 description: |-
   Requires GPS hardware/package

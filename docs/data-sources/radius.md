@@ -1,4 +1,5 @@
 ---
+subcategory: "Users & RADIUS"
 page_title: "RouterOS: routeros_radius"
 description: |-
   Auto-test requires a typed-reference precondition (e.g. an existing peer,

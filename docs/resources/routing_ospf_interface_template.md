@@ -1,4 +1,5 @@
 ---
+subcategory: "OSPF"
 page_title: "RouterOS: routeros_routing_ospf_interface_template"
 description: |-
   References an existing ospf area; auto-test can't synthesise.

@@ -1,4 +1,5 @@
 ---
+subcategory: "IP"
 page_title: "RouterOS: routeros_ip_socks_users"
 description: |-
   RouterOS resource.

@@ -1,4 +1,5 @@
 ---
+subcategory: "OSPF"
 page_title: "RouterOS: routeros_routing_ospf_neighbor"
 description: |-
   RouterOS resource.

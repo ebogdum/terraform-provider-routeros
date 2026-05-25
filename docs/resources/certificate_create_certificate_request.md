@@ -1,4 +1,5 @@
 ---
+subcategory: "Certificates"
 page_title: "RouterOS: routeros_certificate_create_certificate_request"
 description: |-
   Needs an existing template. Skipped.

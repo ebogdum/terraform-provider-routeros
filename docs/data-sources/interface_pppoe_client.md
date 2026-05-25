@@ -1,4 +1,5 @@
 ---
+subcategory: "Interfaces"
 page_title: "RouterOS: routeros_interface_pppoe_client"
 description: |-
   PPPoE client needs at least one interface in 'interfaces'. Skipped.

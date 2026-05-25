@@ -1,4 +1,5 @@
 ---
+subcategory: "Users & RADIUS"
 page_title: "RouterOS: routeros_password"
 description: |-
   Changes the logged-in user's password. Skipped from acc tests -- would lock subsequent tests out.

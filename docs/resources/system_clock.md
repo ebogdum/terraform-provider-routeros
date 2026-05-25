@@ -1,4 +1,5 @@
 ---
+subcategory: "System"
 page_title: "RouterOS: routeros_system_clock"
 description: |-
   Setting clock outside automated test scope -- would skew router time.

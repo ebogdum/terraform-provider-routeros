@@ -1,4 +1,5 @@
 ---
+subcategory: "IP"
 page_title: "RouterOS: routeros_ip_cloud"
 description: |-
   MikroTik Cloud (DDNS) singleton -- async DDNS state propagation makes acc tests flaky.

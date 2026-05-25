@@ -1,4 +1,5 @@
 ---
+subcategory: "Firewall"
 page_title: "RouterOS: routeros_ip_firewall_mangle"
 description: |-
   IP firewall mangle rule. Ordered by `position` (sort key, not identity).

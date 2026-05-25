@@ -1,4 +1,5 @@
 ---
+subcategory: "Wireless"
 page_title: "RouterOS: routeros_interface_wireless"
 description: |-
   802.11abgn interface needs a master-interface from the physical wireless hardware. Skipped on CHR.

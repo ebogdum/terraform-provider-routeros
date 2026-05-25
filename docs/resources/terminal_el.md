@@ -1,4 +1,5 @@
 ---
+subcategory: "System & misc"
 page_title: "RouterOS: routeros_terminal_el"
 description: |-
   RouterOS resource.

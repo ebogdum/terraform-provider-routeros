@@ -1,4 +1,5 @@
 ---
+subcategory: "DHCP"
 page_title: "RouterOS: routeros_ipv6_dhcp_client"
 description: |-
   RouterOS resource.

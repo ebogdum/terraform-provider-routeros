@@ -1,4 +1,5 @@
 ---
+subcategory: "Files"
 page_title: "RouterOS: routeros_file"
 description: |-
   Creating a file via REST requires writing the contents in a follow-up call; not in the acc-test fast path.

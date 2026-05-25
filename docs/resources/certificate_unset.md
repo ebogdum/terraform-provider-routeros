@@ -1,4 +1,5 @@
 ---
+subcategory: "Certificates"
 page_title: "RouterOS: routeros_certificate_unset"
 description: |-
   Needs cert .id + field. Skipped.

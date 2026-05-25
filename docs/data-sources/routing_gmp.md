@@ -1,4 +1,5 @@
 ---
+subcategory: "Routing"
 page_title: "RouterOS: routeros_routing_gmp"
 description: |-
   GMP needs interface configuration. Skipped from automated acc tests.

@@ -1,4 +1,5 @@
 ---
+subcategory: "IPv6"
 page_title: "RouterOS: routeros_ipv6_pool"
 description: |-
   RouterOS resource.

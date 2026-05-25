@@ -1,4 +1,5 @@
 ---
+subcategory: "SNMP"
 page_title: "RouterOS: routeros_snmp"
 description: |-
   Singleton; live-edit risks orphaning agent -- skip in acc

@@ -1,4 +1,5 @@
 ---
+subcategory: "IPv6"
 page_title: "RouterOS: routeros_ipv6_neighbor"
 description: |-
   IPv6 neighbor table -- read-only on most devices.

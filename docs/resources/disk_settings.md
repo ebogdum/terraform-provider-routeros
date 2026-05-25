@@ -1,4 +1,5 @@
 ---
+subcategory: "Storage"
 page_title: "RouterOS: routeros_disk_settings"
 description: |-
   RouterOS resource.

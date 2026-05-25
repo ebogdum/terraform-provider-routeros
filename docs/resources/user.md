@@ -1,4 +1,5 @@
 ---
+subcategory: "Users & RADIUS"
 page_title: "RouterOS: routeros_user"
 description: |-
   User accounts. password is sensitive and not round-trippable (RouterOS scrubs it on read).

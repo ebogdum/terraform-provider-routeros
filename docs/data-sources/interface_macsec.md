@@ -1,4 +1,5 @@
 ---
+subcategory: "Interfaces"
 page_title: "RouterOS: routeros_interface_macsec"
 description: |-
   MACsec needs a base interface; skipped on hardware without a suitable parent.

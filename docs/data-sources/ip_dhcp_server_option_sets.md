@@ -1,4 +1,5 @@
 ---
+subcategory: "DHCP"
 page_title: "RouterOS: routeros_ip_dhcp_server_option_sets"
 description: |-
   Sets reference existing /ip/dhcp-server/option entries; skipped from automated acc tests.

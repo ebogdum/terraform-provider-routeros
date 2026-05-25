@@ -1,4 +1,5 @@
 ---
+subcategory: "Interfaces"
 page_title: "RouterOS: routeros_interface_ethernet_switch_rule"
 description: |-
   Requires switch chip presence

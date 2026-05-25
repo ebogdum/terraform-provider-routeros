@@ -1,4 +1,5 @@
 ---
+subcategory: "Logging"
 page_title: "RouterOS: routeros_log_warning"
 description: |-
   RouterOS resource.

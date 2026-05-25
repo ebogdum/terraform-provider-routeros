@@ -1,4 +1,5 @@
 ---
+subcategory: "System & misc"
 page_title: "RouterOS: routeros_caps_man_configuration"
 description: |-
   RouterOS resource.

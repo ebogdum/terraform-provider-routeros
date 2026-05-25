@@ -1,4 +1,5 @@
 ---
+subcategory: "Tools"
 page_title: "RouterOS: routeros_tool_graphing_resource"
 description: |-
   RouterOS resource.

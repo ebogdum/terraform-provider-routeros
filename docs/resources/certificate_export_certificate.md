@@ -1,4 +1,5 @@
 ---
+subcategory: "Certificates"
 page_title: "RouterOS: routeros_certificate_export_certificate"
 description: |-
   Needs a cert .id. Skipped.

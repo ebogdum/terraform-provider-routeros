@@ -1,4 +1,5 @@
 ---
+subcategory: "Certificates"
 page_title: "RouterOS: routeros_certificate_builtin"
 description: |-
   System-generated certificates -- read-only.

@@ -1,4 +1,5 @@
 ---
+subcategory: "System & misc"
 page_title: "RouterOS: routeros_environment"
 description: |-
   Console environment variables -- read-only.

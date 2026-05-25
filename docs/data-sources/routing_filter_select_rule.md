@@ -1,4 +1,5 @@
 ---
+subcategory: "Routing"
 page_title: "RouterOS: routeros_routing_filter_select_rule"
 description: |-
   References a /routing/filter rule. Skipped.

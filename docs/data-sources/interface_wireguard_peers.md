@@ -1,4 +1,5 @@
 ---
+subcategory: "WireGuard"
 page_title: "RouterOS: routeros_interface_wireguard_peers"
 description: |-
   Peer attached to a /interface/wireguard interface. Set the `interface`

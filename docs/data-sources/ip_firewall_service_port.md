@@ -1,4 +1,5 @@
 ---
+subcategory: "Firewall"
 page_title: "RouterOS: routeros_ip_firewall_service_port"
 description: |-
   RouterOS resource.

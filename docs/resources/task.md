@@ -1,4 +1,5 @@
 ---
+subcategory: "System & misc"
 page_title: "RouterOS: routeros_task"
 description: |-
   /task is read-only -- entries are created by other RouterOS operations.

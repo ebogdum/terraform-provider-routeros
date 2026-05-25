@@ -1,4 +1,5 @@
 ---
+subcategory: "Tools"
 page_title: "RouterOS: routeros_tool_graphing_interface"
 description: |-
   Graphing rules are unique per (interface, dest-addr) -- running tests repeatedly hits "already exists" without explicit cleanup.

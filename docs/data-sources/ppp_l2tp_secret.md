@@ -1,4 +1,5 @@
 ---
+subcategory: "PPP"
 page_title: "RouterOS: routeros_ppp_l2tp_secret"
 description: |-
   L2TP CHAP/PAP shared secret entry. Schema varies across ROS releases. Skipped from automated acc tests.

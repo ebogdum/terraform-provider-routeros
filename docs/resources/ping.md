@@ -1,4 +1,5 @@
 ---
+subcategory: "System & misc"
 page_title: "RouterOS: routeros_ping"
 description: |-
   Long-running by default; REST 60-second cap closes the session.

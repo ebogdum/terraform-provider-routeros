@@ -1,4 +1,5 @@
 ---
+subcategory: "IPv6"
 page_title: "RouterOS: routeros_ipv6_route"
 description: |-
   RouterOS resource.

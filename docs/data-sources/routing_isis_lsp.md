@@ -1,4 +1,5 @@
 ---
+subcategory: "ISIS"
 page_title: "RouterOS: routeros_routing_isis_lsp"
 description: |-
   RouterOS resource.

@@ -1,4 +1,5 @@
 ---
+subcategory: "Tools"
 page_title: "RouterOS: routeros_tool_traffic_monitor"
 description: |-
   RouterOS resource.

@@ -1,4 +1,5 @@
 ---
+subcategory: "System & misc"
 page_title: "RouterOS: routeros_caps_man_access_list"
 description: |-
   RouterOS resource.

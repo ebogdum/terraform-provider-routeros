@@ -1,4 +1,5 @@
 ---
+subcategory: "Certificates"
 page_title: "RouterOS: routeros_certificate_enable_ssl_certificate"
 description: |-
   RouterOS resource.

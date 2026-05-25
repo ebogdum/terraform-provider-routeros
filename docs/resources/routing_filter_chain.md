@@ -1,4 +1,5 @@
 ---
+subcategory: "Routing"
 page_title: "RouterOS: routeros_routing_filter_chain"
 description: |-
   Discovered; required chain name must be unique

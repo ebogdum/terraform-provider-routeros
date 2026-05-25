@@ -1,4 +1,5 @@
 ---
+subcategory: "IP"
 page_title: "RouterOS: routeros_ip_traffic_flow_target"
 description: |-
   Discovered; required dst-address must be valid

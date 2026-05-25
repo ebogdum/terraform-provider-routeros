@@ -1,4 +1,5 @@
 ---
+subcategory: "Tools"
 page_title: "RouterOS: routeros_tool_bandwidth_test"
 description: |-
   Needs a remote bandwidth-server. Skipped (long-running, network-dependent).

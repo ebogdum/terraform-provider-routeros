@@ -1,4 +1,5 @@
 ---
+subcategory: "Tools"
 page_title: "RouterOS: routeros_tool_flood_ping"
 description: |-
   Restricted by device-mode on most CHR/x86 installs. Skipped.

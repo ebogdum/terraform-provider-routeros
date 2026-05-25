@@ -1,4 +1,5 @@
 ---
+subcategory: "System"
 page_title: "RouterOS: routeros_system_watchdog"
 description: |-
   Singleton; misconfig can soft-brick -- skip in acc

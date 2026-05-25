@@ -1,4 +1,5 @@
 ---
+subcategory: "DHCP"
 page_title: "RouterOS: routeros_ip_dhcp_server_lease"
 description: |-
   Lease entries reference an existing dhcp-server; auto-test can't synthesise the precondition reliably.

@@ -1,4 +1,5 @@
 ---
+subcategory: "Tools"
 page_title: "RouterOS: routeros_tool_profile_cpu"
 description: |-
   Long-running monitor command, not CRUD

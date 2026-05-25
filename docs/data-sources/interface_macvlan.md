@@ -1,4 +1,5 @@
 ---
+subcategory: "Interfaces"
 page_title: "RouterOS: routeros_interface_macvlan"
 description: |-
   MACVLAN needs an existing parent interface that supports it; live values from CHR may not match. Skipped.

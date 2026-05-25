@@ -1,4 +1,5 @@
 ---
+subcategory: "System"
 page_title: "RouterOS: routeros_system_reboot"
 description: |-
   Reboots the router. Verified working against a CHR VM (test PASSes with

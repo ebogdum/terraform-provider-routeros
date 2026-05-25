@@ -1,4 +1,5 @@
 ---
+subcategory: "Hotspot"
 page_title: "RouterOS: routeros_ip_hotspot_ip_binding"
 description: |-
   Hotspot ip-binding requires existing hotspot.

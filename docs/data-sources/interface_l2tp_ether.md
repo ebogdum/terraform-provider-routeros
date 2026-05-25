@@ -1,4 +1,5 @@
 ---
+subcategory: "Interfaces"
 page_title: "RouterOS: routeros_interface_l2tp_ether"
 description: |-
   RouterOS resource.

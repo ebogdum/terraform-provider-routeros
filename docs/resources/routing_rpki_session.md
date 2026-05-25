@@ -1,4 +1,5 @@
 ---
+subcategory: "Routing"
 page_title: "RouterOS: routeros_routing_rpki_session"
 description: |-
   Discovered; needs rpki backend

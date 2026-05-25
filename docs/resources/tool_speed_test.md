@@ -1,4 +1,5 @@
 ---
+subcategory: "Tools"
 page_title: "RouterOS: routeros_tool_speed_test"
 description: |-
   Long-running speed test; REST 60-second cap closes the session.

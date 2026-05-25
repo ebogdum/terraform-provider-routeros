@@ -1,4 +1,5 @@
 ---
+subcategory: "Interfaces"
 page_title: "RouterOS: routeros_interface"
 description: |-
   /interface is mostly read-only -- interfaces are created by their specific subtypes (/interface/bridge, /interface/wireguard, etc.).

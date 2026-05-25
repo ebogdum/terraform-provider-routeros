@@ -1,4 +1,5 @@
 ---
+subcategory: "IP"
 page_title: "RouterOS: routeros_ip_reverse_proxy"
 description: |-
   Reverse proxy listener -- properties differ across ROS versions; safe defaults rejected on 7.x. Skipped.
