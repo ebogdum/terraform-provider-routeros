@@ -1,23 +1,21 @@
 ---
-page_title: "Provider: routeros"
+page_title: "Provider: RouterOS"
 description: |-
-  Manage MikroTik RouterOS 7.x devices through Terraform.
+  Manage MikroTik RouterOS 7.x devices through Terraform: every menu, every property, every action.
 ---
 
-# routeros Provider
+# RouterOS Provider
 
-Manage MikroTik RouterOS 7.x devices through Terraform.
+The RouterOS provider manages MikroTik RouterOS 7.x devices through their
+REST API. It covers every menu the device exposes -- 186 resources, 277
+data sources, 75 actions, 3522 properties -- all generated from a schema
+validated property by property against a live router.
 
-The provider speaks RouterOS REST (HTTPS) and covers every menu the device
-exposes: IP, IPv6, routing, firewall, interfaces, queues, certificates,
-hotspot, PPP, IPsec, system, tools, and more -- 420 menus / 182 resources /
-276 data sources / 75 actions, all generated from a single committed schema.
+A single provider block can manage one router or an entire fleet via a
+named `routers` map; every resource and data source takes an optional
+`router` attribute, omitted for the default router.
 
-One provider block can manage many routers at once via the `routers` map;
-each resource and data source picks the target router with an optional
-`router` attribute.
-
-## Example Usage -- single router
+## Example Usage
 
 ```terraform
 terraform {
@@ -43,7 +41,7 @@ resource "routeros_ip_address" "lan" {
 }
 ```
 
-## Example Usage -- multi-router (manage a fleet from one config)
+## Multi-Router Fleet
 
 ```terraform
 provider "routeros" {
@@ -60,82 +58,44 @@ provider "routeros" {
       password = var.edge_se_password
       insecure = true
     }
-    edge_nw = {
-      host     = "https://10.0.2.1"
-      username = "admin"
-      password = var.edge_nw_password
-      insecure = true
-    }
   }
 }
 
-# Apply a uniform identity to every router with a single resource block.
 resource "routeros_system_identity" "label" {
-  for_each = toset(["core", "edge_se", "edge_nw"])
+  for_each = toset(["core", "edge_se"])
   router   = each.key
   name     = each.key
 }
 
-# Cross-router lookup: read core's routing table from edge_se's config.
 data "routeros_ip_route" "core_routes" {
   router = "core"
 }
 ```
 
-Omitting `router =` selects the default -- the entry named `default`, or the
-first router in sorted order if there is no `default`.
+## Environment Variables
 
-## Schema
+Single-router shorthand fields fall back to environment variables when not
+set in the provider block:
 
-### Single-router shorthand
+| Variable | Provider attribute |
+|---|---|
+| `ROUTEROS_HOST` | `host` |
+| `ROUTEROS_USER` | `username` |
+| `ROUTEROS_PASSWORD` | `password` |
+| `ROUTEROS_CA_CERT` | `ca_cert` |
+| `ROUTEROS_INSECURE` | `insecure` |
+| `ROUTEROS_VERSION` | `ros_version` |
 
-| field | type | required | description |
-|---|---|---|---|
-| `host` | string | no (env: `ROUTEROS_HOST`) | Router base URL, e.g. `https://192.0.2.1`. |
-| `username` | string | no (env: `ROUTEROS_USER`) | API user. |
-| `password` | string | no (env: `ROUTEROS_PASSWORD`) | API password. **Sensitive.** |
-| `ca_cert` | string | no (env: `ROUTEROS_CA_CERT`) | PEM-encoded CA bundle for verifying the router's TLS cert. |
-| `insecure` | bool | no (env: `ROUTEROS_INSECURE`) | Skip TLS verification. Use only for lab gear. |
-| `ros_version` | string | no (env: `ROUTEROS_VERSION`) | Declared RouterOS version; used to gate version-conditional fields. |
+## Safety Guards
 
-Shorthand fields seed a router named `default`. They are ignored when
-`routers = { default = { ... } }` is already declared.
-
-### Multi-router
-
-```hcl
-provider "routeros" {
-  routers = {
-    <name> = {
-      host     = "..."
-      username = "..."
-      password = "..."     # sensitive
-      ca_cert  = "..."     # optional
-      insecure = true|false
-    }
-    ...
-  }
-}
-```
-
-## Safety
-
-The provider refuses to apply changes that would obviously sever management
-access to the router, unless the resource sets `lockout_ack = true`:
+Changes that would obviously sever management access are refused unless
+the resource sets `lockout_ack = true`:
 
 - `routeros_ip_firewall_filter` / `routeros_ipv6_firewall_filter` --
-  `chain=input|forward` with `action=drop|reject|tarpit` and no narrowing
-  match condition (the rule would drop your own session).
-- `routeros_user` -- deleting or disabling the last admin account.
-- `routeros_user_group` -- removing required policies (`api`, `web`, `winbox`,
-  `ssh`, `password`, `policy`, `write`) from the `full` group.
-- `routeros_tool_mac_server` -- emptying the `allowed-interface-list`.
+  `chain=input|forward` + `action=drop|reject|tarpit` with no narrowing match
+- `routeros_user` -- deleting or disabling the last admin
+- `routeros_user_group` -- removing required policies from the `full` group
+- `routeros_tool_mac_server` -- emptying `allowed-interface-list`
 
-Each guard is conservative: the override is per-resource, not provider-wide.
-
-## Status
-
-See the [CHANGELOG](https://github.com/ebogdum/terraform-provider-routeros/blob/main/CHANGELOG.md)
-for release history. Schema is harvested + validated against a live device
-per release; menus that require hardware not present on the test device
-are emitted but not exercised in the automated acceptance sweep.
+Sensitive properties (passwords, secrets, keys, OTP, SIM PIN) are flagged
+so Terraform redacts them in plan output, state files, and CLI display.
