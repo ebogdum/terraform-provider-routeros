@@ -8,6 +8,6 @@ resource "routeros_interface_ppp_server" "ppp_server_example" {
   # max_mru = "replace-me"
   # max_mtu = "replace-me"
   # mrru = "replace-me"
-  # name = "example"
+  # name = "tf-example"
   # profile = "replace-me"
 }

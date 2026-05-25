@@ -14,7 +14,7 @@ Manages the RouterOS `/ipv6/pool` menu.
 ```terraform
 resource "routeros_ipv6_pool" "pool_example" {
   # router = "my-router"  # which router to target; omit for the default
-  name = "example"
+  name = "tf-example"
   prefix = "fd00:db8::/56"
   prefix_length = 64
 

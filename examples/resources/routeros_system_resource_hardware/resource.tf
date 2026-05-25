@@ -9,7 +9,7 @@ resource "routeros_system_resource_hardware" "hardware_example" {
   # irq = 0
   # location = "replace-me"
   # memory = "replace-me"
-  # name = "example"
+  # name = "tf-example"
   # owner = "replace-me"
   # parent = 0
   # pci = "replace-me"

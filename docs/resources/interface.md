@@ -23,7 +23,7 @@ resource "routeros_interface" "interface_example" {
   # find = "replace-me"
   # move = "replace-me"
   # mtu = 1500
-  # name = "example"
+  # name = "tf-example"
   # print = "replace-me"
   # remove = "replace-me"
   # set = "replace-me"

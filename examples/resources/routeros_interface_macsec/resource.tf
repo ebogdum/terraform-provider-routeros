@@ -5,6 +5,6 @@ resource "routeros_interface_macsec" "macsec_example" {
 
   # Optional attributes (uncomment as needed):
   # mtu = "replace-me"
-  # name = "example"
+  # name = "tf-example"
   # profile = "replace-me"
 }

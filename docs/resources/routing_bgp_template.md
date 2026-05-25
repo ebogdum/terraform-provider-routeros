@@ -14,7 +14,7 @@ Manages the RouterOS `/routing/bgp/template` menu.
 ```terraform
 resource "routeros_routing_bgp_template" "template_example" {
   # router = "my-router"  # which router to target; omit for the default
-  name = "example"
+  name = "tf-example"
 
   comment = "managed by terraform"
   disabled = false

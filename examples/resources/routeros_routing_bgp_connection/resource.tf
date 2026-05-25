@@ -12,7 +12,7 @@ resource "routeros_routing_bgp_connection" "connection_example" {
   # keepalive_time = "replace-me"
   # listen = "replace-me"
   # multihop = "replace-me"
-  # name = "example"
+  # name = "tf-example"
   # nexthop_choice = "replace-me"
   # routing_table = "main"
   # tcp_md5_key = "REDACTED"

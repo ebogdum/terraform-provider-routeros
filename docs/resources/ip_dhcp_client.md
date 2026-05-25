@@ -26,7 +26,7 @@ resource "routeros_ip_dhcp_client" "dhcp_client_example" {
   # dhcp_options = []
   # dscp = 0
   # interface = "ether1"
-  # name = "example"
+  # name = "tf-example"
   # script = "replace-me"
   # use_broadcast = "both"
   # use_peer_dns = true

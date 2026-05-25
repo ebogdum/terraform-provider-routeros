@@ -7,7 +7,7 @@ resource "routeros_ip_hotspot_user_profile" "profile_example" {
   # idle_timeout = "replace-me"
   # keepalive_timeout = "1h"
   # mac_cookie_timeout = "1h"
-  # name = "example"
+  # name = "tf-example"
   # shared_users = 0
   # status_autorefresh = "1h"
   # transparent_proxy = false

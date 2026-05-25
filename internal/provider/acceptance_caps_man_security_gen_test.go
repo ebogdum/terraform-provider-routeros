@@ -26,7 +26,7 @@ provider "routeros" {
 
 resource "routeros_caps_man_security" "acc" {
   router = "home"
-  name = "example"
+  name = "tf-example"
 }
 `
 	cfg = formatProviderCfg(cfg)

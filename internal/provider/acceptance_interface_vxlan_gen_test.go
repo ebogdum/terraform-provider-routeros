@@ -26,7 +26,7 @@ provider "routeros" {
 
 resource "routeros_interface_vxlan" "acc" {
   router = "home"
-  name = "example"
+  name = "tf-example"
   vni = "100"
 }
 `

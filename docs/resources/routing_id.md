@@ -18,7 +18,7 @@ resource "routeros_routing_id" "id_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
-  # name = "example"
+  # name = "tf-example"
   # select_dynamic_id = "only static"
   # select_from_vrf = "replace-me"
 }

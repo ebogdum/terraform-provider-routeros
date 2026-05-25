@@ -5,7 +5,7 @@ resource "routeros_routing_bgp_instance" "instance_example" {
   # Optional attributes (uncomment as needed):
   # as = "replace-me"
   # cluster_id = "replace-me"
-  # name = "example"
+  # name = "tf-example"
   # router_id = "replace-me"
   # routing_table = "main"
   # vrf = "main"

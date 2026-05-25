@@ -29,7 +29,7 @@ data "routeros_interface" "all" { router = "home" }
 resource "routeros_ip_dhcp_server" "acc" {
   router = "home"
   interface = data.routeros_interface.all.records[0].name
-  name = "example"
+  name = "tf-example"
 }
 `
 	cfg = formatProviderCfg(cfg)

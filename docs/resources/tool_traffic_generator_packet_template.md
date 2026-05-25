@@ -22,7 +22,7 @@ resource "routeros_tool_traffic_generator_packet_template" "packet_template_exam
   # header_stack = "replace-me"
   # interface = "ether1"
   # ip_id = "replace-me"
-  # name = "example"
+  # name = "tf-example"
   # port = "443"
   # tcp_ack = "replace-me"
   # tcp_data_offset = "replace-me"

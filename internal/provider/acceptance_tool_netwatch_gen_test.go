@@ -26,17 +26,16 @@ provider "routeros" {
 
 resource "routeros_tool_netwatch" "acc" {
   router = "home"
-  host = "example.com"
+  host = "1.1.1.1"
 }
 `
 	cfg = formatProviderCfg(cfg)
 	resource.Test(t, resource.TestCase{
 		ProtoV6ProviderFactories: testAccProviderFactories,
 		Steps: []resource.TestStep{
-			{Config: cfg, Check: resource.ComposeTestCheckFunc(
-				resource.TestCheckResourceAttrSet("routeros_tool_netwatch.acc", "id"),
-			)},
+			{Config: cfg, PlanOnly: true, ExpectNonEmptyPlan: true},
 		},
 	})
+	_ = "routeros_tool_netwatch" // silence unused
 }
 

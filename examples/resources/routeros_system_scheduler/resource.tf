@@ -1,6 +1,6 @@
 resource "routeros_system_scheduler" "scheduler_example" {
   # router = "my-router"  # which router to target; omit for the default
-  name     = "example"
+  name     = "tf-example"
   on_event = ":put \"tick\""
 
   comment  = "managed by terraform"

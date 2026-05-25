@@ -1,6 +1,6 @@
 resource "routeros_snmp_community" "community_example" {
   # router = "my-router"  # which router to target; omit for the default
-  name = "example"
+  name = "tf-example"
 
   comment  = "managed by terraform"
   disabled = false

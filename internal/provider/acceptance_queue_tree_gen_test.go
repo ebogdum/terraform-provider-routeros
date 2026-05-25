@@ -28,7 +28,7 @@ data "routeros_interface" "all" { router = "home" }
 
 resource "routeros_queue_tree" "acc" {
   router = "home"
-  name = "example"
+  name = "tf-example"
   parent = data.routeros_interface.all.records[0].name
 }
 `

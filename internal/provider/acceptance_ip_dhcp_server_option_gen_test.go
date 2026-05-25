@@ -27,7 +27,7 @@ provider "routeros" {
 resource "routeros_ip_dhcp_server_option" "acc" {
   router = "home"
   code = 60
-  name = "example"
+  name = "tf-example"
   value = "'tf-acc'"
 }
 `

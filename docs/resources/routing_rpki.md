@@ -18,7 +18,7 @@ resource "routeros_routing_rpki" "rpki_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
-  # address = "10.99.0.1"
+  # address = "replace-me"
   # expire_interval = "replace-me"
   # group = "replace-me"
   # port = "443"

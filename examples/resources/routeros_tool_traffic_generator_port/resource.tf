@@ -4,5 +4,5 @@ resource "routeros_tool_traffic_generator_port" "port_example" {
 
   # Optional attributes (uncomment as needed):
   # interface = "ether1"
-  # name = "example"
+  # name = "tf-example"
 }

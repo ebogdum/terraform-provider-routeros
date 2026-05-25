@@ -14,7 +14,7 @@ resource "routeros_interface_wireguard_peers" "peers_example" {
   # endpoint_address = "10.99.0.0/24"
   # endpoint_port = "443"
   # interface = "ether1"
-  # name = "example"
+  # name = "tf-example"
   # persistent_keepalive = "replace-me"
   # preshared_key = "REDACTED"
   # private_key = "REDACTED"

@@ -14,7 +14,7 @@ Manages the RouterOS `/ip/firewall/address-list` menu.
 ```terraform
 resource "routeros_ip_firewall_address_list" "address_list_example" {
   # router = "my-router"  # which router to target; omit for the default
-  address = "10.99.0.1"
+  address = "10.255.255.0/30"
   list = "my-list"
 
   comment = "managed by terraform"

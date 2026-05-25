@@ -14,7 +14,7 @@ Manages the RouterOS `/ppp/secret` menu.
 ```terraform
 resource "routeros_ppp_secret" "secret_example" {
   # router = "my-router"  # which router to target; omit for the default
-  name = "example"
+  name = "tf-example"
 
   comment = "managed by terraform"
   disabled = false

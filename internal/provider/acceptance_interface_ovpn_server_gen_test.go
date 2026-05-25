@@ -26,7 +26,7 @@ provider "routeros" {
 
 resource "routeros_interface_ovpn_server" "acc" {
   router = "home"
-  name = "example"
+  name = "tf-example"
   user = "myuser"
 }
 `

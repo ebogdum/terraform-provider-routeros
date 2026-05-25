@@ -4,7 +4,7 @@ resource "routeros_ip_dhcp_server_lease" "lease_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
-  # address = "10.99.0.1"
+  # address = "replace-me"
   # agent_circuit_id = "replace-me"
   # agent_remote_id = "replace-me"
   # allow_dual_stack_queue = "replace-me"

@@ -24,7 +24,7 @@ resource "routeros_ip_hotspot_profile" "profile_example" {
   # http_proxy = "replace-me"
   # install_hotspot_queue = false
   # login_by = []
-  # name = "example"
+  # name = "tf-example"
   # smtp_server = "10.99.0.1"
   # split_user_domain = false
   # use_radius = false

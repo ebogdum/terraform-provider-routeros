@@ -19,7 +19,7 @@ resource "routeros_ip_dns_forwarders" "forwarders_example" {
 
   # Optional attributes (uncomment as needed):
   # dns_servers = "replace-me"
-  # name = "example"
+  # name = "tf-example"
 }
 ```
 

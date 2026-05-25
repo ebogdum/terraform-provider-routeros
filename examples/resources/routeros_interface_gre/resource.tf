@@ -13,6 +13,6 @@ resource "routeros_interface_gre" "gre_example" {
   # l2mtu = "replace-me"
   # local_address = "10.99.0.1"
   # mtu = 0
-  # name = "example"
+  # name = "tf-example"
   # remote_address = "10.99.0.1"
 }

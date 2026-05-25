@@ -1,7 +1,7 @@
 resource "routeros_ip_dhcp_server" "dhcp_server_example" {
   # router = "my-router"  # which router to target; omit for the default
   interface = "ether1"
-  name      = "example"
+  name      = "tf-example"
 
   comment  = "managed by terraform"
   disabled = false

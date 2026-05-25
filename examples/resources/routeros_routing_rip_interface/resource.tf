@@ -8,7 +8,7 @@ resource "routeros_routing_rip_interface" "interface_example" {
   # interfaces = "replace-me"
   # key_chain = "replace-me"
   # mode = "replace-me"
-  # name = "example"
+  # name = "tf-example"
   # password = "REDACTED"
   # poison_reverse = "replace-me"
   # source_addresses = "replace-me"

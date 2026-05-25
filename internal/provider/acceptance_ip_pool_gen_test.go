@@ -26,7 +26,7 @@ provider "routeros" {
 
 resource "routeros_ip_pool" "acc" {
   router = "home"
-  name = "example"
+  name = "tf-example"
   ranges = "10.99.0.100-10.99.0.200"
 }
 `

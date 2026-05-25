@@ -2,7 +2,7 @@ resource "routeros_ip_dhcp_relay" "dhcp_relay_example" {
   # router = "my-router"  # which router to target; omit for the default
   dhcp_server = "127.0.0.1"
   interface   = "ether1"
-  name        = "example"
+  name        = "tf-example"
 
   disabled = false
 

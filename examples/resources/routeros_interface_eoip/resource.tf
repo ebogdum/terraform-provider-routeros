@@ -1,6 +1,6 @@
 resource "routeros_interface_eoip" "eoip_example" {
   # router = "my-router"  # which router to target; omit for the default
-  name           = "example"
+  name           = "tf-example"
   remote_address = "10.99.0.1"
   tunnel_id      = 1
 

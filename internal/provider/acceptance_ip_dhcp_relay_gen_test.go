@@ -30,7 +30,7 @@ resource "routeros_ip_dhcp_relay" "acc" {
   router = "home"
   dhcp_server = "127.0.0.1"
   interface = data.routeros_interface.all.records[0].name
-  name = "example"
+  name = "tf-example"
 }
 `
 	cfg = formatProviderCfg(cfg)

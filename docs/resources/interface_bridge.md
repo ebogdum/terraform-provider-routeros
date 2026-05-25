@@ -32,7 +32,7 @@ resource "routeros_interface_bridge" "bridge_example" {
   # mlag_peer_port = "443"
   # mlag_priority = 0
   # mtu = "replace-me"
-  # name = "example"
+  # name = "tf-example"
   # port_cost_mode = "replace-me"
   # priority = 0
   # protocol_mode = "replace-me"

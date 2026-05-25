@@ -25,7 +25,7 @@ resource "routeros_interface_pppoe_client" "pppoe_client_example" {
   # max_mru = "replace-me"
   # max_mtu = "replace-me"
   # mrru = "replace-me"
-  # name = "example"
+  # name = "tf-example"
   # password = "REDACTED"
   # profile = "replace-me"
   # user = "myuser"

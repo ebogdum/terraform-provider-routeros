@@ -20,7 +20,7 @@ resource "routeros_routing_fantasy" "fantasy_example" {
   # Optional attributes (uncomment as needed):
   # dst_address = "10.99.0.0/24"
   # gateway = "replace-me"
-  # name = "example"
+  # name = "tf-example"
   # scope = "replace-me"
   # target_scope = "replace-me"
 }

@@ -9,6 +9,6 @@ resource "routeros_interface_6to4" "6to4_example" {
   # dscp = "replace-me"
   # local_address = "10.99.0.1"
   # mtu = "replace-me"
-  # name = "example"
+  # name = "tf-example"
   # remote_address = "10.99.0.1"
 }

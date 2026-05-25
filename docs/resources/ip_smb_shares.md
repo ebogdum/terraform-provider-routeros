@@ -14,7 +14,7 @@ Manages the RouterOS `/ip/smb/shares` menu.
 ```terraform
 resource "routeros_ip_smb_shares" "shares_example" {
   # router = "my-router"  # which router to target; omit for the default
-  name = "example"
+  name = "tf-example"
 
   comment = "managed by terraform"
   disabled = false

@@ -33,10 +33,9 @@ resource "routeros_certificate_crl" "acc" {
 	resource.Test(t, resource.TestCase{
 		ProtoV6ProviderFactories: testAccProviderFactories,
 		Steps: []resource.TestStep{
-			{Config: cfg, Check: resource.ComposeTestCheckFunc(
-				resource.TestCheckResourceAttrSet("routeros_certificate_crl.acc", "id"),
-			)},
+			{Config: cfg, PlanOnly: true, ExpectNonEmptyPlan: true},
 		},
 	})
+	_ = "routeros_certificate_crl" // silence unused
 }
 

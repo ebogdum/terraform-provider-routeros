@@ -19,7 +19,7 @@ resource "routeros_routing_table" "table_example" {
 
   # Optional attributes (uncomment as needed):
   # fib = "replace-me"
-  # name = "example"
+  # name = "tf-example"
 }
 ```
 

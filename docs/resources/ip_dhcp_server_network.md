@@ -14,7 +14,7 @@ Manages the RouterOS `/ip/dhcp-server/network` menu.
 ```terraform
 resource "routeros_ip_dhcp_server_network" "network_example" {
   # router = "my-router"  # which router to target; omit for the default
-  address = "10.99.0.1"
+  address = "10.255.255.0/30"
 
   comment = "managed by terraform"
 

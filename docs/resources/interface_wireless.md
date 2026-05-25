@@ -65,7 +65,7 @@ resource "routeros_interface_wireless" "wireless_example" {
   # mtu = "replace-me"
   # multicast_buffering = "replace-me"
   # multicast_helper = "replace-me"
-  # name = "example"
+  # name = "tf-example"
   # noise_floor_threshold = "replace-me"
   # nv2_cell_radius = "replace-me"
   # nv2_noise_floor_offset = "replace-me"

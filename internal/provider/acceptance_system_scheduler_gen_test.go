@@ -26,7 +26,7 @@ provider "routeros" {
 
 resource "routeros_system_scheduler" "acc" {
   router = "home"
-  name = "example"
+  name = "tf-example"
   on_event = ":put \"tick\""
 }
 `

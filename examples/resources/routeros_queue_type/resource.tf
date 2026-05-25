@@ -1,7 +1,7 @@
 resource "routeros_queue_type" "type_example" {
   # router = "my-router"  # which router to target; omit for the default
   kind = "pfifo"
-  name = "example"
+  name = "tf-example"
 
   # Optional attributes (uncomment as needed):
   # mq_pfifo_limit = 0

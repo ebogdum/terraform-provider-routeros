@@ -3,6 +3,6 @@ resource "routeros_ip_kid_control" "kid_control_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
-  # name = "example"
+  # name = "tf-example"
   # rate_limit = "replace-me"
 }

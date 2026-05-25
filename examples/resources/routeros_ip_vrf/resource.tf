@@ -5,5 +5,5 @@ resource "routeros_ip_vrf" "vrf_example" {
 
   # Optional attributes (uncomment as needed):
   # interfaces = "replace-me"
-  # name = "example"
+  # name = "tf-example"
 }

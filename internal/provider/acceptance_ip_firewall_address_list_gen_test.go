@@ -26,7 +26,7 @@ provider "routeros" {
 
 resource "routeros_ip_firewall_address_list" "acc" {
   router = "home"
-  address = "10.99.0.1"
+  address = "10.255.255.0/30"
   list = "my-list"
 }
 `

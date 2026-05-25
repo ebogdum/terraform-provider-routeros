@@ -14,7 +14,7 @@ Manages the RouterOS `/user/group` menu.
 ```terraform
 resource "routeros_user_group" "group_example" {
   # router = "my-router"  # which router to target; omit for the default
-  name = "example"
+  name = "tf-example"
 
   comment = "managed by terraform"
 

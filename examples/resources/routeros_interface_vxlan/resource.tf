@@ -1,6 +1,6 @@
 resource "routeros_interface_vxlan" "vxlan_example" {
   # router = "my-router"  # which router to target; omit for the default
-  name = "example"
+  name = "tf-example"
   vni  = "100"
 
   comment  = "managed by terraform"

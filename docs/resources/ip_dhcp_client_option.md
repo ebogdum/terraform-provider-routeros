@@ -18,7 +18,7 @@ resource "routeros_ip_dhcp_client_option" "option_example" {
 
   # Optional attributes (uncomment as needed):
   # code = 0
-  # name = "example"
+  # name = "tf-example"
   # value = "replace-me"
 }
 ```

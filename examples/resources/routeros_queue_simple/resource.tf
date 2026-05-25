@@ -1,6 +1,6 @@
 resource "routeros_queue_simple" "simple_example" {
   # router = "my-router"  # which router to target; omit for the default
-  name   = "example"
+  name   = "tf-example"
   target = "127.0.0.1/32"
 
   comment  = "managed by terraform"

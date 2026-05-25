@@ -29,7 +29,7 @@ data "routeros_interface" "all" { router = "home" }
 resource "routeros_interface_vlan" "acc" {
   router = "home"
   interface = data.routeros_interface.all.records[0].name
-  name = "example"
+  name = "tf-example"
   vlan_id = "100"
 }
 `

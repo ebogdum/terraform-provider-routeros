@@ -7,6 +7,6 @@ resource "routeros_ip_ipsec_proposal" "proposal_example" {
   # auth_algorithms = "md5"
   # enc_algorithms = []
   # lifetime = "1800"
-  # name = "example"
+  # name = "tf-example"
   # pfs_group = "replace-me"
 }

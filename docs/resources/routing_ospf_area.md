@@ -26,7 +26,7 @@ resource "routeros_routing_ospf_area" "area_example" {
   # area_id = "10.99.0.1"
   # default_cost = "replace-me"
   # instance = "replace-me"
-  # name = "example"
+  # name = "tf-example"
   # no_summaries = "replace-me"
   # nssa_translator = "replace-me"
   # type = "default"

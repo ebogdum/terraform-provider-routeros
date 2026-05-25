@@ -26,8 +26,8 @@ provider "routeros" {
 
 resource "routeros_ip_dns_static" "acc" {
   router = "home"
-  address = "10.99.0.1"
-  name = "example"
+  address = "127.0.0.1"
+  name = "tf-example"
 }
 `
 	cfg = formatProviderCfg(cfg)

@@ -22,7 +22,7 @@ resource "routeros_routing_ospf_instance" "instance_example" {
   # domain_tag = "replace-me"
   # mpls_te_address = "10.99.0.0/24"
   # mpls_te_area = "replace-me"
-  # name = "example"
+  # name = "tf-example"
   # originate_default = "replace-me"
   # out_filter_select = "replace-me"
   # redistribute = "replace-me"

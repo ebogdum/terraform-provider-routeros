@@ -26,7 +26,7 @@ provider "routeros" {
 
 resource "routeros_ip_dhcp_server_network" "acc" {
   router = "home"
-  address = "10.99.0.1"
+  address = "10.255.255.0/30"
 }
 `
 	cfg = formatProviderCfg(cfg)

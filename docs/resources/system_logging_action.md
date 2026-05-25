@@ -23,7 +23,7 @@ resource "routeros_system_logging_action" "action_example" {
   # disk_stop_on_full = false
   # memory_lines = 0
   # memory_stop_on_full = false
-  # name = "example"
+  # name = "tf-example"
   # remember = false
   # remote = "replace-me"
   # remote_log_format = "replace-me"

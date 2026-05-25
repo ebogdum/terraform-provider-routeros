@@ -1,7 +1,7 @@
 resource "routeros_interface_vlan" "vlan_example" {
   # router = "my-router"  # which router to target; omit for the default
   interface = "ether1"
-  name      = "example"
+  name      = "tf-example"
   vlan_id   = "100"
 
   comment  = "managed by terraform"

@@ -1,6 +1,6 @@
 resource "routeros_queue_tree" "tree_example" {
   # router = "my-router"  # which router to target; omit for the default
-  name   = "example"
+  name   = "tf-example"
   parent = "global"
 
   comment  = "managed by terraform"

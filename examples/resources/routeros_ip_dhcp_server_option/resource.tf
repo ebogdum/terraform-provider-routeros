@@ -1,7 +1,7 @@
 resource "routeros_ip_dhcp_server_option" "option_example" {
   # router = "my-router"  # which router to target; omit for the default
   code  = 60
-  name  = "example"
+  name  = "tf-example"
   value = "'tf-acc'"
 
   comment = "managed by terraform"

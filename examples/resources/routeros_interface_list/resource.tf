@@ -1,6 +1,6 @@
 resource "routeros_interface_list" "list_example" {
   # router = "my-router"  # which router to target; omit for the default
-  name = "example"
+  name = "tf-example"
 
   comment = "managed by terraform"
 

@@ -4,7 +4,7 @@ resource "routeros_ip_smb_users" "users_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
-  # name = "example"
+  # name = "tf-example"
   # password = "REDACTED"
   # read_only = false
 }

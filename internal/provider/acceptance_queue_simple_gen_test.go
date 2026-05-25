@@ -26,7 +26,7 @@ provider "routeros" {
 
 resource "routeros_queue_simple" "acc" {
   router = "home"
-  name = "example"
+  name = "tf-example"
   target = "127.0.0.1/32"
 }
 `

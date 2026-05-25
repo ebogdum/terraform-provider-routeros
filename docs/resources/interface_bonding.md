@@ -27,7 +27,7 @@ resource "routeros_interface_bonding" "bonding_example" {
   # arp_timeout = "replace-me"
   # mode = "replace-me"
   # mtu = "replace-me"
-  # name = "example"
+  # name = "tf-example"
 }
 ```
 

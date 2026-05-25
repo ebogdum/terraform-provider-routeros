@@ -18,7 +18,7 @@ resource "routeros_routing_rip_instance" "instance_example" {
 
   # Optional attributes (uncomment as needed):
   # afi = "replace-me"
-  # name = "example"
+  # name = "tf-example"
   # originate_default = "replace-me"
   # redistribute = "replace-me"
   # route_gc_timeout = "replace-me"

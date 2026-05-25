@@ -1,7 +1,7 @@
 resource "routeros_ip_hotspot" "hotspot_example" {
   # router = "my-router"  # which router to target; omit for the default
   interface = "ether1"
-  name      = "example"
+  name      = "tf-example"
 
   disabled = false
 

@@ -14,7 +14,7 @@ Manages the RouterOS `/system/script` menu.
 ```terraform
 resource "routeros_system_script" "script_example" {
   # router = "my-router"  # which router to target; omit for the default
-  name = "example"
+  name = "tf-example"
   source = ":put \"hello\""
 
   comment = "managed by terraform"

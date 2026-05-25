@@ -14,7 +14,7 @@ Manages the RouterOS `/caps-man/datapath` menu.
 ```terraform
 resource "routeros_caps_man_datapath" "datapath_example" {
   # router = "my-router"  # which router to target; omit for the default
-  name = "example"
+  name = "tf-example"
 
   comment = "managed by terraform"
 

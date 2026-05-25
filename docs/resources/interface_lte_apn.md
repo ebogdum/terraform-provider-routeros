@@ -15,7 +15,7 @@ Manages the RouterOS `/interface/lte/apn` menu.
 resource "routeros_interface_lte_apn" "apn_example" {
   # router = "my-router"  # which router to target; omit for the default
   apn = "internet"
-  name = "example"
+  name = "tf-example"
 
   comment = "managed by terraform"
 

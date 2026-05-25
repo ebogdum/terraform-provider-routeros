@@ -18,7 +18,7 @@ resource "routeros_interface_pppoe_server" "pppoe_server_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
-  # name = "example"
+  # name = "tf-example"
   # service = "replace-me"
   # user = "myuser"
 }

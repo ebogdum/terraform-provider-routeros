@@ -9,5 +9,5 @@ resource "routeros_interface_macvlan" "macvlan_example" {
   # mac_address = "10.99.0.0/24"
   # mode = "replace-me"
   # mtu = "replace-me"
-  # name = "example"
+  # name = "tf-example"
 }

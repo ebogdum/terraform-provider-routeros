@@ -27,7 +27,7 @@ provider "routeros" {
 resource "routeros_interface_lte_apn" "acc" {
   router = "home"
   apn = "internet"
-  name = "example"
+  name = "tf-example"
 }
 `
 	cfg = formatProviderCfg(cfg)

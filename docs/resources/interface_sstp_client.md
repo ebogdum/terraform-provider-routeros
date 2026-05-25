@@ -15,7 +15,7 @@ Manages the RouterOS `/interface/sstp-client` menu.
 resource "routeros_interface_sstp_client" "sstp_client_example" {
   # router = "my-router"  # which router to target; omit for the default
   connect_to = "127.0.0.1"
-  name = "example"
+  name = "tf-example"
   user = "myuser"
 
   comment = "managed by terraform"

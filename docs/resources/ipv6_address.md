@@ -14,7 +14,7 @@ Manages the RouterOS `/ipv6/address` menu.
 ```terraform
 resource "routeros_ipv6_address" "address_example" {
   # router = "my-router"  # which router to target; omit for the default
-  address = "10.99.0.1"
+  address = "fd00:db8::1/64"
   interface = "ether1"
 
   comment = "managed by terraform"

@@ -27,7 +27,7 @@ provider "routeros" {
 resource "routeros_queue_type" "acc" {
   router = "home"
   kind = "pfifo"
-  name = "example"
+  name = "tf-example"
 }
 `
 	cfg = formatProviderCfg(cfg)

@@ -26,7 +26,7 @@ provider "routeros" {
 
 resource "routeros_system_script" "acc" {
   router = "home"
-  name = "example"
+  name = "tf-example"
   source = ":put \"hello\""
 }
 `

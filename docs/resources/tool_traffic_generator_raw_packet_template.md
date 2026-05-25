@@ -22,7 +22,7 @@ resource "routeros_tool_traffic_generator_raw_packet_template" "raw_packet_templ
   # header = "replace-me"
   # ip_header_offset = "replace-me"
   # ipv6_header_offset = "replace-me"
-  # name = "example"
+  # name = "tf-example"
   # port = "443"
   # random_byte_offsets_and_masks = "replace-me"
   # random_ranges = "replace-me"

@@ -4,6 +4,6 @@ resource "routeros_system_backup" "backup_example" {
   # Optional attributes (uncomment as needed):
   # dont_encrypt = "replace-me"
   # encryption = "replace-me"
-  # name = "example"
+  # name = "tf-example"
   # password = "REDACTED"
 }

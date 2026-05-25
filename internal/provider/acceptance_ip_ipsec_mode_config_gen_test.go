@@ -26,7 +26,7 @@ provider "routeros" {
 
 resource "routeros_ip_ipsec_mode_config" "acc" {
   router = "home"
-  name = "example"
+  name = "tf-example"
 }
 `
 	cfg = formatProviderCfg(cfg)

@@ -23,7 +23,7 @@ resource "routeros_iot_lora" "lora_example" {
   # gateway_id = "replace-me"
   # lbt_enabled = "replace-me"
   # listen_time = "replace-me"
-  # name = "example"
+  # name = "tf-example"
   # network = "10.99.0.0/24"
   # rssi_threshold = "replace-me"
   # servers = "replace-me"

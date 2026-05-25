@@ -27,7 +27,7 @@ provider "routeros" {
 resource "routeros_user" "acc" {
   router = "home"
   group = "read"
-  name = "example"
+  name = "tf-example"
   password = "REDACTED"
   lockout_ack = true
 }

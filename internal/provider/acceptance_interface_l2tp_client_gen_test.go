@@ -27,7 +27,7 @@ provider "routeros" {
 resource "routeros_interface_l2tp_client" "acc" {
   router = "home"
   connect_to = "127.0.0.1"
-  name = "example"
+  name = "tf-example"
   user = "myuser"
 }
 `

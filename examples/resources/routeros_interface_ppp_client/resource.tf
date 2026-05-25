@@ -11,7 +11,7 @@ resource "routeros_interface_ppp_client" "ppp_client_example" {
   # max_mru = "replace-me"
   # max_mtu = "replace-me"
   # mrru = "replace-me"
-  # name = "example"
+  # name = "tf-example"
   # password = "REDACTED"
   # profile = "replace-me"
   # remote_address = "10.99.0.1"

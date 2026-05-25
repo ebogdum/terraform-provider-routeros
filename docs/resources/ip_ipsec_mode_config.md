@@ -14,7 +14,7 @@ Manages the RouterOS `/ip/ipsec/mode-config` menu.
 ```terraform
 resource "routeros_ip_ipsec_mode_config" "mode_config_example" {
   # router = "my-router"  # which router to target; omit for the default
-  name = "example"
+  name = "tf-example"
 
   # Optional attributes (uncomment as needed):
   # address = "10.99.0.1"

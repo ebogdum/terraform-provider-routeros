@@ -7,7 +7,7 @@ resource "routeros_system_ups" "ups_example" {
   # alarm_setting = "immediate"
   # check_capabilities = "replace-me"
   # min_runtime = "replace-me"
-  # name = "example"
+  # name = "tf-example"
   # offline_time = "replace-me"
   # port = "443"
 }

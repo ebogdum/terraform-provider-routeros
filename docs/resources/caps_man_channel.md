@@ -14,7 +14,7 @@ Manages the RouterOS `/caps-man/channel` menu.
 ```terraform
 resource "routeros_caps_man_channel" "channel_example" {
   # router = "my-router"  # which router to target; omit for the default
-  name = "example"
+  name = "tf-example"
 
   comment = "managed by terraform"
 

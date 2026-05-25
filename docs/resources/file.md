@@ -17,7 +17,7 @@ resource "routeros_file" "file_example" {
 
   # Optional attributes (uncomment as needed):
   # contents = "replace-me"
-  # name = "example"
+  # name = "tf-example"
   # type = 0
 }
 ```

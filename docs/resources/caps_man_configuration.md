@@ -14,7 +14,7 @@ Manages the RouterOS `/caps-man/configuration` menu.
 ```terraform
 resource "routeros_caps_man_configuration" "configuration_example" {
   # router = "my-router"  # which router to target; omit for the default
-  name = "example"
+  name = "tf-example"
 
   comment = "managed by terraform"
 

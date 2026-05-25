@@ -26,7 +26,7 @@ provider "routeros" {
 
 resource "routeros_ipv6_pool" "acc" {
   router = "home"
-  name = "example"
+  name = "tf-example"
   prefix = "fd00:db8::/56"
   prefix_length = 64
 }

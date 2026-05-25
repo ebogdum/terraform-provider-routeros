@@ -4,7 +4,7 @@ resource "routeros_interface_ethernet" "ethernet_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
-  # address = "10.99.0.1"
+  # address = "replace-me"
   # advertise = []
   # arp = "disabled"
   # arp_timeout = "1h"
@@ -19,7 +19,7 @@ resource "routeros_interface_ethernet" "ethernet_example" {
   # loop_protect_send_interval = "1h"
   # mac_address = "10.99.0.0/24"
   # mtu = 1500
-  # name = "example"
+  # name = "tf-example"
   # orig_mac_address = "10.99.0.0/24"
   # published = "replace-me"
   # rx_flow_control = "off"

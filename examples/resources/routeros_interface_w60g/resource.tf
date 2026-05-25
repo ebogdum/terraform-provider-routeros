@@ -13,7 +13,7 @@ resource "routeros_interface_w60g" "w60g_example" {
   # mdmg_fix = "replace-me"
   # mode = "replace-me"
   # mtu = "replace-me"
-  # name = "example"
+  # name = "tf-example"
   # password = "REDACTED"
   # put_stations_in_bridge = "replace-me"
   # region = "replace-me"

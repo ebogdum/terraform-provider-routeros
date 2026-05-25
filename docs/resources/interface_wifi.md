@@ -18,7 +18,7 @@ resource "routeros_interface_wifi" "wifi_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
-  # name = "example"
+  # name = "tf-example"
 }
 ```
 

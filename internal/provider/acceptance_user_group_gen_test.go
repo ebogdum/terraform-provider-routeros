@@ -26,7 +26,7 @@ provider "routeros" {
 
 resource "routeros_user_group" "acc" {
   router = "home"
-  name = "example"
+  name = "tf-example"
   lockout_ack = true
 }
 `

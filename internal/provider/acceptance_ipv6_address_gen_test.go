@@ -28,7 +28,7 @@ data "routeros_interface" "all" { router = "home" }
 
 resource "routeros_ipv6_address" "acc" {
   router = "home"
-  address = "10.99.0.1"
+  address = "fd00:db8::1/64"
   interface = data.routeros_interface.all.records[0].name
 }
 `

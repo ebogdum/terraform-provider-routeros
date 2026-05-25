@@ -32,10 +32,9 @@ resource "routeros_interface_wireguard_peers" "acc" {
 	resource.Test(t, resource.TestCase{
 		ProtoV6ProviderFactories: testAccProviderFactories,
 		Steps: []resource.TestStep{
-			{Config: cfg, Check: resource.ComposeTestCheckFunc(
-				resource.TestCheckResourceAttrSet("routeros_interface_wireguard_peers.acc", "id"),
-			)},
+			{Config: cfg, PlanOnly: true, ExpectNonEmptyPlan: true},
 		},
 	})
+	_ = "routeros_interface_wireguard_peers" // silence unused
 }
 

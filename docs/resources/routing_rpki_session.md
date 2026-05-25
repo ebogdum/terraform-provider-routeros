@@ -16,7 +16,7 @@ resource "routeros_routing_rpki_session" "session_example" {
   # router = "my-router"  # which router to target; omit for the default
 
   # Optional attributes (uncomment as needed):
-  # address = "10.99.0.1"
+  # address = "replace-me"
   # expires = "1h"
   # group = "replace-me"
   # port = "443"

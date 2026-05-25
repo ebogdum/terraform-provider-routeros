@@ -26,7 +26,7 @@ provider "routeros" {
 
 resource "routeros_interface_sstp_server" "acc" {
   router = "home"
-  name = "example"
+  name = "tf-example"
   user = "myuser"
 }
 `

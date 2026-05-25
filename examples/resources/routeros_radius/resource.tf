@@ -6,7 +6,7 @@ resource "routeros_radius" "radius_example" {
   # Optional attributes (uncomment as needed):
   # accounting_backup = false
   # accounting_port = "443"
-  # address = "10.99.0.1"
+  # address = "replace-me"
   # authentication_port = "443"
   # called_id = "replace-me"
   # certificate = "replace-me"

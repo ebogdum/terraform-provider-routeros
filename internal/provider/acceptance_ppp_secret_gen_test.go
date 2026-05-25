@@ -26,7 +26,7 @@ provider "routeros" {
 
 resource "routeros_ppp_secret" "acc" {
   router = "home"
-  name = "example"
+  name = "tf-example"
 }
 `
 	cfg = formatProviderCfg(cfg)

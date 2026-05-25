@@ -26,7 +26,7 @@ provider "routeros" {
 
 resource "routeros_ip_socks_users" "acc" {
   router = "home"
-  name = "example"
+  name = "tf-example"
   password = "REDACTED"
 }
 `

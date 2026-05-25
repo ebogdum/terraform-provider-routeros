@@ -26,7 +26,7 @@ resource "routeros_certificate" "certificate_example" {
   # key_size = "2048"
   # key_usage = "109"
   # locality = "replace-me"
-  # name = "example"
+  # name = "tf-example"
   # organization = "replace-me"
   # state = "replace-me"
   # subject_alt_name = "replace-me"

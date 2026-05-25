@@ -26,7 +26,7 @@ provider "routeros" {
 
 resource "routeros_interface_wifi_configuration" "acc" {
   router = "home"
-  name = "example"
+  name = "tf-example"
 }
 `
 	cfg = formatProviderCfg(cfg)

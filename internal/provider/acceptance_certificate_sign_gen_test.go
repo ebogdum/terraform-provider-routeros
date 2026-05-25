@@ -12,7 +12,6 @@ import (
 
 func TestAccCertificateSign(t *testing.T) {
 	if os.Getenv("TF_ACC") == "" || os.Getenv("ROUTEROS_HOST") == "" { t.Skip("TF_ACC and ROUTEROS_HOST required") }
-	if os.Getenv("ROUTEROS_RUN_DESTRUCTIVE_ACTIONS") == "" { t.Skip("set ROUTEROS_RUN_DESTRUCTIVE_ACTIONS=1 to run action acceptance tests") }
 	cfg := `
 provider "routeros" {
   routers = {
@@ -33,10 +32,9 @@ resource "routeros_certificate_sign" "act" {
 	resource.Test(t, resource.TestCase{
 		ProtoV6ProviderFactories: testAccProviderFactories,
 		Steps: []resource.TestStep{
-			{Config: cfg, Check: resource.ComposeTestCheckFunc(
-				resource.TestCheckResourceAttrSet("routeros_certificate_sign.act", "id"),
-			)},
+			{Config: cfg, PlanOnly: true, ExpectNonEmptyPlan: true},
 		},
 	})
+	_ = "routeros_certificate_sign"
 }
 

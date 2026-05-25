@@ -26,7 +26,7 @@ provider "routeros" {
 
 resource "routeros_routing_bgp_template" "acc" {
   router = "home"
-  name = "example"
+  name = "tf-example"
 }
 `
 	cfg = formatProviderCfg(cfg)
