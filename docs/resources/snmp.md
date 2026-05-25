@@ -2,12 +2,12 @@
 subcategory: "SNMP"
 page_title: "RouterOS: routeros_snmp"
 description: |-
-  Singleton; live-edit risks orphaning agent -- skip in acc
+  Singleton; live-edit risks orphaning agent — skip in acc
 ---
 
 # Resource: routeros_snmp
 
-Singleton; live-edit risks orphaning agent -- skip in acc
+Singleton; live-edit risks orphaning agent — skip in acc
 
 ## Example Usage
 

@@ -30,13 +30,16 @@ type UserManagerAttributeResource struct {
 }
 
 type UserManagerAttributeModel struct {
-	ID          types.String `tfsdk:"id"`
-	Name        types.String `tfsdk:"name"`
-	PacketTypes types.String `tfsdk:"packet_types"`
-	TypeID      types.String `tfsdk:"type_id"`
-	ValueType   types.String `tfsdk:"value_type"`
-	VendorID    types.String `tfsdk:"vendor_id"`
-	Router      types.String `tfsdk:"router"`
+	ID           types.String `tfsdk:"id"`
+	Default      types.String `tfsdk:"default"`
+	DefaultName  types.String `tfsdk:"default_name"`
+	Name         types.String `tfsdk:"name"`
+	PacketTypes  types.String `tfsdk:"packet_types"`
+	StandardName types.String `tfsdk:"standard_name"`
+	TypeID       types.String `tfsdk:"type_id"`
+	ValueType    types.String `tfsdk:"value_type"`
+	VendorID     types.String `tfsdk:"vendor_id"`
+	Router       types.String `tfsdk:"router"`
 }
 
 func NewUserManagerAttributeResource() resource.Resource { return &UserManagerAttributeResource{} }
@@ -63,6 +66,16 @@ func (r *UserManagerAttributeResource) Schema(_ context.Context, _ resource.Sche
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
+			"default": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"default_name": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"name": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -72,6 +85,11 @@ func (r *UserManagerAttributeResource) Schema(_ context.Context, _ resource.Sche
 				Optional:    true,
 				Computed:    true,
 				Description: "access-accept - use this attribute in RADIUS Access-Accept messages access-challenge - use this attribute in RADIUS Access-Challenge messages",
+			},
+			"standard_name": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
 			},
 			"type_id": schema.StringAttribute{
 				Optional:    true,
@@ -107,11 +125,20 @@ func (r *UserManagerAttributeResource) Create(ctx context.Context, req resource.
 		return
 	}
 	body := client.Object{}
+	if !(plan.Default.IsNull() || plan.Default.IsUnknown()) {
+		body["default"] = plan.Default.ValueString()
+	}
+	if !(plan.DefaultName.IsNull() || plan.DefaultName.IsUnknown()) {
+		body["default-name"] = plan.DefaultName.ValueString()
+	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
 	}
 	if !(plan.PacketTypes.IsNull() || plan.PacketTypes.IsUnknown()) {
 		body["packet-types"] = plan.PacketTypes.ValueString()
+	}
+	if !(plan.StandardName.IsNull() || plan.StandardName.IsUnknown()) {
+		body["standard-name"] = plan.StandardName.ValueString()
 	}
 	if !(plan.TypeID.IsNull() || plan.TypeID.IsUnknown()) {
 		body["type-id"] = plan.TypeID.ValueString()
@@ -169,11 +196,20 @@ func (r *UserManagerAttributeResource) Update(ctx context.Context, req resource.
 		return
 	}
 	body := client.Object{}
+	if !plan.Default.Equal(state.Default) {
+		body["default"] = plan.Default.ValueString()
+	}
+	if !plan.DefaultName.Equal(state.DefaultName) {
+		body["default-name"] = plan.DefaultName.ValueString()
+	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
 	}
 	if !plan.PacketTypes.Equal(state.PacketTypes) {
 		body["packet-types"] = plan.PacketTypes.ValueString()
+	}
+	if !plan.StandardName.Equal(state.StandardName) {
+		body["standard-name"] = plan.StandardName.ValueString()
 	}
 	if !plan.TypeID.Equal(state.TypeID) {
 		body["type-id"] = plan.TypeID.ValueString()
@@ -267,6 +303,26 @@ func userManagerAttributeLookupByNaturalKey(ctx context.Context, c *client.Clien
 func userManagerAttributeApply(ctx context.Context, obj client.Object, m *UserManagerAttributeModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["default"]; ok {
+		_ = v
+		if v != "" {
+			m.Default = types.StringValue(v)
+		} else {
+			m.Default = types.StringNull()
+		}
+	} else {
+		m.Default = types.StringNull()
+	}
+	if v, ok := obj["default-name"]; ok {
+		_ = v
+		if v != "" {
+			m.DefaultName = types.StringValue(v)
+		} else {
+			m.DefaultName = types.StringNull()
+		}
+	} else {
+		m.DefaultName = types.StringNull()
+	}
 	if v, ok := obj["name"]; ok {
 		_ = v
 		if v != "" {
@@ -286,6 +342,16 @@ func userManagerAttributeApply(ctx context.Context, obj client.Object, m *UserMa
 		}
 	} else {
 		m.PacketTypes = types.StringNull()
+	}
+	if v, ok := obj["standard-name"]; ok {
+		_ = v
+		if v != "" {
+			m.StandardName = types.StringValue(v)
+		} else {
+			m.StandardName = types.StringNull()
+		}
+	} else {
+		m.StandardName = types.StringNull()
 	}
 	if v, ok := obj["type-id"]; ok {
 		_ = v

@@ -29,14 +29,17 @@ This data source supports the following arguments:
 * `comment` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`.
 * `hello_interval` - (Optional) Type: `int`. Default: `10`.
+* `inactive` - (Optional) Type: `bool`.
 * `interface` - (Optional) Type: `string`.
 * `mesh` - (Optional) Type: `string`.
 * `path_cost` - (Optional) Type: `int`. Default: `10`.
-* `port_type` - (Optional) Type: `enum(auto|WDS|wireless|ethernet)`.
+* `port_type` - (Optional) Type: `enum(auto|wds|wireless|ethernet)`.
 
 ## Attribute Reference
 
 This data source exports the following attributes in addition to the arguments above:
 
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
+* `dr_address` - Type: `string`.
+* `dynamic` - Type: `bool`.
 

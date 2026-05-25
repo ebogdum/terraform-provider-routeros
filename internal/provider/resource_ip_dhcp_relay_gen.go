@@ -32,17 +32,20 @@ type IPDHCPRelayResource struct {
 }
 
 type IPDHCPRelayModel struct {
-	ID                types.String `tfsdk:"id"`
-	AddRelayInfo      types.Bool   `tfsdk:"add_relay_info"`
-	DelayThreshold    types.String `tfsdk:"delay_threshold"`
-	DHCPServer        types.String `tfsdk:"dhcp_server"`
-	DHCPServerVrf     types.String `tfsdk:"dhcp_server_vrf"`
-	Disabled          types.Bool   `tfsdk:"disabled"`
-	Interface         types.String `tfsdk:"interface"`
-	LocalAddress      types.String `tfsdk:"local_address"`
-	Name              types.String `tfsdk:"name"`
-	RelayInfoRemoteID types.String `tfsdk:"relay_info_remote_id"`
-	Router            types.String `tfsdk:"router"`
+	ID                     types.String `tfsdk:"id"`
+	AddRelayInfo           types.Bool   `tfsdk:"add_relay_info"`
+	DelayThreshold         types.String `tfsdk:"delay_threshold"`
+	DHCPServer             types.String `tfsdk:"dhcp_server"`
+	DHCPServerVrf          types.String `tfsdk:"dhcp_server_vrf"`
+	Disabled               types.Bool   `tfsdk:"disabled"`
+	Interface              types.String `tfsdk:"interface"`
+	Invalid                types.Bool   `tfsdk:"invalid"`
+	LocalAddress           types.String `tfsdk:"local_address"`
+	LocalAddressAsSourceIP types.Bool   `tfsdk:"local_address_as_source_ip"`
+	Name                   types.String `tfsdk:"name"`
+	RelayInfoRemoteID      types.String `tfsdk:"relay_info_remote_id"`
+	ResetCounters          types.String `tfsdk:"reset_counters"`
+	Router                 types.String `tfsdk:"router"`
 }
 
 func NewIPDHCPRelayResource() resource.Resource { return &IPDHCPRelayResource{} }
@@ -99,17 +102,32 @@ func (r *IPDHCPRelayResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Required:    true,
 				Description: "",
 			},
+			"invalid": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"local_address": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.IsIP()},
 			},
+			"local_address_as_source_ip": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"name": schema.StringAttribute{
 				Required:    true,
 				Description: "",
 			},
 			"relay_info_remote_id": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"reset_counters": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -154,11 +172,17 @@ func (r *IPDHCPRelayResource) Create(ctx context.Context, req resource.CreateReq
 	if !(plan.LocalAddress.IsNull() || plan.LocalAddress.IsUnknown()) {
 		body["local-address"] = plan.LocalAddress.ValueString()
 	}
+	if !(plan.LocalAddressAsSourceIP.IsNull() || plan.LocalAddressAsSourceIP.IsUnknown()) {
+		body["local-address-as-source-ip"] = client.FormatBool(plan.LocalAddressAsSourceIP.ValueBool())
+	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
 	}
 	if !(plan.RelayInfoRemoteID.IsNull() || plan.RelayInfoRemoteID.IsUnknown()) {
 		body["relay-info-remote-id"] = plan.RelayInfoRemoteID.ValueString()
+	}
+	if !(plan.ResetCounters.IsNull() || plan.ResetCounters.IsUnknown()) {
+		body["reset-counters"] = plan.ResetCounters.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ip/dhcp-relay", body)
 	if err != nil {
@@ -228,11 +252,17 @@ func (r *IPDHCPRelayResource) Update(ctx context.Context, req resource.UpdateReq
 	if !plan.LocalAddress.Equal(state.LocalAddress) {
 		body["local-address"] = plan.LocalAddress.ValueString()
 	}
+	if !plan.LocalAddressAsSourceIP.Equal(state.LocalAddressAsSourceIP) {
+		body["local-address-as-source-ip"] = client.FormatBool(plan.LocalAddressAsSourceIP.ValueBool())
+	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
 	}
 	if !plan.RelayInfoRemoteID.Equal(state.RelayInfoRemoteID) {
 		body["relay-info-remote-id"] = plan.RelayInfoRemoteID.ValueString()
+	}
+	if !plan.ResetCounters.Equal(state.ResetCounters) {
+		body["reset-counters"] = plan.ResetCounters.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/dhcp-relay", state.ID.ValueString(), body)
@@ -377,6 +407,16 @@ func iPDHCPRelayApply(ctx context.Context, obj client.Object, m *IPDHCPRelayMode
 	} else {
 		m.Interface = types.StringNull()
 	}
+	if v, ok := obj["invalid"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Invalid = types.BoolValue(b)
+		} else {
+			m.Invalid = types.BoolNull()
+		}
+	} else {
+		m.Invalid = types.BoolNull()
+	}
 	if v, ok := obj["local-address"]; ok {
 		_ = v
 		if v != "" {
@@ -386,6 +426,16 @@ func iPDHCPRelayApply(ctx context.Context, obj client.Object, m *IPDHCPRelayMode
 		}
 	} else {
 		m.LocalAddress = types.StringNull()
+	}
+	if v, ok := obj["local-address-as-source-ip"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.LocalAddressAsSourceIP = types.BoolValue(b)
+		} else {
+			m.LocalAddressAsSourceIP = types.BoolNull()
+		}
+	} else {
+		m.LocalAddressAsSourceIP = types.BoolNull()
 	}
 	if v, ok := obj["name"]; ok {
 		_ = v
@@ -406,5 +456,15 @@ func iPDHCPRelayApply(ctx context.Context, obj client.Object, m *IPDHCPRelayMode
 		}
 	} else {
 		m.RelayInfoRemoteID = types.StringNull()
+	}
+	if v, ok := obj["reset-counters"]; ok {
+		_ = v
+		if v != "" {
+			m.ResetCounters = types.StringValue(v)
+		} else {
+			m.ResetCounters = types.StringNull()
+		}
+	} else {
+		m.ResetCounters = types.StringNull()
 	}
 }

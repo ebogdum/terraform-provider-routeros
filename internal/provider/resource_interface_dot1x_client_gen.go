@@ -38,6 +38,7 @@ type InterfaceDot1xClientModel struct {
 	EAPMethods   types.String `tfsdk:"eap_methods"`
 	Identity     types.String `tfsdk:"identity"`
 	Interface    types.String `tfsdk:"interface"`
+	Invalid      types.Bool   `tfsdk:"invalid"`
 	Password     types.String `tfsdk:"password"`
 	Router       types.String `tfsdk:"router"`
 }
@@ -97,6 +98,11 @@ func (r *InterfaceDot1xClientResource) Schema(_ context.Context, _ resource.Sche
 				Description: "",
 			},
 			"interface": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"invalid": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -373,6 +379,16 @@ func interfaceDot1xClientApply(ctx context.Context, obj client.Object, m *Interf
 		}
 	} else {
 		m.Interface = types.StringNull()
+	}
+	if v, ok := obj["invalid"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Invalid = types.BoolValue(b)
+		} else {
+			m.Invalid = types.BoolNull()
+		}
+	} else {
+		m.Invalid = types.BoolNull()
 	}
 	// Sensitive: RouterOS scrubs the value on read. If the server returned
 	// a value, decode it. Otherwise the plan value (user input) is what's

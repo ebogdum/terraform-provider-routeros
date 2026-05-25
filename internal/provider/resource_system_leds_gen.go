@@ -55,7 +55,7 @@ func (r *SystemLedsResource) Configure(_ context.Context, req resource.Configure
 
 func (r *SystemLedsResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "LED bindings -- type/leds values depend on the specific device's available LEDs; not portable in an auto-test.",
+		Description: "LED bindings — type/leds values depend on the specific device's available LEDs; not portable in an auto-test.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:      true,

@@ -37,7 +37,10 @@ type SystemConsoleModel struct {
 	Free     types.Bool   `tfsdk:"free"`
 	Port     types.String `tfsdk:"port"`
 	Term     types.String `tfsdk:"term"`
+	Used     types.Bool   `tfsdk:"used"`
+	Vc       types.Int64  `tfsdk:"vc"`
 	Vcno     types.Int64  `tfsdk:"vcno"`
+	Wedged   types.Bool   `tfsdk:"wedged"`
 	Router   types.String `tfsdk:"router"`
 }
 
@@ -58,7 +61,7 @@ func (r *SystemConsoleResource) Configure(_ context.Context, req resource.Config
 
 func (r *SystemConsoleResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Active console sessions -- RouterOS-managed; PUT EOFs because the endpoint isn't add-able.",
+		Description: "Active console sessions — RouterOS-managed; PUT EOFs because the endpoint isn't add-able.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:      true,
@@ -95,7 +98,22 @@ func (r *SystemConsoleResource) Schema(_ context.Context, _ resource.SchemaReque
 				Computed:    true,
 				Description: "",
 			},
+			"used": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"vc": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"vcno": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"wedged": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -130,6 +148,12 @@ func (r *SystemConsoleResource) Create(ctx context.Context, req resource.CreateR
 	}
 	if !(plan.Term.IsNull() || plan.Term.IsUnknown()) {
 		body["term"] = plan.Term.ValueString()
+	}
+	if !(plan.Used.IsNull() || plan.Used.IsUnknown()) {
+		body["used"] = client.FormatBool(plan.Used.ValueBool())
+	}
+	if !(plan.Wedged.IsNull() || plan.Wedged.IsUnknown()) {
+		body["wedged"] = client.FormatBool(plan.Wedged.ValueBool())
 	}
 	obj, err := c.Add(ctx, "/system/console", body)
 	if err != nil {
@@ -189,6 +213,12 @@ func (r *SystemConsoleResource) Update(ctx context.Context, req resource.UpdateR
 	}
 	if !plan.Term.Equal(state.Term) {
 		body["term"] = plan.Term.ValueString()
+	}
+	if !plan.Used.Equal(state.Used) {
+		body["used"] = client.FormatBool(plan.Used.ValueBool())
+	}
+	if !plan.Wedged.Equal(state.Wedged) {
+		body["wedged"] = client.FormatBool(plan.Wedged.ValueBool())
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/system/console", state.ID.ValueString(), body)
@@ -333,6 +363,26 @@ func systemConsoleApply(ctx context.Context, obj client.Object, m *SystemConsole
 	} else {
 		m.Term = types.StringNull()
 	}
+	if v, ok := obj["used"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Used = types.BoolValue(b)
+		} else {
+			m.Used = types.BoolNull()
+		}
+	} else {
+		m.Used = types.BoolNull()
+	}
+	if v, ok := obj["vc"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.Vc = types.Int64Value(n)
+		} else {
+			m.Vc = types.Int64Null()
+		}
+	} else {
+		m.Vc = types.Int64Null()
+	}
 	if v, ok := obj["vcno"]; ok {
 		_ = v
 		if n, err := client.ParseInt64(v); err == nil {
@@ -342,5 +392,15 @@ func systemConsoleApply(ctx context.Context, obj client.Object, m *SystemConsole
 		}
 	} else {
 		m.Vcno = types.Int64Null()
+	}
+	if v, ok := obj["wedged"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Wedged = types.BoolValue(b)
+		} else {
+			m.Wedged = types.BoolNull()
+		}
+	} else {
+		m.Wedged = types.BoolNull()
 	}
 }

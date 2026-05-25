@@ -26,8 +26,11 @@ This data source supports the following arguments:
 * `router` - (Optional) Name of the router in the provider's `routers` map to query.
 * `filter` - (Optional) Map of field=value pairs to narrow the result set.
 * `proplist` - (Optional) List of property names to project; smaller payload.
+* `default` - (Optional) Type: `string`.
+* `default_name` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`. Name of the attribute.
 * `packet_types` - (Optional) Type: `string`. access-accept - use this attribute in RADIUS Access-Accept messages access-challenge - use this attribute in RADIUS Access-Challenge messages.
+* `standard_name` - (Optional) Type: `string`.
 * `type_id` - (Optional) Type: `string`. Attribute identification number from the specific vendor's attribute database.
 * `value_type` - (Optional) Type: `string`. hex ip-address - IPv4 or IPv6 IP address ip6-prefix - IPv6 prefix macro string uint32.
 * `vendor_id` - (Optional) Type: `string`. IANA allocated a specific enterprise identification number.

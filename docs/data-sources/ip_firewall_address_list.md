@@ -30,6 +30,7 @@ This data source supports the following arguments:
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `list` - (Required) Type: `string`. Default: `tf_acc_list`.
+* `parent` - (Optional) Type: `int`. Default: `4.294967295e+09`.
 * `timeout` - (Optional) Type: `string`.
 
 ## Attribute Reference
@@ -37,5 +38,6 @@ This data source supports the following arguments:
 This data source exports the following attributes in addition to the arguments above:
 
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
+* `creation_time` - Type: `string`.
 * `dynamic` - Type: `bool`.
 

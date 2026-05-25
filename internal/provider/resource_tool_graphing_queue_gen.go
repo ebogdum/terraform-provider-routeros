@@ -53,7 +53,7 @@ func (r *ToolGraphingQueueResource) Configure(_ context.Context, req resource.Co
 
 func (r *ToolGraphingQueueResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Same as graphing/interface -- skipped to avoid \"already exists\" on re-runs.",
+		Description: "Same as graphing/interface — skipped to avoid \"already exists\" on re-runs.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:      true,

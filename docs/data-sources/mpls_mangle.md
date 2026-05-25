@@ -26,10 +26,13 @@ This data source supports the following arguments:
 * `router` - (Optional) Name of the router in the provider's `routers` map to query.
 * `filter` - (Optional) Map of field=value pairs to narrow the result set.
 * `proplist` - (Optional) List of property names to project; smaller payload.
+* `builtin` - (Optional) Type: `bool`.
 * `chain` - (Optional) Type: `enum(|forward|output)`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `exp` - (Optional) Type: `enum(0|1|2|3|4|5, ...)`.
+* `reset_counters` - (Optional) Type: `string`.
+* `reset_counters_all` - (Optional) Type: `string`.
 * `set_exp` - (Optional) Type: `enum(0|1|2|3|4|5, ...)`.
 * `set_mark` - (Optional) Type: `string`.
 
@@ -38,4 +41,5 @@ This data source supports the following arguments:
 This data source exports the following attributes in addition to the arguments above:
 
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
+* `packets` - Type: `string`.
 

@@ -14,7 +14,7 @@ Manages the RouterOS `/interface/wifi/provisioning` menu.
 ```terraform
 resource "routeros_interface_wifi_provisioning" "provisioning_example" {
   # router = "my-router"  # which router to target; omit for the default
-  action = "none"
+  action = "create-dynamic-enabled"
 
   comment = "managed by terraform"
   disabled = false
@@ -39,7 +39,7 @@ resource "routeros_interface_wifi_provisioning" "provisioning_example" {
 This resource supports the following arguments:
 
 * `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `action` - (Required) Type: `enum(none|create enabled|create disabled|create dynamic enabled)`. Default: `create-dynamic-enabled`.
+* `action` - (Required) Type: `enum(none|create-enabled|create-disabled|create-dynamic-enabled)`. Default: `create-dynamic-enabled`.
 * `address_ranges` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `common_name_regexp` - (Optional) Type: `string`.

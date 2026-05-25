@@ -20,6 +20,7 @@ resource "routeros_ip_ipsec_proposal" "proposal_example" {
   # Optional attributes (uncomment as needed):
   # auth_algorithms = "md5"
   # enc_algorithms = []
+  # encr_algorithms = "4"
   # lifetime = "1800"
   # name = "tf-example"
   # pfs_group = "replace-me"
@@ -35,6 +36,7 @@ This resource supports the following arguments:
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`.
 * `enc_algorithms` - (Optional) Type: `list`.
+* `encr_algorithms` - (Optional) Type: `string`. Default: `4`.
 * `lifetime` - (Optional) Type: `duration`. Default: `1800`.
 * `name` - (Optional) Type: `string`.
 * `pfs_group` - (Optional) Type: `string`.

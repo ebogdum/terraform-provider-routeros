@@ -1,4 +1,4 @@
-resource "routeros_interface_6to4" "6to4_example" {
+resource "routeros_interface_6to4" "ex_6to4_example" {
   # router = "my-router"  # which router to target; omit for the default
   comment  = "managed by terraform"
   disabled = false

@@ -2,12 +2,12 @@
 subcategory: "Certificates"
 page_title: "RouterOS: routeros_certificate_builtin"
 description: |-
-  System-generated certificates -- read-only.
+  System-generated certificates — read-only.
 ---
 
 # Resource: routeros_certificate_builtin
 
-System-generated certificates -- read-only.
+System-generated certificates — read-only.
 
 ## Example Usage
 

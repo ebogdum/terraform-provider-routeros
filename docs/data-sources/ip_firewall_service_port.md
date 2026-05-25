@@ -28,6 +28,7 @@ This data source supports the following arguments:
 * `proplist` - (Optional) List of property names to project; smaller payload.
 * `disabled` - (Optional) Type: `bool`.
 * `ports` - (Optional) Type: `int`.
+* `sip` - (Optional) Type: `string`.
 * `sip_direct_media` - (Optional) Type: `bool`.
 * `sip_timeout` - (Optional) Type: `duration`.
 

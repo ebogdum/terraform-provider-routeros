@@ -53,7 +53,7 @@ func (r *TaskResource) Configure(_ context.Context, req resource.ConfigureReques
 
 func (r *TaskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "/task is read-only -- entries are created by other RouterOS operations.",
+		Description: "/task is read-only — entries are created by other RouterOS operations.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:      true,

@@ -5,6 +5,7 @@ resource "routeros_system_ups" "ups_example" {
 
   # Optional attributes (uncomment as needed):
   # alarm_setting = "immediate"
+  # beep = "replace-me"
   # check_capabilities = "replace-me"
   # min_runtime = "replace-me"
   # name = "tf-example"

@@ -38,6 +38,7 @@ type IPIpsecProposalModel struct {
 	Default        types.Bool   `tfsdk:"default"`
 	Disabled       types.Bool   `tfsdk:"disabled"`
 	EncAlgorithms  types.List   `tfsdk:"enc_algorithms"`
+	EncrAlgorithms types.String `tfsdk:"encr_algorithms"`
 	Lifetime       types.String `tfsdk:"lifetime"`
 	Name           types.String `tfsdk:"name"`
 	PfsGroup       types.String `tfsdk:"pfs_group"`
@@ -95,6 +96,11 @@ func (r *IPIpsecProposalResource) Schema(_ context.Context, _ resource.SchemaReq
 				ElementType: types.StringType,
 				Description: "",
 			},
+			"encr_algorithms": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"lifetime": schema.StringAttribute{
 				Optional:      true,
 				Computed:      true,
@@ -142,6 +148,9 @@ func (r *IPIpsecProposalResource) Create(ctx context.Context, req resource.Creat
 	}
 	if !(plan.EncAlgorithms.IsNull() || plan.EncAlgorithms.IsUnknown()) {
 		body["enc-algorithms"] = encodeStringList(ctx, plan.EncAlgorithms)
+	}
+	if !(plan.EncrAlgorithms.IsNull() || plan.EncrAlgorithms.IsUnknown()) {
+		body["encr-algorithms"] = plan.EncrAlgorithms.ValueString()
 	}
 	if !(plan.Lifetime.IsNull() || plan.Lifetime.IsUnknown()) {
 		body["lifetime"] = plan.Lifetime.ValueString()
@@ -210,6 +219,9 @@ func (r *IPIpsecProposalResource) Update(ctx context.Context, req resource.Updat
 	}
 	if !plan.EncAlgorithms.Equal(state.EncAlgorithms) {
 		body["enc-algorithms"] = encodeStringList(ctx, plan.EncAlgorithms)
+	}
+	if !plan.EncrAlgorithms.Equal(state.EncrAlgorithms) {
+		body["encr-algorithms"] = plan.EncrAlgorithms.ValueString()
 	}
 	if !plan.Lifetime.Equal(state.Lifetime) {
 		body["lifetime"] = plan.Lifetime.ValueString()
@@ -348,6 +360,16 @@ func iPIpsecProposalApply(ctx context.Context, obj client.Object, m *IPIpsecProp
 		m.EncAlgorithms = decodeStringList(ctx, v)
 	} else {
 		m.EncAlgorithms = types.ListNull(types.StringType)
+	}
+	if v, ok := obj["encr-algorithms"]; ok {
+		_ = v
+		if v != "" {
+			m.EncrAlgorithms = types.StringValue(v)
+		} else {
+			m.EncrAlgorithms = types.StringNull()
+		}
+	} else {
+		m.EncrAlgorithms = types.StringNull()
 	}
 	if v, ok := obj["lifetime"]; ok {
 		_ = v

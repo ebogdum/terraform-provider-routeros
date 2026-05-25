@@ -28,11 +28,11 @@ This data source supports the following arguments:
 * `proplist` - (Optional) List of property names to project; smaller payload.
 * `addresses` - (Optional) Type: `cidr`.
 * `authentication_password` - (Optional) Type: `string`. **Sensitive.**
-* `authentication_protocol` - (Optional) Type: `enum(MD5|SHA1)`.
+* `authentication_protocol` - (Optional) Type: `enum(md5|sha1)`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`.
 * `encryption_password` - (Optional) Type: `string`. **Sensitive.**
-* `encryption_protocol` - (Optional) Type: `enum(DES|AES)`.
+* `encryption_protocol` - (Optional) Type: `enum(des|aes)`.
 * `name` - (Required) Type: `string`. Default: `tf-acc-snmp-community`.
 * `read_access` - (Optional) Type: `bool`. Default: `1`.
 * `security` - (Optional) Type: `enum(none|authorized|private)`.

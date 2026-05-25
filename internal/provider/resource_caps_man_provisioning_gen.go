@@ -44,6 +44,7 @@ type CapsManProvisioningModel struct {
 	NameFormat          types.String `tfsdk:"name_format"`
 	NamePrefix          types.String `tfsdk:"name_prefix"`
 	RadioMAC            types.String `tfsdk:"radio_mac"`
+	SlaveConfiguration  types.String `tfsdk:"slave_configuration"`
 	SlaveConfigurations types.String `tfsdk:"slave_configurations"`
 	Router              types.String `tfsdk:"router"`
 }
@@ -76,7 +77,7 @@ func (r *CapsManProvisioningResource) Schema(_ context.Context, _ resource.Schem
 				Optional:    true,
 				Computed:    true,
 				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"none", "create enabled", "create disabled", "create dynamic enabled"}...)},
+				Validators:  []validator.String{schemautil.OneOf([]string{"none", "create-enabled", "create-disabled", "create-dynamic-enabled"}...)},
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -117,7 +118,7 @@ func (r *CapsManProvisioningResource) Schema(_ context.Context, _ resource.Schem
 				Optional:    true,
 				Computed:    true,
 				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"cap", "prefix", "identity", "prefix identity"}...)},
+				Validators:  []validator.String{schemautil.OneOf([]string{"cap", "prefix", "identity", "prefix-identity"}...)},
 			},
 			"name_prefix": schema.StringAttribute{
 				Optional:    true,
@@ -130,6 +131,11 @@ func (r *CapsManProvisioningResource) Schema(_ context.Context, _ resource.Schem
 				Description:   "",
 				Validators:    []validator.String{schemautil.IsMAC()},
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
+			},
+			"slave_configuration": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
 			},
 			"slave_configurations": schema.StringAttribute{
 				Optional:    true,
@@ -187,6 +193,9 @@ func (r *CapsManProvisioningResource) Create(ctx context.Context, req resource.C
 	}
 	if !(plan.RadioMAC.IsNull() || plan.RadioMAC.IsUnknown()) {
 		body["radio-mac"] = plan.RadioMAC.ValueString()
+	}
+	if !(plan.SlaveConfiguration.IsNull() || plan.SlaveConfiguration.IsUnknown()) {
+		body["slave-configuration"] = plan.SlaveConfiguration.ValueString()
 	}
 	if !(plan.SlaveConfigurations.IsNull() || plan.SlaveConfigurations.IsUnknown()) {
 		body["slave-configurations"] = plan.SlaveConfigurations.ValueString()
@@ -270,6 +279,9 @@ func (r *CapsManProvisioningResource) Update(ctx context.Context, req resource.U
 	}
 	if !plan.RadioMAC.Equal(state.RadioMAC) {
 		body["radio-mac"] = plan.RadioMAC.ValueString()
+	}
+	if !plan.SlaveConfiguration.Equal(state.SlaveConfiguration) {
+		body["slave-configuration"] = plan.SlaveConfiguration.ValueString()
 	}
 	if !plan.SlaveConfigurations.Equal(state.SlaveConfigurations) {
 		body["slave-configurations"] = plan.SlaveConfigurations.ValueString()
@@ -466,6 +478,16 @@ func capsManProvisioningApply(ctx context.Context, obj client.Object, m *CapsMan
 		}
 	} else {
 		m.RadioMAC = types.StringNull()
+	}
+	if v, ok := obj["slave-configuration"]; ok {
+		_ = v
+		if v != "" {
+			m.SlaveConfiguration = types.StringValue(v)
+		} else {
+			m.SlaveConfiguration = types.StringNull()
+		}
+	} else {
+		m.SlaveConfiguration = types.StringNull()
 	}
 	if v, ok := obj["slave-configurations"]; ok {
 		_ = v

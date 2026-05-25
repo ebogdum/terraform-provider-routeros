@@ -25,6 +25,7 @@ resource "routeros_ip_ipsec_peer" "peer_example" {
   # passive = false
   # port = "443"
   # profile = "replace-me"
+  # responder = false
   # send_initial_contact = true
 }
 ```
@@ -37,13 +38,21 @@ This resource supports the following arguments:
 * `address` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `exchange_mode` - (Optional) Type: `enum(base|main|aggressive|IKE2)`. Default: `2`.
+* `exchange_mode` - (Optional) Type: `enum(base|main|aggressive|ike2)`. Default: `2`.
 * `local_address` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
 * `passive` - (Optional) Type: `bool`.
 * `port` - (Optional) Type: `int`.
 * `profile` - (Optional) Type: `string`.
+* `responder` - (Optional) Type: `bool`.
 * `send_initial_contact` - (Optional) Type: `bool`. Default: `1`.
+
+## Attribute Reference
+
+In addition to the arguments above, the following attributes are exported:
+
+* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
+* `dynamic` - Type: `bool`.
 
 ## Import
 

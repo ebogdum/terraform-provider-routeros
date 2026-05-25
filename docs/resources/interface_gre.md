@@ -2,12 +2,12 @@
 subcategory: "Interfaces"
 page_title: "RouterOS: routeros_interface_gre"
 description: |-
-  GRE tunnel -- needs reachable remote address and unused name. Skipped.
+  GRE tunnel — needs reachable remote address and unused name. Skipped.
 ---
 
 # Resource: routeros_interface_gre
 
-GRE tunnel -- needs reachable remote address and unused name. Skipped.
+GRE tunnel — needs reachable remote address and unused name. Skipped.
 
 ## Example Usage
 
@@ -48,6 +48,13 @@ This resource supports the following arguments:
 * `mtu` - (Optional) Type: `int`. Layer3 Maximum transmission unit. Default: `0`.
 * `name` - (Optional) Type: `string`. Name of the tunnel.
 * `remote_address` - (Optional) Type: `string`. IP address of remote tunnel end.
+
+## Attribute Reference
+
+In addition to the arguments above, the following attributes are exported:
+
+* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
+* `actual_mtu` - Type: `int`.
 
 ## Import
 

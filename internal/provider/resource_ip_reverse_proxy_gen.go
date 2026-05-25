@@ -53,7 +53,7 @@ func (r *IPReverseProxyResource) Configure(_ context.Context, req resource.Confi
 
 func (r *IPReverseProxyResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Reverse proxy listener -- properties differ across ROS versions; safe defaults rejected on 7.x. Skipped.",
+		Description: "Reverse proxy listener — properties differ across ROS versions; safe defaults rejected on 7.x. Skipped.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:      true,

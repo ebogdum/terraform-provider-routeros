@@ -8,4 +8,6 @@ resource "routeros_ip_dhcp_server_alert" "alert_example" {
   # Optional attributes (uncomment as needed):
   # alert_timeout = "3600"
   # on_alert = "replace-me"
+  # reset_alert = "replace-me"
+  # valid_servers = "replace-me"
 }

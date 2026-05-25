@@ -30,12 +30,16 @@ type IPPoolResource struct {
 }
 
 type IPPoolModel struct {
-	ID       types.String `tfsdk:"id"`
-	Comment  types.String `tfsdk:"comment"`
-	Name     types.String `tfsdk:"name"`
-	NextPool types.String `tfsdk:"next_pool"`
-	Ranges   types.String `tfsdk:"ranges"`
-	Router   types.String `tfsdk:"router"`
+	ID        types.String `tfsdk:"id"`
+	Addresses types.String `tfsdk:"addresses"`
+	Available types.String `tfsdk:"available"`
+	Comment   types.String `tfsdk:"comment"`
+	Name      types.String `tfsdk:"name"`
+	NextPool  types.String `tfsdk:"next_pool"`
+	Ranges    types.String `tfsdk:"ranges"`
+	Total     types.String `tfsdk:"total"`
+	Used      types.String `tfsdk:"used"`
+	Router    types.String `tfsdk:"router"`
 }
 
 func NewIPPoolResource() resource.Resource { return &IPPoolResource{} }
@@ -62,6 +66,16 @@ func (r *IPPoolResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
+			"addresses": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"available": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -79,6 +93,16 @@ func (r *IPPoolResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 			"ranges": schema.StringAttribute{
 				Required:    true,
 				Description: "IP address list of non-overlapping IP address ranges in the form of: from1-to1,from2-to2,...,fromN-toN. For example, 10.0.0.1-10.0.0.27,10.0.0.32-10.0.0.47",
+			},
+			"total": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"used": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
 			},
 			"router": schema.StringAttribute{
 				Optional:    true,
@@ -99,6 +123,9 @@ func (r *IPPoolResource) Create(ctx context.Context, req resource.CreateRequest,
 		return
 	}
 	body := client.Object{}
+	if !(plan.Addresses.IsNull() || plan.Addresses.IsUnknown()) {
+		body["addresses"] = plan.Addresses.ValueString()
+	}
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
 	}
@@ -158,6 +185,9 @@ func (r *IPPoolResource) Update(ctx context.Context, req resource.UpdateRequest,
 		return
 	}
 	body := client.Object{}
+	if !plan.Addresses.Equal(state.Addresses) {
+		body["addresses"] = plan.Addresses.ValueString()
+	}
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
 	}
@@ -253,6 +283,26 @@ func iPPoolLookupByNaturalKey(ctx context.Context, c *client.Client, id string) 
 func iPPoolApply(ctx context.Context, obj client.Object, m *IPPoolModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["addresses"]; ok {
+		_ = v
+		if v != "" {
+			m.Addresses = types.StringValue(v)
+		} else {
+			m.Addresses = types.StringNull()
+		}
+	} else {
+		m.Addresses = types.StringNull()
+	}
+	if v, ok := obj["available"]; ok {
+		_ = v
+		if v != "" {
+			m.Available = types.StringValue(v)
+		} else {
+			m.Available = types.StringNull()
+		}
+	} else {
+		m.Available = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {
@@ -292,5 +342,25 @@ func iPPoolApply(ctx context.Context, obj client.Object, m *IPPoolModel) {
 		}
 	} else {
 		m.Ranges = types.StringNull()
+	}
+	if v, ok := obj["total"]; ok {
+		_ = v
+		if v != "" {
+			m.Total = types.StringValue(v)
+		} else {
+			m.Total = types.StringNull()
+		}
+	} else {
+		m.Total = types.StringNull()
+	}
+	if v, ok := obj["used"]; ok {
+		_ = v
+		if v != "" {
+			m.Used = types.StringValue(v)
+		} else {
+			m.Used = types.StringNull()
+		}
+	} else {
+		m.Used = types.StringNull()
 	}
 }

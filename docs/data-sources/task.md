@@ -2,12 +2,12 @@
 subcategory: "System & misc"
 page_title: "RouterOS: routeros_task"
 description: |-
-  /task is read-only -- entries are created by other RouterOS operations.
+  /task is read-only — entries are created by other RouterOS operations.
 ---
 
 # Data Source: routeros_task
 
-/task is read-only -- entries are created by other RouterOS operations.
+/task is read-only — entries are created by other RouterOS operations.
 
 ## Example Usage
 

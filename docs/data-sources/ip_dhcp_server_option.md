@@ -37,4 +37,5 @@ This data source supports the following arguments:
 This data source exports the following attributes in addition to the arguments above:
 
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
+* `raw_value` - Type: `string`.
 

@@ -30,11 +30,21 @@ type InterfaceWifiSteeringResource struct {
 }
 
 type InterfaceWifiSteeringModel struct {
-	ID       types.String `tfsdk:"id"`
-	Comment  types.String `tfsdk:"comment"`
-	Disabled types.Bool   `tfsdk:"disabled"`
-	Name     types.String `tfsdk:"name"`
-	Router   types.String `tfsdk:"router"`
+	ID                        types.String `tfsdk:"id"`
+	X2gProbeDelay             types.String `tfsdk:"x2g_probe_delay"`
+	Comment                   types.String `tfsdk:"comment"`
+	Disabled                  types.Bool   `tfsdk:"disabled"`
+	Name                      types.String `tfsdk:"name"`
+	NeighborGroup             types.String `tfsdk:"neighbor_group"`
+	NeighborGroups            types.String `tfsdk:"neighbor_groups"`
+	Rrm                       types.String `tfsdk:"rrm"`
+	TransitionRequestCount    types.String `tfsdk:"transition_request_count"`
+	TransitionThreshold       types.String `tfsdk:"transition_threshold"`
+	TransitionThresholdPeriod types.String `tfsdk:"transition_threshold_period"`
+	TransitionThresholdTime   types.String `tfsdk:"transition_threshold_time"`
+	TransitionTime            types.String `tfsdk:"transition_time"`
+	Wnm                       types.String `tfsdk:"wnm"`
+	Router                    types.String `tfsdk:"router"`
 }
 
 func NewInterfaceWifiSteeringResource() resource.Resource { return &InterfaceWifiSteeringResource{} }
@@ -61,6 +71,11 @@ func (r *InterfaceWifiSteeringResource) Schema(_ context.Context, _ resource.Sch
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
+			"x2g_probe_delay": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -73,6 +88,51 @@ func (r *InterfaceWifiSteeringResource) Schema(_ context.Context, _ resource.Sch
 			},
 			"name": schema.StringAttribute{
 				Required:    true,
+				Description: "",
+			},
+			"neighbor_group": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"neighbor_groups": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"rrm": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"transition_request_count": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"transition_threshold": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"transition_threshold_period": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"transition_threshold_time": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"transition_time": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"wnm": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
 				Description: "",
 			},
 			"router": schema.StringAttribute{
@@ -94,6 +154,9 @@ func (r *InterfaceWifiSteeringResource) Create(ctx context.Context, req resource
 		return
 	}
 	body := client.Object{}
+	if !(plan.X2gProbeDelay.IsNull() || plan.X2gProbeDelay.IsUnknown()) {
+		body["2g-probe-delay"] = plan.X2gProbeDelay.ValueString()
+	}
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
 	}
@@ -102,6 +165,33 @@ func (r *InterfaceWifiSteeringResource) Create(ctx context.Context, req resource
 	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
+	}
+	if !(plan.NeighborGroup.IsNull() || plan.NeighborGroup.IsUnknown()) {
+		body["neighbor-group"] = plan.NeighborGroup.ValueString()
+	}
+	if !(plan.NeighborGroups.IsNull() || plan.NeighborGroups.IsUnknown()) {
+		body["neighbor-groups"] = plan.NeighborGroups.ValueString()
+	}
+	if !(plan.Rrm.IsNull() || plan.Rrm.IsUnknown()) {
+		body["rrm"] = plan.Rrm.ValueString()
+	}
+	if !(plan.TransitionRequestCount.IsNull() || plan.TransitionRequestCount.IsUnknown()) {
+		body["transition-request-count"] = plan.TransitionRequestCount.ValueString()
+	}
+	if !(plan.TransitionThreshold.IsNull() || plan.TransitionThreshold.IsUnknown()) {
+		body["transition-threshold"] = plan.TransitionThreshold.ValueString()
+	}
+	if !(plan.TransitionThresholdPeriod.IsNull() || plan.TransitionThresholdPeriod.IsUnknown()) {
+		body["transition-threshold-period"] = plan.TransitionThresholdPeriod.ValueString()
+	}
+	if !(plan.TransitionThresholdTime.IsNull() || plan.TransitionThresholdTime.IsUnknown()) {
+		body["transition-threshold-time"] = plan.TransitionThresholdTime.ValueString()
+	}
+	if !(plan.TransitionTime.IsNull() || plan.TransitionTime.IsUnknown()) {
+		body["transition-time"] = plan.TransitionTime.ValueString()
+	}
+	if !(plan.Wnm.IsNull() || plan.Wnm.IsUnknown()) {
+		body["wnm"] = plan.Wnm.ValueString()
 	}
 	obj, err := c.Add(ctx, "/interface/wifi/steering", body)
 	if err != nil {
@@ -150,6 +240,9 @@ func (r *InterfaceWifiSteeringResource) Update(ctx context.Context, req resource
 		return
 	}
 	body := client.Object{}
+	if !plan.X2gProbeDelay.Equal(state.X2gProbeDelay) {
+		body["2g-probe-delay"] = plan.X2gProbeDelay.ValueString()
+	}
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
 	}
@@ -158,6 +251,33 @@ func (r *InterfaceWifiSteeringResource) Update(ctx context.Context, req resource
 	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
+	}
+	if !plan.NeighborGroup.Equal(state.NeighborGroup) {
+		body["neighbor-group"] = plan.NeighborGroup.ValueString()
+	}
+	if !plan.NeighborGroups.Equal(state.NeighborGroups) {
+		body["neighbor-groups"] = plan.NeighborGroups.ValueString()
+	}
+	if !plan.Rrm.Equal(state.Rrm) {
+		body["rrm"] = plan.Rrm.ValueString()
+	}
+	if !plan.TransitionRequestCount.Equal(state.TransitionRequestCount) {
+		body["transition-request-count"] = plan.TransitionRequestCount.ValueString()
+	}
+	if !plan.TransitionThreshold.Equal(state.TransitionThreshold) {
+		body["transition-threshold"] = plan.TransitionThreshold.ValueString()
+	}
+	if !plan.TransitionThresholdPeriod.Equal(state.TransitionThresholdPeriod) {
+		body["transition-threshold-period"] = plan.TransitionThresholdPeriod.ValueString()
+	}
+	if !plan.TransitionThresholdTime.Equal(state.TransitionThresholdTime) {
+		body["transition-threshold-time"] = plan.TransitionThresholdTime.ValueString()
+	}
+	if !plan.TransitionTime.Equal(state.TransitionTime) {
+		body["transition-time"] = plan.TransitionTime.ValueString()
+	}
+	if !plan.Wnm.Equal(state.Wnm) {
+		body["wnm"] = plan.Wnm.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/wifi/steering", state.ID.ValueString(), body)
@@ -242,6 +362,16 @@ func interfaceWifiSteeringLookupByNaturalKey(ctx context.Context, c *client.Clie
 func interfaceWifiSteeringApply(ctx context.Context, obj client.Object, m *InterfaceWifiSteeringModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["2g-probe-delay"]; ok {
+		_ = v
+		if v != "" {
+			m.X2gProbeDelay = types.StringValue(v)
+		} else {
+			m.X2gProbeDelay = types.StringNull()
+		}
+	} else {
+		m.X2gProbeDelay = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {
@@ -271,5 +401,95 @@ func interfaceWifiSteeringApply(ctx context.Context, obj client.Object, m *Inter
 		}
 	} else {
 		m.Name = types.StringNull()
+	}
+	if v, ok := obj["neighbor-group"]; ok {
+		_ = v
+		if v != "" {
+			m.NeighborGroup = types.StringValue(v)
+		} else {
+			m.NeighborGroup = types.StringNull()
+		}
+	} else {
+		m.NeighborGroup = types.StringNull()
+	}
+	if v, ok := obj["neighbor-groups"]; ok {
+		_ = v
+		if v != "" {
+			m.NeighborGroups = types.StringValue(v)
+		} else {
+			m.NeighborGroups = types.StringNull()
+		}
+	} else {
+		m.NeighborGroups = types.StringNull()
+	}
+	if v, ok := obj["rrm"]; ok {
+		_ = v
+		if v != "" {
+			m.Rrm = types.StringValue(v)
+		} else {
+			m.Rrm = types.StringNull()
+		}
+	} else {
+		m.Rrm = types.StringNull()
+	}
+	if v, ok := obj["transition-request-count"]; ok {
+		_ = v
+		if v != "" {
+			m.TransitionRequestCount = types.StringValue(v)
+		} else {
+			m.TransitionRequestCount = types.StringNull()
+		}
+	} else {
+		m.TransitionRequestCount = types.StringNull()
+	}
+	if v, ok := obj["transition-threshold"]; ok {
+		_ = v
+		if v != "" {
+			m.TransitionThreshold = types.StringValue(v)
+		} else {
+			m.TransitionThreshold = types.StringNull()
+		}
+	} else {
+		m.TransitionThreshold = types.StringNull()
+	}
+	if v, ok := obj["transition-threshold-period"]; ok {
+		_ = v
+		if v != "" {
+			m.TransitionThresholdPeriod = types.StringValue(v)
+		} else {
+			m.TransitionThresholdPeriod = types.StringNull()
+		}
+	} else {
+		m.TransitionThresholdPeriod = types.StringNull()
+	}
+	if v, ok := obj["transition-threshold-time"]; ok {
+		_ = v
+		if v != "" {
+			m.TransitionThresholdTime = types.StringValue(v)
+		} else {
+			m.TransitionThresholdTime = types.StringNull()
+		}
+	} else {
+		m.TransitionThresholdTime = types.StringNull()
+	}
+	if v, ok := obj["transition-time"]; ok {
+		_ = v
+		if v != "" {
+			m.TransitionTime = types.StringValue(v)
+		} else {
+			m.TransitionTime = types.StringNull()
+		}
+	} else {
+		m.TransitionTime = types.StringNull()
+	}
+	if v, ok := obj["wnm"]; ok {
+		_ = v
+		if v != "" {
+			m.Wnm = types.StringValue(v)
+		} else {
+			m.Wnm = types.StringNull()
+		}
+	} else {
+		m.Wnm = types.StringNull()
 	}
 }

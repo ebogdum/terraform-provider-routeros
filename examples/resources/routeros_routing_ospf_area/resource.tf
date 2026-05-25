@@ -8,7 +8,7 @@ resource "routeros_routing_ospf_area" "area_example" {
   # default_cost = "replace-me"
   # instance = "replace-me"
   # name = "tf-example"
-  # no_summaries = "replace-me"
+  # no_summaries = false
   # nssa_translator = "replace-me"
   # type = "default"
 }

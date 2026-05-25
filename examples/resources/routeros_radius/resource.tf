@@ -12,11 +12,14 @@ resource "routeros_radius" "radius_example" {
   # certificate = "replace-me"
   # domain = "example.local"
   # protocol = "udp"
+  # radsec = "replace-me"
   # radsec_timeout = "replace-me"
   # realm = "replace-me"
   # require_message_auth = ""
+  # reset_status = "replace-me"
   # secret = "REDACTED"
   # service = "ppp"
   # src_address = "10.99.0.0/24"
   # timeout = 0
+  # udp = "replace-me"
 }

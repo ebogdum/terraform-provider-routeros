@@ -5,4 +5,5 @@ resource "routeros_routing_filter_select_rule" "select_rule_example" {
 
   # Optional attributes (uncomment as needed):
   # chain = "replace-me"
+  # type = "where"
 }

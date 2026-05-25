@@ -34,9 +34,11 @@ type RoutingTableModel struct {
 	Comment  types.String `tfsdk:"comment"`
 	Disabled types.Bool   `tfsdk:"disabled"`
 	Dynamic  types.Bool   `tfsdk:"dynamic"`
-	Fib      types.String `tfsdk:"fib"`
+	Fib      types.Bool   `tfsdk:"fib"`
 	Invalid  types.Bool   `tfsdk:"invalid"`
 	Name     types.String `tfsdk:"name"`
+	Usage    types.Int64  `tfsdk:"usage"`
+	Used     types.Bool   `tfsdk:"used"`
 	Router   types.String `tfsdk:"router"`
 }
 
@@ -79,7 +81,7 @@ func (r *RoutingTableResource) Schema(_ context.Context, _ resource.SchemaReques
 				Computed:    true,
 				Description: "",
 			},
-			"fib": schema.StringAttribute{
+			"fib": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -90,6 +92,16 @@ func (r *RoutingTableResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description: "",
 			},
 			"name": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"usage": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"used": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -120,10 +132,13 @@ func (r *RoutingTableResource) Create(ctx context.Context, req resource.CreateRe
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
 	if !(plan.Fib.IsNull() || plan.Fib.IsUnknown()) {
-		body["fib"] = plan.Fib.ValueString()
+		body["fib"] = client.FormatBool(plan.Fib.ValueBool())
 	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
+	}
+	if !(plan.Used.IsNull() || plan.Used.IsUnknown()) {
+		body["used"] = client.FormatBool(plan.Used.ValueBool())
 	}
 	obj, err := c.Add(ctx, "/routing/table", body)
 	if err != nil {
@@ -179,10 +194,13 @@ func (r *RoutingTableResource) Update(ctx context.Context, req resource.UpdateRe
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
 	if !plan.Fib.Equal(state.Fib) {
-		body["fib"] = plan.Fib.ValueString()
+		body["fib"] = client.FormatBool(plan.Fib.ValueBool())
 	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
+	}
+	if !plan.Used.Equal(state.Used) {
+		body["used"] = client.FormatBool(plan.Used.ValueBool())
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/routing/table", state.ID.ValueString(), body)
@@ -299,13 +317,13 @@ func routingTableApply(ctx context.Context, obj client.Object, m *RoutingTableMo
 	}
 	if v, ok := obj["fib"]; ok {
 		_ = v
-		if v != "" {
-			m.Fib = types.StringValue(v)
+		if b, err := client.ParseBool(v); err == nil {
+			m.Fib = types.BoolValue(b)
 		} else {
-			m.Fib = types.StringNull()
+			m.Fib = types.BoolNull()
 		}
 	} else {
-		m.Fib = types.StringNull()
+		m.Fib = types.BoolNull()
 	}
 	if v, ok := obj["invalid"]; ok {
 		_ = v
@@ -326,5 +344,25 @@ func routingTableApply(ctx context.Context, obj client.Object, m *RoutingTableMo
 		}
 	} else {
 		m.Name = types.StringNull()
+	}
+	if v, ok := obj["usage"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.Usage = types.Int64Value(n)
+		} else {
+			m.Usage = types.Int64Null()
+		}
+	} else {
+		m.Usage = types.Int64Null()
+	}
+	if v, ok := obj["used"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Used = types.BoolValue(b)
+		} else {
+			m.Used = types.BoolNull()
+		}
+	} else {
+		m.Used = types.BoolNull()
 	}
 }

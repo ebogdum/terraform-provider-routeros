@@ -26,7 +26,7 @@ This data source supports the following arguments:
 * `router` - (Optional) Name of the router in the provider's `routers` map to query.
 * `filter` - (Optional) Map of field=value pairs to narrow the result set.
 * `proplist` - (Optional) List of property names to project; smaller payload.
-* `action` - (Required) Type: `enum(none|create enabled|create disabled|create dynamic enabled)`. Default: `create-dynamic-enabled`.
+* `action` - (Required) Type: `enum(none|create-enabled|create-disabled|create-dynamic-enabled)`. Default: `create-dynamic-enabled`.
 * `address_ranges` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `common_name_regexp` - (Optional) Type: `string`.

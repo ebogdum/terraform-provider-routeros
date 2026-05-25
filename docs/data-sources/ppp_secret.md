@@ -29,6 +29,7 @@ This data source supports the following arguments:
 * `caller_id` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `ipv6` - (Optional) Type: `string`.
 * `ipv6_routes` - (Optional) Type: `string`.
 * `limit_bytes_in` - (Optional) Type: `string`.
 * `limit_bytes_out` - (Optional) Type: `string`.
@@ -46,4 +47,7 @@ This data source supports the following arguments:
 This data source exports the following attributes in addition to the arguments above:
 
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
+* `last_caller_id` - Type: `string`.
+* `last_disconnect_reason` - Type: `enum(|peer-request|hung-up|idle-timeout|session-timeout|reset, ...)`.
+* `last_logged_out` - Type: `string`.
 

@@ -34,8 +34,10 @@ type InterfaceBridgeMstiModel struct {
 	Bridge      types.String `tfsdk:"bridge"`
 	Comment     types.String `tfsdk:"comment"`
 	Disabled    types.Bool   `tfsdk:"disabled"`
+	Dynamic     types.Bool   `tfsdk:"dynamic"`
 	Identifier  types.Int64  `tfsdk:"identifier"`
 	Priority    types.Int64  `tfsdk:"priority"`
+	Status      types.Int64  `tfsdk:"status"`
 	VLANMapping types.String `tfsdk:"vlan_mapping"`
 	Router      types.String `tfsdk:"router"`
 }
@@ -79,12 +81,22 @@ func (r *InterfaceBridgeMstiResource) Schema(_ context.Context, _ resource.Schem
 				Computed:    true,
 				Description: "Whether the entry is disabled.",
 			},
+			"dynamic": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"identifier": schema.Int64Attribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"priority": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"status": schema.Int64Attribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -127,6 +139,9 @@ func (r *InterfaceBridgeMstiResource) Create(ctx context.Context, req resource.C
 	}
 	if !(plan.Priority.IsNull() || plan.Priority.IsUnknown()) {
 		body["priority"] = client.FormatInt64(plan.Priority.ValueInt64())
+	}
+	if !(plan.Status.IsNull() || plan.Status.IsUnknown()) {
+		body["status"] = client.FormatInt64(plan.Status.ValueInt64())
 	}
 	if !(plan.VLANMapping.IsNull() || plan.VLANMapping.IsUnknown()) {
 		body["vlan-mapping"] = plan.VLANMapping.ValueString()
@@ -192,6 +207,9 @@ func (r *InterfaceBridgeMstiResource) Update(ctx context.Context, req resource.U
 	}
 	if !plan.Priority.Equal(state.Priority) {
 		body["priority"] = client.FormatInt64(plan.Priority.ValueInt64())
+	}
+	if !plan.Status.Equal(state.Status) {
+		body["status"] = client.FormatInt64(plan.Status.ValueInt64())
 	}
 	if !plan.VLANMapping.Equal(state.VLANMapping) {
 		body["vlan-mapping"] = plan.VLANMapping.ValueString()
@@ -309,6 +327,16 @@ func interfaceBridgeMstiApply(ctx context.Context, obj client.Object, m *Interfa
 	} else {
 		m.Disabled = types.BoolNull()
 	}
+	if v, ok := obj["dynamic"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Dynamic = types.BoolValue(b)
+		} else {
+			m.Dynamic = types.BoolNull()
+		}
+	} else {
+		m.Dynamic = types.BoolNull()
+	}
 	if v, ok := obj["identifier"]; ok {
 		_ = v
 		if n, err := client.ParseInt64(v); err == nil {
@@ -328,6 +356,16 @@ func interfaceBridgeMstiApply(ctx context.Context, obj client.Object, m *Interfa
 		}
 	} else {
 		m.Priority = types.Int64Null()
+	}
+	if v, ok := obj["status"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.Status = types.Int64Value(n)
+		} else {
+			m.Status = types.Int64Null()
+		}
+	} else {
+		m.Status = types.Int64Null()
 	}
 	if v, ok := obj["vlan-mapping"]; ok {
 		_ = v

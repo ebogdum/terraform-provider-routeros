@@ -39,6 +39,13 @@ This resource supports the following arguments:
 * `real_filename` - (Optional) Type: `string`.
 * `req_filename` - (Optional) Type: `string`.
 
+## Attribute Reference
+
+In addition to the arguments above, the following attributes are exported:
+
+* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
+* `hits` - Type: `int`.
+
 ## Import
 
 Rows are imported by RouterOS `.id`, optionally prefixed by the router name:

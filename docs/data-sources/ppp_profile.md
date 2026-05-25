@@ -36,6 +36,7 @@ This data source supports the following arguments:
 * `bridge_port_vid` - (Optional) Type: `string`.
 * `change_tcp_mss` - (Optional) Type: `enum(no|yes|default)`. Default: `4.294967295e+09`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `def` - (Optional) Type: `string`.
 * `dhcpv6_lease_time` - (Optional) Type: `string`.
 * `dhcpv6_pd_pool` - (Optional) Type: `string`.
 * `dhcpv6_use_radius` - (Optional) Type: `string`.
@@ -44,6 +45,7 @@ This data source supports the following arguments:
 * `incoming_filter` - (Optional) Type: `string`.
 * `insert_queue_before` - (Optional) Type: `string`.
 * `interface_list` - (Optional) Type: `string`.
+* `ipv6` - (Optional) Type: `string`.
 * `local_address` - (Optional) Type: `string`.
 * `name` - (Required) Type: `string`. Default: `tf_acc_pppprof`.
 * `on_down` - (Optional) Type: `string`.
@@ -51,6 +53,8 @@ This data source supports the following arguments:
 * `only_one` - (Optional) Type: `enum(no|yes|default)`. Default: `4.294967295e+09`.
 * `outgoing_filter` - (Optional) Type: `string`.
 * `parent_queue` - (Optional) Type: `string`.
+* `queue_type_rx_tx` - (Optional) Type: `string`.
+* `rate_limit_rx_tx` - (Optional) Type: `string`.
 * `remote_address` - (Optional) Type: `string`.
 * `remote_ipv6_prefix_pool` - (Optional) Type: `string`.
 * `remote_ipv6_prefix_reuse` - (Optional) Type: `string`.

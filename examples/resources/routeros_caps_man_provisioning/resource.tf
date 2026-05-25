@@ -13,5 +13,6 @@ resource "routeros_caps_man_provisioning" "provisioning_example" {
   # name_format = "cap"
   # name_prefix = "replace-me"
   # radio_mac = "02:00:00:00:00:01"
+  # slave_configuration = "replace-me"
   # slave_configurations = "replace-me"
 }

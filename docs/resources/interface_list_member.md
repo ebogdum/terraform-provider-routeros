@@ -21,6 +21,11 @@ resource "routeros_interface_list_member" "member_example" {
   # router = "my-router"  # which router to target; omit for the default
   comment = "managed by terraform"
   disabled = false
+
+  # Optional attributes (uncomment as needed):
+  # dynamic = "replace-me"
+  # interface = "ether1"
+  # list = "my-list"
 }
 ```
 
@@ -31,6 +36,9 @@ This resource supports the following arguments:
 * `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `dynamic` - (Optional) Type: `string`.
+* `interface` - (Optional) Type: `string`.
+* `list` - (Optional) Type: `string`.
 
 ## Import
 

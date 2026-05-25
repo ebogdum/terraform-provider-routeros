@@ -37,8 +37,11 @@ type SystemSchedulerModel struct {
 	Disabled  types.Bool   `tfsdk:"disabled"`
 	Interval  types.String `tfsdk:"interval"`
 	Name      types.String `tfsdk:"name"`
+	NextRun   types.String `tfsdk:"next_run"`
 	OnEvent   types.String `tfsdk:"on_event"`
+	Owner     types.String `tfsdk:"owner"`
 	Policy    types.String `tfsdk:"policy"`
+	RunCount  types.Int64  `tfsdk:"run_count"`
 	StartDate types.String `tfsdk:"start_date"`
 	StartTime types.String `tfsdk:"start_time"`
 	Router    types.String `tfsdk:"router"`
@@ -89,11 +92,26 @@ func (r *SystemSchedulerResource) Schema(_ context.Context, _ resource.SchemaReq
 				Required:    true,
 				Description: "",
 			},
+			"next_run": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"on_event": schema.StringAttribute{
 				Required:    true,
 				Description: "",
 			},
+			"owner": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"policy": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"run_count": schema.Int64Attribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -107,6 +125,7 @@ func (r *SystemSchedulerResource) Schema(_ context.Context, _ resource.SchemaReq
 				Optional:    true,
 				Computed:    true,
 				Description: "",
+				Validators:  []validator.String{schemautil.OneOf([]string{"startup"}...)},
 			},
 			"router": schema.StringAttribute{
 				Optional:    true,
@@ -345,6 +364,16 @@ func systemSchedulerApply(ctx context.Context, obj client.Object, m *SystemSched
 	} else {
 		m.Name = types.StringNull()
 	}
+	if v, ok := obj["next-run"]; ok {
+		_ = v
+		if v != "" {
+			m.NextRun = types.StringValue(v)
+		} else {
+			m.NextRun = types.StringNull()
+		}
+	} else {
+		m.NextRun = types.StringNull()
+	}
 	if v, ok := obj["on-event"]; ok {
 		_ = v
 		if v != "" {
@@ -355,6 +384,16 @@ func systemSchedulerApply(ctx context.Context, obj client.Object, m *SystemSched
 	} else {
 		m.OnEvent = types.StringNull()
 	}
+	if v, ok := obj["owner"]; ok {
+		_ = v
+		if v != "" {
+			m.Owner = types.StringValue(v)
+		} else {
+			m.Owner = types.StringNull()
+		}
+	} else {
+		m.Owner = types.StringNull()
+	}
 	if v, ok := obj["policy"]; ok {
 		_ = v
 		if v != "" {
@@ -364,6 +403,16 @@ func systemSchedulerApply(ctx context.Context, obj client.Object, m *SystemSched
 		}
 	} else {
 		m.Policy = types.StringNull()
+	}
+	if v, ok := obj["run-count"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.RunCount = types.Int64Value(n)
+		} else {
+			m.RunCount = types.Int64Null()
+		}
+	} else {
+		m.RunCount = types.Int64Null()
 	}
 	if v, ok := obj["start-date"]; ok {
 		_ = v

@@ -31,6 +31,9 @@ This data source supports the following arguments:
 * `disabled` - (Optional) Type: `bool`.
 * `invalid_users` - (Optional) Type: `string`.
 * `name` - (Required) Type: `string`. Default: `tf_acc_smbshare`.
+* `newfileman` - (Optional) Type: `string`.
+* `old_directory` - (Optional) Type: `string`.
+* `oldfileman` - (Optional) Type: `string`.
 * `read_only` - (Optional) Type: `bool`.
 * `require_encryption` - (Optional) Type: `bool`.
 * `valid_users` - (Optional) Type: `string`.

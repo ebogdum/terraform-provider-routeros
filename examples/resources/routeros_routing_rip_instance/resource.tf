@@ -4,12 +4,15 @@ resource "routeros_routing_rip_instance" "instance_example" {
 
   # Optional attributes (uncomment as needed):
   # afi = "replace-me"
+  # input_filter = "replace-me"
   # name = "tf-example"
   # originate_default = "replace-me"
+  # output_filter = "replace-me"
   # redistribute = "replace-me"
   # route_gc_timeout = "replace-me"
   # route_timeout = "replace-me"
   # routing_table = "main"
+  # select_output_filter = "replace-me"
   # update_interval = "replace-me"
   # vrf = "main"
 }

@@ -19,6 +19,7 @@ resource "routeros_routing_igmp_proxy_interface" "interface_example" {
 
   # Optional attributes (uncomment as needed):
   # alternative_subnets = "replace-me"
+  # inactive = false
   # interface = "ether1"
   # threshold = 1
   # upstream = false
@@ -33,9 +34,23 @@ This resource supports the following arguments:
 * `alternative_subnets` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`.
+* `inactive` - (Optional) Type: `bool`.
 * `interface` - (Optional) Type: `string`.
 * `threshold` - (Optional) Type: `int`. Default: `1`.
 * `upstream` - (Optional) Type: `bool`.
+
+## Attribute Reference
+
+In addition to the arguments above, the following attributes are exported:
+
+* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
+* `dynamic` - Type: `bool`.
+* `querier` - Type: `bool`.
+* `rx_bytes` - Type: `string`.
+* `rx_packets` - Type: `string`.
+* `source_ip_address` - Type: `ip`.
+* `tx_bytes` - Type: `string`.
+* `tx_packets` - Type: `string`.
 
 ## Import
 

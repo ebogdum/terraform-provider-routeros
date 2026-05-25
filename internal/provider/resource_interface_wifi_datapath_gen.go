@@ -30,13 +30,20 @@ type InterfaceWifiDatapathResource struct {
 }
 
 type InterfaceWifiDatapathModel struct {
-	ID       types.String `tfsdk:"id"`
-	Bridge   types.String `tfsdk:"bridge"`
-	Comment  types.String `tfsdk:"comment"`
-	Disabled types.Bool   `tfsdk:"disabled"`
-	Name     types.String `tfsdk:"name"`
-	VLANID   types.String `tfsdk:"vlan_id"`
-	Router   types.String `tfsdk:"router"`
+	ID                types.String `tfsdk:"id"`
+	Bridge            types.String `tfsdk:"bridge"`
+	BridgeCost        types.String `tfsdk:"bridge_cost"`
+	BridgeHorizon     types.String `tfsdk:"bridge_horizon"`
+	ClientIsolation   types.String `tfsdk:"client_isolation"`
+	Comment           types.String `tfsdk:"comment"`
+	Disabled          types.Bool   `tfsdk:"disabled"`
+	InterfaceList     types.String `tfsdk:"interface_list"`
+	Name              types.String `tfsdk:"name"`
+	OpenFlowSwitch    types.String `tfsdk:"open_flow_switch"`
+	Openflow          types.String `tfsdk:"openflow"`
+	TrafficProcessing types.String `tfsdk:"traffic_processing"`
+	VLANID            types.String `tfsdk:"vlan_id"`
+	Router            types.String `tfsdk:"router"`
 }
 
 func NewInterfaceWifiDatapathResource() resource.Resource { return &InterfaceWifiDatapathResource{} }
@@ -68,6 +75,21 @@ func (r *InterfaceWifiDatapathResource) Schema(_ context.Context, _ resource.Sch
 				Computed:    true,
 				Description: "",
 			},
+			"bridge_cost": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"bridge_horizon": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"client_isolation": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -78,8 +100,28 @@ func (r *InterfaceWifiDatapathResource) Schema(_ context.Context, _ resource.Sch
 				Computed:    true,
 				Description: "Whether the entry is disabled.",
 			},
+			"interface_list": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"name": schema.StringAttribute{
 				Required:    true,
+				Description: "",
+			},
+			"open_flow_switch": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"openflow": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"traffic_processing": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
 				Description: "",
 			},
 			"vlan_id": schema.StringAttribute{
@@ -109,14 +151,35 @@ func (r *InterfaceWifiDatapathResource) Create(ctx context.Context, req resource
 	if !(plan.Bridge.IsNull() || plan.Bridge.IsUnknown()) {
 		body["bridge"] = plan.Bridge.ValueString()
 	}
+	if !(plan.BridgeCost.IsNull() || plan.BridgeCost.IsUnknown()) {
+		body["bridge-cost"] = plan.BridgeCost.ValueString()
+	}
+	if !(plan.BridgeHorizon.IsNull() || plan.BridgeHorizon.IsUnknown()) {
+		body["bridge-horizon"] = plan.BridgeHorizon.ValueString()
+	}
+	if !(plan.ClientIsolation.IsNull() || plan.ClientIsolation.IsUnknown()) {
+		body["client-isolation"] = plan.ClientIsolation.ValueString()
+	}
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
+	if !(plan.InterfaceList.IsNull() || plan.InterfaceList.IsUnknown()) {
+		body["interface-list"] = plan.InterfaceList.ValueString()
+	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
+	}
+	if !(plan.OpenFlowSwitch.IsNull() || plan.OpenFlowSwitch.IsUnknown()) {
+		body["open-flow-switch"] = plan.OpenFlowSwitch.ValueString()
+	}
+	if !(plan.Openflow.IsNull() || plan.Openflow.IsUnknown()) {
+		body["openflow"] = plan.Openflow.ValueString()
+	}
+	if !(plan.TrafficProcessing.IsNull() || plan.TrafficProcessing.IsUnknown()) {
+		body["traffic-processing"] = plan.TrafficProcessing.ValueString()
 	}
 	if !(plan.VLANID.IsNull() || plan.VLANID.IsUnknown()) {
 		body["vlan-id"] = plan.VLANID.ValueString()
@@ -171,14 +234,35 @@ func (r *InterfaceWifiDatapathResource) Update(ctx context.Context, req resource
 	if !plan.Bridge.Equal(state.Bridge) {
 		body["bridge"] = plan.Bridge.ValueString()
 	}
+	if !plan.BridgeCost.Equal(state.BridgeCost) {
+		body["bridge-cost"] = plan.BridgeCost.ValueString()
+	}
+	if !plan.BridgeHorizon.Equal(state.BridgeHorizon) {
+		body["bridge-horizon"] = plan.BridgeHorizon.ValueString()
+	}
+	if !plan.ClientIsolation.Equal(state.ClientIsolation) {
+		body["client-isolation"] = plan.ClientIsolation.ValueString()
+	}
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
+	if !plan.InterfaceList.Equal(state.InterfaceList) {
+		body["interface-list"] = plan.InterfaceList.ValueString()
+	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
+	}
+	if !plan.OpenFlowSwitch.Equal(state.OpenFlowSwitch) {
+		body["open-flow-switch"] = plan.OpenFlowSwitch.ValueString()
+	}
+	if !plan.Openflow.Equal(state.Openflow) {
+		body["openflow"] = plan.Openflow.ValueString()
+	}
+	if !plan.TrafficProcessing.Equal(state.TrafficProcessing) {
+		body["traffic-processing"] = plan.TrafficProcessing.ValueString()
 	}
 	if !plan.VLANID.Equal(state.VLANID) {
 		body["vlan-id"] = plan.VLANID.ValueString()
@@ -276,6 +360,36 @@ func interfaceWifiDatapathApply(ctx context.Context, obj client.Object, m *Inter
 	} else {
 		m.Bridge = types.StringNull()
 	}
+	if v, ok := obj["bridge-cost"]; ok {
+		_ = v
+		if v != "" {
+			m.BridgeCost = types.StringValue(v)
+		} else {
+			m.BridgeCost = types.StringNull()
+		}
+	} else {
+		m.BridgeCost = types.StringNull()
+	}
+	if v, ok := obj["bridge-horizon"]; ok {
+		_ = v
+		if v != "" {
+			m.BridgeHorizon = types.StringValue(v)
+		} else {
+			m.BridgeHorizon = types.StringNull()
+		}
+	} else {
+		m.BridgeHorizon = types.StringNull()
+	}
+	if v, ok := obj["client-isolation"]; ok {
+		_ = v
+		if v != "" {
+			m.ClientIsolation = types.StringValue(v)
+		} else {
+			m.ClientIsolation = types.StringNull()
+		}
+	} else {
+		m.ClientIsolation = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {
@@ -296,6 +410,16 @@ func interfaceWifiDatapathApply(ctx context.Context, obj client.Object, m *Inter
 	} else {
 		m.Disabled = types.BoolNull()
 	}
+	if v, ok := obj["interface-list"]; ok {
+		_ = v
+		if v != "" {
+			m.InterfaceList = types.StringValue(v)
+		} else {
+			m.InterfaceList = types.StringNull()
+		}
+	} else {
+		m.InterfaceList = types.StringNull()
+	}
 	if v, ok := obj["name"]; ok {
 		_ = v
 		if v != "" {
@@ -305,6 +429,36 @@ func interfaceWifiDatapathApply(ctx context.Context, obj client.Object, m *Inter
 		}
 	} else {
 		m.Name = types.StringNull()
+	}
+	if v, ok := obj["open-flow-switch"]; ok {
+		_ = v
+		if v != "" {
+			m.OpenFlowSwitch = types.StringValue(v)
+		} else {
+			m.OpenFlowSwitch = types.StringNull()
+		}
+	} else {
+		m.OpenFlowSwitch = types.StringNull()
+	}
+	if v, ok := obj["openflow"]; ok {
+		_ = v
+		if v != "" {
+			m.Openflow = types.StringValue(v)
+		} else {
+			m.Openflow = types.StringNull()
+		}
+	} else {
+		m.Openflow = types.StringNull()
+	}
+	if v, ok := obj["traffic-processing"]; ok {
+		_ = v
+		if v != "" {
+			m.TrafficProcessing = types.StringValue(v)
+		} else {
+			m.TrafficProcessing = types.StringNull()
+		}
+	} else {
+		m.TrafficProcessing = types.StringNull()
 	}
 	if v, ok := obj["vlan-id"]; ok {
 		_ = v

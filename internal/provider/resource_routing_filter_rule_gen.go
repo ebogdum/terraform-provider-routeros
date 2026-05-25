@@ -34,6 +34,7 @@ type RoutingFilterRuleModel struct {
 	Chain    types.String `tfsdk:"chain"`
 	Comment  types.String `tfsdk:"comment"`
 	Disabled types.Bool   `tfsdk:"disabled"`
+	Invalid  types.Bool   `tfsdk:"invalid"`
 	Rule     types.String `tfsdk:"rule"`
 	Router   types.String `tfsdk:"router"`
 }
@@ -75,6 +76,11 @@ func (r *RoutingFilterRuleResource) Schema(_ context.Context, _ resource.SchemaR
 				Optional:    true,
 				Computed:    true,
 				Description: "Whether the entry is disabled.",
+			},
+			"invalid": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
 			},
 			"rule": schema.StringAttribute{
 				Optional:    true,
@@ -283,6 +289,16 @@ func routingFilterRuleApply(ctx context.Context, obj client.Object, m *RoutingFi
 		}
 	} else {
 		m.Disabled = types.BoolNull()
+	}
+	if v, ok := obj["invalid"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Invalid = types.BoolValue(b)
+		} else {
+			m.Invalid = types.BoolNull()
+		}
+	} else {
+		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["rule"]; ok {
 		_ = v

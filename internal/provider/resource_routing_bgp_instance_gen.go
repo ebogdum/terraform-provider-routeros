@@ -34,6 +34,8 @@ type RoutingBGPInstanceModel struct {
 	As           types.String `tfsdk:"as"`
 	ClusterID    types.String `tfsdk:"cluster_id"`
 	Disabled     types.Bool   `tfsdk:"disabled"`
+	IgnoreAsPath types.String `tfsdk:"ignore_as_path"`
+	Invalid      types.Bool   `tfsdk:"invalid"`
 	Name         types.String `tfsdk:"name"`
 	RouterID     types.String `tfsdk:"router_id"`
 	RoutingTable types.String `tfsdk:"routing_table"`
@@ -76,6 +78,16 @@ func (r *RoutingBGPInstanceResource) Schema(_ context.Context, _ resource.Schema
 				Description: "",
 			},
 			"disabled": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"ignore_as_path": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"invalid": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -127,6 +139,9 @@ func (r *RoutingBGPInstanceResource) Create(ctx context.Context, req resource.Cr
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !(plan.IgnoreAsPath.IsNull() || plan.IgnoreAsPath.IsUnknown()) {
+		body["ignore-as-path"] = plan.IgnoreAsPath.ValueString()
 	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
@@ -195,6 +210,9 @@ func (r *RoutingBGPInstanceResource) Update(ctx context.Context, req resource.Up
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !plan.IgnoreAsPath.Equal(state.IgnoreAsPath) {
+		body["ignore-as-path"] = plan.IgnoreAsPath.ValueString()
 	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
@@ -320,6 +338,26 @@ func routingBGPInstanceApply(ctx context.Context, obj client.Object, m *RoutingB
 		}
 	} else {
 		m.Disabled = types.BoolNull()
+	}
+	if v, ok := obj["ignore-as-path"]; ok {
+		_ = v
+		if v != "" {
+			m.IgnoreAsPath = types.StringValue(v)
+		} else {
+			m.IgnoreAsPath = types.StringNull()
+		}
+	} else {
+		m.IgnoreAsPath = types.StringNull()
+	}
+	if v, ok := obj["invalid"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Invalid = types.BoolValue(b)
+		} else {
+			m.Invalid = types.BoolNull()
+		}
+	} else {
+		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["name"]; ok {
 		_ = v

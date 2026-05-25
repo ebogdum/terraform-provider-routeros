@@ -30,7 +30,9 @@ This data source supports the following arguments:
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `distance` - (Optional) Type: `int`.
 * `dst_address` - (Optional) Type: `cidr`.
+* `ecmp` - (Optional) Type: `bool`.
 * `gateway` - (Optional) Type: `ip`.
+* `hw_offloaded` - (Optional) Type: `bool`.
 * `routing_table` - (Optional) Type: `string`.
 * `scope` - (Optional) Type: `int`.
 * `target_scope` - (Optional) Type: `int`.
@@ -48,4 +50,6 @@ This data source exports the following attributes in addition to the arguments a
 * `immediate_gw` - Type: `string`.
 * `inactive` - Type: `bool`.
 * `local_address` - Type: `string`.
+* `rtype` - Type: `int`.
+* `type` - Type: `int`.
 

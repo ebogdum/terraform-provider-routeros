@@ -39,7 +39,7 @@ This data source supports the following arguments:
 * `enable` - (Optional) Type: `string`.
 * `installed` - (Optional) Type: `bool`.
 * `name` - (Optional) Type: `string`.
-* `scheduled` - (Optional) Type: `enum(|scheduled for uninstall|scheduled for disable|scheduled for enable|scheduled for install)`.
+* `scheduled` - (Optional) Type: `enum(|scheduled-for-uninstall|scheduled-for-disable|scheduled-for-enable|scheduled-for-install)`.
 * `size` - (Optional) Type: `int`.
 * `uninstall` - (Optional) Type: `string`.
 * `unschedule` - (Optional) Type: `string`.

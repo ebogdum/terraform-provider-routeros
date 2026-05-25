@@ -2,12 +2,12 @@
 subcategory: "IPv6"
 page_title: "RouterOS: routeros_ipv6_neighbor"
 description: |-
-  IPv6 neighbor table -- read-only on most devices.
+  IPv6 neighbor table — read-only on most devices.
 ---
 
 # Resource: routeros_ipv6_neighbor
 
-IPv6 neighbor table -- read-only on most devices.
+IPv6 neighbor table — read-only on most devices.
 
 ## Example Usage
 
@@ -21,6 +21,13 @@ resource "routeros_ipv6_neighbor" "neighbor_example" {
   # address = "10.99.0.1"
   # interface = "ether1"
   # mac_address = "10.99.0.0/24"
+  # mac_ping = "replace-me"
+  # mac_telnet = "replace-me"
+  # make_static = "replace-me"
+  # ping = "replace-me"
+  # router = false
+  # telnet = "replace-me"
+  # torch = "replace-me"
 }
 ```
 
@@ -34,13 +41,22 @@ This resource supports the following arguments:
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `interface` - (Optional) Type: `string`.
 * `mac_address` - (Optional) Type: `string`.
+* `mac_ping` - (Optional) Type: `string`.
+* `mac_telnet` - (Optional) Type: `string`.
+* `make_static` - (Optional) Type: `string`.
+* `ping` - (Optional) Type: `string`.
+* `router` - (Optional) Type: `bool`.
+* `telnet` - (Optional) Type: `string`.
+* `torch` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
 In addition to the arguments above, the following attributes are exported:
 
 * `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
+* `bridge_port` - Type: `string`.
 * `dynamic` - Type: `bool`.
+* `host_name` - Type: `string`.
 * `status` - Type: `string`.
 * `vrf` - Type: `string`.
 

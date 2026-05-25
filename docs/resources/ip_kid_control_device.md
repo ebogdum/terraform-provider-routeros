@@ -17,8 +17,13 @@ resource "routeros_ip_kid_control_device" "device_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
+  # blocked = false
+  # bytes = "replace-me"
   # mac_address = "10.99.0.0/24"
   # name = "tf-example"
+  # rate_limited = false
+  # rate_up_down = "replace-me"
+  # reset_counters = "replace-me"
   # user = "myuser"
 }
 ```
@@ -28,10 +33,24 @@ resource "routeros_ip_kid_control_device" "device_example" {
 This resource supports the following arguments:
 
 * `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `blocked` - (Optional) Type: `bool`.
+* `bytes` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`.
 * `mac_address` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
+* `rate_limited` - (Optional) Type: `bool`.
+* `rate_up_down` - (Optional) Type: `string`.
+* `reset_counters` - (Optional) Type: `string`.
 * `user` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+In addition to the arguments above, the following attributes are exported:
+
+* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
+* `activity` - Type: `string`.
+* `dynamic` - Type: `bool`.
+* `ip_address` - Type: `string`.
 
 ## Import
 

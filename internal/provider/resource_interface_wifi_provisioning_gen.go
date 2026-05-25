@@ -79,7 +79,7 @@ func (r *InterfaceWifiProvisioningResource) Schema(_ context.Context, _ resource
 			"action": schema.StringAttribute{
 				Required:    true,
 				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"none", "create enabled", "create disabled", "create dynamic enabled"}...)},
+				Validators:  []validator.String{schemautil.OneOf([]string{"none", "create-enabled", "create-disabled", "create-dynamic-enabled"}...)},
 			},
 			"address_ranges": schema.StringAttribute{
 				Optional:    true,

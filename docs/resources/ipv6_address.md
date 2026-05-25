@@ -23,6 +23,7 @@ resource "routeros_ipv6_address" "address_example" {
   # Optional attributes (uncomment as needed):
   # advertise = true
   # auto_link_local = false
+  # dynglob = "replace-me"
   # eui_64 = false
   # from_pool = "replace-me"
   # no_dad = false
@@ -39,6 +40,7 @@ This resource supports the following arguments:
 * `auto_link_local` - (Optional) Type: `bool`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`.
+* `dynglob` - (Optional) Type: `string`.
 * `eui_64` - (Optional) Type: `bool`.
 * `from_pool` - (Optional) Type: `string`.
 * `interface` - (Required) Type: `string`.
@@ -54,7 +56,10 @@ In addition to the arguments above, the following attributes are exported:
 * `dynamic` - Type: `bool`.
 * `invalid` - Type: `bool`.
 * `link_local` - Type: `bool`.
+* `preferred` - Type: `string`.
+* `scope` - Type: `int`.
 * `slave` - Type: `bool`.
+* `valid` - Type: `string`.
 * `vrf` - Type: `string`.
 
 ## Import

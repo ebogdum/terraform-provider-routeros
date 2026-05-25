@@ -28,10 +28,10 @@ This data source supports the following arguments:
 * `proplist` - (Optional) List of property names to project; smaller payload.
 * `allow_as_in` - (Optional) Type: `int`.
 * `as_override` - (Optional) Type: `bool`.
-* `cisco_vpls_nlri_length_format` - (Optional) Type: `enum(auto bits|auto bytes|bits|bytes)`.
+* `cisco_vpls_nlri_length_format` - (Optional) Type: `enum(auto-bits|auto-bytes|bits|bytes)`.
 * `clear` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
-* `default_originate` - (Optional) Type: `enum(never|if installed|always)`.
+* `default_originate` - (Optional) Type: `enum(never|if-installed|always)`.
 * `default_prepend` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `dump_adv` - (Optional) Type: `string`.
@@ -39,7 +39,7 @@ This data source supports the following arguments:
 * `established` - (Optional) Type: `bool`.
 * `hold_time` - (Optional) Type: `duration`.
 * `ibgp` - (Optional) Type: `bool`.
-* `input_affinity` - (Optional) Type: `enum(remote as|vrf|afi|instance|alone|main)`.
+* `input_affinity` - (Optional) Type: `enum(remote-as|vrf|afi|instance|alone|main)`.
 * `input_filter` - (Optional) Type: `string`.
 * `instance` - (Optional) Type: `string`.
 * `keep_sent_attributes` - (Optional) Type: `bool`.
@@ -52,10 +52,10 @@ This data source supports the following arguments:
 * `local_eor` - (Optional) Type: `string`.
 * `local_id` - (Optional) Type: `ip`.
 * `local_last_notification` - (Optional) Type: `string`.
-* `local_role` - (Optional) Type: `enum(ibgp|ibgp rr|ebgp|ebgp provider|ebgp rs|ebgp rs client, ...)`.
+* `local_role` - (Optional) Type: `enum(ibgp|ibgp-rr|ebgp|ebgp-provider|ebgp-rs|ebgp-rs-client, ...)`.
 * `multihop` - (Optional) Type: `bool`.
 * `name` - (Optional) Type: `string`.
-* `nexthop_choice` - (Optional) Type: `enum(default|force self|propagate)`.
+* `nexthop_choice` - (Optional) Type: `enum(default|force-self|propagate)`.
 * `no_client_to_client_reflection` - (Optional) Type: `bool`.
 * `no_early_cut` - (Optional) Type: `bool`.
 * `output_affinity` - (Optional) Type: `string`.

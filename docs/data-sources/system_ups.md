@@ -26,7 +26,8 @@ This data source supports the following arguments:
 * `router` - (Optional) Name of the router in the provider's `routers` map to query.
 * `filter` - (Optional) Map of field=value pairs to narrow the result set.
 * `proplist` - (Optional) List of property names to project; smaller payload.
-* `alarm_setting` - (Optional) Type: `enum(immediate|delayed|low battery|none)`. UPS sound alarm setting: delayed - alarm is delayed to the on-battery event immediate - alarm immediately after the on-battery event low-battery - alarm only when the battery is low none - do not alarm.
+* `alarm_setting` - (Optional) Type: `enum(immediate|delayed|low-battery|none)`. UPS sound alarm setting: delayed - alarm is delayed to the on-battery event immediate - alarm immediately after the on-battery event low-battery - alarm only when the battery is low none - do not alarm.
+* `beep` - (Optional) Type: `string`.
 * `check_capabilities` - (Optional) Type: `string`. Whether to check UPS capabilities before reading information. Disabling it can fix compatibility issues with some UPS models. (Applies to RouterOS version 6, implemented since v6.17).
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
@@ -40,4 +41,27 @@ This data source supports the following arguments:
 This data source exports the following attributes in addition to the arguments above:
 
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
+* `battery_charge` - Type: `int`.
+* `battery_voltage` - Type: `string`.
+* `frequency` - Type: `int`.
+* `invalid` - Type: `bool`.
+* `line_voltage` - Type: `string`.
+* `load` - Type: `int`.
+* `low_battery` - Type: `bool`.
+* `manufacture_date` - Type: `string`.
+* `model` - Type: `string`.
+* `nominal_battery_voltage` - Type: `int`.
+* `offline_after` - Type: `duration`.
+* `on_battery` - Type: `bool`.
+* `on_line` - Type: `bool`.
+* `ouput_voltage` - Type: `string`.
+* `overload` - Type: `bool`.
+* `replace_battery` - Type: `bool`.
+* `run_time_left` - Type: `duration`.
+* `serial_number` - Type: `string`.
+* `smart_boost` - Type: `bool`.
+* `smart_trim` - Type: `bool`.
+* `temperature` - Type: `string`.
+* `transfer_cause` - Type: `string`.
+* `version` - Type: `string`.
 

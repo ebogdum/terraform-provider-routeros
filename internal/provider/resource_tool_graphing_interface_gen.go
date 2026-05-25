@@ -53,7 +53,7 @@ func (r *ToolGraphingInterfaceResource) Configure(_ context.Context, req resourc
 
 func (r *ToolGraphingInterfaceResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Graphing rules are unique per (interface, dest-addr) -- running tests repeatedly hits \"already exists\" without explicit cleanup.",
+		Description: "Graphing rules are unique per (interface, dest-addr) — running tests repeatedly hits \"already exists\" without explicit cleanup.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:      true,

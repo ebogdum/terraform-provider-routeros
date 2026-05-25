@@ -32,6 +32,7 @@ This data source supports the following arguments:
 * `filter` - (Optional) Map of field=value pairs to narrow the result set.
 * `proplist` - (Optional) List of property names to project; smaller payload.
 * `action` - (Optional) Type: `enum(discard|none|encrypt)`. Default: `2`.
+* `active` - (Optional) Type: `bool`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`.
 * `dst_address` - (Optional) Type: `cidr`.
@@ -39,6 +40,8 @@ This data source supports the following arguments:
 * `group` - (Optional) Type: `string`.
 * `ipsec_protocols` - (Optional) Type: `enum(|ah|esp)`. Default: `2`.
 * `level` - (Optional) Type: `enum(use|require|unique)`. Default: `2`.
+* `nopeer` - (Optional) Type: `string`.
+* `notemplate` - (Optional) Type: `string`.
 * `peer` - (Optional) Type: `string`.
 * `proposal` - (Optional) Type: `string`.
 * `protocol` - (Optional) Type: `enum(icmp|igmp|ggp|ip-encap|tcp|egp, ...)`. Default: `255`.
@@ -54,6 +57,9 @@ This data source exports the following attributes in addition to the arguments a
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
 * `default` - Type: `bool`.
 * `dynamic` - Type: `bool`.
+* `invalid` - Type: `bool`.
+* `ph2_count` - Type: `int`.
+* `ph2_state` - Type: `enum(spawning|starting|message-1-received|message-1-sent|message-2-received|message-2-sent, ...)`.
 * `sa_dst_address` - Type: `string`.
 * `sa_src_address` - Type: `string`.
 

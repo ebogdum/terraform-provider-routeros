@@ -7,7 +7,11 @@ resource "routeros_ip_ipsec_mode_config" "mode_config_example" {
   # address_pool = "4.294967295e+09"
   # address_prefix_length = 24
   # connection_mark = "replace-me"
+  # nonresp = "replace-me"
+  # pool = "replace-me"
+  # resp = "replace-me"
   # responder = false
+  # sdns = "replace-me"
   # split_dns = "replace-me"
   # split_include = "replace-me"
   # src_address_list = "my-list"

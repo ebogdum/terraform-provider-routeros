@@ -34,6 +34,7 @@ type IPIpsecPolicyResource struct {
 type IPIpsecPolicyModel struct {
 	ID             types.String `tfsdk:"id"`
 	Action         types.String `tfsdk:"action"`
+	Active         types.Bool   `tfsdk:"active"`
 	Comment        types.String `tfsdk:"comment"`
 	Default        types.Bool   `tfsdk:"default"`
 	Disabled       types.Bool   `tfsdk:"disabled"`
@@ -41,9 +42,14 @@ type IPIpsecPolicyModel struct {
 	DstPort        types.Int64  `tfsdk:"dst_port"`
 	Dynamic        types.Bool   `tfsdk:"dynamic"`
 	Group          types.String `tfsdk:"group"`
+	Invalid        types.Bool   `tfsdk:"invalid"`
 	IpsecProtocols types.String `tfsdk:"ipsec_protocols"`
 	Level          types.String `tfsdk:"level"`
+	Nopeer         types.String `tfsdk:"nopeer"`
+	Notemplate     types.String `tfsdk:"notemplate"`
 	Peer           types.String `tfsdk:"peer"`
+	Ph2Count       types.Int64  `tfsdk:"ph2_count"`
+	Ph2State       types.String `tfsdk:"ph2_state"`
 	Proposal       types.String `tfsdk:"proposal"`
 	Protocol       types.String `tfsdk:"protocol"`
 	SaDstAddress   types.String `tfsdk:"sa_dst_address"`
@@ -85,6 +91,11 @@ func (r *IPIpsecPolicyResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 				Validators:  []validator.String{schemautil.OneOf([]string{"discard", "none", "encrypt"}...)},
 			},
+			"active": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -122,6 +133,11 @@ func (r *IPIpsecPolicyResource) Schema(_ context.Context, _ resource.SchemaReque
 				Computed:    true,
 				Description: "",
 			},
+			"invalid": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"ipsec_protocols": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -134,10 +150,31 @@ func (r *IPIpsecPolicyResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 				Validators:  []validator.String{schemautil.OneOf([]string{"use", "require", "unique"}...)},
 			},
+			"nopeer": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"notemplate": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"peer": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
+			},
+			"ph2_count": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"ph2_state": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.OneOf([]string{"spawning", "starting", "message-1-received", "message-1-sent", "message-2-received", "message-2-sent", "message-3-received", "message-3-sent", "message-4-received", "established", "expired", "no-phase1", "eap", "crypto", "qkd"}...)},
 			},
 			"proposal": schema.StringAttribute{
 				Optional:    true,
@@ -204,6 +241,9 @@ func (r *IPIpsecPolicyResource) Create(ctx context.Context, req resource.CreateR
 	if !(plan.Action.IsNull() || plan.Action.IsUnknown()) {
 		body["action"] = plan.Action.ValueString()
 	}
+	if !(plan.Active.IsNull() || plan.Active.IsUnknown()) {
+		body["active"] = client.FormatBool(plan.Active.ValueBool())
+	}
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
 	}
@@ -224,6 +264,12 @@ func (r *IPIpsecPolicyResource) Create(ctx context.Context, req resource.CreateR
 	}
 	if !(plan.Level.IsNull() || plan.Level.IsUnknown()) {
 		body["level"] = plan.Level.ValueString()
+	}
+	if !(plan.Nopeer.IsNull() || plan.Nopeer.IsUnknown()) {
+		body["nopeer"] = plan.Nopeer.ValueString()
+	}
+	if !(plan.Notemplate.IsNull() || plan.Notemplate.IsUnknown()) {
+		body["notemplate"] = plan.Notemplate.ValueString()
 	}
 	if !(plan.Peer.IsNull() || plan.Peer.IsUnknown()) {
 		body["peer"] = plan.Peer.ValueString()
@@ -296,6 +342,9 @@ func (r *IPIpsecPolicyResource) Update(ctx context.Context, req resource.UpdateR
 	if !plan.Action.Equal(state.Action) {
 		body["action"] = plan.Action.ValueString()
 	}
+	if !plan.Active.Equal(state.Active) {
+		body["active"] = client.FormatBool(plan.Active.ValueBool())
+	}
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
 	}
@@ -316,6 +365,12 @@ func (r *IPIpsecPolicyResource) Update(ctx context.Context, req resource.UpdateR
 	}
 	if !plan.Level.Equal(state.Level) {
 		body["level"] = plan.Level.ValueString()
+	}
+	if !plan.Nopeer.Equal(state.Nopeer) {
+		body["nopeer"] = plan.Nopeer.ValueString()
+	}
+	if !plan.Notemplate.Equal(state.Notemplate) {
+		body["notemplate"] = plan.Notemplate.ValueString()
 	}
 	if !plan.Peer.Equal(state.Peer) {
 		body["peer"] = plan.Peer.ValueString()
@@ -431,6 +486,16 @@ func iPIpsecPolicyApply(ctx context.Context, obj client.Object, m *IPIpsecPolicy
 	} else {
 		m.Action = types.StringNull()
 	}
+	if v, ok := obj["active"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Active = types.BoolValue(b)
+		} else {
+			m.Active = types.BoolNull()
+		}
+	} else {
+		m.Active = types.BoolNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {
@@ -501,6 +566,16 @@ func iPIpsecPolicyApply(ctx context.Context, obj client.Object, m *IPIpsecPolicy
 	} else {
 		m.Group = types.StringNull()
 	}
+	if v, ok := obj["invalid"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Invalid = types.BoolValue(b)
+		} else {
+			m.Invalid = types.BoolNull()
+		}
+	} else {
+		m.Invalid = types.BoolNull()
+	}
 	if v, ok := obj["ipsec-protocols"]; ok {
 		_ = v
 		if v != "" {
@@ -521,6 +596,26 @@ func iPIpsecPolicyApply(ctx context.Context, obj client.Object, m *IPIpsecPolicy
 	} else {
 		m.Level = types.StringNull()
 	}
+	if v, ok := obj["nopeer"]; ok {
+		_ = v
+		if v != "" {
+			m.Nopeer = types.StringValue(v)
+		} else {
+			m.Nopeer = types.StringNull()
+		}
+	} else {
+		m.Nopeer = types.StringNull()
+	}
+	if v, ok := obj["notemplate"]; ok {
+		_ = v
+		if v != "" {
+			m.Notemplate = types.StringValue(v)
+		} else {
+			m.Notemplate = types.StringNull()
+		}
+	} else {
+		m.Notemplate = types.StringNull()
+	}
 	if v, ok := obj["peer"]; ok {
 		_ = v
 		if v != "" {
@@ -530,6 +625,26 @@ func iPIpsecPolicyApply(ctx context.Context, obj client.Object, m *IPIpsecPolicy
 		}
 	} else {
 		m.Peer = types.StringNull()
+	}
+	if v, ok := obj["ph2-count"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.Ph2Count = types.Int64Value(n)
+		} else {
+			m.Ph2Count = types.Int64Null()
+		}
+	} else {
+		m.Ph2Count = types.Int64Null()
+	}
+	if v, ok := obj["ph2-state"]; ok {
+		_ = v
+		if v != "" {
+			m.Ph2State = types.StringValue(v)
+		} else {
+			m.Ph2State = types.StringNull()
+		}
+	} else {
+		m.Ph2State = types.StringNull()
 	}
 	if v, ok := obj["proposal"]; ok {
 		_ = v

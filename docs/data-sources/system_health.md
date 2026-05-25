@@ -26,7 +26,10 @@ This data source supports the following arguments:
 * `router` - (Optional) Name of the router in the provider's `routers` map to query.
 * `filter` - (Optional) Map of field=value pairs to narrow the result set.
 * `proplist` - (Optional) List of property names to project; smaller payload.
+* `name` - (Optional) Type: `string`.
 * `state_after_reboot` - (Optional) Type: `string`.
+* `type` - (Optional) Type: `enum(c|rpm|v|a|w|)`.
+* `value` - (Optional) Type: `string`.
 
 ## Attribute Reference
 

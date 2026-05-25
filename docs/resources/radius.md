@@ -31,13 +31,16 @@ resource "routeros_radius" "radius_example" {
   # certificate = "replace-me"
   # domain = "example.local"
   # protocol = "udp"
+  # radsec = "replace-me"
   # radsec_timeout = "replace-me"
   # realm = "replace-me"
   # require_message_auth = ""
+  # reset_status = "replace-me"
   # secret = "REDACTED"
   # service = "ppp"
   # src_address = "10.99.0.0/24"
   # timeout = 0
+  # udp = "replace-me"
 }
 ```
 
@@ -56,13 +59,16 @@ This resource supports the following arguments:
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `domain` - (Optional) Type: `string`. Microsoft Windows domain of client passed to RADIUS servers that require domain validation.
 * `protocol` - (Optional) Type: `enum(udp|radsec)`. Specifies the protocol to use when communicating with the RADIUS Server.
+* `radsec` - (Optional) Type: `string`.
 * `radsec_timeout` - (Optional) Type: `string`. Timeout after which the request should be resent over RadSec protocol.
 * `realm` - (Optional) Type: `string`. Explicitly stated realm (user domain), so the users do not have to provide proper ISP domain name in the user name.
-* `require_message_auth` - (Optional) Type: `enum(|no|yes for request resp)`. Specifies if Message-Authenticator attributes are required.
+* `require_message_auth` - (Optional) Type: `enum(|no|yes-for-request-resp)`. Specifies if Message-Authenticator attributes are required.
+* `reset_status` - (Optional) Type: `string`.
 * `secret` - (Optional) Type: `string`. The shared secret used to access the RADIUS server. **Sensitive.**
 * `service` - (Optional) Type: `enum(ppp|login|hotspot|wireless|dhcp|ipsec, ...)`. Router services that will use this RADIUS server: hotspot - HotSpot authentication service login - router's local user authentication ppp - Point-to-Point clients authentication wireless - wireless client authentication dhcp - DHCP protocol client authentication (client's MAC address is sent as User-Name) ipsec - ipsec client authentification dot1x - dot1x authentification.
 * `src_address` - (Optional) Type: `string`. Source IP/IPv6 address of the packets sent to the RADIUS server.
 * `timeout` - (Optional) Type: `int`. Timeout after which the request should be resent.
+* `udp` - (Optional) Type: `string`.
 
 ## Import
 

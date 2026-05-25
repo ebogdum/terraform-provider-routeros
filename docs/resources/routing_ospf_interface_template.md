@@ -21,13 +21,15 @@ resource "routeros_routing_ospf_interface_template" "interface_template_example"
   # area = "replace-me"
   # auth_id = "replace-me"
   # auth_key = "REDACTED"
+  # authentication = "replace-me"
   # cost = 0
   # dead_interval = "1h"
   # hello_interval = "1h"
   # instance_id = 0
   # interfaces = "replace-me"
+  # network_type = "broadcast"
   # networks = "replace-me"
-  # passive = "replace-me"
+  # passive = false
   # prefix_list = "replace-me"
   # priority = 0
   # retransmit_interval = "1h"
@@ -46,6 +48,7 @@ This resource supports the following arguments:
 * `area` - (Optional) Type: `string`.
 * `auth_id` - (Optional) Type: `string`.
 * `auth_key` - (Optional) Type: `string`. **Sensitive.**
+* `authentication` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `cost` - (Optional) Type: `int`.
 * `dead_interval` - (Optional) Type: `duration`.
@@ -53,8 +56,9 @@ This resource supports the following arguments:
 * `hello_interval` - (Optional) Type: `duration`.
 * `instance_id` - (Optional) Type: `int`.
 * `interfaces` - (Optional) Type: `string`.
+* `network_type` - (Optional) Type: `enum(broadcast|nbma|ptp|ptp-unnumbered|ptmp|virtual-link, ...)`.
 * `networks` - (Optional) Type: `string`.
-* `passive` - (Optional) Type: `string`.
+* `passive` - (Optional) Type: `bool`.
 * `prefix_list` - (Optional) Type: `string`.
 * `priority` - (Optional) Type: `int`.
 * `retransmit_interval` - (Optional) Type: `duration`.
@@ -62,6 +66,13 @@ This resource supports the following arguments:
 * `use_bfd` - (Optional) Type: `string`.
 * `vlink_neighbor_id` - (Optional) Type: `string`.
 * `vlink_transit_area` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+In addition to the arguments above, the following attributes are exported:
+
+* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
+* `invalid` - Type: `bool`.
 
 ## Import
 

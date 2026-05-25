@@ -27,6 +27,7 @@ resource "routeros_caps_man_provisioning" "provisioning_example" {
   # name_format = "cap"
   # name_prefix = "replace-me"
   # radio_mac = "02:00:00:00:00:01"
+  # slave_configuration = "replace-me"
   # slave_configurations = "replace-me"
 }
 ```
@@ -36,7 +37,7 @@ resource "routeros_caps_man_provisioning" "provisioning_example" {
 This resource supports the following arguments:
 
 * `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `action` - (Optional) Type: `enum(none|create enabled|create disabled|create dynamic enabled)`.
+* `action` - (Optional) Type: `enum(none|create-enabled|create-disabled|create-dynamic-enabled)`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `common_name_regexp` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
@@ -44,9 +45,10 @@ This resource supports the following arguments:
 * `identity_regexp` - (Optional) Type: `string`.
 * `ip_address_ranges` - (Optional) Type: `string`.
 * `master_configuration` - (Optional) Type: `string`.
-* `name_format` - (Optional) Type: `enum(cap|prefix|identity|prefix identity)`.
+* `name_format` - (Optional) Type: `enum(cap|prefix|identity|prefix-identity)`.
 * `name_prefix` - (Optional) Type: `string`.
 * `radio_mac` - (Optional) Type: `mac`.
+* `slave_configuration` - (Optional) Type: `string`.
 * `slave_configurations` - (Optional) Type: `string`.
 
 ## Import

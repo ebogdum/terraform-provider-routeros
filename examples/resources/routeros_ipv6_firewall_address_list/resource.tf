@@ -7,6 +7,6 @@ resource "routeros_ipv6_firewall_address_list" "address_list_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
-  # dynamic = "replace-me"
+  # parent = 0
   # timeout = "replace-me"
 }

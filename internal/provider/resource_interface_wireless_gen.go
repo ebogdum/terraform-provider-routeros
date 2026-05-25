@@ -95,6 +95,8 @@ type InterfaceWirelessModel struct {
 	RateSelection            types.String `tfsdk:"rate_selection"`
 	RateSet                  types.String `tfsdk:"rate_set"`
 	RxChains                 types.String `tfsdk:"rx_chains"`
+	RxHtChainNames           types.String `tfsdk:"rx_ht_chain_names"`
+	RxHtChains               types.String `tfsdk:"rx_ht_chains"`
 	ScanList                 types.String `tfsdk:"scan_list"`
 	SecurityProfile          types.String `tfsdk:"security_profile"`
 	SkipDfsChannels          types.String `tfsdk:"skip_dfs_channels"`
@@ -104,6 +106,8 @@ type InterfaceWirelessModel struct {
 	SupportedRatesB          types.String `tfsdk:"supported_rates_b"`
 	TdmaPeriodSize           types.String `tfsdk:"tdma_period_size"`
 	TxChains                 types.String `tfsdk:"tx_chains"`
+	TxHtChainNames           types.String `tfsdk:"tx_ht_chain_names"`
+	TxHtChains               types.String `tfsdk:"tx_ht_chains"`
 	TxPower                  types.String `tfsdk:"tx_power"`
 	TxPowerMode              types.String `tfsdk:"tx_power_mode"`
 	UpdateStatsInterval      types.String `tfsdk:"update_stats_interval"`
@@ -465,6 +469,16 @@ func (r *InterfaceWirelessResource) Schema(_ context.Context, _ resource.SchemaR
 				Computed:    true,
 				Description: "Which antennas to use for receive. In current MikroTik routers, both RX and TX chain must be enabled, for the chain to be enabled.",
 			},
+			"rx_ht_chain_names": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"rx_ht_chains": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"scan_list": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -509,6 +523,16 @@ func (r *InterfaceWirelessResource) Schema(_ context.Context, _ resource.SchemaR
 				Optional:    true,
 				Computed:    true,
 				Description: "Which antennas to use for transmitting. In current MikroTik routers, both RX and TX chain must be enabled, for the chain to be enabled.",
+			},
+			"tx_ht_chain_names": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"tx_ht_chains": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
 			},
 			"tx_power": schema.StringAttribute{
 				Optional:    true,
@@ -786,6 +810,12 @@ func (r *InterfaceWirelessResource) Create(ctx context.Context, req resource.Cre
 	if !(plan.RxChains.IsNull() || plan.RxChains.IsUnknown()) {
 		body["rx-chains"] = plan.RxChains.ValueString()
 	}
+	if !(plan.RxHtChainNames.IsNull() || plan.RxHtChainNames.IsUnknown()) {
+		body["rx-ht-chain-names"] = plan.RxHtChainNames.ValueString()
+	}
+	if !(plan.RxHtChains.IsNull() || plan.RxHtChains.IsUnknown()) {
+		body["rx-ht-chains"] = plan.RxHtChains.ValueString()
+	}
 	if !(plan.ScanList.IsNull() || plan.ScanList.IsUnknown()) {
 		body["scan-list"] = plan.ScanList.ValueString()
 	}
@@ -812,6 +842,12 @@ func (r *InterfaceWirelessResource) Create(ctx context.Context, req resource.Cre
 	}
 	if !(plan.TxChains.IsNull() || plan.TxChains.IsUnknown()) {
 		body["tx-chains"] = plan.TxChains.ValueString()
+	}
+	if !(plan.TxHtChainNames.IsNull() || plan.TxHtChainNames.IsUnknown()) {
+		body["tx-ht-chain-names"] = plan.TxHtChainNames.ValueString()
+	}
+	if !(plan.TxHtChains.IsNull() || plan.TxHtChains.IsUnknown()) {
+		body["tx-ht-chains"] = plan.TxHtChains.ValueString()
 	}
 	if !(plan.TxPower.IsNull() || plan.TxPower.IsUnknown()) {
 		body["tx-power"] = plan.TxPower.ValueString()
@@ -1091,6 +1127,12 @@ func (r *InterfaceWirelessResource) Update(ctx context.Context, req resource.Upd
 	if !plan.RxChains.Equal(state.RxChains) {
 		body["rx-chains"] = plan.RxChains.ValueString()
 	}
+	if !plan.RxHtChainNames.Equal(state.RxHtChainNames) {
+		body["rx-ht-chain-names"] = plan.RxHtChainNames.ValueString()
+	}
+	if !plan.RxHtChains.Equal(state.RxHtChains) {
+		body["rx-ht-chains"] = plan.RxHtChains.ValueString()
+	}
 	if !plan.ScanList.Equal(state.ScanList) {
 		body["scan-list"] = plan.ScanList.ValueString()
 	}
@@ -1117,6 +1159,12 @@ func (r *InterfaceWirelessResource) Update(ctx context.Context, req resource.Upd
 	}
 	if !plan.TxChains.Equal(state.TxChains) {
 		body["tx-chains"] = plan.TxChains.ValueString()
+	}
+	if !plan.TxHtChainNames.Equal(state.TxHtChainNames) {
+		body["tx-ht-chain-names"] = plan.TxHtChainNames.ValueString()
+	}
+	if !plan.TxHtChains.Equal(state.TxHtChains) {
+		body["tx-ht-chains"] = plan.TxHtChains.ValueString()
 	}
 	if !plan.TxPower.Equal(state.TxPower) {
 		body["tx-power"] = plan.TxPower.ValueString()
@@ -1884,6 +1932,26 @@ func interfaceWirelessApply(ctx context.Context, obj client.Object, m *Interface
 	} else {
 		m.RxChains = types.StringNull()
 	}
+	if v, ok := obj["rx-ht-chain-names"]; ok {
+		_ = v
+		if v != "" {
+			m.RxHtChainNames = types.StringValue(v)
+		} else {
+			m.RxHtChainNames = types.StringNull()
+		}
+	} else {
+		m.RxHtChainNames = types.StringNull()
+	}
+	if v, ok := obj["rx-ht-chains"]; ok {
+		_ = v
+		if v != "" {
+			m.RxHtChains = types.StringValue(v)
+		} else {
+			m.RxHtChains = types.StringNull()
+		}
+	} else {
+		m.RxHtChains = types.StringNull()
+	}
 	if v, ok := obj["scan-list"]; ok {
 		_ = v
 		if v != "" {
@@ -1973,6 +2041,26 @@ func interfaceWirelessApply(ctx context.Context, obj client.Object, m *Interface
 		}
 	} else {
 		m.TxChains = types.StringNull()
+	}
+	if v, ok := obj["tx-ht-chain-names"]; ok {
+		_ = v
+		if v != "" {
+			m.TxHtChainNames = types.StringValue(v)
+		} else {
+			m.TxHtChainNames = types.StringNull()
+		}
+	} else {
+		m.TxHtChainNames = types.StringNull()
+	}
+	if v, ok := obj["tx-ht-chains"]; ok {
+		_ = v
+		if v != "" {
+			m.TxHtChains = types.StringValue(v)
+		} else {
+			m.TxHtChains = types.StringNull()
+		}
+	} else {
+		m.TxHtChains = types.StringNull()
 	}
 	if v, ok := obj["tx-power"]; ok {
 		_ = v

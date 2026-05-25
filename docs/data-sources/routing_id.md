@@ -29,7 +29,7 @@ This data source supports the following arguments:
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `name` - (Optional) Type: `string`.
-* `select_dynamic_id` - (Optional) Type: `enum(only static|only loopback|only vrf|only active|any|lowest)`.
+* `select_dynamic_id` - (Optional) Type: `enum(only-static|only-loopback|only-vrf|only-active|any|lowest)`.
 * `select_from_vrf` - (Optional) Type: `string`.
 
 ## Attribute Reference
@@ -40,4 +40,5 @@ This data source exports the following attributes in addition to the arguments a
 * `dynamic` - Type: `bool`.
 * `dynamic_id` - Type: `ip`.
 * `inactive` - Type: `bool`.
+* `invalid` - Type: `bool`.
 

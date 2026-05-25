@@ -32,25 +32,74 @@ type ToolTrafficGeneratorPacketTemplateResource struct {
 }
 
 type ToolTrafficGeneratorPacketTemplateModel struct {
-	ID               types.String `tfsdk:"id"`
-	Comment          types.String `tfsdk:"comment"`
-	Data             types.String `tfsdk:"data"`
-	DataByte         types.Int64  `tfsdk:"data_byte"`
-	HeaderStack      types.String `tfsdk:"header_stack"`
-	Interface        types.String `tfsdk:"interface"`
-	IPID             types.String `tfsdk:"ip_id"`
-	Name             types.String `tfsdk:"name"`
-	Port             types.String `tfsdk:"port"`
-	TCPAck           types.String `tfsdk:"tcp_ack"`
-	TCPDataOffset    types.String `tfsdk:"tcp_data_offset"`
-	TCPDstPort       types.String `tfsdk:"tcp_dst_port"`
-	TCPFlags         types.String `tfsdk:"tcp_flags"`
-	TCPSrcPort       types.String `tfsdk:"tcp_src_port"`
-	TCPSyn           types.String `tfsdk:"tcp_syn"`
-	TCPUrgentPointer types.String `tfsdk:"tcp_urgent_pointer"`
-	TCPWindowSize    types.String `tfsdk:"tcp_window_size"`
-	VLANID           types.String `tfsdk:"vlan_id"`
-	Router           types.String `tfsdk:"router"`
+	ID                      types.String `tfsdk:"id"`
+	AssumedDscpEcn          types.String `tfsdk:"assumed_dscp_ecn"`
+	AssumedDst              types.String `tfsdk:"assumed_dst"`
+	AssumedDstPort          types.String `tfsdk:"assumed_dst_port"`
+	AssumedFlowLabel        types.String `tfsdk:"assumed_flow_label"`
+	AssumedFragOffset       types.String `tfsdk:"assumed_frag_offset"`
+	AssumedHeader           types.String `tfsdk:"assumed_header"`
+	AssumedInterface        types.String `tfsdk:"assumed_interface"`
+	AssumedIPID             types.String `tfsdk:"assumed_ip_id"`
+	AssumedNextHeader       types.String `tfsdk:"assumed_next_header"`
+	AssumedPort             types.String `tfsdk:"assumed_port"`
+	AssumedPriority         types.String `tfsdk:"assumed_priority"`
+	AssumedProtocol         types.String `tfsdk:"assumed_protocol"`
+	AssumedSrc              types.String `tfsdk:"assumed_src"`
+	AssumedSrcPort          types.String `tfsdk:"assumed_src_port"`
+	AssumedTCPAck           types.String `tfsdk:"assumed_tcp_ack"`
+	AssumedTCPDataOffset    types.String `tfsdk:"assumed_tcp_data_offset"`
+	AssumedTCPDstPort       types.String `tfsdk:"assumed_tcp_dst_port"`
+	AssumedTCPFlags         types.String `tfsdk:"assumed_tcp_flags"`
+	AssumedTCPSrcPort       types.String `tfsdk:"assumed_tcp_src_port"`
+	AssumedTCPSyn           types.String `tfsdk:"assumed_tcp_syn"`
+	AssumedTCPUrgentPointer types.String `tfsdk:"assumed_tcp_urgent_pointer"`
+	AssumedTCPWindowSize    types.String `tfsdk:"assumed_tcp_window_size"`
+	AssumedTrafficClass     types.String `tfsdk:"assumed_traffic_class"`
+	AssumedTtl              types.String `tfsdk:"assumed_ttl"`
+	AssumedVLANID           types.String `tfsdk:"assumed_vlan_id"`
+	Comment                 types.String `tfsdk:"comment"`
+	Data                    types.String `tfsdk:"data"`
+	DataByte                types.Int64  `tfsdk:"data_byte"`
+	DscpEcn                 types.String `tfsdk:"dscp_ecn"`
+	Dst                     types.String `tfsdk:"dst"`
+	DstPort                 types.String `tfsdk:"dst_port"`
+	FlowLabel               types.String `tfsdk:"flow_label"`
+	FragOffset              types.String `tfsdk:"frag_offset"`
+	Gateway                 types.String `tfsdk:"gateway"`
+	Header                  types.String `tfsdk:"header"`
+	HeaderStack             types.String `tfsdk:"header_stack"`
+	HopLimit                types.String `tfsdk:"hop_limit"`
+	Interface               types.String `tfsdk:"interface"`
+	IP                      types.String `tfsdk:"ip"`
+	IPID                    types.String `tfsdk:"ip_id"`
+	IPV6                    types.String `tfsdk:"ipv6"`
+	MAC                     types.String `tfsdk:"mac"`
+	Name                    types.String `tfsdk:"name"`
+	NextHeader              types.String `tfsdk:"next_header"`
+	Port                    types.String `tfsdk:"port"`
+	Priority                types.String `tfsdk:"priority"`
+	Protocol                types.String `tfsdk:"protocol"`
+	Raw                     types.String `tfsdk:"raw"`
+	RawPacketTemplates      types.String `tfsdk:"raw_packet_templates"`
+	Specbyte                types.String `tfsdk:"specbyte"`
+	Src                     types.String `tfsdk:"src"`
+	SrcPort                 types.String `tfsdk:"src_port"`
+	TCP                     types.String `tfsdk:"tcp"`
+	TCPAck                  types.String `tfsdk:"tcp_ack"`
+	TCPDataOffset           types.String `tfsdk:"tcp_data_offset"`
+	TCPDstPort              types.String `tfsdk:"tcp_dst_port"`
+	TCPFlags                types.String `tfsdk:"tcp_flags"`
+	TCPSrcPort              types.String `tfsdk:"tcp_src_port"`
+	TCPSyn                  types.String `tfsdk:"tcp_syn"`
+	TCPUrgentPointer        types.String `tfsdk:"tcp_urgent_pointer"`
+	TCPWindowSize           types.String `tfsdk:"tcp_window_size"`
+	TrafficClass            types.String `tfsdk:"traffic_class"`
+	Ttl                     types.String `tfsdk:"ttl"`
+	UDP                     types.String `tfsdk:"udp"`
+	VLAN                    types.String `tfsdk:"vlan"`
+	VLANID                  types.String `tfsdk:"vlan_id"`
+	Router                  types.String `tfsdk:"router"`
 }
 
 func NewToolTrafficGeneratorPacketTemplateResource() resource.Resource {
@@ -79,6 +128,131 @@ func (r *ToolTrafficGeneratorPacketTemplateResource) Schema(_ context.Context, _
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
+			"assumed_dscp_ecn": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"assumed_dst": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"assumed_dst_port": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"assumed_flow_label": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"assumed_frag_offset": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"assumed_header": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"assumed_interface": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"assumed_ip_id": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"assumed_next_header": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"assumed_port": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"assumed_priority": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"assumed_protocol": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"assumed_src": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"assumed_src_port": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"assumed_tcp_ack": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"assumed_tcp_data_offset": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"assumed_tcp_dst_port": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"assumed_tcp_flags": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"assumed_tcp_src_port": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"assumed_tcp_syn": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"assumed_tcp_urgent_pointer": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"assumed_tcp_window_size": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"assumed_traffic_class": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"assumed_ttl": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"assumed_vlan_id": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -88,9 +262,44 @@ func (r *ToolTrafficGeneratorPacketTemplateResource) Schema(_ context.Context, _
 				Optional:    true,
 				Computed:    true,
 				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"uninitialized", "random", "specific byte", "incrementing"}...)},
+				Validators:  []validator.String{schemautil.OneOf([]string{"uninitialized", "random", "specific-byte", "incrementing"}...)},
 			},
 			"data_byte": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"dscp_ecn": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"dst": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"dst_port": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"flow_label": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"frag_offset": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"gateway": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"header": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -100,7 +309,17 @@ func (r *ToolTrafficGeneratorPacketTemplateResource) Schema(_ context.Context, _
 				Computed:    true,
 				Description: "",
 			},
+			"hop_limit": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"interface": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"ip": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -110,12 +329,67 @@ func (r *ToolTrafficGeneratorPacketTemplateResource) Schema(_ context.Context, _
 				Computed:    true,
 				Description: "",
 			},
+			"ipv6": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"mac": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"name": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
+			"next_header": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"port": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"priority": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"protocol": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"raw": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"raw_packet_templates": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"specbyte": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"src": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"src_port": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"tcp": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -160,6 +434,26 @@ func (r *ToolTrafficGeneratorPacketTemplateResource) Schema(_ context.Context, _
 				Computed:    true,
 				Description: "",
 			},
+			"traffic_class": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"ttl": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"udp": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"vlan": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"vlan_id": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -193,20 +487,80 @@ func (r *ToolTrafficGeneratorPacketTemplateResource) Create(ctx context.Context,
 	if !(plan.DataByte.IsNull() || plan.DataByte.IsUnknown()) {
 		body["data-byte"] = client.FormatInt64(plan.DataByte.ValueInt64())
 	}
+	if !(plan.DscpEcn.IsNull() || plan.DscpEcn.IsUnknown()) {
+		body["dscp-ecn"] = plan.DscpEcn.ValueString()
+	}
+	if !(plan.Dst.IsNull() || plan.Dst.IsUnknown()) {
+		body["dst"] = plan.Dst.ValueString()
+	}
+	if !(plan.DstPort.IsNull() || plan.DstPort.IsUnknown()) {
+		body["dst-port"] = plan.DstPort.ValueString()
+	}
+	if !(plan.FlowLabel.IsNull() || plan.FlowLabel.IsUnknown()) {
+		body["flow-label"] = plan.FlowLabel.ValueString()
+	}
+	if !(plan.FragOffset.IsNull() || plan.FragOffset.IsUnknown()) {
+		body["frag-offset"] = plan.FragOffset.ValueString()
+	}
+	if !(plan.Gateway.IsNull() || plan.Gateway.IsUnknown()) {
+		body["gateway"] = plan.Gateway.ValueString()
+	}
+	if !(plan.Header.IsNull() || plan.Header.IsUnknown()) {
+		body["header"] = plan.Header.ValueString()
+	}
 	if !(plan.HeaderStack.IsNull() || plan.HeaderStack.IsUnknown()) {
 		body["header-stack"] = plan.HeaderStack.ValueString()
+	}
+	if !(plan.HopLimit.IsNull() || plan.HopLimit.IsUnknown()) {
+		body["hop-limit"] = plan.HopLimit.ValueString()
 	}
 	if !(plan.Interface.IsNull() || plan.Interface.IsUnknown()) {
 		body["interface"] = plan.Interface.ValueString()
 	}
+	if !(plan.IP.IsNull() || plan.IP.IsUnknown()) {
+		body["ip"] = plan.IP.ValueString()
+	}
 	if !(plan.IPID.IsNull() || plan.IPID.IsUnknown()) {
 		body["ip-id"] = plan.IPID.ValueString()
+	}
+	if !(plan.IPV6.IsNull() || plan.IPV6.IsUnknown()) {
+		body["ipv6"] = plan.IPV6.ValueString()
+	}
+	if !(plan.MAC.IsNull() || plan.MAC.IsUnknown()) {
+		body["mac"] = plan.MAC.ValueString()
 	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
 	}
+	if !(plan.NextHeader.IsNull() || plan.NextHeader.IsUnknown()) {
+		body["next-header"] = plan.NextHeader.ValueString()
+	}
 	if !(plan.Port.IsNull() || plan.Port.IsUnknown()) {
 		body["port"] = plan.Port.ValueString()
+	}
+	if !(plan.Priority.IsNull() || plan.Priority.IsUnknown()) {
+		body["priority"] = plan.Priority.ValueString()
+	}
+	if !(plan.Protocol.IsNull() || plan.Protocol.IsUnknown()) {
+		body["protocol"] = plan.Protocol.ValueString()
+	}
+	if !(plan.Raw.IsNull() || plan.Raw.IsUnknown()) {
+		body["raw"] = plan.Raw.ValueString()
+	}
+	if !(plan.RawPacketTemplates.IsNull() || plan.RawPacketTemplates.IsUnknown()) {
+		body["raw-packet-templates"] = plan.RawPacketTemplates.ValueString()
+	}
+	if !(plan.Specbyte.IsNull() || plan.Specbyte.IsUnknown()) {
+		body["specbyte"] = plan.Specbyte.ValueString()
+	}
+	if !(plan.Src.IsNull() || plan.Src.IsUnknown()) {
+		body["src"] = plan.Src.ValueString()
+	}
+	if !(plan.SrcPort.IsNull() || plan.SrcPort.IsUnknown()) {
+		body["src-port"] = plan.SrcPort.ValueString()
+	}
+	if !(plan.TCP.IsNull() || plan.TCP.IsUnknown()) {
+		body["tcp"] = plan.TCP.ValueString()
 	}
 	if !(plan.TCPAck.IsNull() || plan.TCPAck.IsUnknown()) {
 		body["tcp-ack"] = plan.TCPAck.ValueString()
@@ -231,6 +585,18 @@ func (r *ToolTrafficGeneratorPacketTemplateResource) Create(ctx context.Context,
 	}
 	if !(plan.TCPWindowSize.IsNull() || plan.TCPWindowSize.IsUnknown()) {
 		body["tcp-window-size"] = plan.TCPWindowSize.ValueString()
+	}
+	if !(plan.TrafficClass.IsNull() || plan.TrafficClass.IsUnknown()) {
+		body["traffic-class"] = plan.TrafficClass.ValueString()
+	}
+	if !(plan.Ttl.IsNull() || plan.Ttl.IsUnknown()) {
+		body["ttl"] = plan.Ttl.ValueString()
+	}
+	if !(plan.UDP.IsNull() || plan.UDP.IsUnknown()) {
+		body["udp"] = plan.UDP.ValueString()
+	}
+	if !(plan.VLAN.IsNull() || plan.VLAN.IsUnknown()) {
+		body["vlan"] = plan.VLAN.ValueString()
 	}
 	if !(plan.VLANID.IsNull() || plan.VLANID.IsUnknown()) {
 		body["vlan-id"] = plan.VLANID.ValueString()
@@ -291,20 +657,80 @@ func (r *ToolTrafficGeneratorPacketTemplateResource) Update(ctx context.Context,
 	if !plan.DataByte.Equal(state.DataByte) {
 		body["data-byte"] = client.FormatInt64(plan.DataByte.ValueInt64())
 	}
+	if !plan.DscpEcn.Equal(state.DscpEcn) {
+		body["dscp-ecn"] = plan.DscpEcn.ValueString()
+	}
+	if !plan.Dst.Equal(state.Dst) {
+		body["dst"] = plan.Dst.ValueString()
+	}
+	if !plan.DstPort.Equal(state.DstPort) {
+		body["dst-port"] = plan.DstPort.ValueString()
+	}
+	if !plan.FlowLabel.Equal(state.FlowLabel) {
+		body["flow-label"] = plan.FlowLabel.ValueString()
+	}
+	if !plan.FragOffset.Equal(state.FragOffset) {
+		body["frag-offset"] = plan.FragOffset.ValueString()
+	}
+	if !plan.Gateway.Equal(state.Gateway) {
+		body["gateway"] = plan.Gateway.ValueString()
+	}
+	if !plan.Header.Equal(state.Header) {
+		body["header"] = plan.Header.ValueString()
+	}
 	if !plan.HeaderStack.Equal(state.HeaderStack) {
 		body["header-stack"] = plan.HeaderStack.ValueString()
+	}
+	if !plan.HopLimit.Equal(state.HopLimit) {
+		body["hop-limit"] = plan.HopLimit.ValueString()
 	}
 	if !plan.Interface.Equal(state.Interface) {
 		body["interface"] = plan.Interface.ValueString()
 	}
+	if !plan.IP.Equal(state.IP) {
+		body["ip"] = plan.IP.ValueString()
+	}
 	if !plan.IPID.Equal(state.IPID) {
 		body["ip-id"] = plan.IPID.ValueString()
+	}
+	if !plan.IPV6.Equal(state.IPV6) {
+		body["ipv6"] = plan.IPV6.ValueString()
+	}
+	if !plan.MAC.Equal(state.MAC) {
+		body["mac"] = plan.MAC.ValueString()
 	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
 	}
+	if !plan.NextHeader.Equal(state.NextHeader) {
+		body["next-header"] = plan.NextHeader.ValueString()
+	}
 	if !plan.Port.Equal(state.Port) {
 		body["port"] = plan.Port.ValueString()
+	}
+	if !plan.Priority.Equal(state.Priority) {
+		body["priority"] = plan.Priority.ValueString()
+	}
+	if !plan.Protocol.Equal(state.Protocol) {
+		body["protocol"] = plan.Protocol.ValueString()
+	}
+	if !plan.Raw.Equal(state.Raw) {
+		body["raw"] = plan.Raw.ValueString()
+	}
+	if !plan.RawPacketTemplates.Equal(state.RawPacketTemplates) {
+		body["raw-packet-templates"] = plan.RawPacketTemplates.ValueString()
+	}
+	if !plan.Specbyte.Equal(state.Specbyte) {
+		body["specbyte"] = plan.Specbyte.ValueString()
+	}
+	if !plan.Src.Equal(state.Src) {
+		body["src"] = plan.Src.ValueString()
+	}
+	if !plan.SrcPort.Equal(state.SrcPort) {
+		body["src-port"] = plan.SrcPort.ValueString()
+	}
+	if !plan.TCP.Equal(state.TCP) {
+		body["tcp"] = plan.TCP.ValueString()
 	}
 	if !plan.TCPAck.Equal(state.TCPAck) {
 		body["tcp-ack"] = plan.TCPAck.ValueString()
@@ -329,6 +755,18 @@ func (r *ToolTrafficGeneratorPacketTemplateResource) Update(ctx context.Context,
 	}
 	if !plan.TCPWindowSize.Equal(state.TCPWindowSize) {
 		body["tcp-window-size"] = plan.TCPWindowSize.ValueString()
+	}
+	if !plan.TrafficClass.Equal(state.TrafficClass) {
+		body["traffic-class"] = plan.TrafficClass.ValueString()
+	}
+	if !plan.Ttl.Equal(state.Ttl) {
+		body["ttl"] = plan.Ttl.ValueString()
+	}
+	if !plan.UDP.Equal(state.UDP) {
+		body["udp"] = plan.UDP.ValueString()
+	}
+	if !plan.VLAN.Equal(state.VLAN) {
+		body["vlan"] = plan.VLAN.ValueString()
 	}
 	if !plan.VLANID.Equal(state.VLANID) {
 		body["vlan-id"] = plan.VLANID.ValueString()
@@ -416,6 +854,256 @@ func toolTrafficGeneratorPacketTemplateLookupByNaturalKey(ctx context.Context, c
 func toolTrafficGeneratorPacketTemplateApply(ctx context.Context, obj client.Object, m *ToolTrafficGeneratorPacketTemplateModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["assumed-dscp-ecn"]; ok {
+		_ = v
+		if v != "" {
+			m.AssumedDscpEcn = types.StringValue(v)
+		} else {
+			m.AssumedDscpEcn = types.StringNull()
+		}
+	} else {
+		m.AssumedDscpEcn = types.StringNull()
+	}
+	if v, ok := obj["assumed-dst"]; ok {
+		_ = v
+		if v != "" {
+			m.AssumedDst = types.StringValue(v)
+		} else {
+			m.AssumedDst = types.StringNull()
+		}
+	} else {
+		m.AssumedDst = types.StringNull()
+	}
+	if v, ok := obj["assumed-dst-port"]; ok {
+		_ = v
+		if v != "" {
+			m.AssumedDstPort = types.StringValue(v)
+		} else {
+			m.AssumedDstPort = types.StringNull()
+		}
+	} else {
+		m.AssumedDstPort = types.StringNull()
+	}
+	if v, ok := obj["assumed-flow-label"]; ok {
+		_ = v
+		if v != "" {
+			m.AssumedFlowLabel = types.StringValue(v)
+		} else {
+			m.AssumedFlowLabel = types.StringNull()
+		}
+	} else {
+		m.AssumedFlowLabel = types.StringNull()
+	}
+	if v, ok := obj["assumed-frag-offset"]; ok {
+		_ = v
+		if v != "" {
+			m.AssumedFragOffset = types.StringValue(v)
+		} else {
+			m.AssumedFragOffset = types.StringNull()
+		}
+	} else {
+		m.AssumedFragOffset = types.StringNull()
+	}
+	if v, ok := obj["assumed-header"]; ok {
+		_ = v
+		if v != "" {
+			m.AssumedHeader = types.StringValue(v)
+		} else {
+			m.AssumedHeader = types.StringNull()
+		}
+	} else {
+		m.AssumedHeader = types.StringNull()
+	}
+	if v, ok := obj["assumed-interface"]; ok {
+		_ = v
+		if v != "" {
+			m.AssumedInterface = types.StringValue(v)
+		} else {
+			m.AssumedInterface = types.StringNull()
+		}
+	} else {
+		m.AssumedInterface = types.StringNull()
+	}
+	if v, ok := obj["assumed-ip-id"]; ok {
+		_ = v
+		if v != "" {
+			m.AssumedIPID = types.StringValue(v)
+		} else {
+			m.AssumedIPID = types.StringNull()
+		}
+	} else {
+		m.AssumedIPID = types.StringNull()
+	}
+	if v, ok := obj["assumed-next-header"]; ok {
+		_ = v
+		if v != "" {
+			m.AssumedNextHeader = types.StringValue(v)
+		} else {
+			m.AssumedNextHeader = types.StringNull()
+		}
+	} else {
+		m.AssumedNextHeader = types.StringNull()
+	}
+	if v, ok := obj["assumed-port"]; ok {
+		_ = v
+		if v != "" {
+			m.AssumedPort = types.StringValue(v)
+		} else {
+			m.AssumedPort = types.StringNull()
+		}
+	} else {
+		m.AssumedPort = types.StringNull()
+	}
+	if v, ok := obj["assumed-priority"]; ok {
+		_ = v
+		if v != "" {
+			m.AssumedPriority = types.StringValue(v)
+		} else {
+			m.AssumedPriority = types.StringNull()
+		}
+	} else {
+		m.AssumedPriority = types.StringNull()
+	}
+	if v, ok := obj["assumed-protocol"]; ok {
+		_ = v
+		if v != "" {
+			m.AssumedProtocol = types.StringValue(v)
+		} else {
+			m.AssumedProtocol = types.StringNull()
+		}
+	} else {
+		m.AssumedProtocol = types.StringNull()
+	}
+	if v, ok := obj["assumed-src"]; ok {
+		_ = v
+		if v != "" {
+			m.AssumedSrc = types.StringValue(v)
+		} else {
+			m.AssumedSrc = types.StringNull()
+		}
+	} else {
+		m.AssumedSrc = types.StringNull()
+	}
+	if v, ok := obj["assumed-src-port"]; ok {
+		_ = v
+		if v != "" {
+			m.AssumedSrcPort = types.StringValue(v)
+		} else {
+			m.AssumedSrcPort = types.StringNull()
+		}
+	} else {
+		m.AssumedSrcPort = types.StringNull()
+	}
+	if v, ok := obj["assumed-tcp-ack"]; ok {
+		_ = v
+		if v != "" {
+			m.AssumedTCPAck = types.StringValue(v)
+		} else {
+			m.AssumedTCPAck = types.StringNull()
+		}
+	} else {
+		m.AssumedTCPAck = types.StringNull()
+	}
+	if v, ok := obj["assumed-tcp-data-offset"]; ok {
+		_ = v
+		if v != "" {
+			m.AssumedTCPDataOffset = types.StringValue(v)
+		} else {
+			m.AssumedTCPDataOffset = types.StringNull()
+		}
+	} else {
+		m.AssumedTCPDataOffset = types.StringNull()
+	}
+	if v, ok := obj["assumed-tcp-dst-port"]; ok {
+		_ = v
+		if v != "" {
+			m.AssumedTCPDstPort = types.StringValue(v)
+		} else {
+			m.AssumedTCPDstPort = types.StringNull()
+		}
+	} else {
+		m.AssumedTCPDstPort = types.StringNull()
+	}
+	if v, ok := obj["assumed-tcp-flags"]; ok {
+		_ = v
+		if v != "" {
+			m.AssumedTCPFlags = types.StringValue(v)
+		} else {
+			m.AssumedTCPFlags = types.StringNull()
+		}
+	} else {
+		m.AssumedTCPFlags = types.StringNull()
+	}
+	if v, ok := obj["assumed-tcp-src-port"]; ok {
+		_ = v
+		if v != "" {
+			m.AssumedTCPSrcPort = types.StringValue(v)
+		} else {
+			m.AssumedTCPSrcPort = types.StringNull()
+		}
+	} else {
+		m.AssumedTCPSrcPort = types.StringNull()
+	}
+	if v, ok := obj["assumed-tcp-syn"]; ok {
+		_ = v
+		if v != "" {
+			m.AssumedTCPSyn = types.StringValue(v)
+		} else {
+			m.AssumedTCPSyn = types.StringNull()
+		}
+	} else {
+		m.AssumedTCPSyn = types.StringNull()
+	}
+	if v, ok := obj["assumed-tcp-urgent-pointer"]; ok {
+		_ = v
+		if v != "" {
+			m.AssumedTCPUrgentPointer = types.StringValue(v)
+		} else {
+			m.AssumedTCPUrgentPointer = types.StringNull()
+		}
+	} else {
+		m.AssumedTCPUrgentPointer = types.StringNull()
+	}
+	if v, ok := obj["assumed-tcp-window-size"]; ok {
+		_ = v
+		if v != "" {
+			m.AssumedTCPWindowSize = types.StringValue(v)
+		} else {
+			m.AssumedTCPWindowSize = types.StringNull()
+		}
+	} else {
+		m.AssumedTCPWindowSize = types.StringNull()
+	}
+	if v, ok := obj["assumed-traffic-class"]; ok {
+		_ = v
+		if v != "" {
+			m.AssumedTrafficClass = types.StringValue(v)
+		} else {
+			m.AssumedTrafficClass = types.StringNull()
+		}
+	} else {
+		m.AssumedTrafficClass = types.StringNull()
+	}
+	if v, ok := obj["assumed-ttl"]; ok {
+		_ = v
+		if v != "" {
+			m.AssumedTtl = types.StringValue(v)
+		} else {
+			m.AssumedTtl = types.StringNull()
+		}
+	} else {
+		m.AssumedTtl = types.StringNull()
+	}
+	if v, ok := obj["assumed-vlan-id"]; ok {
+		_ = v
+		if v != "" {
+			m.AssumedVLANID = types.StringValue(v)
+		} else {
+			m.AssumedVLANID = types.StringNull()
+		}
+	} else {
+		m.AssumedVLANID = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {
@@ -446,6 +1134,76 @@ func toolTrafficGeneratorPacketTemplateApply(ctx context.Context, obj client.Obj
 	} else {
 		m.DataByte = types.Int64Null()
 	}
+	if v, ok := obj["dscp-ecn"]; ok {
+		_ = v
+		if v != "" {
+			m.DscpEcn = types.StringValue(v)
+		} else {
+			m.DscpEcn = types.StringNull()
+		}
+	} else {
+		m.DscpEcn = types.StringNull()
+	}
+	if v, ok := obj["dst"]; ok {
+		_ = v
+		if v != "" {
+			m.Dst = types.StringValue(v)
+		} else {
+			m.Dst = types.StringNull()
+		}
+	} else {
+		m.Dst = types.StringNull()
+	}
+	if v, ok := obj["dst-port"]; ok {
+		_ = v
+		if v != "" {
+			m.DstPort = types.StringValue(v)
+		} else {
+			m.DstPort = types.StringNull()
+		}
+	} else {
+		m.DstPort = types.StringNull()
+	}
+	if v, ok := obj["flow-label"]; ok {
+		_ = v
+		if v != "" {
+			m.FlowLabel = types.StringValue(v)
+		} else {
+			m.FlowLabel = types.StringNull()
+		}
+	} else {
+		m.FlowLabel = types.StringNull()
+	}
+	if v, ok := obj["frag-offset"]; ok {
+		_ = v
+		if v != "" {
+			m.FragOffset = types.StringValue(v)
+		} else {
+			m.FragOffset = types.StringNull()
+		}
+	} else {
+		m.FragOffset = types.StringNull()
+	}
+	if v, ok := obj["gateway"]; ok {
+		_ = v
+		if v != "" {
+			m.Gateway = types.StringValue(v)
+		} else {
+			m.Gateway = types.StringNull()
+		}
+	} else {
+		m.Gateway = types.StringNull()
+	}
+	if v, ok := obj["header"]; ok {
+		_ = v
+		if v != "" {
+			m.Header = types.StringValue(v)
+		} else {
+			m.Header = types.StringNull()
+		}
+	} else {
+		m.Header = types.StringNull()
+	}
 	if v, ok := obj["header-stack"]; ok {
 		_ = v
 		if v != "" {
@@ -455,6 +1213,16 @@ func toolTrafficGeneratorPacketTemplateApply(ctx context.Context, obj client.Obj
 		}
 	} else {
 		m.HeaderStack = types.StringNull()
+	}
+	if v, ok := obj["hop-limit"]; ok {
+		_ = v
+		if v != "" {
+			m.HopLimit = types.StringValue(v)
+		} else {
+			m.HopLimit = types.StringNull()
+		}
+	} else {
+		m.HopLimit = types.StringNull()
 	}
 	if v, ok := obj["interface"]; ok {
 		_ = v
@@ -466,6 +1234,16 @@ func toolTrafficGeneratorPacketTemplateApply(ctx context.Context, obj client.Obj
 	} else {
 		m.Interface = types.StringNull()
 	}
+	if v, ok := obj["ip"]; ok {
+		_ = v
+		if v != "" {
+			m.IP = types.StringValue(v)
+		} else {
+			m.IP = types.StringNull()
+		}
+	} else {
+		m.IP = types.StringNull()
+	}
 	if v, ok := obj["ip-id"]; ok {
 		_ = v
 		if v != "" {
@@ -475,6 +1253,26 @@ func toolTrafficGeneratorPacketTemplateApply(ctx context.Context, obj client.Obj
 		}
 	} else {
 		m.IPID = types.StringNull()
+	}
+	if v, ok := obj["ipv6"]; ok {
+		_ = v
+		if v != "" {
+			m.IPV6 = types.StringValue(v)
+		} else {
+			m.IPV6 = types.StringNull()
+		}
+	} else {
+		m.IPV6 = types.StringNull()
+	}
+	if v, ok := obj["mac"]; ok {
+		_ = v
+		if v != "" {
+			m.MAC = types.StringValue(v)
+		} else {
+			m.MAC = types.StringNull()
+		}
+	} else {
+		m.MAC = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
 		_ = v
@@ -486,6 +1284,16 @@ func toolTrafficGeneratorPacketTemplateApply(ctx context.Context, obj client.Obj
 	} else {
 		m.Name = types.StringNull()
 	}
+	if v, ok := obj["next-header"]; ok {
+		_ = v
+		if v != "" {
+			m.NextHeader = types.StringValue(v)
+		} else {
+			m.NextHeader = types.StringNull()
+		}
+	} else {
+		m.NextHeader = types.StringNull()
+	}
 	if v, ok := obj["port"]; ok {
 		_ = v
 		if v != "" {
@@ -495,6 +1303,86 @@ func toolTrafficGeneratorPacketTemplateApply(ctx context.Context, obj client.Obj
 		}
 	} else {
 		m.Port = types.StringNull()
+	}
+	if v, ok := obj["priority"]; ok {
+		_ = v
+		if v != "" {
+			m.Priority = types.StringValue(v)
+		} else {
+			m.Priority = types.StringNull()
+		}
+	} else {
+		m.Priority = types.StringNull()
+	}
+	if v, ok := obj["protocol"]; ok {
+		_ = v
+		if v != "" {
+			m.Protocol = types.StringValue(v)
+		} else {
+			m.Protocol = types.StringNull()
+		}
+	} else {
+		m.Protocol = types.StringNull()
+	}
+	if v, ok := obj["raw"]; ok {
+		_ = v
+		if v != "" {
+			m.Raw = types.StringValue(v)
+		} else {
+			m.Raw = types.StringNull()
+		}
+	} else {
+		m.Raw = types.StringNull()
+	}
+	if v, ok := obj["raw-packet-templates"]; ok {
+		_ = v
+		if v != "" {
+			m.RawPacketTemplates = types.StringValue(v)
+		} else {
+			m.RawPacketTemplates = types.StringNull()
+		}
+	} else {
+		m.RawPacketTemplates = types.StringNull()
+	}
+	if v, ok := obj["specbyte"]; ok {
+		_ = v
+		if v != "" {
+			m.Specbyte = types.StringValue(v)
+		} else {
+			m.Specbyte = types.StringNull()
+		}
+	} else {
+		m.Specbyte = types.StringNull()
+	}
+	if v, ok := obj["src"]; ok {
+		_ = v
+		if v != "" {
+			m.Src = types.StringValue(v)
+		} else {
+			m.Src = types.StringNull()
+		}
+	} else {
+		m.Src = types.StringNull()
+	}
+	if v, ok := obj["src-port"]; ok {
+		_ = v
+		if v != "" {
+			m.SrcPort = types.StringValue(v)
+		} else {
+			m.SrcPort = types.StringNull()
+		}
+	} else {
+		m.SrcPort = types.StringNull()
+	}
+	if v, ok := obj["tcp"]; ok {
+		_ = v
+		if v != "" {
+			m.TCP = types.StringValue(v)
+		} else {
+			m.TCP = types.StringNull()
+		}
+	} else {
+		m.TCP = types.StringNull()
 	}
 	if v, ok := obj["tcp-ack"]; ok {
 		_ = v
@@ -575,6 +1463,46 @@ func toolTrafficGeneratorPacketTemplateApply(ctx context.Context, obj client.Obj
 		}
 	} else {
 		m.TCPWindowSize = types.StringNull()
+	}
+	if v, ok := obj["traffic-class"]; ok {
+		_ = v
+		if v != "" {
+			m.TrafficClass = types.StringValue(v)
+		} else {
+			m.TrafficClass = types.StringNull()
+		}
+	} else {
+		m.TrafficClass = types.StringNull()
+	}
+	if v, ok := obj["ttl"]; ok {
+		_ = v
+		if v != "" {
+			m.Ttl = types.StringValue(v)
+		} else {
+			m.Ttl = types.StringNull()
+		}
+	} else {
+		m.Ttl = types.StringNull()
+	}
+	if v, ok := obj["udp"]; ok {
+		_ = v
+		if v != "" {
+			m.UDP = types.StringValue(v)
+		} else {
+			m.UDP = types.StringNull()
+		}
+	} else {
+		m.UDP = types.StringNull()
+	}
+	if v, ok := obj["vlan"]; ok {
+		_ = v
+		if v != "" {
+			m.VLAN = types.StringValue(v)
+		} else {
+			m.VLAN = types.StringNull()
+		}
+	} else {
+		m.VLAN = types.StringNull()
 	}
 	if v, ok := obj["vlan-id"]; ok {
 		_ = v

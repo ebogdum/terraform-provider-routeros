@@ -34,8 +34,10 @@ type UserGroupModel struct {
 	ID         types.String `tfsdk:"id"`
 	Comment    types.String `tfsdk:"comment"`
 	Name       types.String `tfsdk:"name"`
+	Policies   types.String `tfsdk:"policies"`
 	Policy     types.List   `tfsdk:"policy"`
 	Skin       types.String `tfsdk:"skin"`
+	System     types.Bool   `tfsdk:"system"`
 	Router     types.String `tfsdk:"router"`
 	LockoutAck types.Bool   `tfsdk:"lockout_ack"`
 }
@@ -73,6 +75,11 @@ func (r *UserGroupResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Required:    true,
 				Description: "",
 			},
+			"policies": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"policy": schema.ListAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -80,6 +87,11 @@ func (r *UserGroupResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Description: "",
 			},
 			"skin": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"system": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -114,11 +126,17 @@ func (r *UserGroupResource) Create(ctx context.Context, req resource.CreateReque
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
 	}
+	if !(plan.Policies.IsNull() || plan.Policies.IsUnknown()) {
+		body["policies"] = plan.Policies.ValueString()
+	}
 	if !(plan.Policy.IsNull() || plan.Policy.IsUnknown()) {
 		body["policy"] = encodeStringList(ctx, plan.Policy)
 	}
 	if !(plan.Skin.IsNull() || plan.Skin.IsUnknown()) {
 		body["skin"] = plan.Skin.ValueString()
+	}
+	if !(plan.System.IsNull() || plan.System.IsUnknown()) {
+		body["system"] = client.FormatBool(plan.System.ValueBool())
 	}
 	if err := schemautil.CheckUserGroupPolicyLockout("/user/group", body, !plan.LockoutAck.IsNull() && plan.LockoutAck.ValueBool()); err != nil {
 		resp.Diagnostics.AddError("Refusing user-group change", err.Error())
@@ -177,11 +195,17 @@ func (r *UserGroupResource) Update(ctx context.Context, req resource.UpdateReque
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
 	}
+	if !plan.Policies.Equal(state.Policies) {
+		body["policies"] = plan.Policies.ValueString()
+	}
 	if !plan.Policy.Equal(state.Policy) {
 		body["policy"] = encodeStringList(ctx, plan.Policy)
 	}
 	if !plan.Skin.Equal(state.Skin) {
 		body["skin"] = plan.Skin.ValueString()
+	}
+	if !plan.System.Equal(state.System) {
+		body["system"] = client.FormatBool(plan.System.ValueBool())
 	}
 	if err := schemautil.CheckUserGroupPolicyLockout("/user/group", body, !plan.LockoutAck.IsNull() && plan.LockoutAck.ValueBool()); err != nil {
 		resp.Diagnostics.AddError("Refusing user-group change", err.Error())
@@ -295,6 +319,16 @@ func userGroupApply(ctx context.Context, obj client.Object, m *UserGroupModel) {
 	} else {
 		m.Name = types.StringNull()
 	}
+	if v, ok := obj["policies"]; ok {
+		_ = v
+		if v != "" {
+			m.Policies = types.StringValue(v)
+		} else {
+			m.Policies = types.StringNull()
+		}
+	} else {
+		m.Policies = types.StringNull()
+	}
 	if v, ok := obj["policy"]; ok {
 		_ = v
 		m.Policy = decodeStringList(ctx, v)
@@ -310,5 +344,15 @@ func userGroupApply(ctx context.Context, obj client.Object, m *UserGroupModel) {
 		}
 	} else {
 		m.Skin = types.StringNull()
+	}
+	if v, ok := obj["system"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.System = types.BoolValue(b)
+		} else {
+			m.System = types.BoolNull()
+		}
+	} else {
+		m.System = types.BoolNull()
 	}
 }

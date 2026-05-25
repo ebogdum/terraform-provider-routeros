@@ -18,10 +18,12 @@ resource "routeros_interface_wireguard" "wireguard_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
+  # l2_mtu = 1500
   # listen_port = "443"
-  # mtu = "replace-me"
+  # mtu = 1420
   # name = "tf-example"
   # private_key = "REDACTED"
+  # wg_export = "replace-me"
 }
 ```
 
@@ -32,10 +34,12 @@ This resource supports the following arguments:
 * `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `l2_mtu` - (Optional) Type: `int`. Default: `1500`.
 * `listen_port` - (Optional) Type: `int`.
-* `mtu` - (Optional) Type: `string`.
+* `mtu` - (Optional) Type: `int`. Default: `1420`.
 * `name` - (Optional) Type: `string`.
 * `private_key` - (Optional) Type: `string`. 32-byte WireGuard private key (base64). Leave unset to have RouterOS generate one. **Sensitive.**
+* `wg_export` - (Optional) Type: `string`.
 
 ## Attribute Reference
 

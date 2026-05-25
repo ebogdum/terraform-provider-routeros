@@ -20,7 +20,9 @@ resource "routeros_ip_route" "route_example" {
   # Optional attributes (uncomment as needed):
   # distance = 0
   # dst_address = "10.99.0.0/24"
+  # ecmp = false
   # gateway = "10.99.0.1"
+  # hw_offloaded = false
   # routing_table = "main"
   # scope = 0
   # target_scope = 0
@@ -37,7 +39,9 @@ This resource supports the following arguments:
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `distance` - (Optional) Type: `int`.
 * `dst_address` - (Optional) Type: `cidr`.
+* `ecmp` - (Optional) Type: `bool`.
 * `gateway` - (Optional) Type: `ip`.
+* `hw_offloaded` - (Optional) Type: `bool`.
 * `routing_table` - (Optional) Type: `string`.
 * `scope` - (Optional) Type: `int`.
 * `target_scope` - (Optional) Type: `int`.
@@ -55,6 +59,8 @@ In addition to the arguments above, the following attributes are exported:
 * `immediate_gw` - Type: `string`.
 * `inactive` - Type: `bool`.
 * `local_address` - Type: `string`.
+* `rtype` - Type: `int`.
+* `type` - Type: `int`.
 
 ## Import
 

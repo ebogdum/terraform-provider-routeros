@@ -24,8 +24,9 @@ resource "routeros_interface_dot1x_server" "server_example" {
   # guest_vlan_id = "replace-me"
   # interface = "ether1"
   # interim_update = "1h"
-  # mac_auth_mode = "mac as username"
-  # radius_mac_format = "XX:XX:XX:XX:XX:XX"
+  # mac = "replace-me"
+  # mac_auth_mode = "mac-as-username"
+  # radius_mac_format = "xx:xx:xx:xx:xx:xx"
   # reauth_timeout = "replace-me"
   # reject_vlan_id = "replace-me"
   # retrans_timeout = "3000"
@@ -46,12 +47,20 @@ This resource supports the following arguments:
 * `guest_vlan_id` - (Optional) Type: `string`.
 * `interface` - (Optional) Type: `string`.
 * `interim_update` - (Optional) Type: `duration`.
-* `mac_auth_mode` - (Optional) Type: `enum(mac as username|mac as username and password)`.
-* `radius_mac_format` - (Optional) Type: `enum(XX:XX:XX:XX:XX:XX|XX-XX-XX-XX-XX-XX|XXXXXXXXXXXX|xx:xx:xx:xx:xx:xx|xx-xx-xx-xx-xx-xx|xxxxxxxxxxxx)`.
+* `mac` - (Optional) Type: `string`.
+* `mac_auth_mode` - (Optional) Type: `enum(mac-as-username|mac-as-username-and-password)`.
+* `radius_mac_format` - (Optional) Type: `enum(xx:xx:xx:xx:xx:xx|xx-xx-xx-xx-xx-xx|xxxxxxxxxxxx)`.
 * `reauth_timeout` - (Optional) Type: `string`.
 * `reject_vlan_id` - (Optional) Type: `string`.
 * `retrans_timeout` - (Optional) Type: `string`. Default: `3000`.
 * `server_fail_vlan_id` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+In addition to the arguments above, the following attributes are exported:
+
+* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
+* `invalid` - Type: `bool`.
 
 ## Import
 

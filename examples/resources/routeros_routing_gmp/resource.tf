@@ -3,7 +3,8 @@ resource "routeros_routing_gmp" "gmp_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
-  # exclude = "replace-me"
+  # exclude = false
+  # group = "replace-me"
   # interfaces = "replace-me"
   # sources = "replace-me"
 }

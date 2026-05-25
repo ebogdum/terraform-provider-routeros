@@ -19,8 +19,10 @@ resource "routeros_user_group" "group_example" {
   comment = "managed by terraform"
 
   # Optional attributes (uncomment as needed):
+  # policies = "replace-me"
   # policy = ["read"]
   # skin = "replace-me"
+  # system = false
 }
 ```
 
@@ -31,8 +33,10 @@ This resource supports the following arguments:
 * `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `name` - (Required) Type: `string`. Default: `tf-acc-group`.
+* `policies` - (Optional) Type: `string`.
 * `policy` - (Optional) Type: `list`. Default: `read`.
 * `skin` - (Optional) Type: `string`.
+* `system` - (Optional) Type: `bool`.
 
 ## Import
 

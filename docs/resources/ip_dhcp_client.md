@@ -20,6 +20,7 @@ resource "routeros_ip_dhcp_client" "dhcp_client_example" {
   # Optional attributes (uncomment as needed):
   # add_default_route = "yes"
   # allow_reconfigure = false
+  # allow_reconfigure_messages = false
   # check_gateway = "none"
   # default_route_distance = 0
   # default_route_tables = "replace-me"
@@ -27,6 +28,10 @@ resource "routeros_ip_dhcp_client" "dhcp_client_example" {
   # dscp = 0
   # interface = "ether1"
   # name = "tf-example"
+  # release = "replace-me"
+  # renew = "replace-me"
+  # route = "replace-me"
+  # routing_tables = "replace-me"
   # script = "replace-me"
   # use_broadcast = "both"
   # use_peer_dns = true
@@ -40,8 +45,9 @@ resource "routeros_ip_dhcp_client" "dhcp_client_example" {
 This resource supports the following arguments:
 
 * `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `add_default_route` - (Optional) Type: `enum(no|yes|special classless)`. Default: `1`.
+* `add_default_route` - (Optional) Type: `enum(no|yes|special-classless)`. Default: `1`.
 * `allow_reconfigure` - (Optional) Type: `bool`.
+* `allow_reconfigure_messages` - (Optional) Type: `bool`.
 * `check_gateway` - (Optional) Type: `enum(none|arp|ping|bfd)`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `default_route_distance` - (Optional) Type: `int`.
@@ -51,6 +57,10 @@ This resource supports the following arguments:
 * `dscp` - (Optional) Type: `int`.
 * `interface` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
+* `release` - (Optional) Type: `string`.
+* `renew` - (Optional) Type: `string`.
+* `route` - (Optional) Type: `string`.
+* `routing_tables` - (Optional) Type: `string`.
 * `script` - (Optional) Type: `string`.
 * `use_broadcast` - (Optional) Type: `enum(both|always|never)`.
 * `use_peer_dns` - (Optional) Type: `bool`. Default: `1`.
@@ -63,13 +73,19 @@ In addition to the arguments above, the following attributes are exported:
 
 * `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
 * `address` - Type: `cidr`.
+* `caps_managers` - Type: `string`.
 * `dhcp_server` - Type: `ip`.
 * `dynamic` - Type: `bool`.
 * `expires_after` - Type: `duration`.
 * `gateway` - Type: `ip`.
 * `invalid` - Type: `bool`.
+* `ip_address` - Type: `cidr`.
+* `last_received_counter` - Type: `string`.
 * `primary_dns` - Type: `ip`.
 * `primary_ntp` - Type: `ip`.
+* `reconfigure_key` - Type: `string`.
+* `secondary_dns` - Type: `ip`.
+* `secondary_ntp` - Type: `ip`.
 * `status` - Type: `string`.
 
 ## Import

@@ -45,7 +45,7 @@ In addition to the arguments above, the following attributes are exported:
 * `bits` - Type: `int`.
 * `fingerprint` - Type: `string`.
 * `info` - Type: `string`.
-* `key_type` - Type: `enum(RSA|Ed25519|Ed25519-sk)`.
+* `key_type` - Type: `enum(rsa|ed25519|ed25519-sk)`.
 * `user` - Type: `string`.
 
 ## Import

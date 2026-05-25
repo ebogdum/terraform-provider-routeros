@@ -2,12 +2,12 @@
 subcategory: "System"
 page_title: "RouterOS: routeros_system_console"
 description: |-
-  Active console sessions -- RouterOS-managed; PUT EOFs because the endpoint isn't add-able.
+  Active console sessions — RouterOS-managed; PUT EOFs because the endpoint isn't add-able.
 ---
 
 # Resource: routeros_system_console
 
-Active console sessions -- RouterOS-managed; PUT EOFs because the endpoint isn't add-able.
+Active console sessions — RouterOS-managed; PUT EOFs because the endpoint isn't add-able.
 
 ## Example Usage
 
@@ -20,6 +20,8 @@ resource "routeros_system_console" "console_example" {
   # channel = 0
   # port = "443"
   # term = "replace-me"
+  # used = false
+  # wedged = false
 }
 ```
 
@@ -32,6 +34,8 @@ This resource supports the following arguments:
 * `disabled` - (Optional) Type: `bool`.
 * `port` - (Optional) Type: `string`.
 * `term` - (Optional) Type: `string`.
+* `used` - (Optional) Type: `bool`.
+* `wedged` - (Optional) Type: `bool`.
 
 ## Attribute Reference
 
@@ -40,6 +44,7 @@ In addition to the arguments above, the following attributes are exported:
 * `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
 * `default` - Type: `bool`.
 * `free` - Type: `bool`.
+* `vc` - Type: `int`.
 * `vcno` - Type: `int`.
 
 ## Import

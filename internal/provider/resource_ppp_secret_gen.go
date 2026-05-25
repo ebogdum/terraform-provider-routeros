@@ -32,22 +32,26 @@ type PPPSecretResource struct {
 }
 
 type PPPSecretModel struct {
-	ID               types.String `tfsdk:"id"`
-	CallerID         types.String `tfsdk:"caller_id"`
-	Comment          types.String `tfsdk:"comment"`
-	Disabled         types.Bool   `tfsdk:"disabled"`
-	IPV6Routes       types.String `tfsdk:"ipv6_routes"`
-	LimitBytesIn     types.String `tfsdk:"limit_bytes_in"`
-	LimitBytesOut    types.String `tfsdk:"limit_bytes_out"`
-	LocalAddress     types.String `tfsdk:"local_address"`
-	Name             types.String `tfsdk:"name"`
-	Password         types.String `tfsdk:"password"`
-	Profile          types.String `tfsdk:"profile"`
-	RemoteAddress    types.String `tfsdk:"remote_address"`
-	RemoteIPV6Prefix types.String `tfsdk:"remote_ipv6_prefix"`
-	Routes           types.String `tfsdk:"routes"`
-	Service          types.String `tfsdk:"service"`
-	Router           types.String `tfsdk:"router"`
+	ID                   types.String `tfsdk:"id"`
+	CallerID             types.String `tfsdk:"caller_id"`
+	Comment              types.String `tfsdk:"comment"`
+	Disabled             types.Bool   `tfsdk:"disabled"`
+	IPV6                 types.String `tfsdk:"ipv6"`
+	IPV6Routes           types.String `tfsdk:"ipv6_routes"`
+	LastCallerID         types.String `tfsdk:"last_caller_id"`
+	LastDisconnectReason types.String `tfsdk:"last_disconnect_reason"`
+	LastLoggedOut        types.String `tfsdk:"last_logged_out"`
+	LimitBytesIn         types.String `tfsdk:"limit_bytes_in"`
+	LimitBytesOut        types.String `tfsdk:"limit_bytes_out"`
+	LocalAddress         types.String `tfsdk:"local_address"`
+	Name                 types.String `tfsdk:"name"`
+	Password             types.String `tfsdk:"password"`
+	Profile              types.String `tfsdk:"profile"`
+	RemoteAddress        types.String `tfsdk:"remote_address"`
+	RemoteIPV6Prefix     types.String `tfsdk:"remote_ipv6_prefix"`
+	Routes               types.String `tfsdk:"routes"`
+	Service              types.String `tfsdk:"service"`
+	Router               types.String `tfsdk:"router"`
 }
 
 func NewPPPSecretResource() resource.Resource { return &PPPSecretResource{} }
@@ -89,7 +93,28 @@ func (r *PPPSecretResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Computed:    true,
 				Description: "Whether the entry is disabled.",
 			},
+			"ipv6": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"ipv6_routes": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"last_caller_id": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"last_disconnect_reason": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.OneOf([]string{"", "peer-request", "hung-up", "idle-timeout", "session-timeout", "reset", "reboot", "port-error", "nas-error", "nas-request"}...)},
+			},
+			"last_logged_out": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -172,6 +197,9 @@ func (r *PPPSecretResource) Create(ctx context.Context, req resource.CreateReque
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !(plan.IPV6.IsNull() || plan.IPV6.IsUnknown()) {
+		body["ipv6"] = plan.IPV6.ValueString()
 	}
 	if !(plan.IPV6Routes.IsNull() || plan.IPV6Routes.IsUnknown()) {
 		body["ipv6-routes"] = plan.IPV6Routes.ValueString()
@@ -261,6 +289,9 @@ func (r *PPPSecretResource) Update(ctx context.Context, req resource.UpdateReque
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !plan.IPV6.Equal(state.IPV6) {
+		body["ipv6"] = plan.IPV6.ValueString()
 	}
 	if !plan.IPV6Routes.Equal(state.IPV6Routes) {
 		body["ipv6-routes"] = plan.IPV6Routes.ValueString()
@@ -408,6 +439,16 @@ func pPPSecretApply(ctx context.Context, obj client.Object, m *PPPSecretModel) {
 	} else {
 		m.Disabled = types.BoolNull()
 	}
+	if v, ok := obj["ipv6"]; ok {
+		_ = v
+		if v != "" {
+			m.IPV6 = types.StringValue(v)
+		} else {
+			m.IPV6 = types.StringNull()
+		}
+	} else {
+		m.IPV6 = types.StringNull()
+	}
 	if v, ok := obj["ipv6-routes"]; ok {
 		_ = v
 		if v != "" {
@@ -417,6 +458,36 @@ func pPPSecretApply(ctx context.Context, obj client.Object, m *PPPSecretModel) {
 		}
 	} else {
 		m.IPV6Routes = types.StringNull()
+	}
+	if v, ok := obj["last-caller-id"]; ok {
+		_ = v
+		if v != "" {
+			m.LastCallerID = types.StringValue(v)
+		} else {
+			m.LastCallerID = types.StringNull()
+		}
+	} else {
+		m.LastCallerID = types.StringNull()
+	}
+	if v, ok := obj["last-disconnect-reason"]; ok {
+		_ = v
+		if v != "" {
+			m.LastDisconnectReason = types.StringValue(v)
+		} else {
+			m.LastDisconnectReason = types.StringNull()
+		}
+	} else {
+		m.LastDisconnectReason = types.StringNull()
+	}
+	if v, ok := obj["last-logged-out"]; ok {
+		_ = v
+		if v != "" {
+			m.LastLoggedOut = types.StringValue(v)
+		} else {
+			m.LastLoggedOut = types.StringNull()
+		}
+	} else {
+		m.LastLoggedOut = types.StringNull()
 	}
 	if v, ok := obj["limit-bytes-in"]; ok {
 		_ = v

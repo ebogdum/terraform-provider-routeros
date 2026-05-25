@@ -41,10 +41,14 @@ This data source supports the following arguments:
 * `ssid_regexp` - (Optional) Type: `string`.
 * `time` - (Optional) Type: `string`.
 * `vlan_id` - (Optional) Type: `string`.
+* `weekdays` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
 This data source exports the following attributes in addition to the arguments above:
 
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
+* `last_logged_in` - Type: `string`.
+* `last_logged_out` - Type: `string`.
+* `times_matched` - Type: `string`.
 

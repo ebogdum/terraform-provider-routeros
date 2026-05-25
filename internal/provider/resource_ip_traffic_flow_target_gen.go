@@ -32,13 +32,16 @@ type IPTrafficFlowTargetResource struct {
 }
 
 type IPTrafficFlowTargetModel struct {
-	ID         types.String `tfsdk:"id"`
-	Disabled   types.Bool   `tfsdk:"disabled"`
-	DstAddress types.String `tfsdk:"dst_address"`
-	Port       types.Int64  `tfsdk:"port"`
-	SrcAddress types.String `tfsdk:"src_address"`
-	Version    types.String `tfsdk:"version"`
-	Router     types.String `tfsdk:"router"`
+	ID                     types.String `tfsdk:"id"`
+	Disabled               types.Bool   `tfsdk:"disabled"`
+	DstAddress             types.String `tfsdk:"dst_address"`
+	Port                   types.Int64  `tfsdk:"port"`
+	SrcAddress             types.String `tfsdk:"src_address"`
+	V9                     types.String `tfsdk:"v9"`
+	V9IpfixTemplateRefresh types.Int64  `tfsdk:"v9_ipfix_template_refresh"`
+	V9IpfixTemplateTimeout types.Int64  `tfsdk:"v9_ipfix_template_timeout"`
+	Version                types.String `tfsdk:"version"`
+	Router                 types.String `tfsdk:"router"`
 }
 
 func NewIPTrafficFlowTargetResource() resource.Resource { return &IPTrafficFlowTargetResource{} }
@@ -85,11 +88,26 @@ func (r *IPTrafficFlowTargetResource) Schema(_ context.Context, _ resource.Schem
 				Computed:    true,
 				Description: "",
 			},
+			"v9": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"v9_ipfix_template_refresh": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"v9_ipfix_template_timeout": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"version": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"1", "5", "9", "IPFIX"}...)},
+				Validators:  []validator.String{schemautil.OneOf([]string{"1", "5", "9", "ipfix"}...)},
 			},
 			"router": schema.StringAttribute{
 				Optional:    true,
@@ -121,6 +139,15 @@ func (r *IPTrafficFlowTargetResource) Create(ctx context.Context, req resource.C
 	}
 	if !(plan.SrcAddress.IsNull() || plan.SrcAddress.IsUnknown()) {
 		body["src-address"] = plan.SrcAddress.ValueString()
+	}
+	if !(plan.V9.IsNull() || plan.V9.IsUnknown()) {
+		body["v9"] = plan.V9.ValueString()
+	}
+	if !(plan.V9IpfixTemplateRefresh.IsNull() || plan.V9IpfixTemplateRefresh.IsUnknown()) {
+		body["v9-ipfix-template-refresh"] = client.FormatInt64(plan.V9IpfixTemplateRefresh.ValueInt64())
+	}
+	if !(plan.V9IpfixTemplateTimeout.IsNull() || plan.V9IpfixTemplateTimeout.IsUnknown()) {
+		body["v9-ipfix-template-timeout"] = client.FormatInt64(plan.V9IpfixTemplateTimeout.ValueInt64())
 	}
 	if !(plan.Version.IsNull() || plan.Version.IsUnknown()) {
 		body["version"] = plan.Version.ValueString()
@@ -183,6 +210,15 @@ func (r *IPTrafficFlowTargetResource) Update(ctx context.Context, req resource.U
 	}
 	if !plan.SrcAddress.Equal(state.SrcAddress) {
 		body["src-address"] = plan.SrcAddress.ValueString()
+	}
+	if !plan.V9.Equal(state.V9) {
+		body["v9"] = plan.V9.ValueString()
+	}
+	if !plan.V9IpfixTemplateRefresh.Equal(state.V9IpfixTemplateRefresh) {
+		body["v9-ipfix-template-refresh"] = client.FormatInt64(plan.V9IpfixTemplateRefresh.ValueInt64())
+	}
+	if !plan.V9IpfixTemplateTimeout.Equal(state.V9IpfixTemplateTimeout) {
+		body["v9-ipfix-template-timeout"] = client.FormatInt64(plan.V9IpfixTemplateTimeout.ValueInt64())
 	}
 	if !plan.Version.Equal(state.Version) {
 		body["version"] = plan.Version.ValueString()
@@ -309,6 +345,36 @@ func iPTrafficFlowTargetApply(ctx context.Context, obj client.Object, m *IPTraff
 		}
 	} else {
 		m.SrcAddress = types.StringNull()
+	}
+	if v, ok := obj["v9"]; ok {
+		_ = v
+		if v != "" {
+			m.V9 = types.StringValue(v)
+		} else {
+			m.V9 = types.StringNull()
+		}
+	} else {
+		m.V9 = types.StringNull()
+	}
+	if v, ok := obj["v9-ipfix-template-refresh"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.V9IpfixTemplateRefresh = types.Int64Value(n)
+		} else {
+			m.V9IpfixTemplateRefresh = types.Int64Null()
+		}
+	} else {
+		m.V9IpfixTemplateRefresh = types.Int64Null()
+	}
+	if v, ok := obj["v9-ipfix-template-timeout"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.V9IpfixTemplateTimeout = types.Int64Value(n)
+		} else {
+			m.V9IpfixTemplateTimeout = types.Int64Null()
+		}
+	} else {
+		m.V9IpfixTemplateTimeout = types.Int64Null()
 	}
 	if v, ok := obj["version"]; ok {
 		_ = v

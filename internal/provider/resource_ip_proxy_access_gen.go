@@ -12,9 +12,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
 )
 
 var (
@@ -38,6 +40,7 @@ type IPProxyAccessModel struct {
 	DstPort    types.String `tfsdk:"dst_port"`
 	Path       types.String `tfsdk:"path"`
 	SrcAddress types.String `tfsdk:"src_address"`
+	SrcPort    types.String `tfsdk:"src_port"`
 	Router     types.String `tfsdk:"router"`
 }
 
@@ -69,6 +72,7 @@ func (r *IPProxyAccessResource) Schema(_ context.Context, _ resource.SchemaReque
 				Optional:    true,
 				Computed:    true,
 				Description: "",
+				Validators:  []validator.String{schemautil.OneOf([]string{"deny", "accept"}...)},
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -96,6 +100,11 @@ func (r *IPProxyAccessResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"src_address": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"src_port": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -139,6 +148,9 @@ func (r *IPProxyAccessResource) Create(ctx context.Context, req resource.CreateR
 	}
 	if !(plan.SrcAddress.IsNull() || plan.SrcAddress.IsUnknown()) {
 		body["src-address"] = plan.SrcAddress.ValueString()
+	}
+	if !(plan.SrcPort.IsNull() || plan.SrcPort.IsUnknown()) {
+		body["src-port"] = plan.SrcPort.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ip/proxy/access", body)
 	if err != nil {
@@ -207,6 +219,9 @@ func (r *IPProxyAccessResource) Update(ctx context.Context, req resource.UpdateR
 	}
 	if !plan.SrcAddress.Equal(state.SrcAddress) {
 		body["src-address"] = plan.SrcAddress.ValueString()
+	}
+	if !plan.SrcPort.Equal(state.SrcPort) {
+		body["src-port"] = plan.SrcPort.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/proxy/access", state.ID.ValueString(), body)
@@ -360,5 +375,15 @@ func iPProxyAccessApply(ctx context.Context, obj client.Object, m *IPProxyAccess
 		}
 	} else {
 		m.SrcAddress = types.StringNull()
+	}
+	if v, ok := obj["src-port"]; ok {
+		_ = v
+		if v != "" {
+			m.SrcPort = types.StringValue(v)
+		} else {
+			m.SrcPort = types.StringNull()
+		}
+	} else {
+		m.SrcPort = types.StringNull()
 	}
 }

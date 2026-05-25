@@ -32,7 +32,8 @@ type RoutingGmpResource struct {
 type RoutingGmpModel struct {
 	ID         types.String `tfsdk:"id"`
 	Disabled   types.Bool   `tfsdk:"disabled"`
-	Exclude    types.String `tfsdk:"exclude"`
+	Exclude    types.Bool   `tfsdk:"exclude"`
+	Group      types.String `tfsdk:"group"`
 	Interfaces types.String `tfsdk:"interfaces"`
 	Sources    types.String `tfsdk:"sources"`
 	Router     types.String `tfsdk:"router"`
@@ -67,7 +68,12 @@ func (r *RoutingGmpResource) Schema(_ context.Context, _ resource.SchemaRequest,
 				Computed:    true,
 				Description: "Whether the entry is disabled.",
 			},
-			"exclude": schema.StringAttribute{
+			"exclude": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"group": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -105,7 +111,10 @@ func (r *RoutingGmpResource) Create(ctx context.Context, req resource.CreateRequ
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
 	if !(plan.Exclude.IsNull() || plan.Exclude.IsUnknown()) {
-		body["exclude"] = plan.Exclude.ValueString()
+		body["exclude"] = client.FormatBool(plan.Exclude.ValueBool())
+	}
+	if !(plan.Group.IsNull() || plan.Group.IsUnknown()) {
+		body["group"] = plan.Group.ValueString()
 	}
 	if !(plan.Interfaces.IsNull() || plan.Interfaces.IsUnknown()) {
 		body["interfaces"] = plan.Interfaces.ValueString()
@@ -164,7 +173,10 @@ func (r *RoutingGmpResource) Update(ctx context.Context, req resource.UpdateRequ
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
 	if !plan.Exclude.Equal(state.Exclude) {
-		body["exclude"] = plan.Exclude.ValueString()
+		body["exclude"] = client.FormatBool(plan.Exclude.ValueBool())
+	}
+	if !plan.Group.Equal(state.Group) {
+		body["group"] = plan.Group.ValueString()
 	}
 	if !plan.Interfaces.Equal(state.Interfaces) {
 		body["interfaces"] = plan.Interfaces.ValueString()
@@ -267,13 +279,23 @@ func routingGmpApply(ctx context.Context, obj client.Object, m *RoutingGmpModel)
 	}
 	if v, ok := obj["exclude"]; ok {
 		_ = v
-		if v != "" {
-			m.Exclude = types.StringValue(v)
+		if b, err := client.ParseBool(v); err == nil {
+			m.Exclude = types.BoolValue(b)
 		} else {
-			m.Exclude = types.StringNull()
+			m.Exclude = types.BoolNull()
 		}
 	} else {
-		m.Exclude = types.StringNull()
+		m.Exclude = types.BoolNull()
+	}
+	if v, ok := obj["group"]; ok {
+		_ = v
+		if v != "" {
+			m.Group = types.StringValue(v)
+		} else {
+			m.Group = types.StringNull()
+		}
+	} else {
+		m.Group = types.StringNull()
 	}
 	if v, ok := obj["interfaces"]; ok {
 		_ = v

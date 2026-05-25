@@ -12,6 +12,7 @@ resource "routeros_interface_eoip" "eoip_example" {
   # arp = "enabled"
   # arp_timeout = "1h"
   # clamp_tcp_mss = true
+  # disable_time = "300"
   # dont_fragment = "no"
   # dscp = "inherit"
   # ipsec_secret = "REDACTED"
@@ -22,4 +23,5 @@ resource "routeros_interface_eoip" "eoip_example" {
   # loop_protect_send_interval = "replace-me"
   # mac_address = "10.99.0.0/24"
   # mtu = 0
+  # send_interval = "5"
 }

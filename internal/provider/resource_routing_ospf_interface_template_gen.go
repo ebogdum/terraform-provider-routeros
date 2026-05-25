@@ -36,6 +36,7 @@ type RoutingOSPFInterfaceTemplateModel struct {
 	Area               types.String `tfsdk:"area"`
 	AuthID             types.String `tfsdk:"auth_id"`
 	AuthKey            types.String `tfsdk:"auth_key"`
+	Authentication     types.String `tfsdk:"authentication"`
 	Comment            types.String `tfsdk:"comment"`
 	Cost               types.Int64  `tfsdk:"cost"`
 	DeadInterval       types.String `tfsdk:"dead_interval"`
@@ -43,8 +44,10 @@ type RoutingOSPFInterfaceTemplateModel struct {
 	HelloInterval      types.String `tfsdk:"hello_interval"`
 	InstanceID         types.Int64  `tfsdk:"instance_id"`
 	Interfaces         types.String `tfsdk:"interfaces"`
+	Invalid            types.Bool   `tfsdk:"invalid"`
+	NetworkType        types.String `tfsdk:"network_type"`
 	Networks           types.String `tfsdk:"networks"`
-	Passive            types.String `tfsdk:"passive"`
+	Passive            types.Bool   `tfsdk:"passive"`
 	PrefixList         types.String `tfsdk:"prefix_list"`
 	Priority           types.Int64  `tfsdk:"priority"`
 	RetransmitInterval types.String `tfsdk:"retransmit_interval"`
@@ -97,6 +100,11 @@ func (r *RoutingOSPFInterfaceTemplateResource) Schema(_ context.Context, _ resou
 				Sensitive:   true,
 				Description: "",
 			},
+			"authentication": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -136,12 +144,23 @@ func (r *RoutingOSPFInterfaceTemplateResource) Schema(_ context.Context, _ resou
 				Computed:    true,
 				Description: "",
 			},
+			"invalid": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"network_type": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.OneOf([]string{"broadcast", "nbma", "ptp", "ptp-unnumbered", "ptmp", "virtual-link", "ptmp-broadcast"}...)},
+			},
 			"networks": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
-			"passive": schema.StringAttribute{
+			"passive": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -211,6 +230,9 @@ func (r *RoutingOSPFInterfaceTemplateResource) Create(ctx context.Context, req r
 	if !(plan.AuthKey.IsNull() || plan.AuthKey.IsUnknown()) {
 		body["auth-key"] = plan.AuthKey.ValueString()
 	}
+	if !(plan.Authentication.IsNull() || plan.Authentication.IsUnknown()) {
+		body["authentication"] = plan.Authentication.ValueString()
+	}
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
 	}
@@ -232,11 +254,14 @@ func (r *RoutingOSPFInterfaceTemplateResource) Create(ctx context.Context, req r
 	if !(plan.Interfaces.IsNull() || plan.Interfaces.IsUnknown()) {
 		body["interfaces"] = plan.Interfaces.ValueString()
 	}
+	if !(plan.NetworkType.IsNull() || plan.NetworkType.IsUnknown()) {
+		body["network-type"] = plan.NetworkType.ValueString()
+	}
 	if !(plan.Networks.IsNull() || plan.Networks.IsUnknown()) {
 		body["networks"] = plan.Networks.ValueString()
 	}
 	if !(plan.Passive.IsNull() || plan.Passive.IsUnknown()) {
-		body["passive"] = plan.Passive.ValueString()
+		body["passive"] = client.FormatBool(plan.Passive.ValueBool())
 	}
 	if !(plan.PrefixList.IsNull() || plan.PrefixList.IsUnknown()) {
 		body["prefix-list"] = plan.PrefixList.ValueString()
@@ -315,6 +340,9 @@ func (r *RoutingOSPFInterfaceTemplateResource) Update(ctx context.Context, req r
 	if !plan.AuthKey.Equal(state.AuthKey) {
 		body["auth-key"] = plan.AuthKey.ValueString()
 	}
+	if !plan.Authentication.Equal(state.Authentication) {
+		body["authentication"] = plan.Authentication.ValueString()
+	}
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
 	}
@@ -336,11 +364,14 @@ func (r *RoutingOSPFInterfaceTemplateResource) Update(ctx context.Context, req r
 	if !plan.Interfaces.Equal(state.Interfaces) {
 		body["interfaces"] = plan.Interfaces.ValueString()
 	}
+	if !plan.NetworkType.Equal(state.NetworkType) {
+		body["network-type"] = plan.NetworkType.ValueString()
+	}
 	if !plan.Networks.Equal(state.Networks) {
 		body["networks"] = plan.Networks.ValueString()
 	}
 	if !plan.Passive.Equal(state.Passive) {
-		body["passive"] = plan.Passive.ValueString()
+		body["passive"] = client.FormatBool(plan.Passive.ValueBool())
 	}
 	if !plan.PrefixList.Equal(state.PrefixList) {
 		body["prefix-list"] = plan.PrefixList.ValueString()
@@ -480,6 +511,16 @@ func routingOSPFInterfaceTemplateApply(ctx context.Context, obj client.Object, m
 	} else if m.AuthKey.IsUnknown() {
 		m.AuthKey = types.StringNull()
 	}
+	if v, ok := obj["authentication"]; ok {
+		_ = v
+		if v != "" {
+			m.Authentication = types.StringValue(v)
+		} else {
+			m.Authentication = types.StringNull()
+		}
+	} else {
+		m.Authentication = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {
@@ -550,6 +591,26 @@ func routingOSPFInterfaceTemplateApply(ctx context.Context, obj client.Object, m
 	} else {
 		m.Interfaces = types.StringNull()
 	}
+	if v, ok := obj["invalid"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Invalid = types.BoolValue(b)
+		} else {
+			m.Invalid = types.BoolNull()
+		}
+	} else {
+		m.Invalid = types.BoolNull()
+	}
+	if v, ok := obj["network-type"]; ok {
+		_ = v
+		if v != "" {
+			m.NetworkType = types.StringValue(v)
+		} else {
+			m.NetworkType = types.StringNull()
+		}
+	} else {
+		m.NetworkType = types.StringNull()
+	}
 	if v, ok := obj["networks"]; ok {
 		_ = v
 		if v != "" {
@@ -562,13 +623,13 @@ func routingOSPFInterfaceTemplateApply(ctx context.Context, obj client.Object, m
 	}
 	if v, ok := obj["passive"]; ok {
 		_ = v
-		if v != "" {
-			m.Passive = types.StringValue(v)
+		if b, err := client.ParseBool(v); err == nil {
+			m.Passive = types.BoolValue(b)
 		} else {
-			m.Passive = types.StringNull()
+			m.Passive = types.BoolNull()
 		}
 	} else {
-		m.Passive = types.StringNull()
+		m.Passive = types.BoolNull()
 	}
 	if v, ok := obj["prefix-list"]; ok {
 		_ = v

@@ -17,4 +17,5 @@ resource "routeros_interface_wifi_access_list" "access_list_example" {
   # ssid_regexp = "replace-me"
   # time = "replace-me"
   # vlan_id = "replace-me"
+  # weekdays = "replace-me"
 }

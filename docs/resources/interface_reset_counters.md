@@ -2,12 +2,12 @@
 subcategory: "Interfaces"
 page_title: "RouterOS: routeros_interface_reset_counters"
 description: |-
-  Needs an interface .id. Skipped -- generic acc test cannot target the right interface safely.
+  Needs an interface .id. Skipped — generic acc test cannot target the right interface safely.
 ---
 
 # Resource: routeros_interface_reset_counters
 
-Needs an interface .id. Skipped -- generic acc test cannot target the right interface safely.
+Needs an interface .id. Skipped — generic acc test cannot target the right interface safely.
 
 ## Example Usage
 

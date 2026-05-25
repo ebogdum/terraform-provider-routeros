@@ -26,8 +26,10 @@ This data source supports the following arguments:
 * `router` - (Optional) Name of the router in the provider's `routers` map to query.
 * `filter` - (Optional) Map of field=value pairs to narrow the result set.
 * `proplist` - (Optional) List of property names to project; smaller payload.
+* `ca_certificate` - (Optional) Type: `string`.
 * `days_valid` - (Optional) Type: `int`. Default: `1`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `next_ca_certificate` - (Optional) Type: `string`.
 * `path` - (Optional) Type: `string`.
 * `request_lifetime` - (Optional) Type: `duration`. Default: `3600`.
 

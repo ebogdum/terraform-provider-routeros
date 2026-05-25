@@ -29,7 +29,9 @@ This data source supports the following arguments:
 * `comment` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`.
 * `dns_servers` - (Optional) Type: `string`.
+* `do_h_servers` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
+* `verify_do_h_certificate` - (Optional) Type: `bool`.
 
 ## Attribute Reference
 

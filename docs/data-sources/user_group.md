@@ -28,8 +28,10 @@ This data source supports the following arguments:
 * `proplist` - (Optional) List of property names to project; smaller payload.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `name` - (Required) Type: `string`. Default: `tf-acc-group`.
+* `policies` - (Optional) Type: `string`.
 * `policy` - (Optional) Type: `list`. Default: `read`.
 * `skin` - (Optional) Type: `string`.
+* `system` - (Optional) Type: `bool`.
 
 ## Attribute Reference
 

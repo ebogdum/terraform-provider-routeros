@@ -31,7 +31,11 @@ This data source supports the following arguments:
 * `address_prefix_length` - (Optional) Type: `int`. Default: `24`.
 * `connection_mark` - (Optional) Type: `string`.
 * `name` - (Required) Type: `string`. Default: `tf_acc_modecfg`.
+* `nonresp` - (Optional) Type: `string`.
+* `pool` - (Optional) Type: `string`.
+* `resp` - (Optional) Type: `string`.
 * `responder` - (Optional) Type: `bool`.
+* `sdns` - (Optional) Type: `string`.
 * `split_dns` - (Optional) Type: `string`.
 * `split_include` - (Optional) Type: `string`.
 * `src_address_list` - (Optional) Type: `string`.

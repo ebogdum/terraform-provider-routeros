@@ -27,11 +27,15 @@ This data source supports the following arguments:
 * `filter` - (Optional) Map of field=value pairs to narrow the result set.
 * `proplist` - (Optional) List of property names to project; smaller payload.
 * `address` - (Optional) Type: `string`.
+* `available_from` - (Optional) Type: `string`.
+* `cert` - (Optional) Type: `string`.
 * `certificate` - (Optional) Type: `string`. Default: `4.294967295e+09`.
+* `conn` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`.
 * `max_sessions` - (Optional) Type: `int`.
+* `nondyn` - (Optional) Type: `string`.
 * `port` - (Optional) Type: `int`.
-* `tls_version` - (Optional) Type: `enum(any|only v1.2)`.
+* `tls_version` - (Optional) Type: `enum(any|only-v1.2)`.
 * `vrf` - (Optional) Type: `string`.
 
 ## Attribute Reference
@@ -40,10 +44,13 @@ This data source exports the following attributes in addition to the arguments a
 
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
 * `connection` - Type: `bool`.
+* `container` - Type: `string`.
 * `dynamic` - Type: `bool`.
 * `invalid` - Type: `bool`.
 * `local` - Type: `ip`.
 * `name` - Type: `string`.
+* `net_ns` - Type: `int`.
 * `proto` - Type: `string`.
+* `protocol` - Type: `enum(tcp|udp)`.
 * `remote` - Type: `string`.
 

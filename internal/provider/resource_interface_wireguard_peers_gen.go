@@ -12,9 +12,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
 )
 
 var (
@@ -30,26 +32,35 @@ type InterfaceWireguardPeersResource struct {
 }
 
 type InterfaceWireguardPeersModel struct {
-	ID                   types.String `tfsdk:"id"`
-	AllowedAddress       types.String `tfsdk:"allowed_address"`
-	ClientAddress        types.String `tfsdk:"client_address"`
-	ClientAllowedAddress types.String `tfsdk:"client_allowed_address"`
-	ClientDNS            types.String `tfsdk:"client_dns"`
-	ClientEndpoint       types.String `tfsdk:"client_endpoint"`
-	ClientKeepalive      types.String `tfsdk:"client_keepalive"`
-	ClientListenPort     types.String `tfsdk:"client_listen_port"`
-	Comment              types.String `tfsdk:"comment"`
-	Disabled             types.Bool   `tfsdk:"disabled"`
-	EndpointAddress      types.String `tfsdk:"endpoint_address"`
-	EndpointPort         types.String `tfsdk:"endpoint_port"`
-	Interface            types.String `tfsdk:"interface"`
-	Name                 types.String `tfsdk:"name"`
-	PersistentKeepalive  types.String `tfsdk:"persistent_keepalive"`
-	PresharedKey         types.String `tfsdk:"preshared_key"`
-	PrivateKey           types.String `tfsdk:"private_key"`
-	PublicKey            types.String `tfsdk:"public_key"`
-	Responder            types.String `tfsdk:"responder"`
-	Router               types.String `tfsdk:"router"`
+	ID                     types.String `tfsdk:"id"`
+	AllowedAddress         types.String `tfsdk:"allowed_address"`
+	ClientAddress          types.String `tfsdk:"client_address"`
+	ClientAllowedAddress   types.String `tfsdk:"client_allowed_address"`
+	ClientConfig           types.String `tfsdk:"client_config"`
+	ClientDNS              types.String `tfsdk:"client_dns"`
+	ClientEndpoint         types.String `tfsdk:"client_endpoint"`
+	ClientKeepalive        types.String `tfsdk:"client_keepalive"`
+	ClientListenPort       types.Int64  `tfsdk:"client_listen_port"`
+	ClientQr               types.String `tfsdk:"client_qr"`
+	Comment                types.String `tfsdk:"comment"`
+	CurrentEndpointAddress types.String `tfsdk:"current_endpoint_address"`
+	CurrentEndpointPort    types.Int64  `tfsdk:"current_endpoint_port"`
+	Disabled               types.Bool   `tfsdk:"disabled"`
+	Dynamic                types.Bool   `tfsdk:"dynamic"`
+	Endpoint               types.String `tfsdk:"endpoint"`
+	EndpointAddress        types.String `tfsdk:"endpoint_address"`
+	EndpointPort           types.Int64  `tfsdk:"endpoint_port"`
+	Interface              types.String `tfsdk:"interface"`
+	LastHandshake          types.String `tfsdk:"last_handshake"`
+	Name                   types.String `tfsdk:"name"`
+	PersistentKeepalive    types.String `tfsdk:"persistent_keepalive"`
+	PresharedKey           types.String `tfsdk:"preshared_key"`
+	PrivateKey             types.String `tfsdk:"private_key"`
+	PublicKey              types.String `tfsdk:"public_key"`
+	Responder              types.Bool   `tfsdk:"responder"`
+	Rx                     types.String `tfsdk:"rx"`
+	Tx                     types.String `tfsdk:"tx"`
+	Router                 types.String `tfsdk:"router"`
 }
 
 func NewInterfaceWireguardPeersResource() resource.Resource {
@@ -93,6 +104,11 @@ func (r *InterfaceWireguardPeersResource) Schema(_ context.Context, _ resource.S
 				Computed:    true,
 				Description: "",
 			},
+			"client_config": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"client_dns": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -104,11 +120,18 @@ func (r *InterfaceWireguardPeersResource) Schema(_ context.Context, _ resource.S
 				Description: "",
 			},
 			"client_keepalive": schema.StringAttribute{
+				Optional:      true,
+				Computed:      true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			},
+			"client_listen_port": schema.Int64Attribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
-			"client_listen_port": schema.StringAttribute{
+			"client_qr": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -118,17 +141,37 @@ func (r *InterfaceWireguardPeersResource) Schema(_ context.Context, _ resource.S
 				Computed:    true,
 				Description: "Free-form comment.",
 			},
+			"current_endpoint_address": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"current_endpoint_port": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"disabled": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "Whether the entry is disabled.",
+			},
+			"dynamic": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"endpoint": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
 			},
 			"endpoint_address": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
-			"endpoint_port": schema.StringAttribute{
+			"endpoint_port": schema.Int64Attribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -138,15 +181,24 @@ func (r *InterfaceWireguardPeersResource) Schema(_ context.Context, _ resource.S
 				Computed:    true,
 				Description: "",
 			},
+			"last_handshake": schema.StringAttribute{
+				Optional:      true,
+				Computed:      true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			},
 			"name": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"persistent_keepalive": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "",
+				Optional:      true,
+				Computed:      true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
 			},
 			"preshared_key": schema.StringAttribute{
 				Optional:    true,
@@ -165,7 +217,17 @@ func (r *InterfaceWireguardPeersResource) Schema(_ context.Context, _ resource.S
 				Computed:    true,
 				Description: "",
 			},
-			"responder": schema.StringAttribute{
+			"responder": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"rx": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"tx": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -208,7 +270,7 @@ func (r *InterfaceWireguardPeersResource) Create(ctx context.Context, req resour
 		body["client-keepalive"] = plan.ClientKeepalive.ValueString()
 	}
 	if !(plan.ClientListenPort.IsNull() || plan.ClientListenPort.IsUnknown()) {
-		body["client-listen-port"] = plan.ClientListenPort.ValueString()
+		body["client-listen-port"] = client.FormatInt64(plan.ClientListenPort.ValueInt64())
 	}
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
@@ -216,11 +278,14 @@ func (r *InterfaceWireguardPeersResource) Create(ctx context.Context, req resour
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
+	if !(plan.Endpoint.IsNull() || plan.Endpoint.IsUnknown()) {
+		body["endpoint"] = plan.Endpoint.ValueString()
+	}
 	if !(plan.EndpointAddress.IsNull() || plan.EndpointAddress.IsUnknown()) {
 		body["endpoint-address"] = plan.EndpointAddress.ValueString()
 	}
 	if !(plan.EndpointPort.IsNull() || plan.EndpointPort.IsUnknown()) {
-		body["endpoint-port"] = plan.EndpointPort.ValueString()
+		body["endpoint-port"] = client.FormatInt64(plan.EndpointPort.ValueInt64())
 	}
 	if !(plan.Interface.IsNull() || plan.Interface.IsUnknown()) {
 		body["interface"] = plan.Interface.ValueString()
@@ -241,7 +306,7 @@ func (r *InterfaceWireguardPeersResource) Create(ctx context.Context, req resour
 		body["public-key"] = plan.PublicKey.ValueString()
 	}
 	if !(plan.Responder.IsNull() || plan.Responder.IsUnknown()) {
-		body["responder"] = plan.Responder.ValueString()
+		body["responder"] = client.FormatBool(plan.Responder.ValueBool())
 	}
 	obj, err := c.Add(ctx, "/interface/wireguard/peers", body)
 	if err != nil {
@@ -309,7 +374,7 @@ func (r *InterfaceWireguardPeersResource) Update(ctx context.Context, req resour
 		body["client-keepalive"] = plan.ClientKeepalive.ValueString()
 	}
 	if !plan.ClientListenPort.Equal(state.ClientListenPort) {
-		body["client-listen-port"] = plan.ClientListenPort.ValueString()
+		body["client-listen-port"] = client.FormatInt64(plan.ClientListenPort.ValueInt64())
 	}
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
@@ -317,11 +382,14 @@ func (r *InterfaceWireguardPeersResource) Update(ctx context.Context, req resour
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
+	if !plan.Endpoint.Equal(state.Endpoint) {
+		body["endpoint"] = plan.Endpoint.ValueString()
+	}
 	if !plan.EndpointAddress.Equal(state.EndpointAddress) {
 		body["endpoint-address"] = plan.EndpointAddress.ValueString()
 	}
 	if !plan.EndpointPort.Equal(state.EndpointPort) {
-		body["endpoint-port"] = plan.EndpointPort.ValueString()
+		body["endpoint-port"] = client.FormatInt64(plan.EndpointPort.ValueInt64())
 	}
 	if !plan.Interface.Equal(state.Interface) {
 		body["interface"] = plan.Interface.ValueString()
@@ -342,7 +410,7 @@ func (r *InterfaceWireguardPeersResource) Update(ctx context.Context, req resour
 		body["public-key"] = plan.PublicKey.ValueString()
 	}
 	if !plan.Responder.Equal(state.Responder) {
-		body["responder"] = plan.Responder.ValueString()
+		body["responder"] = client.FormatBool(plan.Responder.ValueBool())
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/wireguard/peers", state.ID.ValueString(), body)
@@ -457,6 +525,16 @@ func interfaceWireguardPeersApply(ctx context.Context, obj client.Object, m *Int
 	} else {
 		m.ClientAllowedAddress = types.StringNull()
 	}
+	if v, ok := obj["client-config"]; ok {
+		_ = v
+		if v != "" {
+			m.ClientConfig = types.StringValue(v)
+		} else {
+			m.ClientConfig = types.StringNull()
+		}
+	} else {
+		m.ClientConfig = types.StringNull()
+	}
 	if v, ok := obj["client-dns"]; ok {
 		_ = v
 		if v != "" {
@@ -489,13 +567,23 @@ func interfaceWireguardPeersApply(ctx context.Context, obj client.Object, m *Int
 	}
 	if v, ok := obj["client-listen-port"]; ok {
 		_ = v
-		if v != "" {
-			m.ClientListenPort = types.StringValue(v)
+		if n, err := client.ParseInt64(v); err == nil {
+			m.ClientListenPort = types.Int64Value(n)
 		} else {
-			m.ClientListenPort = types.StringNull()
+			m.ClientListenPort = types.Int64Null()
 		}
 	} else {
-		m.ClientListenPort = types.StringNull()
+		m.ClientListenPort = types.Int64Null()
+	}
+	if v, ok := obj["client-qr"]; ok {
+		_ = v
+		if v != "" {
+			m.ClientQr = types.StringValue(v)
+		} else {
+			m.ClientQr = types.StringNull()
+		}
+	} else {
+		m.ClientQr = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
@@ -507,6 +595,26 @@ func interfaceWireguardPeersApply(ctx context.Context, obj client.Object, m *Int
 	} else {
 		m.Comment = types.StringNull()
 	}
+	if v, ok := obj["current-endpoint-address"]; ok {
+		_ = v
+		if v != "" {
+			m.CurrentEndpointAddress = types.StringValue(v)
+		} else {
+			m.CurrentEndpointAddress = types.StringNull()
+		}
+	} else {
+		m.CurrentEndpointAddress = types.StringNull()
+	}
+	if v, ok := obj["current-endpoint-port"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.CurrentEndpointPort = types.Int64Value(n)
+		} else {
+			m.CurrentEndpointPort = types.Int64Null()
+		}
+	} else {
+		m.CurrentEndpointPort = types.Int64Null()
+	}
 	if v, ok := obj["disabled"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
@@ -516,6 +624,26 @@ func interfaceWireguardPeersApply(ctx context.Context, obj client.Object, m *Int
 		}
 	} else {
 		m.Disabled = types.BoolNull()
+	}
+	if v, ok := obj["dynamic"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Dynamic = types.BoolValue(b)
+		} else {
+			m.Dynamic = types.BoolNull()
+		}
+	} else {
+		m.Dynamic = types.BoolNull()
+	}
+	if v, ok := obj["endpoint"]; ok {
+		_ = v
+		if v != "" {
+			m.Endpoint = types.StringValue(v)
+		} else {
+			m.Endpoint = types.StringNull()
+		}
+	} else {
+		m.Endpoint = types.StringNull()
 	}
 	if v, ok := obj["endpoint-address"]; ok {
 		_ = v
@@ -529,13 +657,13 @@ func interfaceWireguardPeersApply(ctx context.Context, obj client.Object, m *Int
 	}
 	if v, ok := obj["endpoint-port"]; ok {
 		_ = v
-		if v != "" {
-			m.EndpointPort = types.StringValue(v)
+		if n, err := client.ParseInt64(v); err == nil {
+			m.EndpointPort = types.Int64Value(n)
 		} else {
-			m.EndpointPort = types.StringNull()
+			m.EndpointPort = types.Int64Null()
 		}
 	} else {
-		m.EndpointPort = types.StringNull()
+		m.EndpointPort = types.Int64Null()
 	}
 	if v, ok := obj["interface"]; ok {
 		_ = v
@@ -546,6 +674,16 @@ func interfaceWireguardPeersApply(ctx context.Context, obj client.Object, m *Int
 		}
 	} else {
 		m.Interface = types.StringNull()
+	}
+	if v, ok := obj["last-handshake"]; ok {
+		_ = v
+		if v != "" {
+			m.LastHandshake = types.StringValue(v)
+		} else {
+			m.LastHandshake = types.StringNull()
+		}
+	} else {
+		m.LastHandshake = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
 		_ = v
@@ -607,12 +745,32 @@ func interfaceWireguardPeersApply(ctx context.Context, obj client.Object, m *Int
 	}
 	if v, ok := obj["responder"]; ok {
 		_ = v
-		if v != "" {
-			m.Responder = types.StringValue(v)
+		if b, err := client.ParseBool(v); err == nil {
+			m.Responder = types.BoolValue(b)
 		} else {
-			m.Responder = types.StringNull()
+			m.Responder = types.BoolNull()
 		}
 	} else {
-		m.Responder = types.StringNull()
+		m.Responder = types.BoolNull()
+	}
+	if v, ok := obj["rx"]; ok {
+		_ = v
+		if v != "" {
+			m.Rx = types.StringValue(v)
+		} else {
+			m.Rx = types.StringNull()
+		}
+	} else {
+		m.Rx = types.StringNull()
+	}
+	if v, ok := obj["tx"]; ok {
+		_ = v
+		if v != "" {
+			m.Tx = types.StringValue(v)
+		} else {
+			m.Tx = types.StringNull()
+		}
+	} else {
+		m.Tx = types.StringNull()
 	}
 }

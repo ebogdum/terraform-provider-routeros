@@ -35,7 +35,10 @@ type InterfaceMeshPortModel struct {
 	ID            types.String `tfsdk:"id"`
 	Comment       types.String `tfsdk:"comment"`
 	Disabled      types.Bool   `tfsdk:"disabled"`
+	DrAddress     types.String `tfsdk:"dr_address"`
+	Dynamic       types.Bool   `tfsdk:"dynamic"`
 	HelloInterval types.Int64  `tfsdk:"hello_interval"`
+	Inactive      types.Bool   `tfsdk:"inactive"`
 	Interface     types.String `tfsdk:"interface"`
 	Mesh          types.String `tfsdk:"mesh"`
 	PathCost      types.Int64  `tfsdk:"path_cost"`
@@ -77,7 +80,22 @@ func (r *InterfaceMeshPortResource) Schema(_ context.Context, _ resource.SchemaR
 				Computed:    true,
 				Description: "",
 			},
+			"dr_address": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"dynamic": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"hello_interval": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"inactive": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -101,7 +119,7 @@ func (r *InterfaceMeshPortResource) Schema(_ context.Context, _ resource.SchemaR
 				Optional:    true,
 				Computed:    true,
 				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"auto", "WDS", "wireless", "ethernet"}...)},
+				Validators:  []validator.String{schemautil.OneOf([]string{"auto", "wds", "wireless", "ethernet"}...)},
 			},
 			"router": schema.StringAttribute{
 				Optional:    true,
@@ -130,6 +148,9 @@ func (r *InterfaceMeshPortResource) Create(ctx context.Context, req resource.Cre
 	}
 	if !(plan.HelloInterval.IsNull() || plan.HelloInterval.IsUnknown()) {
 		body["hello-interval"] = client.FormatInt64(plan.HelloInterval.ValueInt64())
+	}
+	if !(plan.Inactive.IsNull() || plan.Inactive.IsUnknown()) {
+		body["inactive"] = client.FormatBool(plan.Inactive.ValueBool())
 	}
 	if !(plan.Interface.IsNull() || plan.Interface.IsUnknown()) {
 		body["interface"] = plan.Interface.ValueString()
@@ -198,6 +219,9 @@ func (r *InterfaceMeshPortResource) Update(ctx context.Context, req resource.Upd
 	}
 	if !plan.HelloInterval.Equal(state.HelloInterval) {
 		body["hello-interval"] = client.FormatInt64(plan.HelloInterval.ValueInt64())
+	}
+	if !plan.Inactive.Equal(state.Inactive) {
+		body["inactive"] = client.FormatBool(plan.Inactive.ValueBool())
 	}
 	if !plan.Interface.Equal(state.Interface) {
 		body["interface"] = plan.Interface.ValueString()
@@ -314,6 +338,26 @@ func interfaceMeshPortApply(ctx context.Context, obj client.Object, m *Interface
 	} else {
 		m.Disabled = types.BoolNull()
 	}
+	if v, ok := obj["dr-address"]; ok {
+		_ = v
+		if v != "" {
+			m.DrAddress = types.StringValue(v)
+		} else {
+			m.DrAddress = types.StringNull()
+		}
+	} else {
+		m.DrAddress = types.StringNull()
+	}
+	if v, ok := obj["dynamic"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Dynamic = types.BoolValue(b)
+		} else {
+			m.Dynamic = types.BoolNull()
+		}
+	} else {
+		m.Dynamic = types.BoolNull()
+	}
 	if v, ok := obj["hello-interval"]; ok {
 		_ = v
 		if n, err := client.ParseInt64(v); err == nil {
@@ -323,6 +367,16 @@ func interfaceMeshPortApply(ctx context.Context, obj client.Object, m *Interface
 		}
 	} else {
 		m.HelloInterval = types.Int64Null()
+	}
+	if v, ok := obj["inactive"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Inactive = types.BoolValue(b)
+		} else {
+			m.Inactive = types.BoolNull()
+		}
+	} else {
+		m.Inactive = types.BoolNull()
 	}
 	if v, ok := obj["interface"]; ok {
 		_ = v

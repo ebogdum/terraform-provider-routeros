@@ -19,7 +19,7 @@ resource "routeros_routing_id" "id_example" {
 
   # Optional attributes (uncomment as needed):
   # name = "tf-example"
-  # select_dynamic_id = "only static"
+  # select_dynamic_id = "only-static"
   # select_from_vrf = "replace-me"
 }
 ```
@@ -32,7 +32,7 @@ This resource supports the following arguments:
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `name` - (Optional) Type: `string`.
-* `select_dynamic_id` - (Optional) Type: `enum(only static|only loopback|only vrf|only active|any|lowest)`.
+* `select_dynamic_id` - (Optional) Type: `enum(only-static|only-loopback|only-vrf|only-active|any|lowest)`.
 * `select_from_vrf` - (Optional) Type: `string`.
 
 ## Attribute Reference
@@ -43,6 +43,7 @@ In addition to the arguments above, the following attributes are exported:
 * `dynamic` - Type: `bool`.
 * `dynamic_id` - Type: `ip`.
 * `inactive` - Type: `bool`.
+* `invalid` - Type: `bool`.
 
 ## Import
 

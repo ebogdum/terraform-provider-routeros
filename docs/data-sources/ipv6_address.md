@@ -31,6 +31,7 @@ This data source supports the following arguments:
 * `auto_link_local` - (Optional) Type: `bool`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`.
+* `dynglob` - (Optional) Type: `string`.
 * `eui_64` - (Optional) Type: `bool`.
 * `from_pool` - (Optional) Type: `string`.
 * `interface` - (Required) Type: `string`.
@@ -46,6 +47,9 @@ This data source exports the following attributes in addition to the arguments a
 * `dynamic` - Type: `bool`.
 * `invalid` - Type: `bool`.
 * `link_local` - Type: `bool`.
+* `preferred` - Type: `string`.
+* `scope` - Type: `int`.
 * `slave` - Type: `bool`.
+* `valid` - Type: `string`.
 * `vrf` - Type: `string`.
 

@@ -21,6 +21,7 @@ resource "routeros_routing_bfd_configuration" "configuration_example" {
   # address_list = "replace-me"
   # addresses = "replace-me"
   # forbid_bfd = "replace-me"
+  # inactive = false
   # interfaces = "replace-me"
   # min_rx = "replace-me"
   # min_tx = "replace-me"
@@ -39,6 +40,7 @@ This resource supports the following arguments:
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `forbid_bfd` - (Optional) Type: `string`.
+* `inactive` - (Optional) Type: `bool`.
 * `interfaces` - (Optional) Type: `string`.
 * `min_rx` - (Optional) Type: `string`.
 * `min_tx` - (Optional) Type: `string`.

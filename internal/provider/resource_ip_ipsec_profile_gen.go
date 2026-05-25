@@ -32,20 +32,23 @@ type IPIpsecProfileResource struct {
 }
 
 type IPIpsecProfileModel struct {
-	ID                 types.String `tfsdk:"id"`
-	Default            types.Bool   `tfsdk:"default"`
-	DhGroup            types.List   `tfsdk:"dh_group"`
-	DpdInterval        types.String `tfsdk:"dpd_interval"`
-	DpdMaximumFailures types.Int64  `tfsdk:"dpd_maximum_failures"`
-	EncAlgorithm       types.List   `tfsdk:"enc_algorithm"`
-	HashAlgorithm      types.String `tfsdk:"hash_algorithm"`
-	Lifebytes          types.Int64  `tfsdk:"lifebytes"`
-	Lifetime           types.String `tfsdk:"lifetime"`
-	Name               types.String `tfsdk:"name"`
-	NATTraversal       types.Bool   `tfsdk:"nat_traversal"`
-	Ppk                types.String `tfsdk:"ppk"`
-	ProposalCheck      types.String `tfsdk:"proposal_check"`
-	Router             types.String `tfsdk:"router"`
+	ID                  types.String `tfsdk:"id"`
+	Default             types.Bool   `tfsdk:"default"`
+	DhGroup             types.List   `tfsdk:"dh_group"`
+	DpdInterval         types.String `tfsdk:"dpd_interval"`
+	DpdMaximumFailures  types.Int64  `tfsdk:"dpd_maximum_failures"`
+	EncAlgorithm        types.List   `tfsdk:"enc_algorithm"`
+	EncryptionAlgorithm types.String `tfsdk:"encryption_algorithm"`
+	HashAlgorithm       types.String `tfsdk:"hash_algorithm"`
+	HashAlgorithms      types.String `tfsdk:"hash_algorithms"`
+	Lifebytes           types.Int64  `tfsdk:"lifebytes"`
+	Lifetime            types.String `tfsdk:"lifetime"`
+	Name                types.String `tfsdk:"name"`
+	NATTraversal        types.Bool   `tfsdk:"nat_traversal"`
+	Ppk                 types.String `tfsdk:"ppk"`
+	PrfAlgorithms       types.String `tfsdk:"prf_algorithms"`
+	ProposalCheck       types.String `tfsdk:"proposal_check"`
+	Router              types.String `tfsdk:"router"`
 }
 
 func NewIPIpsecProfileResource() resource.Resource { return &IPIpsecProfileResource{} }
@@ -87,7 +90,7 @@ func (r *IPIpsecProfileResource) Schema(_ context.Context, _ resource.SchemaRequ
 				Optional:    true,
 				Computed:    true,
 				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"disable DPD"}...)},
+				Validators:  []validator.String{schemautil.OneOf([]string{"disable-dpd"}...)},
 			},
 			"dpd_maximum_failures": schema.Int64Attribute{
 				Optional:    true,
@@ -100,10 +103,21 @@ func (r *IPIpsecProfileResource) Schema(_ context.Context, _ resource.SchemaRequ
 				ElementType: types.StringType,
 				Description: "",
 			},
+			"encryption_algorithm": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"hash_algorithm": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
+			},
+			"hash_algorithms": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.OneOf([]string{"md5", "sha1", "sha256", "sha384", "sha512"}...)},
 			},
 			"lifebytes": schema.Int64Attribute{
 				Optional:    true,
@@ -130,7 +144,13 @@ func (r *IPIpsecProfileResource) Schema(_ context.Context, _ resource.SchemaRequ
 				Optional:    true,
 				Computed:    true,
 				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"No", "PSK", "QKD", "PSK IKE Initial"}...)},
+				Validators:  []validator.String{schemautil.OneOf([]string{"no", "psk", "qkd", "psk-ike-initial"}...)},
+			},
+			"prf_algorithms": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.OneOf([]string{"auto", "sha1", "sha256", "sha384", "sha512"}...)},
 			},
 			"proposal_check": schema.StringAttribute{
 				Optional:    true,
@@ -169,8 +189,14 @@ func (r *IPIpsecProfileResource) Create(ctx context.Context, req resource.Create
 	if !(plan.EncAlgorithm.IsNull() || plan.EncAlgorithm.IsUnknown()) {
 		body["enc-algorithm"] = encodeStringList(ctx, plan.EncAlgorithm)
 	}
+	if !(plan.EncryptionAlgorithm.IsNull() || plan.EncryptionAlgorithm.IsUnknown()) {
+		body["encryption-algorithm"] = plan.EncryptionAlgorithm.ValueString()
+	}
 	if !(plan.HashAlgorithm.IsNull() || plan.HashAlgorithm.IsUnknown()) {
 		body["hash-algorithm"] = plan.HashAlgorithm.ValueString()
+	}
+	if !(plan.HashAlgorithms.IsNull() || plan.HashAlgorithms.IsUnknown()) {
+		body["hash-algorithms"] = plan.HashAlgorithms.ValueString()
 	}
 	if !(plan.Lifebytes.IsNull() || plan.Lifebytes.IsUnknown()) {
 		body["lifebytes"] = client.FormatInt64(plan.Lifebytes.ValueInt64())
@@ -186,6 +212,9 @@ func (r *IPIpsecProfileResource) Create(ctx context.Context, req resource.Create
 	}
 	if !(plan.Ppk.IsNull() || plan.Ppk.IsUnknown()) {
 		body["ppk"] = plan.Ppk.ValueString()
+	}
+	if !(plan.PrfAlgorithms.IsNull() || plan.PrfAlgorithms.IsUnknown()) {
+		body["prf-algorithms"] = plan.PrfAlgorithms.ValueString()
 	}
 	if !(plan.ProposalCheck.IsNull() || plan.ProposalCheck.IsUnknown()) {
 		body["proposal-check"] = plan.ProposalCheck.ValueString()
@@ -249,8 +278,14 @@ func (r *IPIpsecProfileResource) Update(ctx context.Context, req resource.Update
 	if !plan.EncAlgorithm.Equal(state.EncAlgorithm) {
 		body["enc-algorithm"] = encodeStringList(ctx, plan.EncAlgorithm)
 	}
+	if !plan.EncryptionAlgorithm.Equal(state.EncryptionAlgorithm) {
+		body["encryption-algorithm"] = plan.EncryptionAlgorithm.ValueString()
+	}
 	if !plan.HashAlgorithm.Equal(state.HashAlgorithm) {
 		body["hash-algorithm"] = plan.HashAlgorithm.ValueString()
+	}
+	if !plan.HashAlgorithms.Equal(state.HashAlgorithms) {
+		body["hash-algorithms"] = plan.HashAlgorithms.ValueString()
 	}
 	if !plan.Lifebytes.Equal(state.Lifebytes) {
 		body["lifebytes"] = client.FormatInt64(plan.Lifebytes.ValueInt64())
@@ -266,6 +301,9 @@ func (r *IPIpsecProfileResource) Update(ctx context.Context, req resource.Update
 	}
 	if !plan.Ppk.Equal(state.Ppk) {
 		body["ppk"] = plan.Ppk.ValueString()
+	}
+	if !plan.PrfAlgorithms.Equal(state.PrfAlgorithms) {
+		body["prf-algorithms"] = plan.PrfAlgorithms.ValueString()
 	}
 	if !plan.ProposalCheck.Equal(state.ProposalCheck) {
 		body["proposal-check"] = plan.ProposalCheck.ValueString()
@@ -395,6 +433,16 @@ func iPIpsecProfileApply(ctx context.Context, obj client.Object, m *IPIpsecProfi
 	} else {
 		m.EncAlgorithm = types.ListNull(types.StringType)
 	}
+	if v, ok := obj["encryption-algorithm"]; ok {
+		_ = v
+		if v != "" {
+			m.EncryptionAlgorithm = types.StringValue(v)
+		} else {
+			m.EncryptionAlgorithm = types.StringNull()
+		}
+	} else {
+		m.EncryptionAlgorithm = types.StringNull()
+	}
 	if v, ok := obj["hash-algorithm"]; ok {
 		_ = v
 		if v != "" {
@@ -404,6 +452,16 @@ func iPIpsecProfileApply(ctx context.Context, obj client.Object, m *IPIpsecProfi
 		}
 	} else {
 		m.HashAlgorithm = types.StringNull()
+	}
+	if v, ok := obj["hash-algorithms"]; ok {
+		_ = v
+		if v != "" {
+			m.HashAlgorithms = types.StringValue(v)
+		} else {
+			m.HashAlgorithms = types.StringNull()
+		}
+	} else {
+		m.HashAlgorithms = types.StringNull()
 	}
 	if v, ok := obj["lifebytes"]; ok {
 		_ = v
@@ -454,6 +512,16 @@ func iPIpsecProfileApply(ctx context.Context, obj client.Object, m *IPIpsecProfi
 		}
 	} else {
 		m.Ppk = types.StringNull()
+	}
+	if v, ok := obj["prf-algorithms"]; ok {
+		_ = v
+		if v != "" {
+			m.PrfAlgorithms = types.StringValue(v)
+		} else {
+			m.PrfAlgorithms = types.StringNull()
+		}
+	} else {
+		m.PrfAlgorithms = types.StringNull()
 	}
 	if v, ok := obj["proposal-check"]; ok {
 		_ = v

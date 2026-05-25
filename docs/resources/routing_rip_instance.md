@@ -18,12 +18,15 @@ resource "routeros_routing_rip_instance" "instance_example" {
 
   # Optional attributes (uncomment as needed):
   # afi = "replace-me"
+  # input_filter = "replace-me"
   # name = "tf-example"
   # originate_default = "replace-me"
+  # output_filter = "replace-me"
   # redistribute = "replace-me"
   # route_gc_timeout = "replace-me"
   # route_timeout = "replace-me"
   # routing_table = "main"
+  # select_output_filter = "replace-me"
   # update_interval = "replace-me"
   # vrf = "main"
 }
@@ -36,12 +39,15 @@ This resource supports the following arguments:
 * `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
 * `afi` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`.
+* `input_filter` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
 * `originate_default` - (Optional) Type: `string`.
+* `output_filter` - (Optional) Type: `string`.
 * `redistribute` - (Optional) Type: `string`.
 * `route_gc_timeout` - (Optional) Type: `string`.
 * `route_timeout` - (Optional) Type: `string`.
 * `routing_table` - (Optional) Type: `string`.
+* `select_output_filter` - (Optional) Type: `string`.
 * `update_interval` - (Optional) Type: `string`.
 * `vrf` - (Optional) Type: `string`.
 

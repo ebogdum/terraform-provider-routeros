@@ -7,5 +7,6 @@ resource "routeros_interface_bridge_msti" "msti_example" {
   # bridge = "bridge1"
   # identifier = 0
   # priority = 32768
+  # status = 0
   # vlan_mapping = "replace-me"
 }

@@ -31,10 +31,13 @@ This data source supports the following arguments:
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `interface` - (Required) Type: `string`.
 * `on_alert` - (Optional) Type: `string`.
+* `reset_alert` - (Optional) Type: `string`.
+* `valid_servers` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
 This data source exports the following attributes in addition to the arguments above:
 
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
+* `unknown_servers` - Type: `string`.
 

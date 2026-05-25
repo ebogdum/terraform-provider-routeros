@@ -29,6 +29,7 @@ This data source supports the following arguments:
 * `area` - (Optional) Type: `string`.
 * `auth_id` - (Optional) Type: `string`.
 * `auth_key` - (Optional) Type: `string`. **Sensitive.**
+* `authentication` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `cost` - (Optional) Type: `int`.
 * `dead_interval` - (Optional) Type: `duration`.
@@ -36,8 +37,9 @@ This data source supports the following arguments:
 * `hello_interval` - (Optional) Type: `duration`.
 * `instance_id` - (Optional) Type: `int`.
 * `interfaces` - (Optional) Type: `string`.
+* `network_type` - (Optional) Type: `enum(broadcast|nbma|ptp|ptp-unnumbered|ptmp|virtual-link, ...)`.
 * `networks` - (Optional) Type: `string`.
-* `passive` - (Optional) Type: `string`.
+* `passive` - (Optional) Type: `bool`.
 * `prefix_list` - (Optional) Type: `string`.
 * `priority` - (Optional) Type: `int`.
 * `retransmit_interval` - (Optional) Type: `duration`.
@@ -51,4 +53,5 @@ This data source supports the following arguments:
 This data source exports the following attributes in addition to the arguments above:
 
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
+* `invalid` - Type: `bool`.
 

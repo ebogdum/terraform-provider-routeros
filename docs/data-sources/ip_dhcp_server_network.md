@@ -28,12 +28,27 @@ This data source supports the following arguments:
 * `proplist` - (Optional) List of property names to project; smaller payload.
 * `address` - (Required) Type: `cidr`. Default: `10.255.255.0/30`.
 * `boot_file_name` - (Optional) Type: `string`.
+* `caps_manager` - (Optional) Type: `string`.
+* `caps_managers` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `dhcp_option` - (Optional) Type: `string`.
 * `dhcp_option_set` - (Optional) Type: `string`. Default: `4.294967295e+09`.
+* `dhcp_options` - (Optional) Type: `string`.
+* `dns_server` - (Optional) Type: `string`.
+* `dns_servers` - (Optional) Type: `string`.
 * `domain` - (Optional) Type: `string`.
+* `dynamic` - (Optional) Type: `string`.
 * `gateway` - (Optional) Type: `string`. Default: `10.255.255.1`.
 * `netmask` - (Optional) Type: `string`.
 * `next_server` - (Optional) Type: `string`.
+* `nndns` - (Optional) Type: `string`.
+* `nnntp` - (Optional) Type: `string`.
+* `no_dns` - (Optional) Type: `bool`.
+* `no_ntp` - (Optional) Type: `bool`.
+* `ntp_server` - (Optional) Type: `string`.
+* `ntp_servers` - (Optional) Type: `string`.
+* `wins_server` - (Optional) Type: `string`.
+* `wins_servers` - (Optional) Type: `string`.
 
 ## Attribute Reference
 

@@ -110,7 +110,7 @@ func (r *UserSSHKeysResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Optional:    true,
 				Computed:    true,
 				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"RSA", "Ed25519", "Ed25519-sk"}...)},
+				Validators:  []validator.String{schemautil.OneOf([]string{"rsa", "ed25519", "ed25519-sk"}...)},
 			},
 			"newk": schema.StringAttribute{
 				Optional:    true,

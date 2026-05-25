@@ -2,12 +2,12 @@
 subcategory: "Tools"
 page_title: "RouterOS: routeros_tool_graphing_queue"
 description: |-
-  Same as graphing/interface -- skipped to avoid "already exists" on re-runs.
+  Same as graphing/interface — skipped to avoid "already exists" on re-runs.
 ---
 
 # Data Source: routeros_tool_graphing_queue
 
-Same as graphing/interface -- skipped to avoid "already exists" on re-runs.
+Same as graphing/interface — skipped to avoid "already exists" on re-runs.
 
 ## Example Usage
 

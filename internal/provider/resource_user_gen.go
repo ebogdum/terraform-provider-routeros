@@ -34,6 +34,7 @@ type UserResource struct {
 type UserModel struct {
 	ID                types.String `tfsdk:"id"`
 	Address           types.String `tfsdk:"address"`
+	Alias             types.String `tfsdk:"alias"`
 	Comment           types.String `tfsdk:"comment"`
 	Disabled          types.Bool   `tfsdk:"disabled"`
 	Expired           types.Bool   `tfsdk:"expired"`
@@ -43,6 +44,7 @@ type UserModel struct {
 	LastLoggedIn      types.String `tfsdk:"last_logged_in"`
 	Name              types.String `tfsdk:"name"`
 	Password          types.String `tfsdk:"password"`
+	Type              types.Int64  `tfsdk:"type"`
 	Router            types.String `tfsdk:"router"`
 	LockoutAck        types.Bool   `tfsdk:"lockout_ack"`
 }
@@ -72,6 +74,11 @@ func (r *UserResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"address": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"alias": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -121,6 +128,11 @@ func (r *UserResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Sensitive:   true,
 				Description: "",
 			},
+			"type": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"router": schema.StringAttribute{
 				Optional:    true,
 				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
@@ -148,6 +160,9 @@ func (r *UserResource) Create(ctx context.Context, req resource.CreateRequest, r
 	if !(plan.Address.IsNull() || plan.Address.IsUnknown()) {
 		body["address"] = plan.Address.ValueString()
 	}
+	if !(plan.Alias.IsNull() || plan.Alias.IsUnknown()) {
+		body["alias"] = plan.Alias.ValueString()
+	}
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
 	}
@@ -168,6 +183,9 @@ func (r *UserResource) Create(ctx context.Context, req resource.CreateRequest, r
 	}
 	if !(plan.Password.IsNull() || plan.Password.IsUnknown()) {
 		body["password"] = plan.Password.ValueString()
+	}
+	if !(plan.Type.IsNull() || plan.Type.IsUnknown()) {
+		body["type"] = client.FormatInt64(plan.Type.ValueInt64())
 	}
 	obj, err := c.Add(ctx, "/user", body)
 	if err != nil {
@@ -219,6 +237,9 @@ func (r *UserResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	if !plan.Address.Equal(state.Address) {
 		body["address"] = plan.Address.ValueString()
 	}
+	if !plan.Alias.Equal(state.Alias) {
+		body["alias"] = plan.Alias.ValueString()
+	}
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
 	}
@@ -239,6 +260,9 @@ func (r *UserResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	}
 	if !plan.Password.Equal(state.Password) {
 		body["password"] = plan.Password.ValueString()
+	}
+	if !plan.Type.Equal(state.Type) {
+		body["type"] = client.FormatInt64(plan.Type.ValueInt64())
 	}
 	// Block disabling the last admin via Update.
 	if v, ok := body["disabled"]; ok && strings.EqualFold(v, "true") {
@@ -346,6 +370,16 @@ func userApply(ctx context.Context, obj client.Object, m *UserModel) {
 	} else {
 		m.Address = types.StringNull()
 	}
+	if v, ok := obj["alias"]; ok {
+		_ = v
+		if v != "" {
+			m.Alias = types.StringValue(v)
+		} else {
+			m.Alias = types.StringNull()
+		}
+	} else {
+		m.Alias = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {
@@ -439,5 +473,15 @@ func userApply(ctx context.Context, obj client.Object, m *UserModel) {
 		}
 	} else if m.Password.IsUnknown() {
 		m.Password = types.StringNull()
+	}
+	if v, ok := obj["type"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.Type = types.Int64Value(n)
+		} else {
+			m.Type = types.Int64Null()
+		}
+	} else {
+		m.Type = types.Int64Null()
 	}
 }

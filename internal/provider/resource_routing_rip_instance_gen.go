@@ -30,18 +30,21 @@ type RoutingRipInstanceResource struct {
 }
 
 type RoutingRipInstanceModel struct {
-	ID               types.String `tfsdk:"id"`
-	Afi              types.String `tfsdk:"afi"`
-	Disabled         types.Bool   `tfsdk:"disabled"`
-	Name             types.String `tfsdk:"name"`
-	OriginateDefault types.String `tfsdk:"originate_default"`
-	Redistribute     types.String `tfsdk:"redistribute"`
-	RouteGcTimeout   types.String `tfsdk:"route_gc_timeout"`
-	RouteTimeout     types.String `tfsdk:"route_timeout"`
-	RoutingTable     types.String `tfsdk:"routing_table"`
-	UpdateInterval   types.String `tfsdk:"update_interval"`
-	Vrf              types.String `tfsdk:"vrf"`
-	Router           types.String `tfsdk:"router"`
+	ID                 types.String `tfsdk:"id"`
+	Afi                types.String `tfsdk:"afi"`
+	Disabled           types.Bool   `tfsdk:"disabled"`
+	InputFilter        types.String `tfsdk:"input_filter"`
+	Name               types.String `tfsdk:"name"`
+	OriginateDefault   types.String `tfsdk:"originate_default"`
+	OutputFilter       types.String `tfsdk:"output_filter"`
+	Redistribute       types.String `tfsdk:"redistribute"`
+	RouteGcTimeout     types.String `tfsdk:"route_gc_timeout"`
+	RouteTimeout       types.String `tfsdk:"route_timeout"`
+	RoutingTable       types.String `tfsdk:"routing_table"`
+	SelectOutputFilter types.String `tfsdk:"select_output_filter"`
+	UpdateInterval     types.String `tfsdk:"update_interval"`
+	Vrf                types.String `tfsdk:"vrf"`
+	Router             types.String `tfsdk:"router"`
 }
 
 func NewRoutingRipInstanceResource() resource.Resource { return &RoutingRipInstanceResource{} }
@@ -78,12 +81,22 @@ func (r *RoutingRipInstanceResource) Schema(_ context.Context, _ resource.Schema
 				Computed:    true,
 				Description: "",
 			},
+			"input_filter": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"name": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"originate_default": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"output_filter": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -104,6 +117,11 @@ func (r *RoutingRipInstanceResource) Schema(_ context.Context, _ resource.Schema
 				Description: "",
 			},
 			"routing_table": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"select_output_filter": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -143,11 +161,17 @@ func (r *RoutingRipInstanceResource) Create(ctx context.Context, req resource.Cr
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
+	if !(plan.InputFilter.IsNull() || plan.InputFilter.IsUnknown()) {
+		body["input-filter"] = plan.InputFilter.ValueString()
+	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
 	}
 	if !(plan.OriginateDefault.IsNull() || plan.OriginateDefault.IsUnknown()) {
 		body["originate-default"] = plan.OriginateDefault.ValueString()
+	}
+	if !(plan.OutputFilter.IsNull() || plan.OutputFilter.IsUnknown()) {
+		body["output-filter"] = plan.OutputFilter.ValueString()
 	}
 	if !(plan.Redistribute.IsNull() || plan.Redistribute.IsUnknown()) {
 		body["redistribute"] = plan.Redistribute.ValueString()
@@ -160,6 +184,9 @@ func (r *RoutingRipInstanceResource) Create(ctx context.Context, req resource.Cr
 	}
 	if !(plan.RoutingTable.IsNull() || plan.RoutingTable.IsUnknown()) {
 		body["routing-table"] = plan.RoutingTable.ValueString()
+	}
+	if !(plan.SelectOutputFilter.IsNull() || plan.SelectOutputFilter.IsUnknown()) {
+		body["select-output-filter"] = plan.SelectOutputFilter.ValueString()
 	}
 	if !(plan.UpdateInterval.IsNull() || plan.UpdateInterval.IsUnknown()) {
 		body["update-interval"] = plan.UpdateInterval.ValueString()
@@ -220,11 +247,17 @@ func (r *RoutingRipInstanceResource) Update(ctx context.Context, req resource.Up
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
+	if !plan.InputFilter.Equal(state.InputFilter) {
+		body["input-filter"] = plan.InputFilter.ValueString()
+	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
 	}
 	if !plan.OriginateDefault.Equal(state.OriginateDefault) {
 		body["originate-default"] = plan.OriginateDefault.ValueString()
+	}
+	if !plan.OutputFilter.Equal(state.OutputFilter) {
+		body["output-filter"] = plan.OutputFilter.ValueString()
 	}
 	if !plan.Redistribute.Equal(state.Redistribute) {
 		body["redistribute"] = plan.Redistribute.ValueString()
@@ -237,6 +270,9 @@ func (r *RoutingRipInstanceResource) Update(ctx context.Context, req resource.Up
 	}
 	if !plan.RoutingTable.Equal(state.RoutingTable) {
 		body["routing-table"] = plan.RoutingTable.ValueString()
+	}
+	if !plan.SelectOutputFilter.Equal(state.SelectOutputFilter) {
+		body["select-output-filter"] = plan.SelectOutputFilter.ValueString()
 	}
 	if !plan.UpdateInterval.Equal(state.UpdateInterval) {
 		body["update-interval"] = plan.UpdateInterval.ValueString()
@@ -347,6 +383,16 @@ func routingRipInstanceApply(ctx context.Context, obj client.Object, m *RoutingR
 	} else {
 		m.Disabled = types.BoolNull()
 	}
+	if v, ok := obj["input-filter"]; ok {
+		_ = v
+		if v != "" {
+			m.InputFilter = types.StringValue(v)
+		} else {
+			m.InputFilter = types.StringNull()
+		}
+	} else {
+		m.InputFilter = types.StringNull()
+	}
 	if v, ok := obj["name"]; ok {
 		_ = v
 		if v != "" {
@@ -366,6 +412,16 @@ func routingRipInstanceApply(ctx context.Context, obj client.Object, m *RoutingR
 		}
 	} else {
 		m.OriginateDefault = types.StringNull()
+	}
+	if v, ok := obj["output-filter"]; ok {
+		_ = v
+		if v != "" {
+			m.OutputFilter = types.StringValue(v)
+		} else {
+			m.OutputFilter = types.StringNull()
+		}
+	} else {
+		m.OutputFilter = types.StringNull()
 	}
 	if v, ok := obj["redistribute"]; ok {
 		_ = v
@@ -406,6 +462,16 @@ func routingRipInstanceApply(ctx context.Context, obj client.Object, m *RoutingR
 		}
 	} else {
 		m.RoutingTable = types.StringNull()
+	}
+	if v, ok := obj["select-output-filter"]; ok {
+		_ = v
+		if v != "" {
+			m.SelectOutputFilter = types.StringValue(v)
+		} else {
+			m.SelectOutputFilter = types.StringNull()
+		}
+	} else {
+		m.SelectOutputFilter = types.StringNull()
 	}
 	if v, ok := obj["update-interval"]; ok {
 		_ = v

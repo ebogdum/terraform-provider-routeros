@@ -12,9 +12,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
 )
 
 var (
@@ -34,6 +36,9 @@ type RoutingFilterSelectRuleModel struct {
 	Chain    types.String `tfsdk:"chain"`
 	Comment  types.String `tfsdk:"comment"`
 	Disabled types.Bool   `tfsdk:"disabled"`
+	Do       types.String `tfsdk:"do"`
+	Invalid  types.Bool   `tfsdk:"invalid"`
+	Type     types.String `tfsdk:"type"`
 	Router   types.String `tfsdk:"router"`
 }
 
@@ -78,6 +83,22 @@ func (r *RoutingFilterSelectRuleResource) Schema(_ context.Context, _ resource.S
 				Computed:    true,
 				Description: "Whether the entry is disabled.",
 			},
+			"do": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"invalid": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"type": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.OneOf([]string{"where", "group-num", "group-prfx", "select-num", "select-prfx", "take", "jump"}...)},
+			},
 			"router": schema.StringAttribute{
 				Optional:    true,
 				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
@@ -105,6 +126,9 @@ func (r *RoutingFilterSelectRuleResource) Create(ctx context.Context, req resour
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !(plan.Type.IsNull() || plan.Type.IsUnknown()) {
+		body["type"] = plan.Type.ValueString()
 	}
 	obj, err := c.Add(ctx, "/routing/filter/select-rule", body)
 	if err != nil {
@@ -161,6 +185,9 @@ func (r *RoutingFilterSelectRuleResource) Update(ctx context.Context, req resour
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !plan.Type.Equal(state.Type) {
+		body["type"] = plan.Type.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/routing/filter/select-rule", state.ID.ValueString(), body)
@@ -274,5 +301,35 @@ func routingFilterSelectRuleApply(ctx context.Context, obj client.Object, m *Rou
 		}
 	} else {
 		m.Disabled = types.BoolNull()
+	}
+	if v, ok := obj["do"]; ok {
+		_ = v
+		if v != "" {
+			m.Do = types.StringValue(v)
+		} else {
+			m.Do = types.StringNull()
+		}
+	} else {
+		m.Do = types.StringNull()
+	}
+	if v, ok := obj["invalid"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Invalid = types.BoolValue(b)
+		} else {
+			m.Invalid = types.BoolNull()
+		}
+	} else {
+		m.Invalid = types.BoolNull()
+	}
+	if v, ok := obj["type"]; ok {
+		_ = v
+		if v != "" {
+			m.Type = types.StringValue(v)
+		} else {
+			m.Type = types.StringNull()
+		}
+	} else {
+		m.Type = types.StringNull()
 	}
 }

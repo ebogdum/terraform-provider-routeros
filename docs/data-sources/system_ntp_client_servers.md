@@ -2,12 +2,12 @@
 subcategory: "NTP"
 page_title: "RouterOS: routeros_system_ntp_client_servers"
 description: |-
-  NTP server list -- accepts add but validator differs per ROS. Skipped from acc tests.
+  NTP server list — accepts add but validator differs per ROS. Skipped from acc tests.
 ---
 
 # Data Source: routeros_system_ntp_client_servers
 
-NTP server list -- accepts add but validator differs per ROS. Skipped from acc tests.
+NTP server list — accepts add but validator differs per ROS. Skipped from acc tests.
 
 ## Example Usage
 
@@ -31,6 +31,7 @@ This data source supports the following arguments:
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`.
 * `iburst` - (Optional) Type: `bool`. Default: `1`.
+* `keys` - (Optional) Type: `string`.
 * `max_poll` - (Optional) Type: `int`. Default: `10`.
 * `min_poll` - (Optional) Type: `int`. Default: `6`.
 
@@ -40,4 +41,5 @@ This data source exports the following attributes in addition to the arguments a
 
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
 * `dynamic` - Type: `bool`.
+* `resolved_address` - Type: `string`.
 

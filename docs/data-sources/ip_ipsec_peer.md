@@ -29,12 +29,13 @@ This data source supports the following arguments:
 * `address` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `exchange_mode` - (Optional) Type: `enum(base|main|aggressive|IKE2)`. Default: `2`.
+* `exchange_mode` - (Optional) Type: `enum(base|main|aggressive|ike2)`. Default: `2`.
 * `local_address` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
 * `passive` - (Optional) Type: `bool`.
 * `port` - (Optional) Type: `int`.
 * `profile` - (Optional) Type: `string`.
+* `responder` - (Optional) Type: `bool`.
 * `send_initial_contact` - (Optional) Type: `bool`. Default: `1`.
 
 ## Attribute Reference
@@ -42,4 +43,5 @@ This data source supports the following arguments:
 This data source exports the following attributes in addition to the arguments above:
 
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
+* `dynamic` - Type: `bool`.
 

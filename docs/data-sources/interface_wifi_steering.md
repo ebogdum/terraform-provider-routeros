@@ -26,9 +26,19 @@ This data source supports the following arguments:
 * `router` - (Optional) Name of the router in the provider's `routers` map to query.
 * `filter` - (Optional) Map of field=value pairs to narrow the result set.
 * `proplist` - (Optional) List of property names to project; smaller payload.
+* `x2g_probe_delay` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `name` - (Required) Type: `string`. Default: `tf_acc_wstr`.
+* `neighbor_group` - (Optional) Type: `string`.
+* `neighbor_groups` - (Optional) Type: `string`.
+* `rrm` - (Optional) Type: `string`.
+* `transition_request_count` - (Optional) Type: `string`.
+* `transition_threshold` - (Optional) Type: `string`.
+* `transition_threshold_period` - (Optional) Type: `string`.
+* `transition_threshold_time` - (Optional) Type: `string`.
+* `transition_time` - (Optional) Type: `string`.
+* `wnm` - (Optional) Type: `string`.
 
 ## Attribute Reference
 

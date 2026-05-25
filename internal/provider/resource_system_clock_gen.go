@@ -53,7 +53,7 @@ func (r *SystemClockResource) Configure(_ context.Context, req resource.Configur
 
 func (r *SystemClockResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Setting clock outside automated test scope -- would skew router time.",
+		Description: "Setting clock outside automated test scope — would skew router time.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:      true,

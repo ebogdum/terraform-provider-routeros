@@ -18,9 +18,10 @@ resource "routeros_ip_hotspot_walled_garden_ip" "ip_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
-  # action = "replace-me"
+  # action = "accept"
   # dst_address = "10.99.0.0/24"
   # dst_address_list = "my-list"
+  # dst_host = "replace-me"
   # dst_port = "443"
   # protocol = "replace-me"
   # server = "replace-me"
@@ -34,11 +35,12 @@ resource "routeros_ip_hotspot_walled_garden_ip" "ip_example" {
 This resource supports the following arguments:
 
 * `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `action` - (Optional) Type: `string`.
+* `action` - (Optional) Type: `enum(accept|drop|reject)`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `dst_address` - (Optional) Type: `string`.
 * `dst_address_list` - (Optional) Type: `string`.
+* `dst_host` - (Optional) Type: `string`.
 * `dst_port` - (Optional) Type: `string`.
 * `protocol` - (Optional) Type: `string`.
 * `server` - (Optional) Type: `string`.

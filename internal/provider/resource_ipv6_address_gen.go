@@ -41,13 +41,17 @@ type IPV6AddressModel struct {
 	Deprecated      types.Bool   `tfsdk:"deprecated"`
 	Disabled        types.Bool   `tfsdk:"disabled"`
 	Dynamic         types.Bool   `tfsdk:"dynamic"`
+	Dynglob         types.String `tfsdk:"dynglob"`
 	Eui64           types.Bool   `tfsdk:"eui_64"`
 	FromPool        types.String `tfsdk:"from_pool"`
 	Interface       types.String `tfsdk:"interface"`
 	Invalid         types.Bool   `tfsdk:"invalid"`
 	LinkLocal       types.Bool   `tfsdk:"link_local"`
 	NoDad           types.Bool   `tfsdk:"no_dad"`
+	Preferred       types.String `tfsdk:"preferred"`
+	Scope           types.Int64  `tfsdk:"scope"`
 	Slave           types.Bool   `tfsdk:"slave"`
+	Valid           types.String `tfsdk:"valid"`
 	Vrf             types.String `tfsdk:"vrf"`
 	Router          types.String `tfsdk:"router"`
 }
@@ -117,6 +121,11 @@ func (r *IPV6AddressResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Computed:    true,
 				Description: "",
 			},
+			"dynglob": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"eui_64": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -146,7 +155,22 @@ func (r *IPV6AddressResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Computed:    true,
 				Description: "",
 			},
+			"preferred": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"scope": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"slave": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"valid": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -189,6 +213,9 @@ func (r *IPV6AddressResource) Create(ctx context.Context, req resource.CreateReq
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !(plan.Dynglob.IsNull() || plan.Dynglob.IsUnknown()) {
+		body["dynglob"] = plan.Dynglob.ValueString()
 	}
 	if !(plan.Eui64.IsNull() || plan.Eui64.IsUnknown()) {
 		body["eui-64"] = client.FormatBool(plan.Eui64.ValueBool())
@@ -263,6 +290,9 @@ func (r *IPV6AddressResource) Update(ctx context.Context, req resource.UpdateReq
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !plan.Dynglob.Equal(state.Dynglob) {
+		body["dynglob"] = plan.Dynglob.ValueString()
 	}
 	if !plan.Eui64.Equal(state.Eui64) {
 		body["eui-64"] = client.FormatBool(plan.Eui64.ValueBool())
@@ -439,6 +469,16 @@ func iPV6AddressApply(ctx context.Context, obj client.Object, m *IPV6AddressMode
 	} else {
 		m.Dynamic = types.BoolNull()
 	}
+	if v, ok := obj["dynglob"]; ok {
+		_ = v
+		if v != "" {
+			m.Dynglob = types.StringValue(v)
+		} else {
+			m.Dynglob = types.StringNull()
+		}
+	} else {
+		m.Dynglob = types.StringNull()
+	}
 	if v, ok := obj["eui-64"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
@@ -499,6 +539,26 @@ func iPV6AddressApply(ctx context.Context, obj client.Object, m *IPV6AddressMode
 	} else {
 		m.NoDad = types.BoolNull()
 	}
+	if v, ok := obj["preferred"]; ok {
+		_ = v
+		if v != "" {
+			m.Preferred = types.StringValue(v)
+		} else {
+			m.Preferred = types.StringNull()
+		}
+	} else {
+		m.Preferred = types.StringNull()
+	}
+	if v, ok := obj["scope"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.Scope = types.Int64Value(n)
+		} else {
+			m.Scope = types.Int64Null()
+		}
+	} else {
+		m.Scope = types.Int64Null()
+	}
 	if v, ok := obj["slave"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
@@ -508,6 +568,16 @@ func iPV6AddressApply(ctx context.Context, obj client.Object, m *IPV6AddressMode
 		}
 	} else {
 		m.Slave = types.BoolNull()
+	}
+	if v, ok := obj["valid"]; ok {
+		_ = v
+		if v != "" {
+			m.Valid = types.StringValue(v)
+		} else {
+			m.Valid = types.StringNull()
+		}
+	} else {
+		m.Valid = types.StringNull()
 	}
 	if v, ok := obj["vrf"]; ok {
 		_ = v

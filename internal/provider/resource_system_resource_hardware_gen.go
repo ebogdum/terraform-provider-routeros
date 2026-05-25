@@ -159,7 +159,7 @@ func (r *SystemResourceHardwareResource) Schema(_ context.Context, _ resource.Sc
 				Optional:    true,
 				Computed:    true,
 				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"USB", "PCI", "SCSI", "Serial"}...)},
+				Validators:  []validator.String{schemautil.OneOf([]string{"usb", "pci", "scsi", "serial"}...)},
 			},
 			"usb": schema.StringAttribute{
 				Optional:    true,

@@ -23,8 +23,10 @@ resource "routeros_user" "user_example" {
 
   # Optional attributes (uncomment as needed):
   # address = "replace-me"
+  # alias = "replace-me"
   # inactivity_policy = "replace-me"
   # inactivity_timeout = "1h"
+  # type = 0
 }
 ```
 
@@ -34,6 +36,7 @@ This resource supports the following arguments:
 
 * `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
 * `address` - (Optional) Type: `string`.
+* `alias` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`.
 * `group` - (Required) Type: `string`. Default: `read`.
@@ -41,6 +44,7 @@ This resource supports the following arguments:
 * `inactivity_timeout` - (Optional) Type: `duration`.
 * `name` - (Required) Type: `string`. Default: `tf_user`.
 * `password` - (Required) Type: `string`. Default: `tf_pw`. **Sensitive.**
+* `type` - (Optional) Type: `int`.
 
 ## Attribute Reference
 

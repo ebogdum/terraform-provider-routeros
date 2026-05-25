@@ -6,7 +6,9 @@ resource "routeros_ip_route" "route_example" {
   # Optional attributes (uncomment as needed):
   # distance = 0
   # dst_address = "10.99.0.0/24"
+  # ecmp = false
   # gateway = "10.99.0.1"
+  # hw_offloaded = false
   # routing_table = "main"
   # scope = 0
   # target_scope = 0

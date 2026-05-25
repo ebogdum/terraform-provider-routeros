@@ -26,6 +26,7 @@ This data source supports the following arguments:
 * `router` - (Optional) Name of the router in the provider's `routers` map to query.
 * `filter` - (Optional) Map of field=value pairs to narrow the result set.
 * `proplist` - (Optional) List of property names to project; smaller payload.
+* `addresses` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `name` - (Required) Type: `string`. Unique identifier of the pool. Default: `tf_acc_pool`.
 * `next_pool` - (Optional) Type: `string`. When IP address acquisition is performed a pool that has no free addresses, and the next-pool property is set, then IP address will be acquired from next-pool.
@@ -36,4 +37,7 @@ This data source supports the following arguments:
 This data source exports the following attributes in addition to the arguments above:
 
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
+* `available` - Type: `string`.
+* `total` - Type: `string`.
+* `used` - Type: `string`.
 

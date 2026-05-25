@@ -33,8 +33,14 @@ This data source supports the following arguments:
 * `proplist` - (Optional) List of property names to project; smaller payload.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `export_filter` - (Optional) Type: `string`.
+* `export_route_targets` - (Optional) Type: `string`.
+* `export_select` - (Optional) Type: `string`.
+* `import_filter` - (Optional) Type: `string`.
+* `import_route_targets` - (Optional) Type: `string`.
 * `instance` - (Optional) Type: `string`.
 * `label_allocation_policy` - (Optional) Type: `enum(|per-vrf|per-prefix)`.
+* `redistribute` - (Optional) Type: `string`.
 * `route_distinguisher` - (Optional) Type: `string`.
 * `vrf` - (Optional) Type: `string`.
 
@@ -43,4 +49,5 @@ This data source supports the following arguments:
 This data source exports the following attributes in addition to the arguments above:
 
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
+* `invalid` - Type: `bool`.
 

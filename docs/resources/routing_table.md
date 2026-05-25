@@ -18,8 +18,9 @@ resource "routeros_routing_table" "table_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
-  # fib = "replace-me"
+  # fib = false
   # name = "tf-example"
+  # used = false
 }
 ```
 
@@ -30,8 +31,9 @@ This resource supports the following arguments:
 * `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `fib` - (Optional) Type: `string`.
+* `fib` - (Optional) Type: `bool`.
 * `name` - (Optional) Type: `string`.
+* `used` - (Optional) Type: `bool`.
 
 ## Attribute Reference
 
@@ -40,6 +42,7 @@ In addition to the arguments above, the following attributes are exported:
 * `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
 * `dynamic` - Type: `bool`.
 * `invalid` - Type: `bool`.
+* `usage` - Type: `int`.
 
 ## Import
 

@@ -31,6 +31,7 @@ resource "routeros_interface_wifi_access_list" "access_list_example" {
   # ssid_regexp = "replace-me"
   # time = "replace-me"
   # vlan_id = "replace-me"
+  # weekdays = "replace-me"
 }
 ```
 
@@ -54,6 +55,16 @@ This resource supports the following arguments:
 * `ssid_regexp` - (Optional) Type: `string`.
 * `time` - (Optional) Type: `string`.
 * `vlan_id` - (Optional) Type: `string`.
+* `weekdays` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+In addition to the arguments above, the following attributes are exported:
+
+* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
+* `last_logged_in` - Type: `string`.
+* `last_logged_out` - Type: `string`.
+* `times_matched` - Type: `string`.
 
 ## Import
 

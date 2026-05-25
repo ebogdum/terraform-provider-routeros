@@ -8,7 +8,7 @@ description: |-
 # Resource: routeros_system_clock_manual
 
 Singleton for manual time configuration. Curl confirms POST /set with an
-empty body returns 200, but the acc test framework times out -- likely
+empty body returns 200, but the acc test framework times out — likely
 because RouterOS adjusts the clock to a value that breaks TLS validation
 on the next request. Skipped from automated acc tests.
 

@@ -37,7 +37,7 @@ This data source supports the following arguments:
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `instance` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
-* `no_summaries` - (Optional) Type: `string`.
+* `no_summaries` - (Optional) Type: `bool`.
 * `nssa_translator` - (Optional) Type: `string`.
 * `type` - (Optional) Type: `enum(default|stub|nssa)`.
 
@@ -46,4 +46,7 @@ This data source supports the following arguments:
 This data source exports the following attributes in addition to the arguments above:
 
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
+* `dynamic` - Type: `bool`.
+* `invalid` - Type: `bool`.
+* `transit_capable` - Type: `bool`.
 

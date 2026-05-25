@@ -18,9 +18,12 @@ resource "routeros_interface_pppoe_client" "pppoe_client_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
+  # ac_name = "replace-me"
+  # add_default_route = "replace-me"
   # allow = "replace-me"
   # default_route_distance = "replace-me"
   # dial_on_demand = "replace-me"
+  # interface = "ether1"
   # keepalive_timeout = "replace-me"
   # max_mru = "replace-me"
   # max_mtu = "replace-me"
@@ -28,6 +31,8 @@ resource "routeros_interface_pppoe_client" "pppoe_client_example" {
   # name = "tf-example"
   # password = "REDACTED"
   # profile = "replace-me"
+  # service_name = "replace-me"
+  # use_peer_dns = "replace-me"
   # user = "myuser"
 }
 ```
@@ -37,11 +42,14 @@ resource "routeros_interface_pppoe_client" "pppoe_client_example" {
 This resource supports the following arguments:
 
 * `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `ac_name` - (Optional) Type: `string`.
+* `add_default_route` - (Optional) Type: `string`.
 * `allow` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `default_route_distance` - (Optional) Type: `string`.
 * `dial_on_demand` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `interface` - (Optional) Type: `string`.
 * `keepalive_timeout` - (Optional) Type: `string`.
 * `max_mru` - (Optional) Type: `string`.
 * `max_mtu` - (Optional) Type: `string`.
@@ -49,6 +57,8 @@ This resource supports the following arguments:
 * `name` - (Optional) Type: `string`.
 * `password` - (Optional) Type: `string`.
 * `profile` - (Optional) Type: `string`.
+* `service_name` - (Optional) Type: `string`.
+* `use_peer_dns` - (Optional) Type: `string`.
 * `user` - (Optional) Type: `string`.
 
 ## Import

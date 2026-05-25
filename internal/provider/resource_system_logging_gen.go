@@ -36,6 +36,7 @@ type SystemLoggingModel struct {
 	Default  types.Bool   `tfsdk:"default"`
 	Disabled types.Bool   `tfsdk:"disabled"`
 	Invalid  types.Bool   `tfsdk:"invalid"`
+	Name     types.String `tfsdk:"name"`
 	Prefix   types.String `tfsdk:"prefix"`
 	Regex    types.String `tfsdk:"regex"`
 	Topics   types.String `tfsdk:"topics"`
@@ -91,6 +92,11 @@ func (r *SystemLoggingResource) Schema(_ context.Context, _ resource.SchemaReque
 				Computed:    true,
 				Description: "",
 			},
+			"name": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"prefix": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -133,6 +139,9 @@ func (r *SystemLoggingResource) Create(ctx context.Context, req resource.CreateR
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
+		body["name"] = plan.Name.ValueString()
 	}
 	if !(plan.Prefix.IsNull() || plan.Prefix.IsUnknown()) {
 		body["prefix"] = plan.Prefix.ValueString()
@@ -198,6 +207,9 @@ func (r *SystemLoggingResource) Update(ctx context.Context, req resource.UpdateR
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !plan.Name.Equal(state.Name) {
+		body["name"] = plan.Name.ValueString()
 	}
 	if !plan.Prefix.Equal(state.Prefix) {
 		body["prefix"] = plan.Prefix.ValueString()
@@ -340,6 +352,16 @@ func systemLoggingApply(ctx context.Context, obj client.Object, m *SystemLogging
 		}
 	} else {
 		m.Invalid = types.BoolNull()
+	}
+	if v, ok := obj["name"]; ok {
+		_ = v
+		if v != "" {
+			m.Name = types.StringValue(v)
+		} else {
+			m.Name = types.StringNull()
+		}
+	} else {
+		m.Name = types.StringNull()
 	}
 	if v, ok := obj["prefix"]; ok {
 		_ = v

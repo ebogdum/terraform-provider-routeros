@@ -6,6 +6,7 @@ resource "routeros_ip_dhcp_client" "dhcp_client_example" {
   # Optional attributes (uncomment as needed):
   # add_default_route = "yes"
   # allow_reconfigure = false
+  # allow_reconfigure_messages = false
   # check_gateway = "none"
   # default_route_distance = 0
   # default_route_tables = "replace-me"
@@ -13,6 +14,10 @@ resource "routeros_ip_dhcp_client" "dhcp_client_example" {
   # dscp = 0
   # interface = "ether1"
   # name = "tf-example"
+  # release = "replace-me"
+  # renew = "replace-me"
+  # route = "replace-me"
+  # routing_tables = "replace-me"
   # script = "replace-me"
   # use_broadcast = "both"
   # use_peer_dns = true

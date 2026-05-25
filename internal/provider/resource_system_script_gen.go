@@ -30,13 +30,18 @@ type SystemScriptResource struct {
 }
 
 type SystemScriptModel struct {
-	ID      types.String `tfsdk:"id"`
-	Comment types.String `tfsdk:"comment"`
-	Name    types.String `tfsdk:"name"`
-	Owner   types.String `tfsdk:"owner"`
-	Policy  types.List   `tfsdk:"policy"`
-	Source  types.String `tfsdk:"source"`
-	Router  types.String `tfsdk:"router"`
+	ID                     types.String `tfsdk:"id"`
+	Comment                types.String `tfsdk:"comment"`
+	DonTRequirePermissions types.Bool   `tfsdk:"don_t_require_permissions"`
+	Invalid                types.Bool   `tfsdk:"invalid"`
+	LastTimeStarted        types.String `tfsdk:"last_time_started"`
+	Name                   types.String `tfsdk:"name"`
+	Owner                  types.String `tfsdk:"owner"`
+	Policy                 types.List   `tfsdk:"policy"`
+	RunCount               types.Int64  `tfsdk:"run_count"`
+	RunScript              types.String `tfsdk:"run_script"`
+	Source                 types.String `tfsdk:"source"`
+	Router                 types.String `tfsdk:"router"`
 }
 
 func NewSystemScriptResource() resource.Resource { return &SystemScriptResource{} }
@@ -68,6 +73,21 @@ func (r *SystemScriptResource) Schema(_ context.Context, _ resource.SchemaReques
 				Computed:    true,
 				Description: "Free-form comment.",
 			},
+			"don_t_require_permissions": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"invalid": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"last_time_started": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"name": schema.StringAttribute{
 				Required:    true,
 				Description: "",
@@ -81,6 +101,16 @@ func (r *SystemScriptResource) Schema(_ context.Context, _ resource.SchemaReques
 				Optional:    true,
 				Computed:    true,
 				ElementType: types.StringType,
+				Description: "",
+			},
+			"run_count": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"run_script": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
 				Description: "",
 			},
 			"source": schema.StringAttribute{
@@ -109,11 +139,17 @@ func (r *SystemScriptResource) Create(ctx context.Context, req resource.CreateRe
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
 	}
+	if !(plan.DonTRequirePermissions.IsNull() || plan.DonTRequirePermissions.IsUnknown()) {
+		body["don-t-require-permissions"] = client.FormatBool(plan.DonTRequirePermissions.ValueBool())
+	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
 	}
 	if !(plan.Policy.IsNull() || plan.Policy.IsUnknown()) {
 		body["policy"] = encodeStringList(ctx, plan.Policy)
+	}
+	if !(plan.RunScript.IsNull() || plan.RunScript.IsUnknown()) {
+		body["run-script"] = plan.RunScript.ValueString()
 	}
 	if !(plan.Source.IsNull() || plan.Source.IsUnknown()) {
 		body["source"] = plan.Source.ValueString()
@@ -168,11 +204,17 @@ func (r *SystemScriptResource) Update(ctx context.Context, req resource.UpdateRe
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
 	}
+	if !plan.DonTRequirePermissions.Equal(state.DonTRequirePermissions) {
+		body["don-t-require-permissions"] = client.FormatBool(plan.DonTRequirePermissions.ValueBool())
+	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
 	}
 	if !plan.Policy.Equal(state.Policy) {
 		body["policy"] = encodeStringList(ctx, plan.Policy)
+	}
+	if !plan.RunScript.Equal(state.RunScript) {
+		body["run-script"] = plan.RunScript.ValueString()
 	}
 	if !plan.Source.Equal(state.Source) {
 		body["source"] = plan.Source.ValueString()
@@ -270,6 +312,36 @@ func systemScriptApply(ctx context.Context, obj client.Object, m *SystemScriptMo
 	} else {
 		m.Comment = types.StringNull()
 	}
+	if v, ok := obj["don-t-require-permissions"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.DonTRequirePermissions = types.BoolValue(b)
+		} else {
+			m.DonTRequirePermissions = types.BoolNull()
+		}
+	} else {
+		m.DonTRequirePermissions = types.BoolNull()
+	}
+	if v, ok := obj["invalid"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Invalid = types.BoolValue(b)
+		} else {
+			m.Invalid = types.BoolNull()
+		}
+	} else {
+		m.Invalid = types.BoolNull()
+	}
+	if v, ok := obj["last-time-started"]; ok {
+		_ = v
+		if v != "" {
+			m.LastTimeStarted = types.StringValue(v)
+		} else {
+			m.LastTimeStarted = types.StringNull()
+		}
+	} else {
+		m.LastTimeStarted = types.StringNull()
+	}
 	if v, ok := obj["name"]; ok {
 		_ = v
 		if v != "" {
@@ -295,6 +367,26 @@ func systemScriptApply(ctx context.Context, obj client.Object, m *SystemScriptMo
 		m.Policy = decodeStringList(ctx, v)
 	} else {
 		m.Policy = types.ListNull(types.StringType)
+	}
+	if v, ok := obj["run-count"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.RunCount = types.Int64Value(n)
+		} else {
+			m.RunCount = types.Int64Null()
+		}
+	} else {
+		m.RunCount = types.Int64Null()
+	}
+	if v, ok := obj["run-script"]; ok {
+		_ = v
+		if v != "" {
+			m.RunScript = types.StringValue(v)
+		} else {
+			m.RunScript = types.StringNull()
+		}
+	} else {
+		m.RunScript = types.StringNull()
 	}
 	if v, ok := obj["source"]; ok {
 		_ = v

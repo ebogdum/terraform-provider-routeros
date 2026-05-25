@@ -27,8 +27,10 @@ This data source supports the following arguments:
 * `filter` - (Optional) Map of field=value pairs to narrow the result set.
 * `proplist` - (Optional) List of property names to project; smaller payload.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `don_t_require_permissions` - (Optional) Type: `bool`.
 * `name` - (Required) Type: `string`. Default: `tf-acc-script`.
 * `policy` - (Optional) Type: `list`.
+* `run_script` - (Optional) Type: `string`.
 * `source` - (Required) Type: `string`. Default: `:put "hello"`.
 
 ## Attribute Reference
@@ -36,5 +38,8 @@ This data source supports the following arguments:
 This data source exports the following attributes in addition to the arguments above:
 
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
+* `invalid` - Type: `bool`.
+* `last_time_started` - Type: `string`.
 * `owner` - Type: `string`.
+* `run_count` - Type: `int`.
 

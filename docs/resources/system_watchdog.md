@@ -2,12 +2,12 @@
 subcategory: "System"
 page_title: "RouterOS: routeros_system_watchdog"
 description: |-
-  Singleton; misconfig can soft-brick -- skip in acc
+  Singleton; misconfig can soft-brick — skip in acc
 ---
 
 # Resource: routeros_system_watchdog
 
-Singleton; misconfig can soft-brick -- skip in acc
+Singleton; misconfig can soft-brick — skip in acc
 
 ## Example Usage
 

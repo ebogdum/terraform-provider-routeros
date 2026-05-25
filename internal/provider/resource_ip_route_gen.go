@@ -41,13 +41,17 @@ type IPRouteModel struct {
 	Distance     types.Int64  `tfsdk:"distance"`
 	DstAddress   types.String `tfsdk:"dst_address"`
 	Dynamic      types.Bool   `tfsdk:"dynamic"`
+	Ecmp         types.Bool   `tfsdk:"ecmp"`
 	Gateway      types.String `tfsdk:"gateway"`
+	HwOffloaded  types.Bool   `tfsdk:"hw_offloaded"`
 	ImmediateGw  types.String `tfsdk:"immediate_gw"`
 	Inactive     types.Bool   `tfsdk:"inactive"`
 	LocalAddress types.String `tfsdk:"local_address"`
 	RoutingTable types.String `tfsdk:"routing_table"`
+	Rtype        types.Int64  `tfsdk:"rtype"`
 	Scope        types.Int64  `tfsdk:"scope"`
 	TargetScope  types.Int64  `tfsdk:"target_scope"`
+	Type         types.Int64  `tfsdk:"type"`
 	VrfInterface types.String `tfsdk:"vrf_interface"`
 	Router       types.String `tfsdk:"router"`
 }
@@ -118,11 +122,21 @@ func (r *IPRouteResource) Schema(_ context.Context, _ resource.SchemaRequest, re
 				Computed:    true,
 				Description: "",
 			},
+			"ecmp": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"gateway": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.IsIP()},
+			},
+			"hw_offloaded": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
 			},
 			"immediate_gw": schema.StringAttribute{
 				Optional:    true,
@@ -144,12 +158,22 @@ func (r *IPRouteResource) Schema(_ context.Context, _ resource.SchemaRequest, re
 				Computed:    true,
 				Description: "",
 			},
+			"rtype": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"scope": schema.Int64Attribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"target_scope": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"type": schema.Int64Attribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -190,8 +214,14 @@ func (r *IPRouteResource) Create(ctx context.Context, req resource.CreateRequest
 	if !(plan.DstAddress.IsNull() || plan.DstAddress.IsUnknown()) {
 		body["dst-address"] = plan.DstAddress.ValueString()
 	}
+	if !(plan.Ecmp.IsNull() || plan.Ecmp.IsUnknown()) {
+		body["ecmp"] = client.FormatBool(plan.Ecmp.ValueBool())
+	}
 	if !(plan.Gateway.IsNull() || plan.Gateway.IsUnknown()) {
 		body["gateway"] = plan.Gateway.ValueString()
+	}
+	if !(plan.HwOffloaded.IsNull() || plan.HwOffloaded.IsUnknown()) {
+		body["hw-offloaded"] = client.FormatBool(plan.HwOffloaded.ValueBool())
 	}
 	if !(plan.RoutingTable.IsNull() || plan.RoutingTable.IsUnknown()) {
 		body["routing-table"] = plan.RoutingTable.ValueString()
@@ -264,8 +294,14 @@ func (r *IPRouteResource) Update(ctx context.Context, req resource.UpdateRequest
 	if !plan.DstAddress.Equal(state.DstAddress) {
 		body["dst-address"] = plan.DstAddress.ValueString()
 	}
+	if !plan.Ecmp.Equal(state.Ecmp) {
+		body["ecmp"] = client.FormatBool(plan.Ecmp.ValueBool())
+	}
 	if !plan.Gateway.Equal(state.Gateway) {
 		body["gateway"] = plan.Gateway.ValueString()
+	}
+	if !plan.HwOffloaded.Equal(state.HwOffloaded) {
+		body["hw-offloaded"] = client.FormatBool(plan.HwOffloaded.ValueBool())
 	}
 	if !plan.RoutingTable.Equal(state.RoutingTable) {
 		body["routing-table"] = plan.RoutingTable.ValueString()
@@ -442,6 +478,16 @@ func iPRouteApply(ctx context.Context, obj client.Object, m *IPRouteModel) {
 	} else {
 		m.Dynamic = types.BoolNull()
 	}
+	if v, ok := obj["ecmp"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Ecmp = types.BoolValue(b)
+		} else {
+			m.Ecmp = types.BoolNull()
+		}
+	} else {
+		m.Ecmp = types.BoolNull()
+	}
 	if v, ok := obj["gateway"]; ok {
 		_ = v
 		if v != "" {
@@ -451,6 +497,16 @@ func iPRouteApply(ctx context.Context, obj client.Object, m *IPRouteModel) {
 		}
 	} else {
 		m.Gateway = types.StringNull()
+	}
+	if v, ok := obj["hw-offloaded"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.HwOffloaded = types.BoolValue(b)
+		} else {
+			m.HwOffloaded = types.BoolNull()
+		}
+	} else {
+		m.HwOffloaded = types.BoolNull()
 	}
 	if v, ok := obj["immediate-gw"]; ok {
 		_ = v
@@ -492,6 +548,16 @@ func iPRouteApply(ctx context.Context, obj client.Object, m *IPRouteModel) {
 	} else {
 		m.RoutingTable = types.StringNull()
 	}
+	if v, ok := obj["rtype"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.Rtype = types.Int64Value(n)
+		} else {
+			m.Rtype = types.Int64Null()
+		}
+	} else {
+		m.Rtype = types.Int64Null()
+	}
 	if v, ok := obj["scope"]; ok {
 		_ = v
 		if n, err := client.ParseInt64(v); err == nil {
@@ -511,6 +577,16 @@ func iPRouteApply(ctx context.Context, obj client.Object, m *IPRouteModel) {
 		}
 	} else {
 		m.TargetScope = types.Int64Null()
+	}
+	if v, ok := obj["type"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.Type = types.Int64Value(n)
+		} else {
+			m.Type = types.Int64Null()
+		}
+	} else {
+		m.Type = types.Int64Null()
 	}
 	if v, ok := obj["vrf-interface"]; ok {
 		_ = v

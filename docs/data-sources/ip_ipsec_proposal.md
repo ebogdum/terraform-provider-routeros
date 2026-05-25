@@ -30,6 +30,7 @@ This data source supports the following arguments:
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`.
 * `enc_algorithms` - (Optional) Type: `list`.
+* `encr_algorithms` - (Optional) Type: `string`. Default: `4`.
 * `lifetime` - (Optional) Type: `duration`. Default: `1800`.
 * `name` - (Optional) Type: `string`.
 * `pfs_group` - (Optional) Type: `string`.

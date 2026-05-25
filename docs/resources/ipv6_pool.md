@@ -36,6 +36,17 @@ This resource supports the following arguments:
 * `prefix` - (Required) Type: `string`. Default: `fd00:db8::/56`.
 * `prefix_length` - (Required) Type: `int`. Default: `64`.
 
+## Attribute Reference
+
+In addition to the arguments above, the following attributes are exported:
+
+* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
+* `actual_prefix` - Type: `string`.
+* `dynamic` - Type: `bool`.
+* `invalid` - Type: `bool`.
+* `preferred_lifetime` - Type: `string`.
+* `valid_lifetime` - Type: `string`.
+
 ## Import
 
 Rows are imported by RouterOS `.id`, optionally prefixed by the router name:

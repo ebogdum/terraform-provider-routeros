@@ -4,6 +4,7 @@ resource "routeros_routing_table" "table_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
-  # fib = "replace-me"
+  # fib = false
   # name = "tf-example"
+  # used = false
 }

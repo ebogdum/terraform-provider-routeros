@@ -27,6 +27,7 @@ This data source supports the following arguments:
 * `filter` - (Optional) Map of field=value pairs to narrow the result set.
 * `proplist` - (Optional) List of property names to project; smaller payload.
 * `address` - (Optional) Type: `string`.
+* `alias` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`.
 * `group` - (Required) Type: `string`. Default: `read`.
@@ -34,6 +35,7 @@ This data source supports the following arguments:
 * `inactivity_timeout` - (Optional) Type: `duration`.
 * `name` - (Required) Type: `string`. Default: `tf_user`.
 * `password` - (Required) Type: `string`. Default: `tf_pw`. **Sensitive.**
+* `type` - (Optional) Type: `int`.
 
 ## Attribute Reference
 

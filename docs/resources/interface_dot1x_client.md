@@ -41,6 +41,13 @@ This resource supports the following arguments:
 * `interface` - (Optional) Type: `string`.
 * `password` - (Optional) Type: `string`. **Sensitive.**
 
+## Attribute Reference
+
+In addition to the arguments above, the following attributes are exported:
+
+* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
+* `invalid` - Type: `bool`.
+
 ## Import
 
 Rows are imported by RouterOS `.id`, optionally prefixed by the router name:

@@ -41,7 +41,7 @@ This data source supports the following arguments:
 * `serial_number` - (Optional) Type: `string`.
 * `speed` - (Optional) Type: `string`.
 * `std_descr` - (Optional) Type: `string`.
-* `type` - (Optional) Type: `enum(USB|PCI|SCSI|Serial)`.
+* `type` - (Optional) Type: `enum(usb|pci|scsi|serial)`.
 * `usb` - (Optional) Type: `string`.
 * `usb_version` - (Optional) Type: `string`.
 * `vendor` - (Optional) Type: `string`.

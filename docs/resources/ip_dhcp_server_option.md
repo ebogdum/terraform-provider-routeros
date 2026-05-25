@@ -36,6 +36,13 @@ This resource supports the following arguments:
 * `name` - (Required) Type: `string`. Default: `tf_acc_opt`.
 * `value` - (Required) Type: `string`. Default: `'tf-acc'`.
 
+## Attribute Reference
+
+In addition to the arguments above, the following attributes are exported:
+
+* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
+* `raw_value` - Type: `string`.
+
 ## Import
 
 Rows are imported by RouterOS `.id`, optionally prefixed by the router name:

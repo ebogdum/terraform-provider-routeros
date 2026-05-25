@@ -32,33 +32,44 @@ type IPDHCPClientResource struct {
 }
 
 type IPDHCPClientModel struct {
-	ID                   types.String `tfsdk:"id"`
-	AddDefaultRoute      types.String `tfsdk:"add_default_route"`
-	Address              types.String `tfsdk:"address"`
-	AllowReconfigure     types.Bool   `tfsdk:"allow_reconfigure"`
-	CheckGateway         types.String `tfsdk:"check_gateway"`
-	Comment              types.String `tfsdk:"comment"`
-	DefaultRouteDistance types.Int64  `tfsdk:"default_route_distance"`
-	DefaultRouteTables   types.String `tfsdk:"default_route_tables"`
-	DHCPOptions          types.List   `tfsdk:"dhcp_options"`
-	DHCPServer           types.String `tfsdk:"dhcp_server"`
-	Disabled             types.Bool   `tfsdk:"disabled"`
-	Dscp                 types.Int64  `tfsdk:"dscp"`
-	Dynamic              types.Bool   `tfsdk:"dynamic"`
-	ExpiresAfter         types.String `tfsdk:"expires_after"`
-	Gateway              types.String `tfsdk:"gateway"`
-	Interface            types.String `tfsdk:"interface"`
-	Invalid              types.Bool   `tfsdk:"invalid"`
-	Name                 types.String `tfsdk:"name"`
-	PrimaryDNS           types.String `tfsdk:"primary_dns"`
-	PrimaryNTP           types.String `tfsdk:"primary_ntp"`
-	Script               types.String `tfsdk:"script"`
-	Status               types.String `tfsdk:"status"`
-	UseBroadcast         types.String `tfsdk:"use_broadcast"`
-	UsePeerDNS           types.Bool   `tfsdk:"use_peer_dns"`
-	UsePeerNTP           types.Bool   `tfsdk:"use_peer_ntp"`
-	VLANPriority         types.Int64  `tfsdk:"vlan_priority"`
-	Router               types.String `tfsdk:"router"`
+	ID                       types.String `tfsdk:"id"`
+	AddDefaultRoute          types.String `tfsdk:"add_default_route"`
+	Address                  types.String `tfsdk:"address"`
+	AllowReconfigure         types.Bool   `tfsdk:"allow_reconfigure"`
+	AllowReconfigureMessages types.Bool   `tfsdk:"allow_reconfigure_messages"`
+	CapsManagers             types.String `tfsdk:"caps_managers"`
+	CheckGateway             types.String `tfsdk:"check_gateway"`
+	Comment                  types.String `tfsdk:"comment"`
+	DefaultRouteDistance     types.Int64  `tfsdk:"default_route_distance"`
+	DefaultRouteTables       types.String `tfsdk:"default_route_tables"`
+	DHCPOptions              types.List   `tfsdk:"dhcp_options"`
+	DHCPServer               types.String `tfsdk:"dhcp_server"`
+	Disabled                 types.Bool   `tfsdk:"disabled"`
+	Dscp                     types.Int64  `tfsdk:"dscp"`
+	Dynamic                  types.Bool   `tfsdk:"dynamic"`
+	ExpiresAfter             types.String `tfsdk:"expires_after"`
+	Gateway                  types.String `tfsdk:"gateway"`
+	Interface                types.String `tfsdk:"interface"`
+	Invalid                  types.Bool   `tfsdk:"invalid"`
+	IPAddress                types.String `tfsdk:"ip_address"`
+	LastReceivedCounter      types.String `tfsdk:"last_received_counter"`
+	Name                     types.String `tfsdk:"name"`
+	PrimaryDNS               types.String `tfsdk:"primary_dns"`
+	PrimaryNTP               types.String `tfsdk:"primary_ntp"`
+	ReconfigureKey           types.String `tfsdk:"reconfigure_key"`
+	Release                  types.String `tfsdk:"release"`
+	Renew                    types.String `tfsdk:"renew"`
+	Route                    types.String `tfsdk:"route"`
+	RoutingTables            types.String `tfsdk:"routing_tables"`
+	Script                   types.String `tfsdk:"script"`
+	SecondaryDNS             types.String `tfsdk:"secondary_dns"`
+	SecondaryNTP             types.String `tfsdk:"secondary_ntp"`
+	Status                   types.String `tfsdk:"status"`
+	UseBroadcast             types.String `tfsdk:"use_broadcast"`
+	UsePeerDNS               types.Bool   `tfsdk:"use_peer_dns"`
+	UsePeerNTP               types.Bool   `tfsdk:"use_peer_ntp"`
+	VLANPriority             types.Int64  `tfsdk:"vlan_priority"`
+	Router                   types.String `tfsdk:"router"`
 }
 
 func NewIPDHCPClientResource() resource.Resource { return &IPDHCPClientResource{} }
@@ -89,7 +100,7 @@ func (r *IPDHCPClientResource) Schema(_ context.Context, _ resource.SchemaReques
 				Optional:    true,
 				Computed:    true,
 				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"no", "yes", "special classless"}...)},
+				Validators:  []validator.String{schemautil.OneOf([]string{"no", "yes", "special-classless"}...)},
 			},
 			"address": schema.StringAttribute{
 				Optional:      true,
@@ -99,6 +110,16 @@ func (r *IPDHCPClientResource) Schema(_ context.Context, _ resource.SchemaReques
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeCIDR()},
 			},
 			"allow_reconfigure": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"allow_reconfigure_messages": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"caps_managers": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -174,6 +195,18 @@ func (r *IPDHCPClientResource) Schema(_ context.Context, _ resource.SchemaReques
 				Computed:    true,
 				Description: "",
 			},
+			"ip_address": schema.StringAttribute{
+				Optional:      true,
+				Computed:      true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsCIDR()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeCIDR()},
+			},
+			"last_received_counter": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"name": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -191,10 +224,47 @@ func (r *IPDHCPClientResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description: "",
 				Validators:  []validator.String{schemautil.IsIP()},
 			},
+			"reconfigure_key": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"release": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"renew": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"route": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"routing_tables": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"script": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
+			},
+			"secondary_dns": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsIP()},
+			},
+			"secondary_ntp": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsIP()},
 			},
 			"status": schema.StringAttribute{
 				Optional:    true,
@@ -247,6 +317,9 @@ func (r *IPDHCPClientResource) Create(ctx context.Context, req resource.CreateRe
 	if !(plan.AllowReconfigure.IsNull() || plan.AllowReconfigure.IsUnknown()) {
 		body["allow-reconfigure"] = client.FormatBool(plan.AllowReconfigure.ValueBool())
 	}
+	if !(plan.AllowReconfigureMessages.IsNull() || plan.AllowReconfigureMessages.IsUnknown()) {
+		body["allow-reconfigure-messages"] = client.FormatBool(plan.AllowReconfigureMessages.ValueBool())
+	}
 	if !(plan.CheckGateway.IsNull() || plan.CheckGateway.IsUnknown()) {
 		body["check-gateway"] = plan.CheckGateway.ValueString()
 	}
@@ -273,6 +346,18 @@ func (r *IPDHCPClientResource) Create(ctx context.Context, req resource.CreateRe
 	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
+	}
+	if !(plan.Release.IsNull() || plan.Release.IsUnknown()) {
+		body["release"] = plan.Release.ValueString()
+	}
+	if !(plan.Renew.IsNull() || plan.Renew.IsUnknown()) {
+		body["renew"] = plan.Renew.ValueString()
+	}
+	if !(plan.Route.IsNull() || plan.Route.IsUnknown()) {
+		body["route"] = plan.Route.ValueString()
+	}
+	if !(plan.RoutingTables.IsNull() || plan.RoutingTables.IsUnknown()) {
+		body["routing-tables"] = plan.RoutingTables.ValueString()
 	}
 	if !(plan.Script.IsNull() || plan.Script.IsUnknown()) {
 		body["script"] = plan.Script.ValueString()
@@ -342,6 +427,9 @@ func (r *IPDHCPClientResource) Update(ctx context.Context, req resource.UpdateRe
 	if !plan.AllowReconfigure.Equal(state.AllowReconfigure) {
 		body["allow-reconfigure"] = client.FormatBool(plan.AllowReconfigure.ValueBool())
 	}
+	if !plan.AllowReconfigureMessages.Equal(state.AllowReconfigureMessages) {
+		body["allow-reconfigure-messages"] = client.FormatBool(plan.AllowReconfigureMessages.ValueBool())
+	}
 	if !plan.CheckGateway.Equal(state.CheckGateway) {
 		body["check-gateway"] = plan.CheckGateway.ValueString()
 	}
@@ -368,6 +456,18 @@ func (r *IPDHCPClientResource) Update(ctx context.Context, req resource.UpdateRe
 	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
+	}
+	if !plan.Release.Equal(state.Release) {
+		body["release"] = plan.Release.ValueString()
+	}
+	if !plan.Renew.Equal(state.Renew) {
+		body["renew"] = plan.Renew.ValueString()
+	}
+	if !plan.Route.Equal(state.Route) {
+		body["route"] = plan.Route.ValueString()
+	}
+	if !plan.RoutingTables.Equal(state.RoutingTables) {
+		body["routing-tables"] = plan.RoutingTables.ValueString()
 	}
 	if !plan.Script.Equal(state.Script) {
 		body["script"] = plan.Script.ValueString()
@@ -497,6 +597,26 @@ func iPDHCPClientApply(ctx context.Context, obj client.Object, m *IPDHCPClientMo
 	} else {
 		m.AllowReconfigure = types.BoolNull()
 	}
+	if v, ok := obj["allow-reconfigure-messages"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.AllowReconfigureMessages = types.BoolValue(b)
+		} else {
+			m.AllowReconfigureMessages = types.BoolNull()
+		}
+	} else {
+		m.AllowReconfigureMessages = types.BoolNull()
+	}
+	if v, ok := obj["caps-managers"]; ok {
+		_ = v
+		if v != "" {
+			m.CapsManagers = types.StringValue(v)
+		} else {
+			m.CapsManagers = types.StringNull()
+		}
+	} else {
+		m.CapsManagers = types.StringNull()
+	}
 	if v, ok := obj["check-gateway"]; ok {
 		_ = v
 		if v != "" {
@@ -623,6 +743,26 @@ func iPDHCPClientApply(ctx context.Context, obj client.Object, m *IPDHCPClientMo
 	} else {
 		m.Invalid = types.BoolNull()
 	}
+	if v, ok := obj["ip-address"]; ok {
+		_ = v
+		if v != "" {
+			m.IPAddress = types.StringValue(v)
+		} else {
+			m.IPAddress = types.StringNull()
+		}
+	} else {
+		m.IPAddress = types.StringNull()
+	}
+	if v, ok := obj["last-received-counter"]; ok {
+		_ = v
+		if v != "" {
+			m.LastReceivedCounter = types.StringValue(v)
+		} else {
+			m.LastReceivedCounter = types.StringNull()
+		}
+	} else {
+		m.LastReceivedCounter = types.StringNull()
+	}
 	if v, ok := obj["name"]; ok {
 		_ = v
 		if v != "" {
@@ -653,6 +793,56 @@ func iPDHCPClientApply(ctx context.Context, obj client.Object, m *IPDHCPClientMo
 	} else {
 		m.PrimaryNTP = types.StringNull()
 	}
+	if v, ok := obj["reconfigure-key"]; ok {
+		_ = v
+		if v != "" {
+			m.ReconfigureKey = types.StringValue(v)
+		} else {
+			m.ReconfigureKey = types.StringNull()
+		}
+	} else {
+		m.ReconfigureKey = types.StringNull()
+	}
+	if v, ok := obj["release"]; ok {
+		_ = v
+		if v != "" {
+			m.Release = types.StringValue(v)
+		} else {
+			m.Release = types.StringNull()
+		}
+	} else {
+		m.Release = types.StringNull()
+	}
+	if v, ok := obj["renew"]; ok {
+		_ = v
+		if v != "" {
+			m.Renew = types.StringValue(v)
+		} else {
+			m.Renew = types.StringNull()
+		}
+	} else {
+		m.Renew = types.StringNull()
+	}
+	if v, ok := obj["route"]; ok {
+		_ = v
+		if v != "" {
+			m.Route = types.StringValue(v)
+		} else {
+			m.Route = types.StringNull()
+		}
+	} else {
+		m.Route = types.StringNull()
+	}
+	if v, ok := obj["routing-tables"]; ok {
+		_ = v
+		if v != "" {
+			m.RoutingTables = types.StringValue(v)
+		} else {
+			m.RoutingTables = types.StringNull()
+		}
+	} else {
+		m.RoutingTables = types.StringNull()
+	}
 	if v, ok := obj["script"]; ok {
 		_ = v
 		if v != "" {
@@ -662,6 +852,26 @@ func iPDHCPClientApply(ctx context.Context, obj client.Object, m *IPDHCPClientMo
 		}
 	} else {
 		m.Script = types.StringNull()
+	}
+	if v, ok := obj["secondary-dns"]; ok {
+		_ = v
+		if v != "" {
+			m.SecondaryDNS = types.StringValue(v)
+		} else {
+			m.SecondaryDNS = types.StringNull()
+		}
+	} else {
+		m.SecondaryDNS = types.StringNull()
+	}
+	if v, ok := obj["secondary-ntp"]; ok {
+		_ = v
+		if v != "" {
+			m.SecondaryNTP = types.StringValue(v)
+		} else {
+			m.SecondaryNTP = types.StringNull()
+		}
+	} else {
+		m.SecondaryNTP = types.StringNull()
 	}
 	if v, ok := obj["status"]; ok {
 		_ = v

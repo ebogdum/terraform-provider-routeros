@@ -5,6 +5,7 @@ resource "routeros_interface_bridge_vlan" "vlan_example" {
 
   # Optional attributes (uncomment as needed):
   # bridge = "bridge1"
+  # mvrp_attributes = "replace-me"
   # mvrp_forbidden = "replace-me"
   # tagged = "replace-me"
   # untagged = "replace-me"

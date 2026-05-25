@@ -29,10 +29,13 @@ This data source supports the following arguments:
 * `chain` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `type` - (Optional) Type: `enum(where|group-num|group-prfx|select-num|select-prfx|take, ...)`.
 
 ## Attribute Reference
 
 This data source exports the following attributes in addition to the arguments above:
 
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
+* `do` - Type: `string`.
+* `invalid` - Type: `bool`.
 

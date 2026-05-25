@@ -37,6 +37,13 @@ This resource supports the following arguments:
 * `instance_id` - (Optional) Type: `int`.
 * `poll_interval` - (Optional) Type: `duration`.
 
+## Attribute Reference
+
+In addition to the arguments above, the following attributes are exported:
+
+* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
+* `invalid` - Type: `bool`.
+
 ## Import
 
 Rows are imported by RouterOS `.id`, optionally prefixed by the router name:

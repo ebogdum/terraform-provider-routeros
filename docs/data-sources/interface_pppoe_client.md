@@ -26,11 +26,14 @@ This data source supports the following arguments:
 * `router` - (Optional) Name of the router in the provider's `routers` map to query.
 * `filter` - (Optional) Map of field=value pairs to narrow the result set.
 * `proplist` - (Optional) List of property names to project; smaller payload.
+* `ac_name` - (Optional) Type: `string`.
+* `add_default_route` - (Optional) Type: `string`.
 * `allow` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `default_route_distance` - (Optional) Type: `string`.
 * `dial_on_demand` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `interface` - (Optional) Type: `string`.
 * `keepalive_timeout` - (Optional) Type: `string`.
 * `max_mru` - (Optional) Type: `string`.
 * `max_mtu` - (Optional) Type: `string`.
@@ -38,6 +41,8 @@ This data source supports the following arguments:
 * `name` - (Optional) Type: `string`.
 * `password` - (Optional) Type: `string`.
 * `profile` - (Optional) Type: `string`.
+* `service_name` - (Optional) Type: `string`.
+* `use_peer_dns` - (Optional) Type: `string`.
 * `user` - (Optional) Type: `string`.
 
 ## Attribute Reference

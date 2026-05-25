@@ -56,6 +56,7 @@ type QueueTypeModel struct {
 	RedMinThreshold    types.Int64  `tfsdk:"red_min_threshold"`
 	SfqAllot           types.Int64  `tfsdk:"sfq_allot"`
 	SfqPerturb         types.Int64  `tfsdk:"sfq_perturb"`
+	TypeName           types.String `tfsdk:"type_name"`
 	Router             types.String `tfsdk:"router"`
 }
 
@@ -91,7 +92,7 @@ func (r *QueueTypeResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 			"kind": schema.StringAttribute{
 				Required:    true,
 				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"", "bfifo", "pfifo", "red", "sfq", "pcq", "mq pfifo", "none", "codel", "fq codel", "cake"}...)},
+				Validators:  []validator.String{schemautil.OneOf([]string{"", "bfifo", "pfifo", "red", "sfq", "pcq", "mq-pfifo", "none", "codel", "fq-codel", "cake"}...)},
 			},
 			"mq_pfifo_limit": schema.Int64Attribute{
 				Optional:    true,
@@ -199,6 +200,11 @@ func (r *QueueTypeResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Computed:    true,
 				Description: "",
 			},
+			"type_name": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"router": schema.StringAttribute{
 				Optional:    true,
 				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
@@ -283,6 +289,9 @@ func (r *QueueTypeResource) Create(ctx context.Context, req resource.CreateReque
 	}
 	if !(plan.SfqPerturb.IsNull() || plan.SfqPerturb.IsUnknown()) {
 		body["sfq-perturb"] = client.FormatInt64(plan.SfqPerturb.ValueInt64())
+	}
+	if !(plan.TypeName.IsNull() || plan.TypeName.IsUnknown()) {
+		body["type-name"] = plan.TypeName.ValueString()
 	}
 	obj, err := c.Add(ctx, "/queue/type", body)
 	if err != nil {
@@ -396,6 +405,9 @@ func (r *QueueTypeResource) Update(ctx context.Context, req resource.UpdateReque
 	}
 	if !plan.SfqPerturb.Equal(state.SfqPerturb) {
 		body["sfq-perturb"] = client.FormatInt64(plan.SfqPerturb.ValueInt64())
+	}
+	if !plan.TypeName.Equal(state.TypeName) {
+		body["type-name"] = plan.TypeName.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/queue/type", state.ID.ValueString(), body)
@@ -709,5 +721,15 @@ func queueTypeApply(ctx context.Context, obj client.Object, m *QueueTypeModel) {
 		}
 	} else {
 		m.SfqPerturb = types.Int64Null()
+	}
+	if v, ok := obj["type-name"]; ok {
+		_ = v
+		if v != "" {
+			m.TypeName = types.StringValue(v)
+		} else {
+			m.TypeName = types.StringNull()
+		}
+	} else {
+		m.TypeName = types.StringNull()
 	}
 }

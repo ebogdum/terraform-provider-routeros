@@ -22,6 +22,8 @@ resource "routeros_ip_dhcp_server_alert" "alert_example" {
   # Optional attributes (uncomment as needed):
   # alert_timeout = "3600"
   # on_alert = "replace-me"
+  # reset_alert = "replace-me"
+  # valid_servers = "replace-me"
 }
 ```
 
@@ -35,6 +37,15 @@ This resource supports the following arguments:
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `interface` - (Required) Type: `string`.
 * `on_alert` - (Optional) Type: `string`.
+* `reset_alert` - (Optional) Type: `string`.
+* `valid_servers` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+In addition to the arguments above, the following attributes are exported:
+
+* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
+* `unknown_servers` - Type: `string`.
 
 ## Import
 

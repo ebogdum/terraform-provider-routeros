@@ -48,6 +48,7 @@ This data source supports the following arguments:
 * `red_min_threshold` - (Optional) Type: `int`.
 * `sfq_allot` - (Optional) Type: `int`.
 * `sfq_perturb` - (Optional) Type: `int`.
+* `type_name` - (Optional) Type: `string`.
 
 ## Attribute Reference
 

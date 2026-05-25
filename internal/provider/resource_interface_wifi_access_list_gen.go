@@ -37,6 +37,8 @@ type InterfaceWifiAccessListModel struct {
 	Comment               types.String `tfsdk:"comment"`
 	Disabled              types.Bool   `tfsdk:"disabled"`
 	Interface             types.String `tfsdk:"interface"`
+	LastLoggedIn          types.String `tfsdk:"last_logged_in"`
+	LastLoggedOut         types.String `tfsdk:"last_logged_out"`
 	MACAddress            types.String `tfsdk:"mac_address"`
 	MACAddressMask        types.String `tfsdk:"mac_address_mask"`
 	MultiPassphraseGroup  types.String `tfsdk:"multi_passphrase_group"`
@@ -45,7 +47,9 @@ type InterfaceWifiAccessListModel struct {
 	SignalRange           types.String `tfsdk:"signal_range"`
 	SsidRegexp            types.String `tfsdk:"ssid_regexp"`
 	Time                  types.String `tfsdk:"time"`
+	TimesMatched          types.String `tfsdk:"times_matched"`
 	VLANID                types.String `tfsdk:"vlan_id"`
+	Weekdays              types.String `tfsdk:"weekdays"`
 	Router                types.String `tfsdk:"router"`
 }
 
@@ -105,6 +109,16 @@ func (r *InterfaceWifiAccessListResource) Schema(_ context.Context, _ resource.S
 				Computed:    true,
 				Description: "",
 			},
+			"last_logged_in": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"last_logged_out": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"mac_address": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -146,7 +160,17 @@ func (r *InterfaceWifiAccessListResource) Schema(_ context.Context, _ resource.S
 				Computed:    true,
 				Description: "",
 			},
+			"times_matched": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"vlan_id": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"weekdays": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -214,6 +238,9 @@ func (r *InterfaceWifiAccessListResource) Create(ctx context.Context, req resour
 	}
 	if !(plan.VLANID.IsNull() || plan.VLANID.IsUnknown()) {
 		body["vlan-id"] = plan.VLANID.ValueString()
+	}
+	if !(plan.Weekdays.IsNull() || plan.Weekdays.IsUnknown()) {
+		body["weekdays"] = plan.Weekdays.ValueString()
 	}
 	obj, err := c.Add(ctx, "/interface/wifi/access-list", body)
 	if err != nil {
@@ -306,6 +333,9 @@ func (r *InterfaceWifiAccessListResource) Update(ctx context.Context, req resour
 	}
 	if !plan.VLANID.Equal(state.VLANID) {
 		body["vlan-id"] = plan.VLANID.ValueString()
+	}
+	if !plan.Weekdays.Equal(state.Weekdays) {
+		body["weekdays"] = plan.Weekdays.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/wifi/access-list", state.ID.ValueString(), body)
@@ -450,6 +480,26 @@ func interfaceWifiAccessListApply(ctx context.Context, obj client.Object, m *Int
 	} else {
 		m.Interface = types.StringNull()
 	}
+	if v, ok := obj["last-logged-in"]; ok {
+		_ = v
+		if v != "" {
+			m.LastLoggedIn = types.StringValue(v)
+		} else {
+			m.LastLoggedIn = types.StringNull()
+		}
+	} else {
+		m.LastLoggedIn = types.StringNull()
+	}
+	if v, ok := obj["last-logged-out"]; ok {
+		_ = v
+		if v != "" {
+			m.LastLoggedOut = types.StringValue(v)
+		} else {
+			m.LastLoggedOut = types.StringNull()
+		}
+	} else {
+		m.LastLoggedOut = types.StringNull()
+	}
 	if v, ok := obj["mac-address"]; ok {
 		_ = v
 		if v != "" {
@@ -534,6 +584,16 @@ func interfaceWifiAccessListApply(ctx context.Context, obj client.Object, m *Int
 	} else {
 		m.Time = types.StringNull()
 	}
+	if v, ok := obj["times-matched"]; ok {
+		_ = v
+		if v != "" {
+			m.TimesMatched = types.StringValue(v)
+		} else {
+			m.TimesMatched = types.StringNull()
+		}
+	} else {
+		m.TimesMatched = types.StringNull()
+	}
 	if v, ok := obj["vlan-id"]; ok {
 		_ = v
 		if v != "" {
@@ -543,5 +603,15 @@ func interfaceWifiAccessListApply(ctx context.Context, obj client.Object, m *Int
 		}
 	} else {
 		m.VLANID = types.StringNull()
+	}
+	if v, ok := obj["weekdays"]; ok {
+		_ = v
+		if v != "" {
+			m.Weekdays = types.StringValue(v)
+		} else {
+			m.Weekdays = types.StringNull()
+		}
+	} else {
+		m.Weekdays = types.StringNull()
 	}
 }

@@ -38,6 +38,7 @@ resource "routeros_queue_type" "type_example" {
   # red_min_threshold = 0
   # sfq_allot = 0
   # sfq_perturb = 0
+  # type_name = "replace-me"
 }
 ```
 
@@ -68,6 +69,7 @@ This resource supports the following arguments:
 * `red_min_threshold` - (Optional) Type: `int`.
 * `sfq_allot` - (Optional) Type: `int`.
 * `sfq_perturb` - (Optional) Type: `int`.
+* `type_name` - (Optional) Type: `string`.
 
 ## Attribute Reference
 

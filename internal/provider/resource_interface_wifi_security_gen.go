@@ -30,13 +30,44 @@ type InterfaceWifiSecurityResource struct {
 }
 
 type InterfaceWifiSecurityModel struct {
-	ID         types.String `tfsdk:"id"`
-	Comment    types.String `tfsdk:"comment"`
-	Disabled   types.Bool   `tfsdk:"disabled"`
-	Encryption types.String `tfsdk:"encryption"`
-	Name       types.String `tfsdk:"name"`
-	Passphrase types.String `tfsdk:"passphrase"`
-	Router     types.String `tfsdk:"router"`
+	ID                       types.String `tfsdk:"id"`
+	BeaconProtection         types.String `tfsdk:"beacon_protection"`
+	Ciphers                  types.String `tfsdk:"ciphers"`
+	Comment                  types.String `tfsdk:"comment"`
+	ConnectGroup             types.String `tfsdk:"connect_group"`
+	ConnectPriority          types.String `tfsdk:"connect_priority"`
+	DhGroups                 types.String `tfsdk:"dh_groups"`
+	DisablePmkid             types.String `tfsdk:"disable_pmkid"`
+	Disabled                 types.Bool   `tfsdk:"disabled"`
+	EAPAccounting            types.String `tfsdk:"eap_accounting"`
+	EAPAnonymousIdentity     types.String `tfsdk:"eap_anonymous_identity"`
+	EAPCertificateMode       types.String `tfsdk:"eap_certificate_mode"`
+	EAPMethods               types.String `tfsdk:"eap_methods"`
+	EAPPassword              types.String `tfsdk:"eap_password"`
+	EAPTLSCertificate        types.String `tfsdk:"eap_tls_certificate"`
+	EAPUsername              types.String `tfsdk:"eap_username"`
+	Encryption               types.String `tfsdk:"encryption"`
+	FtEnabled                types.String `tfsdk:"ft_enabled"`
+	FtMobilityDomain         types.String `tfsdk:"ft_mobility_domain"`
+	FtNasIdentifier          types.String `tfsdk:"ft_nas_identifier"`
+	FtOverDs                 types.String `tfsdk:"ft_over_ds"`
+	FtPreserveVLANID         types.String `tfsdk:"ft_preserve_vlan_id"`
+	FtR0KeyLifetime          types.String `tfsdk:"ft_r0_key_lifetime"`
+	FtReassocDeadline        types.String `tfsdk:"ft_reassoc_deadline"`
+	GroupEncryption          types.String `tfsdk:"group_encryption"`
+	GroupKeyUpdate           types.String `tfsdk:"group_key_update"`
+	ManagementEncryption     types.String `tfsdk:"management_encryption"`
+	ManagementProtection     types.String `tfsdk:"management_protection"`
+	MultiPassphraseGroup     types.String `tfsdk:"multi_passphrase_group"`
+	Name                     types.String `tfsdk:"name"`
+	OweTransitionInterface   types.String `tfsdk:"owe_transition_interface"`
+	Passphrase               types.String `tfsdk:"passphrase"`
+	SaeAntiCloggingThreshold types.String `tfsdk:"sae_anti_clogging_threshold"`
+	SaeMaxFailureRate        types.String `tfsdk:"sae_max_failure_rate"`
+	SaePwe                   types.String `tfsdk:"sae_pwe"`
+	Types                    types.String `tfsdk:"types"`
+	Wps                      types.String `tfsdk:"wps"`
+	Router                   types.String `tfsdk:"router"`
 }
 
 func NewInterfaceWifiSecurityResource() resource.Resource { return &InterfaceWifiSecurityResource{} }
@@ -63,17 +94,142 @@ func (r *InterfaceWifiSecurityResource) Schema(_ context.Context, _ resource.Sch
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
+			"beacon_protection": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"ciphers": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "Free-form comment.",
+			},
+			"connect_group": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"connect_priority": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"dh_groups": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"disable_pmkid": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
 			},
 			"disabled": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "Whether the entry is disabled.",
 			},
+			"eap_accounting": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"eap_anonymous_identity": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"eap_certificate_mode": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"eap_methods": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"eap_password": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"eap_tls_certificate": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"eap_username": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"encryption": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"ft_enabled": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"ft_mobility_domain": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"ft_nas_identifier": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"ft_over_ds": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"ft_preserve_vlan_id": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"ft_r0_key_lifetime": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"ft_reassoc_deadline": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"group_encryption": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"group_key_update": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"management_encryption": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"management_protection": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"multi_passphrase_group": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -82,7 +238,37 @@ func (r *InterfaceWifiSecurityResource) Schema(_ context.Context, _ resource.Sch
 				Required:    true,
 				Description: "",
 			},
+			"owe_transition_interface": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"passphrase": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"sae_anti_clogging_threshold": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"sae_max_failure_rate": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"sae_pwe": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"types": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"wps": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -106,20 +292,113 @@ func (r *InterfaceWifiSecurityResource) Create(ctx context.Context, req resource
 		return
 	}
 	body := client.Object{}
+	if !(plan.BeaconProtection.IsNull() || plan.BeaconProtection.IsUnknown()) {
+		body["beacon-protection"] = plan.BeaconProtection.ValueString()
+	}
+	if !(plan.Ciphers.IsNull() || plan.Ciphers.IsUnknown()) {
+		body["ciphers"] = plan.Ciphers.ValueString()
+	}
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
+	}
+	if !(plan.ConnectGroup.IsNull() || plan.ConnectGroup.IsUnknown()) {
+		body["connect-group"] = plan.ConnectGroup.ValueString()
+	}
+	if !(plan.ConnectPriority.IsNull() || plan.ConnectPriority.IsUnknown()) {
+		body["connect-priority"] = plan.ConnectPriority.ValueString()
+	}
+	if !(plan.DhGroups.IsNull() || plan.DhGroups.IsUnknown()) {
+		body["dh-groups"] = plan.DhGroups.ValueString()
+	}
+	if !(plan.DisablePmkid.IsNull() || plan.DisablePmkid.IsUnknown()) {
+		body["disable-pmkid"] = plan.DisablePmkid.ValueString()
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
+	if !(plan.EAPAccounting.IsNull() || plan.EAPAccounting.IsUnknown()) {
+		body["eap-accounting"] = plan.EAPAccounting.ValueString()
+	}
+	if !(plan.EAPAnonymousIdentity.IsNull() || plan.EAPAnonymousIdentity.IsUnknown()) {
+		body["eap-anonymous-identity"] = plan.EAPAnonymousIdentity.ValueString()
+	}
+	if !(plan.EAPCertificateMode.IsNull() || plan.EAPCertificateMode.IsUnknown()) {
+		body["eap-certificate-mode"] = plan.EAPCertificateMode.ValueString()
+	}
+	if !(plan.EAPMethods.IsNull() || plan.EAPMethods.IsUnknown()) {
+		body["eap-methods"] = plan.EAPMethods.ValueString()
+	}
+	if !(plan.EAPPassword.IsNull() || plan.EAPPassword.IsUnknown()) {
+		body["eap-password"] = plan.EAPPassword.ValueString()
+	}
+	if !(plan.EAPTLSCertificate.IsNull() || plan.EAPTLSCertificate.IsUnknown()) {
+		body["eap-tls-certificate"] = plan.EAPTLSCertificate.ValueString()
+	}
+	if !(plan.EAPUsername.IsNull() || plan.EAPUsername.IsUnknown()) {
+		body["eap-username"] = plan.EAPUsername.ValueString()
+	}
 	if !(plan.Encryption.IsNull() || plan.Encryption.IsUnknown()) {
 		body["encryption"] = plan.Encryption.ValueString()
+	}
+	if !(plan.FtEnabled.IsNull() || plan.FtEnabled.IsUnknown()) {
+		body["ft-enabled"] = plan.FtEnabled.ValueString()
+	}
+	if !(plan.FtMobilityDomain.IsNull() || plan.FtMobilityDomain.IsUnknown()) {
+		body["ft-mobility-domain"] = plan.FtMobilityDomain.ValueString()
+	}
+	if !(plan.FtNasIdentifier.IsNull() || plan.FtNasIdentifier.IsUnknown()) {
+		body["ft-nas-identifier"] = plan.FtNasIdentifier.ValueString()
+	}
+	if !(plan.FtOverDs.IsNull() || plan.FtOverDs.IsUnknown()) {
+		body["ft-over-ds"] = plan.FtOverDs.ValueString()
+	}
+	if !(plan.FtPreserveVLANID.IsNull() || plan.FtPreserveVLANID.IsUnknown()) {
+		body["ft-preserve-vlan-id"] = plan.FtPreserveVLANID.ValueString()
+	}
+	if !(plan.FtR0KeyLifetime.IsNull() || plan.FtR0KeyLifetime.IsUnknown()) {
+		body["ft-r0-key-lifetime"] = plan.FtR0KeyLifetime.ValueString()
+	}
+	if !(plan.FtReassocDeadline.IsNull() || plan.FtReassocDeadline.IsUnknown()) {
+		body["ft-reassoc-deadline"] = plan.FtReassocDeadline.ValueString()
+	}
+	if !(plan.GroupEncryption.IsNull() || plan.GroupEncryption.IsUnknown()) {
+		body["group-encryption"] = plan.GroupEncryption.ValueString()
+	}
+	if !(plan.GroupKeyUpdate.IsNull() || plan.GroupKeyUpdate.IsUnknown()) {
+		body["group-key-update"] = plan.GroupKeyUpdate.ValueString()
+	}
+	if !(plan.ManagementEncryption.IsNull() || plan.ManagementEncryption.IsUnknown()) {
+		body["management-encryption"] = plan.ManagementEncryption.ValueString()
+	}
+	if !(plan.ManagementProtection.IsNull() || plan.ManagementProtection.IsUnknown()) {
+		body["management-protection"] = plan.ManagementProtection.ValueString()
+	}
+	if !(plan.MultiPassphraseGroup.IsNull() || plan.MultiPassphraseGroup.IsUnknown()) {
+		body["multi-passphrase-group"] = plan.MultiPassphraseGroup.ValueString()
 	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
 	}
+	if !(plan.OweTransitionInterface.IsNull() || plan.OweTransitionInterface.IsUnknown()) {
+		body["owe-transition-interface"] = plan.OweTransitionInterface.ValueString()
+	}
 	if !(plan.Passphrase.IsNull() || plan.Passphrase.IsUnknown()) {
 		body["passphrase"] = plan.Passphrase.ValueString()
+	}
+	if !(plan.SaeAntiCloggingThreshold.IsNull() || plan.SaeAntiCloggingThreshold.IsUnknown()) {
+		body["sae-anti-clogging-threshold"] = plan.SaeAntiCloggingThreshold.ValueString()
+	}
+	if !(plan.SaeMaxFailureRate.IsNull() || plan.SaeMaxFailureRate.IsUnknown()) {
+		body["sae-max-failure-rate"] = plan.SaeMaxFailureRate.ValueString()
+	}
+	if !(plan.SaePwe.IsNull() || plan.SaePwe.IsUnknown()) {
+		body["sae-pwe"] = plan.SaePwe.ValueString()
+	}
+	if !(plan.Types.IsNull() || plan.Types.IsUnknown()) {
+		body["types"] = plan.Types.ValueString()
+	}
+	if !(plan.Wps.IsNull() || plan.Wps.IsUnknown()) {
+		body["wps"] = plan.Wps.ValueString()
 	}
 	obj, err := c.Add(ctx, "/interface/wifi/security", body)
 	if err != nil {
@@ -168,20 +447,113 @@ func (r *InterfaceWifiSecurityResource) Update(ctx context.Context, req resource
 		return
 	}
 	body := client.Object{}
+	if !plan.BeaconProtection.Equal(state.BeaconProtection) {
+		body["beacon-protection"] = plan.BeaconProtection.ValueString()
+	}
+	if !plan.Ciphers.Equal(state.Ciphers) {
+		body["ciphers"] = plan.Ciphers.ValueString()
+	}
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
+	}
+	if !plan.ConnectGroup.Equal(state.ConnectGroup) {
+		body["connect-group"] = plan.ConnectGroup.ValueString()
+	}
+	if !plan.ConnectPriority.Equal(state.ConnectPriority) {
+		body["connect-priority"] = plan.ConnectPriority.ValueString()
+	}
+	if !plan.DhGroups.Equal(state.DhGroups) {
+		body["dh-groups"] = plan.DhGroups.ValueString()
+	}
+	if !plan.DisablePmkid.Equal(state.DisablePmkid) {
+		body["disable-pmkid"] = plan.DisablePmkid.ValueString()
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
+	if !plan.EAPAccounting.Equal(state.EAPAccounting) {
+		body["eap-accounting"] = plan.EAPAccounting.ValueString()
+	}
+	if !plan.EAPAnonymousIdentity.Equal(state.EAPAnonymousIdentity) {
+		body["eap-anonymous-identity"] = plan.EAPAnonymousIdentity.ValueString()
+	}
+	if !plan.EAPCertificateMode.Equal(state.EAPCertificateMode) {
+		body["eap-certificate-mode"] = plan.EAPCertificateMode.ValueString()
+	}
+	if !plan.EAPMethods.Equal(state.EAPMethods) {
+		body["eap-methods"] = plan.EAPMethods.ValueString()
+	}
+	if !plan.EAPPassword.Equal(state.EAPPassword) {
+		body["eap-password"] = plan.EAPPassword.ValueString()
+	}
+	if !plan.EAPTLSCertificate.Equal(state.EAPTLSCertificate) {
+		body["eap-tls-certificate"] = plan.EAPTLSCertificate.ValueString()
+	}
+	if !plan.EAPUsername.Equal(state.EAPUsername) {
+		body["eap-username"] = plan.EAPUsername.ValueString()
+	}
 	if !plan.Encryption.Equal(state.Encryption) {
 		body["encryption"] = plan.Encryption.ValueString()
+	}
+	if !plan.FtEnabled.Equal(state.FtEnabled) {
+		body["ft-enabled"] = plan.FtEnabled.ValueString()
+	}
+	if !plan.FtMobilityDomain.Equal(state.FtMobilityDomain) {
+		body["ft-mobility-domain"] = plan.FtMobilityDomain.ValueString()
+	}
+	if !plan.FtNasIdentifier.Equal(state.FtNasIdentifier) {
+		body["ft-nas-identifier"] = plan.FtNasIdentifier.ValueString()
+	}
+	if !plan.FtOverDs.Equal(state.FtOverDs) {
+		body["ft-over-ds"] = plan.FtOverDs.ValueString()
+	}
+	if !plan.FtPreserveVLANID.Equal(state.FtPreserveVLANID) {
+		body["ft-preserve-vlan-id"] = plan.FtPreserveVLANID.ValueString()
+	}
+	if !plan.FtR0KeyLifetime.Equal(state.FtR0KeyLifetime) {
+		body["ft-r0-key-lifetime"] = plan.FtR0KeyLifetime.ValueString()
+	}
+	if !plan.FtReassocDeadline.Equal(state.FtReassocDeadline) {
+		body["ft-reassoc-deadline"] = plan.FtReassocDeadline.ValueString()
+	}
+	if !plan.GroupEncryption.Equal(state.GroupEncryption) {
+		body["group-encryption"] = plan.GroupEncryption.ValueString()
+	}
+	if !plan.GroupKeyUpdate.Equal(state.GroupKeyUpdate) {
+		body["group-key-update"] = plan.GroupKeyUpdate.ValueString()
+	}
+	if !plan.ManagementEncryption.Equal(state.ManagementEncryption) {
+		body["management-encryption"] = plan.ManagementEncryption.ValueString()
+	}
+	if !plan.ManagementProtection.Equal(state.ManagementProtection) {
+		body["management-protection"] = plan.ManagementProtection.ValueString()
+	}
+	if !plan.MultiPassphraseGroup.Equal(state.MultiPassphraseGroup) {
+		body["multi-passphrase-group"] = plan.MultiPassphraseGroup.ValueString()
 	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
 	}
+	if !plan.OweTransitionInterface.Equal(state.OweTransitionInterface) {
+		body["owe-transition-interface"] = plan.OweTransitionInterface.ValueString()
+	}
 	if !plan.Passphrase.Equal(state.Passphrase) {
 		body["passphrase"] = plan.Passphrase.ValueString()
+	}
+	if !plan.SaeAntiCloggingThreshold.Equal(state.SaeAntiCloggingThreshold) {
+		body["sae-anti-clogging-threshold"] = plan.SaeAntiCloggingThreshold.ValueString()
+	}
+	if !plan.SaeMaxFailureRate.Equal(state.SaeMaxFailureRate) {
+		body["sae-max-failure-rate"] = plan.SaeMaxFailureRate.ValueString()
+	}
+	if !plan.SaePwe.Equal(state.SaePwe) {
+		body["sae-pwe"] = plan.SaePwe.ValueString()
+	}
+	if !plan.Types.Equal(state.Types) {
+		body["types"] = plan.Types.ValueString()
+	}
+	if !plan.Wps.Equal(state.Wps) {
+		body["wps"] = plan.Wps.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/wifi/security", state.ID.ValueString(), body)
@@ -266,6 +638,26 @@ func interfaceWifiSecurityLookupByNaturalKey(ctx context.Context, c *client.Clie
 func interfaceWifiSecurityApply(ctx context.Context, obj client.Object, m *InterfaceWifiSecurityModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["beacon-protection"]; ok {
+		_ = v
+		if v != "" {
+			m.BeaconProtection = types.StringValue(v)
+		} else {
+			m.BeaconProtection = types.StringNull()
+		}
+	} else {
+		m.BeaconProtection = types.StringNull()
+	}
+	if v, ok := obj["ciphers"]; ok {
+		_ = v
+		if v != "" {
+			m.Ciphers = types.StringValue(v)
+		} else {
+			m.Ciphers = types.StringNull()
+		}
+	} else {
+		m.Ciphers = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {
@@ -275,6 +667,46 @@ func interfaceWifiSecurityApply(ctx context.Context, obj client.Object, m *Inter
 		}
 	} else {
 		m.Comment = types.StringNull()
+	}
+	if v, ok := obj["connect-group"]; ok {
+		_ = v
+		if v != "" {
+			m.ConnectGroup = types.StringValue(v)
+		} else {
+			m.ConnectGroup = types.StringNull()
+		}
+	} else {
+		m.ConnectGroup = types.StringNull()
+	}
+	if v, ok := obj["connect-priority"]; ok {
+		_ = v
+		if v != "" {
+			m.ConnectPriority = types.StringValue(v)
+		} else {
+			m.ConnectPriority = types.StringNull()
+		}
+	} else {
+		m.ConnectPriority = types.StringNull()
+	}
+	if v, ok := obj["dh-groups"]; ok {
+		_ = v
+		if v != "" {
+			m.DhGroups = types.StringValue(v)
+		} else {
+			m.DhGroups = types.StringNull()
+		}
+	} else {
+		m.DhGroups = types.StringNull()
+	}
+	if v, ok := obj["disable-pmkid"]; ok {
+		_ = v
+		if v != "" {
+			m.DisablePmkid = types.StringValue(v)
+		} else {
+			m.DisablePmkid = types.StringNull()
+		}
+	} else {
+		m.DisablePmkid = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
 		_ = v
@@ -286,6 +718,76 @@ func interfaceWifiSecurityApply(ctx context.Context, obj client.Object, m *Inter
 	} else {
 		m.Disabled = types.BoolNull()
 	}
+	if v, ok := obj["eap-accounting"]; ok {
+		_ = v
+		if v != "" {
+			m.EAPAccounting = types.StringValue(v)
+		} else {
+			m.EAPAccounting = types.StringNull()
+		}
+	} else {
+		m.EAPAccounting = types.StringNull()
+	}
+	if v, ok := obj["eap-anonymous-identity"]; ok {
+		_ = v
+		if v != "" {
+			m.EAPAnonymousIdentity = types.StringValue(v)
+		} else {
+			m.EAPAnonymousIdentity = types.StringNull()
+		}
+	} else {
+		m.EAPAnonymousIdentity = types.StringNull()
+	}
+	if v, ok := obj["eap-certificate-mode"]; ok {
+		_ = v
+		if v != "" {
+			m.EAPCertificateMode = types.StringValue(v)
+		} else {
+			m.EAPCertificateMode = types.StringNull()
+		}
+	} else {
+		m.EAPCertificateMode = types.StringNull()
+	}
+	if v, ok := obj["eap-methods"]; ok {
+		_ = v
+		if v != "" {
+			m.EAPMethods = types.StringValue(v)
+		} else {
+			m.EAPMethods = types.StringNull()
+		}
+	} else {
+		m.EAPMethods = types.StringNull()
+	}
+	if v, ok := obj["eap-password"]; ok {
+		_ = v
+		if v != "" {
+			m.EAPPassword = types.StringValue(v)
+		} else {
+			m.EAPPassword = types.StringNull()
+		}
+	} else {
+		m.EAPPassword = types.StringNull()
+	}
+	if v, ok := obj["eap-tls-certificate"]; ok {
+		_ = v
+		if v != "" {
+			m.EAPTLSCertificate = types.StringValue(v)
+		} else {
+			m.EAPTLSCertificate = types.StringNull()
+		}
+	} else {
+		m.EAPTLSCertificate = types.StringNull()
+	}
+	if v, ok := obj["eap-username"]; ok {
+		_ = v
+		if v != "" {
+			m.EAPUsername = types.StringValue(v)
+		} else {
+			m.EAPUsername = types.StringNull()
+		}
+	} else {
+		m.EAPUsername = types.StringNull()
+	}
 	if v, ok := obj["encryption"]; ok {
 		_ = v
 		if v != "" {
@@ -295,6 +797,126 @@ func interfaceWifiSecurityApply(ctx context.Context, obj client.Object, m *Inter
 		}
 	} else {
 		m.Encryption = types.StringNull()
+	}
+	if v, ok := obj["ft-enabled"]; ok {
+		_ = v
+		if v != "" {
+			m.FtEnabled = types.StringValue(v)
+		} else {
+			m.FtEnabled = types.StringNull()
+		}
+	} else {
+		m.FtEnabled = types.StringNull()
+	}
+	if v, ok := obj["ft-mobility-domain"]; ok {
+		_ = v
+		if v != "" {
+			m.FtMobilityDomain = types.StringValue(v)
+		} else {
+			m.FtMobilityDomain = types.StringNull()
+		}
+	} else {
+		m.FtMobilityDomain = types.StringNull()
+	}
+	if v, ok := obj["ft-nas-identifier"]; ok {
+		_ = v
+		if v != "" {
+			m.FtNasIdentifier = types.StringValue(v)
+		} else {
+			m.FtNasIdentifier = types.StringNull()
+		}
+	} else {
+		m.FtNasIdentifier = types.StringNull()
+	}
+	if v, ok := obj["ft-over-ds"]; ok {
+		_ = v
+		if v != "" {
+			m.FtOverDs = types.StringValue(v)
+		} else {
+			m.FtOverDs = types.StringNull()
+		}
+	} else {
+		m.FtOverDs = types.StringNull()
+	}
+	if v, ok := obj["ft-preserve-vlan-id"]; ok {
+		_ = v
+		if v != "" {
+			m.FtPreserveVLANID = types.StringValue(v)
+		} else {
+			m.FtPreserveVLANID = types.StringNull()
+		}
+	} else {
+		m.FtPreserveVLANID = types.StringNull()
+	}
+	if v, ok := obj["ft-r0-key-lifetime"]; ok {
+		_ = v
+		if v != "" {
+			m.FtR0KeyLifetime = types.StringValue(v)
+		} else {
+			m.FtR0KeyLifetime = types.StringNull()
+		}
+	} else {
+		m.FtR0KeyLifetime = types.StringNull()
+	}
+	if v, ok := obj["ft-reassoc-deadline"]; ok {
+		_ = v
+		if v != "" {
+			m.FtReassocDeadline = types.StringValue(v)
+		} else {
+			m.FtReassocDeadline = types.StringNull()
+		}
+	} else {
+		m.FtReassocDeadline = types.StringNull()
+	}
+	if v, ok := obj["group-encryption"]; ok {
+		_ = v
+		if v != "" {
+			m.GroupEncryption = types.StringValue(v)
+		} else {
+			m.GroupEncryption = types.StringNull()
+		}
+	} else {
+		m.GroupEncryption = types.StringNull()
+	}
+	if v, ok := obj["group-key-update"]; ok {
+		_ = v
+		if v != "" {
+			m.GroupKeyUpdate = types.StringValue(v)
+		} else {
+			m.GroupKeyUpdate = types.StringNull()
+		}
+	} else {
+		m.GroupKeyUpdate = types.StringNull()
+	}
+	if v, ok := obj["management-encryption"]; ok {
+		_ = v
+		if v != "" {
+			m.ManagementEncryption = types.StringValue(v)
+		} else {
+			m.ManagementEncryption = types.StringNull()
+		}
+	} else {
+		m.ManagementEncryption = types.StringNull()
+	}
+	if v, ok := obj["management-protection"]; ok {
+		_ = v
+		if v != "" {
+			m.ManagementProtection = types.StringValue(v)
+		} else {
+			m.ManagementProtection = types.StringNull()
+		}
+	} else {
+		m.ManagementProtection = types.StringNull()
+	}
+	if v, ok := obj["multi-passphrase-group"]; ok {
+		_ = v
+		if v != "" {
+			m.MultiPassphraseGroup = types.StringValue(v)
+		} else {
+			m.MultiPassphraseGroup = types.StringNull()
+		}
+	} else {
+		m.MultiPassphraseGroup = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
 		_ = v
@@ -306,6 +928,16 @@ func interfaceWifiSecurityApply(ctx context.Context, obj client.Object, m *Inter
 	} else {
 		m.Name = types.StringNull()
 	}
+	if v, ok := obj["owe-transition-interface"]; ok {
+		_ = v
+		if v != "" {
+			m.OweTransitionInterface = types.StringValue(v)
+		} else {
+			m.OweTransitionInterface = types.StringNull()
+		}
+	} else {
+		m.OweTransitionInterface = types.StringNull()
+	}
 	if v, ok := obj["passphrase"]; ok {
 		_ = v
 		if v != "" {
@@ -315,5 +947,55 @@ func interfaceWifiSecurityApply(ctx context.Context, obj client.Object, m *Inter
 		}
 	} else {
 		m.Passphrase = types.StringNull()
+	}
+	if v, ok := obj["sae-anti-clogging-threshold"]; ok {
+		_ = v
+		if v != "" {
+			m.SaeAntiCloggingThreshold = types.StringValue(v)
+		} else {
+			m.SaeAntiCloggingThreshold = types.StringNull()
+		}
+	} else {
+		m.SaeAntiCloggingThreshold = types.StringNull()
+	}
+	if v, ok := obj["sae-max-failure-rate"]; ok {
+		_ = v
+		if v != "" {
+			m.SaeMaxFailureRate = types.StringValue(v)
+		} else {
+			m.SaeMaxFailureRate = types.StringNull()
+		}
+	} else {
+		m.SaeMaxFailureRate = types.StringNull()
+	}
+	if v, ok := obj["sae-pwe"]; ok {
+		_ = v
+		if v != "" {
+			m.SaePwe = types.StringValue(v)
+		} else {
+			m.SaePwe = types.StringNull()
+		}
+	} else {
+		m.SaePwe = types.StringNull()
+	}
+	if v, ok := obj["types"]; ok {
+		_ = v
+		if v != "" {
+			m.Types = types.StringValue(v)
+		} else {
+			m.Types = types.StringNull()
+		}
+	} else {
+		m.Types = types.StringNull()
+	}
+	if v, ok := obj["wps"]; ok {
+		_ = v
+		if v != "" {
+			m.Wps = types.StringValue(v)
+		} else {
+			m.Wps = types.StringNull()
+		}
+	} else {
+		m.Wps = types.StringNull()
 	}
 }

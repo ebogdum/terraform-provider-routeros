@@ -6,5 +6,6 @@ resource "routeros_ip_pool" "pool_example" {
   comment = "managed by terraform"
 
   # Optional attributes (uncomment as needed):
+  # addresses = "replace-me"
   # next_pool = "replace-me"
 }

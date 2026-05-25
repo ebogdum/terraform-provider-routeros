@@ -17,7 +17,7 @@ resource "routeros_system_resource_hardware" "hardware_example" {
   # serial_number = "replace-me"
   # speed = "replace-me"
   # std_descr = "replace-me"
-  # type = "USB"
+  # type = "usb"
   # usb = "replace-me"
   # usb_version = "replace-me"
   # vendor = "replace-me"

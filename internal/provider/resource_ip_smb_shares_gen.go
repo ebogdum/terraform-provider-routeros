@@ -38,6 +38,9 @@ type IPSmbSharesModel struct {
 	Dynamic           types.Bool   `tfsdk:"dynamic"`
 	InvalidUsers      types.String `tfsdk:"invalid_users"`
 	Name              types.String `tfsdk:"name"`
+	Newfileman        types.String `tfsdk:"newfileman"`
+	OldDirectory      types.String `tfsdk:"old_directory"`
+	Oldfileman        types.String `tfsdk:"oldfileman"`
 	ReadOnly          types.Bool   `tfsdk:"read_only"`
 	RequireEncryption types.Bool   `tfsdk:"require_encryption"`
 	ValidUsers        types.String `tfsdk:"valid_users"`
@@ -102,6 +105,21 @@ func (r *IPSmbSharesResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Required:    true,
 				Description: "",
 			},
+			"newfileman": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"old_directory": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"oldfileman": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"read_only": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -150,6 +168,15 @@ func (r *IPSmbSharesResource) Create(ctx context.Context, req resource.CreateReq
 	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
+	}
+	if !(plan.Newfileman.IsNull() || plan.Newfileman.IsUnknown()) {
+		body["newfileman"] = plan.Newfileman.ValueString()
+	}
+	if !(plan.OldDirectory.IsNull() || plan.OldDirectory.IsUnknown()) {
+		body["old-directory"] = plan.OldDirectory.ValueString()
+	}
+	if !(plan.Oldfileman.IsNull() || plan.Oldfileman.IsUnknown()) {
+		body["oldfileman"] = plan.Oldfileman.ValueString()
 	}
 	if !(plan.ReadOnly.IsNull() || plan.ReadOnly.IsUnknown()) {
 		body["read-only"] = client.FormatBool(plan.ReadOnly.ValueBool())
@@ -221,6 +248,15 @@ func (r *IPSmbSharesResource) Update(ctx context.Context, req resource.UpdateReq
 	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
+	}
+	if !plan.Newfileman.Equal(state.Newfileman) {
+		body["newfileman"] = plan.Newfileman.ValueString()
+	}
+	if !plan.OldDirectory.Equal(state.OldDirectory) {
+		body["old-directory"] = plan.OldDirectory.ValueString()
+	}
+	if !plan.Oldfileman.Equal(state.Oldfileman) {
+		body["oldfileman"] = plan.Oldfileman.ValueString()
 	}
 	if !plan.ReadOnly.Equal(state.ReadOnly) {
 		body["read-only"] = client.FormatBool(plan.ReadOnly.ValueBool())
@@ -383,6 +419,36 @@ func iPSmbSharesApply(ctx context.Context, obj client.Object, m *IPSmbSharesMode
 		}
 	} else {
 		m.Name = types.StringNull()
+	}
+	if v, ok := obj["newfileman"]; ok {
+		_ = v
+		if v != "" {
+			m.Newfileman = types.StringValue(v)
+		} else {
+			m.Newfileman = types.StringNull()
+		}
+	} else {
+		m.Newfileman = types.StringNull()
+	}
+	if v, ok := obj["old-directory"]; ok {
+		_ = v
+		if v != "" {
+			m.OldDirectory = types.StringValue(v)
+		} else {
+			m.OldDirectory = types.StringNull()
+		}
+	} else {
+		m.OldDirectory = types.StringNull()
+	}
+	if v, ok := obj["oldfileman"]; ok {
+		_ = v
+		if v != "" {
+			m.Oldfileman = types.StringValue(v)
+		} else {
+			m.Oldfileman = types.StringNull()
+		}
+	} else {
+		m.Oldfileman = types.StringNull()
 	}
 	if v, ok := obj["read-only"]; ok {
 		_ = v

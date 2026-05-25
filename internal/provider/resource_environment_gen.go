@@ -53,7 +53,7 @@ func (r *EnvironmentResource) Configure(_ context.Context, req resource.Configur
 
 func (r *EnvironmentResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Console environment variables -- read-only.",
+		Description: "Console environment variables — read-only.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:      true,

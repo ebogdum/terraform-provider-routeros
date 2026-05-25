@@ -33,11 +33,13 @@ type InterfaceEoipResource struct {
 
 type InterfaceEoipModel struct {
 	ID                      types.String `tfsdk:"id"`
+	ActualMTU               types.Int64  `tfsdk:"actual_mtu"`
 	AllowFastPath           types.Bool   `tfsdk:"allow_fast_path"`
 	ARP                     types.String `tfsdk:"arp"`
 	ARPTimeout              types.String `tfsdk:"arp_timeout"`
 	ClampTCPMss             types.Bool   `tfsdk:"clamp_tcp_mss"`
 	Comment                 types.String `tfsdk:"comment"`
+	DisableTime             types.String `tfsdk:"disable_time"`
 	Disabled                types.Bool   `tfsdk:"disabled"`
 	DontFragment            types.String `tfsdk:"dont_fragment"`
 	Dscp                    types.String `tfsdk:"dscp"`
@@ -51,6 +53,8 @@ type InterfaceEoipModel struct {
 	MTU                     types.Int64  `tfsdk:"mtu"`
 	Name                    types.String `tfsdk:"name"`
 	RemoteAddress           types.String `tfsdk:"remote_address"`
+	SendInterval            types.String `tfsdk:"send_interval"`
+	Status                  types.String `tfsdk:"status"`
 	TunnelID                types.Int64  `tfsdk:"tunnel_id"`
 	Router                  types.String `tfsdk:"router"`
 }
@@ -79,6 +83,11 @@ func (r *InterfaceEoipResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
+			"actual_mtu": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"allow_fast_path": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -106,6 +115,13 @@ func (r *InterfaceEoipResource) Schema(_ context.Context, _ resource.SchemaReque
 				Optional:    true,
 				Computed:    true,
 				Description: "Free-form comment.",
+			},
+			"disable_time": schema.StringAttribute{
+				Optional:      true,
+				Computed:      true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
 			},
 			"disabled": schema.BoolAttribute{
 				Optional:    true,
@@ -175,6 +191,19 @@ func (r *InterfaceEoipResource) Schema(_ context.Context, _ resource.SchemaReque
 				Required:    true,
 				Description: "IP address of remote end of EoIP tunnel",
 			},
+			"send_interval": schema.StringAttribute{
+				Optional:      true,
+				Computed:      true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			},
+			"status": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.OneOf([]string{"", "off", "on", "disabled"}...)},
+			},
 			"tunnel_id": schema.Int64Attribute{
 				Required:    true,
 				Description: "Unique tunnel identifier, which must match other side of the tunnel",
@@ -212,6 +241,9 @@ func (r *InterfaceEoipResource) Create(ctx context.Context, req resource.CreateR
 	}
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
+	}
+	if !(plan.DisableTime.IsNull() || plan.DisableTime.IsUnknown()) {
+		body["disable-time"] = plan.DisableTime.ValueString()
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
@@ -251,6 +283,9 @@ func (r *InterfaceEoipResource) Create(ctx context.Context, req resource.CreateR
 	}
 	if !(plan.RemoteAddress.IsNull() || plan.RemoteAddress.IsUnknown()) {
 		body["remote-address"] = plan.RemoteAddress.ValueString()
+	}
+	if !(plan.SendInterval.IsNull() || plan.SendInterval.IsUnknown()) {
+		body["send-interval"] = plan.SendInterval.ValueString()
 	}
 	if !(plan.TunnelID.IsNull() || plan.TunnelID.IsUnknown()) {
 		body["tunnel-id"] = client.FormatInt64(plan.TunnelID.ValueInt64())
@@ -317,6 +352,9 @@ func (r *InterfaceEoipResource) Update(ctx context.Context, req resource.UpdateR
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
 	}
+	if !plan.DisableTime.Equal(state.DisableTime) {
+		body["disable-time"] = plan.DisableTime.ValueString()
+	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
@@ -355,6 +393,9 @@ func (r *InterfaceEoipResource) Update(ctx context.Context, req resource.UpdateR
 	}
 	if !plan.RemoteAddress.Equal(state.RemoteAddress) {
 		body["remote-address"] = plan.RemoteAddress.ValueString()
+	}
+	if !plan.SendInterval.Equal(state.SendInterval) {
+		body["send-interval"] = plan.SendInterval.ValueString()
 	}
 	if !plan.TunnelID.Equal(state.TunnelID) {
 		body["tunnel-id"] = client.FormatInt64(plan.TunnelID.ValueInt64())
@@ -442,6 +483,16 @@ func interfaceEoipLookupByNaturalKey(ctx context.Context, c *client.Client, id s
 func interfaceEoipApply(ctx context.Context, obj client.Object, m *InterfaceEoipModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["actual-mtu"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.ActualMTU = types.Int64Value(n)
+		} else {
+			m.ActualMTU = types.Int64Null()
+		}
+	} else {
+		m.ActualMTU = types.Int64Null()
+	}
 	if v, ok := obj["allow-fast-path"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
@@ -491,6 +542,16 @@ func interfaceEoipApply(ctx context.Context, obj client.Object, m *InterfaceEoip
 		}
 	} else {
 		m.Comment = types.StringNull()
+	}
+	if v, ok := obj["disable-time"]; ok {
+		_ = v
+		if v != "" {
+			m.DisableTime = types.StringValue(v)
+		} else {
+			m.DisableTime = types.StringNull()
+		}
+	} else {
+		m.DisableTime = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
 		_ = v
@@ -625,6 +686,26 @@ func interfaceEoipApply(ctx context.Context, obj client.Object, m *InterfaceEoip
 		}
 	} else {
 		m.RemoteAddress = types.StringNull()
+	}
+	if v, ok := obj["send-interval"]; ok {
+		_ = v
+		if v != "" {
+			m.SendInterval = types.StringValue(v)
+		} else {
+			m.SendInterval = types.StringNull()
+		}
+	} else {
+		m.SendInterval = types.StringNull()
+	}
+	if v, ok := obj["status"]; ok {
+		_ = v
+		if v != "" {
+			m.Status = types.StringValue(v)
+		} else {
+			m.Status = types.StringNull()
+		}
+	} else {
+		m.Status = types.StringNull()
 	}
 	if v, ok := obj["tunnel-id"]; ok {
 		_ = v

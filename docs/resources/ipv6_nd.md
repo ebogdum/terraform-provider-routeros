@@ -20,11 +20,13 @@ resource "routeros_ipv6_nd" "nd_example" {
   # Optional attributes (uncomment as needed):
   # advertise_dns = "no"
   # advertise_mac_address = "10.99.0.0/24"
+  # dns_servers = "replace-me"
   # hop_limit = 64
   # interface = "ether1"
   # managed_address_configuration = false
   # mtu = 0
   # other_configuration = false
+  # pref64_prefixes = "replace-me"
   # ra_delay = "3"
   # ra_interval = "replace-me"
   # ra_lifetime = "1800"
@@ -43,11 +45,13 @@ This resource supports the following arguments:
 * `advertise_mac_address` - (Optional) Type: `bool`. Default: `1`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`.
+* `dns_servers` - (Optional) Type: `string`.
 * `hop_limit` - (Optional) Type: `int`. Default: `64`.
 * `interface` - (Optional) Type: `string`.
 * `managed_address_configuration` - (Optional) Type: `bool`.
 * `mtu` - (Optional) Type: `int`.
 * `other_configuration` - (Optional) Type: `bool`.
+* `pref64_prefixes` - (Optional) Type: `string`.
 * `ra_delay` - (Optional) Type: `duration`. Default: `3`.
 * `ra_interval` - (Optional) Type: `string`.
 * `ra_lifetime` - (Optional) Type: `duration`. Default: `1800`.

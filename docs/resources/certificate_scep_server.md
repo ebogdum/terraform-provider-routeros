@@ -17,7 +17,9 @@ resource "routeros_certificate_scep_server" "scep_server_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
+  # ca_certificate = "replace-me"
   # days_valid = 1
+  # next_ca_certificate = "replace-me"
   # path = "replace-me"
   # request_lifetime = "3600"
 }
@@ -28,8 +30,10 @@ resource "routeros_certificate_scep_server" "scep_server_example" {
 This resource supports the following arguments:
 
 * `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `ca_certificate` - (Optional) Type: `string`.
 * `days_valid` - (Optional) Type: `int`. Default: `1`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `next_ca_certificate` - (Optional) Type: `string`.
 * `path` - (Optional) Type: `string`.
 * `request_lifetime` - (Optional) Type: `duration`. Default: `3600`.
 

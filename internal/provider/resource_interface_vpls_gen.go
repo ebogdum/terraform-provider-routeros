@@ -12,9 +12,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
 )
 
 var (
@@ -30,10 +32,33 @@ type InterfaceVplsResource struct {
 }
 
 type InterfaceVplsModel struct {
-	ID       types.String `tfsdk:"id"`
-	Comment  types.String `tfsdk:"comment"`
-	Disabled types.Bool   `tfsdk:"disabled"`
-	Router   types.String `tfsdk:"router"`
+	ID               types.String `tfsdk:"id"`
+	ARP              types.String `tfsdk:"arp"`
+	ARPTimeout       types.String `tfsdk:"arp_timeout"`
+	BGPSignaled      types.Bool   `tfsdk:"bgp_signaled"`
+	BGPVpls          types.String `tfsdk:"bgp_vpls"`
+	BGPVplsPrefix    types.String `tfsdk:"bgp_vpls_prefix"`
+	Bridge           types.String `tfsdk:"bridge"`
+	BridgeCost       types.String `tfsdk:"bridge_cost"`
+	BridgeHorizon    types.String `tfsdk:"bridge_horizon"`
+	BridgePvid       types.String `tfsdk:"bridge_pvid"`
+	CiscoBGPSignaled types.Bool   `tfsdk:"cisco_bgp_signaled"`
+	CiscoStaticID    types.String `tfsdk:"cisco_static_id"`
+	Comment          types.String `tfsdk:"comment"`
+	Disabled         types.Bool   `tfsdk:"disabled"`
+	LocalLabel       types.Int64  `tfsdk:"local_label"`
+	MACAddress       types.String `tfsdk:"mac_address"`
+	MTU              types.Int64  `tfsdk:"mtu"`
+	PwControlWord    types.String `tfsdk:"pw_control_word"`
+	PwL2mtu          types.String `tfsdk:"pw_l2mtu"`
+	PwType           types.String `tfsdk:"pw_type"`
+	RemoteGroup      types.Int64  `tfsdk:"remote_group"`
+	RemoteLabel      types.Int64  `tfsdk:"remote_label"`
+	RemotePeer       types.String `tfsdk:"remote_peer"`
+	RemoteStatus     types.String `tfsdk:"remote_status"`
+	TeTunnel         types.Int64  `tfsdk:"te_tunnel"`
+	VplsID           types.String `tfsdk:"vpls_id"`
+	Router           types.String `tfsdk:"router"`
 }
 
 func NewInterfaceVplsResource() resource.Resource { return &InterfaceVplsResource{} }
@@ -60,6 +85,64 @@ func (r *InterfaceVplsResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
+			"arp": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.OneOf([]string{"disabled", "enabled", "proxy-arp", "reply-only", "local-proxy-arp"}...)},
+			},
+			"arp_timeout": schema.StringAttribute{
+				Optional:      true,
+				Computed:      true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			},
+			"bgp_signaled": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"bgp_vpls": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"bgp_vpls_prefix": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"bridge": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"bridge_cost": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"bridge_horizon": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"bridge_pvid": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"cisco_bgp_signaled": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"cisco_static_id": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -69,6 +152,66 @@ func (r *InterfaceVplsResource) Schema(_ context.Context, _ resource.SchemaReque
 				Optional:    true,
 				Computed:    true,
 				Description: "Whether the entry is disabled.",
+			},
+			"local_label": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"mac_address": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"mtu": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"pw_control_word": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"pw_l2mtu": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"pw_type": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"remote_group": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"remote_label": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"remote_peer": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"remote_status": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"te_tunnel": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"vpls_id": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
 			},
 			"router": schema.StringAttribute{
 				Optional:    true,
@@ -89,11 +232,59 @@ func (r *InterfaceVplsResource) Create(ctx context.Context, req resource.CreateR
 		return
 	}
 	body := client.Object{}
+	if !(plan.ARP.IsNull() || plan.ARP.IsUnknown()) {
+		body["arp"] = plan.ARP.ValueString()
+	}
+	if !(plan.ARPTimeout.IsNull() || plan.ARPTimeout.IsUnknown()) {
+		body["arp-timeout"] = plan.ARPTimeout.ValueString()
+	}
+	if !(plan.BGPSignaled.IsNull() || plan.BGPSignaled.IsUnknown()) {
+		body["bgp-signaled"] = client.FormatBool(plan.BGPSignaled.ValueBool())
+	}
+	if !(plan.Bridge.IsNull() || plan.Bridge.IsUnknown()) {
+		body["bridge"] = plan.Bridge.ValueString()
+	}
+	if !(plan.BridgeCost.IsNull() || plan.BridgeCost.IsUnknown()) {
+		body["bridge-cost"] = plan.BridgeCost.ValueString()
+	}
+	if !(plan.BridgeHorizon.IsNull() || plan.BridgeHorizon.IsUnknown()) {
+		body["bridge-horizon"] = plan.BridgeHorizon.ValueString()
+	}
+	if !(plan.BridgePvid.IsNull() || plan.BridgePvid.IsUnknown()) {
+		body["bridge-pvid"] = plan.BridgePvid.ValueString()
+	}
+	if !(plan.CiscoBGPSignaled.IsNull() || plan.CiscoBGPSignaled.IsUnknown()) {
+		body["cisco-bgp-signaled"] = client.FormatBool(plan.CiscoBGPSignaled.ValueBool())
+	}
+	if !(plan.CiscoStaticID.IsNull() || plan.CiscoStaticID.IsUnknown()) {
+		body["cisco-static-id"] = plan.CiscoStaticID.ValueString()
+	}
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !(plan.MACAddress.IsNull() || plan.MACAddress.IsUnknown()) {
+		body["mac-address"] = plan.MACAddress.ValueString()
+	}
+	if !(plan.MTU.IsNull() || plan.MTU.IsUnknown()) {
+		body["mtu"] = client.FormatInt64(plan.MTU.ValueInt64())
+	}
+	if !(plan.PwControlWord.IsNull() || plan.PwControlWord.IsUnknown()) {
+		body["pw-control-word"] = plan.PwControlWord.ValueString()
+	}
+	if !(plan.PwL2mtu.IsNull() || plan.PwL2mtu.IsUnknown()) {
+		body["pw-l2mtu"] = plan.PwL2mtu.ValueString()
+	}
+	if !(plan.PwType.IsNull() || plan.PwType.IsUnknown()) {
+		body["pw-type"] = plan.PwType.ValueString()
+	}
+	if !(plan.RemotePeer.IsNull() || plan.RemotePeer.IsUnknown()) {
+		body["remote-peer"] = plan.RemotePeer.ValueString()
+	}
+	if !(plan.VplsID.IsNull() || plan.VplsID.IsUnknown()) {
+		body["vpls-id"] = plan.VplsID.ValueString()
 	}
 	obj, err := c.Add(ctx, "/interface/vpls", body)
 	if err != nil {
@@ -142,11 +333,59 @@ func (r *InterfaceVplsResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 	body := client.Object{}
+	if !plan.ARP.Equal(state.ARP) {
+		body["arp"] = plan.ARP.ValueString()
+	}
+	if !plan.ARPTimeout.Equal(state.ARPTimeout) {
+		body["arp-timeout"] = plan.ARPTimeout.ValueString()
+	}
+	if !plan.BGPSignaled.Equal(state.BGPSignaled) {
+		body["bgp-signaled"] = client.FormatBool(plan.BGPSignaled.ValueBool())
+	}
+	if !plan.Bridge.Equal(state.Bridge) {
+		body["bridge"] = plan.Bridge.ValueString()
+	}
+	if !plan.BridgeCost.Equal(state.BridgeCost) {
+		body["bridge-cost"] = plan.BridgeCost.ValueString()
+	}
+	if !plan.BridgeHorizon.Equal(state.BridgeHorizon) {
+		body["bridge-horizon"] = plan.BridgeHorizon.ValueString()
+	}
+	if !plan.BridgePvid.Equal(state.BridgePvid) {
+		body["bridge-pvid"] = plan.BridgePvid.ValueString()
+	}
+	if !plan.CiscoBGPSignaled.Equal(state.CiscoBGPSignaled) {
+		body["cisco-bgp-signaled"] = client.FormatBool(plan.CiscoBGPSignaled.ValueBool())
+	}
+	if !plan.CiscoStaticID.Equal(state.CiscoStaticID) {
+		body["cisco-static-id"] = plan.CiscoStaticID.ValueString()
+	}
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !plan.MACAddress.Equal(state.MACAddress) {
+		body["mac-address"] = plan.MACAddress.ValueString()
+	}
+	if !plan.MTU.Equal(state.MTU) {
+		body["mtu"] = client.FormatInt64(plan.MTU.ValueInt64())
+	}
+	if !plan.PwControlWord.Equal(state.PwControlWord) {
+		body["pw-control-word"] = plan.PwControlWord.ValueString()
+	}
+	if !plan.PwL2mtu.Equal(state.PwL2mtu) {
+		body["pw-l2mtu"] = plan.PwL2mtu.ValueString()
+	}
+	if !plan.PwType.Equal(state.PwType) {
+		body["pw-type"] = plan.PwType.ValueString()
+	}
+	if !plan.RemotePeer.Equal(state.RemotePeer) {
+		body["remote-peer"] = plan.RemotePeer.ValueString()
+	}
+	if !plan.VplsID.Equal(state.VplsID) {
+		body["vpls-id"] = plan.VplsID.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/vpls", state.ID.ValueString(), body)
@@ -231,6 +470,116 @@ func interfaceVplsLookupByNaturalKey(ctx context.Context, c *client.Client, id s
 func interfaceVplsApply(ctx context.Context, obj client.Object, m *InterfaceVplsModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["arp"]; ok {
+		_ = v
+		if v != "" {
+			m.ARP = types.StringValue(v)
+		} else {
+			m.ARP = types.StringNull()
+		}
+	} else {
+		m.ARP = types.StringNull()
+	}
+	if v, ok := obj["arp-timeout"]; ok {
+		_ = v
+		if v != "" {
+			m.ARPTimeout = types.StringValue(v)
+		} else {
+			m.ARPTimeout = types.StringNull()
+		}
+	} else {
+		m.ARPTimeout = types.StringNull()
+	}
+	if v, ok := obj["bgp-signaled"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.BGPSignaled = types.BoolValue(b)
+		} else {
+			m.BGPSignaled = types.BoolNull()
+		}
+	} else {
+		m.BGPSignaled = types.BoolNull()
+	}
+	if v, ok := obj["bgp-vpls"]; ok {
+		_ = v
+		if v != "" {
+			m.BGPVpls = types.StringValue(v)
+		} else {
+			m.BGPVpls = types.StringNull()
+		}
+	} else {
+		m.BGPVpls = types.StringNull()
+	}
+	if v, ok := obj["bgp-vpls-prefix"]; ok {
+		_ = v
+		if v != "" {
+			m.BGPVplsPrefix = types.StringValue(v)
+		} else {
+			m.BGPVplsPrefix = types.StringNull()
+		}
+	} else {
+		m.BGPVplsPrefix = types.StringNull()
+	}
+	if v, ok := obj["bridge"]; ok {
+		_ = v
+		if v != "" {
+			m.Bridge = types.StringValue(v)
+		} else {
+			m.Bridge = types.StringNull()
+		}
+	} else {
+		m.Bridge = types.StringNull()
+	}
+	if v, ok := obj["bridge-cost"]; ok {
+		_ = v
+		if v != "" {
+			m.BridgeCost = types.StringValue(v)
+		} else {
+			m.BridgeCost = types.StringNull()
+		}
+	} else {
+		m.BridgeCost = types.StringNull()
+	}
+	if v, ok := obj["bridge-horizon"]; ok {
+		_ = v
+		if v != "" {
+			m.BridgeHorizon = types.StringValue(v)
+		} else {
+			m.BridgeHorizon = types.StringNull()
+		}
+	} else {
+		m.BridgeHorizon = types.StringNull()
+	}
+	if v, ok := obj["bridge-pvid"]; ok {
+		_ = v
+		if v != "" {
+			m.BridgePvid = types.StringValue(v)
+		} else {
+			m.BridgePvid = types.StringNull()
+		}
+	} else {
+		m.BridgePvid = types.StringNull()
+	}
+	if v, ok := obj["cisco-bgp-signaled"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.CiscoBGPSignaled = types.BoolValue(b)
+		} else {
+			m.CiscoBGPSignaled = types.BoolNull()
+		}
+	} else {
+		m.CiscoBGPSignaled = types.BoolNull()
+	}
+	if v, ok := obj["cisco-static-id"]; ok {
+		_ = v
+		if v != "" {
+			m.CiscoStaticID = types.StringValue(v)
+		} else {
+			m.CiscoStaticID = types.StringNull()
+		}
+	} else {
+		m.CiscoStaticID = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {
@@ -250,5 +599,125 @@ func interfaceVplsApply(ctx context.Context, obj client.Object, m *InterfaceVpls
 		}
 	} else {
 		m.Disabled = types.BoolNull()
+	}
+	if v, ok := obj["local-label"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.LocalLabel = types.Int64Value(n)
+		} else {
+			m.LocalLabel = types.Int64Null()
+		}
+	} else {
+		m.LocalLabel = types.Int64Null()
+	}
+	if v, ok := obj["mac-address"]; ok {
+		_ = v
+		if v != "" {
+			m.MACAddress = types.StringValue(v)
+		} else {
+			m.MACAddress = types.StringNull()
+		}
+	} else {
+		m.MACAddress = types.StringNull()
+	}
+	if v, ok := obj["mtu"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.MTU = types.Int64Value(n)
+		} else {
+			m.MTU = types.Int64Null()
+		}
+	} else {
+		m.MTU = types.Int64Null()
+	}
+	if v, ok := obj["pw-control-word"]; ok {
+		_ = v
+		if v != "" {
+			m.PwControlWord = types.StringValue(v)
+		} else {
+			m.PwControlWord = types.StringNull()
+		}
+	} else {
+		m.PwControlWord = types.StringNull()
+	}
+	if v, ok := obj["pw-l2mtu"]; ok {
+		_ = v
+		if v != "" {
+			m.PwL2mtu = types.StringValue(v)
+		} else {
+			m.PwL2mtu = types.StringNull()
+		}
+	} else {
+		m.PwL2mtu = types.StringNull()
+	}
+	if v, ok := obj["pw-type"]; ok {
+		_ = v
+		if v != "" {
+			m.PwType = types.StringValue(v)
+		} else {
+			m.PwType = types.StringNull()
+		}
+	} else {
+		m.PwType = types.StringNull()
+	}
+	if v, ok := obj["remote-group"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.RemoteGroup = types.Int64Value(n)
+		} else {
+			m.RemoteGroup = types.Int64Null()
+		}
+	} else {
+		m.RemoteGroup = types.Int64Null()
+	}
+	if v, ok := obj["remote-label"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.RemoteLabel = types.Int64Value(n)
+		} else {
+			m.RemoteLabel = types.Int64Null()
+		}
+	} else {
+		m.RemoteLabel = types.Int64Null()
+	}
+	if v, ok := obj["remote-peer"]; ok {
+		_ = v
+		if v != "" {
+			m.RemotePeer = types.StringValue(v)
+		} else {
+			m.RemotePeer = types.StringNull()
+		}
+	} else {
+		m.RemotePeer = types.StringNull()
+	}
+	if v, ok := obj["remote-status"]; ok {
+		_ = v
+		if v != "" {
+			m.RemoteStatus = types.StringValue(v)
+		} else {
+			m.RemoteStatus = types.StringNull()
+		}
+	} else {
+		m.RemoteStatus = types.StringNull()
+	}
+	if v, ok := obj["te-tunnel"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.TeTunnel = types.Int64Value(n)
+		} else {
+			m.TeTunnel = types.Int64Null()
+		}
+	} else {
+		m.TeTunnel = types.Int64Null()
+	}
+	if v, ok := obj["vpls-id"]; ok {
+		_ = v
+		if v != "" {
+			m.VplsID = types.StringValue(v)
+		} else {
+			m.VplsID = types.StringNull()
+		}
+	} else {
+		m.VplsID = types.StringNull()
 	}
 }

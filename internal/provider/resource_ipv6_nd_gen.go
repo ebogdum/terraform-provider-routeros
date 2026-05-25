@@ -38,12 +38,14 @@ type IPV6NdModel struct {
 	Comment                     types.String `tfsdk:"comment"`
 	Default                     types.Bool   `tfsdk:"default"`
 	Disabled                    types.Bool   `tfsdk:"disabled"`
+	DNSServers                  types.String `tfsdk:"dns_servers"`
 	HopLimit                    types.Int64  `tfsdk:"hop_limit"`
 	Interface                   types.String `tfsdk:"interface"`
 	Invalid                     types.Bool   `tfsdk:"invalid"`
 	ManagedAddressConfiguration types.Bool   `tfsdk:"managed_address_configuration"`
 	MTU                         types.Int64  `tfsdk:"mtu"`
 	OtherConfiguration          types.Bool   `tfsdk:"other_configuration"`
+	Pref64Prefixes              types.String `tfsdk:"pref64_prefixes"`
 	RaDelay                     types.String `tfsdk:"ra_delay"`
 	RaInterval                  types.String `tfsdk:"ra_interval"`
 	RaLifetime                  types.String `tfsdk:"ra_lifetime"`
@@ -103,6 +105,11 @@ func (r *IPV6NdResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 				Computed:    true,
 				Description: "",
 			},
+			"dns_servers": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"hop_limit": schema.Int64Attribute{
 				Optional:    true,
 				Computed:    true,
@@ -129,6 +136,11 @@ func (r *IPV6NdResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 				Description: "",
 			},
 			"other_configuration": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"pref64_prefixes": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -199,6 +211,9 @@ func (r *IPV6NdResource) Create(ctx context.Context, req resource.CreateRequest,
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
+	if !(plan.DNSServers.IsNull() || plan.DNSServers.IsUnknown()) {
+		body["dns-servers"] = plan.DNSServers.ValueString()
+	}
 	if !(plan.HopLimit.IsNull() || plan.HopLimit.IsUnknown()) {
 		body["hop-limit"] = client.FormatInt64(plan.HopLimit.ValueInt64())
 	}
@@ -213,6 +228,9 @@ func (r *IPV6NdResource) Create(ctx context.Context, req resource.CreateRequest,
 	}
 	if !(plan.OtherConfiguration.IsNull() || plan.OtherConfiguration.IsUnknown()) {
 		body["other-configuration"] = client.FormatBool(plan.OtherConfiguration.ValueBool())
+	}
+	if !(plan.Pref64Prefixes.IsNull() || plan.Pref64Prefixes.IsUnknown()) {
+		body["pref64-prefixes"] = plan.Pref64Prefixes.ValueString()
 	}
 	if !(plan.RaDelay.IsNull() || plan.RaDelay.IsUnknown()) {
 		body["ra-delay"] = plan.RaDelay.ValueString()
@@ -291,6 +309,9 @@ func (r *IPV6NdResource) Update(ctx context.Context, req resource.UpdateRequest,
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
+	if !plan.DNSServers.Equal(state.DNSServers) {
+		body["dns-servers"] = plan.DNSServers.ValueString()
+	}
 	if !plan.HopLimit.Equal(state.HopLimit) {
 		body["hop-limit"] = client.FormatInt64(plan.HopLimit.ValueInt64())
 	}
@@ -305,6 +326,9 @@ func (r *IPV6NdResource) Update(ctx context.Context, req resource.UpdateRequest,
 	}
 	if !plan.OtherConfiguration.Equal(state.OtherConfiguration) {
 		body["other-configuration"] = client.FormatBool(plan.OtherConfiguration.ValueBool())
+	}
+	if !plan.Pref64Prefixes.Equal(state.Pref64Prefixes) {
+		body["pref64-prefixes"] = plan.Pref64Prefixes.ValueString()
 	}
 	if !plan.RaDelay.Equal(state.RaDelay) {
 		body["ra-delay"] = plan.RaDelay.ValueString()
@@ -457,6 +481,16 @@ func iPV6NdApply(ctx context.Context, obj client.Object, m *IPV6NdModel) {
 	} else {
 		m.Disabled = types.BoolNull()
 	}
+	if v, ok := obj["dns-servers"]; ok {
+		_ = v
+		if v != "" {
+			m.DNSServers = types.StringValue(v)
+		} else {
+			m.DNSServers = types.StringNull()
+		}
+	} else {
+		m.DNSServers = types.StringNull()
+	}
 	if v, ok := obj["hop-limit"]; ok {
 		_ = v
 		if n, err := client.ParseInt64(v); err == nil {
@@ -516,6 +550,16 @@ func iPV6NdApply(ctx context.Context, obj client.Object, m *IPV6NdModel) {
 		}
 	} else {
 		m.OtherConfiguration = types.BoolNull()
+	}
+	if v, ok := obj["pref64-prefixes"]; ok {
+		_ = v
+		if v != "" {
+			m.Pref64Prefixes = types.StringValue(v)
+		} else {
+			m.Pref64Prefixes = types.StringNull()
+		}
+	} else {
+		m.Pref64Prefixes = types.StringNull()
 	}
 	if v, ok := obj["ra-delay"]; ok {
 		_ = v

@@ -29,6 +29,7 @@ This data source supports the following arguments:
 * `alternative_subnets` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`.
+* `inactive` - (Optional) Type: `bool`.
 * `interface` - (Optional) Type: `string`.
 * `threshold` - (Optional) Type: `int`. Default: `1`.
 * `upstream` - (Optional) Type: `bool`.
@@ -38,4 +39,11 @@ This data source supports the following arguments:
 This data source exports the following attributes in addition to the arguments above:
 
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
+* `dynamic` - Type: `bool`.
+* `querier` - Type: `bool`.
+* `rx_bytes` - Type: `string`.
+* `rx_packets` - Type: `string`.
+* `source_ip_address` - Type: `ip`.
+* `tx_bytes` - Type: `string`.
+* `tx_packets` - Type: `string`.
 

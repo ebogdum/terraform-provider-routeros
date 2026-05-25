@@ -33,11 +33,13 @@ type InterfaceWireguardModel struct {
 	ID         types.String `tfsdk:"id"`
 	Comment    types.String `tfsdk:"comment"`
 	Disabled   types.Bool   `tfsdk:"disabled"`
+	L2MTU      types.Int64  `tfsdk:"l2_mtu"`
 	ListenPort types.Int64  `tfsdk:"listen_port"`
-	MTU        types.String `tfsdk:"mtu"`
+	MTU        types.Int64  `tfsdk:"mtu"`
 	Name       types.String `tfsdk:"name"`
 	PrivateKey types.String `tfsdk:"private_key"`
 	PublicKey  types.String `tfsdk:"public_key"`
+	WgExport   types.String `tfsdk:"wg_export"`
 	Router     types.String `tfsdk:"router"`
 }
 
@@ -75,12 +77,17 @@ func (r *InterfaceWireguardResource) Schema(_ context.Context, _ resource.Schema
 				Computed:    true,
 				Description: "Whether the entry is disabled.",
 			},
+			"l2_mtu": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"listen_port": schema.Int64Attribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
-			"mtu": schema.StringAttribute{
+			"mtu": schema.Int64Attribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -100,6 +107,11 @@ func (r *InterfaceWireguardResource) Schema(_ context.Context, _ resource.Schema
 				Optional:    true,
 				Computed:    true,
 				Description: "Derived public key, exposed by RouterOS.",
+			},
+			"wg_export": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
 			},
 			"router": schema.StringAttribute{
 				Optional:    true,
@@ -126,17 +138,23 @@ func (r *InterfaceWireguardResource) Create(ctx context.Context, req resource.Cr
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
+	if !(plan.L2MTU.IsNull() || plan.L2MTU.IsUnknown()) {
+		body["l2-mtu"] = client.FormatInt64(plan.L2MTU.ValueInt64())
+	}
 	if !(plan.ListenPort.IsNull() || plan.ListenPort.IsUnknown()) {
 		body["listen-port"] = client.FormatInt64(plan.ListenPort.ValueInt64())
 	}
 	if !(plan.MTU.IsNull() || plan.MTU.IsUnknown()) {
-		body["mtu"] = plan.MTU.ValueString()
+		body["mtu"] = client.FormatInt64(plan.MTU.ValueInt64())
 	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
 	}
 	if !(plan.PrivateKey.IsNull() || plan.PrivateKey.IsUnknown()) {
 		body["private-key"] = plan.PrivateKey.ValueString()
+	}
+	if !(plan.WgExport.IsNull() || plan.WgExport.IsUnknown()) {
+		body["wg-export"] = plan.WgExport.ValueString()
 	}
 	obj, err := c.Add(ctx, "/interface/wireguard", body)
 	if err != nil {
@@ -191,17 +209,23 @@ func (r *InterfaceWireguardResource) Update(ctx context.Context, req resource.Up
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
+	if !plan.L2MTU.Equal(state.L2MTU) {
+		body["l2-mtu"] = client.FormatInt64(plan.L2MTU.ValueInt64())
+	}
 	if !plan.ListenPort.Equal(state.ListenPort) {
 		body["listen-port"] = client.FormatInt64(plan.ListenPort.ValueInt64())
 	}
 	if !plan.MTU.Equal(state.MTU) {
-		body["mtu"] = plan.MTU.ValueString()
+		body["mtu"] = client.FormatInt64(plan.MTU.ValueInt64())
 	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
 	}
 	if !plan.PrivateKey.Equal(state.PrivateKey) {
 		body["private-key"] = plan.PrivateKey.ValueString()
+	}
+	if !plan.WgExport.Equal(state.WgExport) {
+		body["wg-export"] = plan.WgExport.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/wireguard", state.ID.ValueString(), body)
@@ -306,6 +330,16 @@ func interfaceWireguardApply(ctx context.Context, obj client.Object, m *Interfac
 	} else {
 		m.Disabled = types.BoolNull()
 	}
+	if v, ok := obj["l2-mtu"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.L2MTU = types.Int64Value(n)
+		} else {
+			m.L2MTU = types.Int64Null()
+		}
+	} else {
+		m.L2MTU = types.Int64Null()
+	}
 	if v, ok := obj["listen-port"]; ok {
 		_ = v
 		if n, err := client.ParseInt64(v); err == nil {
@@ -318,13 +352,13 @@ func interfaceWireguardApply(ctx context.Context, obj client.Object, m *Interfac
 	}
 	if v, ok := obj["mtu"]; ok {
 		_ = v
-		if v != "" {
-			m.MTU = types.StringValue(v)
+		if n, err := client.ParseInt64(v); err == nil {
+			m.MTU = types.Int64Value(n)
 		} else {
-			m.MTU = types.StringNull()
+			m.MTU = types.Int64Null()
 		}
 	} else {
-		m.MTU = types.StringNull()
+		m.MTU = types.Int64Null()
 	}
 	if v, ok := obj["name"]; ok {
 		_ = v
@@ -359,5 +393,15 @@ func interfaceWireguardApply(ctx context.Context, obj client.Object, m *Interfac
 		}
 	} else {
 		m.PublicKey = types.StringNull()
+	}
+	if v, ok := obj["wg-export"]; ok {
+		_ = v
+		if v != "" {
+			m.WgExport = types.StringValue(v)
+		} else {
+			m.WgExport = types.StringNull()
+		}
+	} else {
+		m.WgExport = types.StringNull()
 	}
 }

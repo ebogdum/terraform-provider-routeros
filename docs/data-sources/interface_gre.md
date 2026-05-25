@@ -2,12 +2,12 @@
 subcategory: "Interfaces"
 page_title: "RouterOS: routeros_interface_gre"
 description: |-
-  GRE tunnel -- needs reachable remote address and unused name. Skipped.
+  GRE tunnel — needs reachable remote address and unused name. Skipped.
 ---
 
 # Data Source: routeros_interface_gre
 
-GRE tunnel -- needs reachable remote address and unused name. Skipped.
+GRE tunnel — needs reachable remote address and unused name. Skipped.
 
 ## Example Usage
 
@@ -44,4 +44,5 @@ This data source supports the following arguments:
 This data source exports the following attributes in addition to the arguments above:
 
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
+* `actual_mtu` - Type: `int`.
 

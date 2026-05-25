@@ -39,11 +39,16 @@ type InterfaceBridgePortModel struct {
 	BroadcastFlood        types.Bool   `tfsdk:"broadcast_flood"`
 	Comment               types.String `tfsdk:"comment"`
 	Disabled              types.Bool   `tfsdk:"disabled"`
+	Dynamic               types.Bool   `tfsdk:"dynamic"`
 	Edge                  types.String `tfsdk:"edge"`
 	FastLeave             types.Bool   `tfsdk:"fast_leave"`
 	FrameTypes            types.String `tfsdk:"frame_types"`
+	HardwareOffload       types.Bool   `tfsdk:"hardware_offload"`
 	Horizon               types.Int64  `tfsdk:"horizon"`
 	Hw                    types.String `tfsdk:"hw"`
+	HwOffload             types.Bool   `tfsdk:"hw_offload"`
+	HwOffloadGroup        types.String `tfsdk:"hw_offload_group"`
+	Inactive              types.Bool   `tfsdk:"inactive"`
 	IngressFiltering      types.Bool   `tfsdk:"ingress_filtering"`
 	Interface             types.String `tfsdk:"interface"`
 	InternalPathCost      types.String `tfsdk:"internal_path_cost"`
@@ -51,12 +56,16 @@ type InterfaceBridgePortModel struct {
 	MulticastRouter       types.String `tfsdk:"multicast_router"`
 	MvrpApplicantState    types.String `tfsdk:"mvrp_applicant_state"`
 	MvrpRegistrarState    types.String `tfsdk:"mvrp_registrar_state"`
+	Parent                types.Int64  `tfsdk:"parent"`
 	PathCost              types.String `tfsdk:"path_cost"`
 	PointToPoint          types.String `tfsdk:"point_to_point"`
+	PortStatus            types.String `tfsdk:"port_status"`
 	Priority              types.Int64  `tfsdk:"priority"`
 	Pvid                  types.Int64  `tfsdk:"pvid"`
 	RestrictedRole        types.Bool   `tfsdk:"restricted_role"`
 	RestrictedTcn         types.Bool   `tfsdk:"restricted_tcn"`
+	Role                  types.Int64  `tfsdk:"role"`
+	Status                types.Int64  `tfsdk:"status"`
 	TagStacking           types.Bool   `tfsdk:"tag_stacking"`
 	Trusted               types.Bool   `tfsdk:"trusted"`
 	TrustedRa             types.Bool   `tfsdk:"trusted_ra"`
@@ -119,11 +128,16 @@ func (r *InterfaceBridgePortResource) Schema(_ context.Context, _ resource.Schem
 				Computed:    true,
 				Description: "Whether the entry is disabled.",
 			},
+			"dynamic": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"edge": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"auto", "yes", "no", "yes discover", "no discover"}...)},
+				Validators:  []validator.String{schemautil.OneOf([]string{"auto", "yes", "no", "yes-discover", "no-discover"}...)},
 			},
 			"fast_leave": schema.BoolAttribute{
 				Optional:    true,
@@ -134,7 +148,12 @@ func (r *InterfaceBridgePortResource) Schema(_ context.Context, _ resource.Schem
 				Optional:    true,
 				Computed:    true,
 				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"admit all", "admit only VLAN tagged", "admit only untagged and priority tagged"}...)},
+				Validators:  []validator.String{schemautil.OneOf([]string{"admit-all", "admit-only-vlan-tagged", "admit-only-untagged-and-priority-tagged"}...)},
+			},
+			"hardware_offload": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
 			},
 			"horizon": schema.Int64Attribute{
 				Optional:    true,
@@ -142,6 +161,21 @@ func (r *InterfaceBridgePortResource) Schema(_ context.Context, _ resource.Schem
 				Description: "",
 			},
 			"hw": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"hw_offload": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"hw_offload_group": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"inactive": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -171,19 +205,24 @@ func (r *InterfaceBridgePortResource) Schema(_ context.Context, _ resource.Schem
 				Optional:    true,
 				Computed:    true,
 				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"Disabled", "Temporary Query", "Permanent"}...)},
+				Validators:  []validator.String{schemautil.OneOf([]string{"disabled", "temporary-query", "permanent"}...)},
 			},
 			"mvrp_applicant_state": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"normal participant", "non participant"}...)},
+				Validators:  []validator.String{schemautil.OneOf([]string{"normal-participant", "non-participant"}...)},
 			},
 			"mvrp_registrar_state": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.OneOf([]string{"normal", "fixed"}...)},
+			},
+			"parent": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
 			},
 			"path_cost": schema.StringAttribute{
 				Optional:    true,
@@ -195,6 +234,12 @@ func (r *InterfaceBridgePortResource) Schema(_ context.Context, _ resource.Schem
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.OneOf([]string{"auto", "yes", "no"}...)},
+			},
+			"port_status": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.OneOf([]string{"", "inactive", "active", "disabled"}...)},
 			},
 			"priority": schema.Int64Attribute{
 				Optional:    true,
@@ -212,6 +257,16 @@ func (r *InterfaceBridgePortResource) Schema(_ context.Context, _ resource.Schem
 				Description: "",
 			},
 			"restricted_tcn": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"role": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"status": schema.Int64Attribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -287,11 +342,17 @@ func (r *InterfaceBridgePortResource) Create(ctx context.Context, req resource.C
 	if !(plan.FrameTypes.IsNull() || plan.FrameTypes.IsUnknown()) {
 		body["frame-types"] = plan.FrameTypes.ValueString()
 	}
+	if !(plan.HardwareOffload.IsNull() || plan.HardwareOffload.IsUnknown()) {
+		body["hardware-offload"] = client.FormatBool(plan.HardwareOffload.ValueBool())
+	}
 	if !(plan.Horizon.IsNull() || plan.Horizon.IsUnknown()) {
 		body["horizon"] = client.FormatInt64(plan.Horizon.ValueInt64())
 	}
 	if !(plan.Hw.IsNull() || plan.Hw.IsUnknown()) {
 		body["hw"] = plan.Hw.ValueString()
+	}
+	if !(plan.Inactive.IsNull() || plan.Inactive.IsUnknown()) {
+		body["inactive"] = client.FormatBool(plan.Inactive.ValueBool())
 	}
 	if !(plan.IngressFiltering.IsNull() || plan.IngressFiltering.IsUnknown()) {
 		body["ingress-filtering"] = client.FormatBool(plan.IngressFiltering.ValueBool())
@@ -314,6 +375,9 @@ func (r *InterfaceBridgePortResource) Create(ctx context.Context, req resource.C
 	if !(plan.MvrpRegistrarState.IsNull() || plan.MvrpRegistrarState.IsUnknown()) {
 		body["mvrp-registrar-state"] = plan.MvrpRegistrarState.ValueString()
 	}
+	if !(plan.Parent.IsNull() || plan.Parent.IsUnknown()) {
+		body["parent"] = client.FormatInt64(plan.Parent.ValueInt64())
+	}
 	if !(plan.PathCost.IsNull() || plan.PathCost.IsUnknown()) {
 		body["path-cost"] = plan.PathCost.ValueString()
 	}
@@ -331,6 +395,12 @@ func (r *InterfaceBridgePortResource) Create(ctx context.Context, req resource.C
 	}
 	if !(plan.RestrictedTcn.IsNull() || plan.RestrictedTcn.IsUnknown()) {
 		body["restricted-tcn"] = client.FormatBool(plan.RestrictedTcn.ValueBool())
+	}
+	if !(plan.Role.IsNull() || plan.Role.IsUnknown()) {
+		body["role"] = client.FormatInt64(plan.Role.ValueInt64())
+	}
+	if !(plan.Status.IsNull() || plan.Status.IsUnknown()) {
+		body["status"] = client.FormatInt64(plan.Status.ValueInt64())
 	}
 	if !(plan.TagStacking.IsNull() || plan.TagStacking.IsUnknown()) {
 		body["tag-stacking"] = client.FormatBool(plan.TagStacking.ValueBool())
@@ -421,11 +491,17 @@ func (r *InterfaceBridgePortResource) Update(ctx context.Context, req resource.U
 	if !plan.FrameTypes.Equal(state.FrameTypes) {
 		body["frame-types"] = plan.FrameTypes.ValueString()
 	}
+	if !plan.HardwareOffload.Equal(state.HardwareOffload) {
+		body["hardware-offload"] = client.FormatBool(plan.HardwareOffload.ValueBool())
+	}
 	if !plan.Horizon.Equal(state.Horizon) {
 		body["horizon"] = client.FormatInt64(plan.Horizon.ValueInt64())
 	}
 	if !plan.Hw.Equal(state.Hw) {
 		body["hw"] = plan.Hw.ValueString()
+	}
+	if !plan.Inactive.Equal(state.Inactive) {
+		body["inactive"] = client.FormatBool(plan.Inactive.ValueBool())
 	}
 	if !plan.IngressFiltering.Equal(state.IngressFiltering) {
 		body["ingress-filtering"] = client.FormatBool(plan.IngressFiltering.ValueBool())
@@ -448,6 +524,9 @@ func (r *InterfaceBridgePortResource) Update(ctx context.Context, req resource.U
 	if !plan.MvrpRegistrarState.Equal(state.MvrpRegistrarState) {
 		body["mvrp-registrar-state"] = plan.MvrpRegistrarState.ValueString()
 	}
+	if !plan.Parent.Equal(state.Parent) {
+		body["parent"] = client.FormatInt64(plan.Parent.ValueInt64())
+	}
 	if !plan.PathCost.Equal(state.PathCost) {
 		body["path-cost"] = plan.PathCost.ValueString()
 	}
@@ -465,6 +544,12 @@ func (r *InterfaceBridgePortResource) Update(ctx context.Context, req resource.U
 	}
 	if !plan.RestrictedTcn.Equal(state.RestrictedTcn) {
 		body["restricted-tcn"] = client.FormatBool(plan.RestrictedTcn.ValueBool())
+	}
+	if !plan.Role.Equal(state.Role) {
+		body["role"] = client.FormatInt64(plan.Role.ValueInt64())
+	}
+	if !plan.Status.Equal(state.Status) {
+		body["status"] = client.FormatInt64(plan.Status.ValueInt64())
 	}
 	if !plan.TagStacking.Equal(state.TagStacking) {
 		body["tag-stacking"] = client.FormatBool(plan.TagStacking.ValueBool())
@@ -624,6 +709,16 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 	} else {
 		m.Disabled = types.BoolNull()
 	}
+	if v, ok := obj["dynamic"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Dynamic = types.BoolValue(b)
+		} else {
+			m.Dynamic = types.BoolNull()
+		}
+	} else {
+		m.Dynamic = types.BoolNull()
+	}
 	if v, ok := obj["edge"]; ok {
 		_ = v
 		if v != "" {
@@ -654,6 +749,16 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 	} else {
 		m.FrameTypes = types.StringNull()
 	}
+	if v, ok := obj["hardware-offload"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.HardwareOffload = types.BoolValue(b)
+		} else {
+			m.HardwareOffload = types.BoolNull()
+		}
+	} else {
+		m.HardwareOffload = types.BoolNull()
+	}
 	if v, ok := obj["horizon"]; ok {
 		_ = v
 		if n, err := client.ParseInt64(v); err == nil {
@@ -673,6 +778,36 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 		}
 	} else {
 		m.Hw = types.StringNull()
+	}
+	if v, ok := obj["hw-offload"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.HwOffload = types.BoolValue(b)
+		} else {
+			m.HwOffload = types.BoolNull()
+		}
+	} else {
+		m.HwOffload = types.BoolNull()
+	}
+	if v, ok := obj["hw-offload-group"]; ok {
+		_ = v
+		if v != "" {
+			m.HwOffloadGroup = types.StringValue(v)
+		} else {
+			m.HwOffloadGroup = types.StringNull()
+		}
+	} else {
+		m.HwOffloadGroup = types.StringNull()
+	}
+	if v, ok := obj["inactive"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Inactive = types.BoolValue(b)
+		} else {
+			m.Inactive = types.BoolNull()
+		}
+	} else {
+		m.Inactive = types.BoolNull()
 	}
 	if v, ok := obj["ingress-filtering"]; ok {
 		_ = v
@@ -744,6 +879,16 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 	} else {
 		m.MvrpRegistrarState = types.StringNull()
 	}
+	if v, ok := obj["parent"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.Parent = types.Int64Value(n)
+		} else {
+			m.Parent = types.Int64Null()
+		}
+	} else {
+		m.Parent = types.Int64Null()
+	}
 	if v, ok := obj["path-cost"]; ok {
 		_ = v
 		if v != "" {
@@ -763,6 +908,16 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 		}
 	} else {
 		m.PointToPoint = types.StringNull()
+	}
+	if v, ok := obj["port-status"]; ok {
+		_ = v
+		if v != "" {
+			m.PortStatus = types.StringValue(v)
+		} else {
+			m.PortStatus = types.StringNull()
+		}
+	} else {
+		m.PortStatus = types.StringNull()
 	}
 	if v, ok := obj["priority"]; ok {
 		_ = v
@@ -803,6 +958,26 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 		}
 	} else {
 		m.RestrictedTcn = types.BoolNull()
+	}
+	if v, ok := obj["role"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.Role = types.Int64Value(n)
+		} else {
+			m.Role = types.Int64Null()
+		}
+	} else {
+		m.Role = types.Int64Null()
+	}
+	if v, ok := obj["status"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.Status = types.Int64Value(n)
+		} else {
+			m.Status = types.Int64Null()
+		}
+	} else {
+		m.Status = types.Int64Null()
 	}
 	if v, ok := obj["tag-stacking"]; ok {
 		_ = v

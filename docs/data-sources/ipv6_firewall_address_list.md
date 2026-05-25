@@ -29,8 +29,8 @@ This data source supports the following arguments:
 * `address` - (Required) Type: `string`. Default: `fd00:db8::/64`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `dynamic` - (Optional) Type: `string`.
 * `list` - (Required) Type: `string`. Default: `tf_acc_list6`.
+* `parent` - (Optional) Type: `int`. Default: `4.294967295e+09`.
 * `timeout` - (Optional) Type: `string`.
 
 ## Attribute Reference
@@ -38,4 +38,6 @@ This data source supports the following arguments:
 This data source exports the following attributes in addition to the arguments above:
 
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
+* `creation_time` - Type: `string`.
+* `dynamic` - Type: `bool`.
 

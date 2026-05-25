@@ -37,10 +37,13 @@ type RoutingOSPFAreaModel struct {
 	Comment        types.String `tfsdk:"comment"`
 	DefaultCost    types.String `tfsdk:"default_cost"`
 	Disabled       types.Bool   `tfsdk:"disabled"`
+	Dynamic        types.Bool   `tfsdk:"dynamic"`
 	Instance       types.String `tfsdk:"instance"`
+	Invalid        types.Bool   `tfsdk:"invalid"`
 	Name           types.String `tfsdk:"name"`
-	NoSummaries    types.String `tfsdk:"no_summaries"`
+	NoSummaries    types.Bool   `tfsdk:"no_summaries"`
 	NssaTranslator types.String `tfsdk:"nssa_translator"`
+	TransitCapable types.Bool   `tfsdk:"transit_capable"`
 	Type           types.String `tfsdk:"type"`
 	Router         types.String `tfsdk:"router"`
 }
@@ -90,7 +93,17 @@ func (r *RoutingOSPFAreaResource) Schema(_ context.Context, _ resource.SchemaReq
 				Computed:    true,
 				Description: "Whether the entry is disabled.",
 			},
+			"dynamic": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"instance": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"invalid": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -100,12 +113,17 @@ func (r *RoutingOSPFAreaResource) Schema(_ context.Context, _ resource.SchemaReq
 				Computed:    true,
 				Description: "",
 			},
-			"no_summaries": schema.StringAttribute{
+			"no_summaries": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"nssa_translator": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"transit_capable": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -154,7 +172,7 @@ func (r *RoutingOSPFAreaResource) Create(ctx context.Context, req resource.Creat
 		body["name"] = plan.Name.ValueString()
 	}
 	if !(plan.NoSummaries.IsNull() || plan.NoSummaries.IsUnknown()) {
-		body["no-summaries"] = plan.NoSummaries.ValueString()
+		body["no-summaries"] = client.FormatBool(plan.NoSummaries.ValueBool())
 	}
 	if !(plan.NssaTranslator.IsNull() || plan.NssaTranslator.IsUnknown()) {
 		body["nssa-translator"] = plan.NssaTranslator.ValueString()
@@ -228,7 +246,7 @@ func (r *RoutingOSPFAreaResource) Update(ctx context.Context, req resource.Updat
 		body["name"] = plan.Name.ValueString()
 	}
 	if !plan.NoSummaries.Equal(state.NoSummaries) {
-		body["no-summaries"] = plan.NoSummaries.ValueString()
+		body["no-summaries"] = client.FormatBool(plan.NoSummaries.ValueBool())
 	}
 	if !plan.NssaTranslator.Equal(state.NssaTranslator) {
 		body["nssa-translator"] = plan.NssaTranslator.ValueString()
@@ -359,6 +377,16 @@ func routingOSPFAreaApply(ctx context.Context, obj client.Object, m *RoutingOSPF
 	} else {
 		m.Disabled = types.BoolNull()
 	}
+	if v, ok := obj["dynamic"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Dynamic = types.BoolValue(b)
+		} else {
+			m.Dynamic = types.BoolNull()
+		}
+	} else {
+		m.Dynamic = types.BoolNull()
+	}
 	if v, ok := obj["instance"]; ok {
 		_ = v
 		if v != "" {
@@ -368,6 +396,16 @@ func routingOSPFAreaApply(ctx context.Context, obj client.Object, m *RoutingOSPF
 		}
 	} else {
 		m.Instance = types.StringNull()
+	}
+	if v, ok := obj["invalid"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Invalid = types.BoolValue(b)
+		} else {
+			m.Invalid = types.BoolNull()
+		}
+	} else {
+		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["name"]; ok {
 		_ = v
@@ -381,13 +419,13 @@ func routingOSPFAreaApply(ctx context.Context, obj client.Object, m *RoutingOSPF
 	}
 	if v, ok := obj["no-summaries"]; ok {
 		_ = v
-		if v != "" {
-			m.NoSummaries = types.StringValue(v)
+		if b, err := client.ParseBool(v); err == nil {
+			m.NoSummaries = types.BoolValue(b)
 		} else {
-			m.NoSummaries = types.StringNull()
+			m.NoSummaries = types.BoolNull()
 		}
 	} else {
-		m.NoSummaries = types.StringNull()
+		m.NoSummaries = types.BoolNull()
 	}
 	if v, ok := obj["nssa-translator"]; ok {
 		_ = v
@@ -398,6 +436,16 @@ func routingOSPFAreaApply(ctx context.Context, obj client.Object, m *RoutingOSPF
 		}
 	} else {
 		m.NssaTranslator = types.StringNull()
+	}
+	if v, ok := obj["transit-capable"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.TransitCapable = types.BoolValue(b)
+		} else {
+			m.TransitCapable = types.BoolNull()
+		}
+	} else {
+		m.TransitCapable = types.BoolNull()
 	}
 	if v, ok := obj["type"]; ok {
 		_ = v

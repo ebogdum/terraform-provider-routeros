@@ -21,7 +21,7 @@ resource "routeros_ipv6_firewall_address_list" "address_list_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
-  # dynamic = "replace-me"
+  # parent = 0
   # timeout = "replace-me"
 }
 ```
@@ -34,9 +34,17 @@ This resource supports the following arguments:
 * `address` - (Required) Type: `string`. Default: `fd00:db8::/64`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `dynamic` - (Optional) Type: `string`.
 * `list` - (Required) Type: `string`. Default: `tf_acc_list6`.
+* `parent` - (Optional) Type: `int`. Default: `4.294967295e+09`.
 * `timeout` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+In addition to the arguments above, the following attributes are exported:
+
+* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
+* `creation_time` - Type: `string`.
+* `dynamic` - Type: `bool`.
 
 ## Import
 

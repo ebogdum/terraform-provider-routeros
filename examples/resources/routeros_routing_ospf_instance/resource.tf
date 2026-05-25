@@ -6,10 +6,12 @@ resource "routeros_routing_ospf_instance" "instance_example" {
   # Optional attributes (uncomment as needed):
   # domain_id = "replace-me"
   # domain_tag = "replace-me"
+  # in_filter = "replace-me"
   # mpls_te_address = "10.99.0.0/24"
   # mpls_te_area = "replace-me"
   # name = "tf-example"
   # originate_default = "replace-me"
+  # out_filter = "replace-me"
   # out_filter_select = "replace-me"
   # redistribute = "replace-me"
   # router_id = "replace-me"

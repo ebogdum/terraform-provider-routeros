@@ -8,9 +8,9 @@ resource "routeros_snmp_community" "community_example" {
   # Optional attributes (uncomment as needed):
   # addresses = "10.99.0.0/24"
   # authentication_password = "REDACTED"
-  # authentication_protocol = "MD5"
+  # authentication_protocol = "md5"
   # encryption_password = "REDACTED"
-  # encryption_protocol = "DES"
+  # encryption_protocol = "des"
   # read_access = true
   # security = "none"
   # write_access = false

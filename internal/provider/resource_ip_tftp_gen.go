@@ -34,6 +34,7 @@ type IPTftpModel struct {
 	Allow        types.Bool   `tfsdk:"allow"`
 	Comment      types.String `tfsdk:"comment"`
 	Disabled     types.Bool   `tfsdk:"disabled"`
+	Hits         types.Int64  `tfsdk:"hits"`
 	IPAddresses  types.String `tfsdk:"ip_addresses"`
 	ReadOnly     types.Bool   `tfsdk:"read_only"`
 	RealFilename types.String `tfsdk:"real_filename"`
@@ -79,6 +80,11 @@ func (r *IPTftpResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 				Optional:    true,
 				Computed:    true,
 				Description: "Whether the entry is disabled.",
+			},
+			"hits": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
 			},
 			"ip_addresses": schema.StringAttribute{
 				Optional:    true,
@@ -320,6 +326,16 @@ func iPTftpApply(ctx context.Context, obj client.Object, m *IPTftpModel) {
 		}
 	} else {
 		m.Disabled = types.BoolNull()
+	}
+	if v, ok := obj["hits"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.Hits = types.Int64Value(n)
+		} else {
+			m.Hits = types.Int64Null()
+		}
+	} else {
+		m.Hits = types.Int64Null()
 	}
 	if v, ok := obj["ip-addresses"]; ok {
 		_ = v

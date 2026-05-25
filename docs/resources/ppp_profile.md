@@ -28,6 +28,7 @@ resource "routeros_ppp_profile" "profile_example" {
   # bridge_port_trusted = "replace-me"
   # bridge_port_vid = "replace-me"
   # change_tcp_mss = "no"
+  # def = "replace-me"
   # dhcpv6_lease_time = "replace-me"
   # dhcpv6_pd_pool = "replace-me"
   # dhcpv6_use_radius = "replace-me"
@@ -36,12 +37,15 @@ resource "routeros_ppp_profile" "profile_example" {
   # incoming_filter = "replace-me"
   # insert_queue_before = "replace-me"
   # interface_list = "replace-me"
+  # ipv6 = "replace-me"
   # local_address = "10.99.0.1"
   # on_down = "replace-me"
   # on_up = "replace-me"
   # only_one = "no"
   # outgoing_filter = "replace-me"
   # parent_queue = "replace-me"
+  # queue_type_rx_tx = "replace-me"
+  # rate_limit_rx_tx = "replace-me"
   # remote_address = "10.99.0.1"
   # remote_ipv6_prefix_pool = "replace-me"
   # remote_ipv6_prefix_reuse = "replace-me"
@@ -70,6 +74,7 @@ This resource supports the following arguments:
 * `bridge_port_vid` - (Optional) Type: `string`.
 * `change_tcp_mss` - (Optional) Type: `enum(no|yes|default)`. Default: `4.294967295e+09`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `def` - (Optional) Type: `string`.
 * `dhcpv6_lease_time` - (Optional) Type: `string`.
 * `dhcpv6_pd_pool` - (Optional) Type: `string`.
 * `dhcpv6_use_radius` - (Optional) Type: `string`.
@@ -78,6 +83,7 @@ This resource supports the following arguments:
 * `incoming_filter` - (Optional) Type: `string`.
 * `insert_queue_before` - (Optional) Type: `string`.
 * `interface_list` - (Optional) Type: `string`.
+* `ipv6` - (Optional) Type: `string`.
 * `local_address` - (Optional) Type: `string`.
 * `name` - (Required) Type: `string`. Default: `tf_acc_pppprof`.
 * `on_down` - (Optional) Type: `string`.
@@ -85,6 +91,8 @@ This resource supports the following arguments:
 * `only_one` - (Optional) Type: `enum(no|yes|default)`. Default: `4.294967295e+09`.
 * `outgoing_filter` - (Optional) Type: `string`.
 * `parent_queue` - (Optional) Type: `string`.
+* `queue_type_rx_tx` - (Optional) Type: `string`.
+* `rate_limit_rx_tx` - (Optional) Type: `string`.
 * `remote_address` - (Optional) Type: `string`.
 * `remote_ipv6_prefix_pool` - (Optional) Type: `string`.
 * `remote_ipv6_prefix_reuse` - (Optional) Type: `string`.

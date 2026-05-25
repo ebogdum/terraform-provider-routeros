@@ -33,12 +33,15 @@ This data source supports the following arguments:
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `interface` - (Required) Type: `string`.
 * `local_address` - (Optional) Type: `ip`.
+* `local_address_as_source_ip` - (Optional) Type: `bool`.
 * `name` - (Required) Type: `string`. Default: `tf-acc-relay`.
 * `relay_info_remote_id` - (Optional) Type: `string`.
+* `reset_counters` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
 This data source exports the following attributes in addition to the arguments above:
 
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
+* `invalid` - Type: `bool`.
 

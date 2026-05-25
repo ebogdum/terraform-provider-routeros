@@ -28,10 +28,12 @@ This data source supports the following arguments:
 * `proplist` - (Optional) List of property names to project; smaller payload.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `l2_mtu` - (Optional) Type: `int`. Default: `1500`.
 * `listen_port` - (Optional) Type: `int`.
-* `mtu` - (Optional) Type: `string`.
+* `mtu` - (Optional) Type: `int`. Default: `1420`.
 * `name` - (Optional) Type: `string`.
 * `private_key` - (Optional) Type: `string`. 32-byte WireGuard private key (base64). Leave unset to have RouterOS generate one. **Sensitive.**
+* `wg_export` - (Optional) Type: `string`.
 
 ## Attribute Reference
 

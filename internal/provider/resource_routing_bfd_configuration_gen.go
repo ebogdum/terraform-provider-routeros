@@ -36,6 +36,7 @@ type RoutingBfdConfigurationModel struct {
 	Comment     types.String `tfsdk:"comment"`
 	Disabled    types.Bool   `tfsdk:"disabled"`
 	ForbidBfd   types.String `tfsdk:"forbid_bfd"`
+	Inactive    types.Bool   `tfsdk:"inactive"`
 	Interfaces  types.String `tfsdk:"interfaces"`
 	MinRx       types.String `tfsdk:"min_rx"`
 	MinTx       types.String `tfsdk:"min_tx"`
@@ -91,6 +92,11 @@ func (r *RoutingBfdConfigurationResource) Schema(_ context.Context, _ resource.S
 				Description: "Whether the entry is disabled.",
 			},
 			"forbid_bfd": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"inactive": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -153,6 +159,9 @@ func (r *RoutingBfdConfigurationResource) Create(ctx context.Context, req resour
 	}
 	if !(plan.ForbidBfd.IsNull() || plan.ForbidBfd.IsUnknown()) {
 		body["forbid-bfd"] = plan.ForbidBfd.ValueString()
+	}
+	if !(plan.Inactive.IsNull() || plan.Inactive.IsUnknown()) {
+		body["inactive"] = client.FormatBool(plan.Inactive.ValueBool())
 	}
 	if !(plan.Interfaces.IsNull() || plan.Interfaces.IsUnknown()) {
 		body["interfaces"] = plan.Interfaces.ValueString()
@@ -230,6 +239,9 @@ func (r *RoutingBfdConfigurationResource) Update(ctx context.Context, req resour
 	}
 	if !plan.ForbidBfd.Equal(state.ForbidBfd) {
 		body["forbid-bfd"] = plan.ForbidBfd.ValueString()
+	}
+	if !plan.Inactive.Equal(state.Inactive) {
+		body["inactive"] = client.FormatBool(plan.Inactive.ValueBool())
 	}
 	if !plan.Interfaces.Equal(state.Interfaces) {
 		body["interfaces"] = plan.Interfaces.ValueString()
@@ -378,6 +390,16 @@ func routingBfdConfigurationApply(ctx context.Context, obj client.Object, m *Rou
 		}
 	} else {
 		m.ForbidBfd = types.StringNull()
+	}
+	if v, ok := obj["inactive"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Inactive = types.BoolValue(b)
+		} else {
+			m.Inactive = types.BoolNull()
+		}
+	} else {
+		m.Inactive = types.BoolNull()
 	}
 	if v, ok := obj["interfaces"]; ok {
 		_ = v

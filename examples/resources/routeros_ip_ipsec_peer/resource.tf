@@ -11,5 +11,6 @@ resource "routeros_ip_ipsec_peer" "peer_example" {
   # passive = false
   # port = "443"
   # profile = "replace-me"
+  # responder = false
   # send_initial_contact = true
 }

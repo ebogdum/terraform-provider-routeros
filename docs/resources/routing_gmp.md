@@ -17,7 +17,8 @@ resource "routeros_routing_gmp" "gmp_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
-  # exclude = "replace-me"
+  # exclude = false
+  # group = "replace-me"
   # interfaces = "replace-me"
   # sources = "replace-me"
 }
@@ -29,7 +30,8 @@ This resource supports the following arguments:
 
 * `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `exclude` - (Optional) Type: `string`.
+* `exclude` - (Optional) Type: `bool`.
+* `group` - (Optional) Type: `string`.
 * `interfaces` - (Optional) Type: `string`.
 * `sources` - (Optional) Type: `string`.
 

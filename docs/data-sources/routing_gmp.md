@@ -27,7 +27,8 @@ This data source supports the following arguments:
 * `filter` - (Optional) Map of field=value pairs to narrow the result set.
 * `proplist` - (Optional) List of property names to project; smaller payload.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `exclude` - (Optional) Type: `string`.
+* `exclude` - (Optional) Type: `bool`.
+* `group` - (Optional) Type: `string`.
 * `interfaces` - (Optional) Type: `string`.
 * `sources` - (Optional) Type: `string`.
 

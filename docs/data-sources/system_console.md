@@ -2,12 +2,12 @@
 subcategory: "System"
 page_title: "RouterOS: routeros_system_console"
 description: |-
-  Active console sessions -- RouterOS-managed; PUT EOFs because the endpoint isn't add-able.
+  Active console sessions — RouterOS-managed; PUT EOFs because the endpoint isn't add-able.
 ---
 
 # Data Source: routeros_system_console
 
-Active console sessions -- RouterOS-managed; PUT EOFs because the endpoint isn't add-able.
+Active console sessions — RouterOS-managed; PUT EOFs because the endpoint isn't add-able.
 
 ## Example Usage
 
@@ -30,6 +30,8 @@ This data source supports the following arguments:
 * `disabled` - (Optional) Type: `bool`.
 * `port` - (Optional) Type: `string`.
 * `term` - (Optional) Type: `string`.
+* `used` - (Optional) Type: `bool`.
+* `wedged` - (Optional) Type: `bool`.
 
 ## Attribute Reference
 
@@ -38,5 +40,6 @@ This data source exports the following attributes in addition to the arguments a
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
 * `default` - Type: `bool`.
 * `free` - Type: `bool`.
+* `vc` - Type: `int`.
 * `vcno` - Type: `int`.
 

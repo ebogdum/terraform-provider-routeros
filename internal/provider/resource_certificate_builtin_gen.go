@@ -69,7 +69,7 @@ func (r *CertificateBuiltinResource) Configure(_ context.Context, req resource.C
 
 func (r *CertificateBuiltinResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "System-generated certificates -- read-only.",
+		Description: "System-generated certificates — read-only.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:      true,

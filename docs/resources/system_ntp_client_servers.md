@@ -2,12 +2,12 @@
 subcategory: "NTP"
 page_title: "RouterOS: routeros_system_ntp_client_servers"
 description: |-
-  NTP server list -- accepts add but validator differs per ROS. Skipped from acc tests.
+  NTP server list — accepts add but validator differs per ROS. Skipped from acc tests.
 ---
 
 # Resource: routeros_system_ntp_client_servers
 
-NTP server list -- accepts add but validator differs per ROS. Skipped from acc tests.
+NTP server list — accepts add but validator differs per ROS. Skipped from acc tests.
 
 ## Example Usage
 
@@ -21,6 +21,7 @@ resource "routeros_system_ntp_client_servers" "servers_example" {
   # address = "replace-me"
   # auth_key = "REDACTED"
   # iburst = true
+  # keys = "replace-me"
   # max_poll = 10
   # min_poll = 6
 }
@@ -36,6 +37,7 @@ This resource supports the following arguments:
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`.
 * `iburst` - (Optional) Type: `bool`. Default: `1`.
+* `keys` - (Optional) Type: `string`.
 * `max_poll` - (Optional) Type: `int`. Default: `10`.
 * `min_poll` - (Optional) Type: `int`. Default: `6`.
 
@@ -45,6 +47,7 @@ In addition to the arguments above, the following attributes are exported:
 
 * `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
 * `dynamic` - Type: `bool`.
+* `resolved_address` - Type: `string`.
 
 ## Import
 

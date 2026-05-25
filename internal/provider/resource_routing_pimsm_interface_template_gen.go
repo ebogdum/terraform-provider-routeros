@@ -36,6 +36,7 @@ type RoutingPimsmInterfaceTemplateModel struct {
 	HelloPeriod         types.String `tfsdk:"hello_period"`
 	Instance            types.String `tfsdk:"instance"`
 	Interfaces          types.String `tfsdk:"interfaces"`
+	Invalid             types.Bool   `tfsdk:"invalid"`
 	JoinPrunePeriod     types.String `tfsdk:"join_prune_period"`
 	JoinTrackingSupport types.String `tfsdk:"join_tracking_support"`
 	OverrideInterval    types.String `tfsdk:"override_interval"`
@@ -92,6 +93,11 @@ func (r *RoutingPimsmInterfaceTemplateResource) Schema(_ context.Context, _ reso
 				Description: "",
 			},
 			"interfaces": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"invalid": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -390,6 +396,16 @@ func routingPimsmInterfaceTemplateApply(ctx context.Context, obj client.Object, 
 		}
 	} else {
 		m.Interfaces = types.StringNull()
+	}
+	if v, ok := obj["invalid"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Invalid = types.BoolValue(b)
+		} else {
+			m.Invalid = types.BoolNull()
+		}
+	} else {
+		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["join-prune-period"]; ok {
 		_ = v

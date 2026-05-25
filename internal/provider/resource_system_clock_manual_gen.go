@@ -51,7 +51,7 @@ func (r *SystemClockManualResource) Configure(_ context.Context, req resource.Co
 
 func (r *SystemClockManualResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Singleton for manual time configuration. Curl confirms POST /set with an\nempty body returns 200, but the acc test framework times out -- likely\nbecause RouterOS adjusts the clock to a value that breaks TLS validation\non the next request. Skipped from automated acc tests.\n",
+		Description: "Singleton for manual time configuration. Curl confirms POST /set with an\nempty body returns 200, but the acc test framework times out — likely\nbecause RouterOS adjusts the clock to a value that breaks TLS validation\non the next request. Skipped from automated acc tests.\n",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:      true,

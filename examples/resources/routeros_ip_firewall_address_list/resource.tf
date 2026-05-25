@@ -7,5 +7,6 @@ resource "routeros_ip_firewall_address_list" "address_list_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
+  # parent = 0
   # timeout = "replace-me"
 }

@@ -34,6 +34,7 @@ This data source supports the following arguments:
 * `bridge` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `mvrp_attributes` - (Optional) Type: `string`.
 * `mvrp_forbidden` - (Optional) Type: `string`.
 * `tagged` - (Optional) Type: `string`.
 * `untagged` - (Optional) Type: `string`.
@@ -44,4 +45,7 @@ This data source supports the following arguments:
 This data source exports the following attributes in addition to the arguments above:
 
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
+* `current_tagged` - Type: `string`.
+* `current_untagged` - Type: `string`.
+* `dynamic` - Type: `bool`.
 

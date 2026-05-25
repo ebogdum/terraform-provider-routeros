@@ -31,6 +31,7 @@ type MPLSInterfaceResource struct {
 
 type MPLSInterfaceModel struct {
 	ID        types.String `tfsdk:"id"`
+	Builtin   types.Bool   `tfsdk:"builtin"`
 	Comment   types.String `tfsdk:"comment"`
 	Disabled  types.Bool   `tfsdk:"disabled"`
 	Input     types.String `tfsdk:"input"`
@@ -62,6 +63,11 @@ func (r *MPLSInterfaceResource) Schema(_ context.Context, _ resource.SchemaReque
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"builtin": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -106,6 +112,9 @@ func (r *MPLSInterfaceResource) Create(ctx context.Context, req resource.CreateR
 		return
 	}
 	body := client.Object{}
+	if !(plan.Builtin.IsNull() || plan.Builtin.IsUnknown()) {
+		body["builtin"] = client.FormatBool(plan.Builtin.ValueBool())
+	}
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
 	}
@@ -168,6 +177,9 @@ func (r *MPLSInterfaceResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 	body := client.Object{}
+	if !plan.Builtin.Equal(state.Builtin) {
+		body["builtin"] = client.FormatBool(plan.Builtin.ValueBool())
+	}
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
 	}
@@ -266,6 +278,16 @@ func mPLSInterfaceLookupByNaturalKey(ctx context.Context, c *client.Client, id s
 func mPLSInterfaceApply(ctx context.Context, obj client.Object, m *MPLSInterfaceModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["builtin"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Builtin = types.BoolValue(b)
+		} else {
+			m.Builtin = types.BoolNull()
+		}
+	} else {
+		m.Builtin = types.BoolNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {

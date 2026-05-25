@@ -37,10 +37,13 @@ type RoutingOSPFInstanceModel struct {
 	Disabled         types.Bool   `tfsdk:"disabled"`
 	DomainID         types.String `tfsdk:"domain_id"`
 	DomainTag        types.String `tfsdk:"domain_tag"`
+	InFilter         types.String `tfsdk:"in_filter"`
+	Invalid          types.Bool   `tfsdk:"invalid"`
 	MPLSTeAddress    types.String `tfsdk:"mpls_te_address"`
 	MPLSTeArea       types.String `tfsdk:"mpls_te_area"`
 	Name             types.String `tfsdk:"name"`
 	OriginateDefault types.String `tfsdk:"originate_default"`
+	OutFilter        types.String `tfsdk:"out_filter"`
 	OutFilterSelect  types.String `tfsdk:"out_filter_select"`
 	Redistribute     types.String `tfsdk:"redistribute"`
 	RouterID         types.String `tfsdk:"router_id"`
@@ -94,6 +97,16 @@ func (r *RoutingOSPFInstanceResource) Schema(_ context.Context, _ resource.Schem
 				Computed:    true,
 				Description: "",
 			},
+			"in_filter": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"invalid": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"mpls_te_address": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -110,6 +123,11 @@ func (r *RoutingOSPFInstanceResource) Schema(_ context.Context, _ resource.Schem
 				Description: "",
 			},
 			"originate_default": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"out_filter": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -176,6 +194,9 @@ func (r *RoutingOSPFInstanceResource) Create(ctx context.Context, req resource.C
 	if !(plan.DomainTag.IsNull() || plan.DomainTag.IsUnknown()) {
 		body["domain-tag"] = plan.DomainTag.ValueString()
 	}
+	if !(plan.InFilter.IsNull() || plan.InFilter.IsUnknown()) {
+		body["in-filter"] = plan.InFilter.ValueString()
+	}
 	if !(plan.MPLSTeAddress.IsNull() || plan.MPLSTeAddress.IsUnknown()) {
 		body["mpls-te-address"] = plan.MPLSTeAddress.ValueString()
 	}
@@ -187,6 +208,9 @@ func (r *RoutingOSPFInstanceResource) Create(ctx context.Context, req resource.C
 	}
 	if !(plan.OriginateDefault.IsNull() || plan.OriginateDefault.IsUnknown()) {
 		body["originate-default"] = plan.OriginateDefault.ValueString()
+	}
+	if !(plan.OutFilter.IsNull() || plan.OutFilter.IsUnknown()) {
+		body["out-filter"] = plan.OutFilter.ValueString()
 	}
 	if !(plan.OutFilterSelect.IsNull() || plan.OutFilterSelect.IsUnknown()) {
 		body["out-filter-select"] = plan.OutFilterSelect.ValueString()
@@ -265,6 +289,9 @@ func (r *RoutingOSPFInstanceResource) Update(ctx context.Context, req resource.U
 	if !plan.DomainTag.Equal(state.DomainTag) {
 		body["domain-tag"] = plan.DomainTag.ValueString()
 	}
+	if !plan.InFilter.Equal(state.InFilter) {
+		body["in-filter"] = plan.InFilter.ValueString()
+	}
 	if !plan.MPLSTeAddress.Equal(state.MPLSTeAddress) {
 		body["mpls-te-address"] = plan.MPLSTeAddress.ValueString()
 	}
@@ -276,6 +303,9 @@ func (r *RoutingOSPFInstanceResource) Update(ctx context.Context, req resource.U
 	}
 	if !plan.OriginateDefault.Equal(state.OriginateDefault) {
 		body["originate-default"] = plan.OriginateDefault.ValueString()
+	}
+	if !plan.OutFilter.Equal(state.OutFilter) {
+		body["out-filter"] = plan.OutFilter.ValueString()
 	}
 	if !plan.OutFilterSelect.Equal(state.OutFilterSelect) {
 		body["out-filter-select"] = plan.OutFilterSelect.ValueString()
@@ -418,6 +448,26 @@ func routingOSPFInstanceApply(ctx context.Context, obj client.Object, m *Routing
 	} else {
 		m.DomainTag = types.StringNull()
 	}
+	if v, ok := obj["in-filter"]; ok {
+		_ = v
+		if v != "" {
+			m.InFilter = types.StringValue(v)
+		} else {
+			m.InFilter = types.StringNull()
+		}
+	} else {
+		m.InFilter = types.StringNull()
+	}
+	if v, ok := obj["invalid"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Invalid = types.BoolValue(b)
+		} else {
+			m.Invalid = types.BoolNull()
+		}
+	} else {
+		m.Invalid = types.BoolNull()
+	}
 	if v, ok := obj["mpls-te-address"]; ok {
 		_ = v
 		if v != "" {
@@ -457,6 +507,16 @@ func routingOSPFInstanceApply(ctx context.Context, obj client.Object, m *Routing
 		}
 	} else {
 		m.OriginateDefault = types.StringNull()
+	}
+	if v, ok := obj["out-filter"]; ok {
+		_ = v
+		if v != "" {
+			m.OutFilter = types.StringValue(v)
+		} else {
+			m.OutFilter = types.StringNull()
+		}
+	} else {
+		m.OutFilter = types.StringNull()
 	}
 	if v, ok := obj["out-filter-select"]; ok {
 		_ = v

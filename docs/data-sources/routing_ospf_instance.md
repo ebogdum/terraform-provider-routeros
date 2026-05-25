@@ -30,10 +30,12 @@ This data source supports the following arguments:
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `domain_id` - (Optional) Type: `string`.
 * `domain_tag` - (Optional) Type: `string`.
+* `in_filter` - (Optional) Type: `string`.
 * `mpls_te_address` - (Optional) Type: `string`.
 * `mpls_te_area` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
 * `originate_default` - (Optional) Type: `string`.
+* `out_filter` - (Optional) Type: `string`.
 * `out_filter_select` - (Optional) Type: `string`.
 * `redistribute` - (Optional) Type: `string`.
 * `router_id` - (Optional) Type: `string`.
@@ -46,4 +48,5 @@ This data source supports the following arguments:
 This data source exports the following attributes in addition to the arguments above:
 
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
+* `invalid` - Type: `bool`.
 

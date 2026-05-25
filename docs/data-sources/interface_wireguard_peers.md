@@ -33,23 +33,32 @@ This data source supports the following arguments:
 * `client_allowed_address` - (Optional) Type: `string`.
 * `client_dns` - (Optional) Type: `string`.
 * `client_endpoint` - (Optional) Type: `string`.
-* `client_keepalive` - (Optional) Type: `string`.
-* `client_listen_port` - (Optional) Type: `string`.
+* `client_keepalive` - (Optional) Type: `duration`.
+* `client_listen_port` - (Optional) Type: `int`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `endpoint` - (Optional) Type: `string`.
 * `endpoint_address` - (Optional) Type: `string`.
-* `endpoint_port` - (Optional) Type: `string`.
+* `endpoint_port` - (Optional) Type: `int`. Default: `0`.
 * `interface` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
-* `persistent_keepalive` - (Optional) Type: `string`.
+* `persistent_keepalive` - (Optional) Type: `duration`.
 * `preshared_key` - (Optional) Type: `string`. **Sensitive.**
 * `private_key` - (Optional) Type: `string`. **Sensitive.**
 * `public_key` - (Optional) Type: `string`.
-* `responder` - (Optional) Type: `string`.
+* `responder` - (Optional) Type: `bool`.
 
 ## Attribute Reference
 
 This data source exports the following attributes in addition to the arguments above:
 
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
+* `client_config` - Type: `string`.
+* `client_qr` - Type: `string`.
+* `current_endpoint_address` - Type: `string`.
+* `current_endpoint_port` - Type: `int`.
+* `dynamic` - Type: `bool`.
+* `last_handshake` - Type: `duration`.
+* `rx` - Type: `string`.
+* `tx` - Type: `string`.
 

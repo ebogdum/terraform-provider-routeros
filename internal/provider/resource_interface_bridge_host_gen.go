@@ -30,14 +30,21 @@ type InterfaceBridgeHostResource struct {
 }
 
 type InterfaceBridgeHostModel struct {
-	ID         types.String `tfsdk:"id"`
-	Bridge     types.String `tfsdk:"bridge"`
-	Comment    types.String `tfsdk:"comment"`
-	Disabled   types.Bool   `tfsdk:"disabled"`
-	Interface  types.String `tfsdk:"interface"`
-	MACAddress types.String `tfsdk:"mac_address"`
-	Vid        types.String `tfsdk:"vid"`
-	Router     types.String `tfsdk:"router"`
+	ID          types.String `tfsdk:"id"`
+	Aged        types.Bool   `tfsdk:"aged"`
+	AgedOnPeer  types.Bool   `tfsdk:"aged_on_peer"`
+	Bridge      types.String `tfsdk:"bridge"`
+	Comment     types.String `tfsdk:"comment"`
+	Disabled    types.Bool   `tfsdk:"disabled"`
+	Dynamic     types.Bool   `tfsdk:"dynamic"`
+	ExternalFdb types.Bool   `tfsdk:"external_fdb"`
+	Interface   types.String `tfsdk:"interface"`
+	Local       types.Bool   `tfsdk:"local"`
+	MACAddress  types.String `tfsdk:"mac_address"`
+	OnInterface types.String `tfsdk:"on_interface"`
+	RemoteIP    types.String `tfsdk:"remote_ip"`
+	Vid         types.String `tfsdk:"vid"`
+	Router      types.String `tfsdk:"router"`
 }
 
 func NewInterfaceBridgeHostResource() resource.Resource { return &InterfaceBridgeHostResource{} }
@@ -64,6 +71,16 @@ func (r *InterfaceBridgeHostResource) Schema(_ context.Context, _ resource.Schem
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
+			"aged": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"aged_on_peer": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"bridge": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -79,12 +96,37 @@ func (r *InterfaceBridgeHostResource) Schema(_ context.Context, _ resource.Schem
 				Computed:    true,
 				Description: "Whether the entry is disabled.",
 			},
+			"dynamic": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"external_fdb": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"interface": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
+			"local": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"mac_address": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"on_interface": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"remote_ip": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -113,6 +155,12 @@ func (r *InterfaceBridgeHostResource) Create(ctx context.Context, req resource.C
 		return
 	}
 	body := client.Object{}
+	if !(plan.Aged.IsNull() || plan.Aged.IsUnknown()) {
+		body["aged"] = client.FormatBool(plan.Aged.ValueBool())
+	}
+	if !(plan.AgedOnPeer.IsNull() || plan.AgedOnPeer.IsUnknown()) {
+		body["aged-on-peer"] = client.FormatBool(plan.AgedOnPeer.ValueBool())
+	}
 	if !(plan.Bridge.IsNull() || plan.Bridge.IsUnknown()) {
 		body["bridge"] = plan.Bridge.ValueString()
 	}
@@ -122,8 +170,14 @@ func (r *InterfaceBridgeHostResource) Create(ctx context.Context, req resource.C
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
+	if !(plan.ExternalFdb.IsNull() || plan.ExternalFdb.IsUnknown()) {
+		body["external-fdb"] = client.FormatBool(plan.ExternalFdb.ValueBool())
+	}
 	if !(plan.Interface.IsNull() || plan.Interface.IsUnknown()) {
 		body["interface"] = plan.Interface.ValueString()
+	}
+	if !(plan.Local.IsNull() || plan.Local.IsUnknown()) {
+		body["local"] = client.FormatBool(plan.Local.ValueBool())
 	}
 	if !(plan.MACAddress.IsNull() || plan.MACAddress.IsUnknown()) {
 		body["mac-address"] = plan.MACAddress.ValueString()
@@ -178,6 +232,12 @@ func (r *InterfaceBridgeHostResource) Update(ctx context.Context, req resource.U
 		return
 	}
 	body := client.Object{}
+	if !plan.Aged.Equal(state.Aged) {
+		body["aged"] = client.FormatBool(plan.Aged.ValueBool())
+	}
+	if !plan.AgedOnPeer.Equal(state.AgedOnPeer) {
+		body["aged-on-peer"] = client.FormatBool(plan.AgedOnPeer.ValueBool())
+	}
 	if !plan.Bridge.Equal(state.Bridge) {
 		body["bridge"] = plan.Bridge.ValueString()
 	}
@@ -187,8 +247,14 @@ func (r *InterfaceBridgeHostResource) Update(ctx context.Context, req resource.U
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
+	if !plan.ExternalFdb.Equal(state.ExternalFdb) {
+		body["external-fdb"] = client.FormatBool(plan.ExternalFdb.ValueBool())
+	}
 	if !plan.Interface.Equal(state.Interface) {
 		body["interface"] = plan.Interface.ValueString()
+	}
+	if !plan.Local.Equal(state.Local) {
+		body["local"] = client.FormatBool(plan.Local.ValueBool())
 	}
 	if !plan.MACAddress.Equal(state.MACAddress) {
 		body["mac-address"] = plan.MACAddress.ValueString()
@@ -279,6 +345,26 @@ func interfaceBridgeHostLookupByNaturalKey(ctx context.Context, c *client.Client
 func interfaceBridgeHostApply(ctx context.Context, obj client.Object, m *InterfaceBridgeHostModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["aged"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Aged = types.BoolValue(b)
+		} else {
+			m.Aged = types.BoolNull()
+		}
+	} else {
+		m.Aged = types.BoolNull()
+	}
+	if v, ok := obj["aged-on-peer"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.AgedOnPeer = types.BoolValue(b)
+		} else {
+			m.AgedOnPeer = types.BoolNull()
+		}
+	} else {
+		m.AgedOnPeer = types.BoolNull()
+	}
 	if v, ok := obj["bridge"]; ok {
 		_ = v
 		if v != "" {
@@ -309,6 +395,26 @@ func interfaceBridgeHostApply(ctx context.Context, obj client.Object, m *Interfa
 	} else {
 		m.Disabled = types.BoolNull()
 	}
+	if v, ok := obj["dynamic"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Dynamic = types.BoolValue(b)
+		} else {
+			m.Dynamic = types.BoolNull()
+		}
+	} else {
+		m.Dynamic = types.BoolNull()
+	}
+	if v, ok := obj["external-fdb"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.ExternalFdb = types.BoolValue(b)
+		} else {
+			m.ExternalFdb = types.BoolNull()
+		}
+	} else {
+		m.ExternalFdb = types.BoolNull()
+	}
 	if v, ok := obj["interface"]; ok {
 		_ = v
 		if v != "" {
@@ -319,6 +425,16 @@ func interfaceBridgeHostApply(ctx context.Context, obj client.Object, m *Interfa
 	} else {
 		m.Interface = types.StringNull()
 	}
+	if v, ok := obj["local"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Local = types.BoolValue(b)
+		} else {
+			m.Local = types.BoolNull()
+		}
+	} else {
+		m.Local = types.BoolNull()
+	}
 	if v, ok := obj["mac-address"]; ok {
 		_ = v
 		if v != "" {
@@ -328,6 +444,26 @@ func interfaceBridgeHostApply(ctx context.Context, obj client.Object, m *Interfa
 		}
 	} else {
 		m.MACAddress = types.StringNull()
+	}
+	if v, ok := obj["on-interface"]; ok {
+		_ = v
+		if v != "" {
+			m.OnInterface = types.StringValue(v)
+		} else {
+			m.OnInterface = types.StringNull()
+		}
+	} else {
+		m.OnInterface = types.StringNull()
+	}
+	if v, ok := obj["remote-ip"]; ok {
+		_ = v
+		if v != "" {
+			m.RemoteIP = types.StringValue(v)
+		} else {
+			m.RemoteIP = types.StringNull()
+		}
+	} else {
+		m.RemoteIP = types.StringNull()
 	}
 	if v, ok := obj["vid"]; ok {
 		_ = v

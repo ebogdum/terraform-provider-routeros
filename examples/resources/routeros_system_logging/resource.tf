@@ -5,6 +5,7 @@ resource "routeros_system_logging" "logging_example" {
 
   # Optional attributes (uncomment as needed):
   # action = "replace-me"
+  # name = "tf-example"
   # prefix = "replace-me"
   # regex = "replace-me"
   # topics = "replace-me"

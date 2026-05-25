@@ -19,7 +19,9 @@ resource "routeros_ip_dns_forwarders" "forwarders_example" {
 
   # Optional attributes (uncomment as needed):
   # dns_servers = "replace-me"
+  # do_h_servers = "replace-me"
   # name = "tf-example"
+  # verify_do_h_certificate = false
 }
 ```
 
@@ -31,7 +33,9 @@ This resource supports the following arguments:
 * `comment` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`.
 * `dns_servers` - (Optional) Type: `string`.
+* `do_h_servers` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
+* `verify_do_h_certificate` - (Optional) Type: `bool`.
 
 ## Import
 

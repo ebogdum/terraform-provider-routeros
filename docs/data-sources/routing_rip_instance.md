@@ -28,12 +28,15 @@ This data source supports the following arguments:
 * `proplist` - (Optional) List of property names to project; smaller payload.
 * `afi` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`.
+* `input_filter` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
 * `originate_default` - (Optional) Type: `string`.
+* `output_filter` - (Optional) Type: `string`.
 * `redistribute` - (Optional) Type: `string`.
 * `route_gc_timeout` - (Optional) Type: `string`.
 * `route_timeout` - (Optional) Type: `string`.
 * `routing_table` - (Optional) Type: `string`.
+* `select_output_filter` - (Optional) Type: `string`.
 * `update_interval` - (Optional) Type: `string`.
 * `vrf` - (Optional) Type: `string`.
 

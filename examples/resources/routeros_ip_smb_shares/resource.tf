@@ -8,6 +8,9 @@ resource "routeros_ip_smb_shares" "shares_example" {
   # Optional attributes (uncomment as needed):
   # directory = "replace-me"
   # invalid_users = "replace-me"
+  # newfileman = "replace-me"
+  # old_directory = "replace-me"
+  # oldfileman = "replace-me"
   # read_only = false
   # require_encryption = false
   # valid_users = "replace-me"

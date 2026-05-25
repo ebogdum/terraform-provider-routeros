@@ -59,7 +59,7 @@ func (r *SystemWatchdogResource) Configure(_ context.Context, req resource.Confi
 
 func (r *SystemWatchdogResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Singleton; misconfig can soft-brick -- skip in acc",
+		Description: "Singleton; misconfig can soft-brick — skip in acc",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:      true,

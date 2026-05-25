@@ -23,8 +23,12 @@ resource "routeros_interface_bridge_host" "host_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
+  # aged = false
+  # aged_on_peer = false
   # bridge = "bridge1"
+  # external_fdb = false
   # interface = "ether1"
+  # local = false
   # mac_address = "10.99.0.0/24"
   # vid = "replace-me"
 }
@@ -35,12 +39,25 @@ resource "routeros_interface_bridge_host" "host_example" {
 This resource supports the following arguments:
 
 * `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `aged` - (Optional) Type: `bool`.
+* `aged_on_peer` - (Optional) Type: `bool`.
 * `bridge` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `external_fdb` - (Optional) Type: `bool`.
 * `interface` - (Optional) Type: `string`.
+* `local` - (Optional) Type: `bool`.
 * `mac_address` - (Optional) Type: `string`.
 * `vid` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+In addition to the arguments above, the following attributes are exported:
+
+* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
+* `dynamic` - Type: `bool`.
+* `on_interface` - Type: `string`.
+* `remote_ip` - Type: `string`.
 
 ## Import
 

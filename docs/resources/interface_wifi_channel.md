@@ -20,8 +20,14 @@ resource "routeros_interface_wifi_channel" "channel_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
-  # band = "replace-me"
-  # frequency = "replace-me"
+  # band = "2ghz-b/g/n"
+  # channel_width = "replace-me"
+  # deprioritize_unii_3_4 = "replace-me"
+  # frequency = "2.412e+06"
+  # reselect_interval = "replace-me"
+  # reselect_time = "replace-me"
+  # secondary_frequency = "replace-me"
+  # skip_dfs_channels = "replace-me"
 }
 ```
 
@@ -30,11 +36,17 @@ resource "routeros_interface_wifi_channel" "channel_example" {
 This resource supports the following arguments:
 
 * `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `band` - (Optional) Type: `string`.
+* `band` - (Optional) Type: `enum(2ghz-b|2ghz-only-g|2ghz-b/g|5ghz-a|5ghz-only-n|5ghz-a/n, ...)`. Default: `7`.
+* `channel_width` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `deprioritize_unii_3_4` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `frequency` - (Optional) Type: `string`.
+* `frequency` - (Optional) Type: `string`. Default: `2.412e+06`.
 * `name` - (Required) Type: `string`. Default: `tf_acc_wchan`.
+* `reselect_interval` - (Optional) Type: `string`.
+* `reselect_time` - (Optional) Type: `string`.
+* `secondary_frequency` - (Optional) Type: `string`.
+* `skip_dfs_channels` - (Optional) Type: `string`.
 
 ## Import
 

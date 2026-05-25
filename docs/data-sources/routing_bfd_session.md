@@ -40,7 +40,7 @@ This data source supports the following arguments:
 * `remote_min_rx` - (Optional) Type: `string`.
 * `remote_min_tx` - (Optional) Type: `string`.
 * `required_min_rx` - (Optional) Type: `string`.
-* `state` - (Optional) Type: `enum(admin down|down|init|up)`.
+* `state` - (Optional) Type: `enum(admin-down|down|init|up)`.
 * `state_changes` - (Optional) Type: `int`.
 * `up` - (Optional) Type: `bool`.
 * `uptime` - (Optional) Type: `string`.

@@ -6,5 +6,7 @@ resource "routeros_system_script" "script_example" {
   comment = "managed by terraform"
 
   # Optional attributes (uncomment as needed):
+  # don_t_require_permissions = false
   # policy = []
+  # run_script = "replace-me"
 }

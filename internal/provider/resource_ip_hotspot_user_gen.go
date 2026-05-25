@@ -32,30 +32,35 @@ type IPHotspotUserResource struct {
 }
 
 type IPHotspotUserModel struct {
-	ID              types.String `tfsdk:"id"`
-	Address         types.String `tfsdk:"address"`
-	BytesIn         types.Int64  `tfsdk:"bytes_in"`
-	BytesOut        types.Int64  `tfsdk:"bytes_out"`
-	Comment         types.String `tfsdk:"comment"`
-	Default         types.Bool   `tfsdk:"default"`
-	Disabled        types.Bool   `tfsdk:"disabled"`
-	Dynamic         types.Bool   `tfsdk:"dynamic"`
-	Email           types.String `tfsdk:"email"`
-	LimitBytesIn    types.String `tfsdk:"limit_bytes_in"`
-	LimitBytesOut   types.String `tfsdk:"limit_bytes_out"`
-	LimitBytesTotal types.String `tfsdk:"limit_bytes_total"`
-	LimitUptime     types.String `tfsdk:"limit_uptime"`
-	MACAddress      types.String `tfsdk:"mac_address"`
-	Name            types.String `tfsdk:"name"`
-	OtpSecret       types.String `tfsdk:"otp_secret"`
-	PacketsIn       types.Int64  `tfsdk:"packets_in"`
-	PacketsOut      types.Int64  `tfsdk:"packets_out"`
-	Password        types.String `tfsdk:"password"`
-	Profile         types.String `tfsdk:"profile"`
-	Routes          types.String `tfsdk:"routes"`
-	Server          types.String `tfsdk:"server"`
-	Uptime          types.String `tfsdk:"uptime"`
-	Router          types.String `tfsdk:"router"`
+	ID               types.String `tfsdk:"id"`
+	Address          types.String `tfsdk:"address"`
+	BytesIn          types.Int64  `tfsdk:"bytes_in"`
+	BytesOut         types.Int64  `tfsdk:"bytes_out"`
+	Comment          types.String `tfsdk:"comment"`
+	Def              types.Bool   `tfsdk:"def"`
+	Default          types.Bool   `tfsdk:"default"`
+	Disabled         types.Bool   `tfsdk:"disabled"`
+	Dynamic          types.Bool   `tfsdk:"dynamic"`
+	Email            types.String `tfsdk:"email"`
+	LimitBytesIn     types.String `tfsdk:"limit_bytes_in"`
+	LimitBytesOut    types.String `tfsdk:"limit_bytes_out"`
+	LimitBytesTotal  types.String `tfsdk:"limit_bytes_total"`
+	LimitUptime      types.String `tfsdk:"limit_uptime"`
+	MACAddress       types.String `tfsdk:"mac_address"`
+	Name             types.String `tfsdk:"name"`
+	Nondef           types.String `tfsdk:"nondef"`
+	Nondefro         types.String `tfsdk:"nondefro"`
+	OtpSecret        types.String `tfsdk:"otp_secret"`
+	PacketsIn        types.Int64  `tfsdk:"packets_in"`
+	PacketsOut       types.Int64  `tfsdk:"packets_out"`
+	Password         types.String `tfsdk:"password"`
+	Profile          types.String `tfsdk:"profile"`
+	ResetAllCounters types.String `tfsdk:"reset_all_counters"`
+	ResetCounters    types.String `tfsdk:"reset_counters"`
+	Routes           types.String `tfsdk:"routes"`
+	Server           types.String `tfsdk:"server"`
+	Uptime           types.String `tfsdk:"uptime"`
+	Router           types.String `tfsdk:"router"`
 }
 
 func NewIPHotspotUserResource() resource.Resource { return &IPHotspotUserResource{} }
@@ -99,6 +104,11 @@ func (r *IPHotspotUserResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"comment": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"def": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -154,6 +164,16 @@ func (r *IPHotspotUserResource) Schema(_ context.Context, _ resource.SchemaReque
 				Required:    true,
 				Description: "",
 			},
+			"nondef": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"nondefro": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"otp_secret": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -177,6 +197,16 @@ func (r *IPHotspotUserResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"profile": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"reset_all_counters": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"reset_counters": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -223,6 +253,9 @@ func (r *IPHotspotUserResource) Create(ctx context.Context, req resource.CreateR
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
 	}
+	if !(plan.Def.IsNull() || plan.Def.IsUnknown()) {
+		body["def"] = client.FormatBool(plan.Def.ValueBool())
+	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
@@ -247,6 +280,12 @@ func (r *IPHotspotUserResource) Create(ctx context.Context, req resource.CreateR
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
 	}
+	if !(plan.Nondef.IsNull() || plan.Nondef.IsUnknown()) {
+		body["nondef"] = plan.Nondef.ValueString()
+	}
+	if !(plan.Nondefro.IsNull() || plan.Nondefro.IsUnknown()) {
+		body["nondefro"] = plan.Nondefro.ValueString()
+	}
 	if !(plan.OtpSecret.IsNull() || plan.OtpSecret.IsUnknown()) {
 		body["otp-secret"] = plan.OtpSecret.ValueString()
 	}
@@ -255,6 +294,12 @@ func (r *IPHotspotUserResource) Create(ctx context.Context, req resource.CreateR
 	}
 	if !(plan.Profile.IsNull() || plan.Profile.IsUnknown()) {
 		body["profile"] = plan.Profile.ValueString()
+	}
+	if !(plan.ResetAllCounters.IsNull() || plan.ResetAllCounters.IsUnknown()) {
+		body["reset-all-counters"] = plan.ResetAllCounters.ValueString()
+	}
+	if !(plan.ResetCounters.IsNull() || plan.ResetCounters.IsUnknown()) {
+		body["reset-counters"] = plan.ResetCounters.ValueString()
 	}
 	if !(plan.Routes.IsNull() || plan.Routes.IsUnknown()) {
 		body["routes"] = plan.Routes.ValueString()
@@ -315,6 +360,9 @@ func (r *IPHotspotUserResource) Update(ctx context.Context, req resource.UpdateR
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
 	}
+	if !plan.Def.Equal(state.Def) {
+		body["def"] = client.FormatBool(plan.Def.ValueBool())
+	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
@@ -339,6 +387,12 @@ func (r *IPHotspotUserResource) Update(ctx context.Context, req resource.UpdateR
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
 	}
+	if !plan.Nondef.Equal(state.Nondef) {
+		body["nondef"] = plan.Nondef.ValueString()
+	}
+	if !plan.Nondefro.Equal(state.Nondefro) {
+		body["nondefro"] = plan.Nondefro.ValueString()
+	}
 	if !plan.OtpSecret.Equal(state.OtpSecret) {
 		body["otp-secret"] = plan.OtpSecret.ValueString()
 	}
@@ -347,6 +401,12 @@ func (r *IPHotspotUserResource) Update(ctx context.Context, req resource.UpdateR
 	}
 	if !plan.Profile.Equal(state.Profile) {
 		body["profile"] = plan.Profile.ValueString()
+	}
+	if !plan.ResetAllCounters.Equal(state.ResetAllCounters) {
+		body["reset-all-counters"] = plan.ResetAllCounters.ValueString()
+	}
+	if !plan.ResetCounters.Equal(state.ResetCounters) {
+		body["reset-counters"] = plan.ResetCounters.ValueString()
 	}
 	if !plan.Routes.Equal(state.Routes) {
 		body["routes"] = plan.Routes.ValueString()
@@ -477,6 +537,16 @@ func iPHotspotUserApply(ctx context.Context, obj client.Object, m *IPHotspotUser
 	} else {
 		m.Comment = types.StringNull()
 	}
+	if v, ok := obj["def"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Def = types.BoolValue(b)
+		} else {
+			m.Def = types.BoolNull()
+		}
+	} else {
+		m.Def = types.BoolNull()
+	}
 	if v, ok := obj["default"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
@@ -577,6 +647,26 @@ func iPHotspotUserApply(ctx context.Context, obj client.Object, m *IPHotspotUser
 	} else {
 		m.Name = types.StringNull()
 	}
+	if v, ok := obj["nondef"]; ok {
+		_ = v
+		if v != "" {
+			m.Nondef = types.StringValue(v)
+		} else {
+			m.Nondef = types.StringNull()
+		}
+	} else {
+		m.Nondef = types.StringNull()
+	}
+	if v, ok := obj["nondefro"]; ok {
+		_ = v
+		if v != "" {
+			m.Nondefro = types.StringValue(v)
+		} else {
+			m.Nondefro = types.StringNull()
+		}
+	} else {
+		m.Nondefro = types.StringNull()
+	}
 	// Sensitive: RouterOS scrubs the value on read. If the server returned
 	// a value, decode it. Otherwise the plan value (user input) is what's
 	// in m.OtpSecret already -- but if the user left it unset, resolve
@@ -634,6 +724,26 @@ func iPHotspotUserApply(ctx context.Context, obj client.Object, m *IPHotspotUser
 		}
 	} else {
 		m.Profile = types.StringNull()
+	}
+	if v, ok := obj["reset-all-counters"]; ok {
+		_ = v
+		if v != "" {
+			m.ResetAllCounters = types.StringValue(v)
+		} else {
+			m.ResetAllCounters = types.StringNull()
+		}
+	} else {
+		m.ResetAllCounters = types.StringNull()
+	}
+	if v, ok := obj["reset-counters"]; ok {
+		_ = v
+		if v != "" {
+			m.ResetCounters = types.StringValue(v)
+		} else {
+			m.ResetCounters = types.StringNull()
+		}
+	} else {
+		m.ResetCounters = types.StringNull()
 	}
 	if v, ok := obj["routes"]; ok {
 		_ = v

@@ -7,6 +7,7 @@ resource "routeros_routing_bfd_configuration" "configuration_example" {
   # address_list = "replace-me"
   # addresses = "replace-me"
   # forbid_bfd = "replace-me"
+  # inactive = false
   # interfaces = "replace-me"
   # min_rx = "replace-me"
   # min_tx = "replace-me"

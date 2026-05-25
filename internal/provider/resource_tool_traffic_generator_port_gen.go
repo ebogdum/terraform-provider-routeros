@@ -12,9 +12,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
 )
 
 var (
@@ -30,11 +32,14 @@ type ToolTrafficGeneratorPortResource struct {
 }
 
 type ToolTrafficGeneratorPortModel struct {
-	ID        types.String `tfsdk:"id"`
-	Disabled  types.Bool   `tfsdk:"disabled"`
-	Interface types.String `tfsdk:"interface"`
-	Name      types.String `tfsdk:"name"`
-	Router    types.String `tfsdk:"router"`
+	ID          types.String `tfsdk:"id"`
+	Disabled    types.Bool   `tfsdk:"disabled"`
+	Dynamic     types.Bool   `tfsdk:"dynamic"`
+	FirstHeader types.String `tfsdk:"first_header"`
+	Interface   types.String `tfsdk:"interface"`
+	Invalid     types.Bool   `tfsdk:"invalid"`
+	Name        types.String `tfsdk:"name"`
+	Router      types.String `tfsdk:"router"`
 }
 
 func NewToolTrafficGeneratorPortResource() resource.Resource {
@@ -68,7 +73,23 @@ func (r *ToolTrafficGeneratorPortResource) Schema(_ context.Context, _ resource.
 				Computed:    true,
 				Description: "",
 			},
+			"dynamic": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"first_header": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.OneOf([]string{"", "mac", "vlan", "ip", "udp", "raw", "ipv6", "tcp"}...)},
+			},
 			"interface": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"invalid": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -255,6 +276,26 @@ func toolTrafficGeneratorPortApply(ctx context.Context, obj client.Object, m *To
 	} else {
 		m.Disabled = types.BoolNull()
 	}
+	if v, ok := obj["dynamic"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Dynamic = types.BoolValue(b)
+		} else {
+			m.Dynamic = types.BoolNull()
+		}
+	} else {
+		m.Dynamic = types.BoolNull()
+	}
+	if v, ok := obj["first-header"]; ok {
+		_ = v
+		if v != "" {
+			m.FirstHeader = types.StringValue(v)
+		} else {
+			m.FirstHeader = types.StringNull()
+		}
+	} else {
+		m.FirstHeader = types.StringNull()
+	}
 	if v, ok := obj["interface"]; ok {
 		_ = v
 		if v != "" {
@@ -264,6 +305,16 @@ func toolTrafficGeneratorPortApply(ctx context.Context, obj client.Object, m *To
 		}
 	} else {
 		m.Interface = types.StringNull()
+	}
+	if v, ok := obj["invalid"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Invalid = types.BoolValue(b)
+		} else {
+			m.Invalid = types.BoolNull()
+		}
+	} else {
+		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["name"]; ok {
 		_ = v

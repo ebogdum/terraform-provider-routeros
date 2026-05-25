@@ -27,6 +27,7 @@ This data source supports the following arguments:
 * `filter` - (Optional) Map of field=value pairs to narrow the result set.
 * `proplist` - (Optional) List of property names to project; smaller payload.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `script` - (Optional) Type: `string`.
 * `started` - (Optional) Type: `string`.
 * `type` - (Optional) Type: `string`.
 

@@ -19,6 +19,7 @@ resource "routeros_routing_filter_select_rule" "select_rule_example" {
 
   # Optional attributes (uncomment as needed):
   # chain = "replace-me"
+  # type = "where"
 }
 ```
 
@@ -30,6 +31,15 @@ This resource supports the following arguments:
 * `chain` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `type` - (Optional) Type: `enum(where|group-num|group-prfx|select-num|select-prfx|take, ...)`.
+
+## Attribute Reference
+
+In addition to the arguments above, the following attributes are exported:
+
+* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
+* `do` - Type: `string`.
+* `invalid` - Type: `bool`.
 
 ## Import
 

@@ -36,11 +36,15 @@ type IPIpsecIdentityModel struct {
 	AuthMethod          types.String `tfsdk:"auth_method"`
 	Comment             types.String `tfsdk:"comment"`
 	Disabled            types.Bool   `tfsdk:"disabled"`
+	Dynamic             types.Bool   `tfsdk:"dynamic"`
 	GeneratePolicy      types.String `tfsdk:"generate_policy"`
 	MatchBy             types.String `tfsdk:"match_by"`
+	ModeConfiguration   types.String `tfsdk:"mode_configuration"`
+	MyIDType            types.String `tfsdk:"my_id_type"`
 	NotrackChain        types.String `tfsdk:"notrack_chain"`
 	Peer                types.String `tfsdk:"peer"`
 	PolicyTemplateGroup types.String `tfsdk:"policy_template_group"`
+	RemoteIDType        types.String `tfsdk:"remote_id_type"`
 	Router              types.String `tfsdk:"router"`
 }
 
@@ -72,7 +76,7 @@ func (r *IPIpsecIdentityResource) Schema(_ context.Context, _ resource.SchemaReq
 				Optional:    true,
 				Computed:    true,
 				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"pre shared key", "rsa key", "digital signature", "pre shared key xauth", "rsa signature hybrid", "eap radius", "eap"}...)},
+				Validators:  []validator.String{schemautil.OneOf([]string{"pre-shared-key", "rsa-key", "digital-signature", "pre-shared-key-xauth", "rsa-signature-hybrid", "eap-radius", "eap"}...)},
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -84,17 +88,33 @@ func (r *IPIpsecIdentityResource) Schema(_ context.Context, _ resource.SchemaReq
 				Computed:    true,
 				Description: "Whether the entry is disabled.",
 			},
+			"dynamic": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"generate_policy": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"no", "port override", "port strict"}...)},
+				Validators:  []validator.String{schemautil.OneOf([]string{"no", "port-override", "port-strict"}...)},
 			},
 			"match_by": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"certificate", "remote id"}...)},
+				Validators:  []validator.String{schemautil.OneOf([]string{"certificate", "remote-id"}...)},
+			},
+			"mode_configuration": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"my_id_type": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.OneOf([]string{"fqdn", "user-fqdn", "key-id", "address", "dn", "auto"}...)},
 			},
 			"notrack_chain": schema.StringAttribute{
 				Optional:    true,
@@ -110,6 +130,12 @@ func (r *IPIpsecIdentityResource) Schema(_ context.Context, _ resource.SchemaReq
 				Optional:    true,
 				Computed:    true,
 				Description: "",
+			},
+			"remote_id_type": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.OneOf([]string{"fqdn", "user-fqdn", "key-id", "address", "dn", "auto", "ignore"}...)},
 			},
 			"router": schema.StringAttribute{
 				Optional:    true,
@@ -145,6 +171,12 @@ func (r *IPIpsecIdentityResource) Create(ctx context.Context, req resource.Creat
 	if !(plan.MatchBy.IsNull() || plan.MatchBy.IsUnknown()) {
 		body["match-by"] = plan.MatchBy.ValueString()
 	}
+	if !(plan.ModeConfiguration.IsNull() || plan.ModeConfiguration.IsUnknown()) {
+		body["mode-configuration"] = plan.ModeConfiguration.ValueString()
+	}
+	if !(plan.MyIDType.IsNull() || plan.MyIDType.IsUnknown()) {
+		body["my-id-type"] = plan.MyIDType.ValueString()
+	}
 	if !(plan.NotrackChain.IsNull() || plan.NotrackChain.IsUnknown()) {
 		body["notrack-chain"] = plan.NotrackChain.ValueString()
 	}
@@ -153,6 +185,9 @@ func (r *IPIpsecIdentityResource) Create(ctx context.Context, req resource.Creat
 	}
 	if !(plan.PolicyTemplateGroup.IsNull() || plan.PolicyTemplateGroup.IsUnknown()) {
 		body["policy-template-group"] = plan.PolicyTemplateGroup.ValueString()
+	}
+	if !(plan.RemoteIDType.IsNull() || plan.RemoteIDType.IsUnknown()) {
+		body["remote-id-type"] = plan.RemoteIDType.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ip/ipsec/identity", body)
 	if err != nil {
@@ -216,6 +251,12 @@ func (r *IPIpsecIdentityResource) Update(ctx context.Context, req resource.Updat
 	if !plan.MatchBy.Equal(state.MatchBy) {
 		body["match-by"] = plan.MatchBy.ValueString()
 	}
+	if !plan.ModeConfiguration.Equal(state.ModeConfiguration) {
+		body["mode-configuration"] = plan.ModeConfiguration.ValueString()
+	}
+	if !plan.MyIDType.Equal(state.MyIDType) {
+		body["my-id-type"] = plan.MyIDType.ValueString()
+	}
 	if !plan.NotrackChain.Equal(state.NotrackChain) {
 		body["notrack-chain"] = plan.NotrackChain.ValueString()
 	}
@@ -224,6 +265,9 @@ func (r *IPIpsecIdentityResource) Update(ctx context.Context, req resource.Updat
 	}
 	if !plan.PolicyTemplateGroup.Equal(state.PolicyTemplateGroup) {
 		body["policy-template-group"] = plan.PolicyTemplateGroup.ValueString()
+	}
+	if !plan.RemoteIDType.Equal(state.RemoteIDType) {
+		body["remote-id-type"] = plan.RemoteIDType.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/ipsec/identity", state.ID.ValueString(), body)
@@ -338,6 +382,16 @@ func iPIpsecIdentityApply(ctx context.Context, obj client.Object, m *IPIpsecIden
 	} else {
 		m.Disabled = types.BoolNull()
 	}
+	if v, ok := obj["dynamic"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Dynamic = types.BoolValue(b)
+		} else {
+			m.Dynamic = types.BoolNull()
+		}
+	} else {
+		m.Dynamic = types.BoolNull()
+	}
 	if v, ok := obj["generate-policy"]; ok {
 		_ = v
 		if v != "" {
@@ -357,6 +411,26 @@ func iPIpsecIdentityApply(ctx context.Context, obj client.Object, m *IPIpsecIden
 		}
 	} else {
 		m.MatchBy = types.StringNull()
+	}
+	if v, ok := obj["mode-configuration"]; ok {
+		_ = v
+		if v != "" {
+			m.ModeConfiguration = types.StringValue(v)
+		} else {
+			m.ModeConfiguration = types.StringNull()
+		}
+	} else {
+		m.ModeConfiguration = types.StringNull()
+	}
+	if v, ok := obj["my-id-type"]; ok {
+		_ = v
+		if v != "" {
+			m.MyIDType = types.StringValue(v)
+		} else {
+			m.MyIDType = types.StringNull()
+		}
+	} else {
+		m.MyIDType = types.StringNull()
 	}
 	if v, ok := obj["notrack-chain"]; ok {
 		_ = v
@@ -387,5 +461,15 @@ func iPIpsecIdentityApply(ctx context.Context, obj client.Object, m *IPIpsecIden
 		}
 	} else {
 		m.PolicyTemplateGroup = types.StringNull()
+	}
+	if v, ok := obj["remote-id-type"]; ok {
+		_ = v
+		if v != "" {
+			m.RemoteIDType = types.StringValue(v)
+		} else {
+			m.RemoteIDType = types.StringNull()
+		}
+	} else {
+		m.RemoteIDType = types.StringNull()
 	}
 }

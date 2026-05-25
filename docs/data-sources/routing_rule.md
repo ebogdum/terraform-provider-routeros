@@ -26,20 +26,22 @@ This data source supports the following arguments:
 * `router` - (Optional) Name of the router in the provider's `routers` map to query.
 * `filter` - (Optional) Map of field=value pairs to narrow the result set.
 * `proplist` - (Optional) List of property names to project; smaller payload.
-* `action` - (Optional) Type: `string`.
+* `action` - (Optional) Type: `enum(lookup|unreachable|drop|lookup-only-in-table|mangle)`.
 * `chain` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `dst_address` - (Optional) Type: `string`.
 * `interface` - (Optional) Type: `string`.
+* `min_prefix` - (Optional) Type: `string`.
 * `realm` - (Optional) Type: `string`.
 * `routing_mark` - (Optional) Type: `string`.
 * `src_address` - (Optional) Type: `string`.
-* `vrf` - (Optional) Type: `string`.
+* `vrf` - (Optional) Type: `bool`.
 
 ## Attribute Reference
 
 This data source exports the following attributes in addition to the arguments above:
 
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
+* `invalid` - Type: `bool`.
 

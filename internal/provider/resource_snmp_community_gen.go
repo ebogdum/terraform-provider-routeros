@@ -89,7 +89,7 @@ func (r *SNMPCommunityResource) Schema(_ context.Context, _ resource.SchemaReque
 				Optional:    true,
 				Computed:    true,
 				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"MD5", "SHA1"}...)},
+				Validators:  []validator.String{schemautil.OneOf([]string{"md5", "sha1"}...)},
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -116,7 +116,7 @@ func (r *SNMPCommunityResource) Schema(_ context.Context, _ resource.SchemaReque
 				Optional:    true,
 				Computed:    true,
 				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"DES", "AES"}...)},
+				Validators:  []validator.String{schemautil.OneOf([]string{"des", "aes"}...)},
 			},
 			"name": schema.StringAttribute{
 				Required:    true,

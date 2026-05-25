@@ -41,6 +41,6 @@ This data source exports the following attributes in addition to the arguments a
 * `bits` - Type: `int`.
 * `fingerprint` - Type: `string`.
 * `info` - Type: `string`.
-* `key_type` - Type: `enum(RSA|Ed25519|Ed25519-sk)`.
+* `key_type` - Type: `enum(rsa|ed25519|ed25519-sk)`.
 * `user` - Type: `string`.
 

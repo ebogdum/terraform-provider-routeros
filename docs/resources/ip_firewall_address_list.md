@@ -21,6 +21,7 @@ resource "routeros_ip_firewall_address_list" "address_list_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
+  # parent = 0
   # timeout = "replace-me"
 }
 ```
@@ -34,6 +35,7 @@ This resource supports the following arguments:
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `list` - (Required) Type: `string`. Default: `tf_acc_list`.
+* `parent` - (Optional) Type: `int`. Default: `4.294967295e+09`.
 * `timeout` - (Optional) Type: `string`.
 
 ## Attribute Reference
@@ -41,6 +43,7 @@ This resource supports the following arguments:
 In addition to the arguments above, the following attributes are exported:
 
 * `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
+* `creation_time` - Type: `string`.
 * `dynamic` - Type: `bool`.
 
 ## Import

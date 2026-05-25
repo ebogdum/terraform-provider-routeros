@@ -30,14 +30,16 @@ type IPV6FirewallAddressListResource struct {
 }
 
 type IPV6FirewallAddressListModel struct {
-	ID       types.String `tfsdk:"id"`
-	Address  types.String `tfsdk:"address"`
-	Comment  types.String `tfsdk:"comment"`
-	Disabled types.Bool   `tfsdk:"disabled"`
-	Dynamic  types.String `tfsdk:"dynamic"`
-	List     types.String `tfsdk:"list"`
-	Timeout  types.String `tfsdk:"timeout"`
-	Router   types.String `tfsdk:"router"`
+	ID           types.String `tfsdk:"id"`
+	Address      types.String `tfsdk:"address"`
+	Comment      types.String `tfsdk:"comment"`
+	CreationTime types.String `tfsdk:"creation_time"`
+	Disabled     types.Bool   `tfsdk:"disabled"`
+	Dynamic      types.Bool   `tfsdk:"dynamic"`
+	List         types.String `tfsdk:"list"`
+	Parent       types.Int64  `tfsdk:"parent"`
+	Timeout      types.String `tfsdk:"timeout"`
+	Router       types.String `tfsdk:"router"`
 }
 
 func NewIPV6FirewallAddressListResource() resource.Resource {
@@ -75,18 +77,28 @@ func (r *IPV6FirewallAddressListResource) Schema(_ context.Context, _ resource.S
 				Computed:    true,
 				Description: "Free-form comment.",
 			},
+			"creation_time": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"disabled": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "Whether the entry is disabled.",
 			},
-			"dynamic": schema.StringAttribute{
+			"dynamic": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"list": schema.StringAttribute{
 				Required:    true,
+				Description: "",
+			},
+			"parent": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
 				Description: "",
 			},
 			"timeout": schema.StringAttribute{
@@ -122,11 +134,11 @@ func (r *IPV6FirewallAddressListResource) Create(ctx context.Context, req resour
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !(plan.Dynamic.IsNull() || plan.Dynamic.IsUnknown()) {
-		body["dynamic"] = plan.Dynamic.ValueString()
-	}
 	if !(plan.List.IsNull() || plan.List.IsUnknown()) {
 		body["list"] = plan.List.ValueString()
+	}
+	if !(plan.Parent.IsNull() || plan.Parent.IsUnknown()) {
+		body["parent"] = client.FormatInt64(plan.Parent.ValueInt64())
 	}
 	if !(plan.Timeout.IsNull() || plan.Timeout.IsUnknown()) {
 		body["timeout"] = plan.Timeout.ValueString()
@@ -187,11 +199,11 @@ func (r *IPV6FirewallAddressListResource) Update(ctx context.Context, req resour
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Dynamic.Equal(state.Dynamic) {
-		body["dynamic"] = plan.Dynamic.ValueString()
-	}
 	if !plan.List.Equal(state.List) {
 		body["list"] = plan.List.ValueString()
+	}
+	if !plan.Parent.Equal(state.Parent) {
+		body["parent"] = client.FormatInt64(plan.Parent.ValueInt64())
 	}
 	if !plan.Timeout.Equal(state.Timeout) {
 		body["timeout"] = plan.Timeout.ValueString()
@@ -299,6 +311,16 @@ func iPV6FirewallAddressListApply(ctx context.Context, obj client.Object, m *IPV
 	} else {
 		m.Comment = types.StringNull()
 	}
+	if v, ok := obj["creation-time"]; ok {
+		_ = v
+		if v != "" {
+			m.CreationTime = types.StringValue(v)
+		} else {
+			m.CreationTime = types.StringNull()
+		}
+	} else {
+		m.CreationTime = types.StringNull()
+	}
 	if v, ok := obj["disabled"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
@@ -311,13 +333,13 @@ func iPV6FirewallAddressListApply(ctx context.Context, obj client.Object, m *IPV
 	}
 	if v, ok := obj["dynamic"]; ok {
 		_ = v
-		if v != "" {
-			m.Dynamic = types.StringValue(v)
+		if b, err := client.ParseBool(v); err == nil {
+			m.Dynamic = types.BoolValue(b)
 		} else {
-			m.Dynamic = types.StringNull()
+			m.Dynamic = types.BoolNull()
 		}
 	} else {
-		m.Dynamic = types.StringNull()
+		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["list"]; ok {
 		_ = v
@@ -328,6 +350,16 @@ func iPV6FirewallAddressListApply(ctx context.Context, obj client.Object, m *IPV
 		}
 	} else {
 		m.List = types.StringNull()
+	}
+	if v, ok := obj["parent"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.Parent = types.Int64Value(n)
+		} else {
+			m.Parent = types.Int64Null()
+		}
+	} else {
+		m.Parent = types.Int64Null()
 	}
 	if v, ok := obj["timeout"]; ok {
 		_ = v

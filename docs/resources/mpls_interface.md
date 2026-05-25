@@ -20,6 +20,7 @@ resource "routeros_mpls_interface" "interface_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
+  # builtin = false
   # input = "replace-me"
   # mpls_mtu = "replace-me"
 }
@@ -30,6 +31,7 @@ resource "routeros_mpls_interface" "interface_example" {
 This resource supports the following arguments:
 
 * `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `builtin` - (Optional) Type: `bool`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `input` - (Optional) Type: `string`.

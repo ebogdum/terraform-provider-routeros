@@ -27,14 +27,40 @@ This data source supports the following arguments:
 * `filter` - (Optional) Map of field=value pairs to narrow the result set.
 * `proplist` - (Optional) List of property names to project; smaller payload.
 * `afi` - (Optional) Type: `string`.
+* `allow_as_in` - (Optional) Type: `string`.
 * `as` - (Optional) Type: `string`. Default: `65000`.
+* `as_override` - (Optional) Type: `string`.
+* `cisco_vpls_nlri_length_format` - (Optional) Type: `string`.
+* `cluster_id` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `default_originate` - (Optional) Type: `string`.
+* `default_prepend` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `hold_time` - (Optional) Type: `string`.
+* `ignore_as_path_length` - (Optional) Type: `string`.
+* `input_accept_communities` - (Optional) Type: `string`.
+* `input_accept_ext_communities` - (Optional) Type: `string`.
+* `input_accept_large_communities` - (Optional) Type: `string`.
+* `input_accept_nlri` - (Optional) Type: `string`.
+* `input_affinity` - (Optional) Type: `string`.
+* `input_filter` - (Optional) Type: `string`.
+* `input_filter_communities` - (Optional) Type: `string`.
+* `input_filter_ext_communities` - (Optional) Type: `string`.
+* `input_filter_large_communities` - (Optional) Type: `string`.
+* `input_filter_unknown` - (Optional) Type: `string`.
+* `keep_sent_attributes` - (Optional) Type: `string`.
 * `keepalive_time` - (Optional) Type: `string`.
 * `multihop` - (Optional) Type: `string`.
 * `name` - (Required) Type: `string`. Default: `tf_acc_bgptpl`.
 * `nexthop_choice` - (Optional) Type: `string`.
+* `no_client_to_client_reflection` - (Optional) Type: `string`.
+* `no_early_cut` - (Optional) Type: `string`.
+* `output_affinity` - (Optional) Type: `string`.
+* `output_filter` - (Optional) Type: `string`.
+* `output_network` - (Optional) Type: `string`.
+* `output_redistribute` - (Optional) Type: `string`.
+* `output_selection_policy` - (Optional) Type: `string`.
+* `remove_private_as` - (Optional) Type: `string`.
 * `router_id` - (Optional) Type: `string`. Default: `1.1.1.1`.
 * `routing_table` - (Optional) Type: `string`.
 * `templates` - (Optional) Type: `string`.
@@ -47,4 +73,5 @@ This data source exports the following attributes in addition to the arguments a
 
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
 * `default` - Type: `bool`.
+* `invalid` - Type: `bool`.
 

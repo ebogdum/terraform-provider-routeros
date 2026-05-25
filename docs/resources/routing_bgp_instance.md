@@ -19,6 +19,7 @@ resource "routeros_routing_bgp_instance" "instance_example" {
   # Optional attributes (uncomment as needed):
   # as = "replace-me"
   # cluster_id = "replace-me"
+  # ignore_as_path = "replace-me"
   # name = "tf-example"
   # router_id = "replace-me"
   # routing_table = "main"
@@ -34,10 +35,18 @@ This resource supports the following arguments:
 * `as` - (Optional) Type: `string`.
 * `cluster_id` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`.
+* `ignore_as_path` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
 * `router_id` - (Optional) Type: `string`.
 * `routing_table` - (Optional) Type: `string`.
 * `vrf` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+In addition to the arguments above, the following attributes are exported:
+
+* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
+* `invalid` - Type: `bool`.
 
 ## Import
 

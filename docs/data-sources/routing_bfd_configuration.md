@@ -31,6 +31,7 @@ This data source supports the following arguments:
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `forbid_bfd` - (Optional) Type: `string`.
+* `inactive` - (Optional) Type: `bool`.
 * `interfaces` - (Optional) Type: `string`.
 * `min_rx` - (Optional) Type: `string`.
 * `min_tx` - (Optional) Type: `string`.

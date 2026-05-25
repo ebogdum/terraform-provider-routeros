@@ -26,6 +26,7 @@ resource "routeros_interface_eoip" "eoip_example" {
   # arp = "enabled"
   # arp_timeout = "1h"
   # clamp_tcp_mss = true
+  # disable_time = "300"
   # dont_fragment = "no"
   # dscp = "inherit"
   # ipsec_secret = "REDACTED"
@@ -36,6 +37,7 @@ resource "routeros_interface_eoip" "eoip_example" {
   # loop_protect_send_interval = "replace-me"
   # mac_address = "10.99.0.0/24"
   # mtu = 0
+  # send_interval = "5"
 }
 ```
 
@@ -49,6 +51,7 @@ This resource supports the following arguments:
 * `arp_timeout` - (Optional) Type: `duration`. Time interval in which ARP entries should time out.
 * `clamp_tcp_mss` - (Optional) Type: `bool`. Controls whether to change MSS size for received TCP SYN packets. When enabled, a router will change the MSS size for received TCP SYN packets if the current MSS size exceeds the tunnel interface MTU (taking into account the TCP/IP overhead).The received encapsulated packet will still contain the original MSS, and only after decapsulation the MSS is changed. Default: `1`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `disable_time` - (Optional) Type: `duration`. Default: `300`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `dont_fragment` - (Optional) Type: `enum(no|inherit)`. Whether to include DF bit in related packets: no   - fragment if needed,   inherit   - use Dont Fragment flag of original packet. (Without Dont Fragment: inherit - packet may be fragmented).
 * `dscp` - (Optional) Type: `enum(inherit)`. DSCP value of packet. Inherited option means that dscp value will be inherited from packet which is going to be encapsulated. Default: `256`.
@@ -62,7 +65,16 @@ This resource supports the following arguments:
 * `mtu` - (Optional) Type: `int`. Layer3 Maximum transmission unit. Default: `0`.
 * `name` - (Required) Type: `string`. Interface name. Default: `tf_acc_eoip`.
 * `remote_address` - (Required) Type: `string`. IP address of remote end of EoIP tunnel. Default: `10.255.255.1`.
+* `send_interval` - (Optional) Type: `duration`. Default: `5`.
 * `tunnel_id` - (Required) Type: `int`. Unique tunnel identifier, which must match other side of the tunnel. Default: `1`.
+
+## Attribute Reference
+
+In addition to the arguments above, the following attributes are exported:
+
+* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
+* `actual_mtu` - Type: `int`.
+* `status` - Type: `enum(|off|on|disabled)`.
 
 ## Import
 

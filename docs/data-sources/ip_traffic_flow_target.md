@@ -30,7 +30,10 @@ This data source supports the following arguments:
 * `dst_address` - (Optional) Type: `string`.
 * `port` - (Optional) Type: `int`. Default: `1234`.
 * `src_address` - (Optional) Type: `string`.
-* `version` - (Optional) Type: `enum(1|5|9|IPFIX)`. Default: `9`.
+* `v9` - (Optional) Type: `string`.
+* `v9_ipfix_template_refresh` - (Optional) Type: `int`. Default: `20`.
+* `v9_ipfix_template_timeout` - (Optional) Type: `int`. Default: `1800`.
+* `version` - (Optional) Type: `enum(1|5|9|ipfix)`. Default: `9`.
 
 ## Attribute Reference
 

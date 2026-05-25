@@ -7,6 +7,7 @@ resource "routeros_ppp_secret" "secret_example" {
 
   # Optional attributes (uncomment as needed):
   # caller_id = "replace-me"
+  # ipv6 = "replace-me"
   # ipv6_routes = "replace-me"
   # limit_bytes_in = "replace-me"
   # limit_bytes_out = "replace-me"

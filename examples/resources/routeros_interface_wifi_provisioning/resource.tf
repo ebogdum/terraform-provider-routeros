@@ -1,6 +1,6 @@
 resource "routeros_interface_wifi_provisioning" "provisioning_example" {
   # router = "my-router"  # which router to target; omit for the default
-  action = "none"
+  action = "create-dynamic-enabled"
 
   comment  = "managed by terraform"
   disabled = false

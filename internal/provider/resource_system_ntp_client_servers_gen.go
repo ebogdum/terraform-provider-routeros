@@ -30,16 +30,18 @@ type SystemNTPClientServersResource struct {
 }
 
 type SystemNTPClientServersModel struct {
-	ID       types.String `tfsdk:"id"`
-	Address  types.String `tfsdk:"address"`
-	AuthKey  types.String `tfsdk:"auth_key"`
-	Comment  types.String `tfsdk:"comment"`
-	Disabled types.Bool   `tfsdk:"disabled"`
-	Dynamic  types.Bool   `tfsdk:"dynamic"`
-	Iburst   types.Bool   `tfsdk:"iburst"`
-	MaxPoll  types.Int64  `tfsdk:"max_poll"`
-	MinPoll  types.Int64  `tfsdk:"min_poll"`
-	Router   types.String `tfsdk:"router"`
+	ID              types.String `tfsdk:"id"`
+	Address         types.String `tfsdk:"address"`
+	AuthKey         types.String `tfsdk:"auth_key"`
+	Comment         types.String `tfsdk:"comment"`
+	Disabled        types.Bool   `tfsdk:"disabled"`
+	Dynamic         types.Bool   `tfsdk:"dynamic"`
+	Iburst          types.Bool   `tfsdk:"iburst"`
+	Keys            types.String `tfsdk:"keys"`
+	MaxPoll         types.Int64  `tfsdk:"max_poll"`
+	MinPoll         types.Int64  `tfsdk:"min_poll"`
+	ResolvedAddress types.String `tfsdk:"resolved_address"`
+	Router          types.String `tfsdk:"router"`
 }
 
 func NewSystemNTPClientServersResource() resource.Resource { return &SystemNTPClientServersResource{} }
@@ -59,7 +61,7 @@ func (r *SystemNTPClientServersResource) Configure(_ context.Context, req resour
 
 func (r *SystemNTPClientServersResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "NTP server list -- accepts add but validator differs per ROS. Skipped from acc tests.",
+		Description: "NTP server list — accepts add but validator differs per ROS. Skipped from acc tests.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:      true,
@@ -97,12 +99,22 @@ func (r *SystemNTPClientServersResource) Schema(_ context.Context, _ resource.Sc
 				Computed:    true,
 				Description: "",
 			},
+			"keys": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"max_poll": schema.Int64Attribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"min_poll": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"resolved_address": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -140,6 +152,9 @@ func (r *SystemNTPClientServersResource) Create(ctx context.Context, req resourc
 	}
 	if !(plan.Iburst.IsNull() || plan.Iburst.IsUnknown()) {
 		body["iburst"] = client.FormatBool(plan.Iburst.ValueBool())
+	}
+	if !(plan.Keys.IsNull() || plan.Keys.IsUnknown()) {
+		body["keys"] = plan.Keys.ValueString()
 	}
 	if !(plan.MaxPoll.IsNull() || plan.MaxPoll.IsUnknown()) {
 		body["max-poll"] = client.FormatInt64(plan.MaxPoll.ValueInt64())
@@ -208,6 +223,9 @@ func (r *SystemNTPClientServersResource) Update(ctx context.Context, req resourc
 	}
 	if !plan.Iburst.Equal(state.Iburst) {
 		body["iburst"] = client.FormatBool(plan.Iburst.ValueBool())
+	}
+	if !plan.Keys.Equal(state.Keys) {
+		body["keys"] = plan.Keys.ValueString()
 	}
 	if !plan.MaxPoll.Equal(state.MaxPoll) {
 		body["max-poll"] = client.FormatInt64(plan.MaxPoll.ValueInt64())
@@ -362,6 +380,16 @@ func systemNTPClientServersApply(ctx context.Context, obj client.Object, m *Syst
 	} else {
 		m.Iburst = types.BoolNull()
 	}
+	if v, ok := obj["keys"]; ok {
+		_ = v
+		if v != "" {
+			m.Keys = types.StringValue(v)
+		} else {
+			m.Keys = types.StringNull()
+		}
+	} else {
+		m.Keys = types.StringNull()
+	}
 	if v, ok := obj["max-poll"]; ok {
 		_ = v
 		if n, err := client.ParseInt64(v); err == nil {
@@ -381,5 +409,15 @@ func systemNTPClientServersApply(ctx context.Context, obj client.Object, m *Syst
 		}
 	} else {
 		m.MinPoll = types.Int64Null()
+	}
+	if v, ok := obj["resolved-address"]; ok {
+		_ = v
+		if v != "" {
+			m.ResolvedAddress = types.StringValue(v)
+		} else {
+			m.ResolvedAddress = types.StringNull()
+		}
+	} else {
+		m.ResolvedAddress = types.StringNull()
 	}
 }

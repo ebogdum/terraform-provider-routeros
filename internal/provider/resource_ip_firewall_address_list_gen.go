@@ -30,14 +30,16 @@ type IPFirewallAddressListResource struct {
 }
 
 type IPFirewallAddressListModel struct {
-	ID       types.String `tfsdk:"id"`
-	Address  types.String `tfsdk:"address"`
-	Comment  types.String `tfsdk:"comment"`
-	Disabled types.Bool   `tfsdk:"disabled"`
-	Dynamic  types.Bool   `tfsdk:"dynamic"`
-	List     types.String `tfsdk:"list"`
-	Timeout  types.String `tfsdk:"timeout"`
-	Router   types.String `tfsdk:"router"`
+	ID           types.String `tfsdk:"id"`
+	Address      types.String `tfsdk:"address"`
+	Comment      types.String `tfsdk:"comment"`
+	CreationTime types.String `tfsdk:"creation_time"`
+	Disabled     types.Bool   `tfsdk:"disabled"`
+	Dynamic      types.Bool   `tfsdk:"dynamic"`
+	List         types.String `tfsdk:"list"`
+	Parent       types.Int64  `tfsdk:"parent"`
+	Timeout      types.String `tfsdk:"timeout"`
+	Router       types.String `tfsdk:"router"`
 }
 
 func NewIPFirewallAddressListResource() resource.Resource { return &IPFirewallAddressListResource{} }
@@ -73,6 +75,11 @@ func (r *IPFirewallAddressListResource) Schema(_ context.Context, _ resource.Sch
 				Computed:    true,
 				Description: "Free-form comment.",
 			},
+			"creation_time": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"disabled": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -85,6 +92,11 @@ func (r *IPFirewallAddressListResource) Schema(_ context.Context, _ resource.Sch
 			},
 			"list": schema.StringAttribute{
 				Required:    true,
+				Description: "",
+			},
+			"parent": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
 				Description: "",
 			},
 			"timeout": schema.StringAttribute{
@@ -122,6 +134,9 @@ func (r *IPFirewallAddressListResource) Create(ctx context.Context, req resource
 	}
 	if !(plan.List.IsNull() || plan.List.IsUnknown()) {
 		body["list"] = plan.List.ValueString()
+	}
+	if !(plan.Parent.IsNull() || plan.Parent.IsUnknown()) {
+		body["parent"] = client.FormatInt64(plan.Parent.ValueInt64())
 	}
 	if !(plan.Timeout.IsNull() || plan.Timeout.IsUnknown()) {
 		body["timeout"] = plan.Timeout.ValueString()
@@ -184,6 +199,9 @@ func (r *IPFirewallAddressListResource) Update(ctx context.Context, req resource
 	}
 	if !plan.List.Equal(state.List) {
 		body["list"] = plan.List.ValueString()
+	}
+	if !plan.Parent.Equal(state.Parent) {
+		body["parent"] = client.FormatInt64(plan.Parent.ValueInt64())
 	}
 	if !plan.Timeout.Equal(state.Timeout) {
 		body["timeout"] = plan.Timeout.ValueString()
@@ -291,6 +309,16 @@ func iPFirewallAddressListApply(ctx context.Context, obj client.Object, m *IPFir
 	} else {
 		m.Comment = types.StringNull()
 	}
+	if v, ok := obj["creation-time"]; ok {
+		_ = v
+		if v != "" {
+			m.CreationTime = types.StringValue(v)
+		} else {
+			m.CreationTime = types.StringNull()
+		}
+	} else {
+		m.CreationTime = types.StringNull()
+	}
 	if v, ok := obj["disabled"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
@@ -320,6 +348,16 @@ func iPFirewallAddressListApply(ctx context.Context, obj client.Object, m *IPFir
 		}
 	} else {
 		m.List = types.StringNull()
+	}
+	if v, ok := obj["parent"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.Parent = types.Int64Value(n)
+		} else {
+			m.Parent = types.Int64Null()
+		}
+	} else {
+		m.Parent = types.Int64Null()
 	}
 	if v, ok := obj["timeout"]; ok {
 		_ = v

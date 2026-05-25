@@ -28,8 +28,9 @@ This data source supports the following arguments:
 * `proplist` - (Optional) List of property names to project; smaller payload.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `fib` - (Optional) Type: `string`.
+* `fib` - (Optional) Type: `bool`.
 * `name` - (Optional) Type: `string`.
+* `used` - (Optional) Type: `bool`.
 
 ## Attribute Reference
 
@@ -38,4 +39,5 @@ This data source exports the following attributes in addition to the arguments a
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
 * `dynamic` - Type: `bool`.
 * `invalid` - Type: `bool`.
+* `usage` - Type: `int`.
 

@@ -5,6 +5,6 @@ resource "routeros_routing_id" "id_example" {
 
   # Optional attributes (uncomment as needed):
   # name = "tf-example"
-  # select_dynamic_id = "only static"
+  # select_dynamic_id = "only-static"
   # select_from_vrf = "replace-me"
 }

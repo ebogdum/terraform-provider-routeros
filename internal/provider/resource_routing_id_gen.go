@@ -38,6 +38,7 @@ type RoutingIDModel struct {
 	Dynamic         types.Bool   `tfsdk:"dynamic"`
 	DynamicID       types.String `tfsdk:"dynamic_id"`
 	Inactive        types.Bool   `tfsdk:"inactive"`
+	Invalid         types.Bool   `tfsdk:"invalid"`
 	Name            types.String `tfsdk:"name"`
 	SelectDynamicID types.String `tfsdk:"select_dynamic_id"`
 	SelectFromVrf   types.String `tfsdk:"select_from_vrf"`
@@ -94,6 +95,11 @@ func (r *RoutingIDResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Computed:    true,
 				Description: "",
 			},
+			"invalid": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"name": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -103,7 +109,7 @@ func (r *RoutingIDResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Optional:    true,
 				Computed:    true,
 				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"only static", "only loopback", "only vrf", "only active", "any", "lowest"}...)},
+				Validators:  []validator.String{schemautil.OneOf([]string{"only-static", "only-loopback", "only-vrf", "only-active", "any", "lowest"}...)},
 			},
 			"select_from_vrf": schema.StringAttribute{
 				Optional:    true,
@@ -338,6 +344,16 @@ func routingIDApply(ctx context.Context, obj client.Object, m *RoutingIDModel) {
 		}
 	} else {
 		m.Inactive = types.BoolNull()
+	}
+	if v, ok := obj["invalid"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Invalid = types.BoolValue(b)
+		} else {
+			m.Invalid = types.BoolNull()
+		}
+	} else {
+		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["name"]; ok {
 		_ = v

@@ -6,6 +6,7 @@ resource "routeros_mpls_interface" "interface_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
+  # builtin = false
   # input = "replace-me"
   # mpls_mtu = "replace-me"
 }

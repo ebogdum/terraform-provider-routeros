@@ -21,7 +21,11 @@ resource "routeros_ip_ipsec_mode_config" "mode_config_example" {
   # address_pool = "4.294967295e+09"
   # address_prefix_length = 24
   # connection_mark = "replace-me"
+  # nonresp = "replace-me"
+  # pool = "replace-me"
+  # resp = "replace-me"
   # responder = false
+  # sdns = "replace-me"
   # split_dns = "replace-me"
   # split_include = "replace-me"
   # src_address_list = "my-list"
@@ -41,7 +45,11 @@ This resource supports the following arguments:
 * `address_prefix_length` - (Optional) Type: `int`. Default: `24`.
 * `connection_mark` - (Optional) Type: `string`.
 * `name` - (Required) Type: `string`. Default: `tf_acc_modecfg`.
+* `nonresp` - (Optional) Type: `string`.
+* `pool` - (Optional) Type: `string`.
+* `resp` - (Optional) Type: `string`.
 * `responder` - (Optional) Type: `bool`.
+* `sdns` - (Optional) Type: `string`.
 * `split_dns` - (Optional) Type: `string`.
 * `split_include` - (Optional) Type: `string`.
 * `src_address_list` - (Optional) Type: `string`.

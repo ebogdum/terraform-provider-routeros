@@ -4,10 +4,11 @@ resource "routeros_routing_rule" "rule_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
-  # action = "replace-me"
+  # action = "lookup"
   # chain = "replace-me"
   # dst_address = "10.99.0.0/24"
   # interface = "ether1"
+  # min_prefix = "replace-me"
   # realm = "replace-me"
   # routing_mark = "replace-me"
   # src_address = "10.99.0.0/24"

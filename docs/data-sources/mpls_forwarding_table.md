@@ -35,7 +35,7 @@ This data source supports the following arguments:
 * `te_sender` - (Optional) Type: `string`.
 * `te_session` - (Optional) Type: `string`.
 * `traffic_eng` - (Optional) Type: `bool`.
-* `type` - (Optional) Type: `enum(|LDP|VPN|Traffic Eng.|VPLS)`.
+* `type` - (Optional) Type: `enum(|ldp|vpn|traffic-eng.|vpls)`.
 * `vpls` - (Optional) Type: `string`.
 * `vpn` - (Optional) Type: `bool`.
 * `vrf` - (Optional) Type: `string`.

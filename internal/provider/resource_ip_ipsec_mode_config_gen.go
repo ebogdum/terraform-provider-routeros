@@ -39,7 +39,11 @@ type IPIpsecModeConfigModel struct {
 	ConnectionMark      types.String `tfsdk:"connection_mark"`
 	Default             types.Bool   `tfsdk:"default"`
 	Name                types.String `tfsdk:"name"`
+	Nonresp             types.String `tfsdk:"nonresp"`
+	Pool                types.String `tfsdk:"pool"`
+	Resp                types.String `tfsdk:"resp"`
 	Responder           types.Bool   `tfsdk:"responder"`
+	Sdns                types.String `tfsdk:"sdns"`
 	SplitDNS            types.String `tfsdk:"split_dns"`
 	SplitInclude        types.String `tfsdk:"split_include"`
 	SrcAddressList      types.String `tfsdk:"src_address_list"`
@@ -103,7 +107,27 @@ func (r *IPIpsecModeConfigResource) Schema(_ context.Context, _ resource.SchemaR
 				Required:    true,
 				Description: "",
 			},
+			"nonresp": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"pool": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"resp": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"responder": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"sdns": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -173,8 +197,20 @@ func (r *IPIpsecModeConfigResource) Create(ctx context.Context, req resource.Cre
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
 	}
+	if !(plan.Nonresp.IsNull() || plan.Nonresp.IsUnknown()) {
+		body["nonresp"] = plan.Nonresp.ValueString()
+	}
+	if !(plan.Pool.IsNull() || plan.Pool.IsUnknown()) {
+		body["pool"] = plan.Pool.ValueString()
+	}
+	if !(plan.Resp.IsNull() || plan.Resp.IsUnknown()) {
+		body["resp"] = plan.Resp.ValueString()
+	}
 	if !(plan.Responder.IsNull() || plan.Responder.IsUnknown()) {
 		body["responder"] = client.FormatBool(plan.Responder.ValueBool())
+	}
+	if !(plan.Sdns.IsNull() || plan.Sdns.IsUnknown()) {
+		body["sdns"] = plan.Sdns.ValueString()
 	}
 	if !(plan.SplitDNS.IsNull() || plan.SplitDNS.IsUnknown()) {
 		body["split-dns"] = plan.SplitDNS.ValueString()
@@ -256,8 +292,20 @@ func (r *IPIpsecModeConfigResource) Update(ctx context.Context, req resource.Upd
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
 	}
+	if !plan.Nonresp.Equal(state.Nonresp) {
+		body["nonresp"] = plan.Nonresp.ValueString()
+	}
+	if !plan.Pool.Equal(state.Pool) {
+		body["pool"] = plan.Pool.ValueString()
+	}
+	if !plan.Resp.Equal(state.Resp) {
+		body["resp"] = plan.Resp.ValueString()
+	}
 	if !plan.Responder.Equal(state.Responder) {
 		body["responder"] = client.FormatBool(plan.Responder.ValueBool())
+	}
+	if !plan.Sdns.Equal(state.Sdns) {
+		body["sdns"] = plan.Sdns.ValueString()
 	}
 	if !plan.SplitDNS.Equal(state.SplitDNS) {
 		body["split-dns"] = plan.SplitDNS.ValueString()
@@ -420,6 +468,36 @@ func iPIpsecModeConfigApply(ctx context.Context, obj client.Object, m *IPIpsecMo
 	} else {
 		m.Name = types.StringNull()
 	}
+	if v, ok := obj["nonresp"]; ok {
+		_ = v
+		if v != "" {
+			m.Nonresp = types.StringValue(v)
+		} else {
+			m.Nonresp = types.StringNull()
+		}
+	} else {
+		m.Nonresp = types.StringNull()
+	}
+	if v, ok := obj["pool"]; ok {
+		_ = v
+		if v != "" {
+			m.Pool = types.StringValue(v)
+		} else {
+			m.Pool = types.StringNull()
+		}
+	} else {
+		m.Pool = types.StringNull()
+	}
+	if v, ok := obj["resp"]; ok {
+		_ = v
+		if v != "" {
+			m.Resp = types.StringValue(v)
+		} else {
+			m.Resp = types.StringNull()
+		}
+	} else {
+		m.Resp = types.StringNull()
+	}
 	if v, ok := obj["responder"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
@@ -429,6 +507,16 @@ func iPIpsecModeConfigApply(ctx context.Context, obj client.Object, m *IPIpsecMo
 		}
 	} else {
 		m.Responder = types.BoolNull()
+	}
+	if v, ok := obj["sdns"]; ok {
+		_ = v
+		if v != "" {
+			m.Sdns = types.StringValue(v)
+		} else {
+			m.Sdns = types.StringNull()
+		}
+	} else {
+		m.Sdns = types.StringNull()
 	}
 	if v, ok := obj["split-dns"]; ok {
 		_ = v

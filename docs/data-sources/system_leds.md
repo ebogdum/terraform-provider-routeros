@@ -2,12 +2,12 @@
 subcategory: "System"
 page_title: "RouterOS: routeros_system_leds"
 description: |-
-  LED bindings -- type/leds values depend on the specific device's available LEDs; not portable in an auto-test.
+  LED bindings — type/leds values depend on the specific device's available LEDs; not portable in an auto-test.
 ---
 
 # Data Source: routeros_system_leds
 
-LED bindings -- type/leds values depend on the specific device's available LEDs; not portable in an auto-test.
+LED bindings — type/leds values depend on the specific device's available LEDs; not portable in an auto-test.
 
 ## Example Usage
 

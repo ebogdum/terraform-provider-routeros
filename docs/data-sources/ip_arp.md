@@ -30,17 +30,26 @@ This data source supports the following arguments:
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`.
 * `interface` - (Required) Type: `string`.
+* `ip_address` - (Optional) Type: `ip`.
 * `mac_address` - (Optional) Type: `mac`.
+* `mac_ping` - (Optional) Type: `string`.
+* `mac_telnet` - (Optional) Type: `string`.
+* `make_static` - (Optional) Type: `string`.
+* `ping` - (Optional) Type: `string`.
 * `published` - (Optional) Type: `bool`.
+* `telnet` - (Optional) Type: `string`.
+* `torch` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
 This data source exports the following attributes in addition to the arguments above:
 
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
+* `bridge_port` - Type: `string`.
 * `complete` - Type: `bool`.
 * `dhcp` - Type: `bool`.
 * `dynamic` - Type: `bool`.
+* `host_name` - Type: `string`.
 * `invalid` - Type: `bool`.
 * `status` - Type: `string`.
 * `vrf` - Type: `string`.

@@ -27,15 +27,18 @@ This data source supports the following arguments:
 * `filter` - (Optional) Map of field=value pairs to narrow the result set.
 * `proplist` - (Optional) List of property names to project; smaller payload.
 * `dh_group` - (Optional) Type: `list`. Default: `16388`.
-* `dpd_interval` - (Optional) Type: `enum(disable DPD)`. Default: `8`.
+* `dpd_interval` - (Optional) Type: `enum(disable-dpd)`. Default: `8`.
 * `dpd_maximum_failures` - (Optional) Type: `int`. Default: `4`.
 * `enc_algorithm` - (Optional) Type: `list`.
+* `encryption_algorithm` - (Optional) Type: `string`. Default: `12`.
 * `hash_algorithm` - (Optional) Type: `string`.
+* `hash_algorithms` - (Optional) Type: `enum(md5|sha1|sha256|sha384|sha512)`. Default: `2`.
 * `lifebytes` - (Optional) Type: `int`.
 * `lifetime` - (Optional) Type: `duration`. Default: `86400`.
 * `name` - (Required) Type: `string`. Default: `tf_acc_ipsecprof`.
 * `nat_traversal` - (Optional) Type: `bool`. Default: `1`.
-* `ppk` - (Optional) Type: `enum(No|PSK|QKD|PSK IKE Initial)`.
+* `ppk` - (Optional) Type: `enum(no|psk|qkd|psk-ike-initial)`.
+* `prf_algorithms` - (Optional) Type: `enum(auto|sha1|sha256|sha384|sha512)`.
 * `proposal_check` - (Optional) Type: `enum(|obey|strict|claim|exact)`. Default: `1`.
 
 ## Attribute Reference

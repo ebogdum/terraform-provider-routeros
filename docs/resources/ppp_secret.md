@@ -21,6 +21,7 @@ resource "routeros_ppp_secret" "secret_example" {
 
   # Optional attributes (uncomment as needed):
   # caller_id = "replace-me"
+  # ipv6 = "replace-me"
   # ipv6_routes = "replace-me"
   # limit_bytes_in = "replace-me"
   # limit_bytes_out = "replace-me"
@@ -42,6 +43,7 @@ This resource supports the following arguments:
 * `caller_id` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `ipv6` - (Optional) Type: `string`.
 * `ipv6_routes` - (Optional) Type: `string`.
 * `limit_bytes_in` - (Optional) Type: `string`.
 * `limit_bytes_out` - (Optional) Type: `string`.
@@ -53,6 +55,15 @@ This resource supports the following arguments:
 * `remote_ipv6_prefix` - (Optional) Type: `string`.
 * `routes` - (Optional) Type: `string`.
 * `service` - (Optional) Type: `enum(any|async|pptp|pppoe|l2tp|ovpn, ...)`.
+
+## Attribute Reference
+
+In addition to the arguments above, the following attributes are exported:
+
+* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
+* `last_caller_id` - Type: `string`.
+* `last_disconnect_reason` - Type: `enum(|peer-request|hung-up|idle-timeout|session-timeout|reset, ...)`.
+* `last_logged_out` - Type: `string`.
 
 ## Import
 

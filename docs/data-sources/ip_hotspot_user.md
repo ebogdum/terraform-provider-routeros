@@ -28,6 +28,7 @@ This data source supports the following arguments:
 * `proplist` - (Optional) List of property names to project; smaller payload.
 * `address` - (Optional) Type: `ip`.
 * `comment` - (Optional) Type: `string`.
+* `def` - (Optional) Type: `bool`.
 * `disabled` - (Optional) Type: `bool`.
 * `email` - (Optional) Type: `string`.
 * `limit_bytes_in` - (Optional) Type: `string`.
@@ -36,9 +37,13 @@ This data source supports the following arguments:
 * `limit_uptime` - (Optional) Type: `duration`.
 * `mac_address` - (Optional) Type: `string`.
 * `name` - (Required) Type: `string`. Default: `tf_acc_user`.
+* `nondef` - (Optional) Type: `string`.
+* `nondefro` - (Optional) Type: `string`.
 * `otp_secret` - (Optional) Type: `string`. **Sensitive.**
 * `password` - (Optional) Type: `string`. **Sensitive.**
 * `profile` - (Optional) Type: `string`.
+* `reset_all_counters` - (Optional) Type: `string`.
+* `reset_counters` - (Optional) Type: `string`.
 * `routes` - (Optional) Type: `string`.
 * `server` - (Optional) Type: `string`.
 

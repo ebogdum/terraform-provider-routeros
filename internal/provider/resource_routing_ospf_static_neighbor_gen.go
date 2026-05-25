@@ -38,6 +38,7 @@ type RoutingOSPFStaticNeighborModel struct {
 	Comment      types.String `tfsdk:"comment"`
 	Disabled     types.Bool   `tfsdk:"disabled"`
 	InstanceID   types.Int64  `tfsdk:"instance_id"`
+	Invalid      types.Bool   `tfsdk:"invalid"`
 	PollInterval types.String `tfsdk:"poll_interval"`
 	Router       types.String `tfsdk:"router"`
 }
@@ -89,6 +90,11 @@ func (r *RoutingOSPFStaticNeighborResource) Schema(_ context.Context, _ resource
 				Description: "Whether the entry is disabled.",
 			},
 			"instance_id": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"invalid": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -334,6 +340,16 @@ func routingOSPFStaticNeighborApply(ctx context.Context, obj client.Object, m *R
 		}
 	} else {
 		m.InstanceID = types.Int64Null()
+	}
+	if v, ok := obj["invalid"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Invalid = types.BoolValue(b)
+		} else {
+			m.Invalid = types.BoolNull()
+		}
+	} else {
+		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["poll-interval"]; ok {
 		_ = v

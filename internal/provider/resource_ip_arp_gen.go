@@ -34,16 +34,25 @@ type IPARPResource struct {
 type IPARPModel struct {
 	ID         types.String `tfsdk:"id"`
 	Address    types.String `tfsdk:"address"`
+	BridgePort types.String `tfsdk:"bridge_port"`
 	Comment    types.String `tfsdk:"comment"`
 	Complete   types.Bool   `tfsdk:"complete"`
 	DHCP       types.Bool   `tfsdk:"dhcp"`
 	Disabled   types.Bool   `tfsdk:"disabled"`
 	Dynamic    types.Bool   `tfsdk:"dynamic"`
+	HostName   types.String `tfsdk:"host_name"`
 	Interface  types.String `tfsdk:"interface"`
 	Invalid    types.Bool   `tfsdk:"invalid"`
+	IPAddress  types.String `tfsdk:"ip_address"`
 	MACAddress types.String `tfsdk:"mac_address"`
+	MACPing    types.String `tfsdk:"mac_ping"`
+	MACTelnet  types.String `tfsdk:"mac_telnet"`
+	MakeStatic types.String `tfsdk:"make_static"`
+	Ping       types.String `tfsdk:"ping"`
 	Published  types.Bool   `tfsdk:"published"`
 	Status     types.String `tfsdk:"status"`
+	Telnet     types.String `tfsdk:"telnet"`
+	Torch      types.String `tfsdk:"torch"`
 	Vrf        types.String `tfsdk:"vrf"`
 	Router     types.String `tfsdk:"router"`
 }
@@ -77,6 +86,11 @@ func (r *IPARPResource) Schema(_ context.Context, _ resource.SchemaRequest, resp
 				Description: "",
 				Validators:  []validator.String{schemautil.IsIP()},
 			},
+			"bridge_port": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -102,6 +116,11 @@ func (r *IPARPResource) Schema(_ context.Context, _ resource.SchemaRequest, resp
 				Computed:    true,
 				Description: "",
 			},
+			"host_name": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"interface": schema.StringAttribute{
 				Required:    true,
 				Description: "",
@@ -111,6 +130,12 @@ func (r *IPARPResource) Schema(_ context.Context, _ resource.SchemaRequest, resp
 				Computed:    true,
 				Description: "",
 			},
+			"ip_address": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsIP()},
+			},
 			"mac_address": schema.StringAttribute{
 				Optional:      true,
 				Computed:      true,
@@ -118,12 +143,42 @@ func (r *IPARPResource) Schema(_ context.Context, _ resource.SchemaRequest, resp
 				Validators:    []validator.String{schemautil.IsMAC()},
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
 			},
+			"mac_ping": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"mac_telnet": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"make_static": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"ping": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"published": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"status": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"telnet": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"torch": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -164,11 +219,32 @@ func (r *IPARPResource) Create(ctx context.Context, req resource.CreateRequest, 
 	if !(plan.Interface.IsNull() || plan.Interface.IsUnknown()) {
 		body["interface"] = plan.Interface.ValueString()
 	}
+	if !(plan.IPAddress.IsNull() || plan.IPAddress.IsUnknown()) {
+		body["ip-address"] = plan.IPAddress.ValueString()
+	}
 	if !(plan.MACAddress.IsNull() || plan.MACAddress.IsUnknown()) {
 		body["mac-address"] = plan.MACAddress.ValueString()
 	}
+	if !(plan.MACPing.IsNull() || plan.MACPing.IsUnknown()) {
+		body["mac-ping"] = plan.MACPing.ValueString()
+	}
+	if !(plan.MACTelnet.IsNull() || plan.MACTelnet.IsUnknown()) {
+		body["mac-telnet"] = plan.MACTelnet.ValueString()
+	}
+	if !(plan.MakeStatic.IsNull() || plan.MakeStatic.IsUnknown()) {
+		body["make-static"] = plan.MakeStatic.ValueString()
+	}
+	if !(plan.Ping.IsNull() || plan.Ping.IsUnknown()) {
+		body["ping"] = plan.Ping.ValueString()
+	}
 	if !(plan.Published.IsNull() || plan.Published.IsUnknown()) {
 		body["published"] = client.FormatBool(plan.Published.ValueBool())
+	}
+	if !(plan.Telnet.IsNull() || plan.Telnet.IsUnknown()) {
+		body["telnet"] = plan.Telnet.ValueString()
+	}
+	if !(plan.Torch.IsNull() || plan.Torch.IsUnknown()) {
+		body["torch"] = plan.Torch.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ip/arp", body)
 	if err != nil {
@@ -229,11 +305,32 @@ func (r *IPARPResource) Update(ctx context.Context, req resource.UpdateRequest, 
 	if !plan.Interface.Equal(state.Interface) {
 		body["interface"] = plan.Interface.ValueString()
 	}
+	if !plan.IPAddress.Equal(state.IPAddress) {
+		body["ip-address"] = plan.IPAddress.ValueString()
+	}
 	if !plan.MACAddress.Equal(state.MACAddress) {
 		body["mac-address"] = plan.MACAddress.ValueString()
 	}
+	if !plan.MACPing.Equal(state.MACPing) {
+		body["mac-ping"] = plan.MACPing.ValueString()
+	}
+	if !plan.MACTelnet.Equal(state.MACTelnet) {
+		body["mac-telnet"] = plan.MACTelnet.ValueString()
+	}
+	if !plan.MakeStatic.Equal(state.MakeStatic) {
+		body["make-static"] = plan.MakeStatic.ValueString()
+	}
+	if !plan.Ping.Equal(state.Ping) {
+		body["ping"] = plan.Ping.ValueString()
+	}
 	if !plan.Published.Equal(state.Published) {
 		body["published"] = client.FormatBool(plan.Published.ValueBool())
+	}
+	if !plan.Telnet.Equal(state.Telnet) {
+		body["telnet"] = plan.Telnet.ValueString()
+	}
+	if !plan.Torch.Equal(state.Torch) {
+		body["torch"] = plan.Torch.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/arp", state.ID.ValueString(), body)
@@ -328,6 +425,16 @@ func iPARPApply(ctx context.Context, obj client.Object, m *IPARPModel) {
 	} else {
 		m.Address = types.StringNull()
 	}
+	if v, ok := obj["bridge-port"]; ok {
+		_ = v
+		if v != "" {
+			m.BridgePort = types.StringValue(v)
+		} else {
+			m.BridgePort = types.StringNull()
+		}
+	} else {
+		m.BridgePort = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {
@@ -378,6 +485,16 @@ func iPARPApply(ctx context.Context, obj client.Object, m *IPARPModel) {
 	} else {
 		m.Dynamic = types.BoolNull()
 	}
+	if v, ok := obj["host-name"]; ok {
+		_ = v
+		if v != "" {
+			m.HostName = types.StringValue(v)
+		} else {
+			m.HostName = types.StringNull()
+		}
+	} else {
+		m.HostName = types.StringNull()
+	}
 	if v, ok := obj["interface"]; ok {
 		_ = v
 		if v != "" {
@@ -398,6 +515,16 @@ func iPARPApply(ctx context.Context, obj client.Object, m *IPARPModel) {
 	} else {
 		m.Invalid = types.BoolNull()
 	}
+	if v, ok := obj["ip-address"]; ok {
+		_ = v
+		if v != "" {
+			m.IPAddress = types.StringValue(v)
+		} else {
+			m.IPAddress = types.StringNull()
+		}
+	} else {
+		m.IPAddress = types.StringNull()
+	}
 	if v, ok := obj["mac-address"]; ok {
 		_ = v
 		if v != "" {
@@ -407,6 +534,46 @@ func iPARPApply(ctx context.Context, obj client.Object, m *IPARPModel) {
 		}
 	} else {
 		m.MACAddress = types.StringNull()
+	}
+	if v, ok := obj["mac-ping"]; ok {
+		_ = v
+		if v != "" {
+			m.MACPing = types.StringValue(v)
+		} else {
+			m.MACPing = types.StringNull()
+		}
+	} else {
+		m.MACPing = types.StringNull()
+	}
+	if v, ok := obj["mac-telnet"]; ok {
+		_ = v
+		if v != "" {
+			m.MACTelnet = types.StringValue(v)
+		} else {
+			m.MACTelnet = types.StringNull()
+		}
+	} else {
+		m.MACTelnet = types.StringNull()
+	}
+	if v, ok := obj["make-static"]; ok {
+		_ = v
+		if v != "" {
+			m.MakeStatic = types.StringValue(v)
+		} else {
+			m.MakeStatic = types.StringNull()
+		}
+	} else {
+		m.MakeStatic = types.StringNull()
+	}
+	if v, ok := obj["ping"]; ok {
+		_ = v
+		if v != "" {
+			m.Ping = types.StringValue(v)
+		} else {
+			m.Ping = types.StringNull()
+		}
+	} else {
+		m.Ping = types.StringNull()
 	}
 	if v, ok := obj["published"]; ok {
 		_ = v
@@ -427,6 +594,26 @@ func iPARPApply(ctx context.Context, obj client.Object, m *IPARPModel) {
 		}
 	} else {
 		m.Status = types.StringNull()
+	}
+	if v, ok := obj["telnet"]; ok {
+		_ = v
+		if v != "" {
+			m.Telnet = types.StringValue(v)
+		} else {
+			m.Telnet = types.StringNull()
+		}
+	} else {
+		m.Telnet = types.StringNull()
+	}
+	if v, ok := obj["torch"]; ok {
+		_ = v
+		if v != "" {
+			m.Torch = types.StringValue(v)
+		} else {
+			m.Torch = types.StringNull()
+		}
+	} else {
+		m.Torch = types.StringNull()
 	}
 	if v, ok := obj["vrf"]; ok {
 		_ = v

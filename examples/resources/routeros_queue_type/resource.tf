@@ -24,4 +24,5 @@ resource "routeros_queue_type" "type_example" {
   # red_min_threshold = 0
   # sfq_allot = 0
   # sfq_perturb = 0
+  # type_name = "replace-me"
 }

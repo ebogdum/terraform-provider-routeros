@@ -18,11 +18,12 @@ resource "routeros_ip_proxy_access" "access_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
-  # action = "replace-me"
+  # action = "accept"
   # dst_address = "10.99.0.0/24"
   # dst_port = "443"
   # path = "replace-me"
   # src_address = "10.99.0.0/24"
+  # src_port = "443"
 }
 ```
 
@@ -31,13 +32,14 @@ resource "routeros_ip_proxy_access" "access_example" {
 This resource supports the following arguments:
 
 * `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `action` - (Optional) Type: `string`.
+* `action` - (Optional) Type: `enum(deny|accept)`. Default: `1`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `dst_address` - (Optional) Type: `string`.
 * `dst_port` - (Optional) Type: `string`.
 * `path` - (Optional) Type: `string`.
 * `src_address` - (Optional) Type: `string`.
+* `src_port` - (Optional) Type: `string`.
 
 ## Import
 

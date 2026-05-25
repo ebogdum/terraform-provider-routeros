@@ -12,9 +12,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
 )
 
 var (
@@ -34,8 +36,16 @@ type RoutingIgmpProxyInterfaceModel struct {
 	AlternativeSubnets types.String `tfsdk:"alternative_subnets"`
 	Comment            types.String `tfsdk:"comment"`
 	Disabled           types.Bool   `tfsdk:"disabled"`
+	Dynamic            types.Bool   `tfsdk:"dynamic"`
+	Inactive           types.Bool   `tfsdk:"inactive"`
 	Interface          types.String `tfsdk:"interface"`
+	Querier            types.Bool   `tfsdk:"querier"`
+	RxBytes            types.String `tfsdk:"rx_bytes"`
+	RxPackets          types.String `tfsdk:"rx_packets"`
+	SourceIPAddress    types.String `tfsdk:"source_ip_address"`
 	Threshold          types.Int64  `tfsdk:"threshold"`
+	TxBytes            types.String `tfsdk:"tx_bytes"`
+	TxPackets          types.String `tfsdk:"tx_packets"`
 	Upstream           types.Bool   `tfsdk:"upstream"`
 	Router             types.String `tfsdk:"router"`
 }
@@ -81,12 +91,53 @@ func (r *RoutingIgmpProxyInterfaceResource) Schema(_ context.Context, _ resource
 				Computed:    true,
 				Description: "",
 			},
+			"dynamic": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"inactive": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"interface": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
+			"querier": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"rx_bytes": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"rx_packets": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"source_ip_address": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsIP()},
+			},
 			"threshold": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"tx_bytes": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"tx_packets": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -123,6 +174,9 @@ func (r *RoutingIgmpProxyInterfaceResource) Create(ctx context.Context, req reso
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !(plan.Inactive.IsNull() || plan.Inactive.IsUnknown()) {
+		body["inactive"] = client.FormatBool(plan.Inactive.ValueBool())
 	}
 	if !(plan.Interface.IsNull() || plan.Interface.IsUnknown()) {
 		body["interface"] = plan.Interface.ValueString()
@@ -188,6 +242,9 @@ func (r *RoutingIgmpProxyInterfaceResource) Update(ctx context.Context, req reso
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !plan.Inactive.Equal(state.Inactive) {
+		body["inactive"] = client.FormatBool(plan.Inactive.ValueBool())
 	}
 	if !plan.Interface.Equal(state.Interface) {
 		body["interface"] = plan.Interface.ValueString()
@@ -311,6 +368,26 @@ func routingIgmpProxyInterfaceApply(ctx context.Context, obj client.Object, m *R
 	} else {
 		m.Disabled = types.BoolNull()
 	}
+	if v, ok := obj["dynamic"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Dynamic = types.BoolValue(b)
+		} else {
+			m.Dynamic = types.BoolNull()
+		}
+	} else {
+		m.Dynamic = types.BoolNull()
+	}
+	if v, ok := obj["inactive"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Inactive = types.BoolValue(b)
+		} else {
+			m.Inactive = types.BoolNull()
+		}
+	} else {
+		m.Inactive = types.BoolNull()
+	}
 	if v, ok := obj["interface"]; ok {
 		_ = v
 		if v != "" {
@@ -321,6 +398,46 @@ func routingIgmpProxyInterfaceApply(ctx context.Context, obj client.Object, m *R
 	} else {
 		m.Interface = types.StringNull()
 	}
+	if v, ok := obj["querier"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Querier = types.BoolValue(b)
+		} else {
+			m.Querier = types.BoolNull()
+		}
+	} else {
+		m.Querier = types.BoolNull()
+	}
+	if v, ok := obj["rx-bytes"]; ok {
+		_ = v
+		if v != "" {
+			m.RxBytes = types.StringValue(v)
+		} else {
+			m.RxBytes = types.StringNull()
+		}
+	} else {
+		m.RxBytes = types.StringNull()
+	}
+	if v, ok := obj["rx-packets"]; ok {
+		_ = v
+		if v != "" {
+			m.RxPackets = types.StringValue(v)
+		} else {
+			m.RxPackets = types.StringNull()
+		}
+	} else {
+		m.RxPackets = types.StringNull()
+	}
+	if v, ok := obj["source-ip-address"]; ok {
+		_ = v
+		if v != "" {
+			m.SourceIPAddress = types.StringValue(v)
+		} else {
+			m.SourceIPAddress = types.StringNull()
+		}
+	} else {
+		m.SourceIPAddress = types.StringNull()
+	}
 	if v, ok := obj["threshold"]; ok {
 		_ = v
 		if n, err := client.ParseInt64(v); err == nil {
@@ -330,6 +447,26 @@ func routingIgmpProxyInterfaceApply(ctx context.Context, obj client.Object, m *R
 		}
 	} else {
 		m.Threshold = types.Int64Null()
+	}
+	if v, ok := obj["tx-bytes"]; ok {
+		_ = v
+		if v != "" {
+			m.TxBytes = types.StringValue(v)
+		} else {
+			m.TxBytes = types.StringNull()
+		}
+	} else {
+		m.TxBytes = types.StringNull()
+	}
+	if v, ok := obj["tx-packets"]; ok {
+		_ = v
+		if v != "" {
+			m.TxPackets = types.StringValue(v)
+		} else {
+			m.TxPackets = types.StringNull()
+		}
+	} else {
+		m.TxPackets = types.StringNull()
 	}
 	if v, ok := obj["upstream"]; ok {
 		_ = v

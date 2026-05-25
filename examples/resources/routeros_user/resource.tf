@@ -9,6 +9,8 @@ resource "routeros_user" "user_example" {
 
   # Optional attributes (uncomment as needed):
   # address = "replace-me"
+  # alias = "replace-me"
   # inactivity_policy = "replace-me"
   # inactivity_timeout = "1h"
+  # type = 0
 }

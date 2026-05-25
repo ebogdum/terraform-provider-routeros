@@ -33,11 +33,14 @@ This data source supports the following arguments:
 * `on_event` - (Required) Type: `string`. Default: `:put "tick"`.
 * `policy` - (Optional) Type: `string`.
 * `start_date` - (Optional) Type: `string`.
-* `start_time` - (Optional) Type: `string`.
+* `start_time` - (Optional) Type: `enum(startup)`.
 
 ## Attribute Reference
 
 This data source exports the following attributes in addition to the arguments above:
 
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
+* `next_run` - Type: `string`.
+* `owner` - Type: `string`.
+* `run_count` - Type: `int`.
 

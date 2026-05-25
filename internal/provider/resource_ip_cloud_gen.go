@@ -73,7 +73,7 @@ func (r *IPCloudResource) Configure(_ context.Context, req resource.ConfigureReq
 
 func (r *IPCloudResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "MikroTik Cloud (DDNS) singleton -- async DDNS state propagation makes acc tests flaky.",
+		Description: "MikroTik Cloud (DDNS) singleton — async DDNS state propagation makes acc tests flaky.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:      true,

@@ -20,6 +20,9 @@ resource "routeros_ip_traffic_flow_target" "target_example" {
   # dst_address = "10.99.0.0/24"
   # port = "443"
   # src_address = "10.99.0.0/24"
+  # v9 = "replace-me"
+  # v9_ipfix_template_refresh = 20
+  # v9_ipfix_template_timeout = 1800
   # version = "9"
 }
 ```
@@ -33,7 +36,10 @@ This resource supports the following arguments:
 * `dst_address` - (Optional) Type: `string`.
 * `port` - (Optional) Type: `int`. Default: `1234`.
 * `src_address` - (Optional) Type: `string`.
-* `version` - (Optional) Type: `enum(1|5|9|IPFIX)`. Default: `9`.
+* `v9` - (Optional) Type: `string`.
+* `v9_ipfix_template_refresh` - (Optional) Type: `int`. Default: `20`.
+* `v9_ipfix_template_timeout` - (Optional) Type: `int`. Default: `1800`.
+* `version` - (Optional) Type: `enum(1|5|9|ipfix)`. Default: `9`.
 
 ## Import
 

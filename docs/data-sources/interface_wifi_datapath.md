@@ -27,9 +27,16 @@ This data source supports the following arguments:
 * `filter` - (Optional) Map of field=value pairs to narrow the result set.
 * `proplist` - (Optional) List of property names to project; smaller payload.
 * `bridge` - (Optional) Type: `string`.
+* `bridge_cost` - (Optional) Type: `string`.
+* `bridge_horizon` - (Optional) Type: `string`.
+* `client_isolation` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `interface_list` - (Optional) Type: `string`.
 * `name` - (Required) Type: `string`. Default: `tf_acc_wdp`.
+* `open_flow_switch` - (Optional) Type: `string`.
+* `openflow` - (Optional) Type: `string`.
+* `traffic_processing` - (Optional) Type: `string`.
 * `vlan_id` - (Optional) Type: `string`.
 
 ## Attribute Reference

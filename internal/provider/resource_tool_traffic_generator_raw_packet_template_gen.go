@@ -36,13 +36,17 @@ type ToolTrafficGeneratorRawPacketTemplateModel struct {
 	Comment                   types.String `tfsdk:"comment"`
 	Data                      types.String `tfsdk:"data"`
 	DataByte                  types.Int64  `tfsdk:"data_byte"`
+	Dynamic                   types.Bool   `tfsdk:"dynamic"`
 	Header                    types.String `tfsdk:"header"`
+	HeaderLength              types.Int64  `tfsdk:"header_length"`
 	IPHeaderOffset            types.String `tfsdk:"ip_header_offset"`
 	IPV6HeaderOffset          types.String `tfsdk:"ipv6_header_offset"`
 	Name                      types.String `tfsdk:"name"`
 	Port                      types.String `tfsdk:"port"`
+	Random                    types.String `tfsdk:"random"`
 	RandomByteOffsetsAndMasks types.String `tfsdk:"random_byte_offsets_and_masks"`
 	RandomRanges              types.String `tfsdk:"random_ranges"`
+	Specbyte                  types.String `tfsdk:"specbyte"`
 	SpecialFooter             types.Bool   `tfsdk:"special_footer"`
 	UDPHeaderOffset           types.String `tfsdk:"udp_header_offset"`
 	Router                    types.String `tfsdk:"router"`
@@ -83,14 +87,24 @@ func (r *ToolTrafficGeneratorRawPacketTemplateResource) Schema(_ context.Context
 				Optional:    true,
 				Computed:    true,
 				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"uninitialized", "random", "specific byte", "incrementing"}...)},
+				Validators:  []validator.String{schemautil.OneOf([]string{"uninitialized", "random", "specific-byte", "incrementing"}...)},
 			},
 			"data_byte": schema.Int64Attribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
+			"dynamic": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"header": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"header_length": schema.Int64Attribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -115,12 +129,22 @@ func (r *ToolTrafficGeneratorRawPacketTemplateResource) Schema(_ context.Context
 				Computed:    true,
 				Description: "",
 			},
+			"random": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"random_byte_offsets_and_masks": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"random_ranges": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"specbyte": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -178,11 +202,17 @@ func (r *ToolTrafficGeneratorRawPacketTemplateResource) Create(ctx context.Conte
 	if !(plan.Port.IsNull() || plan.Port.IsUnknown()) {
 		body["port"] = plan.Port.ValueString()
 	}
+	if !(plan.Random.IsNull() || plan.Random.IsUnknown()) {
+		body["random"] = plan.Random.ValueString()
+	}
 	if !(plan.RandomByteOffsetsAndMasks.IsNull() || plan.RandomByteOffsetsAndMasks.IsUnknown()) {
 		body["random-byte-offsets-and-masks"] = plan.RandomByteOffsetsAndMasks.ValueString()
 	}
 	if !(plan.RandomRanges.IsNull() || plan.RandomRanges.IsUnknown()) {
 		body["random-ranges"] = plan.RandomRanges.ValueString()
+	}
+	if !(plan.Specbyte.IsNull() || plan.Specbyte.IsUnknown()) {
+		body["specbyte"] = plan.Specbyte.ValueString()
 	}
 	if !(plan.SpecialFooter.IsNull() || plan.SpecialFooter.IsUnknown()) {
 		body["special-footer"] = client.FormatBool(plan.SpecialFooter.ValueBool())
@@ -261,11 +291,17 @@ func (r *ToolTrafficGeneratorRawPacketTemplateResource) Update(ctx context.Conte
 	if !plan.Port.Equal(state.Port) {
 		body["port"] = plan.Port.ValueString()
 	}
+	if !plan.Random.Equal(state.Random) {
+		body["random"] = plan.Random.ValueString()
+	}
 	if !plan.RandomByteOffsetsAndMasks.Equal(state.RandomByteOffsetsAndMasks) {
 		body["random-byte-offsets-and-masks"] = plan.RandomByteOffsetsAndMasks.ValueString()
 	}
 	if !plan.RandomRanges.Equal(state.RandomRanges) {
 		body["random-ranges"] = plan.RandomRanges.ValueString()
+	}
+	if !plan.Specbyte.Equal(state.Specbyte) {
+		body["specbyte"] = plan.Specbyte.ValueString()
 	}
 	if !plan.SpecialFooter.Equal(state.SpecialFooter) {
 		body["special-footer"] = client.FormatBool(plan.SpecialFooter.ValueBool())
@@ -386,6 +422,16 @@ func toolTrafficGeneratorRawPacketTemplateApply(ctx context.Context, obj client.
 	} else {
 		m.DataByte = types.Int64Null()
 	}
+	if v, ok := obj["dynamic"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Dynamic = types.BoolValue(b)
+		} else {
+			m.Dynamic = types.BoolNull()
+		}
+	} else {
+		m.Dynamic = types.BoolNull()
+	}
 	if v, ok := obj["header"]; ok {
 		_ = v
 		if v != "" {
@@ -395,6 +441,16 @@ func toolTrafficGeneratorRawPacketTemplateApply(ctx context.Context, obj client.
 		}
 	} else {
 		m.Header = types.StringNull()
+	}
+	if v, ok := obj["header-length"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.HeaderLength = types.Int64Value(n)
+		} else {
+			m.HeaderLength = types.Int64Null()
+		}
+	} else {
+		m.HeaderLength = types.Int64Null()
 	}
 	if v, ok := obj["ip-header-offset"]; ok {
 		_ = v
@@ -436,6 +492,16 @@ func toolTrafficGeneratorRawPacketTemplateApply(ctx context.Context, obj client.
 	} else {
 		m.Port = types.StringNull()
 	}
+	if v, ok := obj["random"]; ok {
+		_ = v
+		if v != "" {
+			m.Random = types.StringValue(v)
+		} else {
+			m.Random = types.StringNull()
+		}
+	} else {
+		m.Random = types.StringNull()
+	}
 	if v, ok := obj["random-byte-offsets-and-masks"]; ok {
 		_ = v
 		if v != "" {
@@ -455,6 +521,16 @@ func toolTrafficGeneratorRawPacketTemplateApply(ctx context.Context, obj client.
 		}
 	} else {
 		m.RandomRanges = types.StringNull()
+	}
+	if v, ok := obj["specbyte"]; ok {
+		_ = v
+		if v != "" {
+			m.Specbyte = types.StringValue(v)
+		} else {
+			m.Specbyte = types.StringNull()
+		}
+	} else {
+		m.Specbyte = types.StringNull()
 	}
 	if v, ok := obj["special-footer"]; ok {
 		_ = v

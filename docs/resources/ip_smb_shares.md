@@ -22,6 +22,9 @@ resource "routeros_ip_smb_shares" "shares_example" {
   # Optional attributes (uncomment as needed):
   # directory = "replace-me"
   # invalid_users = "replace-me"
+  # newfileman = "replace-me"
+  # old_directory = "replace-me"
+  # oldfileman = "replace-me"
   # read_only = false
   # require_encryption = false
   # valid_users = "replace-me"
@@ -38,6 +41,9 @@ This resource supports the following arguments:
 * `disabled` - (Optional) Type: `bool`.
 * `invalid_users` - (Optional) Type: `string`.
 * `name` - (Required) Type: `string`. Default: `tf_acc_smbshare`.
+* `newfileman` - (Optional) Type: `string`.
+* `old_directory` - (Optional) Type: `string`.
+* `oldfileman` - (Optional) Type: `string`.
 * `read_only` - (Optional) Type: `bool`.
 * `require_encryption` - (Optional) Type: `bool`.
 * `valid_users` - (Optional) Type: `string`.

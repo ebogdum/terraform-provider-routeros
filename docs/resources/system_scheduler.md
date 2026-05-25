@@ -24,7 +24,7 @@ resource "routeros_system_scheduler" "scheduler_example" {
   # interval = "1h"
   # policy = "replace-me"
   # start_date = "replace-me"
-  # start_time = "replace-me"
+  # start_time = "startup"
 }
 ```
 
@@ -40,7 +40,16 @@ This resource supports the following arguments:
 * `on_event` - (Required) Type: `string`. Default: `:put "tick"`.
 * `policy` - (Optional) Type: `string`.
 * `start_date` - (Optional) Type: `string`.
-* `start_time` - (Optional) Type: `string`.
+* `start_time` - (Optional) Type: `enum(startup)`.
+
+## Attribute Reference
+
+In addition to the arguments above, the following attributes are exported:
+
+* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
+* `next_run` - Type: `string`.
+* `owner` - Type: `string`.
+* `run_count` - Type: `int`.
 
 ## Import
 

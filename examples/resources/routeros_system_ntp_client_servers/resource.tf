@@ -7,6 +7,7 @@ resource "routeros_system_ntp_client_servers" "servers_example" {
   # address = "replace-me"
   # auth_key = "REDACTED"
   # iburst = true
+  # keys = "replace-me"
   # max_poll = 10
   # min_poll = 6
 }

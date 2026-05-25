@@ -5,6 +5,7 @@ resource "routeros_interface_mesh_port" "port_example" {
 
   # Optional attributes (uncomment as needed):
   # hello_interval = 10
+  # inactive = false
   # interface = "ether1"
   # mesh = "replace-me"
   # path_cost = 10

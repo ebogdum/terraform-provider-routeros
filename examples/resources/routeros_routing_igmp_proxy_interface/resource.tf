@@ -5,6 +5,7 @@ resource "routeros_routing_igmp_proxy_interface" "interface_example" {
 
   # Optional attributes (uncomment as needed):
   # alternative_subnets = "replace-me"
+  # inactive = false
   # interface = "ether1"
   # threshold = 1
   # upstream = false

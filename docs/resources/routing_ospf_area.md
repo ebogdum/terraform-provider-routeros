@@ -27,7 +27,7 @@ resource "routeros_routing_ospf_area" "area_example" {
   # default_cost = "replace-me"
   # instance = "replace-me"
   # name = "tf-example"
-  # no_summaries = "replace-me"
+  # no_summaries = false
   # nssa_translator = "replace-me"
   # type = "default"
 }
@@ -44,9 +44,18 @@ This resource supports the following arguments:
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `instance` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
-* `no_summaries` - (Optional) Type: `string`.
+* `no_summaries` - (Optional) Type: `bool`.
 * `nssa_translator` - (Optional) Type: `string`.
 * `type` - (Optional) Type: `enum(default|stub|nssa)`.
+
+## Attribute Reference
+
+In addition to the arguments above, the following attributes are exported:
+
+* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
+* `dynamic` - Type: `bool`.
+* `invalid` - Type: `bool`.
+* `transit_capable` - Type: `bool`.
 
 ## Import
 

@@ -37,4 +37,9 @@ This data source supports the following arguments:
 This data source exports the following attributes in addition to the arguments above:
 
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
+* `actual_prefix` - Type: `string`.
+* `dynamic` - Type: `bool`.
+* `invalid` - Type: `bool`.
+* `preferred_lifetime` - Type: `string`.
+* `valid_lifetime` - Type: `string`.
 

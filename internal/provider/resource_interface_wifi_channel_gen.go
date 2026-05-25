@@ -12,9 +12,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
 )
 
 var (
@@ -30,13 +32,19 @@ type InterfaceWifiChannelResource struct {
 }
 
 type InterfaceWifiChannelModel struct {
-	ID        types.String `tfsdk:"id"`
-	Band      types.String `tfsdk:"band"`
-	Comment   types.String `tfsdk:"comment"`
-	Disabled  types.Bool   `tfsdk:"disabled"`
-	Frequency types.String `tfsdk:"frequency"`
-	Name      types.String `tfsdk:"name"`
-	Router    types.String `tfsdk:"router"`
+	ID                 types.String `tfsdk:"id"`
+	Band               types.String `tfsdk:"band"`
+	ChannelWidth       types.String `tfsdk:"channel_width"`
+	Comment            types.String `tfsdk:"comment"`
+	DeprioritizeUnii34 types.String `tfsdk:"deprioritize_unii_3_4"`
+	Disabled           types.Bool   `tfsdk:"disabled"`
+	Frequency          types.String `tfsdk:"frequency"`
+	Name               types.String `tfsdk:"name"`
+	ReselectInterval   types.String `tfsdk:"reselect_interval"`
+	ReselectTime       types.String `tfsdk:"reselect_time"`
+	SecondaryFrequency types.String `tfsdk:"secondary_frequency"`
+	SkipDfsChannels    types.String `tfsdk:"skip_dfs_channels"`
+	Router             types.String `tfsdk:"router"`
 }
 
 func NewInterfaceWifiChannelResource() resource.Resource { return &InterfaceWifiChannelResource{} }
@@ -67,11 +75,22 @@ func (r *InterfaceWifiChannelResource) Schema(_ context.Context, _ resource.Sche
 				Optional:    true,
 				Computed:    true,
 				Description: "",
+				Validators:  []validator.String{schemautil.OneOf([]string{"2ghz-b", "2ghz-only-g", "2ghz-b/g", "5ghz-a", "5ghz-only-n", "5ghz-a/n", "2ghz-only-n", "2ghz-b/g/n", "5ghz-a/n/ac", "5ghz-only-ac", "2ghz-g/n", "5ghz-n/ac"}...)},
+			},
+			"channel_width": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "Free-form comment.",
+			},
+			"deprioritize_unii_3_4": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
 			},
 			"disabled": schema.BoolAttribute{
 				Optional:    true,
@@ -85,6 +104,26 @@ func (r *InterfaceWifiChannelResource) Schema(_ context.Context, _ resource.Sche
 			},
 			"name": schema.StringAttribute{
 				Required:    true,
+				Description: "",
+			},
+			"reselect_interval": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"reselect_time": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"secondary_frequency": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"skip_dfs_channels": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
 				Description: "",
 			},
 			"router": schema.StringAttribute{
@@ -109,8 +148,14 @@ func (r *InterfaceWifiChannelResource) Create(ctx context.Context, req resource.
 	if !(plan.Band.IsNull() || plan.Band.IsUnknown()) {
 		body["band"] = plan.Band.ValueString()
 	}
+	if !(plan.ChannelWidth.IsNull() || plan.ChannelWidth.IsUnknown()) {
+		body["channel-width"] = plan.ChannelWidth.ValueString()
+	}
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
+	}
+	if !(plan.DeprioritizeUnii34.IsNull() || plan.DeprioritizeUnii34.IsUnknown()) {
+		body["deprioritize-unii-3-4"] = plan.DeprioritizeUnii34.ValueString()
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
@@ -120,6 +165,18 @@ func (r *InterfaceWifiChannelResource) Create(ctx context.Context, req resource.
 	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
+	}
+	if !(plan.ReselectInterval.IsNull() || plan.ReselectInterval.IsUnknown()) {
+		body["reselect-interval"] = plan.ReselectInterval.ValueString()
+	}
+	if !(plan.ReselectTime.IsNull() || plan.ReselectTime.IsUnknown()) {
+		body["reselect-time"] = plan.ReselectTime.ValueString()
+	}
+	if !(plan.SecondaryFrequency.IsNull() || plan.SecondaryFrequency.IsUnknown()) {
+		body["secondary-frequency"] = plan.SecondaryFrequency.ValueString()
+	}
+	if !(plan.SkipDfsChannels.IsNull() || plan.SkipDfsChannels.IsUnknown()) {
+		body["skip-dfs-channels"] = plan.SkipDfsChannels.ValueString()
 	}
 	obj, err := c.Add(ctx, "/interface/wifi/channel", body)
 	if err != nil {
@@ -171,8 +228,14 @@ func (r *InterfaceWifiChannelResource) Update(ctx context.Context, req resource.
 	if !plan.Band.Equal(state.Band) {
 		body["band"] = plan.Band.ValueString()
 	}
+	if !plan.ChannelWidth.Equal(state.ChannelWidth) {
+		body["channel-width"] = plan.ChannelWidth.ValueString()
+	}
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
+	}
+	if !plan.DeprioritizeUnii34.Equal(state.DeprioritizeUnii34) {
+		body["deprioritize-unii-3-4"] = plan.DeprioritizeUnii34.ValueString()
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
@@ -182,6 +245,18 @@ func (r *InterfaceWifiChannelResource) Update(ctx context.Context, req resource.
 	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
+	}
+	if !plan.ReselectInterval.Equal(state.ReselectInterval) {
+		body["reselect-interval"] = plan.ReselectInterval.ValueString()
+	}
+	if !plan.ReselectTime.Equal(state.ReselectTime) {
+		body["reselect-time"] = plan.ReselectTime.ValueString()
+	}
+	if !plan.SecondaryFrequency.Equal(state.SecondaryFrequency) {
+		body["secondary-frequency"] = plan.SecondaryFrequency.ValueString()
+	}
+	if !plan.SkipDfsChannels.Equal(state.SkipDfsChannels) {
+		body["skip-dfs-channels"] = plan.SkipDfsChannels.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/wifi/channel", state.ID.ValueString(), body)
@@ -276,6 +351,16 @@ func interfaceWifiChannelApply(ctx context.Context, obj client.Object, m *Interf
 	} else {
 		m.Band = types.StringNull()
 	}
+	if v, ok := obj["channel-width"]; ok {
+		_ = v
+		if v != "" {
+			m.ChannelWidth = types.StringValue(v)
+		} else {
+			m.ChannelWidth = types.StringNull()
+		}
+	} else {
+		m.ChannelWidth = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {
@@ -285,6 +370,16 @@ func interfaceWifiChannelApply(ctx context.Context, obj client.Object, m *Interf
 		}
 	} else {
 		m.Comment = types.StringNull()
+	}
+	if v, ok := obj["deprioritize-unii-3-4"]; ok {
+		_ = v
+		if v != "" {
+			m.DeprioritizeUnii34 = types.StringValue(v)
+		} else {
+			m.DeprioritizeUnii34 = types.StringNull()
+		}
+	} else {
+		m.DeprioritizeUnii34 = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
 		_ = v
@@ -315,5 +410,45 @@ func interfaceWifiChannelApply(ctx context.Context, obj client.Object, m *Interf
 		}
 	} else {
 		m.Name = types.StringNull()
+	}
+	if v, ok := obj["reselect-interval"]; ok {
+		_ = v
+		if v != "" {
+			m.ReselectInterval = types.StringValue(v)
+		} else {
+			m.ReselectInterval = types.StringNull()
+		}
+	} else {
+		m.ReselectInterval = types.StringNull()
+	}
+	if v, ok := obj["reselect-time"]; ok {
+		_ = v
+		if v != "" {
+			m.ReselectTime = types.StringValue(v)
+		} else {
+			m.ReselectTime = types.StringNull()
+		}
+	} else {
+		m.ReselectTime = types.StringNull()
+	}
+	if v, ok := obj["secondary-frequency"]; ok {
+		_ = v
+		if v != "" {
+			m.SecondaryFrequency = types.StringValue(v)
+		} else {
+			m.SecondaryFrequency = types.StringNull()
+		}
+	} else {
+		m.SecondaryFrequency = types.StringNull()
+	}
+	if v, ok := obj["skip-dfs-channels"]; ok {
+		_ = v
+		if v != "" {
+			m.SkipDfsChannels = types.StringValue(v)
+		} else {
+			m.SkipDfsChannels = types.StringNull()
+		}
+	} else {
+		m.SkipDfsChannels = types.StringNull()
 	}
 }

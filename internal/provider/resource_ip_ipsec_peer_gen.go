@@ -36,12 +36,14 @@ type IPIpsecPeerModel struct {
 	Address            types.String `tfsdk:"address"`
 	Comment            types.String `tfsdk:"comment"`
 	Disabled           types.Bool   `tfsdk:"disabled"`
+	Dynamic            types.Bool   `tfsdk:"dynamic"`
 	ExchangeMode       types.String `tfsdk:"exchange_mode"`
 	LocalAddress       types.String `tfsdk:"local_address"`
 	Name               types.String `tfsdk:"name"`
 	Passive            types.Bool   `tfsdk:"passive"`
 	Port               types.Int64  `tfsdk:"port"`
 	Profile            types.String `tfsdk:"profile"`
+	Responder          types.Bool   `tfsdk:"responder"`
 	SendInitialContact types.Bool   `tfsdk:"send_initial_contact"`
 	Router             types.String `tfsdk:"router"`
 }
@@ -85,11 +87,16 @@ func (r *IPIpsecPeerResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Computed:    true,
 				Description: "Whether the entry is disabled.",
 			},
+			"dynamic": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"exchange_mode": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"base", "main", "aggressive", "IKE2"}...)},
+				Validators:  []validator.String{schemautil.OneOf([]string{"base", "main", "aggressive", "ike2"}...)},
 			},
 			"local_address": schema.StringAttribute{
 				Optional:    true,
@@ -112,6 +119,11 @@ func (r *IPIpsecPeerResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Description: "",
 			},
 			"profile": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"responder": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -166,6 +178,9 @@ func (r *IPIpsecPeerResource) Create(ctx context.Context, req resource.CreateReq
 	}
 	if !(plan.Profile.IsNull() || plan.Profile.IsUnknown()) {
 		body["profile"] = plan.Profile.ValueString()
+	}
+	if !(plan.Responder.IsNull() || plan.Responder.IsUnknown()) {
+		body["responder"] = client.FormatBool(plan.Responder.ValueBool())
 	}
 	if !(plan.SendInitialContact.IsNull() || plan.SendInitialContact.IsUnknown()) {
 		body["send-initial-contact"] = client.FormatBool(plan.SendInitialContact.ValueBool())
@@ -243,6 +258,9 @@ func (r *IPIpsecPeerResource) Update(ctx context.Context, req resource.UpdateReq
 	}
 	if !plan.Profile.Equal(state.Profile) {
 		body["profile"] = plan.Profile.ValueString()
+	}
+	if !plan.Responder.Equal(state.Responder) {
+		body["responder"] = client.FormatBool(plan.Responder.ValueBool())
 	}
 	if !plan.SendInitialContact.Equal(state.SendInitialContact) {
 		body["send-initial-contact"] = client.FormatBool(plan.SendInitialContact.ValueBool())
@@ -360,6 +378,16 @@ func iPIpsecPeerApply(ctx context.Context, obj client.Object, m *IPIpsecPeerMode
 	} else {
 		m.Disabled = types.BoolNull()
 	}
+	if v, ok := obj["dynamic"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Dynamic = types.BoolValue(b)
+		} else {
+			m.Dynamic = types.BoolNull()
+		}
+	} else {
+		m.Dynamic = types.BoolNull()
+	}
 	if v, ok := obj["exchange-mode"]; ok {
 		_ = v
 		if v != "" {
@@ -419,6 +447,16 @@ func iPIpsecPeerApply(ctx context.Context, obj client.Object, m *IPIpsecPeerMode
 		}
 	} else {
 		m.Profile = types.StringNull()
+	}
+	if v, ok := obj["responder"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Responder = types.BoolValue(b)
+		} else {
+			m.Responder = types.BoolNull()
+		}
+	} else {
+		m.Responder = types.BoolNull()
 	}
 	if v, ok := obj["send-initial-contact"]; ok {
 		_ = v

@@ -6,4 +6,6 @@ resource "routeros_system_console" "console_example" {
   # channel = 0
   # port = "443"
   # term = "replace-me"
+  # used = false
+  # wedged = false
 }

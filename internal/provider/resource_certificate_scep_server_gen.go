@@ -32,12 +32,14 @@ type CertificateScepServerResource struct {
 }
 
 type CertificateScepServerModel struct {
-	ID              types.String `tfsdk:"id"`
-	DaysValid       types.Int64  `tfsdk:"days_valid"`
-	Disabled        types.Bool   `tfsdk:"disabled"`
-	Path            types.String `tfsdk:"path"`
-	RequestLifetime types.String `tfsdk:"request_lifetime"`
-	Router          types.String `tfsdk:"router"`
+	ID                types.String `tfsdk:"id"`
+	CACertificate     types.String `tfsdk:"ca_certificate"`
+	DaysValid         types.Int64  `tfsdk:"days_valid"`
+	Disabled          types.Bool   `tfsdk:"disabled"`
+	NextCACertificate types.String `tfsdk:"next_ca_certificate"`
+	Path              types.String `tfsdk:"path"`
+	RequestLifetime   types.String `tfsdk:"request_lifetime"`
+	Router            types.String `tfsdk:"router"`
 }
 
 func NewCertificateScepServerResource() resource.Resource { return &CertificateScepServerResource{} }
@@ -64,6 +66,11 @@ func (r *CertificateScepServerResource) Schema(_ context.Context, _ resource.Sch
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
+			"ca_certificate": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"days_valid": schema.Int64Attribute{
 				Optional:    true,
 				Computed:    true,
@@ -73,6 +80,11 @@ func (r *CertificateScepServerResource) Schema(_ context.Context, _ resource.Sch
 				Optional:    true,
 				Computed:    true,
 				Description: "Whether the entry is disabled.",
+			},
+			"next_ca_certificate": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
 			},
 			"path": schema.StringAttribute{
 				Optional:    true,
@@ -105,11 +117,17 @@ func (r *CertificateScepServerResource) Create(ctx context.Context, req resource
 		return
 	}
 	body := client.Object{}
+	if !(plan.CACertificate.IsNull() || plan.CACertificate.IsUnknown()) {
+		body["ca-certificate"] = plan.CACertificate.ValueString()
+	}
 	if !(plan.DaysValid.IsNull() || plan.DaysValid.IsUnknown()) {
 		body["days-valid"] = client.FormatInt64(plan.DaysValid.ValueInt64())
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !(plan.NextCACertificate.IsNull() || plan.NextCACertificate.IsUnknown()) {
+		body["next-ca-certificate"] = plan.NextCACertificate.ValueString()
 	}
 	if !(plan.Path.IsNull() || plan.Path.IsUnknown()) {
 		body["path"] = plan.Path.ValueString()
@@ -164,11 +182,17 @@ func (r *CertificateScepServerResource) Update(ctx context.Context, req resource
 		return
 	}
 	body := client.Object{}
+	if !plan.CACertificate.Equal(state.CACertificate) {
+		body["ca-certificate"] = plan.CACertificate.ValueString()
+	}
 	if !plan.DaysValid.Equal(state.DaysValid) {
 		body["days-valid"] = client.FormatInt64(plan.DaysValid.ValueInt64())
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !plan.NextCACertificate.Equal(state.NextCACertificate) {
+		body["next-ca-certificate"] = plan.NextCACertificate.ValueString()
 	}
 	if !plan.Path.Equal(state.Path) {
 		body["path"] = plan.Path.ValueString()
@@ -259,6 +283,16 @@ func certificateScepServerLookupByNaturalKey(ctx context.Context, c *client.Clie
 func certificateScepServerApply(ctx context.Context, obj client.Object, m *CertificateScepServerModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["ca-certificate"]; ok {
+		_ = v
+		if v != "" {
+			m.CACertificate = types.StringValue(v)
+		} else {
+			m.CACertificate = types.StringNull()
+		}
+	} else {
+		m.CACertificate = types.StringNull()
+	}
 	if v, ok := obj["days-valid"]; ok {
 		_ = v
 		if n, err := client.ParseInt64(v); err == nil {
@@ -278,6 +312,16 @@ func certificateScepServerApply(ctx context.Context, obj client.Object, m *Certi
 		}
 	} else {
 		m.Disabled = types.BoolNull()
+	}
+	if v, ok := obj["next-ca-certificate"]; ok {
+		_ = v
+		if v != "" {
+			m.NextCACertificate = types.StringValue(v)
+		} else {
+			m.NextCACertificate = types.StringNull()
+		}
+	} else {
+		m.NextCACertificate = types.StringNull()
 	}
 	if v, ok := obj["path"]; ok {
 		_ = v

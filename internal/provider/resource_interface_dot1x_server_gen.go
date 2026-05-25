@@ -41,6 +41,8 @@ type InterfaceDot1xServerModel struct {
 	GuestVLANID      types.String `tfsdk:"guest_vlan_id"`
 	Interface        types.String `tfsdk:"interface"`
 	InterimUpdate    types.String `tfsdk:"interim_update"`
+	Invalid          types.Bool   `tfsdk:"invalid"`
+	MAC              types.String `tfsdk:"mac"`
 	MACAuthMode      types.String `tfsdk:"mac_auth_mode"`
 	RADIUSMACFormat  types.String `tfsdk:"radius_mac_format"`
 	ReauthTimeout    types.String `tfsdk:"reauth_timeout"`
@@ -116,17 +118,27 @@ func (r *InterfaceDot1xServerResource) Schema(_ context.Context, _ resource.Sche
 				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
 			},
+			"invalid": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"mac": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"mac_auth_mode": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"mac as username", "mac as username and password"}...)},
+				Validators:  []validator.String{schemautil.OneOf([]string{"mac-as-username", "mac-as-username-and-password"}...)},
 			},
 			"radius_mac_format": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"XX:XX:XX:XX:XX:XX", "XX-XX-XX-XX-XX-XX", "XXXXXXXXXXXX", "xx:xx:xx:xx:xx:xx", "xx-xx-xx-xx-xx-xx", "xxxxxxxxxxxx"}...)},
+				Validators:  []validator.String{schemautil.OneOf([]string{"xx:xx:xx:xx:xx:xx", "xx-xx-xx-xx-xx-xx", "xxxxxxxxxxxx"}...)},
 			},
 			"reauth_timeout": schema.StringAttribute{
 				Optional:    true,
@@ -190,6 +202,9 @@ func (r *InterfaceDot1xServerResource) Create(ctx context.Context, req resource.
 	}
 	if !(plan.InterimUpdate.IsNull() || plan.InterimUpdate.IsUnknown()) {
 		body["interim-update"] = plan.InterimUpdate.ValueString()
+	}
+	if !(plan.MAC.IsNull() || plan.MAC.IsUnknown()) {
+		body["mac"] = plan.MAC.ValueString()
 	}
 	if !(plan.MACAuthMode.IsNull() || plan.MACAuthMode.IsUnknown()) {
 		body["mac-auth-mode"] = plan.MACAuthMode.ValueString()
@@ -279,6 +294,9 @@ func (r *InterfaceDot1xServerResource) Update(ctx context.Context, req resource.
 	}
 	if !plan.InterimUpdate.Equal(state.InterimUpdate) {
 		body["interim-update"] = plan.InterimUpdate.ValueString()
+	}
+	if !plan.MAC.Equal(state.MAC) {
+		body["mac"] = plan.MAC.ValueString()
 	}
 	if !plan.MACAuthMode.Equal(state.MACAuthMode) {
 		body["mac-auth-mode"] = plan.MACAuthMode.ValueString()
@@ -460,6 +478,26 @@ func interfaceDot1xServerApply(ctx context.Context, obj client.Object, m *Interf
 		}
 	} else {
 		m.InterimUpdate = types.StringNull()
+	}
+	if v, ok := obj["invalid"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Invalid = types.BoolValue(b)
+		} else {
+			m.Invalid = types.BoolNull()
+		}
+	} else {
+		m.Invalid = types.BoolNull()
+	}
+	if v, ok := obj["mac"]; ok {
+		_ = v
+		if v != "" {
+			m.MAC = types.StringValue(v)
+		} else {
+			m.MAC = types.StringNull()
+		}
+	} else {
+		m.MAC = types.StringNull()
 	}
 	if v, ok := obj["mac-auth-mode"]; ok {
 		_ = v

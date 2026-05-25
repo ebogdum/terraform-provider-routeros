@@ -31,11 +31,14 @@ type InterfacePppoeClientResource struct {
 
 type InterfacePppoeClientModel struct {
 	ID                   types.String `tfsdk:"id"`
+	AcName               types.String `tfsdk:"ac_name"`
+	AddDefaultRoute      types.String `tfsdk:"add_default_route"`
 	Allow                types.String `tfsdk:"allow"`
 	Comment              types.String `tfsdk:"comment"`
 	DefaultRouteDistance types.String `tfsdk:"default_route_distance"`
 	DialOnDemand         types.String `tfsdk:"dial_on_demand"`
 	Disabled             types.Bool   `tfsdk:"disabled"`
+	Interface            types.String `tfsdk:"interface"`
 	KeepaliveTimeout     types.String `tfsdk:"keepalive_timeout"`
 	MaxMru               types.String `tfsdk:"max_mru"`
 	MaxMTU               types.String `tfsdk:"max_mtu"`
@@ -43,6 +46,8 @@ type InterfacePppoeClientModel struct {
 	Name                 types.String `tfsdk:"name"`
 	Password             types.String `tfsdk:"password"`
 	Profile              types.String `tfsdk:"profile"`
+	ServiceName          types.String `tfsdk:"service_name"`
+	UsePeerDNS           types.String `tfsdk:"use_peer_dns"`
 	User                 types.String `tfsdk:"user"`
 	Router               types.String `tfsdk:"router"`
 }
@@ -71,6 +76,16 @@ func (r *InterfacePppoeClientResource) Schema(_ context.Context, _ resource.Sche
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
+			"ac_name": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"add_default_route": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"allow": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -95,6 +110,11 @@ func (r *InterfacePppoeClientResource) Schema(_ context.Context, _ resource.Sche
 				Optional:    true,
 				Computed:    true,
 				Description: "Whether the entry is disabled.",
+			},
+			"interface": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
 			},
 			"keepalive_timeout": schema.StringAttribute{
 				Optional:    true,
@@ -131,6 +151,16 @@ func (r *InterfacePppoeClientResource) Schema(_ context.Context, _ resource.Sche
 				Computed:    true,
 				Description: "",
 			},
+			"service_name": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"use_peer_dns": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"user": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -155,6 +185,12 @@ func (r *InterfacePppoeClientResource) Create(ctx context.Context, req resource.
 		return
 	}
 	body := client.Object{}
+	if !(plan.AcName.IsNull() || plan.AcName.IsUnknown()) {
+		body["ac-name"] = plan.AcName.ValueString()
+	}
+	if !(plan.AddDefaultRoute.IsNull() || plan.AddDefaultRoute.IsUnknown()) {
+		body["add-default-route"] = plan.AddDefaultRoute.ValueString()
+	}
 	if !(plan.Allow.IsNull() || plan.Allow.IsUnknown()) {
 		body["allow"] = plan.Allow.ValueString()
 	}
@@ -169,6 +205,9 @@ func (r *InterfacePppoeClientResource) Create(ctx context.Context, req resource.
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !(plan.Interface.IsNull() || plan.Interface.IsUnknown()) {
+		body["interface"] = plan.Interface.ValueString()
 	}
 	if !(plan.KeepaliveTimeout.IsNull() || plan.KeepaliveTimeout.IsUnknown()) {
 		body["keepalive-timeout"] = plan.KeepaliveTimeout.ValueString()
@@ -190,6 +229,12 @@ func (r *InterfacePppoeClientResource) Create(ctx context.Context, req resource.
 	}
 	if !(plan.Profile.IsNull() || plan.Profile.IsUnknown()) {
 		body["profile"] = plan.Profile.ValueString()
+	}
+	if !(plan.ServiceName.IsNull() || plan.ServiceName.IsUnknown()) {
+		body["service-name"] = plan.ServiceName.ValueString()
+	}
+	if !(plan.UsePeerDNS.IsNull() || plan.UsePeerDNS.IsUnknown()) {
+		body["use-peer-dns"] = plan.UsePeerDNS.ValueString()
 	}
 	if !(plan.User.IsNull() || plan.User.IsUnknown()) {
 		body["user"] = plan.User.ValueString()
@@ -241,6 +286,12 @@ func (r *InterfacePppoeClientResource) Update(ctx context.Context, req resource.
 		return
 	}
 	body := client.Object{}
+	if !plan.AcName.Equal(state.AcName) {
+		body["ac-name"] = plan.AcName.ValueString()
+	}
+	if !plan.AddDefaultRoute.Equal(state.AddDefaultRoute) {
+		body["add-default-route"] = plan.AddDefaultRoute.ValueString()
+	}
 	if !plan.Allow.Equal(state.Allow) {
 		body["allow"] = plan.Allow.ValueString()
 	}
@@ -255,6 +306,9 @@ func (r *InterfacePppoeClientResource) Update(ctx context.Context, req resource.
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !plan.Interface.Equal(state.Interface) {
+		body["interface"] = plan.Interface.ValueString()
 	}
 	if !plan.KeepaliveTimeout.Equal(state.KeepaliveTimeout) {
 		body["keepalive-timeout"] = plan.KeepaliveTimeout.ValueString()
@@ -276,6 +330,12 @@ func (r *InterfacePppoeClientResource) Update(ctx context.Context, req resource.
 	}
 	if !plan.Profile.Equal(state.Profile) {
 		body["profile"] = plan.Profile.ValueString()
+	}
+	if !plan.ServiceName.Equal(state.ServiceName) {
+		body["service-name"] = plan.ServiceName.ValueString()
+	}
+	if !plan.UsePeerDNS.Equal(state.UsePeerDNS) {
+		body["use-peer-dns"] = plan.UsePeerDNS.ValueString()
 	}
 	if !plan.User.Equal(state.User) {
 		body["user"] = plan.User.ValueString()
@@ -363,6 +423,26 @@ func interfacePppoeClientLookupByNaturalKey(ctx context.Context, c *client.Clien
 func interfacePppoeClientApply(ctx context.Context, obj client.Object, m *InterfacePppoeClientModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["ac-name"]; ok {
+		_ = v
+		if v != "" {
+			m.AcName = types.StringValue(v)
+		} else {
+			m.AcName = types.StringNull()
+		}
+	} else {
+		m.AcName = types.StringNull()
+	}
+	if v, ok := obj["add-default-route"]; ok {
+		_ = v
+		if v != "" {
+			m.AddDefaultRoute = types.StringValue(v)
+		} else {
+			m.AddDefaultRoute = types.StringNull()
+		}
+	} else {
+		m.AddDefaultRoute = types.StringNull()
+	}
 	if v, ok := obj["allow"]; ok {
 		_ = v
 		if v != "" {
@@ -412,6 +492,16 @@ func interfacePppoeClientApply(ctx context.Context, obj client.Object, m *Interf
 		}
 	} else {
 		m.Disabled = types.BoolNull()
+	}
+	if v, ok := obj["interface"]; ok {
+		_ = v
+		if v != "" {
+			m.Interface = types.StringValue(v)
+		} else {
+			m.Interface = types.StringNull()
+		}
+	} else {
+		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["keepalive-timeout"]; ok {
 		_ = v
@@ -482,6 +572,26 @@ func interfacePppoeClientApply(ctx context.Context, obj client.Object, m *Interf
 		}
 	} else {
 		m.Profile = types.StringNull()
+	}
+	if v, ok := obj["service-name"]; ok {
+		_ = v
+		if v != "" {
+			m.ServiceName = types.StringValue(v)
+		} else {
+			m.ServiceName = types.StringNull()
+		}
+	} else {
+		m.ServiceName = types.StringNull()
+	}
+	if v, ok := obj["use-peer-dns"]; ok {
+		_ = v
+		if v != "" {
+			m.UsePeerDNS = types.StringValue(v)
+		} else {
+			m.UsePeerDNS = types.StringNull()
+		}
+	} else {
+		m.UsePeerDNS = types.StringNull()
 	}
 	if v, ok := obj["user"]; ok {
 		_ = v

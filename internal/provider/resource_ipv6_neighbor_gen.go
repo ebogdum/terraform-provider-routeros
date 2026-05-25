@@ -34,12 +34,21 @@ type IPV6NeighborResource struct {
 type IPV6NeighborModel struct {
 	ID         types.String `tfsdk:"id"`
 	Address    types.String `tfsdk:"address"`
+	BridgePort types.String `tfsdk:"bridge_port"`
 	Comment    types.String `tfsdk:"comment"`
 	Disabled   types.Bool   `tfsdk:"disabled"`
 	Dynamic    types.Bool   `tfsdk:"dynamic"`
+	HostName   types.String `tfsdk:"host_name"`
 	Interface  types.String `tfsdk:"interface"`
 	MACAddress types.String `tfsdk:"mac_address"`
+	MACPing    types.String `tfsdk:"mac_ping"`
+	MACTelnet  types.String `tfsdk:"mac_telnet"`
+	MakeStatic types.String `tfsdk:"make_static"`
+	Ping       types.String `tfsdk:"ping"`
+	RouterRos  types.Bool   `tfsdk:"router_ros"`
 	Status     types.String `tfsdk:"status"`
+	Telnet     types.String `tfsdk:"telnet"`
+	Torch      types.String `tfsdk:"torch"`
 	Vrf        types.String `tfsdk:"vrf"`
 	Router     types.String `tfsdk:"router"`
 }
@@ -61,7 +70,7 @@ func (r *IPV6NeighborResource) Configure(_ context.Context, req resource.Configu
 
 func (r *IPV6NeighborResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "IPv6 neighbor table -- read-only on most devices.",
+		Description: "IPv6 neighbor table — read-only on most devices.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:      true,
@@ -73,6 +82,11 @@ func (r *IPV6NeighborResource) Schema(_ context.Context, _ resource.SchemaReques
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.IsIP()},
+			},
+			"bridge_port": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -89,6 +103,11 @@ func (r *IPV6NeighborResource) Schema(_ context.Context, _ resource.SchemaReques
 				Computed:    true,
 				Description: "",
 			},
+			"host_name": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"interface": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -99,7 +118,42 @@ func (r *IPV6NeighborResource) Schema(_ context.Context, _ resource.SchemaReques
 				Computed:    true,
 				Description: "",
 			},
+			"mac_ping": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"mac_telnet": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"make_static": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"ping": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"router_ros": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"status": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"telnet": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"torch": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -142,6 +196,27 @@ func (r *IPV6NeighborResource) Create(ctx context.Context, req resource.CreateRe
 	}
 	if !(plan.MACAddress.IsNull() || plan.MACAddress.IsUnknown()) {
 		body["mac-address"] = plan.MACAddress.ValueString()
+	}
+	if !(plan.MACPing.IsNull() || plan.MACPing.IsUnknown()) {
+		body["mac-ping"] = plan.MACPing.ValueString()
+	}
+	if !(plan.MACTelnet.IsNull() || plan.MACTelnet.IsUnknown()) {
+		body["mac-telnet"] = plan.MACTelnet.ValueString()
+	}
+	if !(plan.MakeStatic.IsNull() || plan.MakeStatic.IsUnknown()) {
+		body["make-static"] = plan.MakeStatic.ValueString()
+	}
+	if !(plan.Ping.IsNull() || plan.Ping.IsUnknown()) {
+		body["ping"] = plan.Ping.ValueString()
+	}
+	if !(plan.RouterRos.IsNull() || plan.RouterRos.IsUnknown()) {
+		body["router"] = client.FormatBool(plan.RouterRos.ValueBool())
+	}
+	if !(plan.Telnet.IsNull() || plan.Telnet.IsUnknown()) {
+		body["telnet"] = plan.Telnet.ValueString()
+	}
+	if !(plan.Torch.IsNull() || plan.Torch.IsUnknown()) {
+		body["torch"] = plan.Torch.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ipv6/neighbor", body)
 	if err != nil {
@@ -204,6 +279,27 @@ func (r *IPV6NeighborResource) Update(ctx context.Context, req resource.UpdateRe
 	}
 	if !plan.MACAddress.Equal(state.MACAddress) {
 		body["mac-address"] = plan.MACAddress.ValueString()
+	}
+	if !plan.MACPing.Equal(state.MACPing) {
+		body["mac-ping"] = plan.MACPing.ValueString()
+	}
+	if !plan.MACTelnet.Equal(state.MACTelnet) {
+		body["mac-telnet"] = plan.MACTelnet.ValueString()
+	}
+	if !plan.MakeStatic.Equal(state.MakeStatic) {
+		body["make-static"] = plan.MakeStatic.ValueString()
+	}
+	if !plan.Ping.Equal(state.Ping) {
+		body["ping"] = plan.Ping.ValueString()
+	}
+	if !plan.RouterRos.Equal(state.RouterRos) {
+		body["router"] = client.FormatBool(plan.RouterRos.ValueBool())
+	}
+	if !plan.Telnet.Equal(state.Telnet) {
+		body["telnet"] = plan.Telnet.ValueString()
+	}
+	if !plan.Torch.Equal(state.Torch) {
+		body["torch"] = plan.Torch.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ipv6/neighbor", state.ID.ValueString(), body)
@@ -298,6 +394,16 @@ func iPV6NeighborApply(ctx context.Context, obj client.Object, m *IPV6NeighborMo
 	} else {
 		m.Address = types.StringNull()
 	}
+	if v, ok := obj["bridge-port"]; ok {
+		_ = v
+		if v != "" {
+			m.BridgePort = types.StringValue(v)
+		} else {
+			m.BridgePort = types.StringNull()
+		}
+	} else {
+		m.BridgePort = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {
@@ -328,6 +434,16 @@ func iPV6NeighborApply(ctx context.Context, obj client.Object, m *IPV6NeighborMo
 	} else {
 		m.Dynamic = types.BoolNull()
 	}
+	if v, ok := obj["host-name"]; ok {
+		_ = v
+		if v != "" {
+			m.HostName = types.StringValue(v)
+		} else {
+			m.HostName = types.StringNull()
+		}
+	} else {
+		m.HostName = types.StringNull()
+	}
 	if v, ok := obj["interface"]; ok {
 		_ = v
 		if v != "" {
@@ -348,6 +464,56 @@ func iPV6NeighborApply(ctx context.Context, obj client.Object, m *IPV6NeighborMo
 	} else {
 		m.MACAddress = types.StringNull()
 	}
+	if v, ok := obj["mac-ping"]; ok {
+		_ = v
+		if v != "" {
+			m.MACPing = types.StringValue(v)
+		} else {
+			m.MACPing = types.StringNull()
+		}
+	} else {
+		m.MACPing = types.StringNull()
+	}
+	if v, ok := obj["mac-telnet"]; ok {
+		_ = v
+		if v != "" {
+			m.MACTelnet = types.StringValue(v)
+		} else {
+			m.MACTelnet = types.StringNull()
+		}
+	} else {
+		m.MACTelnet = types.StringNull()
+	}
+	if v, ok := obj["make-static"]; ok {
+		_ = v
+		if v != "" {
+			m.MakeStatic = types.StringValue(v)
+		} else {
+			m.MakeStatic = types.StringNull()
+		}
+	} else {
+		m.MakeStatic = types.StringNull()
+	}
+	if v, ok := obj["ping"]; ok {
+		_ = v
+		if v != "" {
+			m.Ping = types.StringValue(v)
+		} else {
+			m.Ping = types.StringNull()
+		}
+	} else {
+		m.Ping = types.StringNull()
+	}
+	if v, ok := obj["router"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.RouterRos = types.BoolValue(b)
+		} else {
+			m.RouterRos = types.BoolNull()
+		}
+	} else {
+		m.RouterRos = types.BoolNull()
+	}
 	if v, ok := obj["status"]; ok {
 		_ = v
 		if v != "" {
@@ -357,6 +523,26 @@ func iPV6NeighborApply(ctx context.Context, obj client.Object, m *IPV6NeighborMo
 		}
 	} else {
 		m.Status = types.StringNull()
+	}
+	if v, ok := obj["telnet"]; ok {
+		_ = v
+		if v != "" {
+			m.Telnet = types.StringValue(v)
+		} else {
+			m.Telnet = types.StringNull()
+		}
+	} else {
+		m.Telnet = types.StringNull()
+	}
+	if v, ok := obj["torch"]; ok {
+		_ = v
+		if v != "" {
+			m.Torch = types.StringValue(v)
+		} else {
+			m.Torch = types.StringNull()
+		}
+	} else {
+		m.Torch = types.StringNull()
 	}
 	if v, ok := obj["vrf"]; ok {
 		_ = v

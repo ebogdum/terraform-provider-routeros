@@ -27,15 +27,17 @@ This data source supports the following arguments:
 * `filter` - (Optional) Map of field=value pairs to narrow the result set.
 * `proplist` - (Optional) List of property names to project; smaller payload.
 * `comment` - (Optional) Type: `string`.
-* `data` - (Optional) Type: `enum(uninitialized|random|specific byte|incrementing)`.
+* `data` - (Optional) Type: `enum(uninitialized|random|specific-byte|incrementing)`.
 * `data_byte` - (Optional) Type: `int`.
 * `header` - (Optional) Type: `string`.
 * `ip_header_offset` - (Optional) Type: `string`.
 * `ipv6_header_offset` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
 * `port` - (Optional) Type: `string`.
+* `random` - (Optional) Type: `string`.
 * `random_byte_offsets_and_masks` - (Optional) Type: `string`.
 * `random_ranges` - (Optional) Type: `string`.
+* `specbyte` - (Optional) Type: `string`.
 * `special_footer` - (Optional) Type: `bool`.
 * `udp_header_offset` - (Optional) Type: `string`.
 
@@ -44,4 +46,6 @@ This data source supports the following arguments:
 This data source exports the following attributes in addition to the arguments above:
 
 * `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
+* `dynamic` - Type: `bool`.
+* `header_length` - Type: `int`.
 

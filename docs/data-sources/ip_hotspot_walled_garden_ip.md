@@ -26,11 +26,12 @@ This data source supports the following arguments:
 * `router` - (Optional) Name of the router in the provider's `routers` map to query.
 * `filter` - (Optional) Map of field=value pairs to narrow the result set.
 * `proplist` - (Optional) List of property names to project; smaller payload.
-* `action` - (Optional) Type: `string`.
+* `action` - (Optional) Type: `enum(accept|drop|reject)`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `dst_address` - (Optional) Type: `string`.
 * `dst_address_list` - (Optional) Type: `string`.
+* `dst_host` - (Optional) Type: `string`.
 * `dst_port` - (Optional) Type: `string`.
 * `protocol` - (Optional) Type: `string`.
 * `server` - (Optional) Type: `string`.

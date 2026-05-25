@@ -61,7 +61,7 @@ func (r *SNMPResource) Configure(_ context.Context, req resource.ConfigureReques
 
 func (r *SNMPResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Singleton; live-edit risks orphaning agent -- skip in acc",
+		Description: "Singleton; live-edit risks orphaning agent — skip in acc",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:      true,

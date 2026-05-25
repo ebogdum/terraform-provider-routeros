@@ -35,8 +35,15 @@ type RoutingBGPVPNModel struct {
 	ID                    types.String `tfsdk:"id"`
 	Comment               types.String `tfsdk:"comment"`
 	Disabled              types.Bool   `tfsdk:"disabled"`
+	ExportFilter          types.String `tfsdk:"export_filter"`
+	ExportRouteTargets    types.String `tfsdk:"export_route_targets"`
+	ExportSelect          types.String `tfsdk:"export_select"`
+	ImportFilter          types.String `tfsdk:"import_filter"`
+	ImportRouteTargets    types.String `tfsdk:"import_route_targets"`
 	Instance              types.String `tfsdk:"instance"`
+	Invalid               types.Bool   `tfsdk:"invalid"`
 	LabelAllocationPolicy types.String `tfsdk:"label_allocation_policy"`
+	Redistribute          types.String `tfsdk:"redistribute"`
 	RouteDistinguisher    types.String `tfsdk:"route_distinguisher"`
 	Vrf                   types.String `tfsdk:"vrf"`
 	Router                types.String `tfsdk:"router"`
@@ -76,7 +83,37 @@ func (r *RoutingBGPVPNResource) Schema(_ context.Context, _ resource.SchemaReque
 				Computed:    true,
 				Description: "Whether the entry is disabled.",
 			},
+			"export_filter": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"export_route_targets": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"export_select": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"import_filter": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"import_route_targets": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"instance": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"invalid": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -86,6 +123,11 @@ func (r *RoutingBGPVPNResource) Schema(_ context.Context, _ resource.SchemaReque
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.OneOf([]string{"", "per-vrf", "per-prefix"}...)},
+			},
+			"redistribute": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
 			},
 			"route_distinguisher": schema.StringAttribute{
 				Optional:    true,
@@ -122,11 +164,29 @@ func (r *RoutingBGPVPNResource) Create(ctx context.Context, req resource.CreateR
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
+	if !(plan.ExportFilter.IsNull() || plan.ExportFilter.IsUnknown()) {
+		body["export-filter"] = plan.ExportFilter.ValueString()
+	}
+	if !(plan.ExportRouteTargets.IsNull() || plan.ExportRouteTargets.IsUnknown()) {
+		body["export-route-targets"] = plan.ExportRouteTargets.ValueString()
+	}
+	if !(plan.ExportSelect.IsNull() || plan.ExportSelect.IsUnknown()) {
+		body["export-select"] = plan.ExportSelect.ValueString()
+	}
+	if !(plan.ImportFilter.IsNull() || plan.ImportFilter.IsUnknown()) {
+		body["import-filter"] = plan.ImportFilter.ValueString()
+	}
+	if !(plan.ImportRouteTargets.IsNull() || plan.ImportRouteTargets.IsUnknown()) {
+		body["import-route-targets"] = plan.ImportRouteTargets.ValueString()
+	}
 	if !(plan.Instance.IsNull() || plan.Instance.IsUnknown()) {
 		body["instance"] = plan.Instance.ValueString()
 	}
 	if !(plan.LabelAllocationPolicy.IsNull() || plan.LabelAllocationPolicy.IsUnknown()) {
 		body["label-allocation-policy"] = plan.LabelAllocationPolicy.ValueString()
+	}
+	if !(plan.Redistribute.IsNull() || plan.Redistribute.IsUnknown()) {
+		body["redistribute"] = plan.Redistribute.ValueString()
 	}
 	if !(plan.RouteDistinguisher.IsNull() || plan.RouteDistinguisher.IsUnknown()) {
 		body["route-distinguisher"] = plan.RouteDistinguisher.ValueString()
@@ -187,11 +247,29 @@ func (r *RoutingBGPVPNResource) Update(ctx context.Context, req resource.UpdateR
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
+	if !plan.ExportFilter.Equal(state.ExportFilter) {
+		body["export-filter"] = plan.ExportFilter.ValueString()
+	}
+	if !plan.ExportRouteTargets.Equal(state.ExportRouteTargets) {
+		body["export-route-targets"] = plan.ExportRouteTargets.ValueString()
+	}
+	if !plan.ExportSelect.Equal(state.ExportSelect) {
+		body["export-select"] = plan.ExportSelect.ValueString()
+	}
+	if !plan.ImportFilter.Equal(state.ImportFilter) {
+		body["import-filter"] = plan.ImportFilter.ValueString()
+	}
+	if !plan.ImportRouteTargets.Equal(state.ImportRouteTargets) {
+		body["import-route-targets"] = plan.ImportRouteTargets.ValueString()
+	}
 	if !plan.Instance.Equal(state.Instance) {
 		body["instance"] = plan.Instance.ValueString()
 	}
 	if !plan.LabelAllocationPolicy.Equal(state.LabelAllocationPolicy) {
 		body["label-allocation-policy"] = plan.LabelAllocationPolicy.ValueString()
+	}
+	if !plan.Redistribute.Equal(state.Redistribute) {
+		body["redistribute"] = plan.Redistribute.ValueString()
 	}
 	if !plan.RouteDistinguisher.Equal(state.RouteDistinguisher) {
 		body["route-distinguisher"] = plan.RouteDistinguisher.ValueString()
@@ -302,6 +380,56 @@ func routingBGPVPNApply(ctx context.Context, obj client.Object, m *RoutingBGPVPN
 	} else {
 		m.Disabled = types.BoolNull()
 	}
+	if v, ok := obj["export-filter"]; ok {
+		_ = v
+		if v != "" {
+			m.ExportFilter = types.StringValue(v)
+		} else {
+			m.ExportFilter = types.StringNull()
+		}
+	} else {
+		m.ExportFilter = types.StringNull()
+	}
+	if v, ok := obj["export-route-targets"]; ok {
+		_ = v
+		if v != "" {
+			m.ExportRouteTargets = types.StringValue(v)
+		} else {
+			m.ExportRouteTargets = types.StringNull()
+		}
+	} else {
+		m.ExportRouteTargets = types.StringNull()
+	}
+	if v, ok := obj["export-select"]; ok {
+		_ = v
+		if v != "" {
+			m.ExportSelect = types.StringValue(v)
+		} else {
+			m.ExportSelect = types.StringNull()
+		}
+	} else {
+		m.ExportSelect = types.StringNull()
+	}
+	if v, ok := obj["import-filter"]; ok {
+		_ = v
+		if v != "" {
+			m.ImportFilter = types.StringValue(v)
+		} else {
+			m.ImportFilter = types.StringNull()
+		}
+	} else {
+		m.ImportFilter = types.StringNull()
+	}
+	if v, ok := obj["import-route-targets"]; ok {
+		_ = v
+		if v != "" {
+			m.ImportRouteTargets = types.StringValue(v)
+		} else {
+			m.ImportRouteTargets = types.StringNull()
+		}
+	} else {
+		m.ImportRouteTargets = types.StringNull()
+	}
 	if v, ok := obj["instance"]; ok {
 		_ = v
 		if v != "" {
@@ -312,6 +440,16 @@ func routingBGPVPNApply(ctx context.Context, obj client.Object, m *RoutingBGPVPN
 	} else {
 		m.Instance = types.StringNull()
 	}
+	if v, ok := obj["invalid"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Invalid = types.BoolValue(b)
+		} else {
+			m.Invalid = types.BoolNull()
+		}
+	} else {
+		m.Invalid = types.BoolNull()
+	}
 	if v, ok := obj["label-allocation-policy"]; ok {
 		_ = v
 		if v != "" {
@@ -321,6 +459,16 @@ func routingBGPVPNApply(ctx context.Context, obj client.Object, m *RoutingBGPVPN
 		}
 	} else {
 		m.LabelAllocationPolicy = types.StringNull()
+	}
+	if v, ok := obj["redistribute"]; ok {
+		_ = v
+		if v != "" {
+			m.Redistribute = types.StringValue(v)
+		} else {
+			m.Redistribute = types.StringNull()
+		}
+	} else {
+		m.Redistribute = types.StringNull()
 	}
 	if v, ok := obj["route-distinguisher"]; ok {
 		_ = v

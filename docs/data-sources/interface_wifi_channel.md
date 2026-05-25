@@ -26,11 +26,17 @@ This data source supports the following arguments:
 * `router` - (Optional) Name of the router in the provider's `routers` map to query.
 * `filter` - (Optional) Map of field=value pairs to narrow the result set.
 * `proplist` - (Optional) List of property names to project; smaller payload.
-* `band` - (Optional) Type: `string`.
+* `band` - (Optional) Type: `enum(2ghz-b|2ghz-only-g|2ghz-b/g|5ghz-a|5ghz-only-n|5ghz-a/n, ...)`. Default: `7`.
+* `channel_width` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `deprioritize_unii_3_4` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `frequency` - (Optional) Type: `string`.
+* `frequency` - (Optional) Type: `string`. Default: `2.412e+06`.
 * `name` - (Required) Type: `string`. Default: `tf_acc_wchan`.
+* `reselect_interval` - (Optional) Type: `string`.
+* `reselect_time` - (Optional) Type: `string`.
+* `secondary_frequency` - (Optional) Type: `string`.
+* `skip_dfs_channels` - (Optional) Type: `string`.
 
 ## Attribute Reference
 

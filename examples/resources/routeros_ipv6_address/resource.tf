@@ -9,6 +9,7 @@ resource "routeros_ipv6_address" "address_example" {
   # Optional attributes (uncomment as needed):
   # advertise = true
   # auto_link_local = false
+  # dynglob = "replace-me"
   # eui_64 = false
   # from_pool = "replace-me"
   # no_dad = false

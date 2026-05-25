@@ -30,15 +30,19 @@ type InterfaceBridgeVLANResource struct {
 }
 
 type InterfaceBridgeVLANModel struct {
-	ID            types.String `tfsdk:"id"`
-	Bridge        types.String `tfsdk:"bridge"`
-	Comment       types.String `tfsdk:"comment"`
-	Disabled      types.Bool   `tfsdk:"disabled"`
-	MvrpForbidden types.String `tfsdk:"mvrp_forbidden"`
-	Tagged        types.String `tfsdk:"tagged"`
-	Untagged      types.String `tfsdk:"untagged"`
-	VLANIds       types.String `tfsdk:"vlan_ids"`
-	Router        types.String `tfsdk:"router"`
+	ID              types.String `tfsdk:"id"`
+	Bridge          types.String `tfsdk:"bridge"`
+	Comment         types.String `tfsdk:"comment"`
+	CurrentTagged   types.String `tfsdk:"current_tagged"`
+	CurrentUntagged types.String `tfsdk:"current_untagged"`
+	Disabled        types.Bool   `tfsdk:"disabled"`
+	Dynamic         types.Bool   `tfsdk:"dynamic"`
+	MvrpAttributes  types.String `tfsdk:"mvrp_attributes"`
+	MvrpForbidden   types.String `tfsdk:"mvrp_forbidden"`
+	Tagged          types.String `tfsdk:"tagged"`
+	Untagged        types.String `tfsdk:"untagged"`
+	VLANIds         types.String `tfsdk:"vlan_ids"`
+	Router          types.String `tfsdk:"router"`
 }
 
 func NewInterfaceBridgeVLANResource() resource.Resource { return &InterfaceBridgeVLANResource{} }
@@ -75,10 +79,30 @@ func (r *InterfaceBridgeVLANResource) Schema(_ context.Context, _ resource.Schem
 				Computed:    true,
 				Description: "Free-form comment.",
 			},
+			"current_tagged": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"current_untagged": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"disabled": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "Whether the entry is disabled.",
+			},
+			"dynamic": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"mvrp_attributes": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
 			},
 			"mvrp_forbidden": schema.StringAttribute{
 				Optional:    true,
@@ -127,6 +151,9 @@ func (r *InterfaceBridgeVLANResource) Create(ctx context.Context, req resource.C
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !(plan.MvrpAttributes.IsNull() || plan.MvrpAttributes.IsUnknown()) {
+		body["mvrp-attributes"] = plan.MvrpAttributes.ValueString()
 	}
 	if !(plan.MvrpForbidden.IsNull() || plan.MvrpForbidden.IsUnknown()) {
 		body["mvrp-forbidden"] = plan.MvrpForbidden.ValueString()
@@ -195,6 +222,9 @@ func (r *InterfaceBridgeVLANResource) Update(ctx context.Context, req resource.U
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !plan.MvrpAttributes.Equal(state.MvrpAttributes) {
+		body["mvrp-attributes"] = plan.MvrpAttributes.ValueString()
 	}
 	if !plan.MvrpForbidden.Equal(state.MvrpForbidden) {
 		body["mvrp-forbidden"] = plan.MvrpForbidden.ValueString()
@@ -311,6 +341,26 @@ func interfaceBridgeVLANApply(ctx context.Context, obj client.Object, m *Interfa
 	} else {
 		m.Comment = types.StringNull()
 	}
+	if v, ok := obj["current-tagged"]; ok {
+		_ = v
+		if v != "" {
+			m.CurrentTagged = types.StringValue(v)
+		} else {
+			m.CurrentTagged = types.StringNull()
+		}
+	} else {
+		m.CurrentTagged = types.StringNull()
+	}
+	if v, ok := obj["current-untagged"]; ok {
+		_ = v
+		if v != "" {
+			m.CurrentUntagged = types.StringValue(v)
+		} else {
+			m.CurrentUntagged = types.StringNull()
+		}
+	} else {
+		m.CurrentUntagged = types.StringNull()
+	}
 	if v, ok := obj["disabled"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
@@ -320,6 +370,26 @@ func interfaceBridgeVLANApply(ctx context.Context, obj client.Object, m *Interfa
 		}
 	} else {
 		m.Disabled = types.BoolNull()
+	}
+	if v, ok := obj["dynamic"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Dynamic = types.BoolValue(b)
+		} else {
+			m.Dynamic = types.BoolNull()
+		}
+	} else {
+		m.Dynamic = types.BoolNull()
+	}
+	if v, ok := obj["mvrp-attributes"]; ok {
+		_ = v
+		if v != "" {
+			m.MvrpAttributes = types.StringValue(v)
+		} else {
+			m.MvrpAttributes = types.StringNull()
+		}
+	} else {
+		m.MvrpAttributes = types.StringNull()
 	}
 	if v, ok := obj["mvrp-forbidden"]; ok {
 		_ = v

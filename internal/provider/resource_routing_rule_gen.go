@@ -12,9 +12,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
 )
 
 var (
@@ -37,10 +39,12 @@ type RoutingRuleModel struct {
 	Disabled    types.Bool   `tfsdk:"disabled"`
 	DstAddress  types.String `tfsdk:"dst_address"`
 	Interface   types.String `tfsdk:"interface"`
+	Invalid     types.Bool   `tfsdk:"invalid"`
+	MinPrefix   types.String `tfsdk:"min_prefix"`
 	Realm       types.String `tfsdk:"realm"`
 	RoutingMark types.String `tfsdk:"routing_mark"`
 	SrcAddress  types.String `tfsdk:"src_address"`
-	Vrf         types.String `tfsdk:"vrf"`
+	Vrf         types.Bool   `tfsdk:"vrf"`
 	Router      types.String `tfsdk:"router"`
 }
 
@@ -72,6 +76,7 @@ func (r *RoutingRuleResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Optional:    true,
 				Computed:    true,
 				Description: "",
+				Validators:  []validator.String{schemautil.OneOf([]string{"lookup", "unreachable", "drop", "lookup-only-in-table", "mangle"}...)},
 			},
 			"chain": schema.StringAttribute{
 				Optional:    true,
@@ -98,6 +103,16 @@ func (r *RoutingRuleResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Computed:    true,
 				Description: "",
 			},
+			"invalid": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"min_prefix": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"realm": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -113,7 +128,7 @@ func (r *RoutingRuleResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Computed:    true,
 				Description: "",
 			},
-			"vrf": schema.StringAttribute{
+			"vrf": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -155,6 +170,9 @@ func (r *RoutingRuleResource) Create(ctx context.Context, req resource.CreateReq
 	if !(plan.Interface.IsNull() || plan.Interface.IsUnknown()) {
 		body["interface"] = plan.Interface.ValueString()
 	}
+	if !(plan.MinPrefix.IsNull() || plan.MinPrefix.IsUnknown()) {
+		body["min-prefix"] = plan.MinPrefix.ValueString()
+	}
 	if !(plan.Realm.IsNull() || plan.Realm.IsUnknown()) {
 		body["realm"] = plan.Realm.ValueString()
 	}
@@ -165,7 +183,7 @@ func (r *RoutingRuleResource) Create(ctx context.Context, req resource.CreateReq
 		body["src-address"] = plan.SrcAddress.ValueString()
 	}
 	if !(plan.Vrf.IsNull() || plan.Vrf.IsUnknown()) {
-		body["vrf"] = plan.Vrf.ValueString()
+		body["vrf"] = client.FormatBool(plan.Vrf.ValueBool())
 	}
 	obj, err := c.Add(ctx, "/routing/rule", body)
 	if err != nil {
@@ -232,6 +250,9 @@ func (r *RoutingRuleResource) Update(ctx context.Context, req resource.UpdateReq
 	if !plan.Interface.Equal(state.Interface) {
 		body["interface"] = plan.Interface.ValueString()
 	}
+	if !plan.MinPrefix.Equal(state.MinPrefix) {
+		body["min-prefix"] = plan.MinPrefix.ValueString()
+	}
 	if !plan.Realm.Equal(state.Realm) {
 		body["realm"] = plan.Realm.ValueString()
 	}
@@ -242,7 +263,7 @@ func (r *RoutingRuleResource) Update(ctx context.Context, req resource.UpdateReq
 		body["src-address"] = plan.SrcAddress.ValueString()
 	}
 	if !plan.Vrf.Equal(state.Vrf) {
-		body["vrf"] = plan.Vrf.ValueString()
+		body["vrf"] = client.FormatBool(plan.Vrf.ValueBool())
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/routing/rule", state.ID.ValueString(), body)
@@ -387,6 +408,26 @@ func routingRuleApply(ctx context.Context, obj client.Object, m *RoutingRuleMode
 	} else {
 		m.Interface = types.StringNull()
 	}
+	if v, ok := obj["invalid"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Invalid = types.BoolValue(b)
+		} else {
+			m.Invalid = types.BoolNull()
+		}
+	} else {
+		m.Invalid = types.BoolNull()
+	}
+	if v, ok := obj["min-prefix"]; ok {
+		_ = v
+		if v != "" {
+			m.MinPrefix = types.StringValue(v)
+		} else {
+			m.MinPrefix = types.StringNull()
+		}
+	} else {
+		m.MinPrefix = types.StringNull()
+	}
 	if v, ok := obj["realm"]; ok {
 		_ = v
 		if v != "" {
@@ -419,12 +460,12 @@ func routingRuleApply(ctx context.Context, obj client.Object, m *RoutingRuleMode
 	}
 	if v, ok := obj["vrf"]; ok {
 		_ = v
-		if v != "" {
-			m.Vrf = types.StringValue(v)
+		if b, err := client.ParseBool(v); err == nil {
+			m.Vrf = types.BoolValue(b)
 		} else {
-			m.Vrf = types.StringNull()
+			m.Vrf = types.BoolNull()
 		}
 	} else {
-		m.Vrf = types.StringNull()
+		m.Vrf = types.BoolNull()
 	}
 }

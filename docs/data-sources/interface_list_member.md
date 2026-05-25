@@ -33,6 +33,9 @@ This data source supports the following arguments:
 * `proplist` - (Optional) List of property names to project; smaller payload.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `dynamic` - (Optional) Type: `string`.
+* `interface` - (Optional) Type: `string`.
+* `list` - (Optional) Type: `string`.
 
 ## Attribute Reference
 

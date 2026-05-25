@@ -24,6 +24,7 @@ resource "routeros_interface_bridge_vlan" "vlan_example" {
 
   # Optional attributes (uncomment as needed):
   # bridge = "bridge1"
+  # mvrp_attributes = "replace-me"
   # mvrp_forbidden = "replace-me"
   # tagged = "replace-me"
   # untagged = "replace-me"
@@ -39,10 +40,20 @@ This resource supports the following arguments:
 * `bridge` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `mvrp_attributes` - (Optional) Type: `string`.
 * `mvrp_forbidden` - (Optional) Type: `string`.
 * `tagged` - (Optional) Type: `string`.
 * `untagged` - (Optional) Type: `string`.
 * `vlan_ids` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+In addition to the arguments above, the following attributes are exported:
+
+* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
+* `current_tagged` - Type: `string`.
+* `current_untagged` - Type: `string`.
+* `dynamic` - Type: `bool`.
 
 ## Import
 

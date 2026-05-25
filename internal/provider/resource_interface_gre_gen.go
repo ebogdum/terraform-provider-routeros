@@ -33,6 +33,7 @@ type InterfaceGreResource struct {
 
 type InterfaceGreModel struct {
 	ID            types.String `tfsdk:"id"`
+	ActualMTU     types.Int64  `tfsdk:"actual_mtu"`
 	AllowFastPath types.Bool   `tfsdk:"allow_fast_path"`
 	ClampTCPMss   types.Bool   `tfsdk:"clamp_tcp_mss"`
 	Comment       types.String `tfsdk:"comment"`
@@ -65,12 +66,17 @@ func (r *InterfaceGreResource) Configure(_ context.Context, req resource.Configu
 
 func (r *InterfaceGreResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "GRE tunnel -- needs reachable remote address and unused name. Skipped.",
+		Description: "GRE tunnel — needs reachable remote address and unused name. Skipped.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"actual_mtu": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
 			},
 			"allow_fast_path": schema.BoolAttribute{
 				Optional:    true,
@@ -357,6 +363,16 @@ func interfaceGreLookupByNaturalKey(ctx context.Context, c *client.Client, id st
 func interfaceGreApply(ctx context.Context, obj client.Object, m *InterfaceGreModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["actual-mtu"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.ActualMTU = types.Int64Value(n)
+		} else {
+			m.ActualMTU = types.Int64Null()
+		}
+	} else {
+		m.ActualMTU = types.Int64Null()
+	}
 	if v, ok := obj["allow-fast-path"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {

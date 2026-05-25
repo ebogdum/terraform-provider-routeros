@@ -19,6 +19,7 @@ resource "routeros_interface_mesh_port" "port_example" {
 
   # Optional attributes (uncomment as needed):
   # hello_interval = 10
+  # inactive = false
   # interface = "ether1"
   # mesh = "replace-me"
   # path_cost = 10
@@ -34,10 +35,19 @@ This resource supports the following arguments:
 * `comment` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`.
 * `hello_interval` - (Optional) Type: `int`. Default: `10`.
+* `inactive` - (Optional) Type: `bool`.
 * `interface` - (Optional) Type: `string`.
 * `mesh` - (Optional) Type: `string`.
 * `path_cost` - (Optional) Type: `int`. Default: `10`.
-* `port_type` - (Optional) Type: `enum(auto|WDS|wireless|ethernet)`.
+* `port_type` - (Optional) Type: `enum(auto|wds|wireless|ethernet)`.
+
+## Attribute Reference
+
+In addition to the arguments above, the following attributes are exported:
+
+* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
+* `dr_address` - Type: `string`.
+* `dynamic` - Type: `bool`.
 
 ## Import
 

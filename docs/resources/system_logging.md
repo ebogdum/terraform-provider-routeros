@@ -19,6 +19,7 @@ resource "routeros_system_logging" "logging_example" {
 
   # Optional attributes (uncomment as needed):
   # action = "replace-me"
+  # name = "tf-example"
   # prefix = "replace-me"
   # regex = "replace-me"
   # topics = "replace-me"
@@ -33,6 +34,7 @@ This resource supports the following arguments:
 * `action` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`.
+* `name` - (Optional) Type: `string`.
 * `prefix` - (Optional) Type: `string`.
 * `regex` - (Optional) Type: `string`.
 * `topics` - (Optional) Type: `string`.

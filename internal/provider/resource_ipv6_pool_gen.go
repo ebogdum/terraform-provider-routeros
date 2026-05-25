@@ -30,13 +30,18 @@ type IPV6PoolResource struct {
 }
 
 type IPV6PoolModel struct {
-	ID           types.String `tfsdk:"id"`
-	Comment      types.String `tfsdk:"comment"`
-	FromPool     types.String `tfsdk:"from_pool"`
-	Name         types.String `tfsdk:"name"`
-	Prefix       types.String `tfsdk:"prefix"`
-	PrefixLength types.Int64  `tfsdk:"prefix_length"`
-	Router       types.String `tfsdk:"router"`
+	ID                types.String `tfsdk:"id"`
+	ActualPrefix      types.String `tfsdk:"actual_prefix"`
+	Comment           types.String `tfsdk:"comment"`
+	Dynamic           types.Bool   `tfsdk:"dynamic"`
+	FromPool          types.String `tfsdk:"from_pool"`
+	Invalid           types.Bool   `tfsdk:"invalid"`
+	Name              types.String `tfsdk:"name"`
+	PreferredLifetime types.String `tfsdk:"preferred_lifetime"`
+	Prefix            types.String `tfsdk:"prefix"`
+	PrefixLength      types.Int64  `tfsdk:"prefix_length"`
+	ValidLifetime     types.String `tfsdk:"valid_lifetime"`
+	Router            types.String `tfsdk:"router"`
 }
 
 func NewIPV6PoolResource() resource.Resource { return &IPV6PoolResource{} }
@@ -63,12 +68,27 @@ func (r *IPV6PoolResource) Schema(_ context.Context, _ resource.SchemaRequest, r
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
+			"actual_prefix": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "Free-form comment.",
 			},
+			"dynamic": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"from_pool": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"invalid": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -77,12 +97,22 @@ func (r *IPV6PoolResource) Schema(_ context.Context, _ resource.SchemaRequest, r
 				Required:    true,
 				Description: "",
 			},
+			"preferred_lifetime": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"prefix": schema.StringAttribute{
 				Required:    true,
 				Description: "",
 			},
 			"prefix_length": schema.Int64Attribute{
 				Required:    true,
+				Description: "",
+			},
+			"valid_lifetime": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
 				Description: "",
 			},
 			"router": schema.StringAttribute{
@@ -264,6 +294,16 @@ func iPV6PoolLookupByNaturalKey(ctx context.Context, c *client.Client, id string
 func iPV6PoolApply(ctx context.Context, obj client.Object, m *IPV6PoolModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["actual-prefix"]; ok {
+		_ = v
+		if v != "" {
+			m.ActualPrefix = types.StringValue(v)
+		} else {
+			m.ActualPrefix = types.StringNull()
+		}
+	} else {
+		m.ActualPrefix = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {
@@ -273,6 +313,16 @@ func iPV6PoolApply(ctx context.Context, obj client.Object, m *IPV6PoolModel) {
 		}
 	} else {
 		m.Comment = types.StringNull()
+	}
+	if v, ok := obj["dynamic"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Dynamic = types.BoolValue(b)
+		} else {
+			m.Dynamic = types.BoolNull()
+		}
+	} else {
+		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["from-pool"]; ok {
 		_ = v
@@ -284,6 +334,16 @@ func iPV6PoolApply(ctx context.Context, obj client.Object, m *IPV6PoolModel) {
 	} else {
 		m.FromPool = types.StringNull()
 	}
+	if v, ok := obj["invalid"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Invalid = types.BoolValue(b)
+		} else {
+			m.Invalid = types.BoolNull()
+		}
+	} else {
+		m.Invalid = types.BoolNull()
+	}
 	if v, ok := obj["name"]; ok {
 		_ = v
 		if v != "" {
@@ -293,6 +353,16 @@ func iPV6PoolApply(ctx context.Context, obj client.Object, m *IPV6PoolModel) {
 		}
 	} else {
 		m.Name = types.StringNull()
+	}
+	if v, ok := obj["preferred-lifetime"]; ok {
+		_ = v
+		if v != "" {
+			m.PreferredLifetime = types.StringValue(v)
+		} else {
+			m.PreferredLifetime = types.StringNull()
+		}
+	} else {
+		m.PreferredLifetime = types.StringNull()
 	}
 	if v, ok := obj["prefix"]; ok {
 		_ = v
@@ -313,5 +383,15 @@ func iPV6PoolApply(ctx context.Context, obj client.Object, m *IPV6PoolModel) {
 		}
 	} else {
 		m.PrefixLength = types.Int64Null()
+	}
+	if v, ok := obj["valid-lifetime"]; ok {
+		_ = v
+		if v != "" {
+			m.ValidLifetime = types.StringValue(v)
+		} else {
+			m.ValidLifetime = types.StringNull()
+		}
+	} else {
+		m.ValidLifetime = types.StringNull()
 	}
 }

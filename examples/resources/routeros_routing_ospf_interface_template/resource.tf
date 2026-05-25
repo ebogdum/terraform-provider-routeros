@@ -7,13 +7,15 @@ resource "routeros_routing_ospf_interface_template" "interface_template_example"
   # area = "replace-me"
   # auth_id = "replace-me"
   # auth_key = "REDACTED"
+  # authentication = "replace-me"
   # cost = 0
   # dead_interval = "1h"
   # hello_interval = "1h"
   # instance_id = 0
   # interfaces = "replace-me"
+  # network_type = "broadcast"
   # networks = "replace-me"
-  # passive = "replace-me"
+  # passive = false
   # prefix_list = "replace-me"
   # priority = 0
   # retransmit_interval = "1h"

@@ -10,5 +10,5 @@ resource "routeros_system_scheduler" "scheduler_example" {
   # interval = "1h"
   # policy = "replace-me"
   # start_date = "replace-me"
-  # start_time = "replace-me"
+  # start_time = "startup"
 }

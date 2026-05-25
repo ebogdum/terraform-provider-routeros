@@ -32,15 +32,27 @@ type InterfaceMeshResource struct {
 }
 
 type InterfaceMeshModel struct {
-	ID              types.String `tfsdk:"id"`
-	ARP             types.String `tfsdk:"arp"`
-	ARPTimeout      types.String `tfsdk:"arp_timeout"`
-	Comment         types.String `tfsdk:"comment"`
-	Disabled        types.Bool   `tfsdk:"disabled"`
-	MeshPortal      types.Bool   `tfsdk:"mesh_portal"`
-	MTU             types.Int64  `tfsdk:"mtu"`
-	ReoptimizePaths types.Bool   `tfsdk:"reoptimize_paths"`
-	Router          types.String `tfsdk:"router"`
+	ID                   types.String `tfsdk:"id"`
+	AdminMACAddress      types.String `tfsdk:"admin_mac_address"`
+	ARP                  types.String `tfsdk:"arp"`
+	ARPTimeout           types.String `tfsdk:"arp_timeout"`
+	Comment              types.String `tfsdk:"comment"`
+	DefaultHoplimit      types.Int64  `tfsdk:"default_hoplimit"`
+	Disabled             types.Bool   `tfsdk:"disabled"`
+	MACAddress           types.String `tfsdk:"mac_address"`
+	MeshPortal           types.Bool   `tfsdk:"mesh_portal"`
+	MeshTraceroute       types.String `tfsdk:"mesh_traceroute"`
+	MTU                  types.Int64  `tfsdk:"mtu"`
+	PrepLifetime         types.String `tfsdk:"prep_lifetime"`
+	PreqDestinationOnly  types.Bool   `tfsdk:"preq_destination_only"`
+	PreqReplyAndForward  types.Bool   `tfsdk:"preq_reply_and_forward"`
+	PreqRetries          types.Int64  `tfsdk:"preq_retries"`
+	PreqWaitingTime      types.Int64  `tfsdk:"preq_waiting_time"`
+	RannInterval         types.String `tfsdk:"rann_interval"`
+	RannLifetime         types.String `tfsdk:"rann_lifetime"`
+	RannPropagationDelay types.Int64  `tfsdk:"rann_propagation_delay"`
+	ReoptimizePaths      types.Bool   `tfsdk:"reoptimize_paths"`
+	Router               types.String `tfsdk:"router"`
 }
 
 func NewInterfaceMeshResource() resource.Resource { return &InterfaceMeshResource{} }
@@ -67,6 +79,11 @@ func (r *InterfaceMeshResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
+			"admin_mac_address": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"arp": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -85,17 +102,78 @@ func (r *InterfaceMeshResource) Schema(_ context.Context, _ resource.SchemaReque
 				Computed:    true,
 				Description: "Free-form comment.",
 			},
+			"default_hoplimit": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"disabled": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "Whether the entry is disabled.",
+			},
+			"mac_address": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
 			},
 			"mesh_portal": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
+			"mesh_traceroute": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"mtu": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"prep_lifetime": schema.StringAttribute{
+				Optional:      true,
+				Computed:      true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			},
+			"preq_destination_only": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"preq_reply_and_forward": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"preq_retries": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"preq_waiting_time": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"rann_interval": schema.StringAttribute{
+				Optional:      true,
+				Computed:      true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			},
+			"rann_lifetime": schema.StringAttribute{
+				Optional:      true,
+				Computed:      true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			},
+			"rann_propagation_delay": schema.Int64Attribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -124,6 +202,9 @@ func (r *InterfaceMeshResource) Create(ctx context.Context, req resource.CreateR
 		return
 	}
 	body := client.Object{}
+	if !(plan.AdminMACAddress.IsNull() || plan.AdminMACAddress.IsUnknown()) {
+		body["admin-mac-address"] = plan.AdminMACAddress.ValueString()
+	}
 	if !(plan.ARP.IsNull() || plan.ARP.IsUnknown()) {
 		body["arp"] = plan.ARP.ValueString()
 	}
@@ -133,14 +214,44 @@ func (r *InterfaceMeshResource) Create(ctx context.Context, req resource.CreateR
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
 	}
+	if !(plan.DefaultHoplimit.IsNull() || plan.DefaultHoplimit.IsUnknown()) {
+		body["default-hoplimit"] = client.FormatInt64(plan.DefaultHoplimit.ValueInt64())
+	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
 	if !(plan.MeshPortal.IsNull() || plan.MeshPortal.IsUnknown()) {
 		body["mesh-portal"] = client.FormatBool(plan.MeshPortal.ValueBool())
 	}
+	if !(plan.MeshTraceroute.IsNull() || plan.MeshTraceroute.IsUnknown()) {
+		body["mesh-traceroute"] = plan.MeshTraceroute.ValueString()
+	}
 	if !(plan.MTU.IsNull() || plan.MTU.IsUnknown()) {
 		body["mtu"] = client.FormatInt64(plan.MTU.ValueInt64())
+	}
+	if !(plan.PrepLifetime.IsNull() || plan.PrepLifetime.IsUnknown()) {
+		body["prep-lifetime"] = plan.PrepLifetime.ValueString()
+	}
+	if !(plan.PreqDestinationOnly.IsNull() || plan.PreqDestinationOnly.IsUnknown()) {
+		body["preq-destination-only"] = client.FormatBool(plan.PreqDestinationOnly.ValueBool())
+	}
+	if !(plan.PreqReplyAndForward.IsNull() || plan.PreqReplyAndForward.IsUnknown()) {
+		body["preq-reply-and-forward"] = client.FormatBool(plan.PreqReplyAndForward.ValueBool())
+	}
+	if !(plan.PreqRetries.IsNull() || plan.PreqRetries.IsUnknown()) {
+		body["preq-retries"] = client.FormatInt64(plan.PreqRetries.ValueInt64())
+	}
+	if !(plan.PreqWaitingTime.IsNull() || plan.PreqWaitingTime.IsUnknown()) {
+		body["preq-waiting-time"] = client.FormatInt64(plan.PreqWaitingTime.ValueInt64())
+	}
+	if !(plan.RannInterval.IsNull() || plan.RannInterval.IsUnknown()) {
+		body["rann-interval"] = plan.RannInterval.ValueString()
+	}
+	if !(plan.RannLifetime.IsNull() || plan.RannLifetime.IsUnknown()) {
+		body["rann-lifetime"] = plan.RannLifetime.ValueString()
+	}
+	if !(plan.RannPropagationDelay.IsNull() || plan.RannPropagationDelay.IsUnknown()) {
+		body["rann-propagation-delay"] = client.FormatInt64(plan.RannPropagationDelay.ValueInt64())
 	}
 	if !(plan.ReoptimizePaths.IsNull() || plan.ReoptimizePaths.IsUnknown()) {
 		body["reoptimize-paths"] = client.FormatBool(plan.ReoptimizePaths.ValueBool())
@@ -192,6 +303,9 @@ func (r *InterfaceMeshResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 	body := client.Object{}
+	if !plan.AdminMACAddress.Equal(state.AdminMACAddress) {
+		body["admin-mac-address"] = plan.AdminMACAddress.ValueString()
+	}
 	if !plan.ARP.Equal(state.ARP) {
 		body["arp"] = plan.ARP.ValueString()
 	}
@@ -201,14 +315,44 @@ func (r *InterfaceMeshResource) Update(ctx context.Context, req resource.UpdateR
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
 	}
+	if !plan.DefaultHoplimit.Equal(state.DefaultHoplimit) {
+		body["default-hoplimit"] = client.FormatInt64(plan.DefaultHoplimit.ValueInt64())
+	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
 	if !plan.MeshPortal.Equal(state.MeshPortal) {
 		body["mesh-portal"] = client.FormatBool(plan.MeshPortal.ValueBool())
 	}
+	if !plan.MeshTraceroute.Equal(state.MeshTraceroute) {
+		body["mesh-traceroute"] = plan.MeshTraceroute.ValueString()
+	}
 	if !plan.MTU.Equal(state.MTU) {
 		body["mtu"] = client.FormatInt64(plan.MTU.ValueInt64())
+	}
+	if !plan.PrepLifetime.Equal(state.PrepLifetime) {
+		body["prep-lifetime"] = plan.PrepLifetime.ValueString()
+	}
+	if !plan.PreqDestinationOnly.Equal(state.PreqDestinationOnly) {
+		body["preq-destination-only"] = client.FormatBool(plan.PreqDestinationOnly.ValueBool())
+	}
+	if !plan.PreqReplyAndForward.Equal(state.PreqReplyAndForward) {
+		body["preq-reply-and-forward"] = client.FormatBool(plan.PreqReplyAndForward.ValueBool())
+	}
+	if !plan.PreqRetries.Equal(state.PreqRetries) {
+		body["preq-retries"] = client.FormatInt64(plan.PreqRetries.ValueInt64())
+	}
+	if !plan.PreqWaitingTime.Equal(state.PreqWaitingTime) {
+		body["preq-waiting-time"] = client.FormatInt64(plan.PreqWaitingTime.ValueInt64())
+	}
+	if !plan.RannInterval.Equal(state.RannInterval) {
+		body["rann-interval"] = plan.RannInterval.ValueString()
+	}
+	if !plan.RannLifetime.Equal(state.RannLifetime) {
+		body["rann-lifetime"] = plan.RannLifetime.ValueString()
+	}
+	if !plan.RannPropagationDelay.Equal(state.RannPropagationDelay) {
+		body["rann-propagation-delay"] = client.FormatInt64(plan.RannPropagationDelay.ValueInt64())
 	}
 	if !plan.ReoptimizePaths.Equal(state.ReoptimizePaths) {
 		body["reoptimize-paths"] = client.FormatBool(plan.ReoptimizePaths.ValueBool())
@@ -296,6 +440,16 @@ func interfaceMeshLookupByNaturalKey(ctx context.Context, c *client.Client, id s
 func interfaceMeshApply(ctx context.Context, obj client.Object, m *InterfaceMeshModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["admin-mac-address"]; ok {
+		_ = v
+		if v != "" {
+			m.AdminMACAddress = types.StringValue(v)
+		} else {
+			m.AdminMACAddress = types.StringNull()
+		}
+	} else {
+		m.AdminMACAddress = types.StringNull()
+	}
 	if v, ok := obj["arp"]; ok {
 		_ = v
 		if v != "" {
@@ -326,6 +480,16 @@ func interfaceMeshApply(ctx context.Context, obj client.Object, m *InterfaceMesh
 	} else {
 		m.Comment = types.StringNull()
 	}
+	if v, ok := obj["default-hoplimit"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.DefaultHoplimit = types.Int64Value(n)
+		} else {
+			m.DefaultHoplimit = types.Int64Null()
+		}
+	} else {
+		m.DefaultHoplimit = types.Int64Null()
+	}
 	if v, ok := obj["disabled"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
@@ -335,6 +499,16 @@ func interfaceMeshApply(ctx context.Context, obj client.Object, m *InterfaceMesh
 		}
 	} else {
 		m.Disabled = types.BoolNull()
+	}
+	if v, ok := obj["mac-address"]; ok {
+		_ = v
+		if v != "" {
+			m.MACAddress = types.StringValue(v)
+		} else {
+			m.MACAddress = types.StringNull()
+		}
+	} else {
+		m.MACAddress = types.StringNull()
 	}
 	if v, ok := obj["mesh-portal"]; ok {
 		_ = v
@@ -346,6 +520,16 @@ func interfaceMeshApply(ctx context.Context, obj client.Object, m *InterfaceMesh
 	} else {
 		m.MeshPortal = types.BoolNull()
 	}
+	if v, ok := obj["mesh-traceroute"]; ok {
+		_ = v
+		if v != "" {
+			m.MeshTraceroute = types.StringValue(v)
+		} else {
+			m.MeshTraceroute = types.StringNull()
+		}
+	} else {
+		m.MeshTraceroute = types.StringNull()
+	}
 	if v, ok := obj["mtu"]; ok {
 		_ = v
 		if n, err := client.ParseInt64(v); err == nil {
@@ -355,6 +539,86 @@ func interfaceMeshApply(ctx context.Context, obj client.Object, m *InterfaceMesh
 		}
 	} else {
 		m.MTU = types.Int64Null()
+	}
+	if v, ok := obj["prep-lifetime"]; ok {
+		_ = v
+		if v != "" {
+			m.PrepLifetime = types.StringValue(v)
+		} else {
+			m.PrepLifetime = types.StringNull()
+		}
+	} else {
+		m.PrepLifetime = types.StringNull()
+	}
+	if v, ok := obj["preq-destination-only"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.PreqDestinationOnly = types.BoolValue(b)
+		} else {
+			m.PreqDestinationOnly = types.BoolNull()
+		}
+	} else {
+		m.PreqDestinationOnly = types.BoolNull()
+	}
+	if v, ok := obj["preq-reply-and-forward"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.PreqReplyAndForward = types.BoolValue(b)
+		} else {
+			m.PreqReplyAndForward = types.BoolNull()
+		}
+	} else {
+		m.PreqReplyAndForward = types.BoolNull()
+	}
+	if v, ok := obj["preq-retries"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.PreqRetries = types.Int64Value(n)
+		} else {
+			m.PreqRetries = types.Int64Null()
+		}
+	} else {
+		m.PreqRetries = types.Int64Null()
+	}
+	if v, ok := obj["preq-waiting-time"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.PreqWaitingTime = types.Int64Value(n)
+		} else {
+			m.PreqWaitingTime = types.Int64Null()
+		}
+	} else {
+		m.PreqWaitingTime = types.Int64Null()
+	}
+	if v, ok := obj["rann-interval"]; ok {
+		_ = v
+		if v != "" {
+			m.RannInterval = types.StringValue(v)
+		} else {
+			m.RannInterval = types.StringNull()
+		}
+	} else {
+		m.RannInterval = types.StringNull()
+	}
+	if v, ok := obj["rann-lifetime"]; ok {
+		_ = v
+		if v != "" {
+			m.RannLifetime = types.StringValue(v)
+		} else {
+			m.RannLifetime = types.StringNull()
+		}
+	} else {
+		m.RannLifetime = types.StringNull()
+	}
+	if v, ok := obj["rann-propagation-delay"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.RannPropagationDelay = types.Int64Value(n)
+		} else {
+			m.RannPropagationDelay = types.Int64Null()
+		}
+	} else {
+		m.RannPropagationDelay = types.Int64Null()
 	}
 	if v, ok := obj["reoptimize-paths"]; ok {
 		_ = v

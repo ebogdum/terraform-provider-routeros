@@ -30,13 +30,14 @@ type IPDHCPServerOptionResource struct {
 }
 
 type IPDHCPServerOptionModel struct {
-	ID      types.String `tfsdk:"id"`
-	Code    types.Int64  `tfsdk:"code"`
-	Comment types.String `tfsdk:"comment"`
-	Force   types.Bool   `tfsdk:"force"`
-	Name    types.String `tfsdk:"name"`
-	Value   types.String `tfsdk:"value"`
-	Router  types.String `tfsdk:"router"`
+	ID       types.String `tfsdk:"id"`
+	Code     types.Int64  `tfsdk:"code"`
+	Comment  types.String `tfsdk:"comment"`
+	Force    types.Bool   `tfsdk:"force"`
+	Name     types.String `tfsdk:"name"`
+	RawValue types.String `tfsdk:"raw_value"`
+	Value    types.String `tfsdk:"value"`
+	Router   types.String `tfsdk:"router"`
 }
 
 func NewIPDHCPServerOptionResource() resource.Resource { return &IPDHCPServerOptionResource{} }
@@ -79,6 +80,11 @@ func (r *IPDHCPServerOptionResource) Schema(_ context.Context, _ resource.Schema
 			},
 			"name": schema.StringAttribute{
 				Required:    true,
+				Description: "",
+			},
+			"raw_value": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
 				Description: "",
 			},
 			"value": schema.StringAttribute{
@@ -303,6 +309,16 @@ func iPDHCPServerOptionApply(ctx context.Context, obj client.Object, m *IPDHCPSe
 		}
 	} else {
 		m.Name = types.StringNull()
+	}
+	if v, ok := obj["raw-value"]; ok {
+		_ = v
+		if v != "" {
+			m.RawValue = types.StringValue(v)
+		} else {
+			m.RawValue = types.StringNull()
+		}
+	} else {
+		m.RawValue = types.StringNull()
 	}
 	if v, ok := obj["value"]; ok {
 		_ = v

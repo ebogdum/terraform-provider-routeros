@@ -32,14 +32,18 @@ type MPLSMangleResource struct {
 }
 
 type MPLSMangleModel struct {
-	ID       types.String `tfsdk:"id"`
-	Chain    types.String `tfsdk:"chain"`
-	Comment  types.String `tfsdk:"comment"`
-	Disabled types.Bool   `tfsdk:"disabled"`
-	Exp      types.String `tfsdk:"exp"`
-	SetExp   types.String `tfsdk:"set_exp"`
-	SetMark  types.String `tfsdk:"set_mark"`
-	Router   types.String `tfsdk:"router"`
+	ID               types.String `tfsdk:"id"`
+	Builtin          types.Bool   `tfsdk:"builtin"`
+	Chain            types.String `tfsdk:"chain"`
+	Comment          types.String `tfsdk:"comment"`
+	Disabled         types.Bool   `tfsdk:"disabled"`
+	Exp              types.String `tfsdk:"exp"`
+	Packets          types.String `tfsdk:"packets"`
+	ResetCounters    types.String `tfsdk:"reset_counters"`
+	ResetCountersAll types.String `tfsdk:"reset_counters_all"`
+	SetExp           types.String `tfsdk:"set_exp"`
+	SetMark          types.String `tfsdk:"set_mark"`
+	Router           types.String `tfsdk:"router"`
 }
 
 func NewMPLSMangleResource() resource.Resource { return &MPLSMangleResource{} }
@@ -66,6 +70,11 @@ func (r *MPLSMangleResource) Schema(_ context.Context, _ resource.SchemaRequest,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
+			"builtin": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"chain": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -87,6 +96,21 @@ func (r *MPLSMangleResource) Schema(_ context.Context, _ resource.SchemaRequest,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.OneOf([]string{"0", "1", "2", "3", "4", "5", "6", "7"}...)},
+			},
+			"packets": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"reset_counters": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"reset_counters_all": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
 			},
 			"set_exp": schema.StringAttribute{
 				Optional:    true,
@@ -118,6 +142,9 @@ func (r *MPLSMangleResource) Create(ctx context.Context, req resource.CreateRequ
 		return
 	}
 	body := client.Object{}
+	if !(plan.Builtin.IsNull() || plan.Builtin.IsUnknown()) {
+		body["builtin"] = client.FormatBool(plan.Builtin.ValueBool())
+	}
 	if !(plan.Chain.IsNull() || plan.Chain.IsUnknown()) {
 		body["chain"] = plan.Chain.ValueString()
 	}
@@ -129,6 +156,12 @@ func (r *MPLSMangleResource) Create(ctx context.Context, req resource.CreateRequ
 	}
 	if !(plan.Exp.IsNull() || plan.Exp.IsUnknown()) {
 		body["exp"] = plan.Exp.ValueString()
+	}
+	if !(plan.ResetCounters.IsNull() || plan.ResetCounters.IsUnknown()) {
+		body["reset-counters"] = plan.ResetCounters.ValueString()
+	}
+	if !(plan.ResetCountersAll.IsNull() || plan.ResetCountersAll.IsUnknown()) {
+		body["reset-counters-all"] = plan.ResetCountersAll.ValueString()
 	}
 	if !(plan.SetExp.IsNull() || plan.SetExp.IsUnknown()) {
 		body["set-exp"] = plan.SetExp.ValueString()
@@ -183,6 +216,9 @@ func (r *MPLSMangleResource) Update(ctx context.Context, req resource.UpdateRequ
 		return
 	}
 	body := client.Object{}
+	if !plan.Builtin.Equal(state.Builtin) {
+		body["builtin"] = client.FormatBool(plan.Builtin.ValueBool())
+	}
 	if !plan.Chain.Equal(state.Chain) {
 		body["chain"] = plan.Chain.ValueString()
 	}
@@ -194,6 +230,12 @@ func (r *MPLSMangleResource) Update(ctx context.Context, req resource.UpdateRequ
 	}
 	if !plan.Exp.Equal(state.Exp) {
 		body["exp"] = plan.Exp.ValueString()
+	}
+	if !plan.ResetCounters.Equal(state.ResetCounters) {
+		body["reset-counters"] = plan.ResetCounters.ValueString()
+	}
+	if !plan.ResetCountersAll.Equal(state.ResetCountersAll) {
+		body["reset-counters-all"] = plan.ResetCountersAll.ValueString()
 	}
 	if !plan.SetExp.Equal(state.SetExp) {
 		body["set-exp"] = plan.SetExp.ValueString()
@@ -284,6 +326,16 @@ func mPLSMangleLookupByNaturalKey(ctx context.Context, c *client.Client, id stri
 func mPLSMangleApply(ctx context.Context, obj client.Object, m *MPLSMangleModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["builtin"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Builtin = types.BoolValue(b)
+		} else {
+			m.Builtin = types.BoolNull()
+		}
+	} else {
+		m.Builtin = types.BoolNull()
+	}
 	if v, ok := obj["chain"]; ok {
 		_ = v
 		if v != "" {
@@ -323,6 +375,36 @@ func mPLSMangleApply(ctx context.Context, obj client.Object, m *MPLSMangleModel)
 		}
 	} else {
 		m.Exp = types.StringNull()
+	}
+	if v, ok := obj["packets"]; ok {
+		_ = v
+		if v != "" {
+			m.Packets = types.StringValue(v)
+		} else {
+			m.Packets = types.StringNull()
+		}
+	} else {
+		m.Packets = types.StringNull()
+	}
+	if v, ok := obj["reset-counters"]; ok {
+		_ = v
+		if v != "" {
+			m.ResetCounters = types.StringValue(v)
+		} else {
+			m.ResetCounters = types.StringNull()
+		}
+	} else {
+		m.ResetCounters = types.StringNull()
+	}
+	if v, ok := obj["reset-counters-all"]; ok {
+		_ = v
+		if v != "" {
+			m.ResetCountersAll = types.StringValue(v)
+		} else {
+			m.ResetCountersAll = types.StringNull()
+		}
+	} else {
+		m.ResetCountersAll = types.StringNull()
 	}
 	if v, ok := obj["set-exp"]; ok {
 		_ = v

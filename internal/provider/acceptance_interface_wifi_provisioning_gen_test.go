@@ -26,7 +26,7 @@ provider "routeros" {
 
 resource "routeros_interface_wifi_provisioning" "acc" {
   router = "home"
-  action = "none"
+  action = "create-dynamic-enabled"
 }
 `
 	cfg = formatProviderCfg(cfg)

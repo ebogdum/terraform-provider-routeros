@@ -31,7 +31,7 @@ resource "routeros_system_resource_hardware" "hardware_example" {
   # serial_number = "replace-me"
   # speed = "replace-me"
   # std_descr = "replace-me"
-  # type = "USB"
+  # type = "usb"
   # usb = "replace-me"
   # usb_version = "replace-me"
   # vendor = "replace-me"
@@ -59,7 +59,7 @@ This resource supports the following arguments:
 * `serial_number` - (Optional) Type: `string`.
 * `speed` - (Optional) Type: `string`.
 * `std_descr` - (Optional) Type: `string`.
-* `type` - (Optional) Type: `enum(USB|PCI|SCSI|Serial)`.
+* `type` - (Optional) Type: `enum(usb|pci|scsi|serial)`.
 * `usb` - (Optional) Type: `string`.
 * `usb_version` - (Optional) Type: `string`.
 * `vendor` - (Optional) Type: `string`.

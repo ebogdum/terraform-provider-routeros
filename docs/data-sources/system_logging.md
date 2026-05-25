@@ -29,6 +29,7 @@ This data source supports the following arguments:
 * `action` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`.
+* `name` - (Optional) Type: `string`.
 * `prefix` - (Optional) Type: `string`.
 * `regex` - (Optional) Type: `string`.
 * `topics` - (Optional) Type: `string`.

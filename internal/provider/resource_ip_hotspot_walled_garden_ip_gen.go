@@ -12,9 +12,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
 )
 
 var (
@@ -36,6 +38,7 @@ type IPHotspotWalledGardenIPModel struct {
 	Disabled       types.Bool   `tfsdk:"disabled"`
 	DstAddress     types.String `tfsdk:"dst_address"`
 	DstAddressList types.String `tfsdk:"dst_address_list"`
+	DstHost        types.String `tfsdk:"dst_host"`
 	DstPort        types.String `tfsdk:"dst_port"`
 	Protocol       types.String `tfsdk:"protocol"`
 	Server         types.String `tfsdk:"server"`
@@ -74,6 +77,7 @@ func (r *IPHotspotWalledGardenIPResource) Schema(_ context.Context, _ resource.S
 				Optional:    true,
 				Computed:    true,
 				Description: "",
+				Validators:  []validator.String{schemautil.OneOf([]string{"accept", "drop", "reject"}...)},
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -91,6 +95,11 @@ func (r *IPHotspotWalledGardenIPResource) Schema(_ context.Context, _ resource.S
 				Description: "",
 			},
 			"dst_address_list": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"dst_host": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -153,6 +162,9 @@ func (r *IPHotspotWalledGardenIPResource) Create(ctx context.Context, req resour
 	}
 	if !(plan.DstAddressList.IsNull() || plan.DstAddressList.IsUnknown()) {
 		body["dst-address-list"] = plan.DstAddressList.ValueString()
+	}
+	if !(plan.DstHost.IsNull() || plan.DstHost.IsUnknown()) {
+		body["dst-host"] = plan.DstHost.ValueString()
 	}
 	if !(plan.DstPort.IsNull() || plan.DstPort.IsUnknown()) {
 		body["dst-port"] = plan.DstPort.ValueString()
@@ -230,6 +242,9 @@ func (r *IPHotspotWalledGardenIPResource) Update(ctx context.Context, req resour
 	}
 	if !plan.DstAddressList.Equal(state.DstAddressList) {
 		body["dst-address-list"] = plan.DstAddressList.ValueString()
+	}
+	if !plan.DstHost.Equal(state.DstHost) {
+		body["dst-host"] = plan.DstHost.ValueString()
 	}
 	if !plan.DstPort.Equal(state.DstPort) {
 		body["dst-port"] = plan.DstPort.ValueString()
@@ -378,6 +393,16 @@ func iPHotspotWalledGardenIPApply(ctx context.Context, obj client.Object, m *IPH
 		}
 	} else {
 		m.DstAddressList = types.StringNull()
+	}
+	if v, ok := obj["dst-host"]; ok {
+		_ = v
+		if v != "" {
+			m.DstHost = types.StringValue(v)
+		} else {
+			m.DstHost = types.StringNull()
+		}
+	} else {
+		m.DstHost = types.StringNull()
 	}
 	if v, ok := obj["dst-port"]; ok {
 		_ = v

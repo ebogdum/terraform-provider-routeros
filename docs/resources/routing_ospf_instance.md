@@ -20,10 +20,12 @@ resource "routeros_routing_ospf_instance" "instance_example" {
   # Optional attributes (uncomment as needed):
   # domain_id = "replace-me"
   # domain_tag = "replace-me"
+  # in_filter = "replace-me"
   # mpls_te_address = "10.99.0.0/24"
   # mpls_te_area = "replace-me"
   # name = "tf-example"
   # originate_default = "replace-me"
+  # out_filter = "replace-me"
   # out_filter_select = "replace-me"
   # redistribute = "replace-me"
   # router_id = "replace-me"
@@ -42,16 +44,25 @@ This resource supports the following arguments:
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `domain_id` - (Optional) Type: `string`.
 * `domain_tag` - (Optional) Type: `string`.
+* `in_filter` - (Optional) Type: `string`.
 * `mpls_te_address` - (Optional) Type: `string`.
 * `mpls_te_area` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
 * `originate_default` - (Optional) Type: `string`.
+* `out_filter` - (Optional) Type: `string`.
 * `out_filter_select` - (Optional) Type: `string`.
 * `redistribute` - (Optional) Type: `string`.
 * `router_id` - (Optional) Type: `string`.
 * `routing_table` - (Optional) Type: `string`.
 * `version` - (Optional) Type: `enum(2|3)`.
 * `vrf` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+In addition to the arguments above, the following attributes are exported:
+
+* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
+* `invalid` - Type: `bool`.
 
 ## Import
 

@@ -5,6 +5,8 @@ resource "routeros_user_group" "group_example" {
   comment = "managed by terraform"
 
   # Optional attributes (uncomment as needed):
+  # policies = "replace-me"
   # policy = ["read"]
   # skin = "replace-me"
+  # system = false
 }
