@@ -73,7 +73,7 @@ func (d *InterfaceListDataSource) Read(ctx context.Context, req datasource.ReadR
 	opts := []client.QueryOption{}
 	if !m.Filter.IsNull() && !m.Filter.IsUnknown() {
 		filt := map[string]string{}
-		m.Filter.ElementsAs(ctx, &filt, false)
+		resp.Diagnostics.Append(m.Filter.ElementsAs(ctx, &filt, false)...)
 		for k, v := range filt {
 			opts = append(opts, client.WithFilter(k, v))
 		}

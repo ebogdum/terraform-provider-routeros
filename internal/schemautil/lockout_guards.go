@@ -78,6 +78,12 @@ func CheckUserGroupPolicyLockout(menuPath string, body client.Object, acknowledg
 // Caller is expected to supply the full intended state (snapshot of all
 // service rows after the planned change), not just the diff for one row,
 // since the test is global.
+//
+// /ip/service is currently surfaced only as a data source (RouterOS does not
+// permit add/remove on the rows -- only enable/disable). If a resource is
+// added later it MUST call this guard before applying a disable. The unit
+// tests in lockout_test.go cover the behaviour so it stays correct in the
+// meantime.
 func CheckIPServiceLockout(menuPath string, allServices []client.Object, acknowledged bool) error {
 	if acknowledged {
 		return nil
@@ -102,8 +108,8 @@ func CheckIPServiceLockout(menuPath string, allServices []client.Object, acknowl
 		return nil
 	}
 	return errors.New("refusing to apply /ip/service: would disable every management " +
-		"service (winbox/ssh/api/www/...). Leave at least one enabled or set " +
-		"lockout_ack=true to override.")
+		"service (winbox/ssh/api/www/...); leave at least one enabled or set " +
+		"lockout_ack=true to override")
 }
 
 // CheckMACServerLockout refuses an empty allowed-interface-list on /tool/mac-server
@@ -120,8 +126,8 @@ func CheckMACServerLockout(menuPath string, body client.Object, acknowledged boo
 	allowed := strings.TrimSpace(body["allowed-interface-list"])
 	if allowed == "" || allowed == "none" {
 		return errors.New("refusing to set /tool/mac-server allowed-interface-list to empty/none: " +
-			"this disables MAC-Winbox recovery, leaving no out-of-band access if SSH/Winbox/web break. " +
-			"Set lockout_ack=true to override.")
+			"this disables MAC-Winbox recovery, leaving no out-of-band access if SSH/Winbox/web break; " +
+			"set lockout_ack=true to override")
 	}
 	return nil
 }

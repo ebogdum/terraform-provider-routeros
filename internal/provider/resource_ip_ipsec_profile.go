@@ -177,7 +177,7 @@ func (r *IPIpsecProfileResource) Create(ctx context.Context, req resource.Create
 	}
 	body := client.Object{}
 	if !(plan.DhGroup.IsNull() || plan.DhGroup.IsUnknown()) {
-		body["dh-group"] = encodeStringList(ctx, plan.DhGroup)
+		body["dh-group"] = encodeStringList(ctx, plan.DhGroup, &resp.Diagnostics)
 	}
 	if !(plan.DpdInterval.IsNull() || plan.DpdInterval.IsUnknown()) {
 		body["dpd-interval"] = plan.DpdInterval.ValueString()
@@ -186,7 +186,7 @@ func (r *IPIpsecProfileResource) Create(ctx context.Context, req resource.Create
 		body["dpd-maximum-failures"] = client.FormatInt64(plan.DpdMaximumFailures.ValueInt64())
 	}
 	if !(plan.EncAlgorithm.IsNull() || plan.EncAlgorithm.IsUnknown()) {
-		body["enc-algorithm"] = encodeStringList(ctx, plan.EncAlgorithm)
+		body["enc-algorithm"] = encodeStringList(ctx, plan.EncAlgorithm, &resp.Diagnostics)
 	}
 	if !(plan.EncryptionAlgorithm.IsNull() || plan.EncryptionAlgorithm.IsUnknown()) {
 		body["encryption-algorithm"] = plan.EncryptionAlgorithm.ValueString()
@@ -266,7 +266,7 @@ func (r *IPIpsecProfileResource) Update(ctx context.Context, req resource.Update
 	}
 	body := client.Object{}
 	if !plan.DhGroup.Equal(state.DhGroup) {
-		body["dh-group"] = encodeStringList(ctx, plan.DhGroup)
+		body["dh-group"] = encodeStringList(ctx, plan.DhGroup, &resp.Diagnostics)
 	}
 	if !plan.DpdInterval.Equal(state.DpdInterval) {
 		body["dpd-interval"] = plan.DpdInterval.ValueString()
@@ -275,7 +275,7 @@ func (r *IPIpsecProfileResource) Update(ctx context.Context, req resource.Update
 		body["dpd-maximum-failures"] = client.FormatInt64(plan.DpdMaximumFailures.ValueInt64())
 	}
 	if !plan.EncAlgorithm.Equal(state.EncAlgorithm) {
-		body["enc-algorithm"] = encodeStringList(ctx, plan.EncAlgorithm)
+		body["enc-algorithm"] = encodeStringList(ctx, plan.EncAlgorithm, &resp.Diagnostics)
 	}
 	if !plan.EncryptionAlgorithm.Equal(state.EncryptionAlgorithm) {
 		body["encryption-algorithm"] = plan.EncryptionAlgorithm.ValueString()
@@ -341,11 +341,7 @@ func (r *IPIpsecProfileResource) ImportState(ctx context.Context, req resource.I
 	//   <router>/*<id>                   -> .id on the named router
 	//   <router>/<naturalkey>            -> resolved via List + filter
 	//   <naturalkey>                     -> resolved on the default router
-	id := req.ID
-	routerName := ""
-	if i := strings.Index(id, "/"); i > 0 && !strings.HasPrefix(id, "*") {
-		routerName, id = id[:i], id[i+1:]
-	}
+	routerName, id := parseImportID(r.reg, req.ID)
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("router"), types.StringValue(routerName))...)
 	if strings.HasPrefix(id, "*") {
 		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(id))...)
@@ -371,20 +367,7 @@ func (r *IPIpsecProfileResource) ImportState(ctx context.Context, req resource.I
 // keys match id. The strategy: try every key declared in the schema overlay's
 // natural_keys list (or fall back to "name") with equality matching.
 func iPIpsecProfileLookupByNaturalKey(ctx context.Context, c *client.Client, id string) ([]client.Object, error) {
-	keys := []string{}
-	if len(keys) == 0 {
-		keys = []string{"name"}
-	}
-	for _, k := range keys {
-		rows, err := c.List(ctx, "/ip/ipsec/profile", client.WithFilter(k, id))
-		if err != nil {
-			return nil, err
-		}
-		if len(rows) > 0 {
-			return rows, nil
-		}
-	}
-	return nil, nil
+	return lookupByNaturalKey(ctx, c, "/ip/ipsec/profile", id)
 }
 
 func iPIpsecProfileApply(ctx context.Context, obj client.Object, m *IPIpsecProfileModel) {

@@ -677,14 +677,22 @@ func (r *IPV6FirewallMangleResource) Create(ctx context.Context, req resource.Cr
 		r.reg.RegisterOrdered(plan.Router.ValueString(), "/ipv6/firewall/mangle", obj[".id"], plan.Position.ValueInt64())
 		snap := r.reg.OrderedSnapshot(plan.Router.ValueString(), "/ipv6/firewall/mangle")
 		if err := c.PlaceOrdered(ctx, plan.Router.ValueString(), "/ipv6/firewall/mangle", obj[".id"], plan.Position.ValueInt64(), snap); err != nil {
+			// Resource exists on the device; write minimal state so Terraform
+			// tracks it (and a future apply can repair the order or delete it)
+			// instead of creating a duplicate.
+			iPV6FirewallMangleApply(ctx, obj, &plan)
+			resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 			resp.Diagnostics.AddError("Order /ipv6/firewall/mangle failed", err.Error())
 			return
 		}
-		obj, err = c.GetByID(ctx, "/ipv6/firewall/mangle", obj[".id"])
-		if err != nil {
-			resp.Diagnostics.AddError("Re-read after order failed", err.Error())
+		reread, rerr := c.GetByID(ctx, "/ipv6/firewall/mangle", obj[".id"])
+		if rerr != nil {
+			iPV6FirewallMangleApply(ctx, obj, &plan)
+			resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+			resp.Diagnostics.AddError("Re-read after order failed", rerr.Error())
 			return
 		}
+		obj = reread
 	}
 	iPV6FirewallMangleApply(ctx, obj, &plan)
 	// Apply has already split the marker off the comment; carry position
@@ -946,6 +954,9 @@ func (r *IPV6FirewallMangleResource) Update(ctx context.Context, req resource.Up
 		if !plan.Position.Equal(state.Position) {
 			snap := r.reg.OrderedSnapshot(plan.Router.ValueString(), "/ipv6/firewall/mangle")
 			if err := c.PlaceOrdered(ctx, plan.Router.ValueString(), "/ipv6/firewall/mangle", plan.ID.ValueString(), plan.Position.ValueInt64(), snap); err != nil {
+				// Set already applied; persist the new attributes so state matches the
+				// device even if the re-order failed.
+				resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 				resp.Diagnostics.AddError("Order /ipv6/firewall/mangle failed", err.Error())
 				return
 			}
@@ -976,11 +987,7 @@ func (r *IPV6FirewallMangleResource) ImportState(ctx context.Context, req resour
 	//   <router>/*<id>                   -> .id on the named router
 	//   <router>/<naturalkey>            -> resolved via List + filter
 	//   <naturalkey>                     -> resolved on the default router
-	id := req.ID
-	routerName := ""
-	if i := strings.Index(id, "/"); i > 0 && !strings.HasPrefix(id, "*") {
-		routerName, id = id[:i], id[i+1:]
-	}
+	routerName, id := parseImportID(r.reg, req.ID)
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("router"), types.StringValue(routerName))...)
 	if strings.HasPrefix(id, "*") {
 		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(id))...)
@@ -1006,20 +1013,7 @@ func (r *IPV6FirewallMangleResource) ImportState(ctx context.Context, req resour
 // keys match id. The strategy: try every key declared in the schema overlay's
 // natural_keys list (or fall back to "name") with equality matching.
 func iPV6FirewallMangleLookupByNaturalKey(ctx context.Context, c *client.Client, id string) ([]client.Object, error) {
-	keys := []string{}
-	if len(keys) == 0 {
-		keys = []string{"name"}
-	}
-	for _, k := range keys {
-		rows, err := c.List(ctx, "/ipv6/firewall/mangle", client.WithFilter(k, id))
-		if err != nil {
-			return nil, err
-		}
-		if len(rows) > 0 {
-			return rows, nil
-		}
-	}
-	return nil, nil
+	return lookupByNaturalKey(ctx, c, "/ipv6/firewall/mangle", id)
 }
 
 func iPV6FirewallMangleApply(ctx context.Context, obj client.Object, m *IPV6FirewallMangleModel) {

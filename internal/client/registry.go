@@ -11,9 +11,9 @@ import (
 // resource via ProviderData. Resources select which router to act against via
 // their `router` attribute; an empty value selects the default router.
 type Registry struct {
-	mu       sync.RWMutex
-	clients  map[string]*Client
-	def      string // name of the default router (first declared, or "default")
+	mu      sync.RWMutex
+	clients map[string]*Client
+	def     string // name of the default router (first declared, or "default")
 	// ordered is a per-(router, menuPath, .id) -> desired position map populated
 	// by ordered-resource Create/Update and consumed by Client.PlaceOrdered.
 	// Lives only in-memory; ground truth is Terraform state, not the device.

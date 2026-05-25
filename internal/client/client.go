@@ -26,6 +26,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -54,6 +55,9 @@ type Client struct {
 	cfg  Config
 	base *url.URL // always ends in /rest/
 	http *http.Client
+
+	orderLocksMu sync.Mutex
+	orderLocks   map[string]*sync.Mutex
 }
 
 // New constructs a Client. The router's reachability is not checked here.
@@ -87,7 +91,9 @@ func New(cfg Config) (*Client, error) {
 	}
 
 	tlsCfg := &tls.Config{
-		InsecureSkipVerify: cfg.Insecure,
+		// Skipping verification is a user-opt feature for self-signed RouterOS
+		// certs. Documented and surfaced in the provider schema as `insecure`.
+		InsecureSkipVerify: cfg.Insecure, //nolint:gosec // G402: user-opt
 		MinVersion:         tls.VersionTLS12,
 	}
 	if cfg.CACertPEM != "" {
@@ -98,18 +104,24 @@ func New(cfg Config) (*Client, error) {
 		tlsCfg.RootCAs = pool
 	}
 
+	// Cap header timeout at half of overall timeout (min 10s) so a slow server
+	// can be detected before the overall ctx is exhausted.
+	headerTimeout := min(max(cfg.HTTPTimeout/2, 10*time.Second), cfg.HTTPTimeout)
+
 	tr := &http.Transport{
 		Proxy:                 http.ProxyFromEnvironment,
 		TLSClientConfig:       tlsCfg,
 		TLSHandshakeTimeout:   10 * time.Second,
-		ResponseHeaderTimeout: cfg.HTTPTimeout,
+		ResponseHeaderTimeout: headerTimeout,
 		ExpectContinueTimeout: 1 * time.Second,
 		IdleConnTimeout:       90 * time.Second,
 		MaxIdleConns:          20,
 		MaxIdleConnsPerHost:   8,
-		// RouterOS REST has historical issues with HTTP/2; force HTTP/1.1
-		// by leaving ForceAttemptHTTP2 default (false) and not configuring
-		// NextProtos. Done implicitly.
+		ForceAttemptHTTP2:     false,
+		// RouterOS REST has historical issues with HTTP/2. An empty
+		// TLSNextProto map prevents the runtime from auto-configuring h2
+		// even if ALPN would negotiate it.
+		TLSNextProto: map[string]func(string, *tls.Conn) http.RoundTripper{},
 	}
 
 	return &Client{
@@ -160,7 +172,8 @@ func menuPath(p string) string {
 
 // rel builds the URL for path[+suffix]. RouterOS REST requires literal `*` in
 // .id values (e.g. /rest/interface/wireguard/*1) and rejects the URL-encoded
-// form %2A. Go's net/url EscapedPath escapes `*`, so we drive RawPath manually.
+// form %2A. We let net/url compute the proper escaped form for everything else
+// (spaces, '#', '?', non-ASCII), then substitute %2A back to '*' in RawPath.
 func (c *Client) rel(path string, suffix ...string) *url.URL {
 	u := *c.base
 	parts := []string{menuPath(path)}
@@ -172,15 +185,15 @@ func (c *Client) rel(path string, suffix ...string) *url.URL {
 	}
 	joined := strings.Join(parts, "/")
 	u.Path += joined
-	// Force the on-wire form to keep '*' literal. RawPath must be a valid
-	// encoding of Path or net/url ignores it; '*' is its own encoding, so
-	// substituting an unchanged copy of Path is safe.
-	u.RawPath = u.Path
+	// EscapedPath returns the canonical encoding of Path. Patch %2A -> '*' so
+	// RouterOS accepts the .id segment; every other escape is preserved.
+	u.RawPath = strings.ReplaceAll(u.EscapedPath(), "%2A", "*")
 	return &u
 }
 
 // do issues req, retrying on transport errors and 5xx for safe-to-retry
-// requests only.
+// requests only. Returns the response status code, fully drained body, and
+// any error. The underlying response body is always closed before return.
 //
 //	GET, DELETE                -- always retry-safe
 //	POST <path>/set            -- RouterOS singleton upsert; idempotent (same
@@ -189,7 +202,7 @@ func (c *Client) rel(path string, suffix ...string) *url.URL {
 //	                             Retry-safe.
 //	PUT, other POST            -- NOT retry-safe (PUT=add creates duplicates;
 //	                             POST <action> may run twice).
-func (c *Client) do(ctx context.Context, req *http.Request) (*http.Response, []byte, error) {
+func (c *Client) do(ctx context.Context, req *http.Request) (int, []byte, error) {
 	retrySafe := req.Method == http.MethodGet || req.Method == http.MethodDelete
 	if req.Method == http.MethodPost {
 		p := req.URL.Path
@@ -205,7 +218,7 @@ func (c *Client) do(ctx context.Context, req *http.Request) (*http.Response, []b
 			select {
 			case <-ctx.Done():
 				t.Stop()
-				return nil, nil, ctx.Err()
+				return 0, nil, ctx.Err()
 			case <-t.C:
 			}
 			backoff *= 2
@@ -215,24 +228,32 @@ func (c *Client) do(ctx context.Context, req *http.Request) (*http.Response, []b
 		if req.GetBody != nil {
 			body, err := req.GetBody()
 			if err != nil {
-				return nil, nil, err
+				return 0, nil, err
 			}
 			r.Body = body
 		}
 		resp, err := c.http.Do(r)
 		if err != nil {
+			// Caller-cancelled or deadline-exceeded: no point retrying;
+			// the next iteration would just see the same ctx.Err().
+			if errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
+				return 0, nil, err
+			}
 			lastErr = err
 			if !retrySafe {
-				return nil, nil, err
+				return 0, nil, err
 			}
 			continue
 		}
 		body, readErr := io.ReadAll(resp.Body)
-		resp.Body.Close()
+		_ = resp.Body.Close()
 		if readErr != nil {
+			if errors.Is(readErr, context.Canceled) || errors.Is(readErr, context.DeadlineExceeded) {
+				return 0, nil, readErr
+			}
 			lastErr = readErr
 			if !retrySafe {
-				return nil, nil, readErr
+				return 0, nil, readErr
 			}
 			continue
 		}
@@ -240,9 +261,9 @@ func (c *Client) do(ctx context.Context, req *http.Request) (*http.Response, []b
 			lastErr = fmt.Errorf("routeros: %s %s -> %d (will retry)", req.Method, req.URL.Path, resp.StatusCode)
 			continue
 		}
-		return resp, body, nil
+		return resp.StatusCode, body, nil
 	}
-	return nil, nil, lastErr
+	return 0, nil, lastErr
 }
 
 // request builds and executes; on non-2xx it returns *APIError.
@@ -270,18 +291,18 @@ func (c *Client) request(ctx context.Context, method, urlStr string, body any) (
 		req.SetBasicAuth(c.cfg.Username, c.cfg.Password)
 	}
 
-	resp, raw, err := c.do(ctx, req)
+	status, raw, err := c.do(ctx, req)
 	if err != nil {
 		return nil, err
 	}
-	if resp.StatusCode >= 200 && resp.StatusCode < 300 {
+	if status >= 200 && status < 300 {
 		return raw, nil
 	}
-	apiErr := &APIError{StatusCode: resp.StatusCode}
+	apiErr := &APIError{StatusCode: status}
 	if jerr := json.Unmarshal(raw, apiErr); jerr != nil || apiErr.Message == "" {
 		apiErr.Message = strings.TrimSpace(string(raw))
 		if apiErr.Message == "" {
-			apiErr.Message = http.StatusText(resp.StatusCode)
+			apiErr.Message = http.StatusText(status)
 		}
 	}
 	return nil, apiErr
@@ -301,12 +322,16 @@ func (c *Client) List(ctx context.Context, path string, opts ...QueryOption) ([]
 	return decodeList(raw)
 }
 
-// GetByID fetches a single record by .id ("*1"). Returns IsNotFound on 404.
+// GetByID fetches a single record by .id ("*1"). Returns IsNotFound on 404
+// or on 200-with-empty-body (some intermediaries swallow the body).
 func (c *Client) GetByID(ctx context.Context, path, id string) (Object, error) {
 	u := c.rel(path, id)
 	raw, err := c.request(ctx, http.MethodGet, u.String(), nil)
 	if err != nil {
 		return nil, err
+	}
+	if len(bytes.TrimSpace(raw)) == 0 {
+		return nil, &APIError{StatusCode: http.StatusNotFound, Code: http.StatusNotFound, Message: "empty response body"}
 	}
 	return decodeOne(raw)
 }

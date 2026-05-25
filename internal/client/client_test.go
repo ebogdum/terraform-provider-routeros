@@ -12,7 +12,18 @@ import (
 
 func newTestServer(t *testing.T, handler http.HandlerFunc) *Client {
 	t.Helper()
-	srv := httptest.NewServer(handler)
+	// Wrap the handler with a Basic-Auth assertion so a regression that
+	// stopped sending the Authorization header would be caught.
+	wrapped := func(w http.ResponseWriter, r *http.Request) {
+		user, pass, ok := r.BasicAuth()
+		if !ok || user != "u" || pass != "p" {
+			t.Errorf("missing or wrong basic auth: ok=%v user=%q", ok, user)
+			http.Error(w, "auth", http.StatusUnauthorized)
+			return
+		}
+		handler(w, r)
+	}
+	srv := httptest.NewServer(http.HandlerFunc(wrapped))
 	t.Cleanup(srv.Close)
 	c, err := New(Config{Host: srv.URL, Username: "u", Password: "p"})
 	if err != nil {
@@ -35,39 +46,43 @@ func TestListAddSetRemove(t *testing.T) {
 				for _, v := range store {
 					out = append(out, v)
 				}
-				json.NewEncoder(w).Encode(out)
+				_ = json.NewEncoder(w).Encode(out)
 				return
 			}
 			id := strings.TrimPrefix(path, "ip/address/")
 			if obj, ok := store[id]; ok {
-				json.NewEncoder(w).Encode(obj)
+				_ = json.NewEncoder(w).Encode(obj)
 				return
 			}
 			w.WriteHeader(http.StatusNotFound)
-			json.NewEncoder(w).Encode(APIError{Code: 404, Message: "Not Found"})
+			_ = json.NewEncoder(w).Encode(APIError{Code: 404, Message: "Not Found"})
 		case http.MethodPut:
 			body, _ := io.ReadAll(r.Body)
 			var in Object
-			json.Unmarshal(body, &in)
+			if err := json.Unmarshal(body, &in); err != nil {
+				t.Errorf("PUT body: %v", err)
+			}
 			in[".id"] = "*2"
 			store["*2"] = in
-			json.NewEncoder(w).Encode(in)
+			_ = json.NewEncoder(w).Encode(in)
 		case http.MethodPatch:
 			id := strings.TrimPrefix(path, "ip/address/")
 			body, _ := io.ReadAll(r.Body)
 			var in Object
-			json.Unmarshal(body, &in)
+			if err := json.Unmarshal(body, &in); err != nil {
+				t.Errorf("PATCH body: %v", err)
+			}
 			obj := store[id]
 			for k, v := range in {
 				obj[k] = v
 			}
 			store[id] = obj
-			json.NewEncoder(w).Encode(obj)
+			_ = json.NewEncoder(w).Encode(obj)
 		case http.MethodDelete:
 			id := strings.TrimPrefix(path, "ip/address/")
 			if _, ok := store[id]; !ok {
 				w.WriteHeader(http.StatusNotFound)
-				json.NewEncoder(w).Encode(APIError{Code: 404, Message: "Not Found"})
+				_ = json.NewEncoder(w).Encode(APIError{Code: 404, Message: "Not Found"})
 				return
 			}
 			delete(store, id)
@@ -121,10 +136,10 @@ func TestListAddSetRemove(t *testing.T) {
 }
 
 func TestAPIError(t *testing.T) {
-	c := newTestServer(t, func(w http.ResponseWriter, r *http.Request) {
+	c := newTestServer(t, func(w http.ResponseWriter, _ *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusNotAcceptable)
-		json.NewEncoder(w).Encode(APIError{Code: 406, Message: "Not Acceptable", Detail: "no such argument"})
+		_ = json.NewEncoder(w).Encode(APIError{Code: 406, Message: "Not Acceptable", Detail: "no such argument"})
 	})
 	_, err := c.Add(context.Background(), "/ip/address", Object{"bogus": "x"})
 	if err == nil {

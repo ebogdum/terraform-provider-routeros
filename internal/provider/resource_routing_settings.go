@@ -163,7 +163,7 @@ func routingSettingsUpsert(ctx context.Context, reg *client.Registry, plan *Rout
 		body["check-gateway-ping-timeout"] = plan.CheckGatewayPingTimeout.ValueString()
 	}
 	if !(plan.PolicyRules.IsNull() || plan.PolicyRules.IsUnknown()) {
-		body["policy-rules"] = encodeStringList(ctx, plan.PolicyRules)
+		body["policy-rules"] = encodeStringList(ctx, plan.PolicyRules, diags)
 	}
 	if !(plan.SingleProcess.IsNull() || plan.SingleProcess.IsUnknown()) {
 		body["single-process"] = client.FormatBool(plan.SingleProcess.ValueBool())

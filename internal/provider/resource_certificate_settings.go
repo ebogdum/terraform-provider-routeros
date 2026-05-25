@@ -160,7 +160,7 @@ func certificateSettingsUpsert(ctx context.Context, reg *client.Registry, plan *
 		body["crl-use"] = client.FormatBool(plan.CrlUse.ValueBool())
 	}
 	if !(plan.CurrentDefaults.IsNull() || plan.CurrentDefaults.IsUnknown()) {
-		body["current-defaults"] = encodeStringList(ctx, plan.CurrentDefaults)
+		body["current-defaults"] = encodeStringList(ctx, plan.CurrentDefaults, diags)
 	}
 	obj, err := c.SetSingleton(ctx, "/certificate/settings", body)
 	if err != nil {

@@ -10,12 +10,15 @@ import (
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
 )
 
-func encodeStringList(ctx context.Context, l types.List) string {
+func encodeStringList(ctx context.Context, l types.List, diags *diag.Diagnostics) string {
 	if l.IsNull() || l.IsUnknown() {
 		return ""
 	}
 	var items []string
 	if d := l.ElementsAs(ctx, &items, false); d.HasError() {
+		// Surface the conversion failure rather than silently writing an empty
+		// list, which would clear the field on RouterOS.
+		diags.Append(d...)
 		return ""
 	}
 	return client.FormatList(items)

@@ -245,6 +245,7 @@ func (r *InterfaceWifiSecurityResource) Schema(_ context.Context, _ resource.Sch
 			"passphrase": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
+				Sensitive:   true,
 				Description: "",
 			},
 			"sae_anti_clogging_threshold": schema.StringAttribute{
@@ -588,11 +589,7 @@ func (r *InterfaceWifiSecurityResource) ImportState(ctx context.Context, req res
 	//   <router>/*<id>                   -> .id on the named router
 	//   <router>/<naturalkey>            -> resolved via List + filter
 	//   <naturalkey>                     -> resolved on the default router
-	id := req.ID
-	routerName := ""
-	if i := strings.Index(id, "/"); i > 0 && !strings.HasPrefix(id, "*") {
-		routerName, id = id[:i], id[i+1:]
-	}
+	routerName, id := parseImportID(r.reg, req.ID)
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("router"), types.StringValue(routerName))...)
 	if strings.HasPrefix(id, "*") {
 		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(id))...)
@@ -618,20 +615,7 @@ func (r *InterfaceWifiSecurityResource) ImportState(ctx context.Context, req res
 // keys match id. The strategy: try every key declared in the schema overlay's
 // natural_keys list (or fall back to "name") with equality matching.
 func interfaceWifiSecurityLookupByNaturalKey(ctx context.Context, c *client.Client, id string) ([]client.Object, error) {
-	keys := []string{}
-	if len(keys) == 0 {
-		keys = []string{"name"}
-	}
-	for _, k := range keys {
-		rows, err := c.List(ctx, "/interface/wifi/security", client.WithFilter(k, id))
-		if err != nil {
-			return nil, err
-		}
-		if len(rows) > 0 {
-			return rows, nil
-		}
-	}
-	return nil, nil
+	return lookupByNaturalKey(ctx, c, "/interface/wifi/security", id)
 }
 
 func interfaceWifiSecurityApply(ctx context.Context, obj client.Object, m *InterfaceWifiSecurityModel) {

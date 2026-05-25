@@ -25,7 +25,10 @@ func (m normalizeStringPM) PlanModifyString(_ context.Context, req planmodifier.
 	}
 	canon, err := m.fn(req.ConfigValue.ValueString())
 	if err != nil {
-		// Leave for the validator to reject.
+		// Refuse to plan: the value cannot be normalised. A validator may
+		// also reject it, but plan modifiers can run independently of (or
+		// before) validators, so we surface the error here too.
+		resp.Diagnostics.AddAttributeError(req.Path, "Invalid value", err.Error())
 		return
 	}
 	// If state already equals the canonical form, keep state to avoid a diff.

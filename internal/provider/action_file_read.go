@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -70,9 +71,10 @@ func (r *FileReadResource) Schema(_ context.Context, _ resource.SchemaRequest, r
 				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplaceIfConfigured()},
 			},
 			"params": schema.MapAttribute{
-				Optional:    true,
-				ElementType: types.StringType,
-				Description: "Extra parameters forwarded to RouterOS verbatim. Keys with dots are allowed. Example: { ca = \"my-ca\", name = \"new-cert\" }.",
+				Optional:      true,
+				ElementType:   types.StringType,
+				PlanModifiers: []planmodifier.Map{mapplanmodifier.RequiresReplaceIfConfigured()},
+				Description:   "Extra parameters forwarded to RouterOS verbatim. Keys with dots are allowed. Example: { ca = \"my-ca\", name = \"new-cert\" }.",
 			},
 			"router": schema.StringAttribute{Optional: true,
 				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",

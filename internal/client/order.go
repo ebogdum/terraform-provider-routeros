@@ -6,13 +6,22 @@ import (
 	"sync"
 )
 
-// placeOrderedLocks serialises PlaceOrdered per (router-base, menuPath).
-var placeOrderedLocks sync.Map
-
-func (c *Client) lockFor(menuPath string) *sync.Mutex {
-	k := c.base.String() + "|" + menuPath
-	v, _ := placeOrderedLocks.LoadOrStore(k, &sync.Mutex{})
-	return v.(*sync.Mutex)
+// orderLocks serialises PlaceOrdered per (router-name, menuPath) within a
+// single client. Keyed locally rather than globally so two clients pointing
+// at the same base URL but configured separately do not share a lock.
+func (c *Client) lockFor(router, menuPath string) *sync.Mutex {
+	c.orderLocksMu.Lock()
+	defer c.orderLocksMu.Unlock()
+	if c.orderLocks == nil {
+		c.orderLocks = map[string]*sync.Mutex{}
+	}
+	k := router + "|" + menuPath
+	mu, ok := c.orderLocks[k]
+	if !ok {
+		mu = &sync.Mutex{}
+		c.orderLocks[k] = mu
+	}
+	return mu
 }
 
 // PlaceOrdered moves thisID into the correct slot within menuPath relative to
@@ -33,7 +42,7 @@ func (c *Client) lockFor(menuPath string) *sync.Mutex {
 // Nothing is written into rule comments. Position lives only in TF state +
 // the in-memory registry map.
 func (c *Client) PlaceOrdered(ctx context.Context, router, menuPath, thisID string, thisPosition int64, snapshot map[string]int64) error {
-	mu := c.lockFor(menuPath)
+	mu := c.lockFor(router, menuPath)
 	mu.Lock()
 	defer mu.Unlock()
 

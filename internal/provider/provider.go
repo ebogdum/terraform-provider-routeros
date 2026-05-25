@@ -199,7 +199,9 @@ func firstNonEmpty(vals ...string) string {
 }
 
 // mergeConfig fills empty fields of explicit with values from loose. Explicit
-// always wins when it has a non-zero value.
+// always wins when it has a value -- including booleans. The explicit Insecure
+// is authoritative; loose/env never downgrades TLS verification on a router
+// that was configured in the routers map.
 func mergeConfig(explicit, loose client.Config) client.Config {
 	if explicit.Host == "" {
 		explicit.Host = loose.Host
@@ -216,9 +218,7 @@ func mergeConfig(explicit, loose client.Config) client.Config {
 	if explicit.ROSVersion == "" {
 		explicit.ROSVersion = loose.ROSVersion
 	}
-	// Insecure: explicit-true is honored; otherwise inherit.
-	if !explicit.Insecure {
-		explicit.Insecure = loose.Insecure
-	}
+	// Insecure intentionally not inherited: an explicit `insecure = false`
+	// must not be silently flipped to true by ROUTEROS_INSECURE.
 	return explicit
 }
