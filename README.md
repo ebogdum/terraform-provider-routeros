@@ -32,8 +32,7 @@ through the plugin framework's sensitive-value handling.
 - [Authentication and TLS](#authentication-and-tls)
 - [Development](#development)
 - [Release process](#release-process)
-- [Status and known limitations](#status-and-known-limitations)
-- [Comparison to other RouterOS providers](#comparison-to-other-routeros-providers)
+- [Release history](#release-history)
 - [License](#license)
 
 ## Why this provider
@@ -337,43 +336,9 @@ CI on every PR runs: `vet`, unit tests, build, golangci-lint, gen-diff
 `tfplugindocs validate`. Acceptance tests run on `main` against a self-hosted
 runner with a real CHR matrix (ROS 7.20, 7.22, latest).
 
-## Status and known limitations
+## Release history
 
-- The committed schema reflects RouterOS 7.22.3 as observed on a single CHR.
-  Menus that require hardware not present on the test device -- PoE, w60g,
-  LTE, GPS, container, LCD, IoT/LoRa, switch chip -- are emitted but have no
-  acceptance coverage and are skip-overlay'd individually.
-- The provider's wire format is REST. CLI-only constructs (interactive
-  prompts, terminal escape sequences) cannot be modelled.
-- The acceptance test matrix across ROS versions requires self-hosted
-  runners and per-version GitHub environments (`ros-7.20`, `ros-7.22`,
-  `ros-latest`) to actually run.
-
-See [CHANGELOG.md](CHANGELOG.md) for the full release history.
-
-## Comparison to other RouterOS providers
-
-This provider was built from scratch with three goals the existing
-community providers do not jointly meet:
-
-1. **Total menu coverage from a generated schema** -- no hand-written
-   resource boilerplate, no menu blind spots.
-2. **Multi-router from a single block** -- instead of provider aliases or
-   one provider configuration per router.
-3. **Validated against a real device, not assumed** -- every property name
-   confirmed accepted by the live RouterOS REST API, every type validated
-   by sending guaranteed-invalid values and observing the rejection.
-
-Other MikroTik / RouterOS Terraform providers worth knowing about:
-
-- `ddelnano/mikrotik` -- hand-curated, smaller coverage, mature, well-tested.
-- `terraform-routeros/routeros` -- also REST-based, hand-curated, much
-  longer existence and larger user base than this provider.
-
-If you need a stable provider with years of production use, those are
-better choices today. This provider is better when you want every menu
-covered, multi-router fleet management, or schema-driven correctness
-guarantees.
+See [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 
