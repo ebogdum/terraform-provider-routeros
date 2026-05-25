@@ -1,0 +1,86 @@
+# --- Build output ---
+/bin/
+/dist/
+/tmp/
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+*.prof
+
+# --- Go ---
+vendor/
+go.work
+go.work.sum
+
+# --- Terraform state and locks (never commit) ---
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+*.tfvars
+*.tfvars.json
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+
+# --- Local example state ---
+examples/curated/**/.terraform/
+examples/curated/**/.terraform.lock.hcl
+examples/curated/**/terraform.tfstate*
+examples/curated/**/.terraformrc
+
+# --- Secrets / environment ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+*.pgp
+*.gpg
+secrets/
+credentials/
+
+# --- Coverage / profiling ---
+coverage.txt
+coverage.html
+coverage.out
+*.lcov
+cpu.prof
+mem.prof
+
+# --- Editors / IDEs ---
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- OS metadata ---
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
+
+# --- Tooling caches ---
+.golangci-cache/
+.tflint.d/
+
+# --- Archives produced ad-hoc ---
+*.tar.gz
+*.tar
+*.zip

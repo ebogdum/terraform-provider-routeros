@@ -1,0 +1,11 @@
+resource "routeros_mpls_interface" "interface_example" {
+  # router = "my-router"  # which router to target; omit for the default
+  interface = "ether1"
+
+  comment  = "managed by terraform"
+  disabled = false
+
+  # Optional attributes (uncomment as needed):
+  # input = "replace-me"
+  # mpls_mtu = "replace-me"
+}
