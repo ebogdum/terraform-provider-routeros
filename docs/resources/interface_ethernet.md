@@ -18,7 +18,6 @@ resource "routeros_interface_ethernet" "ethernet_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
-  # address = "replace-me"
   # advertise = []
   # arp = "disabled"
   # arp_timeout = "1h"
@@ -26,7 +25,6 @@ resource "routeros_interface_ethernet" "ethernet_example" {
   # combo_mode = "auto"
   # disable_running_check = false
   # fec_mode = "off"
-  # interface = "ether1"
   # l2mtu = "replace-me"
   # loop_protect = "default"
   # loop_protect_disable_time = "1h"
@@ -35,7 +33,6 @@ resource "routeros_interface_ethernet" "ethernet_example" {
   # mtu = 1500
   # name = "tf-example"
   # orig_mac_address = "10.99.0.0/24"
-  # published = "replace-me"
   # rx_flow_control = "off"
   # sfp_shutdown_temperature = 0
   # speed = "10M baseT half"
@@ -48,7 +45,6 @@ resource "routeros_interface_ethernet" "ethernet_example" {
 This resource supports the following arguments:
 
 * `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `address` - (Optional) Type: `string`. IP address to be mapped.
 * `advertise` - (Optional) Type: `list`.
 * `arp` - (Optional) Type: `enum(disabled|enabled|proxy-arp|reply-only|local-proxy-arp)`.
 * `arp_timeout` - (Optional) Type: `duration`.
@@ -58,7 +54,6 @@ This resource supports the following arguments:
 * `disable_running_check` - (Optional) Type: `bool`.
 * `disabled` - (Optional) Type: `bool`.
 * `fec_mode` - (Optional) Type: `enum(off|auto|fec74|fec91)`.
-* `interface` - (Optional) Type: `string`. Interface name the IP address is assigned to.
 * `l2mtu` - (Optional) Type: `string`.
 * `loop_protect` - (Optional) Type: `enum(default|off|on)`.
 * `loop_protect_disable_time` - (Optional) Type: `duration`.
@@ -67,7 +62,6 @@ This resource supports the following arguments:
 * `mtu` - (Optional) Type: `int`. Default: `1500`.
 * `name` - (Optional) Type: `string`.
 * `orig_mac_address` - (Optional) Type: `mac`.
-* `published` - (Optional) Type: `string`. Static proxy-arp entry for individual IP addresses. When an ARP query is received for the specific IP address, the device will respond with its own MAC address. No need to set proxy-arp on the interface itself for all the MAC addresses to be proxied. The interface will respond to an ARP request only when the device has an active route towards the destination.
 * `rx_flow_control` - (Optional) Type: `enum(off|on|auto)`.
 * `sfp_shutdown_temperature` - (Optional) Type: `int`.
 * `speed` - (Optional) Type: `enum(10M baseT half|10M baseT full|100M baseT half|100M baseT full|1G baseT half|1G baseT full, ...)`.

@@ -64,7 +64,6 @@ resource "routeros_ip_firewall_filter" "filter_example" {
   # out_interface_list = "LAN"
   # packet_mark = "replace-me"
   # packet_size = "replace-me"
-  # path = "replace-me"
   # per_connection_classifier = "replace-me"
   # port = "443"
   # priority = "replace-me"
@@ -134,7 +133,6 @@ This resource supports the following arguments:
 * `out_interface_list` - (Optional) Type: `string`.
 * `packet_mark` - (Optional) Type: `string`.
 * `packet_size` - (Optional) Type: `string`.
-* `path` - (Optional) Type: `string`. Parameter allows to include or exclude specific configuration menu from router entire configuration.
 * `per_connection_classifier` - (Optional) Type: `string`.
 * `port` - (Optional) Type: `string`.
 * `priority` - (Optional) Type: `string`.

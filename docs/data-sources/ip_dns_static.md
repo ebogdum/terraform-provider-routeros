@@ -27,10 +27,24 @@ This data source supports the following arguments:
 * `filter` - (Optional) Map of field=value pairs to narrow the result set.
 * `proplist` - (Optional) List of property names to project; smaller payload.
 * `address` - (Required) Type: `string`. Address to return. Default: `127.0.0.1`.
+* `address_list` - (Optional) Type: `string`.
+* `cname` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `forward_to` - (Optional) Type: `string`.
+* `match_subdomain` - (Optional) Type: `string`.
+* `mx_exchange` - (Optional) Type: `string`.
+* `mx_preference` - (Optional) Type: `string`.
 * `name` - (Required) Type: `string`. FQDN matched against incoming queries. Default: `tf-acc-test.invalid`.
+* `ns` - (Optional) Type: `string`.
+* `regexp` - (Optional) Type: `string`.
+* `srv_port` - (Optional) Type: `string`.
+* `srv_priority` - (Optional) Type: `string`.
+* `srv_target` - (Optional) Type: `string`.
+* `srv_weight` - (Optional) Type: `string`.
+* `text` - (Optional) Type: `string`.
 * `ttl` - (Optional) Type: `string`.
+* `type` - (Optional) Type: `string`.
 
 ## Attribute Reference
 

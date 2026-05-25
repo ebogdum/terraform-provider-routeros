@@ -30,98 +30,94 @@ type InterfaceWirelessResource struct {
 }
 
 type InterfaceWirelessModel struct {
-	ID                          types.String `tfsdk:"id"`
-	AdaptiveNoiseImmunity       types.String `tfsdk:"adaptive_noise_immunity"`
-	AllowSharedkey              types.String `tfsdk:"allow_sharedkey"`
-	AmpduPriorities             types.String `tfsdk:"ampdu_priorities"`
-	AmsduLimit                  types.String `tfsdk:"amsdu_limit"`
-	AmsduThreshold              types.String `tfsdk:"amsdu_threshold"`
-	AntennaGain                 types.String `tfsdk:"antenna_gain"`
-	AntennaMode                 types.String `tfsdk:"antenna_mode"`
-	Area                        types.String `tfsdk:"area"`
-	ARP                         types.String `tfsdk:"arp"`
-	ARPTimeout                  types.String `tfsdk:"arp_timeout"`
-	Band                        types.String `tfsdk:"band"`
-	BasicRatesB                 types.String `tfsdk:"basic_rates_b"`
-	BridgeMode                  types.String `tfsdk:"bridge_mode"`
-	BurstTime                   types.String `tfsdk:"burst_time"`
-	ChannelWidth                types.String `tfsdk:"channel_width"`
-	Comment                     types.String `tfsdk:"comment"`
-	Compression                 types.String `tfsdk:"compression"`
-	Country                     types.String `tfsdk:"country"`
-	DefaultApTxLimit            types.String `tfsdk:"default_ap_tx_limit"`
-	DefaultAuthentication       types.String `tfsdk:"default_authentication"`
-	DefaultClientTxLimit        types.String `tfsdk:"default_client_tx_limit"`
-	DefaultForwarding           types.String `tfsdk:"default_forwarding"`
-	DisableRunningCheck         types.String `tfsdk:"disable_running_check"`
-	Disabled                    types.Bool   `tfsdk:"disabled"`
-	DisconnectTimeout           types.String `tfsdk:"disconnect_timeout"`
-	Distance                    types.String `tfsdk:"distance"`
-	FrameLifetime               types.String `tfsdk:"frame_lifetime"`
-	Frequency                   types.String `tfsdk:"frequency"`
-	FrequencyMode               types.String `tfsdk:"frequency_mode"`
-	FrequencyOffset             types.String `tfsdk:"frequency_offset"`
-	GuardInterval               types.String `tfsdk:"guard_interval"`
-	HideSsid                    types.String `tfsdk:"hide_ssid"`
-	HtBasicMcs                  types.String `tfsdk:"ht_basic_mcs"`
-	HtSupportedMcs              types.String `tfsdk:"ht_supported_mcs"`
-	HwFragmentationThreshold    types.String `tfsdk:"hw_fragmentation_threshold"`
-	HwProtectionMode            types.String `tfsdk:"hw_protection_mode"`
-	HwProtectionThreshold       types.String `tfsdk:"hw_protection_threshold"`
-	HwRetries                   types.String `tfsdk:"hw_retries"`
-	Installation                types.String `tfsdk:"installation"`
-	InterworkingProfile         types.String `tfsdk:"interworking_profile"`
-	KeepaliveFrames             types.String `tfsdk:"keepalive_frames"`
-	L2mtu                       types.String `tfsdk:"l2mtu"`
-	MACAddress                  types.String `tfsdk:"mac_address"`
-	MasterInterface             types.String `tfsdk:"master_interface"`
-	MaxStationCount             types.String `tfsdk:"max_station_count"`
-	Mode                        types.String `tfsdk:"mode"`
-	MTU                         types.String `tfsdk:"mtu"`
-	MulticastBuffering          types.String `tfsdk:"multicast_buffering"`
-	MulticastHelper             types.String `tfsdk:"multicast_helper"`
-	Name                        types.String `tfsdk:"name"`
-	NoiseFloorThreshold         types.String `tfsdk:"noise_floor_threshold"`
-	Nv2CellRADIUS               types.String `tfsdk:"nv2_cell_radius"`
-	Nv2NoiseFloorOffset         types.String `tfsdk:"nv2_noise_floor_offset"`
-	Nv2PresharedKey             types.String `tfsdk:"nv2_preshared_key"`
-	Nv2Qos                      types.String `tfsdk:"nv2_qos"`
-	Nv2QueueCount               types.String `tfsdk:"nv2_queue_count"`
-	Nv2Security                 types.String `tfsdk:"nv2_security"`
-	OnFailRetryTime             types.String `tfsdk:"on_fail_retry_time"`
-	PeriodicCalibration         types.String `tfsdk:"periodic_calibration"`
-	PeriodicCalibrationInterval types.String `tfsdk:"periodic_calibration_interval"`
-	PreambleMode                types.String `tfsdk:"preamble_mode"`
-	PrismCardtype               types.String `tfsdk:"prism_cardtype"`
-	ProprietaryExtensions       types.String `tfsdk:"proprietary_extensions"`
-	RadioName                   types.String `tfsdk:"radio_name"`
-	RateSelection               types.String `tfsdk:"rate_selection"`
-	RateSet                     types.String `tfsdk:"rate_set"`
-	RxChains                    types.String `tfsdk:"rx_chains"`
-	ScanList                    types.String `tfsdk:"scan_list"`
-	SecondaryChannel            types.String `tfsdk:"secondary_channel"`
-	SecurityProfile             types.String `tfsdk:"security_profile"`
-	SkipDfsChannels             types.String `tfsdk:"skip_dfs_channels"`
-	Ssid                        types.String `tfsdk:"ssid"`
-	StationBridgeCloneMAC       types.String `tfsdk:"station_bridge_clone_mac"`
-	StationRoaming              types.String `tfsdk:"station_roaming"`
-	SupportedRatesB             types.String `tfsdk:"supported_rates_b"`
-	TdmaPeriodSize              types.String `tfsdk:"tdma_period_size"`
-	TxChains                    types.String `tfsdk:"tx_chains"`
-	TxPower                     types.String `tfsdk:"tx_power"`
-	TxPowerMode                 types.String `tfsdk:"tx_power_mode"`
-	UpdateStatsInterval         types.String `tfsdk:"update_stats_interval"`
-	VhtBasicMcs                 types.String `tfsdk:"vht_basic_mcs"`
-	VhtSupportedMcs             types.String `tfsdk:"vht_supported_mcs"`
-	WdsCostRange                types.String `tfsdk:"wds_cost_range"`
-	WdsDefaultBridge            types.String `tfsdk:"wds_default_bridge"`
-	WdsDefaultCost              types.String `tfsdk:"wds_default_cost"`
-	WdsIgnoreSsid               types.String `tfsdk:"wds_ignore_ssid"`
-	WdsMode                     types.String `tfsdk:"wds_mode"`
-	WirelessProtocol            types.String `tfsdk:"wireless_protocol"`
-	WmmSupport                  types.String `tfsdk:"wmm_support"`
-	WpsMode                     types.String `tfsdk:"wps_mode"`
-	Router                      types.String `tfsdk:"router"`
+	ID                       types.String `tfsdk:"id"`
+	AdaptiveNoiseImmunity    types.String `tfsdk:"adaptive_noise_immunity"`
+	AllowSharedkey           types.String `tfsdk:"allow_sharedkey"`
+	AmpduPriorities          types.String `tfsdk:"ampdu_priorities"`
+	AmsduLimit               types.String `tfsdk:"amsdu_limit"`
+	AmsduThreshold           types.String `tfsdk:"amsdu_threshold"`
+	AntennaGain              types.String `tfsdk:"antenna_gain"`
+	AntennaMode              types.String `tfsdk:"antenna_mode"`
+	Area                     types.String `tfsdk:"area"`
+	ARP                      types.String `tfsdk:"arp"`
+	ARPTimeout               types.String `tfsdk:"arp_timeout"`
+	Band                     types.String `tfsdk:"band"`
+	BasicRatesB              types.String `tfsdk:"basic_rates_b"`
+	BridgeMode               types.String `tfsdk:"bridge_mode"`
+	BurstTime                types.String `tfsdk:"burst_time"`
+	ChannelWidth             types.String `tfsdk:"channel_width"`
+	Comment                  types.String `tfsdk:"comment"`
+	Compression              types.String `tfsdk:"compression"`
+	Country                  types.String `tfsdk:"country"`
+	DefaultApTxLimit         types.String `tfsdk:"default_ap_tx_limit"`
+	DefaultAuthentication    types.String `tfsdk:"default_authentication"`
+	DefaultClientTxLimit     types.String `tfsdk:"default_client_tx_limit"`
+	DefaultForwarding        types.String `tfsdk:"default_forwarding"`
+	DisableRunningCheck      types.String `tfsdk:"disable_running_check"`
+	Disabled                 types.Bool   `tfsdk:"disabled"`
+	DisconnectTimeout        types.String `tfsdk:"disconnect_timeout"`
+	Distance                 types.String `tfsdk:"distance"`
+	FrameLifetime            types.String `tfsdk:"frame_lifetime"`
+	Frequency                types.String `tfsdk:"frequency"`
+	FrequencyMode            types.String `tfsdk:"frequency_mode"`
+	FrequencyOffset          types.String `tfsdk:"frequency_offset"`
+	GuardInterval            types.String `tfsdk:"guard_interval"`
+	HideSsid                 types.String `tfsdk:"hide_ssid"`
+	HtBasicMcs               types.String `tfsdk:"ht_basic_mcs"`
+	HtSupportedMcs           types.String `tfsdk:"ht_supported_mcs"`
+	HwFragmentationThreshold types.String `tfsdk:"hw_fragmentation_threshold"`
+	HwProtectionMode         types.String `tfsdk:"hw_protection_mode"`
+	HwProtectionThreshold    types.String `tfsdk:"hw_protection_threshold"`
+	HwRetries                types.String `tfsdk:"hw_retries"`
+	Installation             types.String `tfsdk:"installation"`
+	InterworkingProfile      types.String `tfsdk:"interworking_profile"`
+	KeepaliveFrames          types.String `tfsdk:"keepalive_frames"`
+	L2mtu                    types.String `tfsdk:"l2mtu"`
+	MACAddress               types.String `tfsdk:"mac_address"`
+	MasterInterface          types.String `tfsdk:"master_interface"`
+	MaxStationCount          types.String `tfsdk:"max_station_count"`
+	Mode                     types.String `tfsdk:"mode"`
+	MTU                      types.String `tfsdk:"mtu"`
+	MulticastBuffering       types.String `tfsdk:"multicast_buffering"`
+	MulticastHelper          types.String `tfsdk:"multicast_helper"`
+	Name                     types.String `tfsdk:"name"`
+	NoiseFloorThreshold      types.String `tfsdk:"noise_floor_threshold"`
+	Nv2CellRADIUS            types.String `tfsdk:"nv2_cell_radius"`
+	Nv2NoiseFloorOffset      types.String `tfsdk:"nv2_noise_floor_offset"`
+	Nv2PresharedKey          types.String `tfsdk:"nv2_preshared_key"`
+	Nv2Qos                   types.String `tfsdk:"nv2_qos"`
+	Nv2QueueCount            types.String `tfsdk:"nv2_queue_count"`
+	Nv2Security              types.String `tfsdk:"nv2_security"`
+	OnFailRetryTime          types.String `tfsdk:"on_fail_retry_time"`
+	PreambleMode             types.String `tfsdk:"preamble_mode"`
+	PrismCardtype            types.String `tfsdk:"prism_cardtype"`
+	RadioName                types.String `tfsdk:"radio_name"`
+	RateSelection            types.String `tfsdk:"rate_selection"`
+	RateSet                  types.String `tfsdk:"rate_set"`
+	RxChains                 types.String `tfsdk:"rx_chains"`
+	ScanList                 types.String `tfsdk:"scan_list"`
+	SecurityProfile          types.String `tfsdk:"security_profile"`
+	SkipDfsChannels          types.String `tfsdk:"skip_dfs_channels"`
+	Ssid                     types.String `tfsdk:"ssid"`
+	StationBridgeCloneMAC    types.String `tfsdk:"station_bridge_clone_mac"`
+	StationRoaming           types.String `tfsdk:"station_roaming"`
+	SupportedRatesB          types.String `tfsdk:"supported_rates_b"`
+	TdmaPeriodSize           types.String `tfsdk:"tdma_period_size"`
+	TxChains                 types.String `tfsdk:"tx_chains"`
+	TxPower                  types.String `tfsdk:"tx_power"`
+	TxPowerMode              types.String `tfsdk:"tx_power_mode"`
+	UpdateStatsInterval      types.String `tfsdk:"update_stats_interval"`
+	VhtBasicMcs              types.String `tfsdk:"vht_basic_mcs"`
+	VhtSupportedMcs          types.String `tfsdk:"vht_supported_mcs"`
+	WdsCostRange             types.String `tfsdk:"wds_cost_range"`
+	WdsDefaultBridge         types.String `tfsdk:"wds_default_bridge"`
+	WdsDefaultCost           types.String `tfsdk:"wds_default_cost"`
+	WdsIgnoreSsid            types.String `tfsdk:"wds_ignore_ssid"`
+	WdsMode                  types.String `tfsdk:"wds_mode"`
+	WirelessProtocol         types.String `tfsdk:"wireless_protocol"`
+	WmmSupport               types.String `tfsdk:"wmm_support"`
+	WpsMode                  types.String `tfsdk:"wps_mode"`
+	Router                   types.String `tfsdk:"router"`
 }
 
 func NewInterfaceWirelessResource() resource.Resource { return &InterfaceWirelessResource{} }
@@ -439,16 +435,6 @@ func (r *InterfaceWirelessResource) Schema(_ context.Context, _ resource.SchemaR
 				Computed:    true,
 				Description: "After third sending failure on the lowest data rate, wait for specified time interval before retrying.",
 			},
-			"periodic_calibration": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "Setting default enables periodic calibration if info default-periodic-calibration property is enabled . Value of that property depends on the type of wireless card. This property is only effective for cards based on Atheros chipset.",
-			},
-			"periodic_calibration_interval": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "This property is only effective for cards based on Atheros chipset.",
-			},
 			"preamble_mode": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -458,11 +444,6 @@ func (r *InterfaceWirelessResource) Schema(_ context.Context, _ resource.SchemaR
 				Optional:    true,
 				Computed:    true,
 				Description: "Specify type of the installed Prism wireless card.",
-			},
-			"proprietary_extensions": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "RouterOS includes proprietary information in an information element of management frames. This parameter controls how this information is included. pre-2.9.25 - This is older method. It can interoperate with newer versions of RouterOS. This method is incompatible with some clients, for example, Centrino based ones. post-2.9.25 - This uses standardized way of including vendor specific information, that is compatible with newer wireless clients.",
 			},
 			"radio_name": schema.StringAttribute{
 				Optional:    true,
@@ -488,11 +469,6 @@ func (r *InterfaceWirelessResource) Schema(_ context.Context, _ resource.SchemaR
 				Optional:    true,
 				Computed:    true,
 				Description: "The default value is all channels from selected band that are supported by card and allowed by the country and frequency-mode settings (this list can be seen in info ). For default scan list in 5ghz band channels are taken with 20MHz step, in 5ghz-turbo band - with 40MHz step, for all other bands - with 5MHz step. If scan-list is specified manually, then all matching channels are taken. (Example: scan-list = default,5200-5245,2412-2427 - This will use the default value of scan list for current band, and add to it supported frequencies from 5200-5245 or 2412-2427 range.) Since RouterOS v6.0 with Winbox or Webfig, for inputting of multiple frequencies, add each frequency or range of frequencies into separate multiple scan-lists. Using a comma to separate frequencies is no longer supported in Winbox/Webfig since v6.0. Since RouterOS v6.35 (wireless-rep) scan-list support step feature where it is possible to manually specify the scan step. Example: scan-list = 5500-5600:20 will generate such scan-list values 5500,5520,5540,5560,5580,5600",
-			},
-			"secondary_channel": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "Specifies secondary channel, required to enable 80+80MHz transmission. To disable 80+80MHz functionality, set secondary-channel to \"\" or unset the value via CLI/GUI.",
 			},
 			"security_profile": schema.StringAttribute{
 				Optional:    true,
@@ -792,20 +768,11 @@ func (r *InterfaceWirelessResource) Create(ctx context.Context, req resource.Cre
 	if !(plan.OnFailRetryTime.IsNull() || plan.OnFailRetryTime.IsUnknown()) {
 		body["on-fail-retry-time"] = plan.OnFailRetryTime.ValueString()
 	}
-	if !(plan.PeriodicCalibration.IsNull() || plan.PeriodicCalibration.IsUnknown()) {
-		body["periodic-calibration"] = plan.PeriodicCalibration.ValueString()
-	}
-	if !(plan.PeriodicCalibrationInterval.IsNull() || plan.PeriodicCalibrationInterval.IsUnknown()) {
-		body["periodic-calibration-interval"] = plan.PeriodicCalibrationInterval.ValueString()
-	}
 	if !(plan.PreambleMode.IsNull() || plan.PreambleMode.IsUnknown()) {
 		body["preamble-mode"] = plan.PreambleMode.ValueString()
 	}
 	if !(plan.PrismCardtype.IsNull() || plan.PrismCardtype.IsUnknown()) {
 		body["prism-cardtype"] = plan.PrismCardtype.ValueString()
-	}
-	if !(plan.ProprietaryExtensions.IsNull() || plan.ProprietaryExtensions.IsUnknown()) {
-		body["proprietary-extensions"] = plan.ProprietaryExtensions.ValueString()
 	}
 	if !(plan.RadioName.IsNull() || plan.RadioName.IsUnknown()) {
 		body["radio-name"] = plan.RadioName.ValueString()
@@ -821,9 +788,6 @@ func (r *InterfaceWirelessResource) Create(ctx context.Context, req resource.Cre
 	}
 	if !(plan.ScanList.IsNull() || plan.ScanList.IsUnknown()) {
 		body["scan-list"] = plan.ScanList.ValueString()
-	}
-	if !(plan.SecondaryChannel.IsNull() || plan.SecondaryChannel.IsUnknown()) {
-		body["secondary-channel"] = plan.SecondaryChannel.ValueString()
 	}
 	if !(plan.SecurityProfile.IsNull() || plan.SecurityProfile.IsUnknown()) {
 		body["security-profile"] = plan.SecurityProfile.ValueString()
@@ -1109,20 +1073,11 @@ func (r *InterfaceWirelessResource) Update(ctx context.Context, req resource.Upd
 	if !plan.OnFailRetryTime.Equal(state.OnFailRetryTime) {
 		body["on-fail-retry-time"] = plan.OnFailRetryTime.ValueString()
 	}
-	if !plan.PeriodicCalibration.Equal(state.PeriodicCalibration) {
-		body["periodic-calibration"] = plan.PeriodicCalibration.ValueString()
-	}
-	if !plan.PeriodicCalibrationInterval.Equal(state.PeriodicCalibrationInterval) {
-		body["periodic-calibration-interval"] = plan.PeriodicCalibrationInterval.ValueString()
-	}
 	if !plan.PreambleMode.Equal(state.PreambleMode) {
 		body["preamble-mode"] = plan.PreambleMode.ValueString()
 	}
 	if !plan.PrismCardtype.Equal(state.PrismCardtype) {
 		body["prism-cardtype"] = plan.PrismCardtype.ValueString()
-	}
-	if !plan.ProprietaryExtensions.Equal(state.ProprietaryExtensions) {
-		body["proprietary-extensions"] = plan.ProprietaryExtensions.ValueString()
 	}
 	if !plan.RadioName.Equal(state.RadioName) {
 		body["radio-name"] = plan.RadioName.ValueString()
@@ -1138,9 +1093,6 @@ func (r *InterfaceWirelessResource) Update(ctx context.Context, req resource.Upd
 	}
 	if !plan.ScanList.Equal(state.ScanList) {
 		body["scan-list"] = plan.ScanList.ValueString()
-	}
-	if !plan.SecondaryChannel.Equal(state.SecondaryChannel) {
-		body["secondary-channel"] = plan.SecondaryChannel.ValueString()
 	}
 	if !plan.SecurityProfile.Equal(state.SecurityProfile) {
 		body["security-profile"] = plan.SecurityProfile.ValueString()
@@ -1872,26 +1824,6 @@ func interfaceWirelessApply(ctx context.Context, obj client.Object, m *Interface
 	} else {
 		m.OnFailRetryTime = types.StringNull()
 	}
-	if v, ok := obj["periodic-calibration"]; ok {
-		_ = v
-		if v != "" {
-			m.PeriodicCalibration = types.StringValue(v)
-		} else {
-			m.PeriodicCalibration = types.StringNull()
-		}
-	} else {
-		m.PeriodicCalibration = types.StringNull()
-	}
-	if v, ok := obj["periodic-calibration-interval"]; ok {
-		_ = v
-		if v != "" {
-			m.PeriodicCalibrationInterval = types.StringValue(v)
-		} else {
-			m.PeriodicCalibrationInterval = types.StringNull()
-		}
-	} else {
-		m.PeriodicCalibrationInterval = types.StringNull()
-	}
 	if v, ok := obj["preamble-mode"]; ok {
 		_ = v
 		if v != "" {
@@ -1911,16 +1843,6 @@ func interfaceWirelessApply(ctx context.Context, obj client.Object, m *Interface
 		}
 	} else {
 		m.PrismCardtype = types.StringNull()
-	}
-	if v, ok := obj["proprietary-extensions"]; ok {
-		_ = v
-		if v != "" {
-			m.ProprietaryExtensions = types.StringValue(v)
-		} else {
-			m.ProprietaryExtensions = types.StringNull()
-		}
-	} else {
-		m.ProprietaryExtensions = types.StringNull()
 	}
 	if v, ok := obj["radio-name"]; ok {
 		_ = v
@@ -1971,16 +1893,6 @@ func interfaceWirelessApply(ctx context.Context, obj client.Object, m *Interface
 		}
 	} else {
 		m.ScanList = types.StringNull()
-	}
-	if v, ok := obj["secondary-channel"]; ok {
-		_ = v
-		if v != "" {
-			m.SecondaryChannel = types.StringValue(v)
-		} else {
-			m.SecondaryChannel = types.StringNull()
-		}
-	} else {
-		m.SecondaryChannel = types.StringNull()
 	}
 	if v, ok := obj["security-profile"]; ok {
 		_ = v

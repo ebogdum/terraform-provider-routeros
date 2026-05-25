@@ -76,7 +76,6 @@ type IPFirewallFilterModel struct {
 	PacketMark              types.String `tfsdk:"packet_mark"`
 	PacketSize              types.String `tfsdk:"packet_size"`
 	Packets                 types.String `tfsdk:"packets"`
-	Path                    types.String `tfsdk:"path"`
 	PerConnectionClassifier types.String `tfsdk:"per_connection_classifier"`
 	Port                    types.String `tfsdk:"port"`
 	Priority                types.String `tfsdk:"priority"`
@@ -343,11 +342,6 @@ func (r *IPFirewallFilterResource) Schema(_ context.Context, _ resource.SchemaRe
 				Computed:    true,
 				Description: "",
 			},
-			"path": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "Parameter allows to include or exclude specific configuration menu from router entire configuration",
-			},
 			"per_connection_classifier": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -598,9 +592,6 @@ func (r *IPFirewallFilterResource) Create(ctx context.Context, req resource.Crea
 	if !(plan.PacketSize.IsNull() || plan.PacketSize.IsUnknown()) {
 		body["packet-size"] = plan.PacketSize.ValueString()
 	}
-	if !(plan.Path.IsNull() || plan.Path.IsUnknown()) {
-		body["path"] = plan.Path.ValueString()
-	}
 	if !(plan.PerConnectionClassifier.IsNull() || plan.PerConnectionClassifier.IsUnknown()) {
 		body["per-connection-classifier"] = plan.PerConnectionClassifier.ValueString()
 	}
@@ -658,14 +649,6 @@ func (r *IPFirewallFilterResource) Create(ctx context.Context, req resource.Crea
 	if !(plan.Ttl.IsNull() || plan.Ttl.IsUnknown()) {
 		body["ttl"] = plan.Ttl.ValueString()
 	}
-	// Encode the position marker into the comment we send to the device.
-	if !plan.Position.IsNull() && !plan.Position.IsUnknown() {
-		var userComment string
-		if !plan.Comment.IsNull() && !plan.Comment.IsUnknown() {
-			userComment = plan.Comment.ValueString()
-		}
-		body["comment"] = client.EncodeOrderedComment("", plan.Position.ValueInt64(), userComment)
-	}
 	if err := schemautil.CheckFirewallLockout("/ip/firewall/filter", body, !plan.LockoutAck.IsNull() && plan.LockoutAck.ValueBool()); err != nil {
 		resp.Diagnostics.AddError("Refusing dangerous firewall rule", err.Error())
 		return
@@ -676,7 +659,9 @@ func (r *IPFirewallFilterResource) Create(ctx context.Context, req resource.Crea
 		return
 	}
 	if !plan.Position.IsNull() && !plan.Position.IsUnknown() {
-		if err := c.PlaceOrdered(ctx, "/ip/firewall/filter", obj[".id"], "", plan.Position.ValueInt64()); err != nil {
+		r.reg.RegisterOrdered(plan.Router.ValueString(), "/ip/firewall/filter", obj[".id"], plan.Position.ValueInt64())
+		snap := r.reg.OrderedSnapshot(plan.Router.ValueString(), "/ip/firewall/filter")
+		if err := c.PlaceOrdered(ctx, plan.Router.ValueString(), "/ip/firewall/filter", obj[".id"], plan.Position.ValueInt64(), snap); err != nil {
 			resp.Diagnostics.AddError("Order /ip/firewall/filter failed", err.Error())
 			return
 		}
@@ -856,9 +841,6 @@ func (r *IPFirewallFilterResource) Update(ctx context.Context, req resource.Upda
 	if !plan.PacketSize.Equal(state.PacketSize) {
 		body["packet-size"] = plan.PacketSize.ValueString()
 	}
-	if !plan.Path.Equal(state.Path) {
-		body["path"] = plan.Path.ValueString()
-	}
 	if !plan.PerConnectionClassifier.Equal(state.PerConnectionClassifier) {
 		body["per-connection-classifier"] = plan.PerConnectionClassifier.ValueString()
 	}
@@ -918,15 +900,11 @@ func (r *IPFirewallFilterResource) Update(ctx context.Context, req resource.Upda
 	}
 	// If position OR comment changed, re-encode the marker into the comment
 	// so the device-side prefix stays in sync.
-	if !plan.Position.Equal(state.Position) || !plan.Comment.Equal(state.Comment) {
-		var userComment string
-		if !plan.Comment.IsNull() && !plan.Comment.IsUnknown() {
-			userComment = plan.Comment.ValueString()
-		}
-		if !plan.Position.IsNull() && !plan.Position.IsUnknown() {
-			body["comment"] = client.EncodeOrderedComment("", plan.Position.ValueInt64(), userComment)
+	if !plan.Comment.Equal(state.Comment) {
+		if plan.Comment.IsNull() || plan.Comment.IsUnknown() {
+			body["comment"] = ""
 		} else {
-			body["comment"] = userComment
+			body["comment"] = plan.Comment.ValueString()
 		}
 	}
 	// Build the EFFECTIVE rule (state merged with diff) so the guard sees the
@@ -1228,13 +1206,6 @@ func (r *IPFirewallFilterResource) Update(ctx context.Context, req resource.Upda
 			effective["packet-size"] = state.PacketSize.ValueString()
 		}
 	}
-	if v, ok := body["path"]; ok {
-		effective["path"] = v
-	} else {
-		if !state.Path.IsNull() && !state.Path.IsUnknown() {
-			effective["path"] = state.Path.ValueString()
-		}
-	}
 	if v, ok := body["per-connection-classifier"]; ok {
 		effective["per-connection-classifier"] = v
 	} else {
@@ -1382,10 +1353,14 @@ func (r *IPFirewallFilterResource) Update(ctx context.Context, req resource.Upda
 	} else {
 		plan.ID = state.ID
 	}
-	if !plan.Position.Equal(state.Position) && !plan.Position.IsNull() && !plan.Position.IsUnknown() {
-		if err := c.PlaceOrdered(ctx, "/ip/firewall/filter", plan.ID.ValueString(), "", plan.Position.ValueInt64()); err != nil {
-			resp.Diagnostics.AddError("Order /ip/firewall/filter failed", err.Error())
-			return
+	if !plan.Position.IsNull() && !plan.Position.IsUnknown() {
+		r.reg.RegisterOrdered(plan.Router.ValueString(), "/ip/firewall/filter", plan.ID.ValueString(), plan.Position.ValueInt64())
+		if !plan.Position.Equal(state.Position) {
+			snap := r.reg.OrderedSnapshot(plan.Router.ValueString(), "/ip/firewall/filter")
+			if err := c.PlaceOrdered(ctx, plan.Router.ValueString(), "/ip/firewall/filter", plan.ID.ValueString(), plan.Position.ValueInt64(), snap); err != nil {
+				resp.Diagnostics.AddError("Order /ip/firewall/filter failed", err.Error())
+				return
+			}
 		}
 	}
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
@@ -1404,6 +1379,7 @@ func (r *IPFirewallFilterResource) Delete(ctx context.Context, req resource.Dele
 	if err := c.Remove(ctx, "/ip/firewall/filter", state.ID.ValueString()); err != nil {
 		resp.Diagnostics.AddError("Delete /ip/firewall/filter failed", err.Error())
 	}
+	r.reg.UnregisterOrdered(state.Router.ValueString(), "/ip/firewall/filter", state.ID.ValueString())
 }
 
 func (r *IPFirewallFilterResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
@@ -1462,17 +1438,10 @@ func iPFirewallFilterApply(ctx context.Context, obj client.Object, m *IPFirewall
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	// Strip the [tf:pos=N] marker from the comment before exposing to state.
-	// Position lifts out into its own attribute so users see clean values.
-	// Computed:true requires the value to be known after apply -- explicitly
-	// Null it when no marker is present (otherwise it stays Unknown and
-	// terraform-plugin-framework errors).
-	m.Position = types.Int64Null()
-	if rawComment, ok := obj["comment"]; ok {
-		_, decodedPos, userComment, hasMarker := client.DecodeOrderedComment(rawComment)
-		obj["comment"] = userComment
-		if hasMarker {
-			m.Position = types.Int64Value(decodedPos)
-		}
+	// Position is TF-state-only metadata; never written to the device. Keep
+	// whatever the user planned. Comment is left untouched.
+	if m.Position.IsUnknown() {
+		m.Position = types.Int64Null()
 	}
 	// LockoutAck is local-only and not persisted on the wire. Carry the
 	// plan's value through to state (Null if the user didn't set it).
@@ -1918,16 +1887,6 @@ func iPFirewallFilterApply(ctx context.Context, obj client.Object, m *IPFirewall
 		}
 	} else {
 		m.Packets = types.StringNull()
-	}
-	if v, ok := obj["path"]; ok {
-		_ = v
-		if v != "" {
-			m.Path = types.StringValue(v)
-		} else {
-			m.Path = types.StringNull()
-		}
-	} else {
-		m.Path = types.StringNull()
 	}
 	if v, ok := obj["per-connection-classifier"]; ok {
 		_ = v

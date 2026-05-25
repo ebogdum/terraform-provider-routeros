@@ -21,9 +21,7 @@ resource "routeros_ipv6_dhcp_client" "dhcp_client_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
-  # clientid = "replace-me"
   # default_route_distance = "replace-me"
-  # hostname = "replace-me"
 }
 ```
 
@@ -32,11 +30,9 @@ resource "routeros_ipv6_dhcp_client" "dhcp_client_example" {
 This resource supports the following arguments:
 
 * `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `clientid` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `default_route_distance` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `hostname` - (Optional) Type: `string`.
 * `interface` - (Required) Type: `string`.
 * `request` - (Required) Type: `string`. Default: `address`.
 

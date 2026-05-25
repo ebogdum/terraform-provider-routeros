@@ -26,11 +26,9 @@ This data source supports the following arguments:
 * `router` - (Optional) Name of the router in the provider's `routers` map to query.
 * `filter` - (Optional) Map of field=value pairs to narrow the result set.
 * `proplist` - (Optional) List of property names to project; smaller payload.
-* `clientid` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `default_route_distance` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `hostname` - (Optional) Type: `string`.
 * `interface` - (Required) Type: `string`.
 * `request` - (Required) Type: `string`. Default: `address`.
 

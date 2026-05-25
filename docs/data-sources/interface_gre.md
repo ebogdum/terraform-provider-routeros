@@ -34,7 +34,6 @@ This data source supports the following arguments:
 * `dscp` - (Optional) Type: `enum(inherit)`. Set dscp value in Gre header to a fixed value or inherit from dscp value taken from tunnelled traffic. Default: `256`.
 * `ipsec_secret` - (Optional) Type: `string`. When secret is specified, router adds dynamic IPsec peer to remote-address with pre-shared key and policy (by default phase2 uses sha1/aes128cbc). **Sensitive.**
 * `keepalive` - (Optional) Type: `string`. Tunnel keepalive parameter sets the time interval in which the tunnel running flag will remain even if the remote end of tunnel goes down. If configured time,retries fail, interface running flag is removed. Parameters are written in following format: KeepaliveInterval,KeepaliveRetries where KeepaliveInterval is time interval and KeepaliveRetries - number of retry attempts. By default keepalive is set to 10 seconds and 10 retries. Default: `1`.
-* `l2mtu` - (Optional) Type: `string`. Layer2 Maximum transmission unit.
 * `local_address` - (Optional) Type: `ip`. IP address that will be used for local tunnel end. If set to 0.0.0.0 then IP address of outgoing interface will be used.
 * `mtu` - (Optional) Type: `int`. Layer3 Maximum transmission unit. Default: `0`.
 * `name` - (Optional) Type: `string`. Name of the tunnel.

@@ -4,7 +4,6 @@ resource "routeros_interface_ethernet" "ethernet_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
-  # address = "replace-me"
   # advertise = []
   # arp = "disabled"
   # arp_timeout = "1h"
@@ -12,7 +11,6 @@ resource "routeros_interface_ethernet" "ethernet_example" {
   # combo_mode = "auto"
   # disable_running_check = false
   # fec_mode = "off"
-  # interface = "ether1"
   # l2mtu = "replace-me"
   # loop_protect = "default"
   # loop_protect_disable_time = "1h"
@@ -21,7 +19,6 @@ resource "routeros_interface_ethernet" "ethernet_example" {
   # mtu = 1500
   # name = "tf-example"
   # orig_mac_address = "10.99.0.0/24"
-  # published = "replace-me"
   # rx_flow_control = "off"
   # sfp_shutdown_temperature = 0
   # speed = "10M baseT half"

@@ -26,7 +26,6 @@ This data source supports the following arguments:
 * `router` - (Optional) Name of the router in the provider's `routers` map to query.
 * `filter` - (Optional) Map of field=value pairs to narrow the result set.
 * `proplist` - (Optional) List of property names to project; smaller payload.
-* `address` - (Optional) Type: `string`. IP address to be mapped.
 * `advertise` - (Optional) Type: `list`.
 * `arp` - (Optional) Type: `enum(disabled|enabled|proxy-arp|reply-only|local-proxy-arp)`.
 * `arp_timeout` - (Optional) Type: `duration`.
@@ -36,7 +35,6 @@ This data source supports the following arguments:
 * `disable_running_check` - (Optional) Type: `bool`.
 * `disabled` - (Optional) Type: `bool`.
 * `fec_mode` - (Optional) Type: `enum(off|auto|fec74|fec91)`.
-* `interface` - (Optional) Type: `string`. Interface name the IP address is assigned to.
 * `l2mtu` - (Optional) Type: `string`.
 * `loop_protect` - (Optional) Type: `enum(default|off|on)`.
 * `loop_protect_disable_time` - (Optional) Type: `duration`.
@@ -45,7 +43,6 @@ This data source supports the following arguments:
 * `mtu` - (Optional) Type: `int`. Default: `1500`.
 * `name` - (Optional) Type: `string`.
 * `orig_mac_address` - (Optional) Type: `mac`.
-* `published` - (Optional) Type: `string`. Static proxy-arp entry for individual IP addresses. When an ARP query is received for the specific IP address, the device will respond with its own MAC address. No need to set proxy-arp on the interface itself for all the MAC addresses to be proxied. The interface will respond to an ARP request only when the device has an active route towards the destination.
 * `rx_flow_control` - (Optional) Type: `enum(off|on|auto)`.
 * `sfp_shutdown_temperature` - (Optional) Type: `int`.
 * `speed` - (Optional) Type: `enum(10M baseT half|10M baseT full|100M baseT half|100M baseT full|1G baseT half|1G baseT full, ...)`.

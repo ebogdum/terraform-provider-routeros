@@ -30,13 +30,27 @@ type IPDNSStaticResource struct {
 }
 
 type IPDNSStaticModel struct {
-	ID       types.String `tfsdk:"id"`
-	Address  types.String `tfsdk:"address"`
-	Comment  types.String `tfsdk:"comment"`
-	Disabled types.Bool   `tfsdk:"disabled"`
-	Name     types.String `tfsdk:"name"`
-	Ttl      types.String `tfsdk:"ttl"`
-	Router   types.String `tfsdk:"router"`
+	ID             types.String `tfsdk:"id"`
+	Address        types.String `tfsdk:"address"`
+	AddressList    types.String `tfsdk:"address_list"`
+	Cname          types.String `tfsdk:"cname"`
+	Comment        types.String `tfsdk:"comment"`
+	Disabled       types.Bool   `tfsdk:"disabled"`
+	ForwardTo      types.String `tfsdk:"forward_to"`
+	MatchSubdomain types.String `tfsdk:"match_subdomain"`
+	MxExchange     types.String `tfsdk:"mx_exchange"`
+	MxPreference   types.String `tfsdk:"mx_preference"`
+	Name           types.String `tfsdk:"name"`
+	Ns             types.String `tfsdk:"ns"`
+	Regexp         types.String `tfsdk:"regexp"`
+	SrvPort        types.String `tfsdk:"srv_port"`
+	SrvPriority    types.String `tfsdk:"srv_priority"`
+	SrvTarget      types.String `tfsdk:"srv_target"`
+	SrvWeight      types.String `tfsdk:"srv_weight"`
+	Text           types.String `tfsdk:"text"`
+	Ttl            types.String `tfsdk:"ttl"`
+	Type           types.String `tfsdk:"type"`
+	Router         types.String `tfsdk:"router"`
 }
 
 func NewIPDNSStaticResource() resource.Resource { return &IPDNSStaticResource{} }
@@ -67,6 +81,16 @@ func (r *IPDNSStaticResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Required:    true,
 				Description: "Address to return.",
 			},
+			"address_list": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"cname": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -77,11 +101,71 @@ func (r *IPDNSStaticResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Computed:    true,
 				Description: "Whether the entry is disabled.",
 			},
+			"forward_to": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"match_subdomain": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"mx_exchange": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"mx_preference": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"name": schema.StringAttribute{
 				Required:    true,
 				Description: "FQDN matched against incoming queries.",
 			},
+			"ns": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"regexp": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"srv_port": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"srv_priority": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"srv_target": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"srv_weight": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"text": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"ttl": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"type": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -108,17 +192,59 @@ func (r *IPDNSStaticResource) Create(ctx context.Context, req resource.CreateReq
 	if !(plan.Address.IsNull() || plan.Address.IsUnknown()) {
 		body["address"] = plan.Address.ValueString()
 	}
+	if !(plan.AddressList.IsNull() || plan.AddressList.IsUnknown()) {
+		body["address-list"] = plan.AddressList.ValueString()
+	}
+	if !(plan.Cname.IsNull() || plan.Cname.IsUnknown()) {
+		body["cname"] = plan.Cname.ValueString()
+	}
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
+	if !(plan.ForwardTo.IsNull() || plan.ForwardTo.IsUnknown()) {
+		body["forward-to"] = plan.ForwardTo.ValueString()
+	}
+	if !(plan.MatchSubdomain.IsNull() || plan.MatchSubdomain.IsUnknown()) {
+		body["match-subdomain"] = plan.MatchSubdomain.ValueString()
+	}
+	if !(plan.MxExchange.IsNull() || plan.MxExchange.IsUnknown()) {
+		body["mx-exchange"] = plan.MxExchange.ValueString()
+	}
+	if !(plan.MxPreference.IsNull() || plan.MxPreference.IsUnknown()) {
+		body["mx-preference"] = plan.MxPreference.ValueString()
+	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
 	}
+	if !(plan.Ns.IsNull() || plan.Ns.IsUnknown()) {
+		body["ns"] = plan.Ns.ValueString()
+	}
+	if !(plan.Regexp.IsNull() || plan.Regexp.IsUnknown()) {
+		body["regexp"] = plan.Regexp.ValueString()
+	}
+	if !(plan.SrvPort.IsNull() || plan.SrvPort.IsUnknown()) {
+		body["srv-port"] = plan.SrvPort.ValueString()
+	}
+	if !(plan.SrvPriority.IsNull() || plan.SrvPriority.IsUnknown()) {
+		body["srv-priority"] = plan.SrvPriority.ValueString()
+	}
+	if !(plan.SrvTarget.IsNull() || plan.SrvTarget.IsUnknown()) {
+		body["srv-target"] = plan.SrvTarget.ValueString()
+	}
+	if !(plan.SrvWeight.IsNull() || plan.SrvWeight.IsUnknown()) {
+		body["srv-weight"] = plan.SrvWeight.ValueString()
+	}
+	if !(plan.Text.IsNull() || plan.Text.IsUnknown()) {
+		body["text"] = plan.Text.ValueString()
+	}
 	if !(plan.Ttl.IsNull() || plan.Ttl.IsUnknown()) {
 		body["ttl"] = plan.Ttl.ValueString()
+	}
+	if !(plan.Type.IsNull() || plan.Type.IsUnknown()) {
+		body["type"] = plan.Type.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ip/dns/static", body)
 	if err != nil {
@@ -170,17 +296,59 @@ func (r *IPDNSStaticResource) Update(ctx context.Context, req resource.UpdateReq
 	if !plan.Address.Equal(state.Address) {
 		body["address"] = plan.Address.ValueString()
 	}
+	if !plan.AddressList.Equal(state.AddressList) {
+		body["address-list"] = plan.AddressList.ValueString()
+	}
+	if !plan.Cname.Equal(state.Cname) {
+		body["cname"] = plan.Cname.ValueString()
+	}
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
+	if !plan.ForwardTo.Equal(state.ForwardTo) {
+		body["forward-to"] = plan.ForwardTo.ValueString()
+	}
+	if !plan.MatchSubdomain.Equal(state.MatchSubdomain) {
+		body["match-subdomain"] = plan.MatchSubdomain.ValueString()
+	}
+	if !plan.MxExchange.Equal(state.MxExchange) {
+		body["mx-exchange"] = plan.MxExchange.ValueString()
+	}
+	if !plan.MxPreference.Equal(state.MxPreference) {
+		body["mx-preference"] = plan.MxPreference.ValueString()
+	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
 	}
+	if !plan.Ns.Equal(state.Ns) {
+		body["ns"] = plan.Ns.ValueString()
+	}
+	if !plan.Regexp.Equal(state.Regexp) {
+		body["regexp"] = plan.Regexp.ValueString()
+	}
+	if !plan.SrvPort.Equal(state.SrvPort) {
+		body["srv-port"] = plan.SrvPort.ValueString()
+	}
+	if !plan.SrvPriority.Equal(state.SrvPriority) {
+		body["srv-priority"] = plan.SrvPriority.ValueString()
+	}
+	if !plan.SrvTarget.Equal(state.SrvTarget) {
+		body["srv-target"] = plan.SrvTarget.ValueString()
+	}
+	if !plan.SrvWeight.Equal(state.SrvWeight) {
+		body["srv-weight"] = plan.SrvWeight.ValueString()
+	}
+	if !plan.Text.Equal(state.Text) {
+		body["text"] = plan.Text.ValueString()
+	}
 	if !plan.Ttl.Equal(state.Ttl) {
 		body["ttl"] = plan.Ttl.ValueString()
+	}
+	if !plan.Type.Equal(state.Type) {
+		body["type"] = plan.Type.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/dns/static", state.ID.ValueString(), body)
@@ -275,6 +443,26 @@ func iPDNSStaticApply(ctx context.Context, obj client.Object, m *IPDNSStaticMode
 	} else {
 		m.Address = types.StringNull()
 	}
+	if v, ok := obj["address-list"]; ok {
+		_ = v
+		if v != "" {
+			m.AddressList = types.StringValue(v)
+		} else {
+			m.AddressList = types.StringNull()
+		}
+	} else {
+		m.AddressList = types.StringNull()
+	}
+	if v, ok := obj["cname"]; ok {
+		_ = v
+		if v != "" {
+			m.Cname = types.StringValue(v)
+		} else {
+			m.Cname = types.StringNull()
+		}
+	} else {
+		m.Cname = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {
@@ -295,6 +483,46 @@ func iPDNSStaticApply(ctx context.Context, obj client.Object, m *IPDNSStaticMode
 	} else {
 		m.Disabled = types.BoolNull()
 	}
+	if v, ok := obj["forward-to"]; ok {
+		_ = v
+		if v != "" {
+			m.ForwardTo = types.StringValue(v)
+		} else {
+			m.ForwardTo = types.StringNull()
+		}
+	} else {
+		m.ForwardTo = types.StringNull()
+	}
+	if v, ok := obj["match-subdomain"]; ok {
+		_ = v
+		if v != "" {
+			m.MatchSubdomain = types.StringValue(v)
+		} else {
+			m.MatchSubdomain = types.StringNull()
+		}
+	} else {
+		m.MatchSubdomain = types.StringNull()
+	}
+	if v, ok := obj["mx-exchange"]; ok {
+		_ = v
+		if v != "" {
+			m.MxExchange = types.StringValue(v)
+		} else {
+			m.MxExchange = types.StringNull()
+		}
+	} else {
+		m.MxExchange = types.StringNull()
+	}
+	if v, ok := obj["mx-preference"]; ok {
+		_ = v
+		if v != "" {
+			m.MxPreference = types.StringValue(v)
+		} else {
+			m.MxPreference = types.StringNull()
+		}
+	} else {
+		m.MxPreference = types.StringNull()
+	}
 	if v, ok := obj["name"]; ok {
 		_ = v
 		if v != "" {
@@ -305,6 +533,76 @@ func iPDNSStaticApply(ctx context.Context, obj client.Object, m *IPDNSStaticMode
 	} else {
 		m.Name = types.StringNull()
 	}
+	if v, ok := obj["ns"]; ok {
+		_ = v
+		if v != "" {
+			m.Ns = types.StringValue(v)
+		} else {
+			m.Ns = types.StringNull()
+		}
+	} else {
+		m.Ns = types.StringNull()
+	}
+	if v, ok := obj["regexp"]; ok {
+		_ = v
+		if v != "" {
+			m.Regexp = types.StringValue(v)
+		} else {
+			m.Regexp = types.StringNull()
+		}
+	} else {
+		m.Regexp = types.StringNull()
+	}
+	if v, ok := obj["srv-port"]; ok {
+		_ = v
+		if v != "" {
+			m.SrvPort = types.StringValue(v)
+		} else {
+			m.SrvPort = types.StringNull()
+		}
+	} else {
+		m.SrvPort = types.StringNull()
+	}
+	if v, ok := obj["srv-priority"]; ok {
+		_ = v
+		if v != "" {
+			m.SrvPriority = types.StringValue(v)
+		} else {
+			m.SrvPriority = types.StringNull()
+		}
+	} else {
+		m.SrvPriority = types.StringNull()
+	}
+	if v, ok := obj["srv-target"]; ok {
+		_ = v
+		if v != "" {
+			m.SrvTarget = types.StringValue(v)
+		} else {
+			m.SrvTarget = types.StringNull()
+		}
+	} else {
+		m.SrvTarget = types.StringNull()
+	}
+	if v, ok := obj["srv-weight"]; ok {
+		_ = v
+		if v != "" {
+			m.SrvWeight = types.StringValue(v)
+		} else {
+			m.SrvWeight = types.StringNull()
+		}
+	} else {
+		m.SrvWeight = types.StringNull()
+	}
+	if v, ok := obj["text"]; ok {
+		_ = v
+		if v != "" {
+			m.Text = types.StringValue(v)
+		} else {
+			m.Text = types.StringNull()
+		}
+	} else {
+		m.Text = types.StringNull()
+	}
 	if v, ok := obj["ttl"]; ok {
 		_ = v
 		if v != "" {
@@ -314,5 +612,15 @@ func iPDNSStaticApply(ctx context.Context, obj client.Object, m *IPDNSStaticMode
 		}
 	} else {
 		m.Ttl = types.StringNull()
+	}
+	if v, ok := obj["type"]; ok {
+		_ = v
+		if v != "" {
+			m.Type = types.StringValue(v)
+		} else {
+			m.Type = types.StringNull()
+		}
+	} else {
+		m.Type = types.StringNull()
 	}
 }

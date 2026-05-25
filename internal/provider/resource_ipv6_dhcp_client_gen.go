@@ -31,11 +31,9 @@ type IPV6DHCPClientResource struct {
 
 type IPV6DHCPClientModel struct {
 	ID                   types.String `tfsdk:"id"`
-	Clientid             types.String `tfsdk:"clientid"`
 	Comment              types.String `tfsdk:"comment"`
 	DefaultRouteDistance types.String `tfsdk:"default_route_distance"`
 	Disabled             types.Bool   `tfsdk:"disabled"`
-	Hostname             types.String `tfsdk:"hostname"`
 	Interface            types.String `tfsdk:"interface"`
 	Request              types.String `tfsdk:"request"`
 	Router               types.String `tfsdk:"router"`
@@ -65,11 +63,6 @@ func (r *IPV6DHCPClientResource) Schema(_ context.Context, _ resource.SchemaRequ
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
-			"clientid": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "",
-			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -84,11 +77,6 @@ func (r *IPV6DHCPClientResource) Schema(_ context.Context, _ resource.SchemaRequ
 				Optional:    true,
 				Computed:    true,
 				Description: "Whether the entry is disabled.",
-			},
-			"hostname": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "",
 			},
 			"interface": schema.StringAttribute{
 				Required:    true,
@@ -117,9 +105,6 @@ func (r *IPV6DHCPClientResource) Create(ctx context.Context, req resource.Create
 		return
 	}
 	body := client.Object{}
-	if !(plan.Clientid.IsNull() || plan.Clientid.IsUnknown()) {
-		body["clientid"] = plan.Clientid.ValueString()
-	}
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
 	}
@@ -128,9 +113,6 @@ func (r *IPV6DHCPClientResource) Create(ctx context.Context, req resource.Create
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
-	}
-	if !(plan.Hostname.IsNull() || plan.Hostname.IsUnknown()) {
-		body["hostname"] = plan.Hostname.ValueString()
 	}
 	if !(plan.Interface.IsNull() || plan.Interface.IsUnknown()) {
 		body["interface"] = plan.Interface.ValueString()
@@ -185,9 +167,6 @@ func (r *IPV6DHCPClientResource) Update(ctx context.Context, req resource.Update
 		return
 	}
 	body := client.Object{}
-	if !plan.Clientid.Equal(state.Clientid) {
-		body["clientid"] = plan.Clientid.ValueString()
-	}
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
 	}
@@ -196,9 +175,6 @@ func (r *IPV6DHCPClientResource) Update(ctx context.Context, req resource.Update
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
-	}
-	if !plan.Hostname.Equal(state.Hostname) {
-		body["hostname"] = plan.Hostname.ValueString()
 	}
 	if !plan.Interface.Equal(state.Interface) {
 		body["interface"] = plan.Interface.ValueString()
@@ -289,16 +265,6 @@ func iPV6DHCPClientLookupByNaturalKey(ctx context.Context, c *client.Client, id 
 func iPV6DHCPClientApply(ctx context.Context, obj client.Object, m *IPV6DHCPClientModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
-	if v, ok := obj["clientid"]; ok {
-		_ = v
-		if v != "" {
-			m.Clientid = types.StringValue(v)
-		} else {
-			m.Clientid = types.StringNull()
-		}
-	} else {
-		m.Clientid = types.StringNull()
-	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {
@@ -328,16 +294,6 @@ func iPV6DHCPClientApply(ctx context.Context, obj client.Object, m *IPV6DHCPClie
 		}
 	} else {
 		m.Disabled = types.BoolNull()
-	}
-	if v, ok := obj["hostname"]; ok {
-		_ = v
-		if v != "" {
-			m.Hostname = types.StringValue(v)
-		} else {
-			m.Hostname = types.StringNull()
-		}
-	} else {
-		m.Hostname = types.StringNull()
 	}
 	if v, ok := obj["interface"]; ok {
 		_ = v

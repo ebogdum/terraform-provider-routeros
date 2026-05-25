@@ -34,12 +34,9 @@ type InterfaceResource struct {
 type InterfaceModel struct {
 	ID             types.String `tfsdk:"id"`
 	ActualMTU      types.Int64  `tfsdk:"actual_mtu"`
-	Add            types.String `tfsdk:"add"`
 	Comment        types.String `tfsdk:"comment"`
 	DefaultName    types.String `tfsdk:"default_name"`
 	Disabled       types.Bool   `tfsdk:"disabled"`
-	Edit           types.String `tfsdk:"edit"`
-	Find           types.String `tfsdk:"find"`
 	FpRpsDrop      types.Int64  `tfsdk:"fp_rps_drop"`
 	FpRxByte       types.Int64  `tfsdk:"fp_rx_byte"`
 	FpRxPacket     types.Int64  `tfsdk:"fp_rx_packet"`
@@ -48,17 +45,13 @@ type InterfaceModel struct {
 	LastLinkUpTime types.String `tfsdk:"last_link_up_time"`
 	LinkDowns      types.Int64  `tfsdk:"link_downs"`
 	MACAddress     types.String `tfsdk:"mac_address"`
-	Move           types.String `tfsdk:"move"`
 	MTU            types.Int64  `tfsdk:"mtu"`
 	Name           types.String `tfsdk:"name"`
-	Print          types.String `tfsdk:"print"`
-	Remove         types.String `tfsdk:"remove"`
 	Running        types.Bool   `tfsdk:"running"`
 	RxByte         types.Int64  `tfsdk:"rx_byte"`
 	RxDrop         types.Int64  `tfsdk:"rx_drop"`
 	RxError        types.Int64  `tfsdk:"rx_error"`
 	RxPacket       types.Int64  `tfsdk:"rx_packet"`
-	Set            types.String `tfsdk:"set"`
 	TxByte         types.Int64  `tfsdk:"tx_byte"`
 	TxDrop         types.Int64  `tfsdk:"tx_drop"`
 	TxError        types.Int64  `tfsdk:"tx_error"`
@@ -98,11 +91,6 @@ func (r *InterfaceResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Computed:    true,
 				Description: "",
 			},
-			"add": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "This command usually has all the same arguments as a set, except the item number argument. It adds a new item with the values you have specified, usually at the end of the item list, in places where the order of items is relevant. There are some required properties that you have to supply, such as the interface for a new address, while other properties are set to defaults unless you explicitly specify them. Common Parameters copy-from - Copies an existing item. It takes default values of a new item's properties from another item. If you do not want to make an exact copy, you can specify new values for some properties. When copying items that have names, you will usually have to give a new name to a copy place-before - places a new item before an existing item with a specified position. Thus, you do not need to use the move command after adding an item to the list disabled - controls disabled/enabled state of the newly added item(-s) comment - holds the description of a newly created item Return Values add command returns the internal number of items it has added",
-			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -117,16 +105,6 @@ func (r *InterfaceResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Optional:    true,
 				Computed:    true,
 				Description: "",
-			},
-			"edit": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "This command is associated with the set command. It can be used to edit values of properties that contain a large amount of text, such as scripts, but it works with all editable properties. Depending on the capabilities of the terminal, either a full-screen editor or a single line editor is launched to edit the value of the specified property.",
-			},
-			"find": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "The find command has the same arguments as a set, plus the flag arguments like disabled or active that take values yes or no depending on the value of the respective flag. To see all flags and their names, look at the top of the print command's output. The find command returns internal numbers of all items that have the same values of arguments as specified.",
 			},
 			"fp_rps_drop": schema.Int64Attribute{
 				Optional:    true,
@@ -170,11 +148,6 @@ func (r *InterfaceResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Validators:    []validator.String{schemautil.IsMAC()},
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
 			},
-			"move": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "Changes the order of items in the list. Parameters: the first argument specifies the item(-s) being moved. the second argument specifies the item before which to place all items being moved (they are placed at the end of the list if the second argument is omitted).",
-			},
 			"mtu": schema.Int64Attribute{
 				Optional:    true,
 				Computed:    true,
@@ -184,16 +157,6 @@ func (r *InterfaceResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Optional:    true,
 				Computed:    true,
 				Description: "",
-			},
-			"print": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "Shows all information that's accessible from a particular command level. Thus, /system clock print shows the system date and time, /ip route print shows all routes etc. If there\\'s a list of items in the current level and they are not read-only, i.e. you can change/remove them (example of read-only item list is /system history , which shows a history of executed actions), then print command also assigns numbers that are used by all commands that operate with items in this list. Common Parameters: append -\u00a0 brief - forces the print command to use tabular output form count-only - shows the number of items detail - forces the print command to use property=value output form file - prints the contents of the specific sub-menu into a file on the router. follow -\u00a0 follow-only -\u00a0 follow-strict -\u00a0 from - show only specified items, in the same order in which they are given. interval - updates the output from the print command for every interval of seconds. oid - prints the OID value for properties that are accessible from SNMP. proplist - comma-separated and ordered list of property names that should be included for the returned items. show-ids -\u00a0 where - show only items that match specified criteria. The syntax of where the property is similar to the find command. without-paging - prints the output without stopping after each screenful.",
-			},
-			"remove": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "Removes specified item(-s) from a list.",
 			},
 			"running": schema.BoolAttribute{
 				Optional:    true,
@@ -219,11 +182,6 @@ func (r *InterfaceResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Optional:    true,
 				Computed:    true,
 				Description: "",
-			},
-			"set": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "Allows you to change values of general parameters or item parameters. The set command has arguments with names corresponding to values you can change. Use ? or double Tab to see a list of all arguments. If there is a list of items in this command level, then the set has one action argument that accepts the number of items (or list of numbers) you wish to set up. This command does not return anything.",
 			},
 			"tx_byte": schema.Int64Attribute{
 				Optional:    true,
@@ -279,38 +237,17 @@ func (r *InterfaceResource) Create(ctx context.Context, req resource.CreateReque
 		return
 	}
 	body := client.Object{}
-	if !(plan.Add.IsNull() || plan.Add.IsUnknown()) {
-		body["add"] = plan.Add.ValueString()
-	}
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !(plan.Edit.IsNull() || plan.Edit.IsUnknown()) {
-		body["edit"] = plan.Edit.ValueString()
-	}
-	if !(plan.Find.IsNull() || plan.Find.IsUnknown()) {
-		body["find"] = plan.Find.ValueString()
-	}
-	if !(plan.Move.IsNull() || plan.Move.IsUnknown()) {
-		body["move"] = plan.Move.ValueString()
-	}
 	if !(plan.MTU.IsNull() || plan.MTU.IsUnknown()) {
 		body["mtu"] = client.FormatInt64(plan.MTU.ValueInt64())
 	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
-	}
-	if !(plan.Print.IsNull() || plan.Print.IsUnknown()) {
-		body["print"] = plan.Print.ValueString()
-	}
-	if !(plan.Remove.IsNull() || plan.Remove.IsUnknown()) {
-		body["remove"] = plan.Remove.ValueString()
-	}
-	if !(plan.Set.IsNull() || plan.Set.IsUnknown()) {
-		body["set"] = plan.Set.ValueString()
 	}
 	obj, err := c.Add(ctx, "/interface", body)
 	if err != nil {
@@ -359,38 +296,17 @@ func (r *InterfaceResource) Update(ctx context.Context, req resource.UpdateReque
 		return
 	}
 	body := client.Object{}
-	if !plan.Add.Equal(state.Add) {
-		body["add"] = plan.Add.ValueString()
-	}
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Edit.Equal(state.Edit) {
-		body["edit"] = plan.Edit.ValueString()
-	}
-	if !plan.Find.Equal(state.Find) {
-		body["find"] = plan.Find.ValueString()
-	}
-	if !plan.Move.Equal(state.Move) {
-		body["move"] = plan.Move.ValueString()
-	}
 	if !plan.MTU.Equal(state.MTU) {
 		body["mtu"] = client.FormatInt64(plan.MTU.ValueInt64())
 	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
-	}
-	if !plan.Print.Equal(state.Print) {
-		body["print"] = plan.Print.ValueString()
-	}
-	if !plan.Remove.Equal(state.Remove) {
-		body["remove"] = plan.Remove.ValueString()
-	}
-	if !plan.Set.Equal(state.Set) {
-		body["set"] = plan.Set.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface", state.ID.ValueString(), body)
@@ -485,16 +401,6 @@ func interfaceApply(ctx context.Context, obj client.Object, m *InterfaceModel) {
 	} else {
 		m.ActualMTU = types.Int64Null()
 	}
-	if v, ok := obj["add"]; ok {
-		_ = v
-		if v != "" {
-			m.Add = types.StringValue(v)
-		} else {
-			m.Add = types.StringNull()
-		}
-	} else {
-		m.Add = types.StringNull()
-	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {
@@ -524,26 +430,6 @@ func interfaceApply(ctx context.Context, obj client.Object, m *InterfaceModel) {
 		}
 	} else {
 		m.Disabled = types.BoolNull()
-	}
-	if v, ok := obj["edit"]; ok {
-		_ = v
-		if v != "" {
-			m.Edit = types.StringValue(v)
-		} else {
-			m.Edit = types.StringNull()
-		}
-	} else {
-		m.Edit = types.StringNull()
-	}
-	if v, ok := obj["find"]; ok {
-		_ = v
-		if v != "" {
-			m.Find = types.StringValue(v)
-		} else {
-			m.Find = types.StringNull()
-		}
-	} else {
-		m.Find = types.StringNull()
 	}
 	if v, ok := obj["fp-rps-drop"]; ok {
 		_ = v
@@ -625,16 +511,6 @@ func interfaceApply(ctx context.Context, obj client.Object, m *InterfaceModel) {
 	} else {
 		m.MACAddress = types.StringNull()
 	}
-	if v, ok := obj["move"]; ok {
-		_ = v
-		if v != "" {
-			m.Move = types.StringValue(v)
-		} else {
-			m.Move = types.StringNull()
-		}
-	} else {
-		m.Move = types.StringNull()
-	}
 	if v, ok := obj["mtu"]; ok {
 		_ = v
 		if n, err := client.ParseInt64(v); err == nil {
@@ -654,26 +530,6 @@ func interfaceApply(ctx context.Context, obj client.Object, m *InterfaceModel) {
 		}
 	} else {
 		m.Name = types.StringNull()
-	}
-	if v, ok := obj["print"]; ok {
-		_ = v
-		if v != "" {
-			m.Print = types.StringValue(v)
-		} else {
-			m.Print = types.StringNull()
-		}
-	} else {
-		m.Print = types.StringNull()
-	}
-	if v, ok := obj["remove"]; ok {
-		_ = v
-		if v != "" {
-			m.Remove = types.StringValue(v)
-		} else {
-			m.Remove = types.StringNull()
-		}
-	} else {
-		m.Remove = types.StringNull()
 	}
 	if v, ok := obj["running"]; ok {
 		_ = v
@@ -724,16 +580,6 @@ func interfaceApply(ctx context.Context, obj client.Object, m *InterfaceModel) {
 		}
 	} else {
 		m.RxPacket = types.Int64Null()
-	}
-	if v, ok := obj["set"]; ok {
-		_ = v
-		if v != "" {
-			m.Set = types.StringValue(v)
-		} else {
-			m.Set = types.StringNull()
-		}
-	} else {
-		m.Set = types.StringNull()
 	}
 	if v, ok := obj["tx-byte"]; ok {
 		_ = v

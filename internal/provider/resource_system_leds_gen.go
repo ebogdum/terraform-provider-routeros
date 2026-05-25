@@ -30,13 +30,12 @@ type SystemLedsResource struct {
 }
 
 type SystemLedsModel struct {
-	ID                  types.String `tfsdk:"id"`
-	Disabled            types.Bool   `tfsdk:"disabled"`
-	Interface           types.String `tfsdk:"interface"`
-	Leds                types.String `tfsdk:"leds"`
-	ModemSignalTreshold types.String `tfsdk:"modem_signal_treshold"`
-	Type                types.String `tfsdk:"type"`
-	Router              types.String `tfsdk:"router"`
+	ID        types.String `tfsdk:"id"`
+	Disabled  types.Bool   `tfsdk:"disabled"`
+	Interface types.String `tfsdk:"interface"`
+	Leds      types.String `tfsdk:"leds"`
+	Type      types.String `tfsdk:"type"`
+	Router    types.String `tfsdk:"router"`
 }
 
 func NewSystemLedsResource() resource.Resource { return &SystemLedsResource{} }
@@ -78,11 +77,6 @@ func (r *SystemLedsResource) Schema(_ context.Context, _ resource.SchemaRequest,
 				Computed:    true,
 				Description: "List of led names used for a status report. For example, wireless signal strength will require more than one led.",
 			},
-			"modem_signal_treshold": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "Applicable if a type is \u00a0 modem-signal",
-			},
 			"type": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -115,9 +109,6 @@ func (r *SystemLedsResource) Create(ctx context.Context, req resource.CreateRequ
 	}
 	if !(plan.Leds.IsNull() || plan.Leds.IsUnknown()) {
 		body["leds"] = plan.Leds.ValueString()
-	}
-	if !(plan.ModemSignalTreshold.IsNull() || plan.ModemSignalTreshold.IsUnknown()) {
-		body["modem-signal-treshold"] = plan.ModemSignalTreshold.ValueString()
 	}
 	if !(plan.Type.IsNull() || plan.Type.IsUnknown()) {
 		body["type"] = plan.Type.ValueString()
@@ -177,9 +168,6 @@ func (r *SystemLedsResource) Update(ctx context.Context, req resource.UpdateRequ
 	}
 	if !plan.Leds.Equal(state.Leds) {
 		body["leds"] = plan.Leds.ValueString()
-	}
-	if !plan.ModemSignalTreshold.Equal(state.ModemSignalTreshold) {
-		body["modem-signal-treshold"] = plan.ModemSignalTreshold.ValueString()
 	}
 	if !plan.Type.Equal(state.Type) {
 		body["type"] = plan.Type.ValueString()
@@ -296,16 +284,6 @@ func systemLedsApply(ctx context.Context, obj client.Object, m *SystemLedsModel)
 		}
 	} else {
 		m.Leds = types.StringNull()
-	}
-	if v, ok := obj["modem-signal-treshold"]; ok {
-		_ = v
-		if v != "" {
-			m.ModemSignalTreshold = types.StringValue(v)
-		} else {
-			m.ModemSignalTreshold = types.StringNull()
-		}
-	} else {
-		m.ModemSignalTreshold = types.StringNull()
 	}
 	if v, ok := obj["type"]; ok {
 		_ = v

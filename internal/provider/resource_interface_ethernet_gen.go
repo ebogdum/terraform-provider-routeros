@@ -33,7 +33,6 @@ type InterfaceEthernetResource struct {
 
 type InterfaceEthernetModel struct {
 	ID                      types.String `tfsdk:"id"`
-	Address                 types.String `tfsdk:"address"`
 	Advertise               types.List   `tfsdk:"advertise"`
 	ARP                     types.String `tfsdk:"arp"`
 	ARPTimeout              types.String `tfsdk:"arp_timeout"`
@@ -45,7 +44,6 @@ type InterfaceEthernetModel struct {
 	DisableRunningCheck     types.Bool   `tfsdk:"disable_running_check"`
 	Disabled                types.Bool   `tfsdk:"disabled"`
 	FecMode                 types.String `tfsdk:"fec_mode"`
-	Interface               types.String `tfsdk:"interface"`
 	L2mtu                   types.String `tfsdk:"l2mtu"`
 	LoopProtect             types.String `tfsdk:"loop_protect"`
 	LoopProtectDisableTime  types.String `tfsdk:"loop_protect_disable_time"`
@@ -55,7 +53,6 @@ type InterfaceEthernetModel struct {
 	MTU                     types.Int64  `tfsdk:"mtu"`
 	Name                    types.String `tfsdk:"name"`
 	OrigMACAddress          types.String `tfsdk:"orig_mac_address"`
-	Published               types.String `tfsdk:"published"`
 	Running                 types.Bool   `tfsdk:"running"`
 	RxBroadcast             types.Int64  `tfsdk:"rx_broadcast"`
 	RxBytes                 types.Int64  `tfsdk:"rx_bytes"`
@@ -95,11 +92,6 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
-			},
-			"address": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "IP address to be mapped",
 			},
 			"advertise": schema.ListAttribute{
 				Optional:    true,
@@ -163,11 +155,6 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 				Validators:  []validator.String{schemautil.OneOf([]string{"off", "auto", "fec74", "fec91"}...)},
 			},
-			"interface": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "Interface name the IP address is assigned to",
-			},
 			"l2mtu": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -221,11 +208,6 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Description:   "",
 				Validators:    []validator.String{schemautil.IsMAC()},
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
-			},
-			"published": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "Static proxy-arp entry for individual IP addresses. When an ARP query is received for the specific IP address, the device will respond with its own MAC address. No need to set proxy-arp on the interface itself for all the MAC addresses to be proxied. The interface will respond to an ARP request only when the device has an active route towards the destination",
 			},
 			"running": schema.BoolAttribute{
 				Optional:    true,
@@ -314,9 +296,6 @@ func (r *InterfaceEthernetResource) Create(ctx context.Context, req resource.Cre
 		return
 	}
 	body := client.Object{}
-	if !(plan.Address.IsNull() || plan.Address.IsUnknown()) {
-		body["address"] = plan.Address.ValueString()
-	}
 	if !(plan.Advertise.IsNull() || plan.Advertise.IsUnknown()) {
 		body["advertise"] = encodeStringList(ctx, plan.Advertise)
 	}
@@ -344,9 +323,6 @@ func (r *InterfaceEthernetResource) Create(ctx context.Context, req resource.Cre
 	if !(plan.FecMode.IsNull() || plan.FecMode.IsUnknown()) {
 		body["fec-mode"] = plan.FecMode.ValueString()
 	}
-	if !(plan.Interface.IsNull() || plan.Interface.IsUnknown()) {
-		body["interface"] = plan.Interface.ValueString()
-	}
 	if !(plan.L2mtu.IsNull() || plan.L2mtu.IsUnknown()) {
 		body["l2mtu"] = plan.L2mtu.ValueString()
 	}
@@ -370,9 +346,6 @@ func (r *InterfaceEthernetResource) Create(ctx context.Context, req resource.Cre
 	}
 	if !(plan.OrigMACAddress.IsNull() || plan.OrigMACAddress.IsUnknown()) {
 		body["orig-mac-address"] = plan.OrigMACAddress.ValueString()
-	}
-	if !(plan.Published.IsNull() || plan.Published.IsUnknown()) {
-		body["published"] = plan.Published.ValueString()
 	}
 	if !(plan.RxFlowControl.IsNull() || plan.RxFlowControl.IsUnknown()) {
 		body["rx-flow-control"] = plan.RxFlowControl.ValueString()
@@ -433,9 +406,6 @@ func (r *InterfaceEthernetResource) Update(ctx context.Context, req resource.Upd
 		return
 	}
 	body := client.Object{}
-	if !plan.Address.Equal(state.Address) {
-		body["address"] = plan.Address.ValueString()
-	}
 	if !plan.Advertise.Equal(state.Advertise) {
 		body["advertise"] = encodeStringList(ctx, plan.Advertise)
 	}
@@ -463,9 +433,6 @@ func (r *InterfaceEthernetResource) Update(ctx context.Context, req resource.Upd
 	if !plan.FecMode.Equal(state.FecMode) {
 		body["fec-mode"] = plan.FecMode.ValueString()
 	}
-	if !plan.Interface.Equal(state.Interface) {
-		body["interface"] = plan.Interface.ValueString()
-	}
 	if !plan.L2mtu.Equal(state.L2mtu) {
 		body["l2mtu"] = plan.L2mtu.ValueString()
 	}
@@ -489,9 +456,6 @@ func (r *InterfaceEthernetResource) Update(ctx context.Context, req resource.Upd
 	}
 	if !plan.OrigMACAddress.Equal(state.OrigMACAddress) {
 		body["orig-mac-address"] = plan.OrigMACAddress.ValueString()
-	}
-	if !plan.Published.Equal(state.Published) {
-		body["published"] = plan.Published.ValueString()
 	}
 	if !plan.RxFlowControl.Equal(state.RxFlowControl) {
 		body["rx-flow-control"] = plan.RxFlowControl.ValueString()
@@ -588,16 +552,6 @@ func interfaceEthernetLookupByNaturalKey(ctx context.Context, c *client.Client, 
 func interfaceEthernetApply(ctx context.Context, obj client.Object, m *InterfaceEthernetModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
-	if v, ok := obj["address"]; ok {
-		_ = v
-		if v != "" {
-			m.Address = types.StringValue(v)
-		} else {
-			m.Address = types.StringNull()
-		}
-	} else {
-		m.Address = types.StringNull()
-	}
 	if v, ok := obj["advertise"]; ok {
 		_ = v
 		m.Advertise = decodeStringList(ctx, v)
@@ -704,16 +658,6 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	} else {
 		m.FecMode = types.StringNull()
 	}
-	if v, ok := obj["interface"]; ok {
-		_ = v
-		if v != "" {
-			m.Interface = types.StringValue(v)
-		} else {
-			m.Interface = types.StringNull()
-		}
-	} else {
-		m.Interface = types.StringNull()
-	}
 	if v, ok := obj["l2mtu"]; ok {
 		_ = v
 		if v != "" {
@@ -803,16 +747,6 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		}
 	} else {
 		m.OrigMACAddress = types.StringNull()
-	}
-	if v, ok := obj["published"]; ok {
-		_ = v
-		if v != "" {
-			m.Published = types.StringValue(v)
-		} else {
-			m.Published = types.StringNull()
-		}
-	} else {
-		m.Published = types.StringNull()
 	}
 	if v, ok := obj["running"]; ok {
 		_ = v

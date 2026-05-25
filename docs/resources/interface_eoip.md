@@ -30,7 +30,6 @@ resource "routeros_interface_eoip" "eoip_example" {
   # dscp = "inherit"
   # ipsec_secret = "REDACTED"
   # keepalive = "1"
-  # l2mtu = "replace-me"
   # local_address = "10.99.0.1"
   # loop_protect = "default"
   # loop_protect_disable_time = "replace-me"
@@ -55,7 +54,6 @@ This resource supports the following arguments:
 * `dscp` - (Optional) Type: `enum(inherit)`. DSCP value of packet. Inherited option means that dscp value will be inherited from packet which is going to be encapsulated. Default: `256`.
 * `ipsec_secret` - (Optional) Type: `string`. When secret is specified, router adds dynamic IPsec peer to remote-address with pre-shared key and policy (by default phase2 uses sha1/aes128cbc). **Sensitive.**
 * `keepalive` - (Optional) Type: `string`. Tunnel keepalive parameter sets the time interval in which the tunnel running flag will remain even if the remote end of tunnel goes down. If configured time,retries fail, interface running flag is removed. Parameters are written in following format: KeepaliveInterval,KeepaliveRetries where KeepaliveInterval is time interval and KeepaliveRetries - number of retry attempts. By default keepalive is set to 10 seconds and 10 retries. Default: `1`.
-* `l2mtu` - (Optional) Type: `string`. Layer2 Maximum transmission unit. Not configurable for EoIP.
 * `local_address` - (Optional) Type: `ip`. Source address of the tunnel packets, local on the router.
 * `loop_protect` - (Optional) Type: `enum(default|off|on)`.
 * `loop_protect_disable_time` - (Optional) Type: `string`.

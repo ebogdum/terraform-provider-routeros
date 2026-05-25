@@ -33,6 +33,7 @@ type InterfaceBridgeResource struct {
 
 type InterfaceBridgeModel struct {
 	ID                types.String `tfsdk:"id"`
+	AdminMAC          types.String `tfsdk:"admin_mac"`
 	AgeingTime        types.String `tfsdk:"ageing_time"`
 	ARP               types.String `tfsdk:"arp"`
 	ARPTimeout        types.String `tfsdk:"arp_timeout"`
@@ -40,20 +41,27 @@ type InterfaceBridgeModel struct {
 	Comment           types.String `tfsdk:"comment"`
 	DHCPSnooping      types.Bool   `tfsdk:"dhcp_snooping"`
 	Disabled          types.Bool   `tfsdk:"disabled"`
+	EtherType         types.String `tfsdk:"ether_type"`
 	FastForward       types.Bool   `tfsdk:"fast_forward"`
 	ForwardDelay      types.String `tfsdk:"forward_delay"`
+	FrameTypes        types.String `tfsdk:"frame_types"`
 	IgmpSnooping      types.Bool   `tfsdk:"igmp_snooping"`
+	IngressFiltering  types.String `tfsdk:"ingress_filtering"`
 	MaxLearnedEntries types.String `tfsdk:"max_learned_entries"`
 	MaxMessageAge     types.String `tfsdk:"max_message_age"`
 	MlagHeartbeat     types.String `tfsdk:"mlag_heartbeat"`
 	MlagPeerPort      types.String `tfsdk:"mlag_peer_port"`
 	MlagPriority      types.Int64  `tfsdk:"mlag_priority"`
 	MTU               types.String `tfsdk:"mtu"`
+	Mvrp              types.String `tfsdk:"mvrp"`
 	Name              types.String `tfsdk:"name"`
 	PortCostMode      types.String `tfsdk:"port_cost_mode"`
 	Priority          types.Int64  `tfsdk:"priority"`
 	ProtocolMode      types.String `tfsdk:"protocol_mode"`
+	Pvid              types.String `tfsdk:"pvid"`
 	RaGuard           types.Bool   `tfsdk:"ra_guard"`
+	RegionName        types.String `tfsdk:"region_name"`
+	RegionRevision    types.String `tfsdk:"region_revision"`
 	TransmitHoldCount types.Int64  `tfsdk:"transmit_hold_count"`
 	VLANFiltering     types.Bool   `tfsdk:"vlan_filtering"`
 	Router            types.String `tfsdk:"router"`
@@ -82,6 +90,11 @@ func (r *InterfaceBridgeResource) Schema(_ context.Context, _ resource.SchemaReq
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"admin_mac": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
 			},
 			"ageing_time": schema.StringAttribute{
 				Optional:      true,
@@ -120,6 +133,11 @@ func (r *InterfaceBridgeResource) Schema(_ context.Context, _ resource.SchemaReq
 				Computed:    true,
 				Description: "Whether the entry is disabled.",
 			},
+			"ether_type": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"fast_forward": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -132,7 +150,17 @@ func (r *InterfaceBridgeResource) Schema(_ context.Context, _ resource.SchemaReq
 				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
 			},
+			"frame_types": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"igmp_snooping": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"ingress_filtering": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -171,6 +199,11 @@ func (r *InterfaceBridgeResource) Schema(_ context.Context, _ resource.SchemaReq
 				Computed:    true,
 				Description: "",
 			},
+			"mvrp": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"name": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -191,7 +224,22 @@ func (r *InterfaceBridgeResource) Schema(_ context.Context, _ resource.SchemaReq
 				Computed:    true,
 				Description: "",
 			},
+			"pvid": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
 			"ra_guard": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"region_name": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"region_revision": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -225,6 +273,9 @@ func (r *InterfaceBridgeResource) Create(ctx context.Context, req resource.Creat
 		return
 	}
 	body := client.Object{}
+	if !(plan.AdminMAC.IsNull() || plan.AdminMAC.IsUnknown()) {
+		body["admin-mac"] = plan.AdminMAC.ValueString()
+	}
 	if !(plan.AgeingTime.IsNull() || plan.AgeingTime.IsUnknown()) {
 		body["ageing-time"] = plan.AgeingTime.ValueString()
 	}
@@ -246,14 +297,23 @@ func (r *InterfaceBridgeResource) Create(ctx context.Context, req resource.Creat
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
+	if !(plan.EtherType.IsNull() || plan.EtherType.IsUnknown()) {
+		body["ether-type"] = plan.EtherType.ValueString()
+	}
 	if !(plan.FastForward.IsNull() || plan.FastForward.IsUnknown()) {
 		body["fast-forward"] = client.FormatBool(plan.FastForward.ValueBool())
 	}
 	if !(plan.ForwardDelay.IsNull() || plan.ForwardDelay.IsUnknown()) {
 		body["forward-delay"] = plan.ForwardDelay.ValueString()
 	}
+	if !(plan.FrameTypes.IsNull() || plan.FrameTypes.IsUnknown()) {
+		body["frame-types"] = plan.FrameTypes.ValueString()
+	}
 	if !(plan.IgmpSnooping.IsNull() || plan.IgmpSnooping.IsUnknown()) {
 		body["igmp-snooping"] = client.FormatBool(plan.IgmpSnooping.ValueBool())
+	}
+	if !(plan.IngressFiltering.IsNull() || plan.IngressFiltering.IsUnknown()) {
+		body["ingress-filtering"] = plan.IngressFiltering.ValueString()
 	}
 	if !(plan.MaxLearnedEntries.IsNull() || plan.MaxLearnedEntries.IsUnknown()) {
 		body["max-learned-entries"] = plan.MaxLearnedEntries.ValueString()
@@ -273,6 +333,9 @@ func (r *InterfaceBridgeResource) Create(ctx context.Context, req resource.Creat
 	if !(plan.MTU.IsNull() || plan.MTU.IsUnknown()) {
 		body["mtu"] = plan.MTU.ValueString()
 	}
+	if !(plan.Mvrp.IsNull() || plan.Mvrp.IsUnknown()) {
+		body["mvrp"] = plan.Mvrp.ValueString()
+	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
 	}
@@ -285,8 +348,17 @@ func (r *InterfaceBridgeResource) Create(ctx context.Context, req resource.Creat
 	if !(plan.ProtocolMode.IsNull() || plan.ProtocolMode.IsUnknown()) {
 		body["protocol-mode"] = plan.ProtocolMode.ValueString()
 	}
+	if !(plan.Pvid.IsNull() || plan.Pvid.IsUnknown()) {
+		body["pvid"] = plan.Pvid.ValueString()
+	}
 	if !(plan.RaGuard.IsNull() || plan.RaGuard.IsUnknown()) {
 		body["ra-guard"] = client.FormatBool(plan.RaGuard.ValueBool())
+	}
+	if !(plan.RegionName.IsNull() || plan.RegionName.IsUnknown()) {
+		body["region-name"] = plan.RegionName.ValueString()
+	}
+	if !(plan.RegionRevision.IsNull() || plan.RegionRevision.IsUnknown()) {
+		body["region-revision"] = plan.RegionRevision.ValueString()
 	}
 	if !(plan.TransmitHoldCount.IsNull() || plan.TransmitHoldCount.IsUnknown()) {
 		body["transmit-hold-count"] = client.FormatInt64(plan.TransmitHoldCount.ValueInt64())
@@ -341,6 +413,9 @@ func (r *InterfaceBridgeResource) Update(ctx context.Context, req resource.Updat
 		return
 	}
 	body := client.Object{}
+	if !plan.AdminMAC.Equal(state.AdminMAC) {
+		body["admin-mac"] = plan.AdminMAC.ValueString()
+	}
 	if !plan.AgeingTime.Equal(state.AgeingTime) {
 		body["ageing-time"] = plan.AgeingTime.ValueString()
 	}
@@ -362,14 +437,23 @@ func (r *InterfaceBridgeResource) Update(ctx context.Context, req resource.Updat
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
+	if !plan.EtherType.Equal(state.EtherType) {
+		body["ether-type"] = plan.EtherType.ValueString()
+	}
 	if !plan.FastForward.Equal(state.FastForward) {
 		body["fast-forward"] = client.FormatBool(plan.FastForward.ValueBool())
 	}
 	if !plan.ForwardDelay.Equal(state.ForwardDelay) {
 		body["forward-delay"] = plan.ForwardDelay.ValueString()
 	}
+	if !plan.FrameTypes.Equal(state.FrameTypes) {
+		body["frame-types"] = plan.FrameTypes.ValueString()
+	}
 	if !plan.IgmpSnooping.Equal(state.IgmpSnooping) {
 		body["igmp-snooping"] = client.FormatBool(plan.IgmpSnooping.ValueBool())
+	}
+	if !plan.IngressFiltering.Equal(state.IngressFiltering) {
+		body["ingress-filtering"] = plan.IngressFiltering.ValueString()
 	}
 	if !plan.MaxLearnedEntries.Equal(state.MaxLearnedEntries) {
 		body["max-learned-entries"] = plan.MaxLearnedEntries.ValueString()
@@ -389,6 +473,9 @@ func (r *InterfaceBridgeResource) Update(ctx context.Context, req resource.Updat
 	if !plan.MTU.Equal(state.MTU) {
 		body["mtu"] = plan.MTU.ValueString()
 	}
+	if !plan.Mvrp.Equal(state.Mvrp) {
+		body["mvrp"] = plan.Mvrp.ValueString()
+	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
 	}
@@ -401,8 +488,17 @@ func (r *InterfaceBridgeResource) Update(ctx context.Context, req resource.Updat
 	if !plan.ProtocolMode.Equal(state.ProtocolMode) {
 		body["protocol-mode"] = plan.ProtocolMode.ValueString()
 	}
+	if !plan.Pvid.Equal(state.Pvid) {
+		body["pvid"] = plan.Pvid.ValueString()
+	}
 	if !plan.RaGuard.Equal(state.RaGuard) {
 		body["ra-guard"] = client.FormatBool(plan.RaGuard.ValueBool())
+	}
+	if !plan.RegionName.Equal(state.RegionName) {
+		body["region-name"] = plan.RegionName.ValueString()
+	}
+	if !plan.RegionRevision.Equal(state.RegionRevision) {
+		body["region-revision"] = plan.RegionRevision.ValueString()
 	}
 	if !plan.TransmitHoldCount.Equal(state.TransmitHoldCount) {
 		body["transmit-hold-count"] = client.FormatInt64(plan.TransmitHoldCount.ValueInt64())
@@ -493,6 +589,16 @@ func interfaceBridgeLookupByNaturalKey(ctx context.Context, c *client.Client, id
 func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBridgeModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["admin-mac"]; ok {
+		_ = v
+		if v != "" {
+			m.AdminMAC = types.StringValue(v)
+		} else {
+			m.AdminMAC = types.StringNull()
+		}
+	} else {
+		m.AdminMAC = types.StringNull()
+	}
 	if v, ok := obj["ageing-time"]; ok {
 		_ = v
 		if v != "" {
@@ -563,6 +669,16 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 	} else {
 		m.Disabled = types.BoolNull()
 	}
+	if v, ok := obj["ether-type"]; ok {
+		_ = v
+		if v != "" {
+			m.EtherType = types.StringValue(v)
+		} else {
+			m.EtherType = types.StringNull()
+		}
+	} else {
+		m.EtherType = types.StringNull()
+	}
 	if v, ok := obj["fast-forward"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
@@ -583,6 +699,16 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 	} else {
 		m.ForwardDelay = types.StringNull()
 	}
+	if v, ok := obj["frame-types"]; ok {
+		_ = v
+		if v != "" {
+			m.FrameTypes = types.StringValue(v)
+		} else {
+			m.FrameTypes = types.StringNull()
+		}
+	} else {
+		m.FrameTypes = types.StringNull()
+	}
 	if v, ok := obj["igmp-snooping"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
@@ -592,6 +718,16 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 		}
 	} else {
 		m.IgmpSnooping = types.BoolNull()
+	}
+	if v, ok := obj["ingress-filtering"]; ok {
+		_ = v
+		if v != "" {
+			m.IngressFiltering = types.StringValue(v)
+		} else {
+			m.IngressFiltering = types.StringNull()
+		}
+	} else {
+		m.IngressFiltering = types.StringNull()
 	}
 	if v, ok := obj["max-learned-entries"]; ok {
 		_ = v
@@ -653,6 +789,16 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 	} else {
 		m.MTU = types.StringNull()
 	}
+	if v, ok := obj["mvrp"]; ok {
+		_ = v
+		if v != "" {
+			m.Mvrp = types.StringValue(v)
+		} else {
+			m.Mvrp = types.StringNull()
+		}
+	} else {
+		m.Mvrp = types.StringNull()
+	}
 	if v, ok := obj["name"]; ok {
 		_ = v
 		if v != "" {
@@ -693,6 +839,16 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 	} else {
 		m.ProtocolMode = types.StringNull()
 	}
+	if v, ok := obj["pvid"]; ok {
+		_ = v
+		if v != "" {
+			m.Pvid = types.StringValue(v)
+		} else {
+			m.Pvid = types.StringNull()
+		}
+	} else {
+		m.Pvid = types.StringNull()
+	}
 	if v, ok := obj["ra-guard"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
@@ -702,6 +858,26 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 		}
 	} else {
 		m.RaGuard = types.BoolNull()
+	}
+	if v, ok := obj["region-name"]; ok {
+		_ = v
+		if v != "" {
+			m.RegionName = types.StringValue(v)
+		} else {
+			m.RegionName = types.StringNull()
+		}
+	} else {
+		m.RegionName = types.StringNull()
+	}
+	if v, ok := obj["region-revision"]; ok {
+		_ = v
+		if v != "" {
+			m.RegionRevision = types.StringValue(v)
+		} else {
+			m.RegionRevision = types.StringNull()
+		}
+	} else {
+		m.RegionRevision = types.StringNull()
 	}
 	if v, ok := obj["transmit-hold-count"]; ok {
 		_ = v

@@ -10,7 +10,6 @@ resource "routeros_interface_vlan" "vlan_example" {
   # Optional attributes (uncomment as needed):
   # arp = "replace-me"
   # arp_timeout = "replace-me"
-  # l3_hw_offloading = "replace-me"
   # mtu = "replace-me"
   # mvrp = "replace-me"
   # use_service_tag = "replace-me"

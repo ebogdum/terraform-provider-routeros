@@ -45,7 +45,6 @@ resource "routeros_ip_firewall_filter" "filter_example" {
   # out_interface_list = "LAN"
   # packet_mark = "replace-me"
   # packet_size = "replace-me"
-  # path = "replace-me"
   # per_connection_classifier = "replace-me"
   # port = "443"
   # priority = "replace-me"

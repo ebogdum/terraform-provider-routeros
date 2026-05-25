@@ -16,7 +16,6 @@ resource "routeros_interface_eoip" "eoip_example" {
   # dscp = "inherit"
   # ipsec_secret = "REDACTED"
   # keepalive = "1"
-  # l2mtu = "replace-me"
   # local_address = "10.99.0.1"
   # loop_protect = "default"
   # loop_protect_disable_time = "replace-me"

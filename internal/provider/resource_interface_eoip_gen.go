@@ -43,7 +43,6 @@ type InterfaceEoipModel struct {
 	Dscp                    types.String `tfsdk:"dscp"`
 	IpsecSecret             types.String `tfsdk:"ipsec_secret"`
 	Keepalive               types.String `tfsdk:"keepalive"`
-	L2mtu                   types.String `tfsdk:"l2mtu"`
 	LocalAddress            types.String `tfsdk:"local_address"`
 	LoopProtect             types.String `tfsdk:"loop_protect"`
 	LoopProtectDisableTime  types.String `tfsdk:"loop_protect_disable_time"`
@@ -135,11 +134,6 @@ func (r *InterfaceEoipResource) Schema(_ context.Context, _ resource.SchemaReque
 				Optional:    true,
 				Computed:    true,
 				Description: "Tunnel keepalive parameter sets the time interval in which the tunnel running flag will remain even if the remote end of tunnel goes down. If configured time,retries fail, interface running flag is removed. Parameters are written in following format: KeepaliveInterval,KeepaliveRetries where KeepaliveInterval is time interval and KeepaliveRetries - number of retry attempts. By default keepalive is set to 10 seconds and 10 retries.",
-			},
-			"l2mtu": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "Layer2 Maximum transmission unit. Not configurable for EoIP.",
 			},
 			"local_address": schema.StringAttribute{
 				Optional:    true,
@@ -233,9 +227,6 @@ func (r *InterfaceEoipResource) Create(ctx context.Context, req resource.CreateR
 	}
 	if !(plan.Keepalive.IsNull() || plan.Keepalive.IsUnknown()) {
 		body["keepalive"] = plan.Keepalive.ValueString()
-	}
-	if !(plan.L2mtu.IsNull() || plan.L2mtu.IsUnknown()) {
-		body["l2mtu"] = plan.L2mtu.ValueString()
 	}
 	if !(plan.LocalAddress.IsNull() || plan.LocalAddress.IsUnknown()) {
 		body["local-address"] = plan.LocalAddress.ValueString()
@@ -340,9 +331,6 @@ func (r *InterfaceEoipResource) Update(ctx context.Context, req resource.UpdateR
 	}
 	if !plan.Keepalive.Equal(state.Keepalive) {
 		body["keepalive"] = plan.Keepalive.ValueString()
-	}
-	if !plan.L2mtu.Equal(state.L2mtu) {
-		body["l2mtu"] = plan.L2mtu.ValueString()
 	}
 	if !plan.LocalAddress.Equal(state.LocalAddress) {
 		body["local-address"] = plan.LocalAddress.ValueString()
@@ -557,16 +545,6 @@ func interfaceEoipApply(ctx context.Context, obj client.Object, m *InterfaceEoip
 		}
 	} else {
 		m.Keepalive = types.StringNull()
-	}
-	if v, ok := obj["l2mtu"]; ok {
-		_ = v
-		if v != "" {
-			m.L2mtu = types.StringValue(v)
-		} else {
-			m.L2mtu = types.StringNull()
-		}
-	} else {
-		m.L2mtu = types.StringNull()
 	}
 	if v, ok := obj["local-address"]; ok {
 		_ = v

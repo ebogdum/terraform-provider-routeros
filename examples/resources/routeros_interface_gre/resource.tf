@@ -10,7 +10,6 @@ resource "routeros_interface_gre" "gre_example" {
   # dscp = "inherit"
   # ipsec_secret = "REDACTED"
   # keepalive = "1"
-  # l2mtu = "replace-me"
   # local_address = "10.99.0.1"
   # mtu = 0
   # name = "tf-example"

@@ -30,19 +30,18 @@ type InterfaceVLANResource struct {
 }
 
 type InterfaceVLANModel struct {
-	ID             types.String `tfsdk:"id"`
-	ARP            types.String `tfsdk:"arp"`
-	ARPTimeout     types.String `tfsdk:"arp_timeout"`
-	Comment        types.String `tfsdk:"comment"`
-	Disabled       types.Bool   `tfsdk:"disabled"`
-	Interface      types.String `tfsdk:"interface"`
-	L3HwOffloading types.String `tfsdk:"l3_hw_offloading"`
-	MTU            types.String `tfsdk:"mtu"`
-	Mvrp           types.String `tfsdk:"mvrp"`
-	Name           types.String `tfsdk:"name"`
-	UseServiceTag  types.String `tfsdk:"use_service_tag"`
-	VLANID         types.String `tfsdk:"vlan_id"`
-	Router         types.String `tfsdk:"router"`
+	ID            types.String `tfsdk:"id"`
+	ARP           types.String `tfsdk:"arp"`
+	ARPTimeout    types.String `tfsdk:"arp_timeout"`
+	Comment       types.String `tfsdk:"comment"`
+	Disabled      types.Bool   `tfsdk:"disabled"`
+	Interface     types.String `tfsdk:"interface"`
+	MTU           types.String `tfsdk:"mtu"`
+	Mvrp          types.String `tfsdk:"mvrp"`
+	Name          types.String `tfsdk:"name"`
+	UseServiceTag types.String `tfsdk:"use_service_tag"`
+	VLANID        types.String `tfsdk:"vlan_id"`
+	Router        types.String `tfsdk:"router"`
 }
 
 func NewInterfaceVLANResource() resource.Resource { return &InterfaceVLANResource{} }
@@ -92,11 +91,6 @@ func (r *InterfaceVLANResource) Schema(_ context.Context, _ resource.SchemaReque
 			"interface": schema.StringAttribute{
 				Required:    true,
 				Description: "Name of the interface on top of which VLAN will work. Adding a VLAN interface to a bridge with vlan-filtering enabled will automatically tag the bridge interface as a member port. A dynamic entry with the comment \"added by vlan on bridge\" will appear under the /interface/bridge/vlan menu.",
-			},
-			"l3_hw_offloading": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "Enables or disabled L3HW on a per-VLAN interface. This setting is only applicable to devices that support L3HW offloading and is available starting from RouterOS v7.21. More details - Per-VLAN offloading .",
 			},
 			"mtu": schema.StringAttribute{
 				Optional:    true,
@@ -154,9 +148,6 @@ func (r *InterfaceVLANResource) Create(ctx context.Context, req resource.CreateR
 	}
 	if !(plan.Interface.IsNull() || plan.Interface.IsUnknown()) {
 		body["interface"] = plan.Interface.ValueString()
-	}
-	if !(plan.L3HwOffloading.IsNull() || plan.L3HwOffloading.IsUnknown()) {
-		body["l3-hw-offloading"] = plan.L3HwOffloading.ValueString()
 	}
 	if !(plan.MTU.IsNull() || plan.MTU.IsUnknown()) {
 		body["mtu"] = plan.MTU.ValueString()
@@ -234,9 +225,6 @@ func (r *InterfaceVLANResource) Update(ctx context.Context, req resource.UpdateR
 	}
 	if !plan.Interface.Equal(state.Interface) {
 		body["interface"] = plan.Interface.ValueString()
-	}
-	if !plan.L3HwOffloading.Equal(state.L3HwOffloading) {
-		body["l3-hw-offloading"] = plan.L3HwOffloading.ValueString()
 	}
 	if !plan.MTU.Equal(state.MTU) {
 		body["mtu"] = plan.MTU.ValueString()
@@ -385,16 +373,6 @@ func interfaceVLANApply(ctx context.Context, obj client.Object, m *InterfaceVLAN
 		}
 	} else {
 		m.Interface = types.StringNull()
-	}
-	if v, ok := obj["l3-hw-offloading"]; ok {
-		_ = v
-		if v != "" {
-			m.L3HwOffloading = types.StringValue(v)
-		} else {
-			m.L3HwOffloading = types.StringNull()
-		}
-	} else {
-		m.L3HwOffloading = types.StringNull()
 	}
 	if v, ok := obj["mtu"]; ok {
 		_ = v

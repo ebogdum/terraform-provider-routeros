@@ -586,14 +586,6 @@ func (r *IPV6FirewallFilterResource) Create(ctx context.Context, req resource.Cr
 	if !(plan.TLSHost.IsNull() || plan.TLSHost.IsUnknown()) {
 		body["tls-host"] = plan.TLSHost.ValueString()
 	}
-	// Encode the position marker into the comment we send to the device.
-	if !plan.Position.IsNull() && !plan.Position.IsUnknown() {
-		var userComment string
-		if !plan.Comment.IsNull() && !plan.Comment.IsUnknown() {
-			userComment = plan.Comment.ValueString()
-		}
-		body["comment"] = client.EncodeOrderedComment("", plan.Position.ValueInt64(), userComment)
-	}
 	if err := schemautil.CheckFirewallLockout("/ipv6/firewall/filter", body, !plan.LockoutAck.IsNull() && plan.LockoutAck.ValueBool()); err != nil {
 		resp.Diagnostics.AddError("Refusing dangerous firewall rule", err.Error())
 		return
@@ -604,7 +596,9 @@ func (r *IPV6FirewallFilterResource) Create(ctx context.Context, req resource.Cr
 		return
 	}
 	if !plan.Position.IsNull() && !plan.Position.IsUnknown() {
-		if err := c.PlaceOrdered(ctx, "/ipv6/firewall/filter", obj[".id"], "", plan.Position.ValueInt64()); err != nil {
+		r.reg.RegisterOrdered(plan.Router.ValueString(), "/ipv6/firewall/filter", obj[".id"], plan.Position.ValueInt64())
+		snap := r.reg.OrderedSnapshot(plan.Router.ValueString(), "/ipv6/firewall/filter")
+		if err := c.PlaceOrdered(ctx, plan.Router.ValueString(), "/ipv6/firewall/filter", obj[".id"], plan.Position.ValueInt64(), snap); err != nil {
 			resp.Diagnostics.AddError("Order /ipv6/firewall/filter failed", err.Error())
 			return
 		}
@@ -822,15 +816,11 @@ func (r *IPV6FirewallFilterResource) Update(ctx context.Context, req resource.Up
 	}
 	// If position OR comment changed, re-encode the marker into the comment
 	// so the device-side prefix stays in sync.
-	if !plan.Position.Equal(state.Position) || !plan.Comment.Equal(state.Comment) {
-		var userComment string
-		if !plan.Comment.IsNull() && !plan.Comment.IsUnknown() {
-			userComment = plan.Comment.ValueString()
-		}
-		if !plan.Position.IsNull() && !plan.Position.IsUnknown() {
-			body["comment"] = client.EncodeOrderedComment("", plan.Position.ValueInt64(), userComment)
+	if !plan.Comment.Equal(state.Comment) {
+		if plan.Comment.IsNull() || plan.Comment.IsUnknown() {
+			body["comment"] = ""
 		} else {
-			body["comment"] = userComment
+			body["comment"] = plan.Comment.ValueString()
 		}
 	}
 	// Build the EFFECTIVE rule (state merged with diff) so the guard sees the
@@ -1230,10 +1220,14 @@ func (r *IPV6FirewallFilterResource) Update(ctx context.Context, req resource.Up
 	} else {
 		plan.ID = state.ID
 	}
-	if !plan.Position.Equal(state.Position) && !plan.Position.IsNull() && !plan.Position.IsUnknown() {
-		if err := c.PlaceOrdered(ctx, "/ipv6/firewall/filter", plan.ID.ValueString(), "", plan.Position.ValueInt64()); err != nil {
-			resp.Diagnostics.AddError("Order /ipv6/firewall/filter failed", err.Error())
-			return
+	if !plan.Position.IsNull() && !plan.Position.IsUnknown() {
+		r.reg.RegisterOrdered(plan.Router.ValueString(), "/ipv6/firewall/filter", plan.ID.ValueString(), plan.Position.ValueInt64())
+		if !plan.Position.Equal(state.Position) {
+			snap := r.reg.OrderedSnapshot(plan.Router.ValueString(), "/ipv6/firewall/filter")
+			if err := c.PlaceOrdered(ctx, plan.Router.ValueString(), "/ipv6/firewall/filter", plan.ID.ValueString(), plan.Position.ValueInt64(), snap); err != nil {
+				resp.Diagnostics.AddError("Order /ipv6/firewall/filter failed", err.Error())
+				return
+			}
 		}
 	}
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
@@ -1252,6 +1246,7 @@ func (r *IPV6FirewallFilterResource) Delete(ctx context.Context, req resource.De
 	if err := c.Remove(ctx, "/ipv6/firewall/filter", state.ID.ValueString()); err != nil {
 		resp.Diagnostics.AddError("Delete /ipv6/firewall/filter failed", err.Error())
 	}
+	r.reg.UnregisterOrdered(state.Router.ValueString(), "/ipv6/firewall/filter", state.ID.ValueString())
 }
 
 func (r *IPV6FirewallFilterResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
@@ -1310,17 +1305,10 @@ func iPV6FirewallFilterApply(ctx context.Context, obj client.Object, m *IPV6Fire
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	// Strip the [tf:pos=N] marker from the comment before exposing to state.
-	// Position lifts out into its own attribute so users see clean values.
-	// Computed:true requires the value to be known after apply -- explicitly
-	// Null it when no marker is present (otherwise it stays Unknown and
-	// terraform-plugin-framework errors).
-	m.Position = types.Int64Null()
-	if rawComment, ok := obj["comment"]; ok {
-		_, decodedPos, userComment, hasMarker := client.DecodeOrderedComment(rawComment)
-		obj["comment"] = userComment
-		if hasMarker {
-			m.Position = types.Int64Value(decodedPos)
-		}
+	// Position is TF-state-only metadata; never written to the device. Keep
+	// whatever the user planned. Comment is left untouched.
+	if m.Position.IsUnknown() {
+		m.Position = types.Int64Null()
 	}
 	// LockoutAck is local-only and not persisted on the wire. Carry the
 	// plan's value through to state (Null if the user didn't set it).

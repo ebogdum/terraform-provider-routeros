@@ -33,11 +33,8 @@ type DiskModel struct {
 	ID                  types.String `tfsdk:"id"`
 	Comment             types.String `tfsdk:"comment"`
 	Disabled            types.Bool   `tfsdk:"disabled"`
-	Eject               types.String `tfsdk:"eject"`
-	Format              types.String `tfsdk:"format"`
 	MediaInterface      types.String `tfsdk:"media_interface"`
 	MediaSharing        types.Bool   `tfsdk:"media_sharing"`
-	MonitorTraffic      types.String `tfsdk:"monitor_traffic"`
 	MountFilesystem     types.Bool   `tfsdk:"mount_filesystem"`
 	MountPointTemplate  types.String `tfsdk:"mount_point_template"`
 	MountReadOnly       types.Bool   `tfsdk:"mount_read_only"`
@@ -45,16 +42,13 @@ type DiskModel struct {
 	PartitionNumber     types.Int64  `tfsdk:"partition_number"`
 	PartitionOffset     types.String `tfsdk:"partition_offset"`
 	PartitionSize       types.String `tfsdk:"partition_size"`
-	ResetCounters       types.String `tfsdk:"reset_counters"`
 	Slot                types.String `tfsdk:"slot"`
 	SmbServerEncryption types.Bool   `tfsdk:"smb_server_encryption"`
 	SmbServerPassword   types.String `tfsdk:"smb_server_password"`
 	SmbServerUser       types.String `tfsdk:"smb_server_user"`
 	SmbSharing          types.Bool   `tfsdk:"smb_sharing"`
 	Swap                types.Bool   `tfsdk:"swap"`
-	Test                types.String `tfsdk:"test"`
 	TmpfsMaxSize        types.String `tfsdk:"tmpfs_max_size"`
-	Trim                types.String `tfsdk:"trim"`
 	Type                types.String `tfsdk:"type"`
 	Router              types.String `tfsdk:"router"`
 }
@@ -93,16 +87,6 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Computed:    true,
 				Description: "Whether the entry is disabled.",
 			},
-			"eject": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "Safely unmounts (ejects) drive of your selection by using \"slot\" that is assigned to it. After issuing this command it can be removed from host device.",
-			},
-			"format": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "Command to initiate disk formatting process. Contains additional properties of its own. Such as \"file-system\" and \"label\". select disk (slot) that should be formatted file-system ('exfat', 'ext4', 'fat32', 'xfs', 'btrfs', 'discard', 'discard-secure', 'wipe') - applies one of the available file system types; alternatively can be used to discard storage blocks (blkdiscard equivalent) or securely wipe (overwrite) data. mbr-partition-table - make mbr partition table",
-			},
 			"media_interface": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -112,11 +96,6 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Optional:    true,
 				Computed:    true,
 				Description: "",
-			},
-			"monitor_traffic": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "Check real time disk performance and health stats",
 			},
 			"mount_filesystem": schema.BoolAttribute{
 				Optional:    true,
@@ -153,11 +132,6 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Computed:    true,
 				Description: "",
 			},
-			"reset_counters": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "Resets disk (slot) statistics",
-			},
 			"slot": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -189,20 +163,10 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Computed:    true,
 				Description: "",
 			},
-			"test": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "allows performing performance tests of selected device (Available from RouterOS 7.16) disk -\u00a0 device or devices for test direction - ('read','write')\u00a0 duration - (int)\u00a0 pattern - ('random', 'sequential') thread-count - (int) block-size - size of block to be used for testing type - ('device', 'filesystem')",
-			},
 			"tmpfs_max_size": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
-			},
-			"trim": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "Discards the unused data blocks for performance (fstrim equivalent). Some NVMe enclosures might not support disk trimming.",
 			},
 			"type": schema.StringAttribute{
 				Optional:    true,
@@ -234,20 +198,11 @@ func (r *DiskResource) Create(ctx context.Context, req resource.CreateRequest, r
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !(plan.Eject.IsNull() || plan.Eject.IsUnknown()) {
-		body["eject"] = plan.Eject.ValueString()
-	}
-	if !(plan.Format.IsNull() || plan.Format.IsUnknown()) {
-		body["format"] = plan.Format.ValueString()
-	}
 	if !(plan.MediaInterface.IsNull() || plan.MediaInterface.IsUnknown()) {
 		body["media-interface"] = plan.MediaInterface.ValueString()
 	}
 	if !(plan.MediaSharing.IsNull() || plan.MediaSharing.IsUnknown()) {
 		body["media-sharing"] = client.FormatBool(plan.MediaSharing.ValueBool())
-	}
-	if !(plan.MonitorTraffic.IsNull() || plan.MonitorTraffic.IsUnknown()) {
-		body["monitor-traffic"] = plan.MonitorTraffic.ValueString()
 	}
 	if !(plan.MountFilesystem.IsNull() || plan.MountFilesystem.IsUnknown()) {
 		body["mount-filesystem"] = client.FormatBool(plan.MountFilesystem.ValueBool())
@@ -267,9 +222,6 @@ func (r *DiskResource) Create(ctx context.Context, req resource.CreateRequest, r
 	if !(plan.PartitionSize.IsNull() || plan.PartitionSize.IsUnknown()) {
 		body["partition-size"] = plan.PartitionSize.ValueString()
 	}
-	if !(plan.ResetCounters.IsNull() || plan.ResetCounters.IsUnknown()) {
-		body["reset-counters"] = plan.ResetCounters.ValueString()
-	}
 	if !(plan.Slot.IsNull() || plan.Slot.IsUnknown()) {
 		body["slot"] = plan.Slot.ValueString()
 	}
@@ -288,14 +240,8 @@ func (r *DiskResource) Create(ctx context.Context, req resource.CreateRequest, r
 	if !(plan.Swap.IsNull() || plan.Swap.IsUnknown()) {
 		body["swap"] = client.FormatBool(plan.Swap.ValueBool())
 	}
-	if !(plan.Test.IsNull() || plan.Test.IsUnknown()) {
-		body["test"] = plan.Test.ValueString()
-	}
 	if !(plan.TmpfsMaxSize.IsNull() || plan.TmpfsMaxSize.IsUnknown()) {
 		body["tmpfs-max-size"] = plan.TmpfsMaxSize.ValueString()
-	}
-	if !(plan.Trim.IsNull() || plan.Trim.IsUnknown()) {
-		body["trim"] = plan.Trim.ValueString()
 	}
 	if !(plan.Type.IsNull() || plan.Type.IsUnknown()) {
 		body["type"] = plan.Type.ValueString()
@@ -353,20 +299,11 @@ func (r *DiskResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Eject.Equal(state.Eject) {
-		body["eject"] = plan.Eject.ValueString()
-	}
-	if !plan.Format.Equal(state.Format) {
-		body["format"] = plan.Format.ValueString()
-	}
 	if !plan.MediaInterface.Equal(state.MediaInterface) {
 		body["media-interface"] = plan.MediaInterface.ValueString()
 	}
 	if !plan.MediaSharing.Equal(state.MediaSharing) {
 		body["media-sharing"] = client.FormatBool(plan.MediaSharing.ValueBool())
-	}
-	if !plan.MonitorTraffic.Equal(state.MonitorTraffic) {
-		body["monitor-traffic"] = plan.MonitorTraffic.ValueString()
 	}
 	if !plan.MountFilesystem.Equal(state.MountFilesystem) {
 		body["mount-filesystem"] = client.FormatBool(plan.MountFilesystem.ValueBool())
@@ -386,9 +323,6 @@ func (r *DiskResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	if !plan.PartitionSize.Equal(state.PartitionSize) {
 		body["partition-size"] = plan.PartitionSize.ValueString()
 	}
-	if !plan.ResetCounters.Equal(state.ResetCounters) {
-		body["reset-counters"] = plan.ResetCounters.ValueString()
-	}
 	if !plan.Slot.Equal(state.Slot) {
 		body["slot"] = plan.Slot.ValueString()
 	}
@@ -407,14 +341,8 @@ func (r *DiskResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	if !plan.Swap.Equal(state.Swap) {
 		body["swap"] = client.FormatBool(plan.Swap.ValueBool())
 	}
-	if !plan.Test.Equal(state.Test) {
-		body["test"] = plan.Test.ValueString()
-	}
 	if !plan.TmpfsMaxSize.Equal(state.TmpfsMaxSize) {
 		body["tmpfs-max-size"] = plan.TmpfsMaxSize.ValueString()
-	}
-	if !plan.Trim.Equal(state.Trim) {
-		body["trim"] = plan.Trim.ValueString()
 	}
 	if !plan.Type.Equal(state.Type) {
 		body["type"] = plan.Type.ValueString()
@@ -522,26 +450,6 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 	} else {
 		m.Disabled = types.BoolNull()
 	}
-	if v, ok := obj["eject"]; ok {
-		_ = v
-		if v != "" {
-			m.Eject = types.StringValue(v)
-		} else {
-			m.Eject = types.StringNull()
-		}
-	} else {
-		m.Eject = types.StringNull()
-	}
-	if v, ok := obj["format"]; ok {
-		_ = v
-		if v != "" {
-			m.Format = types.StringValue(v)
-		} else {
-			m.Format = types.StringNull()
-		}
-	} else {
-		m.Format = types.StringNull()
-	}
 	if v, ok := obj["media-interface"]; ok {
 		_ = v
 		if v != "" {
@@ -561,16 +469,6 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 		}
 	} else {
 		m.MediaSharing = types.BoolNull()
-	}
-	if v, ok := obj["monitor-traffic"]; ok {
-		_ = v
-		if v != "" {
-			m.MonitorTraffic = types.StringValue(v)
-		} else {
-			m.MonitorTraffic = types.StringNull()
-		}
-	} else {
-		m.MonitorTraffic = types.StringNull()
 	}
 	if v, ok := obj["mount-filesystem"]; ok {
 		_ = v
@@ -642,16 +540,6 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 	} else {
 		m.PartitionSize = types.StringNull()
 	}
-	if v, ok := obj["reset-counters"]; ok {
-		_ = v
-		if v != "" {
-			m.ResetCounters = types.StringValue(v)
-		} else {
-			m.ResetCounters = types.StringNull()
-		}
-	} else {
-		m.ResetCounters = types.StringNull()
-	}
 	if v, ok := obj["slot"]; ok {
 		_ = v
 		if v != "" {
@@ -716,16 +604,6 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 	} else {
 		m.Swap = types.BoolNull()
 	}
-	if v, ok := obj["test"]; ok {
-		_ = v
-		if v != "" {
-			m.Test = types.StringValue(v)
-		} else {
-			m.Test = types.StringNull()
-		}
-	} else {
-		m.Test = types.StringNull()
-	}
 	if v, ok := obj["tmpfs-max-size"]; ok {
 		_ = v
 		if v != "" {
@@ -735,16 +613,6 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 		}
 	} else {
 		m.TmpfsMaxSize = types.StringNull()
-	}
-	if v, ok := obj["trim"]; ok {
-		_ = v
-		if v != "" {
-			m.Trim = types.StringValue(v)
-		} else {
-			m.Trim = types.StringNull()
-		}
-	} else {
-		m.Trim = types.StringNull()
 	}
 	if v, ok := obj["type"]; ok {
 		_ = v

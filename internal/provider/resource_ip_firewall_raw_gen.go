@@ -543,21 +543,15 @@ func (r *IPFirewallRawResource) Create(ctx context.Context, req resource.CreateR
 	if !(plan.Ttl.IsNull() || plan.Ttl.IsUnknown()) {
 		body["ttl"] = plan.Ttl.ValueString()
 	}
-	// Encode the position marker into the comment we send to the device.
-	if !plan.Position.IsNull() && !plan.Position.IsUnknown() {
-		var userComment string
-		if !plan.Comment.IsNull() && !plan.Comment.IsUnknown() {
-			userComment = plan.Comment.ValueString()
-		}
-		body["comment"] = client.EncodeOrderedComment("", plan.Position.ValueInt64(), userComment)
-	}
 	obj, err := c.Add(ctx, "/ip/firewall/raw", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /ip/firewall/raw failed", err.Error())
 		return
 	}
 	if !plan.Position.IsNull() && !plan.Position.IsUnknown() {
-		if err := c.PlaceOrdered(ctx, "/ip/firewall/raw", obj[".id"], "", plan.Position.ValueInt64()); err != nil {
+		r.reg.RegisterOrdered(plan.Router.ValueString(), "/ip/firewall/raw", obj[".id"], plan.Position.ValueInt64())
+		snap := r.reg.OrderedSnapshot(plan.Router.ValueString(), "/ip/firewall/raw")
+		if err := c.PlaceOrdered(ctx, plan.Router.ValueString(), "/ip/firewall/raw", obj[".id"], plan.Position.ValueInt64(), snap); err != nil {
 			resp.Diagnostics.AddError("Order /ip/firewall/raw failed", err.Error())
 			return
 		}
@@ -763,15 +757,11 @@ func (r *IPFirewallRawResource) Update(ctx context.Context, req resource.UpdateR
 	}
 	// If position OR comment changed, re-encode the marker into the comment
 	// so the device-side prefix stays in sync.
-	if !plan.Position.Equal(state.Position) || !plan.Comment.Equal(state.Comment) {
-		var userComment string
-		if !plan.Comment.IsNull() && !plan.Comment.IsUnknown() {
-			userComment = plan.Comment.ValueString()
-		}
-		if !plan.Position.IsNull() && !plan.Position.IsUnknown() {
-			body["comment"] = client.EncodeOrderedComment("", plan.Position.ValueInt64(), userComment)
+	if !plan.Comment.Equal(state.Comment) {
+		if plan.Comment.IsNull() || plan.Comment.IsUnknown() {
+			body["comment"] = ""
 		} else {
-			body["comment"] = userComment
+			body["comment"] = plan.Comment.ValueString()
 		}
 	}
 	if len(body) > 0 {
@@ -784,10 +774,14 @@ func (r *IPFirewallRawResource) Update(ctx context.Context, req resource.UpdateR
 	} else {
 		plan.ID = state.ID
 	}
-	if !plan.Position.Equal(state.Position) && !plan.Position.IsNull() && !plan.Position.IsUnknown() {
-		if err := c.PlaceOrdered(ctx, "/ip/firewall/raw", plan.ID.ValueString(), "", plan.Position.ValueInt64()); err != nil {
-			resp.Diagnostics.AddError("Order /ip/firewall/raw failed", err.Error())
-			return
+	if !plan.Position.IsNull() && !plan.Position.IsUnknown() {
+		r.reg.RegisterOrdered(plan.Router.ValueString(), "/ip/firewall/raw", plan.ID.ValueString(), plan.Position.ValueInt64())
+		if !plan.Position.Equal(state.Position) {
+			snap := r.reg.OrderedSnapshot(plan.Router.ValueString(), "/ip/firewall/raw")
+			if err := c.PlaceOrdered(ctx, plan.Router.ValueString(), "/ip/firewall/raw", plan.ID.ValueString(), plan.Position.ValueInt64(), snap); err != nil {
+				resp.Diagnostics.AddError("Order /ip/firewall/raw failed", err.Error())
+				return
+			}
 		}
 	}
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
@@ -806,6 +800,7 @@ func (r *IPFirewallRawResource) Delete(ctx context.Context, req resource.DeleteR
 	if err := c.Remove(ctx, "/ip/firewall/raw", state.ID.ValueString()); err != nil {
 		resp.Diagnostics.AddError("Delete /ip/firewall/raw failed", err.Error())
 	}
+	r.reg.UnregisterOrdered(state.Router.ValueString(), "/ip/firewall/raw", state.ID.ValueString())
 }
 
 func (r *IPFirewallRawResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
@@ -864,17 +859,10 @@ func iPFirewallRawApply(ctx context.Context, obj client.Object, m *IPFirewallRaw
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	// Strip the [tf:pos=N] marker from the comment before exposing to state.
-	// Position lifts out into its own attribute so users see clean values.
-	// Computed:true requires the value to be known after apply -- explicitly
-	// Null it when no marker is present (otherwise it stays Unknown and
-	// terraform-plugin-framework errors).
-	m.Position = types.Int64Null()
-	if rawComment, ok := obj["comment"]; ok {
-		_, decodedPos, userComment, hasMarker := client.DecodeOrderedComment(rawComment)
-		obj["comment"] = userComment
-		if hasMarker {
-			m.Position = types.Int64Value(decodedPos)
-		}
+	// Position is TF-state-only metadata; never written to the device. Keep
+	// whatever the user planned. Comment is left untouched.
+	if m.Position.IsUnknown() {
+		m.Position = types.Int64Null()
 	}
 	if v, ok := obj["action"]; ok {
 		_ = v

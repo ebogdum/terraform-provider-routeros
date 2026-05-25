@@ -24,7 +24,6 @@ resource "routeros_interface_vlan" "vlan_example" {
   # Optional attributes (uncomment as needed):
   # arp = "replace-me"
   # arp_timeout = "replace-me"
-  # l3_hw_offloading = "replace-me"
   # mtu = "replace-me"
   # mvrp = "replace-me"
   # use_service_tag = "replace-me"
@@ -41,7 +40,6 @@ This resource supports the following arguments:
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `interface` - (Required) Type: `string`. Name of the interface on top of which VLAN will work. Adding a VLAN interface to a bridge with vlan-filtering enabled will automatically tag the bridge interface as a member port. A dynamic entry with the comment "added by vlan on bridge" will appear under the /interface/bridge/vlan menu.
-* `l3_hw_offloading` - (Optional) Type: `string`. Enables or disabled L3HW on a per-VLAN interface. This setting is only applicable to devices that support L3HW offloading and is available starting from RouterOS v7.21. More details - Per-VLAN offloading .
 * `mtu` - (Optional) Type: `string`. Layer3 Maximum transmission unit.
 * `mvrp` - (Optional) Type: `string`. Specifies whether this VLAN should declare its attributes through Multiple VLAN Registration Protocol (MVRP) as an applicant. Its main use case is for VLANs that is created on Ethernet interface (such as a "router on a stick" setup) that is connected to a bridge supporting MVRP . Enabling this option on a VLAN interface that is already part of an MVRP-enabled bridge has no effect, as the bridge manages MVRP in that case.   This property only has an effect when use-service-tag   is disabled .
 * `name` - (Required) Type: `string`. Interface name. Default: `tf_acc_vlan`.

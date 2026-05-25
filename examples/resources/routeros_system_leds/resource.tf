@@ -5,6 +5,5 @@ resource "routeros_system_leds" "leds_example" {
   # Optional attributes (uncomment as needed):
   # interface = "ether1"
   # leds = "replace-me"
-  # modem_signal_treshold = "replace-me"
   # type = "replace-me"
 }
