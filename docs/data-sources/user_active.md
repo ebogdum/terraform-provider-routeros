@@ -1,5 +1,5 @@
 ---
-subcategory: "Users"
+subcategory: "Users & RADIUS"
 page_title: "RouterOS: routeros_user_active"
 description: |-
   RouterOS resource.

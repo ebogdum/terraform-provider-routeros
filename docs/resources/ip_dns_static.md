@@ -1,5 +1,5 @@
 ---
-subcategory: "IP"
+subcategory: "DNS"
 page_title: "RouterOS: routeros_ip_dns_static"
 description: |-
   A DNS A/AAAA/CNAME/MX/... static entry. Requires either name OR regexp.

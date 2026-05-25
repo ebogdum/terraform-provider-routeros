@@ -1,5 +1,5 @@
 ---
-subcategory: "IP"
+subcategory: "DHCP"
 page_title: "RouterOS: routeros_ip_dhcp_client"
 description: |-
   DHCP client per interface. On most devices the default config already binds one to an interface, causing "dhcp-client on that interface already" on a fresh add. Skipped.

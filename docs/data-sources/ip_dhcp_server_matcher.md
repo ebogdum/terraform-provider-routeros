@@ -1,5 +1,5 @@
 ---
-subcategory: "IP"
+subcategory: "DHCP"
 page_title: "RouterOS: routeros_ip_dhcp_server_matcher"
 description: |-
   matching-type field has version-specific accepted values; needs hand-tuning per ROS.

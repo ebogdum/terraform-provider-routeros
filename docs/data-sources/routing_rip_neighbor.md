@@ -1,5 +1,5 @@
 ---
-subcategory: "Routing"
+subcategory: "RIP"
 page_title: "RouterOS: routeros_routing_rip_neighbor"
 description: |-
   Discovered; needs rip neighbor fixture

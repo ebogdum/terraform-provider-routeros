@@ -1,5 +1,5 @@
 ---
-subcategory: "Disks"
+subcategory: "Storage"
 page_title: "RouterOS: routeros_disk_trim"
 description: |-
   Needs disk .id. Skipped.

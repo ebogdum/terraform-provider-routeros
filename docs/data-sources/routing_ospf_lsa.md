@@ -1,5 +1,5 @@
 ---
-subcategory: "Routing"
+subcategory: "OSPF"
 page_title: "RouterOS: routeros_routing_ospf_lsa"
 description: |-
   RouterOS resource.

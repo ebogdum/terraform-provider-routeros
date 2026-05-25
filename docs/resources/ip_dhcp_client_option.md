@@ -1,5 +1,5 @@
 ---
-subcategory: "IP"
+subcategory: "DHCP"
 page_title: "RouterOS: routeros_ip_dhcp_client_option"
 description: |-
   DHCP client option requires an existing dhcp-client + named option. Skipped.

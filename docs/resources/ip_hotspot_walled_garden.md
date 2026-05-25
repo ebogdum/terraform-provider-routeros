@@ -1,5 +1,5 @@
 ---
-subcategory: "IP"
+subcategory: "Hotspot"
 page_title: "RouterOS: routeros_ip_hotspot_walled_garden"
 description: |-
   RouterOS resource.

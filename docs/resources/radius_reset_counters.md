@@ -1,5 +1,5 @@
 ---
-subcategory: "RADIUS"
+subcategory: "Users & RADIUS"
 page_title: "RouterOS: routeros_radius_reset_counters"
 description: |-
   RouterOS resource.

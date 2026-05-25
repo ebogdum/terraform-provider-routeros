@@ -1,5 +1,5 @@
 ---
-subcategory: "Lcd"
+subcategory: "System & misc"
 page_title: "RouterOS: routeros_lcd"
 description: |-
   Requires LCD-equipped board (e.g. RB1100AHx4)

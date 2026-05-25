@@ -1,5 +1,5 @@
 ---
-subcategory: "Disks"
+subcategory: "Storage"
 page_title: "RouterOS: routeros_disk_format"
 description: |-
   Formats a block device. Requires the .id of a real /disk entry, which an

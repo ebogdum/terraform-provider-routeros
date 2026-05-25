@@ -1,5 +1,5 @@
 ---
-subcategory: "IPv6"
+subcategory: "Firewall"
 page_title: "RouterOS: routeros_ipv6_firewall_raw"
 description: |-
   RouterOS resource.

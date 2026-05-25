@@ -1,5 +1,5 @@
 ---
-subcategory: "System"
+subcategory: "NTP"
 page_title: "RouterOS: routeros_system_ntp_server"
 description: |-
   RouterOS resource.

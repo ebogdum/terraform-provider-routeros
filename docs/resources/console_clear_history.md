@@ -1,5 +1,5 @@
 ---
-subcategory: "Console"
+subcategory: "System & misc"
 page_title: "RouterOS: routeros_console_clear_history"
 description: |-
   RouterOS resource.

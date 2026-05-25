@@ -1,5 +1,5 @@
 ---
-subcategory: "IP"
+subcategory: "DNS"
 page_title: "RouterOS: routeros_ip_dns_cache_all"
 description: |-
   RouterOS resource.

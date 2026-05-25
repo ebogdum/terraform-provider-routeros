@@ -1,5 +1,5 @@
 ---
-subcategory: "Disks"
+subcategory: "Storage"
 page_title: "RouterOS: routeros_disk"
 description: |-
   Storage volumes. Creating one usually requires a backing device.

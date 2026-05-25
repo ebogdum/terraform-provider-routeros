@@ -1,5 +1,5 @@
 ---
-subcategory: "Routing"
+subcategory: "BGP"
 page_title: "RouterOS: routeros_routing_bgp_vpn"
 description: |-
   Auto-test requires a typed-reference precondition (e.g. an existing peer,

@@ -1,5 +1,5 @@
 ---
-subcategory: "IP"
+subcategory: "Firewall"
 page_title: "RouterOS: routeros_ip_firewall_connection_tracking"
 description: |-
   RouterOS resource.

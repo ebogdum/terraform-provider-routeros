@@ -1,5 +1,5 @@
 ---
-subcategory: "Users"
+subcategory: "Users & RADIUS"
 page_title: "RouterOS: routeros_user_ssh_keys"
 description: |-
   SSH key import requires a real key file already uploaded to /file. Skipped from automated acc tests.

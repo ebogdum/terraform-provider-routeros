@@ -1,5 +1,5 @@
 ---
-subcategory: "Interfaces"
+subcategory: "Bridge"
 page_title: "RouterOS: routeros_interface_bridge"
 description: |-
   RouterOS resource.

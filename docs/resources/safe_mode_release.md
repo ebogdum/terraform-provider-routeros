@@ -1,5 +1,5 @@
 ---
-subcategory: "Safe-mode"
+subcategory: "System & misc"
 page_title: "RouterOS: routeros_safe_mode_release"
 description: |-
   RouterOS resource.

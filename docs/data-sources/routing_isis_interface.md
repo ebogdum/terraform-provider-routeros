@@ -1,5 +1,5 @@
 ---
-subcategory: "Routing"
+subcategory: "ISIS"
 page_title: "RouterOS: routeros_routing_isis_interface"
 description: |-
   RouterOS resource.

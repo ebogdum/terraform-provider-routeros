@@ -1,5 +1,5 @@
 ---
-subcategory: "Iot"
+subcategory: "System & misc"
 page_title: "RouterOS: routeros_iot_lora"
 description: |-
   Requires LoRa hardware/package

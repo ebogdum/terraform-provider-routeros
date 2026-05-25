@@ -1,5 +1,5 @@
 ---
-subcategory: "Interfaces"
+subcategory: "Wireless"
 page_title: "RouterOS: routeros_interface_wifi_configuration"
 description: |-
   RouterOS resource.

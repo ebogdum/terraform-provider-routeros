@@ -1,5 +1,5 @@
 ---
-subcategory: "Disks"
+subcategory: "Storage"
 page_title: "RouterOS: routeros_disk_test"
 description: |-
   Needs a specific disk; not portable.
