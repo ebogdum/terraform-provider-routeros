@@ -1,5 +1,4 @@
 ---
-subcategory: "Tools"
 page_title: "RouterOS: routeros_tool_fetch"
 description: |-
   RouterOS resource.

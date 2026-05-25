@@ -1,5 +1,4 @@
 ---
-subcategory: "Containers"
 page_title: "RouterOS: routeros_container"
 description: |-
   Requires container package + capable architecture

@@ -1,5 +1,4 @@
 ---
-subcategory: "System & misc"
 page_title: "RouterOS: routeros_caps_man_registration_table"
 description: |-
   CAPsMAN registration table; read-only.

@@ -1,5 +1,4 @@
 ---
-subcategory: "Tools"
 page_title: "RouterOS: routeros_tool_traceroute"
 description: |-
   Long-running by default; REST 60-second cap closes the session.

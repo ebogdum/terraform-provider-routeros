@@ -1,5 +1,4 @@
 ---
-subcategory: "RIP"
 page_title: "RouterOS: routeros_routing_rip_interface"
 description: |-
   Discovered; needs rip instance

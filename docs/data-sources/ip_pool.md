@@ -1,5 +1,4 @@
 ---
-subcategory: "IP"
 page_title: "RouterOS: routeros_ip_pool"
 description: |-
   RouterOS resource.

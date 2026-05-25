@@ -1,5 +1,4 @@
 ---
-subcategory: "System"
 page_title: "RouterOS: routeros_system_reset_configuration"
 description: |-
   Resets RouterOS to defaults. Curl confirms RouterOS accepts the POST and

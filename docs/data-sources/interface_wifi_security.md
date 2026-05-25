@@ -1,5 +1,4 @@
 ---
-subcategory: "Wireless"
 page_title: "RouterOS: routeros_interface_wifi_security"
 description: |-
   RouterOS resource.

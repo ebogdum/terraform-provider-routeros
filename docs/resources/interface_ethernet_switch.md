@@ -1,5 +1,4 @@
 ---
-subcategory: "Interfaces"
 page_title: "RouterOS: routeros_interface_ethernet_switch"
 description: |-
   Switch chip menu varies by hardware; not on hAP/CHR

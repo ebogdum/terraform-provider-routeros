@@ -1,5 +1,4 @@
 ---
-subcategory: "Interfaces"
 page_title: "RouterOS: routeros_interface_vpls"
 description: |-
   VPLS needs MPLS/LDP setup; skipped from automated acc tests.

@@ -1,5 +1,4 @@
 ---
-subcategory: "System"
 page_title: "RouterOS: routeros_system_leds_settings"
 description: |-
   RouterOS resource.

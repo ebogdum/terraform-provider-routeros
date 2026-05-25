@@ -1,5 +1,4 @@
 ---
-subcategory: "System & misc"
 page_title: "RouterOS: routeros_caps_man_actual_interface_configuration"
 description: |-
   CAPsMAN dynamic table; read-only.

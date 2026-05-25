@@ -1,5 +1,4 @@
 ---
-subcategory: "Tools"
 page_title: "RouterOS: routeros_tool_sniffer_connection"
 description: |-
   RouterOS resource.

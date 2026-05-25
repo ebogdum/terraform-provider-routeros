@@ -1,5 +1,4 @@
 ---
-subcategory: "MPLS"
 page_title: "RouterOS: routeros_mpls_ldp_neighbor"
 description: |-
   Requires an existing LDP instance. Skipped.

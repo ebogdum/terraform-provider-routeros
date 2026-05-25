@@ -1,5 +1,4 @@
 ---
-subcategory: "SNMP"
 page_title: "RouterOS: routeros_snmp_send_trap"
 description: |-
   RouterOS resource.

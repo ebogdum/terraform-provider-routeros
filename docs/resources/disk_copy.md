@@ -1,5 +1,4 @@
 ---
-subcategory: "Storage"
 page_title: "RouterOS: routeros_disk_copy"
 description: |-
   Needs real source/destination block devices.

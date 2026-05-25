@@ -1,5 +1,4 @@
 ---
-subcategory: "Interfaces"
 page_title: "RouterOS: routeros_interface_ipip"
 description: |-
   RouterOS resource.

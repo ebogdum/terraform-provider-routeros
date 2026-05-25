@@ -1,5 +1,4 @@
 ---
-subcategory: "System"
 page_title: "RouterOS: routeros_system_ssh_exec"
 description: |-
   Needs a reachable SSH peer with a real command. Skipped.

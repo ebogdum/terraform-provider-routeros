@@ -1,5 +1,4 @@
 ---
-subcategory: "Tools"
 page_title: "RouterOS: routeros_tool_ip_scan"
 description: |-
   Long-running network scan; REST 60-second cap closes the session.

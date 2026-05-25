@@ -1,5 +1,4 @@
 ---
-subcategory: "System"
 page_title: "RouterOS: routeros_system_shutdown"
 description: |-
   Powers off the router. Verified working against a CHR VM. Skipped from the

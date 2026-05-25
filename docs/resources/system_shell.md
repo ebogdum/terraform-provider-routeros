@@ -1,5 +1,4 @@
 ---
-subcategory: "System"
 page_title: "RouterOS: routeros_system_shell"
 description: |-
   Interactive shell; not suitable for non-interactive acc tests.

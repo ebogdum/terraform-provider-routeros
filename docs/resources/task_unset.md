@@ -1,5 +1,4 @@
 ---
-subcategory: "System & misc"
 page_title: "RouterOS: routeros_task_unset"
 description: |-
   Needs a task .id. Skipped.

@@ -1,5 +1,4 @@
 ---
-subcategory: "Queues"
 page_title: "RouterOS: routeros_queue_monitor"
 description: |-
   Streaming monitor; REST 60-second cap closes the session.

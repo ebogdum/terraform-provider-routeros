@@ -1,5 +1,4 @@
 ---
-subcategory: "IP"
 page_title: "RouterOS: routeros_ip_kid_control_device"
 description: |-
   Discovered; needs kid-control-name fixture

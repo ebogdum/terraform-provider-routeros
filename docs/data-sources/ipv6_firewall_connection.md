@@ -1,5 +1,4 @@
 ---
-subcategory: "Firewall"
 page_title: "RouterOS: routeros_ipv6_firewall_connection"
 description: |-
   RouterOS resource.

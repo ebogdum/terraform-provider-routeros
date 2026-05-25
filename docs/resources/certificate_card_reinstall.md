@@ -1,5 +1,4 @@
 ---
-subcategory: "Certificates"
 page_title: "RouterOS: routeros_certificate_card_reinstall"
 description: |-
   Needs HSM card PIN. Skipped.

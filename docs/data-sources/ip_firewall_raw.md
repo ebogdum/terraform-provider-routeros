@@ -1,5 +1,4 @@
 ---
-subcategory: "Firewall"
 page_title: "RouterOS: routeros_ip_firewall_raw"
 description: |-
   IP firewall raw rule. Ordered by `position` (sort key, not identity).

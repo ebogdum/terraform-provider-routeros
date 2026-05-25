@@ -1,5 +1,4 @@
 ---
-subcategory: "Hotspot"
 page_title: "RouterOS: routeros_ip_hotspot_user"
 description: |-
   RouterOS resource.

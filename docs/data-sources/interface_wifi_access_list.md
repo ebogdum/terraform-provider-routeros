@@ -1,5 +1,4 @@
 ---
-subcategory: "Wireless"
 page_title: "RouterOS: routeros_interface_wifi_access_list"
 description: |-
   RouterOS resource.

@@ -1,5 +1,4 @@
 ---
-subcategory: "Routing"
 page_title: "RouterOS: routeros_routing_igmp_proxy"
 description: |-
   RouterOS resource.

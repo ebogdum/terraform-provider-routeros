@@ -1,5 +1,4 @@
 ---
-subcategory: "Tools"
 page_title: "RouterOS: routeros_tool_traffic_generator_packet_template"
 description: |-
   RouterOS resource.

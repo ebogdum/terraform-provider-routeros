@@ -1,5 +1,4 @@
 ---
-subcategory: "Interfaces"
 page_title: "RouterOS: routeros_interface_lte_apn"
 description: |-
   RouterOS resource.

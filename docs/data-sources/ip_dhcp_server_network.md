@@ -1,5 +1,4 @@
 ---
-subcategory: "DHCP"
 page_title: "RouterOS: routeros_ip_dhcp_server_network"
 description: |-
   RouterOS resource.

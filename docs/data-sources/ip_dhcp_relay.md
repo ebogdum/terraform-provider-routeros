@@ -1,5 +1,4 @@
 ---
-subcategory: "DHCP"
 page_title: "RouterOS: routeros_ip_dhcp_relay"
 description: |-
   RouterOS resource.

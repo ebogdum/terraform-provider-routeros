@@ -1,5 +1,4 @@
 ---
-subcategory: "BGP"
 page_title: "RouterOS: routeros_routing_bgp_session"
 description: |-
   RouterOS resource.

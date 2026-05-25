@@ -1,5 +1,4 @@
 ---
-subcategory: "Routing"
 page_title: "RouterOS: routeros_routing_fantasy"
 description: |-
   RouterOS resource.

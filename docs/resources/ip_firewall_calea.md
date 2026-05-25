@@ -1,5 +1,4 @@
 ---
-subcategory: "Firewall"
 page_title: "RouterOS: routeros_ip_firewall_calea"
 description: |-
   IP firewall CALEA creates a session that drops the management connection on CHR. Skipped.

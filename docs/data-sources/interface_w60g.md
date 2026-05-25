@@ -1,5 +1,4 @@
 ---
-subcategory: "Interfaces"
 page_title: "RouterOS: routeros_interface_w60g"
 description: |-
   Requires 60GHz wAP60G hardware

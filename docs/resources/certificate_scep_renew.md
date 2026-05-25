@@ -1,5 +1,4 @@
 ---
-subcategory: "Certificates"
 page_title: "RouterOS: routeros_certificate_scep_renew"
 description: |-
   Needs an existing SCEP cert .id. Skipped.

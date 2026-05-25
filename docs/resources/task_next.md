@@ -1,5 +1,4 @@
 ---
-subcategory: "System & misc"
 page_title: "RouterOS: routeros_task_next"
 description: |-
   Needs an active task. Skipped.

@@ -1,5 +1,4 @@
 ---
-subcategory: "DHCP"
 page_title: "RouterOS: routeros_ipv6_dhcp_relay"
 description: |-
   server address validator rejects literal addresses on this ROS version. Skipped.

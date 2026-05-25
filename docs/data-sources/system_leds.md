@@ -1,5 +1,4 @@
 ---
-subcategory: "System"
 page_title: "RouterOS: routeros_system_leds"
 description: |-
   LED bindings -- type/leds values depend on the specific device's available LEDs; not portable in an auto-test.

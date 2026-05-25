@@ -1,5 +1,4 @@
 ---
-subcategory: "Tools"
 page_title: "RouterOS: routeros_tool_profile"
 description: |-
   Long-running CPU profiler.

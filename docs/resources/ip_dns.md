@@ -1,5 +1,4 @@
 ---
-subcategory: "DNS"
 page_title: "RouterOS: routeros_ip_dns"
 description: |-
   RouterOS resource.

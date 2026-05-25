@@ -1,5 +1,4 @@
 ---
-subcategory: "Certificates"
 page_title: "RouterOS: routeros_certificate_issued_revoke"
 description: |-
   Needs an issued cert .id. Skipped.

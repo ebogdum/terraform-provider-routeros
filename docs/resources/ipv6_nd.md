@@ -1,5 +1,4 @@
 ---
-subcategory: "IPv6"
 page_title: "RouterOS: routeros_ipv6_nd"
 description: |-
   ND config is per-interface and conflicts with defaults if the interface is already configured.

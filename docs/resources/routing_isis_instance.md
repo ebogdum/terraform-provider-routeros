@@ -1,5 +1,4 @@
 ---
-subcategory: "ISIS"
 page_title: "RouterOS: routeros_routing_isis_instance"
 description: |-
   ISIS instance argument set differs across ROS releases. Skipped.

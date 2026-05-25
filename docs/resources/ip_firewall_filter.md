@@ -1,5 +1,4 @@
 ---
-subcategory: "Firewall"
 page_title: "RouterOS: routeros_ip_firewall_filter"
 description: |-
   IP firewall filter rule. Ordered top-down by `position` (sort key, not

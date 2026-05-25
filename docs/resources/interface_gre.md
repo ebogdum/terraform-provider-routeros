@@ -1,5 +1,4 @@
 ---
-subcategory: "Interfaces"
 page_title: "RouterOS: routeros_interface_gre"
 description: |-
   GRE tunnel -- needs reachable remote address and unused name. Skipped.

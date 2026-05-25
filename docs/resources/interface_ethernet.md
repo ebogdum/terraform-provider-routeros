@@ -1,5 +1,4 @@
 ---
-subcategory: "Interfaces"
 page_title: "RouterOS: routeros_interface_ethernet"
 description: |-
   /interface/ethernet entries are auto-created from the physical NICs; can't be added via TF.

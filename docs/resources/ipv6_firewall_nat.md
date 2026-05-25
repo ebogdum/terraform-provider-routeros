@@ -1,5 +1,4 @@
 ---
-subcategory: "Firewall"
 page_title: "RouterOS: routeros_ipv6_firewall_nat"
 description: |-
   RouterOS resource.

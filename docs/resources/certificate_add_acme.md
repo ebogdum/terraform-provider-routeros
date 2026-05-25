@@ -1,5 +1,4 @@
 ---
-subcategory: "Certificates"
 page_title: "RouterOS: routeros_certificate_add_acme"
 description: |-
   ACME enrolment needs a real domain name and reachable ACME server.

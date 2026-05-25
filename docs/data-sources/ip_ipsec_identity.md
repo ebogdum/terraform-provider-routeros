@@ -1,5 +1,4 @@
 ---
-subcategory: "IPsec"
 page_title: "RouterOS: routeros_ip_ipsec_identity"
 description: |-
   Auto-test requires a typed-reference precondition (e.g. an existing peer,

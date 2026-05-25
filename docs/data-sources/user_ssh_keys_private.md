@@ -1,5 +1,4 @@
 ---
-subcategory: "Users & RADIUS"
 page_title: "RouterOS: routeros_user_ssh_keys_private"
 description: |-
   RouterOS resource.

@@ -1,5 +1,4 @@
 ---
-subcategory: "Interfaces"
 page_title: "RouterOS: routeros_interface_dot1x_client"
 description: |-
   802.1X client attaches to a specific Ethernet interface; values vary per device. Skipped.

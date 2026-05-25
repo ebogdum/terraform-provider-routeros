@@ -1,5 +1,4 @@
 ---
-subcategory: "Tools"
 page_title: "RouterOS: routeros_tool_mac_telnet"
 description: |-
   Interactive MAC-Telnet session. Skipped.

@@ -1,5 +1,4 @@
 ---
-subcategory: "System"
 page_title: "RouterOS: routeros_system_sup_output"
 description: |-
   RouterOS resource.

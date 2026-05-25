@@ -1,5 +1,4 @@
 ---
-subcategory: "Users & RADIUS"
 page_title: "RouterOS: routeros_radius_incoming"
 description: |-
   RouterOS resource.

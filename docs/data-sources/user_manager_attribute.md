@@ -1,5 +1,4 @@
 ---
-subcategory: "Users & RADIUS"
 page_title: "RouterOS: routeros_user_manager_attribute"
 description: |-
   Requires user-manager package

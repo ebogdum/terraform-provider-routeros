@@ -1,5 +1,4 @@
 ---
-subcategory: "Bridge"
 page_title: "RouterOS: routeros_interface_bridge_calea"
 description: |-
   Bridge CALEA creates a session that drops the management connection on CHR. Skipped.

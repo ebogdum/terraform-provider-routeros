@@ -1,5 +1,4 @@
 ---
-subcategory: "System"
 page_title: "RouterOS: routeros_system_ssh"
 description: |-
   SSH client opens an interactive session; not suitable for non-interactive acc tests.

@@ -1,5 +1,4 @@
 ---
-subcategory: "PPP"
 page_title: "RouterOS: routeros_ppp_aaa"
 description: |-
   RouterOS resource.

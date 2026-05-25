@@ -1,5 +1,4 @@
 ---
-subcategory: "NTP"
 page_title: "RouterOS: routeros_system_ntp_client_servers"
 description: |-
   NTP server list -- accepts add but validator differs per ROS. Skipped from acc tests.

@@ -1,5 +1,4 @@
 ---
-subcategory: "System"
 page_title: "RouterOS: routeros_system_check_disk"
 description: |-
   RouterOS resource.

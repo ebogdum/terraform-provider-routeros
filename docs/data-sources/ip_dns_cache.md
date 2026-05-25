@@ -1,5 +1,4 @@
 ---
-subcategory: "DNS"
 page_title: "RouterOS: routeros_ip_dns_cache"
 description: |-
   DNS cache is read-only; entries are populated by queries.

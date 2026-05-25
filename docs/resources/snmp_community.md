@@ -1,5 +1,4 @@
 ---
-subcategory: "SNMP"
 page_title: "RouterOS: routeros_snmp_community"
 description: |-
   RouterOS resource.

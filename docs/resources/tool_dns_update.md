@@ -1,5 +1,4 @@
 ---
-subcategory: "Tools"
 page_title: "RouterOS: routeros_tool_dns_update"
 description: |-
   Sends an RFC 2136 DDNS update; needs a real DDNS server.

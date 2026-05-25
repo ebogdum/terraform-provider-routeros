@@ -1,5 +1,4 @@
 ---
-subcategory: "ISIS"
 page_title: "RouterOS: routeros_routing_isis_interface_template"
 description: |-
   References an existing isis instance; auto-test can't synthesise.

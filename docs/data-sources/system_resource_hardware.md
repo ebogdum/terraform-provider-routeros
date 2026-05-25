@@ -1,5 +1,4 @@
 ---
-subcategory: "System"
 page_title: "RouterOS: routeros_system_resource_hardware"
 description: |-
   Discovered read-only menu

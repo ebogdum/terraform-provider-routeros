@@ -1,5 +1,4 @@
 ---
-subcategory: "Queues"
 page_title: "RouterOS: routeros_queue_interface"
 description: |-
   RouterOS resource.

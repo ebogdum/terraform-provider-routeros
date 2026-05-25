@@ -1,5 +1,4 @@
 ---
-subcategory: "System"
 page_title: "RouterOS: routeros_system_serial_terminal"
 description: |-
   Needs an active serial port. Skipped.

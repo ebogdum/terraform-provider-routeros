@@ -1,5 +1,4 @@
 ---
-subcategory: "System & misc"
 page_title: "RouterOS: routeros_caps_man_security"
 description: |-
   RouterOS resource.

@@ -1,5 +1,4 @@
 ---
-subcategory: "Storage"
 page_title: "RouterOS: routeros_disk_monitor_traffic"
 description: |-
   Needs disk .id. Skipped.

@@ -1,5 +1,4 @@
 ---
-subcategory: "Storage"
 page_title: "RouterOS: routeros_disk_unset"
 description: |-
   Needs disk .id. Skipped.

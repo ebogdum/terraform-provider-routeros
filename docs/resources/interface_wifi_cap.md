@@ -1,5 +1,4 @@
 ---
-subcategory: "Wireless"
 page_title: "RouterOS: routeros_interface_wifi_cap"
 description: |-
   RouterOS resource.

@@ -1,5 +1,4 @@
 ---
-subcategory: "System"
 page_title: "RouterOS: routeros_system_console"
 description: |-
   Active console sessions -- RouterOS-managed; PUT EOFs because the endpoint isn't add-able.

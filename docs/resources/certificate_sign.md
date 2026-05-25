@@ -1,5 +1,4 @@
 ---
-subcategory: "Certificates"
 page_title: "RouterOS: routeros_certificate_sign"
 description: |-
   Sign a certificate. Pass `certificate` (the cert name to sign), `ca` (signer

@@ -1,5 +1,4 @@
 ---
-subcategory: "Tools"
 page_title: "RouterOS: routeros_tool_traffic_generator_port"
 description: |-
   Discovered; needs tgen config

@@ -1,5 +1,4 @@
 ---
-subcategory: "Tools"
 page_title: "RouterOS: routeros_tool_bandwidth_server_session"
 description: |-
   RouterOS resource.

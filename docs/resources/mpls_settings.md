@@ -1,5 +1,4 @@
 ---
-subcategory: "MPLS"
 page_title: "RouterOS: routeros_mpls_settings"
 description: |-
   RouterOS resource.

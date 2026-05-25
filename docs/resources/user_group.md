@@ -1,5 +1,4 @@
 ---
-subcategory: "Users & RADIUS"
 page_title: "RouterOS: routeros_user_group"
 description: |-
   RouterOS resource.

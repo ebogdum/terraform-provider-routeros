@@ -1,5 +1,4 @@
 ---
-subcategory: "Scripts & scheduler"
 page_title: "RouterOS: routeros_system_script"
 description: |-
   RouterOS resource.

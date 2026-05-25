@@ -1,5 +1,4 @@
 ---
-subcategory: "Bridge"
 page_title: "RouterOS: routeros_interface_bridge_filter"
 description: |-
   RouterOS resource.

@@ -1,5 +1,4 @@
 ---
-subcategory: "Interfaces"
 page_title: "RouterOS: routeros_interface_monitor_traffic"
 description: |-
   Streaming monitor; the REST 60-second cap closes the session before output is produced.

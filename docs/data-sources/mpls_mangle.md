@@ -1,5 +1,4 @@
 ---
-subcategory: "MPLS"
 page_title: "RouterOS: routeros_mpls_mangle"
 description: |-
   MPLS mangle schema differs across ROS versions and the audit can't determine the correct argument set without an active LDP. Skipped.

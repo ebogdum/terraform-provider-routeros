@@ -1,5 +1,4 @@
 ---
-subcategory: "Interfaces"
 page_title: "RouterOS: routeros_interface_lte"
 description: |-
   LTE interfaces are physical-device backed; skipped on virtual devices.

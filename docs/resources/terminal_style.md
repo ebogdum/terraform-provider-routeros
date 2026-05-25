@@ -1,5 +1,4 @@
 ---
-subcategory: "System & misc"
 page_title: "RouterOS: routeros_terminal_style"
 description: |-
   RouterOS resource.

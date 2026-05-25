@@ -1,5 +1,4 @@
 ---
-subcategory: "MPLS"
 page_title: "RouterOS: routeros_mpls_ldp"
 description: |-
   LDP allows one active instance per VRF; if one already exists this fails.

@@ -1,5 +1,4 @@
 ---
-subcategory: "IPsec"
 page_title: "RouterOS: routeros_ip_ipsec_active_peers"
 description: |-
   RouterOS resource.

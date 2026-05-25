@@ -1,5 +1,4 @@
 ---
-subcategory: "Logging"
 page_title: "RouterOS: routeros_log"
 description: |-
   RouterOS resource.

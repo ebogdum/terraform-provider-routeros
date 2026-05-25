@@ -1,5 +1,4 @@
 ---
-subcategory: "System & misc"
 page_title: "RouterOS: routeros_port_remote_access"
 description: |-
   RouterOS resource.
