@@ -1,0 +1,23 @@
+//go:build acceptance
+
+package provider
+
+import (
+	"fmt"
+	"os"
+
+	"github.com/hashicorp/terraform-plugin-framework/providerserver"
+	"github.com/hashicorp/terraform-plugin-go/tfprotov6"
+)
+
+var testAccProviderFactories = map[string]func() (tfprotov6.ProviderServer, error){
+	"routeros": providerserver.NewProtocol6WithError(New("acceptance")()),
+}
+
+func formatProviderCfg(tpl string) string {
+	return fmt.Sprintf(tpl,
+		os.Getenv("ROUTEROS_HOST"),
+		os.Getenv("ROUTEROS_USER"),
+		os.Getenv("ROUTEROS_PASSWORD"),
+	)
+}

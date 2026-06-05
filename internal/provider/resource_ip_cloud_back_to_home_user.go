@@ -1,0 +1,584 @@
+package provider
+
+import (
+	"context"
+	"fmt"
+	"strings"
+
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
+)
+
+var (
+	_ resource.Resource                = &IPCloudBackToHomeUserResource{}
+	_ resource.ResourceWithImportState = &IPCloudBackToHomeUserResource{}
+	_                                  = attr.Value(nil)
+	_                                  = strings.TrimSpace
+	_                                  = path.Root
+)
+
+type IPCloudBackToHomeUserResource struct {
+	reg *client.Registry
+}
+
+type IPCloudBackToHomeUserModel struct {
+	ID              types.String `tfsdk:"id"`
+	Active          types.Bool   `tfsdk:"active"`
+	AllowLan        types.Bool   `tfsdk:"allow_lan"`
+	ClientAddress   types.String `tfsdk:"client_address"`
+	ClientConfig    types.String `tfsdk:"client_config"`
+	ClientQr        types.String `tfsdk:"client_qr"`
+	Comment         types.String `tfsdk:"comment"`
+	Disabled        types.Bool   `tfsdk:"disabled"`
+	Expires         types.String `tfsdk:"expires"`
+	FileAccessMode  types.String `tfsdk:"file_access_mode"`
+	FileAccessToken types.String `tfsdk:"file_access_token"`
+	Files           types.String `tfsdk:"files"`
+	Name            types.String `tfsdk:"name"`
+	Newe            types.String `tfsdk:"newe"`
+	Newfileman      types.String `tfsdk:"newfileman"`
+	Notnew          types.String `tfsdk:"notnew"`
+	Oldfileman      types.String `tfsdk:"oldfileman"`
+	PrivateKey      types.String `tfsdk:"private_key"`
+	PublicKey       types.String `tfsdk:"public_key"`
+	Router          types.String `tfsdk:"router"`
+}
+
+func NewIPCloudBackToHomeUserResource() resource.Resource { return &IPCloudBackToHomeUserResource{} }
+
+func (r *IPCloudBackToHomeUserResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_ip_cloud_back_to_home_user"
+}
+
+func (r *IPCloudBackToHomeUserResource) Configure(_ context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+	reg, diags := configureRegistry(req.ProviderData)
+	resp.Diagnostics.Append(diags...)
+	if reg != nil {
+		r.reg = reg
+	}
+	_ = fmt.Sprintf
+}
+
+func (r *IPCloudBackToHomeUserResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+	resp.Schema = schema.Schema{
+		Description: "Mirrors RouterOS `/ip/cloud/back-to-home-user`.",
+		Attributes: map[string]schema.Attribute{
+			"id": schema.StringAttribute{
+				Computed:      true,
+				Description:   "RouterOS internal .id.",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"active": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"allow_lan": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"client_address": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"client_config": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"client_qr": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"comment": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"disabled": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"expires": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"file_access_mode": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.OneOf([]string{"", "disabled", "read-only", "full"}...)},
+			},
+			"file_access_token": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"files": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"name": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"newe": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"newfileman": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"notnew": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"oldfileman": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"private_key": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"public_key": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"router": schema.StringAttribute{
+				Optional:    true,
+				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+			},
+		},
+	}
+}
+
+func (r *IPCloudBackToHomeUserResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan IPCloudBackToHomeUserModel
+	if diags := req.Plan.Get(ctx, &plan); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, plan.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	body := client.Object{}
+	if !(plan.Active.IsNull() || plan.Active.IsUnknown()) {
+		body["active"] = client.FormatBool(plan.Active.ValueBool())
+	}
+	if !(plan.AllowLan.IsNull() || plan.AllowLan.IsUnknown()) {
+		body["allow-lan"] = client.FormatBool(plan.AllowLan.ValueBool())
+	}
+	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
+		body["comment"] = plan.Comment.ValueString()
+	}
+	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
+		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !(plan.Expires.IsNull() || plan.Expires.IsUnknown()) {
+		body["expires"] = plan.Expires.ValueString()
+	}
+	if !(plan.FileAccessMode.IsNull() || plan.FileAccessMode.IsUnknown()) {
+		body["file-access-mode"] = plan.FileAccessMode.ValueString()
+	}
+	if !(plan.Files.IsNull() || plan.Files.IsUnknown()) {
+		body["files"] = plan.Files.ValueString()
+	}
+	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
+		body["name"] = plan.Name.ValueString()
+	}
+	if !(plan.Newe.IsNull() || plan.Newe.IsUnknown()) {
+		body["newe"] = plan.Newe.ValueString()
+	}
+	if !(plan.Newfileman.IsNull() || plan.Newfileman.IsUnknown()) {
+		body["newfileman"] = plan.Newfileman.ValueString()
+	}
+	if !(plan.Notnew.IsNull() || plan.Notnew.IsUnknown()) {
+		body["notnew"] = plan.Notnew.ValueString()
+	}
+	if !(plan.Oldfileman.IsNull() || plan.Oldfileman.IsUnknown()) {
+		body["oldfileman"] = plan.Oldfileman.ValueString()
+	}
+	if !(plan.PrivateKey.IsNull() || plan.PrivateKey.IsUnknown()) {
+		body["private-key"] = plan.PrivateKey.ValueString()
+	}
+	if !(plan.PublicKey.IsNull() || plan.PublicKey.IsUnknown()) {
+		body["public-key"] = plan.PublicKey.ValueString()
+	}
+	obj, err := c.Add(ctx, "/ip/cloud/back-to-home-user", body)
+	if err != nil {
+		resp.Diagnostics.AddError("Create /ip/cloud/back-to-home-user failed", err.Error())
+		return
+	}
+	iPCloudBackToHomeUserApply(ctx, obj, &plan)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+func (r *IPCloudBackToHomeUserResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state IPCloudBackToHomeUserModel
+	if diags := req.State.Get(ctx, &state); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, state.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	obj, err := c.GetByID(ctx, "/ip/cloud/back-to-home-user", state.ID.ValueString())
+	if err != nil {
+		if client.IsNotFound(err) {
+			resp.State.RemoveResource(ctx)
+			return
+		}
+		resp.Diagnostics.AddError("Read /ip/cloud/back-to-home-user failed", err.Error())
+		return
+	}
+	iPCloudBackToHomeUserApply(ctx, obj, &state)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
+}
+
+func (r *IPCloudBackToHomeUserResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state IPCloudBackToHomeUserModel
+	if diags := req.Plan.Get(ctx, &plan); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	if diags := req.State.Get(ctx, &state); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, plan.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	body := client.Object{}
+	if !plan.Active.Equal(state.Active) {
+		body["active"] = client.FormatBool(plan.Active.ValueBool())
+	}
+	if !plan.AllowLan.Equal(state.AllowLan) {
+		body["allow-lan"] = client.FormatBool(plan.AllowLan.ValueBool())
+	}
+	if !plan.Comment.Equal(state.Comment) {
+		body["comment"] = plan.Comment.ValueString()
+	}
+	if !plan.Disabled.Equal(state.Disabled) {
+		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !plan.Expires.Equal(state.Expires) {
+		body["expires"] = plan.Expires.ValueString()
+	}
+	if !plan.FileAccessMode.Equal(state.FileAccessMode) {
+		body["file-access-mode"] = plan.FileAccessMode.ValueString()
+	}
+	if !plan.Files.Equal(state.Files) {
+		body["files"] = plan.Files.ValueString()
+	}
+	if !plan.Name.Equal(state.Name) {
+		body["name"] = plan.Name.ValueString()
+	}
+	if !plan.Newe.Equal(state.Newe) {
+		body["newe"] = plan.Newe.ValueString()
+	}
+	if !plan.Newfileman.Equal(state.Newfileman) {
+		body["newfileman"] = plan.Newfileman.ValueString()
+	}
+	if !plan.Notnew.Equal(state.Notnew) {
+		body["notnew"] = plan.Notnew.ValueString()
+	}
+	if !plan.Oldfileman.Equal(state.Oldfileman) {
+		body["oldfileman"] = plan.Oldfileman.ValueString()
+	}
+	if !plan.PrivateKey.Equal(state.PrivateKey) {
+		body["private-key"] = plan.PrivateKey.ValueString()
+	}
+	if !plan.PublicKey.Equal(state.PublicKey) {
+		body["public-key"] = plan.PublicKey.ValueString()
+	}
+	if len(body) > 0 {
+		obj, err := c.Set(ctx, "/ip/cloud/back-to-home-user", state.ID.ValueString(), body)
+		if err != nil {
+			resp.Diagnostics.AddError("Update /ip/cloud/back-to-home-user failed", err.Error())
+			return
+		}
+		iPCloudBackToHomeUserApply(ctx, obj, &plan)
+	} else {
+		plan.ID = state.ID
+	}
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+func (r *IPCloudBackToHomeUserResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state IPCloudBackToHomeUserModel
+	if diags := req.State.Get(ctx, &state); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, state.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	if err := c.Remove(ctx, "/ip/cloud/back-to-home-user", state.ID.ValueString()); err != nil {
+		resp.Diagnostics.AddError("Delete /ip/cloud/back-to-home-user failed", err.Error())
+	}
+}
+
+func (r *IPCloudBackToHomeUserResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	// Import formats accepted:
+	//   *<id>                            -> bare RouterOS .id on the default router
+	//   <router>/*<id>                   -> .id on the named router
+	//   <router>/<naturalkey>            -> resolved via List + filter
+	//   <naturalkey>                     -> resolved on the default router
+	id := req.ID
+	routerName := ""
+	if i := strings.Index(id, "/"); i > 0 && !strings.HasPrefix(id, "*") {
+		routerName, id = id[:i], id[i+1:]
+	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("router"), types.StringValue(routerName))...)
+	if strings.HasPrefix(id, "*") {
+		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(id))...)
+		return
+	}
+	c := pickClient(r.reg, types.StringValue(routerName), &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	rows, err := iPCloudBackToHomeUserLookupByNaturalKey(ctx, c, id)
+	if err != nil {
+		resp.Diagnostics.AddError("Import lookup failed", err.Error())
+		return
+	}
+	if len(rows) == 0 {
+		resp.Diagnostics.AddError("Import not found", fmt.Sprintf("no /ip/cloud/back-to-home-user matches %q", id))
+		return
+	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(rows[0][".id"]))...)
+}
+
+// iPCloudBackToHomeUserLookupByNaturalKey searches for a record whose natural
+// keys match id. The strategy: try every key declared in the schema overlay's
+// natural_keys list (or fall back to "name") with equality matching.
+func iPCloudBackToHomeUserLookupByNaturalKey(ctx context.Context, c *client.Client, id string) ([]client.Object, error) {
+	keys := []string{}
+	if len(keys) == 0 {
+		keys = []string{"name"}
+	}
+	for _, k := range keys {
+		rows, err := c.List(ctx, "/ip/cloud/back-to-home-user", client.WithFilter(k, id))
+		if err != nil {
+			return nil, err
+		}
+		if len(rows) > 0 {
+			return rows, nil
+		}
+	}
+	return nil, nil
+}
+
+func iPCloudBackToHomeUserApply(ctx context.Context, obj client.Object, m *IPCloudBackToHomeUserModel) {
+	_ = ctx
+	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["active"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Active = types.BoolValue(b)
+		} else {
+			m.Active = types.BoolNull()
+		}
+	} else {
+		m.Active = types.BoolNull()
+	}
+	if v, ok := obj["allow-lan"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.AllowLan = types.BoolValue(b)
+		} else {
+			m.AllowLan = types.BoolNull()
+		}
+	} else {
+		m.AllowLan = types.BoolNull()
+	}
+	if v, ok := obj["client-address"]; ok {
+		_ = v
+		if v != "" {
+			m.ClientAddress = types.StringValue(v)
+		} else {
+			m.ClientAddress = types.StringNull()
+		}
+	} else {
+		m.ClientAddress = types.StringNull()
+	}
+	if v, ok := obj["client-config"]; ok {
+		_ = v
+		if v != "" {
+			m.ClientConfig = types.StringValue(v)
+		} else {
+			m.ClientConfig = types.StringNull()
+		}
+	} else {
+		m.ClientConfig = types.StringNull()
+	}
+	if v, ok := obj["client-qr"]; ok {
+		_ = v
+		if v != "" {
+			m.ClientQr = types.StringValue(v)
+		} else {
+			m.ClientQr = types.StringNull()
+		}
+	} else {
+		m.ClientQr = types.StringNull()
+	}
+	if v, ok := obj["comment"]; ok {
+		_ = v
+		if v != "" {
+			m.Comment = types.StringValue(v)
+		} else {
+			m.Comment = types.StringNull()
+		}
+	} else {
+		m.Comment = types.StringNull()
+	}
+	if v, ok := obj["disabled"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Disabled = types.BoolValue(b)
+		} else {
+			m.Disabled = types.BoolNull()
+		}
+	} else {
+		m.Disabled = types.BoolNull()
+	}
+	if v, ok := obj["expires"]; ok {
+		_ = v
+		if v != "" {
+			m.Expires = types.StringValue(v)
+		} else {
+			m.Expires = types.StringNull()
+		}
+	} else {
+		m.Expires = types.StringNull()
+	}
+	if v, ok := obj["file-access-mode"]; ok {
+		_ = v
+		if v != "" {
+			m.FileAccessMode = types.StringValue(v)
+		} else {
+			m.FileAccessMode = types.StringNull()
+		}
+	} else {
+		m.FileAccessMode = types.StringNull()
+	}
+	if v, ok := obj["file-access-token"]; ok {
+		_ = v
+		if v != "" {
+			m.FileAccessToken = types.StringValue(v)
+		} else {
+			m.FileAccessToken = types.StringNull()
+		}
+	} else {
+		m.FileAccessToken = types.StringNull()
+	}
+	if v, ok := obj["files"]; ok {
+		_ = v
+		if v != "" {
+			m.Files = types.StringValue(v)
+		} else {
+			m.Files = types.StringNull()
+		}
+	} else {
+		m.Files = types.StringNull()
+	}
+	if v, ok := obj["name"]; ok {
+		_ = v
+		if v != "" {
+			m.Name = types.StringValue(v)
+		} else {
+			m.Name = types.StringNull()
+		}
+	} else {
+		m.Name = types.StringNull()
+	}
+	if v, ok := obj["newe"]; ok {
+		_ = v
+		if v != "" {
+			m.Newe = types.StringValue(v)
+		} else {
+			m.Newe = types.StringNull()
+		}
+	} else {
+		m.Newe = types.StringNull()
+	}
+	if v, ok := obj["newfileman"]; ok {
+		_ = v
+		if v != "" {
+			m.Newfileman = types.StringValue(v)
+		} else {
+			m.Newfileman = types.StringNull()
+		}
+	} else {
+		m.Newfileman = types.StringNull()
+	}
+	if v, ok := obj["notnew"]; ok {
+		_ = v
+		if v != "" {
+			m.Notnew = types.StringValue(v)
+		} else {
+			m.Notnew = types.StringNull()
+		}
+	} else {
+		m.Notnew = types.StringNull()
+	}
+	if v, ok := obj["oldfileman"]; ok {
+		_ = v
+		if v != "" {
+			m.Oldfileman = types.StringValue(v)
+		} else {
+			m.Oldfileman = types.StringNull()
+		}
+	} else {
+		m.Oldfileman = types.StringNull()
+	}
+	if v, ok := obj["private-key"]; ok {
+		_ = v
+		if v != "" {
+			m.PrivateKey = types.StringValue(v)
+		} else {
+			m.PrivateKey = types.StringNull()
+		}
+	} else {
+		m.PrivateKey = types.StringNull()
+	}
+	if v, ok := obj["public-key"]; ok {
+		_ = v
+		if v != "" {
+			m.PublicKey = types.StringValue(v)
+		} else {
+			m.PublicKey = types.StringNull()
+		}
+	} else {
+		m.PublicKey = types.StringNull()
+	}
+}

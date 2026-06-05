@@ -1,0 +1,499 @@
+package provider
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
+)
+
+var (
+	_ resource.Resource                = &IPFirewallConnectionTrackingResource{}
+	_ resource.ResourceWithImportState = &IPFirewallConnectionTrackingResource{}
+	_                                  = path.Root
+	_                                  = fmt.Sprintf
+)
+
+type IPFirewallConnectionTrackingResource struct {
+	reg *client.Registry
+}
+
+type IPFirewallConnectionTrackingModel struct {
+	ID                    types.String `tfsdk:"id"`
+	ActiveIpv4            types.Bool   `tfsdk:"active_ipv4"`
+	ActiveIPV6            types.Bool   `tfsdk:"active_ipv6"`
+	Enabled               types.String `tfsdk:"enabled"`
+	GenericTimeout        types.String `tfsdk:"generic_timeout"`
+	IcmpTimeout           types.String `tfsdk:"icmp_timeout"`
+	LiberalTCPTracking    types.Bool   `tfsdk:"liberal_tcp_tracking"`
+	LooseTCPTracking      types.Bool   `tfsdk:"loose_tcp_tracking"`
+	MaxEntries            types.Int64  `tfsdk:"max_entries"`
+	TCPCloseTimeout       types.String `tfsdk:"tcp_close_timeout"`
+	TCPCloseWaitTimeout   types.String `tfsdk:"tcp_close_wait_timeout"`
+	TCPEstablishedTimeout types.String `tfsdk:"tcp_established_timeout"`
+	TCPFinWaitTimeout     types.String `tfsdk:"tcp_fin_wait_timeout"`
+	TCPLastAckTimeout     types.String `tfsdk:"tcp_last_ack_timeout"`
+	TCPMaxRetransTimeout  types.String `tfsdk:"tcp_max_retrans_timeout"`
+	TCPSynReceivedTimeout types.String `tfsdk:"tcp_syn_received_timeout"`
+	TCPSynSentTimeout     types.String `tfsdk:"tcp_syn_sent_timeout"`
+	TCPTimeWaitTimeout    types.String `tfsdk:"tcp_time_wait_timeout"`
+	TCPUnackedTimeout     types.String `tfsdk:"tcp_unacked_timeout"`
+	TotalEntries          types.Int64  `tfsdk:"total_entries"`
+	TotalIp4Entries       types.Int64  `tfsdk:"total_ip4_entries"`
+	TotalIp6Entries       types.Int64  `tfsdk:"total_ip6_entries"`
+	UDPStreamTimeout      types.String `tfsdk:"udp_stream_timeout"`
+	UDPTimeout            types.String `tfsdk:"udp_timeout"`
+	Router                types.String `tfsdk:"router"`
+}
+
+func NewIPFirewallConnectionTrackingResource() resource.Resource {
+	return &IPFirewallConnectionTrackingResource{}
+}
+
+func (r *IPFirewallConnectionTrackingResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_ip_firewall_connection_tracking"
+}
+
+func (r *IPFirewallConnectionTrackingResource) Configure(_ context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+	reg, diags := configureRegistry(req.ProviderData)
+	resp.Diagnostics.Append(diags...)
+	if reg != nil {
+		r.reg = reg
+	}
+}
+
+func (r *IPFirewallConnectionTrackingResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+	resp.Schema = schema.Schema{
+		Description: "Mirrors RouterOS `/ip/firewall/connection/tracking`.",
+		Attributes: map[string]schema.Attribute{
+			"id": schema.StringAttribute{
+				Computed:      true,
+				Description:   "Stable identifier (the singleton's menu path, optionally namespaced by router).",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"active_ipv4": schema.BoolAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"active_ipv6": schema.BoolAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"enabled": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"generic_timeout": schema.StringAttribute{Optional: true, Computed: true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			},
+			"icmp_timeout": schema.StringAttribute{Optional: true, Computed: true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			},
+			"liberal_tcp_tracking": schema.BoolAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"loose_tcp_tracking": schema.BoolAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"max_entries": schema.Int64Attribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"tcp_close_timeout": schema.StringAttribute{Optional: true, Computed: true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			},
+			"tcp_close_wait_timeout": schema.StringAttribute{Optional: true, Computed: true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			},
+			"tcp_established_timeout": schema.StringAttribute{Optional: true, Computed: true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			},
+			"tcp_fin_wait_timeout": schema.StringAttribute{Optional: true, Computed: true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			},
+			"tcp_last_ack_timeout": schema.StringAttribute{Optional: true, Computed: true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			},
+			"tcp_max_retrans_timeout": schema.StringAttribute{Optional: true, Computed: true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			},
+			"tcp_syn_received_timeout": schema.StringAttribute{Optional: true, Computed: true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			},
+			"tcp_syn_sent_timeout": schema.StringAttribute{Optional: true, Computed: true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			},
+			"tcp_time_wait_timeout": schema.StringAttribute{Optional: true, Computed: true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			},
+			"tcp_unacked_timeout": schema.StringAttribute{Optional: true, Computed: true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			},
+			"total_entries": schema.Int64Attribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"total_ip4_entries": schema.Int64Attribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"total_ip6_entries": schema.Int64Attribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"udp_stream_timeout": schema.StringAttribute{Optional: true, Computed: true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			},
+			"udp_timeout": schema.StringAttribute{Optional: true, Computed: true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			},
+			"router": schema.StringAttribute{Optional: true,
+				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+			},
+		},
+	}
+}
+
+func (r *IPFirewallConnectionTrackingResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan IPFirewallConnectionTrackingModel
+	if d := req.Plan.Get(ctx, &plan); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	iPFirewallConnectionTrackingUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+func (r *IPFirewallConnectionTrackingResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan IPFirewallConnectionTrackingModel
+	if d := req.Plan.Get(ctx, &plan); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	iPFirewallConnectionTrackingUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+func (r *IPFirewallConnectionTrackingResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state IPFirewallConnectionTrackingModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	c := pickClient(r.reg, state.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	obj, err := c.GetSingleton(ctx, "/ip/firewall/connection/tracking")
+	if err != nil {
+		resp.Diagnostics.AddError("Read /ip/firewall/connection/tracking failed", err.Error())
+		return
+	}
+	iPFirewallConnectionTrackingApply(ctx, obj, &state)
+	state.ID = types.StringValue(stateIDFor("/ip/firewall/connection/tracking", state.Router))
+	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
+}
+
+func (r *IPFirewallConnectionTrackingResource) Delete(_ context.Context, _ resource.DeleteRequest, _ *resource.DeleteResponse) {
+	// Singleton menus aren't removable; just drop the state.
+}
+
+func (r *IPFirewallConnectionTrackingResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	// Import format: "<router>" or empty for default.
+	routerName := req.ID
+	if routerName == "/ip/firewall/connection/tracking" {
+		routerName = ""
+	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("router"), types.StringValue(routerName))...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/ip/firewall/connection/tracking", types.StringValue(routerName))))...)
+}
+
+func iPFirewallConnectionTrackingUpsert(ctx context.Context, reg *client.Registry, plan *IPFirewallConnectionTrackingModel, diags *diagBuf) {
+	c := pickClient(reg, plan.Router, diags)
+	if c == nil {
+		return
+	}
+	body := client.Object{}
+	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) {
+		body["enabled"] = plan.Enabled.ValueString()
+	}
+	if !(plan.GenericTimeout.IsNull() || plan.GenericTimeout.IsUnknown()) {
+		body["generic-timeout"] = plan.GenericTimeout.ValueString()
+	}
+	if !(plan.IcmpTimeout.IsNull() || plan.IcmpTimeout.IsUnknown()) {
+		body["icmp-timeout"] = plan.IcmpTimeout.ValueString()
+	}
+	if !(plan.LiberalTCPTracking.IsNull() || plan.LiberalTCPTracking.IsUnknown()) {
+		body["liberal-tcp-tracking"] = client.FormatBool(plan.LiberalTCPTracking.ValueBool())
+	}
+	if !(plan.LooseTCPTracking.IsNull() || plan.LooseTCPTracking.IsUnknown()) {
+		body["loose-tcp-tracking"] = client.FormatBool(plan.LooseTCPTracking.ValueBool())
+	}
+	if !(plan.TCPCloseTimeout.IsNull() || plan.TCPCloseTimeout.IsUnknown()) {
+		body["tcp-close-timeout"] = plan.TCPCloseTimeout.ValueString()
+	}
+	if !(plan.TCPCloseWaitTimeout.IsNull() || plan.TCPCloseWaitTimeout.IsUnknown()) {
+		body["tcp-close-wait-timeout"] = plan.TCPCloseWaitTimeout.ValueString()
+	}
+	if !(plan.TCPEstablishedTimeout.IsNull() || plan.TCPEstablishedTimeout.IsUnknown()) {
+		body["tcp-established-timeout"] = plan.TCPEstablishedTimeout.ValueString()
+	}
+	if !(plan.TCPFinWaitTimeout.IsNull() || plan.TCPFinWaitTimeout.IsUnknown()) {
+		body["tcp-fin-wait-timeout"] = plan.TCPFinWaitTimeout.ValueString()
+	}
+	if !(plan.TCPLastAckTimeout.IsNull() || plan.TCPLastAckTimeout.IsUnknown()) {
+		body["tcp-last-ack-timeout"] = plan.TCPLastAckTimeout.ValueString()
+	}
+	if !(plan.TCPMaxRetransTimeout.IsNull() || plan.TCPMaxRetransTimeout.IsUnknown()) {
+		body["tcp-max-retrans-timeout"] = plan.TCPMaxRetransTimeout.ValueString()
+	}
+	if !(plan.TCPSynReceivedTimeout.IsNull() || plan.TCPSynReceivedTimeout.IsUnknown()) {
+		body["tcp-syn-received-timeout"] = plan.TCPSynReceivedTimeout.ValueString()
+	}
+	if !(plan.TCPSynSentTimeout.IsNull() || plan.TCPSynSentTimeout.IsUnknown()) {
+		body["tcp-syn-sent-timeout"] = plan.TCPSynSentTimeout.ValueString()
+	}
+	if !(plan.TCPTimeWaitTimeout.IsNull() || plan.TCPTimeWaitTimeout.IsUnknown()) {
+		body["tcp-time-wait-timeout"] = plan.TCPTimeWaitTimeout.ValueString()
+	}
+	if !(plan.TCPUnackedTimeout.IsNull() || plan.TCPUnackedTimeout.IsUnknown()) {
+		body["tcp-unacked-timeout"] = plan.TCPUnackedTimeout.ValueString()
+	}
+	if !(plan.UDPStreamTimeout.IsNull() || plan.UDPStreamTimeout.IsUnknown()) {
+		body["udp-stream-timeout"] = plan.UDPStreamTimeout.ValueString()
+	}
+	if !(plan.UDPTimeout.IsNull() || plan.UDPTimeout.IsUnknown()) {
+		body["udp-timeout"] = plan.UDPTimeout.ValueString()
+	}
+	obj, err := c.SetSingleton(ctx, "/ip/firewall/connection/tracking", body)
+	if err != nil {
+		diags.AddError("Upsert /ip/firewall/connection/tracking failed", err.Error())
+		return
+	}
+	iPFirewallConnectionTrackingApply(ctx, obj, plan)
+	plan.ID = types.StringValue(stateIDFor("/ip/firewall/connection/tracking", plan.Router))
+}
+
+func iPFirewallConnectionTrackingApply(ctx context.Context, obj client.Object, m *IPFirewallConnectionTrackingModel) {
+	_ = ctx
+	if v, ok := obj["active-ipv4"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.ActiveIpv4 = types.BoolValue(b)
+		} else {
+			m.ActiveIpv4 = types.BoolNull()
+		}
+	}
+	if v, ok := obj["active-ipv6"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.ActiveIPV6 = types.BoolValue(b)
+		} else {
+			m.ActiveIPV6 = types.BoolNull()
+		}
+	}
+	if v, ok := obj["enabled"]; ok {
+		_ = v
+		if v != "" {
+			m.Enabled = types.StringValue(v)
+		} else {
+			m.Enabled = types.StringNull()
+		}
+	}
+	if v, ok := obj["generic-timeout"]; ok {
+		_ = v
+		if v != "" {
+			m.GenericTimeout = types.StringValue(v)
+		} else {
+			m.GenericTimeout = types.StringNull()
+		}
+	}
+	if v, ok := obj["icmp-timeout"]; ok {
+		_ = v
+		if v != "" {
+			m.IcmpTimeout = types.StringValue(v)
+		} else {
+			m.IcmpTimeout = types.StringNull()
+		}
+	}
+	if v, ok := obj["liberal-tcp-tracking"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.LiberalTCPTracking = types.BoolValue(b)
+		} else {
+			m.LiberalTCPTracking = types.BoolNull()
+		}
+	}
+	if v, ok := obj["loose-tcp-tracking"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.LooseTCPTracking = types.BoolValue(b)
+		} else {
+			m.LooseTCPTracking = types.BoolNull()
+		}
+	}
+	if v, ok := obj["max-entries"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.MaxEntries = types.Int64Value(n)
+		} else {
+			m.MaxEntries = types.Int64Null()
+		}
+	}
+	if v, ok := obj["tcp-close-timeout"]; ok {
+		_ = v
+		if v != "" {
+			m.TCPCloseTimeout = types.StringValue(v)
+		} else {
+			m.TCPCloseTimeout = types.StringNull()
+		}
+	}
+	if v, ok := obj["tcp-close-wait-timeout"]; ok {
+		_ = v
+		if v != "" {
+			m.TCPCloseWaitTimeout = types.StringValue(v)
+		} else {
+			m.TCPCloseWaitTimeout = types.StringNull()
+		}
+	}
+	if v, ok := obj["tcp-established-timeout"]; ok {
+		_ = v
+		if v != "" {
+			m.TCPEstablishedTimeout = types.StringValue(v)
+		} else {
+			m.TCPEstablishedTimeout = types.StringNull()
+		}
+	}
+	if v, ok := obj["tcp-fin-wait-timeout"]; ok {
+		_ = v
+		if v != "" {
+			m.TCPFinWaitTimeout = types.StringValue(v)
+		} else {
+			m.TCPFinWaitTimeout = types.StringNull()
+		}
+	}
+	if v, ok := obj["tcp-last-ack-timeout"]; ok {
+		_ = v
+		if v != "" {
+			m.TCPLastAckTimeout = types.StringValue(v)
+		} else {
+			m.TCPLastAckTimeout = types.StringNull()
+		}
+	}
+	if v, ok := obj["tcp-max-retrans-timeout"]; ok {
+		_ = v
+		if v != "" {
+			m.TCPMaxRetransTimeout = types.StringValue(v)
+		} else {
+			m.TCPMaxRetransTimeout = types.StringNull()
+		}
+	}
+	if v, ok := obj["tcp-syn-received-timeout"]; ok {
+		_ = v
+		if v != "" {
+			m.TCPSynReceivedTimeout = types.StringValue(v)
+		} else {
+			m.TCPSynReceivedTimeout = types.StringNull()
+		}
+	}
+	if v, ok := obj["tcp-syn-sent-timeout"]; ok {
+		_ = v
+		if v != "" {
+			m.TCPSynSentTimeout = types.StringValue(v)
+		} else {
+			m.TCPSynSentTimeout = types.StringNull()
+		}
+	}
+	if v, ok := obj["tcp-time-wait-timeout"]; ok {
+		_ = v
+		if v != "" {
+			m.TCPTimeWaitTimeout = types.StringValue(v)
+		} else {
+			m.TCPTimeWaitTimeout = types.StringNull()
+		}
+	}
+	if v, ok := obj["tcp-unacked-timeout"]; ok {
+		_ = v
+		if v != "" {
+			m.TCPUnackedTimeout = types.StringValue(v)
+		} else {
+			m.TCPUnackedTimeout = types.StringNull()
+		}
+	}
+	if v, ok := obj["total-entries"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.TotalEntries = types.Int64Value(n)
+		} else {
+			m.TotalEntries = types.Int64Null()
+		}
+	}
+	if v, ok := obj["total-ip4-entries"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.TotalIp4Entries = types.Int64Value(n)
+		} else {
+			m.TotalIp4Entries = types.Int64Null()
+		}
+	}
+	if v, ok := obj["total-ip6-entries"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.TotalIp6Entries = types.Int64Value(n)
+		} else {
+			m.TotalIp6Entries = types.Int64Null()
+		}
+	}
+	if v, ok := obj["udp-stream-timeout"]; ok {
+		_ = v
+		if v != "" {
+			m.UDPStreamTimeout = types.StringValue(v)
+		} else {
+			m.UDPStreamTimeout = types.StringNull()
+		}
+	}
+	if v, ok := obj["udp-timeout"]; ok {
+		_ = v
+		if v != "" {
+			m.UDPTimeout = types.StringValue(v)
+		} else {
+			m.UDPTimeout = types.StringNull()
+		}
+	}
+}

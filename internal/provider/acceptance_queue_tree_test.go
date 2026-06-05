@@ -1,0 +1,45 @@
+//go:build acceptance
+
+package provider
+
+import (
+	"os"
+	"testing"
+
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+)
+
+func TestAccQueueTree(t *testing.T) {
+	if os.Getenv("TF_ACC") == "" || os.Getenv("ROUTEROS_HOST") == "" {
+		t.Skip("TF_ACC and ROUTEROS_HOST required")
+	}
+	cfg := `
+provider "routeros" {
+  routers = {
+    home = {
+      host     = "%s"
+      username = "%s"
+      password = "%s"
+      insecure = true
+    }
+  }
+}
+
+data "routeros_interface" "all" { router = "home" }
+
+resource "routeros_queue_tree" "acc" {
+  router = "home"
+  name = "tf-example"
+  parent = data.routeros_interface.all.records[0].name
+}
+`
+	cfg = formatProviderCfg(cfg)
+	resource.Test(t, resource.TestCase{
+		ProtoV6ProviderFactories: testAccProviderFactories,
+		Steps: []resource.TestStep{
+			{Config: cfg, Check: resource.ComposeTestCheckFunc(
+				resource.TestCheckResourceAttrSet("routeros_queue_tree.acc", "id"),
+			)},
+		},
+	})
+}

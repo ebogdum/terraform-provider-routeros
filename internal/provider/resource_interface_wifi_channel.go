@@ -1,0 +1,453 @@
+package provider
+
+import (
+	"context"
+	"fmt"
+	"strings"
+
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
+)
+
+var (
+	_ resource.Resource                = &InterfaceWifiChannelResource{}
+	_ resource.ResourceWithImportState = &InterfaceWifiChannelResource{}
+	_                                  = attr.Value(nil)
+	_                                  = strings.TrimSpace
+	_                                  = path.Root
+)
+
+type InterfaceWifiChannelResource struct {
+	reg *client.Registry
+}
+
+type InterfaceWifiChannelModel struct {
+	ID                 types.String `tfsdk:"id"`
+	Band               types.String `tfsdk:"band"`
+	ChannelWidth       types.String `tfsdk:"channel_width"`
+	Comment            types.String `tfsdk:"comment"`
+	DeprioritizeUnii34 types.String `tfsdk:"deprioritize_unii_3_4"`
+	Disabled           types.Bool   `tfsdk:"disabled"`
+	Frequency          types.String `tfsdk:"frequency"`
+	Name               types.String `tfsdk:"name"`
+	ReselectInterval   types.String `tfsdk:"reselect_interval"`
+	ReselectTime       types.String `tfsdk:"reselect_time"`
+	SecondaryFrequency types.String `tfsdk:"secondary_frequency"`
+	SkipDfsChannels    types.String `tfsdk:"skip_dfs_channels"`
+	Router             types.String `tfsdk:"router"`
+}
+
+func NewInterfaceWifiChannelResource() resource.Resource { return &InterfaceWifiChannelResource{} }
+
+func (r *InterfaceWifiChannelResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_interface_wifi_channel"
+}
+
+func (r *InterfaceWifiChannelResource) Configure(_ context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+	reg, diags := configureRegistry(req.ProviderData)
+	resp.Diagnostics.Append(diags...)
+	if reg != nil {
+		r.reg = reg
+	}
+	_ = fmt.Sprintf
+}
+
+func (r *InterfaceWifiChannelResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+	resp.Schema = schema.Schema{
+		Description: "Mirrors RouterOS `/interface/wifi/channel`.",
+		Attributes: map[string]schema.Attribute{
+			"id": schema.StringAttribute{
+				Computed:      true,
+				Description:   "RouterOS internal .id.",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"band": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.OneOf([]string{"2ghz-b", "2ghz-only-g", "2ghz-b/g", "5ghz-a", "5ghz-only-n", "5ghz-a/n", "2ghz-only-n", "2ghz-b/g/n", "5ghz-a/n/ac", "5ghz-only-ac", "2ghz-g/n", "5ghz-n/ac", "2ghz-g", "2ghz-n", "2ghz-ax", "2ghz-be", "5ghz-n", "5ghz-ac", "5ghz-an", "5ghz-ax", "5ghz-be", "6ghz-ax", "6ghz-be"}...)},
+			},
+			"channel_width": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"comment": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "Free-form comment.",
+			},
+			"deprioritize_unii_3_4": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"disabled": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether the entry is disabled.",
+			},
+			"frequency": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"name": schema.StringAttribute{
+				Required:    true,
+				Description: "",
+			},
+			"reselect_interval": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"reselect_time": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"secondary_frequency": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"skip_dfs_channels": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"router": schema.StringAttribute{
+				Optional:    true,
+				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+			},
+		},
+	}
+}
+
+func (r *InterfaceWifiChannelResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan InterfaceWifiChannelModel
+	if diags := req.Plan.Get(ctx, &plan); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, plan.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	body := client.Object{}
+	if !(plan.Band.IsNull() || plan.Band.IsUnknown()) {
+		body["band"] = plan.Band.ValueString()
+	}
+	if !(plan.ChannelWidth.IsNull() || plan.ChannelWidth.IsUnknown()) {
+		body["channel-width"] = plan.ChannelWidth.ValueString()
+	}
+	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
+		body["comment"] = plan.Comment.ValueString()
+	}
+	if !(plan.DeprioritizeUnii34.IsNull() || plan.DeprioritizeUnii34.IsUnknown()) {
+		body["deprioritize-unii-3-4"] = plan.DeprioritizeUnii34.ValueString()
+	}
+	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
+		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !(plan.Frequency.IsNull() || plan.Frequency.IsUnknown()) {
+		body["frequency"] = plan.Frequency.ValueString()
+	}
+	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
+		body["name"] = plan.Name.ValueString()
+	}
+	if !(plan.ReselectInterval.IsNull() || plan.ReselectInterval.IsUnknown()) {
+		body["reselect-interval"] = plan.ReselectInterval.ValueString()
+	}
+	if !(plan.ReselectTime.IsNull() || plan.ReselectTime.IsUnknown()) {
+		body["reselect-time"] = plan.ReselectTime.ValueString()
+	}
+	if !(plan.SecondaryFrequency.IsNull() || plan.SecondaryFrequency.IsUnknown()) {
+		body["secondary-frequency"] = plan.SecondaryFrequency.ValueString()
+	}
+	if !(plan.SkipDfsChannels.IsNull() || plan.SkipDfsChannels.IsUnknown()) {
+		body["skip-dfs-channels"] = plan.SkipDfsChannels.ValueString()
+	}
+	obj, err := c.Add(ctx, "/interface/wifi/channel", body)
+	if err != nil {
+		resp.Diagnostics.AddError("Create /interface/wifi/channel failed", err.Error())
+		return
+	}
+	interfaceWifiChannelApply(ctx, obj, &plan)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+func (r *InterfaceWifiChannelResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state InterfaceWifiChannelModel
+	if diags := req.State.Get(ctx, &state); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, state.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	obj, err := c.GetByID(ctx, "/interface/wifi/channel", state.ID.ValueString())
+	if err != nil {
+		if client.IsNotFound(err) {
+			resp.State.RemoveResource(ctx)
+			return
+		}
+		resp.Diagnostics.AddError("Read /interface/wifi/channel failed", err.Error())
+		return
+	}
+	interfaceWifiChannelApply(ctx, obj, &state)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
+}
+
+func (r *InterfaceWifiChannelResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state InterfaceWifiChannelModel
+	if diags := req.Plan.Get(ctx, &plan); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	if diags := req.State.Get(ctx, &state); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, plan.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	body := client.Object{}
+	if !plan.Band.Equal(state.Band) {
+		body["band"] = plan.Band.ValueString()
+	}
+	if !plan.ChannelWidth.Equal(state.ChannelWidth) {
+		body["channel-width"] = plan.ChannelWidth.ValueString()
+	}
+	if !plan.Comment.Equal(state.Comment) {
+		body["comment"] = plan.Comment.ValueString()
+	}
+	if !plan.DeprioritizeUnii34.Equal(state.DeprioritizeUnii34) {
+		body["deprioritize-unii-3-4"] = plan.DeprioritizeUnii34.ValueString()
+	}
+	if !plan.Disabled.Equal(state.Disabled) {
+		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !plan.Frequency.Equal(state.Frequency) {
+		body["frequency"] = plan.Frequency.ValueString()
+	}
+	if !plan.Name.Equal(state.Name) {
+		body["name"] = plan.Name.ValueString()
+	}
+	if !plan.ReselectInterval.Equal(state.ReselectInterval) {
+		body["reselect-interval"] = plan.ReselectInterval.ValueString()
+	}
+	if !plan.ReselectTime.Equal(state.ReselectTime) {
+		body["reselect-time"] = plan.ReselectTime.ValueString()
+	}
+	if !plan.SecondaryFrequency.Equal(state.SecondaryFrequency) {
+		body["secondary-frequency"] = plan.SecondaryFrequency.ValueString()
+	}
+	if !plan.SkipDfsChannels.Equal(state.SkipDfsChannels) {
+		body["skip-dfs-channels"] = plan.SkipDfsChannels.ValueString()
+	}
+	if len(body) > 0 {
+		obj, err := c.Set(ctx, "/interface/wifi/channel", state.ID.ValueString(), body)
+		if err != nil {
+			resp.Diagnostics.AddError("Update /interface/wifi/channel failed", err.Error())
+			return
+		}
+		interfaceWifiChannelApply(ctx, obj, &plan)
+	} else {
+		plan.ID = state.ID
+	}
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+func (r *InterfaceWifiChannelResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state InterfaceWifiChannelModel
+	if diags := req.State.Get(ctx, &state); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, state.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	if err := c.Remove(ctx, "/interface/wifi/channel", state.ID.ValueString()); err != nil {
+		resp.Diagnostics.AddError("Delete /interface/wifi/channel failed", err.Error())
+	}
+}
+
+func (r *InterfaceWifiChannelResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	// Import formats accepted:
+	//   *<id>                            -> bare RouterOS .id on the default router
+	//   <router>/*<id>                   -> .id on the named router
+	//   <router>/<naturalkey>            -> resolved via List + filter
+	//   <naturalkey>                     -> resolved on the default router
+	id := req.ID
+	routerName := ""
+	if i := strings.Index(id, "/"); i > 0 && !strings.HasPrefix(id, "*") {
+		routerName, id = id[:i], id[i+1:]
+	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("router"), types.StringValue(routerName))...)
+	if strings.HasPrefix(id, "*") {
+		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(id))...)
+		return
+	}
+	c := pickClient(r.reg, types.StringValue(routerName), &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	rows, err := interfaceWifiChannelLookupByNaturalKey(ctx, c, id)
+	if err != nil {
+		resp.Diagnostics.AddError("Import lookup failed", err.Error())
+		return
+	}
+	if len(rows) == 0 {
+		resp.Diagnostics.AddError("Import not found", fmt.Sprintf("no /interface/wifi/channel matches %q", id))
+		return
+	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(rows[0][".id"]))...)
+}
+
+// interfaceWifiChannelLookupByNaturalKey searches for a record whose natural
+// keys match id. The strategy: try every key declared in the schema overlay's
+// natural_keys list (or fall back to "name") with equality matching.
+func interfaceWifiChannelLookupByNaturalKey(ctx context.Context, c *client.Client, id string) ([]client.Object, error) {
+	keys := []string{}
+	if len(keys) == 0 {
+		keys = []string{"name"}
+	}
+	for _, k := range keys {
+		rows, err := c.List(ctx, "/interface/wifi/channel", client.WithFilter(k, id))
+		if err != nil {
+			return nil, err
+		}
+		if len(rows) > 0 {
+			return rows, nil
+		}
+	}
+	return nil, nil
+}
+
+func interfaceWifiChannelApply(ctx context.Context, obj client.Object, m *InterfaceWifiChannelModel) {
+	_ = ctx
+	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["band"]; ok {
+		_ = v
+		if v != "" {
+			m.Band = types.StringValue(v)
+		} else {
+			m.Band = types.StringNull()
+		}
+	} else {
+		m.Band = types.StringNull()
+	}
+	if v, ok := obj["channel-width"]; ok {
+		_ = v
+		if v != "" {
+			m.ChannelWidth = types.StringValue(v)
+		} else {
+			m.ChannelWidth = types.StringNull()
+		}
+	} else {
+		m.ChannelWidth = types.StringNull()
+	}
+	if v, ok := obj["comment"]; ok {
+		_ = v
+		if v != "" {
+			m.Comment = types.StringValue(v)
+		} else {
+			m.Comment = types.StringNull()
+		}
+	} else {
+		m.Comment = types.StringNull()
+	}
+	if v, ok := obj["deprioritize-unii-3-4"]; ok {
+		_ = v
+		if v != "" {
+			m.DeprioritizeUnii34 = types.StringValue(v)
+		} else {
+			m.DeprioritizeUnii34 = types.StringNull()
+		}
+	} else {
+		m.DeprioritizeUnii34 = types.StringNull()
+	}
+	if v, ok := obj["disabled"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Disabled = types.BoolValue(b)
+		} else {
+			m.Disabled = types.BoolNull()
+		}
+	} else {
+		m.Disabled = types.BoolNull()
+	}
+	if v, ok := obj["frequency"]; ok {
+		_ = v
+		if v != "" {
+			m.Frequency = types.StringValue(v)
+		} else {
+			m.Frequency = types.StringNull()
+		}
+	} else {
+		m.Frequency = types.StringNull()
+	}
+	if v, ok := obj["name"]; ok {
+		_ = v
+		if v != "" {
+			m.Name = types.StringValue(v)
+		} else {
+			m.Name = types.StringNull()
+		}
+	} else {
+		m.Name = types.StringNull()
+	}
+	if v, ok := obj["reselect-interval"]; ok {
+		_ = v
+		if v != "" {
+			m.ReselectInterval = types.StringValue(v)
+		} else {
+			m.ReselectInterval = types.StringNull()
+		}
+	} else {
+		m.ReselectInterval = types.StringNull()
+	}
+	if v, ok := obj["reselect-time"]; ok {
+		_ = v
+		if v != "" {
+			m.ReselectTime = types.StringValue(v)
+		} else {
+			m.ReselectTime = types.StringNull()
+		}
+	} else {
+		m.ReselectTime = types.StringNull()
+	}
+	if v, ok := obj["secondary-frequency"]; ok {
+		_ = v
+		if v != "" {
+			m.SecondaryFrequency = types.StringValue(v)
+		} else {
+			m.SecondaryFrequency = types.StringNull()
+		}
+	} else {
+		m.SecondaryFrequency = types.StringNull()
+	}
+	if v, ok := obj["skip-dfs-channels"]; ok {
+		_ = v
+		if v != "" {
+			m.SkipDfsChannels = types.StringValue(v)
+		} else {
+			m.SkipDfsChannels = types.StringNull()
+		}
+	} else {
+		m.SkipDfsChannels = types.StringNull()
+	}
+}

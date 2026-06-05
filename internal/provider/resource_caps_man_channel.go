@@ -1,0 +1,318 @@
+package provider
+
+import (
+	"context"
+	"fmt"
+	"strings"
+
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+)
+
+var (
+	_ resource.Resource                = &CapsManChannelResource{}
+	_ resource.ResourceWithImportState = &CapsManChannelResource{}
+	_                                  = attr.Value(nil)
+	_                                  = strings.TrimSpace
+	_                                  = path.Root
+)
+
+type CapsManChannelResource struct {
+	reg *client.Registry
+}
+
+type CapsManChannelModel struct {
+	ID        types.String `tfsdk:"id"`
+	Band      types.String `tfsdk:"band"`
+	Comment   types.String `tfsdk:"comment"`
+	Frequency types.String `tfsdk:"frequency"`
+	Name      types.String `tfsdk:"name"`
+	TxPower   types.String `tfsdk:"tx_power"`
+	Router    types.String `tfsdk:"router"`
+}
+
+func NewCapsManChannelResource() resource.Resource { return &CapsManChannelResource{} }
+
+func (r *CapsManChannelResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_caps_man_channel"
+}
+
+func (r *CapsManChannelResource) Configure(_ context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+	reg, diags := configureRegistry(req.ProviderData)
+	resp.Diagnostics.Append(diags...)
+	if reg != nil {
+		r.reg = reg
+	}
+	_ = fmt.Sprintf
+}
+
+func (r *CapsManChannelResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+	resp.Schema = schema.Schema{
+		Description: "Mirrors RouterOS `/caps-man/channel`.",
+		Attributes: map[string]schema.Attribute{
+			"id": schema.StringAttribute{
+				Computed:      true,
+				Description:   "RouterOS internal .id.",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"band": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"comment": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "Free-form comment.",
+			},
+			"frequency": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"name": schema.StringAttribute{
+				Required:    true,
+				Description: "",
+			},
+			"tx_power": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"router": schema.StringAttribute{
+				Optional:    true,
+				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+			},
+		},
+	}
+}
+
+func (r *CapsManChannelResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan CapsManChannelModel
+	if diags := req.Plan.Get(ctx, &plan); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, plan.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	body := client.Object{}
+	if !(plan.Band.IsNull() || plan.Band.IsUnknown()) {
+		body["band"] = plan.Band.ValueString()
+	}
+	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
+		body["comment"] = plan.Comment.ValueString()
+	}
+	if !(plan.Frequency.IsNull() || plan.Frequency.IsUnknown()) {
+		body["frequency"] = plan.Frequency.ValueString()
+	}
+	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
+		body["name"] = plan.Name.ValueString()
+	}
+	if !(plan.TxPower.IsNull() || plan.TxPower.IsUnknown()) {
+		body["tx-power"] = plan.TxPower.ValueString()
+	}
+	obj, err := c.Add(ctx, "/caps-man/channel", body)
+	if err != nil {
+		resp.Diagnostics.AddError("Create /caps-man/channel failed", err.Error())
+		return
+	}
+	capsManChannelApply(ctx, obj, &plan)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+func (r *CapsManChannelResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state CapsManChannelModel
+	if diags := req.State.Get(ctx, &state); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, state.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	obj, err := c.GetByID(ctx, "/caps-man/channel", state.ID.ValueString())
+	if err != nil {
+		if client.IsNotFound(err) {
+			resp.State.RemoveResource(ctx)
+			return
+		}
+		resp.Diagnostics.AddError("Read /caps-man/channel failed", err.Error())
+		return
+	}
+	capsManChannelApply(ctx, obj, &state)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
+}
+
+func (r *CapsManChannelResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state CapsManChannelModel
+	if diags := req.Plan.Get(ctx, &plan); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	if diags := req.State.Get(ctx, &state); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, plan.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	body := client.Object{}
+	if !plan.Band.Equal(state.Band) {
+		body["band"] = plan.Band.ValueString()
+	}
+	if !plan.Comment.Equal(state.Comment) {
+		body["comment"] = plan.Comment.ValueString()
+	}
+	if !plan.Frequency.Equal(state.Frequency) {
+		body["frequency"] = plan.Frequency.ValueString()
+	}
+	if !plan.Name.Equal(state.Name) {
+		body["name"] = plan.Name.ValueString()
+	}
+	if !plan.TxPower.Equal(state.TxPower) {
+		body["tx-power"] = plan.TxPower.ValueString()
+	}
+	if len(body) > 0 {
+		obj, err := c.Set(ctx, "/caps-man/channel", state.ID.ValueString(), body)
+		if err != nil {
+			resp.Diagnostics.AddError("Update /caps-man/channel failed", err.Error())
+			return
+		}
+		capsManChannelApply(ctx, obj, &plan)
+	} else {
+		plan.ID = state.ID
+	}
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+func (r *CapsManChannelResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state CapsManChannelModel
+	if diags := req.State.Get(ctx, &state); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, state.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	if err := c.Remove(ctx, "/caps-man/channel", state.ID.ValueString()); err != nil {
+		resp.Diagnostics.AddError("Delete /caps-man/channel failed", err.Error())
+	}
+}
+
+func (r *CapsManChannelResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	// Import formats accepted:
+	//   *<id>                            -> bare RouterOS .id on the default router
+	//   <router>/*<id>                   -> .id on the named router
+	//   <router>/<naturalkey>            -> resolved via List + filter
+	//   <naturalkey>                     -> resolved on the default router
+	id := req.ID
+	routerName := ""
+	if i := strings.Index(id, "/"); i > 0 && !strings.HasPrefix(id, "*") {
+		routerName, id = id[:i], id[i+1:]
+	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("router"), types.StringValue(routerName))...)
+	if strings.HasPrefix(id, "*") {
+		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(id))...)
+		return
+	}
+	c := pickClient(r.reg, types.StringValue(routerName), &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	rows, err := capsManChannelLookupByNaturalKey(ctx, c, id)
+	if err != nil {
+		resp.Diagnostics.AddError("Import lookup failed", err.Error())
+		return
+	}
+	if len(rows) == 0 {
+		resp.Diagnostics.AddError("Import not found", fmt.Sprintf("no /caps-man/channel matches %q", id))
+		return
+	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(rows[0][".id"]))...)
+}
+
+// capsManChannelLookupByNaturalKey searches for a record whose natural
+// keys match id. The strategy: try every key declared in the schema overlay's
+// natural_keys list (or fall back to "name") with equality matching.
+func capsManChannelLookupByNaturalKey(ctx context.Context, c *client.Client, id string) ([]client.Object, error) {
+	keys := []string{}
+	if len(keys) == 0 {
+		keys = []string{"name"}
+	}
+	for _, k := range keys {
+		rows, err := c.List(ctx, "/caps-man/channel", client.WithFilter(k, id))
+		if err != nil {
+			return nil, err
+		}
+		if len(rows) > 0 {
+			return rows, nil
+		}
+	}
+	return nil, nil
+}
+
+func capsManChannelApply(ctx context.Context, obj client.Object, m *CapsManChannelModel) {
+	_ = ctx
+	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["band"]; ok {
+		_ = v
+		if v != "" {
+			m.Band = types.StringValue(v)
+		} else {
+			m.Band = types.StringNull()
+		}
+	} else {
+		m.Band = types.StringNull()
+	}
+	if v, ok := obj["comment"]; ok {
+		_ = v
+		if v != "" {
+			m.Comment = types.StringValue(v)
+		} else {
+			m.Comment = types.StringNull()
+		}
+	} else {
+		m.Comment = types.StringNull()
+	}
+	if v, ok := obj["frequency"]; ok {
+		_ = v
+		if v != "" {
+			m.Frequency = types.StringValue(v)
+		} else {
+			m.Frequency = types.StringNull()
+		}
+	} else {
+		m.Frequency = types.StringNull()
+	}
+	if v, ok := obj["name"]; ok {
+		_ = v
+		if v != "" {
+			m.Name = types.StringValue(v)
+		} else {
+			m.Name = types.StringNull()
+		}
+	} else {
+		m.Name = types.StringNull()
+	}
+	if v, ok := obj["tx-power"]; ok {
+		_ = v
+		if v != "" {
+			m.TxPower = types.StringValue(v)
+		} else {
+			m.TxPower = types.StringNull()
+		}
+	} else {
+		m.TxPower = types.StringNull()
+	}
+}

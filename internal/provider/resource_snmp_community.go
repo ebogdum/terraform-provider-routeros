@@ -1,0 +1,483 @@
+package provider
+
+import (
+	"context"
+	"fmt"
+	"strings"
+
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
+)
+
+var (
+	_ resource.Resource                = &SNMPCommunityResource{}
+	_ resource.ResourceWithImportState = &SNMPCommunityResource{}
+	_                                  = attr.Value(nil)
+	_                                  = strings.TrimSpace
+	_                                  = path.Root
+)
+
+type SNMPCommunityResource struct {
+	reg *client.Registry
+}
+
+type SNMPCommunityModel struct {
+	ID                     types.String `tfsdk:"id"`
+	Addresses              types.String `tfsdk:"addresses"`
+	AuthenticationPassword types.String `tfsdk:"authentication_password"`
+	AuthenticationProtocol types.String `tfsdk:"authentication_protocol"`
+	Comment                types.String `tfsdk:"comment"`
+	Default                types.Bool   `tfsdk:"default"`
+	Disabled               types.Bool   `tfsdk:"disabled"`
+	EncryptionPassword     types.String `tfsdk:"encryption_password"`
+	EncryptionProtocol     types.String `tfsdk:"encryption_protocol"`
+	Name                   types.String `tfsdk:"name"`
+	ReadAccess             types.Bool   `tfsdk:"read_access"`
+	Security               types.String `tfsdk:"security"`
+	WriteAccess            types.Bool   `tfsdk:"write_access"`
+	Router                 types.String `tfsdk:"router"`
+}
+
+func NewSNMPCommunityResource() resource.Resource { return &SNMPCommunityResource{} }
+
+func (r *SNMPCommunityResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_snmp_community"
+}
+
+func (r *SNMPCommunityResource) Configure(_ context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+	reg, diags := configureRegistry(req.ProviderData)
+	resp.Diagnostics.Append(diags...)
+	if reg != nil {
+		r.reg = reg
+	}
+	_ = fmt.Sprintf
+}
+
+func (r *SNMPCommunityResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+	resp.Schema = schema.Schema{
+		Description: "Mirrors RouterOS `/snmp/community`.",
+		Attributes: map[string]schema.Attribute{
+			"id": schema.StringAttribute{
+				Computed:      true,
+				Description:   "RouterOS internal .id.",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"addresses": schema.StringAttribute{
+				Optional:      true,
+				Computed:      true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsCIDR()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeCIDR()},
+			},
+			"authentication_password": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Sensitive:   true,
+				Description: "",
+			},
+			"authentication_protocol": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.OneOf([]string{"md5", "sha1"}...)},
+			},
+			"comment": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "Free-form comment.",
+			},
+			"default": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"disabled": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"encryption_password": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Sensitive:   true,
+				Description: "",
+			},
+			"encryption_protocol": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.OneOf([]string{"des", "aes"}...)},
+			},
+			"name": schema.StringAttribute{
+				Required:    true,
+				Description: "",
+			},
+			"read_access": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"security": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.OneOf([]string{"none", "authorized", "private"}...)},
+			},
+			"write_access": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"router": schema.StringAttribute{
+				Optional:    true,
+				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+			},
+		},
+	}
+}
+
+func (r *SNMPCommunityResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan SNMPCommunityModel
+	if diags := req.Plan.Get(ctx, &plan); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, plan.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	body := client.Object{}
+	if !(plan.Addresses.IsNull() || plan.Addresses.IsUnknown()) {
+		body["addresses"] = plan.Addresses.ValueString()
+	}
+	if !(plan.AuthenticationPassword.IsNull() || plan.AuthenticationPassword.IsUnknown()) {
+		body["authentication-password"] = plan.AuthenticationPassword.ValueString()
+	}
+	if !(plan.AuthenticationProtocol.IsNull() || plan.AuthenticationProtocol.IsUnknown()) {
+		body["authentication-protocol"] = plan.AuthenticationProtocol.ValueString()
+	}
+	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
+		body["comment"] = plan.Comment.ValueString()
+	}
+	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
+		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !(plan.EncryptionPassword.IsNull() || plan.EncryptionPassword.IsUnknown()) {
+		body["encryption-password"] = plan.EncryptionPassword.ValueString()
+	}
+	if !(plan.EncryptionProtocol.IsNull() || plan.EncryptionProtocol.IsUnknown()) {
+		body["encryption-protocol"] = plan.EncryptionProtocol.ValueString()
+	}
+	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
+		body["name"] = plan.Name.ValueString()
+	}
+	if !(plan.ReadAccess.IsNull() || plan.ReadAccess.IsUnknown()) {
+		body["read-access"] = client.FormatBool(plan.ReadAccess.ValueBool())
+	}
+	if !(plan.Security.IsNull() || plan.Security.IsUnknown()) {
+		body["security"] = plan.Security.ValueString()
+	}
+	if !(plan.WriteAccess.IsNull() || plan.WriteAccess.IsUnknown()) {
+		body["write-access"] = client.FormatBool(plan.WriteAccess.ValueBool())
+	}
+	obj, err := c.Add(ctx, "/snmp/community", body)
+	if err != nil {
+		resp.Diagnostics.AddError("Create /snmp/community failed", err.Error())
+		return
+	}
+	sNMPCommunityApply(ctx, obj, &plan)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+func (r *SNMPCommunityResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state SNMPCommunityModel
+	if diags := req.State.Get(ctx, &state); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, state.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	obj, err := c.GetByID(ctx, "/snmp/community", state.ID.ValueString())
+	if err != nil {
+		if client.IsNotFound(err) {
+			resp.State.RemoveResource(ctx)
+			return
+		}
+		resp.Diagnostics.AddError("Read /snmp/community failed", err.Error())
+		return
+	}
+	sNMPCommunityApply(ctx, obj, &state)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
+}
+
+func (r *SNMPCommunityResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state SNMPCommunityModel
+	if diags := req.Plan.Get(ctx, &plan); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	if diags := req.State.Get(ctx, &state); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, plan.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	body := client.Object{}
+	if !plan.Addresses.Equal(state.Addresses) {
+		body["addresses"] = plan.Addresses.ValueString()
+	}
+	if !plan.AuthenticationPassword.Equal(state.AuthenticationPassword) {
+		body["authentication-password"] = plan.AuthenticationPassword.ValueString()
+	}
+	if !plan.AuthenticationProtocol.Equal(state.AuthenticationProtocol) {
+		body["authentication-protocol"] = plan.AuthenticationProtocol.ValueString()
+	}
+	if !plan.Comment.Equal(state.Comment) {
+		body["comment"] = plan.Comment.ValueString()
+	}
+	if !plan.Disabled.Equal(state.Disabled) {
+		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !plan.EncryptionPassword.Equal(state.EncryptionPassword) {
+		body["encryption-password"] = plan.EncryptionPassword.ValueString()
+	}
+	if !plan.EncryptionProtocol.Equal(state.EncryptionProtocol) {
+		body["encryption-protocol"] = plan.EncryptionProtocol.ValueString()
+	}
+	if !plan.Name.Equal(state.Name) {
+		body["name"] = plan.Name.ValueString()
+	}
+	if !plan.ReadAccess.Equal(state.ReadAccess) {
+		body["read-access"] = client.FormatBool(plan.ReadAccess.ValueBool())
+	}
+	if !plan.Security.Equal(state.Security) {
+		body["security"] = plan.Security.ValueString()
+	}
+	if !plan.WriteAccess.Equal(state.WriteAccess) {
+		body["write-access"] = client.FormatBool(plan.WriteAccess.ValueBool())
+	}
+	if len(body) > 0 {
+		obj, err := c.Set(ctx, "/snmp/community", state.ID.ValueString(), body)
+		if err != nil {
+			resp.Diagnostics.AddError("Update /snmp/community failed", err.Error())
+			return
+		}
+		sNMPCommunityApply(ctx, obj, &plan)
+	} else {
+		plan.ID = state.ID
+	}
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+func (r *SNMPCommunityResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state SNMPCommunityModel
+	if diags := req.State.Get(ctx, &state); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, state.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	if err := c.Remove(ctx, "/snmp/community", state.ID.ValueString()); err != nil {
+		resp.Diagnostics.AddError("Delete /snmp/community failed", err.Error())
+	}
+}
+
+func (r *SNMPCommunityResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	// Import formats accepted:
+	//   *<id>                            -> bare RouterOS .id on the default router
+	//   <router>/*<id>                   -> .id on the named router
+	//   <router>/<naturalkey>            -> resolved via List + filter
+	//   <naturalkey>                     -> resolved on the default router
+	id := req.ID
+	routerName := ""
+	if i := strings.Index(id, "/"); i > 0 && !strings.HasPrefix(id, "*") {
+		routerName, id = id[:i], id[i+1:]
+	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("router"), types.StringValue(routerName))...)
+	if strings.HasPrefix(id, "*") {
+		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(id))...)
+		return
+	}
+	c := pickClient(r.reg, types.StringValue(routerName), &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	rows, err := sNMPCommunityLookupByNaturalKey(ctx, c, id)
+	if err != nil {
+		resp.Diagnostics.AddError("Import lookup failed", err.Error())
+		return
+	}
+	if len(rows) == 0 {
+		resp.Diagnostics.AddError("Import not found", fmt.Sprintf("no /snmp/community matches %q", id))
+		return
+	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(rows[0][".id"]))...)
+}
+
+// sNMPCommunityLookupByNaturalKey searches for a record whose natural
+// keys match id. The strategy: try every key declared in the schema overlay's
+// natural_keys list (or fall back to "name") with equality matching.
+func sNMPCommunityLookupByNaturalKey(ctx context.Context, c *client.Client, id string) ([]client.Object, error) {
+	keys := []string{}
+	if len(keys) == 0 {
+		keys = []string{"name"}
+	}
+	for _, k := range keys {
+		rows, err := c.List(ctx, "/snmp/community", client.WithFilter(k, id))
+		if err != nil {
+			return nil, err
+		}
+		if len(rows) > 0 {
+			return rows, nil
+		}
+	}
+	return nil, nil
+}
+
+func sNMPCommunityApply(ctx context.Context, obj client.Object, m *SNMPCommunityModel) {
+	_ = ctx
+	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["addresses"]; ok {
+		_ = v
+		if v != "" {
+			m.Addresses = types.StringValue(v)
+		} else {
+			m.Addresses = types.StringNull()
+		}
+	} else {
+		m.Addresses = types.StringNull()
+	}
+	// Sensitive: RouterOS scrubs the value on read. If the server returned
+	// a value, decode it. Otherwise the plan value (user input) is what's
+	// in m.AuthenticationPassword already -- but if the user left it unset, resolve
+	// the unknown to null so the framework accepts the state.
+	if v, ok := obj["authentication-password"]; ok && v != "" {
+		_ = v
+		if v != "" {
+			m.AuthenticationPassword = types.StringValue(v)
+		} else {
+			m.AuthenticationPassword = types.StringNull()
+		}
+	} else if m.AuthenticationPassword.IsUnknown() {
+		m.AuthenticationPassword = types.StringNull()
+	}
+	if v, ok := obj["authentication-protocol"]; ok {
+		_ = v
+		if v != "" {
+			m.AuthenticationProtocol = types.StringValue(v)
+		} else {
+			m.AuthenticationProtocol = types.StringNull()
+		}
+	} else {
+		m.AuthenticationProtocol = types.StringNull()
+	}
+	if v, ok := obj["comment"]; ok {
+		_ = v
+		if v != "" {
+			m.Comment = types.StringValue(v)
+		} else {
+			m.Comment = types.StringNull()
+		}
+	} else {
+		m.Comment = types.StringNull()
+	}
+	if v, ok := obj["default"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Default = types.BoolValue(b)
+		} else {
+			m.Default = types.BoolNull()
+		}
+	} else {
+		m.Default = types.BoolNull()
+	}
+	if v, ok := obj["disabled"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Disabled = types.BoolValue(b)
+		} else {
+			m.Disabled = types.BoolNull()
+		}
+	} else {
+		m.Disabled = types.BoolNull()
+	}
+	// Sensitive: RouterOS scrubs the value on read. If the server returned
+	// a value, decode it. Otherwise the plan value (user input) is what's
+	// in m.EncryptionPassword already -- but if the user left it unset, resolve
+	// the unknown to null so the framework accepts the state.
+	if v, ok := obj["encryption-password"]; ok && v != "" {
+		_ = v
+		if v != "" {
+			m.EncryptionPassword = types.StringValue(v)
+		} else {
+			m.EncryptionPassword = types.StringNull()
+		}
+	} else if m.EncryptionPassword.IsUnknown() {
+		m.EncryptionPassword = types.StringNull()
+	}
+	if v, ok := obj["encryption-protocol"]; ok {
+		_ = v
+		if v != "" {
+			m.EncryptionProtocol = types.StringValue(v)
+		} else {
+			m.EncryptionProtocol = types.StringNull()
+		}
+	} else {
+		m.EncryptionProtocol = types.StringNull()
+	}
+	if v, ok := obj["name"]; ok {
+		_ = v
+		if v != "" {
+			m.Name = types.StringValue(v)
+		} else {
+			m.Name = types.StringNull()
+		}
+	} else {
+		m.Name = types.StringNull()
+	}
+	if v, ok := obj["read-access"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.ReadAccess = types.BoolValue(b)
+		} else {
+			m.ReadAccess = types.BoolNull()
+		}
+	} else {
+		m.ReadAccess = types.BoolNull()
+	}
+	if v, ok := obj["security"]; ok {
+		_ = v
+		if v != "" {
+			m.Security = types.StringValue(v)
+		} else {
+			m.Security = types.StringNull()
+		}
+	} else {
+		m.Security = types.StringNull()
+	}
+	if v, ok := obj["write-access"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.WriteAccess = types.BoolValue(b)
+		} else {
+			m.WriteAccess = types.BoolNull()
+		}
+	} else {
+		m.WriteAccess = types.BoolNull()
+	}
+}

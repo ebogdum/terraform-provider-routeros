@@ -1,0 +1,424 @@
+package provider
+
+import (
+	"context"
+	"fmt"
+	"strings"
+
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
+)
+
+var (
+	_ resource.Resource                = &UserSSHKeysResource{}
+	_ resource.ResourceWithImportState = &UserSSHKeysResource{}
+	_                                  = attr.Value(nil)
+	_                                  = strings.TrimSpace
+	_                                  = path.Root
+)
+
+type UserSSHKeysResource struct {
+	reg *client.Registry
+}
+
+type UserSSHKeysModel struct {
+	ID           types.String `tfsdk:"id"`
+	Bits         types.Int64  `tfsdk:"bits"`
+	Comment      types.String `tfsdk:"comment"`
+	Disabled     types.Bool   `tfsdk:"disabled"`
+	Fingerprint  types.String `tfsdk:"fingerprint"`
+	ImportSSHKey types.String `tfsdk:"import_ssh_key"`
+	Info         types.String `tfsdk:"info"`
+	Key          types.String `tfsdk:"key"`
+	KeyType      types.String `tfsdk:"key_type"`
+	Newk         types.String `tfsdk:"newk"`
+	Oldk         types.String `tfsdk:"oldk"`
+	User         types.String `tfsdk:"user"`
+	Router       types.String `tfsdk:"router"`
+}
+
+func NewUserSSHKeysResource() resource.Resource { return &UserSSHKeysResource{} }
+
+func (r *UserSSHKeysResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_user_ssh_keys"
+}
+
+func (r *UserSSHKeysResource) Configure(_ context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+	reg, diags := configureRegistry(req.ProviderData)
+	resp.Diagnostics.Append(diags...)
+	if reg != nil {
+		r.reg = reg
+	}
+	_ = fmt.Sprintf
+}
+
+func (r *UserSSHKeysResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+	resp.Schema = schema.Schema{
+		Description: "SSH key import requires a real key file already uploaded to /file. Skipped from automated acc tests.",
+		Attributes: map[string]schema.Attribute{
+			"id": schema.StringAttribute{
+				Computed:      true,
+				Description:   "RouterOS internal .id.",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"bits": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"comment": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "Free-form comment.",
+			},
+			"disabled": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether the entry is disabled.",
+			},
+			"fingerprint": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"import_ssh_key": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"info": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"key": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"key_type": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.OneOf([]string{"rsa", "ed25519", "ed25519-sk"}...)},
+			},
+			"newk": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"oldk": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"user": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"router": schema.StringAttribute{
+				Optional:    true,
+				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+			},
+		},
+	}
+}
+
+func (r *UserSSHKeysResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan UserSSHKeysModel
+	if diags := req.Plan.Get(ctx, &plan); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, plan.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	body := client.Object{}
+	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
+		body["comment"] = plan.Comment.ValueString()
+	}
+	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
+		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !(plan.ImportSSHKey.IsNull() || plan.ImportSSHKey.IsUnknown()) {
+		body["import-ssh-key"] = plan.ImportSSHKey.ValueString()
+	}
+	if !(plan.Key.IsNull() || plan.Key.IsUnknown()) {
+		body["key"] = plan.Key.ValueString()
+	}
+	if !(plan.Newk.IsNull() || plan.Newk.IsUnknown()) {
+		body["newk"] = plan.Newk.ValueString()
+	}
+	if !(plan.Oldk.IsNull() || plan.Oldk.IsUnknown()) {
+		body["oldk"] = plan.Oldk.ValueString()
+	}
+	obj, err := c.Add(ctx, "/user/ssh-keys", body)
+	if err != nil {
+		resp.Diagnostics.AddError("Create /user/ssh-keys failed", err.Error())
+		return
+	}
+	userSSHKeysApply(ctx, obj, &plan)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+func (r *UserSSHKeysResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state UserSSHKeysModel
+	if diags := req.State.Get(ctx, &state); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, state.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	obj, err := c.GetByID(ctx, "/user/ssh-keys", state.ID.ValueString())
+	if err != nil {
+		if client.IsNotFound(err) {
+			resp.State.RemoveResource(ctx)
+			return
+		}
+		resp.Diagnostics.AddError("Read /user/ssh-keys failed", err.Error())
+		return
+	}
+	userSSHKeysApply(ctx, obj, &state)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
+}
+
+func (r *UserSSHKeysResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state UserSSHKeysModel
+	if diags := req.Plan.Get(ctx, &plan); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	if diags := req.State.Get(ctx, &state); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, plan.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	body := client.Object{}
+	if !plan.Comment.Equal(state.Comment) {
+		body["comment"] = plan.Comment.ValueString()
+	}
+	if !plan.Disabled.Equal(state.Disabled) {
+		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !plan.ImportSSHKey.Equal(state.ImportSSHKey) {
+		body["import-ssh-key"] = plan.ImportSSHKey.ValueString()
+	}
+	if !plan.Key.Equal(state.Key) {
+		body["key"] = plan.Key.ValueString()
+	}
+	if !plan.Newk.Equal(state.Newk) {
+		body["newk"] = plan.Newk.ValueString()
+	}
+	if !plan.Oldk.Equal(state.Oldk) {
+		body["oldk"] = plan.Oldk.ValueString()
+	}
+	if len(body) > 0 {
+		obj, err := c.Set(ctx, "/user/ssh-keys", state.ID.ValueString(), body)
+		if err != nil {
+			resp.Diagnostics.AddError("Update /user/ssh-keys failed", err.Error())
+			return
+		}
+		userSSHKeysApply(ctx, obj, &plan)
+	} else {
+		plan.ID = state.ID
+	}
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+func (r *UserSSHKeysResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state UserSSHKeysModel
+	if diags := req.State.Get(ctx, &state); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, state.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	if err := c.Remove(ctx, "/user/ssh-keys", state.ID.ValueString()); err != nil {
+		resp.Diagnostics.AddError("Delete /user/ssh-keys failed", err.Error())
+	}
+}
+
+func (r *UserSSHKeysResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	// Import formats accepted:
+	//   *<id>                            -> bare RouterOS .id on the default router
+	//   <router>/*<id>                   -> .id on the named router
+	//   <router>/<naturalkey>            -> resolved via List + filter
+	//   <naturalkey>                     -> resolved on the default router
+	id := req.ID
+	routerName := ""
+	if i := strings.Index(id, "/"); i > 0 && !strings.HasPrefix(id, "*") {
+		routerName, id = id[:i], id[i+1:]
+	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("router"), types.StringValue(routerName))...)
+	if strings.HasPrefix(id, "*") {
+		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(id))...)
+		return
+	}
+	c := pickClient(r.reg, types.StringValue(routerName), &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	rows, err := userSSHKeysLookupByNaturalKey(ctx, c, id)
+	if err != nil {
+		resp.Diagnostics.AddError("Import lookup failed", err.Error())
+		return
+	}
+	if len(rows) == 0 {
+		resp.Diagnostics.AddError("Import not found", fmt.Sprintf("no /user/ssh-keys matches %q", id))
+		return
+	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(rows[0][".id"]))...)
+}
+
+// userSSHKeysLookupByNaturalKey searches for a record whose natural
+// keys match id. The strategy: try every key declared in the schema overlay's
+// natural_keys list (or fall back to "name") with equality matching.
+func userSSHKeysLookupByNaturalKey(ctx context.Context, c *client.Client, id string) ([]client.Object, error) {
+	keys := []string{}
+	if len(keys) == 0 {
+		keys = []string{"name"}
+	}
+	for _, k := range keys {
+		rows, err := c.List(ctx, "/user/ssh-keys", client.WithFilter(k, id))
+		if err != nil {
+			return nil, err
+		}
+		if len(rows) > 0 {
+			return rows, nil
+		}
+	}
+	return nil, nil
+}
+
+func userSSHKeysApply(ctx context.Context, obj client.Object, m *UserSSHKeysModel) {
+	_ = ctx
+	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["bits"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.Bits = types.Int64Value(n)
+		} else {
+			m.Bits = types.Int64Null()
+		}
+	} else {
+		m.Bits = types.Int64Null()
+	}
+	if v, ok := obj["comment"]; ok {
+		_ = v
+		if v != "" {
+			m.Comment = types.StringValue(v)
+		} else {
+			m.Comment = types.StringNull()
+		}
+	} else {
+		m.Comment = types.StringNull()
+	}
+	if v, ok := obj["disabled"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Disabled = types.BoolValue(b)
+		} else {
+			m.Disabled = types.BoolNull()
+		}
+	} else {
+		m.Disabled = types.BoolNull()
+	}
+	if v, ok := obj["fingerprint"]; ok {
+		_ = v
+		if v != "" {
+			m.Fingerprint = types.StringValue(v)
+		} else {
+			m.Fingerprint = types.StringNull()
+		}
+	} else {
+		m.Fingerprint = types.StringNull()
+	}
+	if v, ok := obj["import-ssh-key"]; ok {
+		_ = v
+		if v != "" {
+			m.ImportSSHKey = types.StringValue(v)
+		} else {
+			m.ImportSSHKey = types.StringNull()
+		}
+	} else {
+		m.ImportSSHKey = types.StringNull()
+	}
+	if v, ok := obj["info"]; ok {
+		_ = v
+		if v != "" {
+			m.Info = types.StringValue(v)
+		} else {
+			m.Info = types.StringNull()
+		}
+	} else {
+		m.Info = types.StringNull()
+	}
+	if v, ok := obj["key"]; ok {
+		_ = v
+		if v != "" {
+			m.Key = types.StringValue(v)
+		} else {
+			m.Key = types.StringNull()
+		}
+	} else {
+		m.Key = types.StringNull()
+	}
+	if v, ok := obj["key-type"]; ok {
+		_ = v
+		if v != "" {
+			m.KeyType = types.StringValue(v)
+		} else {
+			m.KeyType = types.StringNull()
+		}
+	} else {
+		m.KeyType = types.StringNull()
+	}
+	if v, ok := obj["newk"]; ok {
+		_ = v
+		if v != "" {
+			m.Newk = types.StringValue(v)
+		} else {
+			m.Newk = types.StringNull()
+		}
+	} else {
+		m.Newk = types.StringNull()
+	}
+	if v, ok := obj["oldk"]; ok {
+		_ = v
+		if v != "" {
+			m.Oldk = types.StringValue(v)
+		} else {
+			m.Oldk = types.StringNull()
+		}
+	} else {
+		m.Oldk = types.StringNull()
+	}
+	if v, ok := obj["user"]; ok {
+		_ = v
+		if v != "" {
+			m.User = types.StringValue(v)
+		} else {
+			m.User = types.StringNull()
+		}
+	} else {
+		m.User = types.StringNull()
+	}
+}

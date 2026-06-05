@@ -1,0 +1,535 @@
+package provider
+
+import (
+	"context"
+	"fmt"
+	"strings"
+
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
+)
+
+var (
+	_ resource.Resource                = &IPIpsecProfileResource{}
+	_ resource.ResourceWithImportState = &IPIpsecProfileResource{}
+	_                                  = attr.Value(nil)
+	_                                  = strings.TrimSpace
+	_                                  = path.Root
+)
+
+type IPIpsecProfileResource struct {
+	reg *client.Registry
+}
+
+type IPIpsecProfileModel struct {
+	ID                  types.String `tfsdk:"id"`
+	Default             types.Bool   `tfsdk:"default"`
+	DhGroup             types.List   `tfsdk:"dh_group"`
+	DpdInterval         types.String `tfsdk:"dpd_interval"`
+	DpdMaximumFailures  types.Int64  `tfsdk:"dpd_maximum_failures"`
+	EncAlgorithm        types.List   `tfsdk:"enc_algorithm"`
+	EncryptionAlgorithm types.String `tfsdk:"encryption_algorithm"`
+	HashAlgorithm       types.String `tfsdk:"hash_algorithm"`
+	HashAlgorithms      types.String `tfsdk:"hash_algorithms"`
+	Lifebytes           types.Int64  `tfsdk:"lifebytes"`
+	Lifetime            types.String `tfsdk:"lifetime"`
+	Name                types.String `tfsdk:"name"`
+	NATTraversal        types.Bool   `tfsdk:"nat_traversal"`
+	Ppk                 types.String `tfsdk:"ppk"`
+	PrfAlgorithms       types.String `tfsdk:"prf_algorithms"`
+	ProposalCheck       types.String `tfsdk:"proposal_check"`
+	Router              types.String `tfsdk:"router"`
+}
+
+func NewIPIpsecProfileResource() resource.Resource { return &IPIpsecProfileResource{} }
+
+func (r *IPIpsecProfileResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_ip_ipsec_profile"
+}
+
+func (r *IPIpsecProfileResource) Configure(_ context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+	reg, diags := configureRegistry(req.ProviderData)
+	resp.Diagnostics.Append(diags...)
+	if reg != nil {
+		r.reg = reg
+	}
+	_ = fmt.Sprintf
+}
+
+func (r *IPIpsecProfileResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+	resp.Schema = schema.Schema{
+		Description: "Mirrors RouterOS `/ip/ipsec/profile`.",
+		Attributes: map[string]schema.Attribute{
+			"id": schema.StringAttribute{
+				Computed:      true,
+				Description:   "RouterOS internal .id.",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"default": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"dh_group": schema.ListAttribute{
+				Optional:    true,
+				Computed:    true,
+				ElementType: types.StringType,
+				Description: "",
+			},
+			"dpd_interval": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.OneOf([]string{"disable-dpd"}...)},
+			},
+			"dpd_maximum_failures": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"enc_algorithm": schema.ListAttribute{
+				Optional:    true,
+				Computed:    true,
+				ElementType: types.StringType,
+				Description: "",
+			},
+			"encryption_algorithm": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"hash_algorithm": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"hash_algorithms": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.OneOf([]string{"md5", "sha1", "sha256", "sha384", "sha512"}...)},
+			},
+			"lifebytes": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"lifetime": schema.StringAttribute{
+				Optional:      true,
+				Computed:      true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			},
+			"name": schema.StringAttribute{
+				Required:    true,
+				Description: "",
+			},
+			"nat_traversal": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"ppk": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.OneOf([]string{"no", "psk", "qkd", "psk-ike-initial"}...)},
+			},
+			"prf_algorithms": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.OneOf([]string{"auto", "sha1", "sha256", "sha384", "sha512"}...)},
+			},
+			"proposal_check": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.OneOf([]string{"", "obey", "strict", "claim", "exact"}...)},
+			},
+			"router": schema.StringAttribute{
+				Optional:    true,
+				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+			},
+		},
+	}
+}
+
+func (r *IPIpsecProfileResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan IPIpsecProfileModel
+	if diags := req.Plan.Get(ctx, &plan); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, plan.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	body := client.Object{}
+	if !(plan.DhGroup.IsNull() || plan.DhGroup.IsUnknown()) {
+		body["dh-group"] = encodeStringList(ctx, plan.DhGroup)
+	}
+	if !(plan.DpdInterval.IsNull() || plan.DpdInterval.IsUnknown()) {
+		body["dpd-interval"] = plan.DpdInterval.ValueString()
+	}
+	if !(plan.DpdMaximumFailures.IsNull() || plan.DpdMaximumFailures.IsUnknown()) {
+		body["dpd-maximum-failures"] = client.FormatInt64(plan.DpdMaximumFailures.ValueInt64())
+	}
+	if !(plan.EncAlgorithm.IsNull() || plan.EncAlgorithm.IsUnknown()) {
+		body["enc-algorithm"] = encodeStringList(ctx, plan.EncAlgorithm)
+	}
+	if !(plan.EncryptionAlgorithm.IsNull() || plan.EncryptionAlgorithm.IsUnknown()) {
+		body["encryption-algorithm"] = plan.EncryptionAlgorithm.ValueString()
+	}
+	if !(plan.HashAlgorithm.IsNull() || plan.HashAlgorithm.IsUnknown()) {
+		body["hash-algorithm"] = plan.HashAlgorithm.ValueString()
+	}
+	if !(plan.HashAlgorithms.IsNull() || plan.HashAlgorithms.IsUnknown()) {
+		body["hash-algorithms"] = plan.HashAlgorithms.ValueString()
+	}
+	if !(plan.Lifebytes.IsNull() || plan.Lifebytes.IsUnknown()) {
+		body["lifebytes"] = client.FormatInt64(plan.Lifebytes.ValueInt64())
+	}
+	if !(plan.Lifetime.IsNull() || plan.Lifetime.IsUnknown()) {
+		body["lifetime"] = plan.Lifetime.ValueString()
+	}
+	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
+		body["name"] = plan.Name.ValueString()
+	}
+	if !(plan.NATTraversal.IsNull() || plan.NATTraversal.IsUnknown()) {
+		body["nat-traversal"] = client.FormatBool(plan.NATTraversal.ValueBool())
+	}
+	if !(plan.Ppk.IsNull() || plan.Ppk.IsUnknown()) {
+		body["ppk"] = plan.Ppk.ValueString()
+	}
+	if !(plan.PrfAlgorithms.IsNull() || plan.PrfAlgorithms.IsUnknown()) {
+		body["prf-algorithms"] = plan.PrfAlgorithms.ValueString()
+	}
+	if !(plan.ProposalCheck.IsNull() || plan.ProposalCheck.IsUnknown()) {
+		body["proposal-check"] = plan.ProposalCheck.ValueString()
+	}
+	obj, err := c.Add(ctx, "/ip/ipsec/profile", body)
+	if err != nil {
+		resp.Diagnostics.AddError("Create /ip/ipsec/profile failed", err.Error())
+		return
+	}
+	iPIpsecProfileApply(ctx, obj, &plan)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+func (r *IPIpsecProfileResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state IPIpsecProfileModel
+	if diags := req.State.Get(ctx, &state); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, state.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	obj, err := c.GetByID(ctx, "/ip/ipsec/profile", state.ID.ValueString())
+	if err != nil {
+		if client.IsNotFound(err) {
+			resp.State.RemoveResource(ctx)
+			return
+		}
+		resp.Diagnostics.AddError("Read /ip/ipsec/profile failed", err.Error())
+		return
+	}
+	iPIpsecProfileApply(ctx, obj, &state)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
+}
+
+func (r *IPIpsecProfileResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state IPIpsecProfileModel
+	if diags := req.Plan.Get(ctx, &plan); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	if diags := req.State.Get(ctx, &state); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, plan.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	body := client.Object{}
+	if !plan.DhGroup.Equal(state.DhGroup) {
+		body["dh-group"] = encodeStringList(ctx, plan.DhGroup)
+	}
+	if !plan.DpdInterval.Equal(state.DpdInterval) {
+		body["dpd-interval"] = plan.DpdInterval.ValueString()
+	}
+	if !plan.DpdMaximumFailures.Equal(state.DpdMaximumFailures) {
+		body["dpd-maximum-failures"] = client.FormatInt64(plan.DpdMaximumFailures.ValueInt64())
+	}
+	if !plan.EncAlgorithm.Equal(state.EncAlgorithm) {
+		body["enc-algorithm"] = encodeStringList(ctx, plan.EncAlgorithm)
+	}
+	if !plan.EncryptionAlgorithm.Equal(state.EncryptionAlgorithm) {
+		body["encryption-algorithm"] = plan.EncryptionAlgorithm.ValueString()
+	}
+	if !plan.HashAlgorithm.Equal(state.HashAlgorithm) {
+		body["hash-algorithm"] = plan.HashAlgorithm.ValueString()
+	}
+	if !plan.HashAlgorithms.Equal(state.HashAlgorithms) {
+		body["hash-algorithms"] = plan.HashAlgorithms.ValueString()
+	}
+	if !plan.Lifebytes.Equal(state.Lifebytes) {
+		body["lifebytes"] = client.FormatInt64(plan.Lifebytes.ValueInt64())
+	}
+	if !plan.Lifetime.Equal(state.Lifetime) {
+		body["lifetime"] = plan.Lifetime.ValueString()
+	}
+	if !plan.Name.Equal(state.Name) {
+		body["name"] = plan.Name.ValueString()
+	}
+	if !plan.NATTraversal.Equal(state.NATTraversal) {
+		body["nat-traversal"] = client.FormatBool(plan.NATTraversal.ValueBool())
+	}
+	if !plan.Ppk.Equal(state.Ppk) {
+		body["ppk"] = plan.Ppk.ValueString()
+	}
+	if !plan.PrfAlgorithms.Equal(state.PrfAlgorithms) {
+		body["prf-algorithms"] = plan.PrfAlgorithms.ValueString()
+	}
+	if !plan.ProposalCheck.Equal(state.ProposalCheck) {
+		body["proposal-check"] = plan.ProposalCheck.ValueString()
+	}
+	if len(body) > 0 {
+		obj, err := c.Set(ctx, "/ip/ipsec/profile", state.ID.ValueString(), body)
+		if err != nil {
+			resp.Diagnostics.AddError("Update /ip/ipsec/profile failed", err.Error())
+			return
+		}
+		iPIpsecProfileApply(ctx, obj, &plan)
+	} else {
+		plan.ID = state.ID
+	}
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+func (r *IPIpsecProfileResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state IPIpsecProfileModel
+	if diags := req.State.Get(ctx, &state); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, state.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	if err := c.Remove(ctx, "/ip/ipsec/profile", state.ID.ValueString()); err != nil {
+		resp.Diagnostics.AddError("Delete /ip/ipsec/profile failed", err.Error())
+	}
+}
+
+func (r *IPIpsecProfileResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	// Import formats accepted:
+	//   *<id>                            -> bare RouterOS .id on the default router
+	//   <router>/*<id>                   -> .id on the named router
+	//   <router>/<naturalkey>            -> resolved via List + filter
+	//   <naturalkey>                     -> resolved on the default router
+	id := req.ID
+	routerName := ""
+	if i := strings.Index(id, "/"); i > 0 && !strings.HasPrefix(id, "*") {
+		routerName, id = id[:i], id[i+1:]
+	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("router"), types.StringValue(routerName))...)
+	if strings.HasPrefix(id, "*") {
+		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(id))...)
+		return
+	}
+	c := pickClient(r.reg, types.StringValue(routerName), &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	rows, err := iPIpsecProfileLookupByNaturalKey(ctx, c, id)
+	if err != nil {
+		resp.Diagnostics.AddError("Import lookup failed", err.Error())
+		return
+	}
+	if len(rows) == 0 {
+		resp.Diagnostics.AddError("Import not found", fmt.Sprintf("no /ip/ipsec/profile matches %q", id))
+		return
+	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(rows[0][".id"]))...)
+}
+
+// iPIpsecProfileLookupByNaturalKey searches for a record whose natural
+// keys match id. The strategy: try every key declared in the schema overlay's
+// natural_keys list (or fall back to "name") with equality matching.
+func iPIpsecProfileLookupByNaturalKey(ctx context.Context, c *client.Client, id string) ([]client.Object, error) {
+	keys := []string{}
+	if len(keys) == 0 {
+		keys = []string{"name"}
+	}
+	for _, k := range keys {
+		rows, err := c.List(ctx, "/ip/ipsec/profile", client.WithFilter(k, id))
+		if err != nil {
+			return nil, err
+		}
+		if len(rows) > 0 {
+			return rows, nil
+		}
+	}
+	return nil, nil
+}
+
+func iPIpsecProfileApply(ctx context.Context, obj client.Object, m *IPIpsecProfileModel) {
+	_ = ctx
+	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["default"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Default = types.BoolValue(b)
+		} else {
+			m.Default = types.BoolNull()
+		}
+	} else {
+		m.Default = types.BoolNull()
+	}
+	if v, ok := obj["dh-group"]; ok {
+		_ = v
+		m.DhGroup = decodeStringList(ctx, v)
+	} else {
+		m.DhGroup = types.ListNull(types.StringType)
+	}
+	if v, ok := obj["dpd-interval"]; ok {
+		_ = v
+		if v != "" {
+			m.DpdInterval = types.StringValue(v)
+		} else {
+			m.DpdInterval = types.StringNull()
+		}
+	} else {
+		m.DpdInterval = types.StringNull()
+	}
+	if v, ok := obj["dpd-maximum-failures"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.DpdMaximumFailures = types.Int64Value(n)
+		} else {
+			m.DpdMaximumFailures = types.Int64Null()
+		}
+	} else {
+		m.DpdMaximumFailures = types.Int64Null()
+	}
+	if v, ok := obj["enc-algorithm"]; ok {
+		_ = v
+		m.EncAlgorithm = decodeStringList(ctx, v)
+	} else {
+		m.EncAlgorithm = types.ListNull(types.StringType)
+	}
+	if v, ok := obj["encryption-algorithm"]; ok {
+		_ = v
+		if v != "" {
+			m.EncryptionAlgorithm = types.StringValue(v)
+		} else {
+			m.EncryptionAlgorithm = types.StringNull()
+		}
+	} else {
+		m.EncryptionAlgorithm = types.StringNull()
+	}
+	if v, ok := obj["hash-algorithm"]; ok {
+		_ = v
+		if v != "" {
+			m.HashAlgorithm = types.StringValue(v)
+		} else {
+			m.HashAlgorithm = types.StringNull()
+		}
+	} else {
+		m.HashAlgorithm = types.StringNull()
+	}
+	if v, ok := obj["hash-algorithms"]; ok {
+		_ = v
+		if v != "" {
+			m.HashAlgorithms = types.StringValue(v)
+		} else {
+			m.HashAlgorithms = types.StringNull()
+		}
+	} else {
+		m.HashAlgorithms = types.StringNull()
+	}
+	if v, ok := obj["lifebytes"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.Lifebytes = types.Int64Value(n)
+		} else {
+			m.Lifebytes = types.Int64Null()
+		}
+	} else {
+		m.Lifebytes = types.Int64Null()
+	}
+	if v, ok := obj["lifetime"]; ok {
+		_ = v
+		if v != "" {
+			m.Lifetime = types.StringValue(v)
+		} else {
+			m.Lifetime = types.StringNull()
+		}
+	} else {
+		m.Lifetime = types.StringNull()
+	}
+	if v, ok := obj["name"]; ok {
+		_ = v
+		if v != "" {
+			m.Name = types.StringValue(v)
+		} else {
+			m.Name = types.StringNull()
+		}
+	} else {
+		m.Name = types.StringNull()
+	}
+	if v, ok := obj["nat-traversal"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.NATTraversal = types.BoolValue(b)
+		} else {
+			m.NATTraversal = types.BoolNull()
+		}
+	} else {
+		m.NATTraversal = types.BoolNull()
+	}
+	if v, ok := obj["ppk"]; ok {
+		_ = v
+		if v != "" {
+			m.Ppk = types.StringValue(v)
+		} else {
+			m.Ppk = types.StringNull()
+		}
+	} else {
+		m.Ppk = types.StringNull()
+	}
+	if v, ok := obj["prf-algorithms"]; ok {
+		_ = v
+		if v != "" {
+			m.PrfAlgorithms = types.StringValue(v)
+		} else {
+			m.PrfAlgorithms = types.StringNull()
+		}
+	} else {
+		m.PrfAlgorithms = types.StringNull()
+	}
+	if v, ok := obj["proposal-check"]; ok {
+		_ = v
+		if v != "" {
+			m.ProposalCheck = types.StringValue(v)
+		} else {
+			m.ProposalCheck = types.StringNull()
+		}
+	} else {
+		m.ProposalCheck = types.StringNull()
+	}
+}

@@ -1,0 +1,212 @@
+package provider
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+)
+
+var (
+	_ resource.Resource                = &CertificateSettingsResource{}
+	_ resource.ResourceWithImportState = &CertificateSettingsResource{}
+	_                                  = path.Root
+	_                                  = fmt.Sprintf
+)
+
+type CertificateSettingsResource struct {
+	reg *client.Registry
+}
+
+type CertificateSettingsModel struct {
+	ID                types.String `tfsdk:"id"`
+	BuiltinTrustStore types.String `tfsdk:"builtin_trust_store"`
+	CrlDownload       types.Bool   `tfsdk:"crl_download"`
+	CrlStore          types.String `tfsdk:"crl_store"`
+	CrlUse            types.Bool   `tfsdk:"crl_use"`
+	CurrentDefaults   types.List   `tfsdk:"current_defaults"`
+	Router            types.String `tfsdk:"router"`
+}
+
+func NewCertificateSettingsResource() resource.Resource { return &CertificateSettingsResource{} }
+
+func (r *CertificateSettingsResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_certificate_settings"
+}
+
+func (r *CertificateSettingsResource) Configure(_ context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+	reg, diags := configureRegistry(req.ProviderData)
+	resp.Diagnostics.Append(diags...)
+	if reg != nil {
+		r.reg = reg
+	}
+}
+
+func (r *CertificateSettingsResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+	resp.Schema = schema.Schema{
+		Description: "Mirrors RouterOS `/certificate/settings`.",
+		Attributes: map[string]schema.Attribute{
+			"id": schema.StringAttribute{
+				Computed:      true,
+				Description:   "Stable identifier (the singleton's menu path, optionally namespaced by router).",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"builtin_trust_store": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"crl_download": schema.BoolAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"crl_store": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"crl_use": schema.BoolAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"current_defaults": schema.ListAttribute{Optional: true, Computed: true,
+				ElementType: types.StringType,
+				Description: "",
+			},
+			"router": schema.StringAttribute{Optional: true,
+				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+			},
+		},
+	}
+}
+
+func (r *CertificateSettingsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan CertificateSettingsModel
+	if d := req.Plan.Get(ctx, &plan); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	certificateSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+func (r *CertificateSettingsResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan CertificateSettingsModel
+	if d := req.Plan.Get(ctx, &plan); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	certificateSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+func (r *CertificateSettingsResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state CertificateSettingsModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	c := pickClient(r.reg, state.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	obj, err := c.GetSingleton(ctx, "/certificate/settings")
+	if err != nil {
+		resp.Diagnostics.AddError("Read /certificate/settings failed", err.Error())
+		return
+	}
+	certificateSettingsApply(ctx, obj, &state)
+	state.ID = types.StringValue(stateIDFor("/certificate/settings", state.Router))
+	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
+}
+
+func (r *CertificateSettingsResource) Delete(_ context.Context, _ resource.DeleteRequest, _ *resource.DeleteResponse) {
+	// Singleton menus aren't removable; just drop the state.
+}
+
+func (r *CertificateSettingsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	// Import format: "<router>" or empty for default.
+	routerName := req.ID
+	if routerName == "/certificate/settings" {
+		routerName = ""
+	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("router"), types.StringValue(routerName))...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/certificate/settings", types.StringValue(routerName))))...)
+}
+
+func certificateSettingsUpsert(ctx context.Context, reg *client.Registry, plan *CertificateSettingsModel, diags *diagBuf) {
+	c := pickClient(reg, plan.Router, diags)
+	if c == nil {
+		return
+	}
+	body := client.Object{}
+	if !(plan.BuiltinTrustStore.IsNull() || plan.BuiltinTrustStore.IsUnknown()) {
+		body["builtin-trust-store"] = plan.BuiltinTrustStore.ValueString()
+	}
+	if !(plan.CrlDownload.IsNull() || plan.CrlDownload.IsUnknown()) {
+		body["crl-download"] = client.FormatBool(plan.CrlDownload.ValueBool())
+	}
+	if !(plan.CrlStore.IsNull() || plan.CrlStore.IsUnknown()) {
+		body["crl-store"] = plan.CrlStore.ValueString()
+	}
+	if !(plan.CrlUse.IsNull() || plan.CrlUse.IsUnknown()) {
+		body["crl-use"] = client.FormatBool(plan.CrlUse.ValueBool())
+	}
+	if !(plan.CurrentDefaults.IsNull() || plan.CurrentDefaults.IsUnknown()) {
+		body["current-defaults"] = encodeStringList(ctx, plan.CurrentDefaults)
+	}
+	obj, err := c.SetSingleton(ctx, "/certificate/settings", body)
+	if err != nil {
+		diags.AddError("Upsert /certificate/settings failed", err.Error())
+		return
+	}
+	certificateSettingsApply(ctx, obj, plan)
+	plan.ID = types.StringValue(stateIDFor("/certificate/settings", plan.Router))
+}
+
+func certificateSettingsApply(ctx context.Context, obj client.Object, m *CertificateSettingsModel) {
+	_ = ctx
+	if v, ok := obj["builtin-trust-store"]; ok {
+		_ = v
+		if v != "" {
+			m.BuiltinTrustStore = types.StringValue(v)
+		} else {
+			m.BuiltinTrustStore = types.StringNull()
+		}
+	}
+	if v, ok := obj["crl-download"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.CrlDownload = types.BoolValue(b)
+		} else {
+			m.CrlDownload = types.BoolNull()
+		}
+	}
+	if v, ok := obj["crl-store"]; ok {
+		_ = v
+		if v != "" {
+			m.CrlStore = types.StringValue(v)
+		} else {
+			m.CrlStore = types.StringNull()
+		}
+	}
+	if v, ok := obj["crl-use"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.CrlUse = types.BoolValue(b)
+		} else {
+			m.CrlUse = types.BoolNull()
+		}
+	}
+	if v, ok := obj["current-defaults"]; ok {
+		_ = v
+		m.CurrentDefaults = decodeStringList(ctx, v)
+	}
+}

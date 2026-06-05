@@ -1,0 +1,617 @@
+package provider
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+)
+
+var (
+	_ resource.Resource                = &ToolSnifferResource{}
+	_ resource.ResourceWithImportState = &ToolSnifferResource{}
+	_                                  = path.Root
+	_                                  = fmt.Sprintf
+)
+
+type ToolSnifferResource struct {
+	reg *client.Registry
+}
+
+type ToolSnifferModel struct {
+	ID                           types.String `tfsdk:"id"`
+	FileLimit                    types.Int64  `tfsdk:"file_limit"`
+	FileName                     types.String `tfsdk:"file_name"`
+	FilterCpu                    types.String `tfsdk:"filter_cpu"`
+	FilterDirection              types.String `tfsdk:"filter_direction"`
+	FilterDstIPAddress           types.String `tfsdk:"filter_dst_ip_address"`
+	FilterDstIPV6Address         types.String `tfsdk:"filter_dst_ipv6_address"`
+	FilterDstMACAddress          types.String `tfsdk:"filter_dst_mac_address"`
+	FilterDstPort                types.String `tfsdk:"filter_dst_port"`
+	FilterInterface              types.String `tfsdk:"filter_interface"`
+	FilterIPAddress              types.String `tfsdk:"filter_ip_address"`
+	FilterIPProtocol             types.String `tfsdk:"filter_ip_protocol"`
+	FilterIPV6Address            types.String `tfsdk:"filter_ipv6_address"`
+	FilterMACAddress             types.String `tfsdk:"filter_mac_address"`
+	FilterMACProtocol            types.String `tfsdk:"filter_mac_protocol"`
+	FilterOperatorBetweenEntries types.String `tfsdk:"filter_operator_between_entries"`
+	FilterPort                   types.String `tfsdk:"filter_port"`
+	FilterSize                   types.String `tfsdk:"filter_size"`
+	FilterSrcIPAddress           types.String `tfsdk:"filter_src_ip_address"`
+	FilterSrcIPV6Address         types.String `tfsdk:"filter_src_ipv6_address"`
+	FilterSrcMACAddress          types.String `tfsdk:"filter_src_mac_address"`
+	FilterSrcPort                types.String `tfsdk:"filter_src_port"`
+	FilterStream                 types.Bool   `tfsdk:"filter_stream"`
+	FilterVLAN                   types.String `tfsdk:"filter_vlan"`
+	MaxPacketSize                types.Int64  `tfsdk:"max_packet_size"`
+	MemoryLimit                  types.Int64  `tfsdk:"memory_limit"`
+	MemoryScroll                 types.Bool   `tfsdk:"memory_scroll"`
+	OnlyHeaders                  types.Bool   `tfsdk:"only_headers"`
+	QuickRows                    types.Int64  `tfsdk:"quick_rows"`
+	QuickShowFrame               types.Bool   `tfsdk:"quick_show_frame"`
+	Running                      types.Bool   `tfsdk:"running"`
+	StreamingEnabled             types.Bool   `tfsdk:"streaming_enabled"`
+	StreamingServer              types.String `tfsdk:"streaming_server"`
+	Router                       types.String `tfsdk:"router"`
+}
+
+func NewToolSnifferResource() resource.Resource { return &ToolSnifferResource{} }
+
+func (r *ToolSnifferResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_tool_sniffer"
+}
+
+func (r *ToolSnifferResource) Configure(_ context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+	reg, diags := configureRegistry(req.ProviderData)
+	resp.Diagnostics.Append(diags...)
+	if reg != nil {
+		r.reg = reg
+	}
+}
+
+func (r *ToolSnifferResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+	resp.Schema = schema.Schema{
+		Description: "Mirrors RouterOS `/tool/sniffer`.",
+		Attributes: map[string]schema.Attribute{
+			"id": schema.StringAttribute{
+				Computed:      true,
+				Description:   "Stable identifier (the singleton's menu path, optionally namespaced by router).",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"file_limit": schema.Int64Attribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"file_name": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"filter_cpu": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"filter_direction": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"filter_dst_ip_address": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"filter_dst_ipv6_address": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"filter_dst_mac_address": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"filter_dst_port": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"filter_interface": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"filter_ip_address": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"filter_ip_protocol": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"filter_ipv6_address": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"filter_mac_address": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"filter_mac_protocol": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"filter_operator_between_entries": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"filter_port": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"filter_size": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"filter_src_ip_address": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"filter_src_ipv6_address": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"filter_src_mac_address": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"filter_src_port": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"filter_stream": schema.BoolAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"filter_vlan": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"max_packet_size": schema.Int64Attribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"memory_limit": schema.Int64Attribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"memory_scroll": schema.BoolAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"only_headers": schema.BoolAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"quick_rows": schema.Int64Attribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"quick_show_frame": schema.BoolAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"running": schema.BoolAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"streaming_enabled": schema.BoolAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"streaming_server": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"router": schema.StringAttribute{Optional: true,
+				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+			},
+		},
+	}
+}
+
+func (r *ToolSnifferResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan ToolSnifferModel
+	if d := req.Plan.Get(ctx, &plan); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	toolSnifferUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+func (r *ToolSnifferResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan ToolSnifferModel
+	if d := req.Plan.Get(ctx, &plan); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	toolSnifferUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+func (r *ToolSnifferResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state ToolSnifferModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	c := pickClient(r.reg, state.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	obj, err := c.GetSingleton(ctx, "/tool/sniffer")
+	if err != nil {
+		resp.Diagnostics.AddError("Read /tool/sniffer failed", err.Error())
+		return
+	}
+	toolSnifferApply(ctx, obj, &state)
+	state.ID = types.StringValue(stateIDFor("/tool/sniffer", state.Router))
+	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
+}
+
+func (r *ToolSnifferResource) Delete(_ context.Context, _ resource.DeleteRequest, _ *resource.DeleteResponse) {
+	// Singleton menus aren't removable; just drop the state.
+}
+
+func (r *ToolSnifferResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	// Import format: "<router>" or empty for default.
+	routerName := req.ID
+	if routerName == "/tool/sniffer" {
+		routerName = ""
+	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("router"), types.StringValue(routerName))...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/tool/sniffer", types.StringValue(routerName))))...)
+}
+
+func toolSnifferUpsert(ctx context.Context, reg *client.Registry, plan *ToolSnifferModel, diags *diagBuf) {
+	c := pickClient(reg, plan.Router, diags)
+	if c == nil {
+		return
+	}
+	body := client.Object{}
+	if !(plan.FileLimit.IsNull() || plan.FileLimit.IsUnknown()) {
+		body["file-limit"] = client.FormatInt64(plan.FileLimit.ValueInt64())
+	}
+	if !(plan.FileName.IsNull() || plan.FileName.IsUnknown()) {
+		body["file-name"] = plan.FileName.ValueString()
+	}
+	if !(plan.FilterCpu.IsNull() || plan.FilterCpu.IsUnknown()) {
+		body["filter-cpu"] = plan.FilterCpu.ValueString()
+	}
+	if !(plan.FilterDirection.IsNull() || plan.FilterDirection.IsUnknown()) {
+		body["filter-direction"] = plan.FilterDirection.ValueString()
+	}
+	if !(plan.FilterDstIPAddress.IsNull() || plan.FilterDstIPAddress.IsUnknown()) {
+		body["filter-dst-ip-address"] = plan.FilterDstIPAddress.ValueString()
+	}
+	if !(plan.FilterDstIPV6Address.IsNull() || plan.FilterDstIPV6Address.IsUnknown()) {
+		body["filter-dst-ipv6-address"] = plan.FilterDstIPV6Address.ValueString()
+	}
+	if !(plan.FilterDstMACAddress.IsNull() || plan.FilterDstMACAddress.IsUnknown()) {
+		body["filter-dst-mac-address"] = plan.FilterDstMACAddress.ValueString()
+	}
+	if !(plan.FilterDstPort.IsNull() || plan.FilterDstPort.IsUnknown()) {
+		body["filter-dst-port"] = plan.FilterDstPort.ValueString()
+	}
+	if !(plan.FilterInterface.IsNull() || plan.FilterInterface.IsUnknown()) {
+		body["filter-interface"] = plan.FilterInterface.ValueString()
+	}
+	if !(plan.FilterIPAddress.IsNull() || plan.FilterIPAddress.IsUnknown()) {
+		body["filter-ip-address"] = plan.FilterIPAddress.ValueString()
+	}
+	if !(plan.FilterIPProtocol.IsNull() || plan.FilterIPProtocol.IsUnknown()) {
+		body["filter-ip-protocol"] = plan.FilterIPProtocol.ValueString()
+	}
+	if !(plan.FilterIPV6Address.IsNull() || plan.FilterIPV6Address.IsUnknown()) {
+		body["filter-ipv6-address"] = plan.FilterIPV6Address.ValueString()
+	}
+	if !(plan.FilterMACAddress.IsNull() || plan.FilterMACAddress.IsUnknown()) {
+		body["filter-mac-address"] = plan.FilterMACAddress.ValueString()
+	}
+	if !(plan.FilterMACProtocol.IsNull() || plan.FilterMACProtocol.IsUnknown()) {
+		body["filter-mac-protocol"] = plan.FilterMACProtocol.ValueString()
+	}
+	if !(plan.FilterOperatorBetweenEntries.IsNull() || plan.FilterOperatorBetweenEntries.IsUnknown()) {
+		body["filter-operator-between-entries"] = plan.FilterOperatorBetweenEntries.ValueString()
+	}
+	if !(plan.FilterPort.IsNull() || plan.FilterPort.IsUnknown()) {
+		body["filter-port"] = plan.FilterPort.ValueString()
+	}
+	if !(plan.FilterSize.IsNull() || plan.FilterSize.IsUnknown()) {
+		body["filter-size"] = plan.FilterSize.ValueString()
+	}
+	if !(plan.FilterSrcIPAddress.IsNull() || plan.FilterSrcIPAddress.IsUnknown()) {
+		body["filter-src-ip-address"] = plan.FilterSrcIPAddress.ValueString()
+	}
+	if !(plan.FilterSrcIPV6Address.IsNull() || plan.FilterSrcIPV6Address.IsUnknown()) {
+		body["filter-src-ipv6-address"] = plan.FilterSrcIPV6Address.ValueString()
+	}
+	if !(plan.FilterSrcMACAddress.IsNull() || plan.FilterSrcMACAddress.IsUnknown()) {
+		body["filter-src-mac-address"] = plan.FilterSrcMACAddress.ValueString()
+	}
+	if !(plan.FilterSrcPort.IsNull() || plan.FilterSrcPort.IsUnknown()) {
+		body["filter-src-port"] = plan.FilterSrcPort.ValueString()
+	}
+	if !(plan.FilterStream.IsNull() || plan.FilterStream.IsUnknown()) {
+		body["filter-stream"] = client.FormatBool(plan.FilterStream.ValueBool())
+	}
+	if !(plan.FilterVLAN.IsNull() || plan.FilterVLAN.IsUnknown()) {
+		body["filter-vlan"] = plan.FilterVLAN.ValueString()
+	}
+	if !(plan.MaxPacketSize.IsNull() || plan.MaxPacketSize.IsUnknown()) {
+		body["max-packet-size"] = client.FormatInt64(plan.MaxPacketSize.ValueInt64())
+	}
+	if !(plan.MemoryLimit.IsNull() || plan.MemoryLimit.IsUnknown()) {
+		body["memory-limit"] = client.FormatInt64(plan.MemoryLimit.ValueInt64())
+	}
+	if !(plan.MemoryScroll.IsNull() || plan.MemoryScroll.IsUnknown()) {
+		body["memory-scroll"] = client.FormatBool(plan.MemoryScroll.ValueBool())
+	}
+	if !(plan.OnlyHeaders.IsNull() || plan.OnlyHeaders.IsUnknown()) {
+		body["only-headers"] = client.FormatBool(plan.OnlyHeaders.ValueBool())
+	}
+	if !(plan.QuickRows.IsNull() || plan.QuickRows.IsUnknown()) {
+		body["quick-rows"] = client.FormatInt64(plan.QuickRows.ValueInt64())
+	}
+	if !(plan.QuickShowFrame.IsNull() || plan.QuickShowFrame.IsUnknown()) {
+		body["quick-show-frame"] = client.FormatBool(plan.QuickShowFrame.ValueBool())
+	}
+	if !(plan.StreamingEnabled.IsNull() || plan.StreamingEnabled.IsUnknown()) {
+		body["streaming-enabled"] = client.FormatBool(plan.StreamingEnabled.ValueBool())
+	}
+	if !(plan.StreamingServer.IsNull() || plan.StreamingServer.IsUnknown()) {
+		body["streaming-server"] = plan.StreamingServer.ValueString()
+	}
+	obj, err := c.SetSingleton(ctx, "/tool/sniffer", body)
+	if err != nil {
+		diags.AddError("Upsert /tool/sniffer failed", err.Error())
+		return
+	}
+	toolSnifferApply(ctx, obj, plan)
+	plan.ID = types.StringValue(stateIDFor("/tool/sniffer", plan.Router))
+}
+
+func toolSnifferApply(ctx context.Context, obj client.Object, m *ToolSnifferModel) {
+	_ = ctx
+	if v, ok := obj["file-limit"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.FileLimit = types.Int64Value(n)
+		} else {
+			m.FileLimit = types.Int64Null()
+		}
+	}
+	if v, ok := obj["file-name"]; ok {
+		_ = v
+		if v != "" {
+			m.FileName = types.StringValue(v)
+		} else {
+			m.FileName = types.StringNull()
+		}
+	}
+	if v, ok := obj["filter-cpu"]; ok {
+		_ = v
+		if v != "" {
+			m.FilterCpu = types.StringValue(v)
+		} else {
+			m.FilterCpu = types.StringNull()
+		}
+	}
+	if v, ok := obj["filter-direction"]; ok {
+		_ = v
+		if v != "" {
+			m.FilterDirection = types.StringValue(v)
+		} else {
+			m.FilterDirection = types.StringNull()
+		}
+	}
+	if v, ok := obj["filter-dst-ip-address"]; ok {
+		_ = v
+		if v != "" {
+			m.FilterDstIPAddress = types.StringValue(v)
+		} else {
+			m.FilterDstIPAddress = types.StringNull()
+		}
+	}
+	if v, ok := obj["filter-dst-ipv6-address"]; ok {
+		_ = v
+		if v != "" {
+			m.FilterDstIPV6Address = types.StringValue(v)
+		} else {
+			m.FilterDstIPV6Address = types.StringNull()
+		}
+	}
+	if v, ok := obj["filter-dst-mac-address"]; ok {
+		_ = v
+		if v != "" {
+			m.FilterDstMACAddress = types.StringValue(v)
+		} else {
+			m.FilterDstMACAddress = types.StringNull()
+		}
+	}
+	if v, ok := obj["filter-dst-port"]; ok {
+		_ = v
+		if v != "" {
+			m.FilterDstPort = types.StringValue(v)
+		} else {
+			m.FilterDstPort = types.StringNull()
+		}
+	}
+	if v, ok := obj["filter-interface"]; ok {
+		_ = v
+		if v != "" {
+			m.FilterInterface = types.StringValue(v)
+		} else {
+			m.FilterInterface = types.StringNull()
+		}
+	}
+	if v, ok := obj["filter-ip-address"]; ok {
+		_ = v
+		if v != "" {
+			m.FilterIPAddress = types.StringValue(v)
+		} else {
+			m.FilterIPAddress = types.StringNull()
+		}
+	}
+	if v, ok := obj["filter-ip-protocol"]; ok {
+		_ = v
+		if v != "" {
+			m.FilterIPProtocol = types.StringValue(v)
+		} else {
+			m.FilterIPProtocol = types.StringNull()
+		}
+	}
+	if v, ok := obj["filter-ipv6-address"]; ok {
+		_ = v
+		if v != "" {
+			m.FilterIPV6Address = types.StringValue(v)
+		} else {
+			m.FilterIPV6Address = types.StringNull()
+		}
+	}
+	if v, ok := obj["filter-mac-address"]; ok {
+		_ = v
+		if v != "" {
+			m.FilterMACAddress = types.StringValue(v)
+		} else {
+			m.FilterMACAddress = types.StringNull()
+		}
+	}
+	if v, ok := obj["filter-mac-protocol"]; ok {
+		_ = v
+		if v != "" {
+			m.FilterMACProtocol = types.StringValue(v)
+		} else {
+			m.FilterMACProtocol = types.StringNull()
+		}
+	}
+	if v, ok := obj["filter-operator-between-entries"]; ok {
+		_ = v
+		if v != "" {
+			m.FilterOperatorBetweenEntries = types.StringValue(v)
+		} else {
+			m.FilterOperatorBetweenEntries = types.StringNull()
+		}
+	}
+	if v, ok := obj["filter-port"]; ok {
+		_ = v
+		if v != "" {
+			m.FilterPort = types.StringValue(v)
+		} else {
+			m.FilterPort = types.StringNull()
+		}
+	}
+	if v, ok := obj["filter-size"]; ok {
+		_ = v
+		if v != "" {
+			m.FilterSize = types.StringValue(v)
+		} else {
+			m.FilterSize = types.StringNull()
+		}
+	}
+	if v, ok := obj["filter-src-ip-address"]; ok {
+		_ = v
+		if v != "" {
+			m.FilterSrcIPAddress = types.StringValue(v)
+		} else {
+			m.FilterSrcIPAddress = types.StringNull()
+		}
+	}
+	if v, ok := obj["filter-src-ipv6-address"]; ok {
+		_ = v
+		if v != "" {
+			m.FilterSrcIPV6Address = types.StringValue(v)
+		} else {
+			m.FilterSrcIPV6Address = types.StringNull()
+		}
+	}
+	if v, ok := obj["filter-src-mac-address"]; ok {
+		_ = v
+		if v != "" {
+			m.FilterSrcMACAddress = types.StringValue(v)
+		} else {
+			m.FilterSrcMACAddress = types.StringNull()
+		}
+	}
+	if v, ok := obj["filter-src-port"]; ok {
+		_ = v
+		if v != "" {
+			m.FilterSrcPort = types.StringValue(v)
+		} else {
+			m.FilterSrcPort = types.StringNull()
+		}
+	}
+	if v, ok := obj["filter-stream"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.FilterStream = types.BoolValue(b)
+		} else {
+			m.FilterStream = types.BoolNull()
+		}
+	}
+	if v, ok := obj["filter-vlan"]; ok {
+		_ = v
+		if v != "" {
+			m.FilterVLAN = types.StringValue(v)
+		} else {
+			m.FilterVLAN = types.StringNull()
+		}
+	}
+	if v, ok := obj["max-packet-size"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.MaxPacketSize = types.Int64Value(n)
+		} else {
+			m.MaxPacketSize = types.Int64Null()
+		}
+	}
+	if v, ok := obj["memory-limit"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.MemoryLimit = types.Int64Value(n)
+		} else {
+			m.MemoryLimit = types.Int64Null()
+		}
+	}
+	if v, ok := obj["memory-scroll"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.MemoryScroll = types.BoolValue(b)
+		} else {
+			m.MemoryScroll = types.BoolNull()
+		}
+	}
+	if v, ok := obj["only-headers"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.OnlyHeaders = types.BoolValue(b)
+		} else {
+			m.OnlyHeaders = types.BoolNull()
+		}
+	}
+	if v, ok := obj["quick-rows"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.QuickRows = types.Int64Value(n)
+		} else {
+			m.QuickRows = types.Int64Null()
+		}
+	}
+	if v, ok := obj["quick-show-frame"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.QuickShowFrame = types.BoolValue(b)
+		} else {
+			m.QuickShowFrame = types.BoolNull()
+		}
+	}
+	if v, ok := obj["running"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Running = types.BoolValue(b)
+		} else {
+			m.Running = types.BoolNull()
+		}
+	}
+	if v, ok := obj["streaming-enabled"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.StreamingEnabled = types.BoolValue(b)
+		} else {
+			m.StreamingEnabled = types.BoolNull()
+		}
+	}
+	if v, ok := obj["streaming-server"]; ok {
+		_ = v
+		if v != "" {
+			m.StreamingServer = types.StringValue(v)
+		} else {
+			m.StreamingServer = types.StringNull()
+		}
+	}
+}

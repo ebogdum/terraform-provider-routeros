@@ -1,0 +1,363 @@
+package provider
+
+import (
+	"context"
+	"fmt"
+	"strings"
+
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+)
+
+var (
+	_ resource.Resource                = &InterfaceBondingResource{}
+	_ resource.ResourceWithImportState = &InterfaceBondingResource{}
+	_                                  = attr.Value(nil)
+	_                                  = strings.TrimSpace
+	_                                  = path.Root
+)
+
+type InterfaceBondingResource struct {
+	reg *client.Registry
+}
+
+type InterfaceBondingModel struct {
+	ID         types.String `tfsdk:"id"`
+	ARP        types.String `tfsdk:"arp"`
+	ARPTimeout types.String `tfsdk:"arp_timeout"`
+	Comment    types.String `tfsdk:"comment"`
+	Disabled   types.Bool   `tfsdk:"disabled"`
+	Mode       types.String `tfsdk:"mode"`
+	MTU        types.String `tfsdk:"mtu"`
+	Name       types.String `tfsdk:"name"`
+	Router     types.String `tfsdk:"router"`
+}
+
+func NewInterfaceBondingResource() resource.Resource { return &InterfaceBondingResource{} }
+
+func (r *InterfaceBondingResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_interface_bonding"
+}
+
+func (r *InterfaceBondingResource) Configure(_ context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+	reg, diags := configureRegistry(req.ProviderData)
+	resp.Diagnostics.Append(diags...)
+	if reg != nil {
+		r.reg = reg
+	}
+	_ = fmt.Sprintf
+}
+
+func (r *InterfaceBondingResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+	resp.Schema = schema.Schema{
+		Description: "Auto-test requires a typed-reference precondition (e.g. an existing peer,\ninstance, bridge of the specific kind). The current acc-test generator's\ngeneric data.routeros_interface.all lookup can't satisfy these. Use this\nresource manually with explicit references to a precondition resource\nin your config.\n",
+		Attributes: map[string]schema.Attribute{
+			"id": schema.StringAttribute{
+				Computed:      true,
+				Description:   "RouterOS internal .id.",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"arp": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"arp_timeout": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"comment": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "Free-form comment.",
+			},
+			"disabled": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether the entry is disabled.",
+			},
+			"mode": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"mtu": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"name": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"router": schema.StringAttribute{
+				Optional:    true,
+				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+			},
+		},
+	}
+}
+
+func (r *InterfaceBondingResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan InterfaceBondingModel
+	if diags := req.Plan.Get(ctx, &plan); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, plan.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	body := client.Object{}
+	if !(plan.ARP.IsNull() || plan.ARP.IsUnknown()) {
+		body["arp"] = plan.ARP.ValueString()
+	}
+	if !(plan.ARPTimeout.IsNull() || plan.ARPTimeout.IsUnknown()) {
+		body["arp-timeout"] = plan.ARPTimeout.ValueString()
+	}
+	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
+		body["comment"] = plan.Comment.ValueString()
+	}
+	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
+		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !(plan.Mode.IsNull() || plan.Mode.IsUnknown()) {
+		body["mode"] = plan.Mode.ValueString()
+	}
+	if !(plan.MTU.IsNull() || plan.MTU.IsUnknown()) {
+		body["mtu"] = plan.MTU.ValueString()
+	}
+	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
+		body["name"] = plan.Name.ValueString()
+	}
+	obj, err := c.Add(ctx, "/interface/bonding", body)
+	if err != nil {
+		resp.Diagnostics.AddError("Create /interface/bonding failed", err.Error())
+		return
+	}
+	interfaceBondingApply(ctx, obj, &plan)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+func (r *InterfaceBondingResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state InterfaceBondingModel
+	if diags := req.State.Get(ctx, &state); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, state.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	obj, err := c.GetByID(ctx, "/interface/bonding", state.ID.ValueString())
+	if err != nil {
+		if client.IsNotFound(err) {
+			resp.State.RemoveResource(ctx)
+			return
+		}
+		resp.Diagnostics.AddError("Read /interface/bonding failed", err.Error())
+		return
+	}
+	interfaceBondingApply(ctx, obj, &state)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
+}
+
+func (r *InterfaceBondingResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state InterfaceBondingModel
+	if diags := req.Plan.Get(ctx, &plan); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	if diags := req.State.Get(ctx, &state); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, plan.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	body := client.Object{}
+	if !plan.ARP.Equal(state.ARP) {
+		body["arp"] = plan.ARP.ValueString()
+	}
+	if !plan.ARPTimeout.Equal(state.ARPTimeout) {
+		body["arp-timeout"] = plan.ARPTimeout.ValueString()
+	}
+	if !plan.Comment.Equal(state.Comment) {
+		body["comment"] = plan.Comment.ValueString()
+	}
+	if !plan.Disabled.Equal(state.Disabled) {
+		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !plan.Mode.Equal(state.Mode) {
+		body["mode"] = plan.Mode.ValueString()
+	}
+	if !plan.MTU.Equal(state.MTU) {
+		body["mtu"] = plan.MTU.ValueString()
+	}
+	if !plan.Name.Equal(state.Name) {
+		body["name"] = plan.Name.ValueString()
+	}
+	if len(body) > 0 {
+		obj, err := c.Set(ctx, "/interface/bonding", state.ID.ValueString(), body)
+		if err != nil {
+			resp.Diagnostics.AddError("Update /interface/bonding failed", err.Error())
+			return
+		}
+		interfaceBondingApply(ctx, obj, &plan)
+	} else {
+		plan.ID = state.ID
+	}
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+func (r *InterfaceBondingResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state InterfaceBondingModel
+	if diags := req.State.Get(ctx, &state); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, state.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	if err := c.Remove(ctx, "/interface/bonding", state.ID.ValueString()); err != nil {
+		resp.Diagnostics.AddError("Delete /interface/bonding failed", err.Error())
+	}
+}
+
+func (r *InterfaceBondingResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	// Import formats accepted:
+	//   *<id>                            -> bare RouterOS .id on the default router
+	//   <router>/*<id>                   -> .id on the named router
+	//   <router>/<naturalkey>            -> resolved via List + filter
+	//   <naturalkey>                     -> resolved on the default router
+	id := req.ID
+	routerName := ""
+	if i := strings.Index(id, "/"); i > 0 && !strings.HasPrefix(id, "*") {
+		routerName, id = id[:i], id[i+1:]
+	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("router"), types.StringValue(routerName))...)
+	if strings.HasPrefix(id, "*") {
+		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(id))...)
+		return
+	}
+	c := pickClient(r.reg, types.StringValue(routerName), &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	rows, err := interfaceBondingLookupByNaturalKey(ctx, c, id)
+	if err != nil {
+		resp.Diagnostics.AddError("Import lookup failed", err.Error())
+		return
+	}
+	if len(rows) == 0 {
+		resp.Diagnostics.AddError("Import not found", fmt.Sprintf("no /interface/bonding matches %q", id))
+		return
+	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(rows[0][".id"]))...)
+}
+
+// interfaceBondingLookupByNaturalKey searches for a record whose natural
+// keys match id. The strategy: try every key declared in the schema overlay's
+// natural_keys list (or fall back to "name") with equality matching.
+func interfaceBondingLookupByNaturalKey(ctx context.Context, c *client.Client, id string) ([]client.Object, error) {
+	keys := []string{}
+	if len(keys) == 0 {
+		keys = []string{"name"}
+	}
+	for _, k := range keys {
+		rows, err := c.List(ctx, "/interface/bonding", client.WithFilter(k, id))
+		if err != nil {
+			return nil, err
+		}
+		if len(rows) > 0 {
+			return rows, nil
+		}
+	}
+	return nil, nil
+}
+
+func interfaceBondingApply(ctx context.Context, obj client.Object, m *InterfaceBondingModel) {
+	_ = ctx
+	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["arp"]; ok {
+		_ = v
+		if v != "" {
+			m.ARP = types.StringValue(v)
+		} else {
+			m.ARP = types.StringNull()
+		}
+	} else {
+		m.ARP = types.StringNull()
+	}
+	if v, ok := obj["arp-timeout"]; ok {
+		_ = v
+		if v != "" {
+			m.ARPTimeout = types.StringValue(v)
+		} else {
+			m.ARPTimeout = types.StringNull()
+		}
+	} else {
+		m.ARPTimeout = types.StringNull()
+	}
+	if v, ok := obj["comment"]; ok {
+		_ = v
+		if v != "" {
+			m.Comment = types.StringValue(v)
+		} else {
+			m.Comment = types.StringNull()
+		}
+	} else {
+		m.Comment = types.StringNull()
+	}
+	if v, ok := obj["disabled"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Disabled = types.BoolValue(b)
+		} else {
+			m.Disabled = types.BoolNull()
+		}
+	} else {
+		m.Disabled = types.BoolNull()
+	}
+	if v, ok := obj["mode"]; ok {
+		_ = v
+		if v != "" {
+			m.Mode = types.StringValue(v)
+		} else {
+			m.Mode = types.StringNull()
+		}
+	} else {
+		m.Mode = types.StringNull()
+	}
+	if v, ok := obj["mtu"]; ok {
+		_ = v
+		if v != "" {
+			m.MTU = types.StringValue(v)
+		} else {
+			m.MTU = types.StringNull()
+		}
+	} else {
+		m.MTU = types.StringNull()
+	}
+	if v, ok := obj["name"]; ok {
+		_ = v
+		if v != "" {
+			m.Name = types.StringValue(v)
+		} else {
+			m.Name = types.StringNull()
+		}
+	} else {
+		m.Name = types.StringNull()
+	}
+}

@@ -1,0 +1,357 @@
+package provider
+
+import (
+	"context"
+	"fmt"
+	"strings"
+
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
+)
+
+var (
+	_ resource.Resource                = &UserGroupResource{}
+	_ resource.ResourceWithImportState = &UserGroupResource{}
+	_                                  = attr.Value(nil)
+	_                                  = strings.TrimSpace
+	_                                  = path.Root
+)
+
+type UserGroupResource struct {
+	reg *client.Registry
+}
+
+type UserGroupModel struct {
+	ID         types.String `tfsdk:"id"`
+	Comment    types.String `tfsdk:"comment"`
+	Name       types.String `tfsdk:"name"`
+	Policies   types.String `tfsdk:"policies"`
+	Policy     types.List   `tfsdk:"policy"`
+	Skin       types.String `tfsdk:"skin"`
+	System     types.Bool   `tfsdk:"system"`
+	Router     types.String `tfsdk:"router"`
+	LockoutAck types.Bool   `tfsdk:"lockout_ack"`
+}
+
+func NewUserGroupResource() resource.Resource { return &UserGroupResource{} }
+
+func (r *UserGroupResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_user_group"
+}
+
+func (r *UserGroupResource) Configure(_ context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+	reg, diags := configureRegistry(req.ProviderData)
+	resp.Diagnostics.Append(diags...)
+	if reg != nil {
+		r.reg = reg
+	}
+	_ = fmt.Sprintf
+}
+
+func (r *UserGroupResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+	resp.Schema = schema.Schema{
+		Description: "Mirrors RouterOS `/user/group`.",
+		Attributes: map[string]schema.Attribute{
+			"id": schema.StringAttribute{
+				Computed:      true,
+				Description:   "RouterOS internal .id.",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"comment": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "Free-form comment.",
+			},
+			"name": schema.StringAttribute{
+				Required:    true,
+				Description: "",
+			},
+			"policies": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"policy": schema.ListAttribute{
+				Optional:    true,
+				Computed:    true,
+				ElementType: types.StringType,
+				Description: "",
+			},
+			"skin": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"system": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+			},
+			"router": schema.StringAttribute{
+				Optional:    true,
+				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+			},
+			"lockout_ack": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "Acknowledge that this rule may sever management traffic (required for unconditional input/forward drop/reject/tarpit rules with no match).",
+			},
+		},
+	}
+}
+
+func (r *UserGroupResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan UserGroupModel
+	if diags := req.Plan.Get(ctx, &plan); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, plan.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	body := client.Object{}
+	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
+		body["comment"] = plan.Comment.ValueString()
+	}
+	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
+		body["name"] = plan.Name.ValueString()
+	}
+	if !(plan.Policies.IsNull() || plan.Policies.IsUnknown()) {
+		body["policies"] = plan.Policies.ValueString()
+	}
+	if !(plan.Policy.IsNull() || plan.Policy.IsUnknown()) {
+		body["policy"] = encodeStringList(ctx, plan.Policy)
+	}
+	if !(plan.Skin.IsNull() || plan.Skin.IsUnknown()) {
+		body["skin"] = plan.Skin.ValueString()
+	}
+	if !(plan.System.IsNull() || plan.System.IsUnknown()) {
+		body["system"] = client.FormatBool(plan.System.ValueBool())
+	}
+	if err := schemautil.CheckUserGroupPolicyLockout("/user/group", body, !plan.LockoutAck.IsNull() && plan.LockoutAck.ValueBool()); err != nil {
+		resp.Diagnostics.AddError("Refusing user-group change", err.Error())
+		return
+	}
+	obj, err := c.Add(ctx, "/user/group", body)
+	if err != nil {
+		resp.Diagnostics.AddError("Create /user/group failed", err.Error())
+		return
+	}
+	userGroupApply(ctx, obj, &plan)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+func (r *UserGroupResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state UserGroupModel
+	if diags := req.State.Get(ctx, &state); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, state.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	obj, err := c.GetByID(ctx, "/user/group", state.ID.ValueString())
+	if err != nil {
+		if client.IsNotFound(err) {
+			resp.State.RemoveResource(ctx)
+			return
+		}
+		resp.Diagnostics.AddError("Read /user/group failed", err.Error())
+		return
+	}
+	userGroupApply(ctx, obj, &state)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
+}
+
+func (r *UserGroupResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state UserGroupModel
+	if diags := req.Plan.Get(ctx, &plan); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	if diags := req.State.Get(ctx, &state); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, plan.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	body := client.Object{}
+	if !plan.Comment.Equal(state.Comment) {
+		body["comment"] = plan.Comment.ValueString()
+	}
+	if !plan.Name.Equal(state.Name) {
+		body["name"] = plan.Name.ValueString()
+	}
+	if !plan.Policies.Equal(state.Policies) {
+		body["policies"] = plan.Policies.ValueString()
+	}
+	if !plan.Policy.Equal(state.Policy) {
+		body["policy"] = encodeStringList(ctx, plan.Policy)
+	}
+	if !plan.Skin.Equal(state.Skin) {
+		body["skin"] = plan.Skin.ValueString()
+	}
+	if !plan.System.Equal(state.System) {
+		body["system"] = client.FormatBool(plan.System.ValueBool())
+	}
+	if err := schemautil.CheckUserGroupPolicyLockout("/user/group", body, !plan.LockoutAck.IsNull() && plan.LockoutAck.ValueBool()); err != nil {
+		resp.Diagnostics.AddError("Refusing user-group change", err.Error())
+		return
+	}
+	if len(body) > 0 {
+		obj, err := c.Set(ctx, "/user/group", state.ID.ValueString(), body)
+		if err != nil {
+			resp.Diagnostics.AddError("Update /user/group failed", err.Error())
+			return
+		}
+		userGroupApply(ctx, obj, &plan)
+	} else {
+		plan.ID = state.ID
+	}
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+func (r *UserGroupResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state UserGroupModel
+	if diags := req.State.Get(ctx, &state); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	c := pickClient(r.reg, state.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	if err := c.Remove(ctx, "/user/group", state.ID.ValueString()); err != nil {
+		resp.Diagnostics.AddError("Delete /user/group failed", err.Error())
+	}
+}
+
+func (r *UserGroupResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	// Import formats accepted:
+	//   *<id>                            -> bare RouterOS .id on the default router
+	//   <router>/*<id>                   -> .id on the named router
+	//   <router>/<naturalkey>            -> resolved via List + filter
+	//   <naturalkey>                     -> resolved on the default router
+	id := req.ID
+	routerName := ""
+	if i := strings.Index(id, "/"); i > 0 && !strings.HasPrefix(id, "*") {
+		routerName, id = id[:i], id[i+1:]
+	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("router"), types.StringValue(routerName))...)
+	if strings.HasPrefix(id, "*") {
+		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(id))...)
+		return
+	}
+	c := pickClient(r.reg, types.StringValue(routerName), &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	rows, err := userGroupLookupByNaturalKey(ctx, c, id)
+	if err != nil {
+		resp.Diagnostics.AddError("Import lookup failed", err.Error())
+		return
+	}
+	if len(rows) == 0 {
+		resp.Diagnostics.AddError("Import not found", fmt.Sprintf("no /user/group matches %q", id))
+		return
+	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(rows[0][".id"]))...)
+}
+
+// userGroupLookupByNaturalKey searches for a record whose natural
+// keys match id. The strategy: try every key declared in the schema overlay's
+// natural_keys list (or fall back to "name") with equality matching.
+func userGroupLookupByNaturalKey(ctx context.Context, c *client.Client, id string) ([]client.Object, error) {
+	keys := []string{}
+	if len(keys) == 0 {
+		keys = []string{"name"}
+	}
+	for _, k := range keys {
+		rows, err := c.List(ctx, "/user/group", client.WithFilter(k, id))
+		if err != nil {
+			return nil, err
+		}
+		if len(rows) > 0 {
+			return rows, nil
+		}
+	}
+	return nil, nil
+}
+
+func userGroupApply(ctx context.Context, obj client.Object, m *UserGroupModel) {
+	_ = ctx
+	m.ID = types.StringValue(obj[".id"])
+	// LockoutAck is local-only and not persisted on the wire. Carry the
+	// plan's value through to state (Null if the user didn't set it).
+	if m.LockoutAck.IsUnknown() {
+		m.LockoutAck = types.BoolNull()
+	}
+	if v, ok := obj["comment"]; ok {
+		_ = v
+		if v != "" {
+			m.Comment = types.StringValue(v)
+		} else {
+			m.Comment = types.StringNull()
+		}
+	} else {
+		m.Comment = types.StringNull()
+	}
+	if v, ok := obj["name"]; ok {
+		_ = v
+		if v != "" {
+			m.Name = types.StringValue(v)
+		} else {
+			m.Name = types.StringNull()
+		}
+	} else {
+		m.Name = types.StringNull()
+	}
+	if v, ok := obj["policies"]; ok {
+		_ = v
+		if v != "" {
+			m.Policies = types.StringValue(v)
+		} else {
+			m.Policies = types.StringNull()
+		}
+	} else {
+		m.Policies = types.StringNull()
+	}
+	if v, ok := obj["policy"]; ok {
+		_ = v
+		m.Policy = decodeStringList(ctx, v)
+	} else {
+		m.Policy = types.ListNull(types.StringType)
+	}
+	if v, ok := obj["skin"]; ok {
+		_ = v
+		if v != "" {
+			m.Skin = types.StringValue(v)
+		} else {
+			m.Skin = types.StringNull()
+		}
+	} else {
+		m.Skin = types.StringNull()
+	}
+	if v, ok := obj["system"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.System = types.BoolValue(b)
+		} else {
+			m.System = types.BoolNull()
+		}
+	} else {
+		m.System = types.BoolNull()
+	}
+}

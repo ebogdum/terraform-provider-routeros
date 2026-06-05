@@ -1,0 +1,224 @@
+package provider
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+)
+
+var (
+	_ resource.Resource                = &SystemNTPClientResource{}
+	_ resource.ResourceWithImportState = &SystemNTPClientResource{}
+	_                                  = path.Root
+	_                                  = fmt.Sprintf
+)
+
+type SystemNTPClientResource struct {
+	reg *client.Registry
+}
+
+type SystemNTPClientModel struct {
+	ID        types.String `tfsdk:"id"`
+	Enabled   types.Bool   `tfsdk:"enabled"`
+	FreqDrift types.Int64  `tfsdk:"freq_drift"`
+	Mode      types.String `tfsdk:"mode"`
+	Servers   types.String `tfsdk:"servers"`
+	Status    types.String `tfsdk:"status"`
+	Vrf       types.String `tfsdk:"vrf"`
+	Router    types.String `tfsdk:"router"`
+}
+
+func NewSystemNTPClientResource() resource.Resource { return &SystemNTPClientResource{} }
+
+func (r *SystemNTPClientResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_system_ntp_client"
+}
+
+func (r *SystemNTPClientResource) Configure(_ context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+	reg, diags := configureRegistry(req.ProviderData)
+	resp.Diagnostics.Append(diags...)
+	if reg != nil {
+		r.reg = reg
+	}
+}
+
+func (r *SystemNTPClientResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+	resp.Schema = schema.Schema{
+		Description: "Mirrors RouterOS `/system/ntp/client`.",
+		Attributes: map[string]schema.Attribute{
+			"id": schema.StringAttribute{
+				Computed:      true,
+				Description:   "Stable identifier (the singleton's menu path, optionally namespaced by router).",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"enabled": schema.BoolAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"freq_drift": schema.Int64Attribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"mode": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"servers": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"status": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"vrf": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "",
+			},
+			"router": schema.StringAttribute{Optional: true,
+				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+			},
+		},
+	}
+}
+
+func (r *SystemNTPClientResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan SystemNTPClientModel
+	if d := req.Plan.Get(ctx, &plan); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	systemNTPClientUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+func (r *SystemNTPClientResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan SystemNTPClientModel
+	if d := req.Plan.Get(ctx, &plan); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	systemNTPClientUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+func (r *SystemNTPClientResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state SystemNTPClientModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	c := pickClient(r.reg, state.Router, &resp.Diagnostics)
+	if c == nil {
+		return
+	}
+	obj, err := c.GetSingleton(ctx, "/system/ntp/client")
+	if err != nil {
+		resp.Diagnostics.AddError("Read /system/ntp/client failed", err.Error())
+		return
+	}
+	systemNTPClientApply(ctx, obj, &state)
+	state.ID = types.StringValue(stateIDFor("/system/ntp/client", state.Router))
+	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
+}
+
+func (r *SystemNTPClientResource) Delete(_ context.Context, _ resource.DeleteRequest, _ *resource.DeleteResponse) {
+	// Singleton menus aren't removable; just drop the state.
+}
+
+func (r *SystemNTPClientResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	// Import format: "<router>" or empty for default.
+	routerName := req.ID
+	if routerName == "/system/ntp/client" {
+		routerName = ""
+	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("router"), types.StringValue(routerName))...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/system/ntp/client", types.StringValue(routerName))))...)
+}
+
+func systemNTPClientUpsert(ctx context.Context, reg *client.Registry, plan *SystemNTPClientModel, diags *diagBuf) {
+	c := pickClient(reg, plan.Router, diags)
+	if c == nil {
+		return
+	}
+	body := client.Object{}
+	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) {
+		body["enabled"] = client.FormatBool(plan.Enabled.ValueBool())
+	}
+	if !(plan.Mode.IsNull() || plan.Mode.IsUnknown()) {
+		body["mode"] = plan.Mode.ValueString()
+	}
+	if !(plan.Servers.IsNull() || plan.Servers.IsUnknown()) {
+		body["servers"] = plan.Servers.ValueString()
+	}
+	if !(plan.Vrf.IsNull() || plan.Vrf.IsUnknown()) {
+		body["vrf"] = plan.Vrf.ValueString()
+	}
+	obj, err := c.SetSingleton(ctx, "/system/ntp/client", body)
+	if err != nil {
+		diags.AddError("Upsert /system/ntp/client failed", err.Error())
+		return
+	}
+	systemNTPClientApply(ctx, obj, plan)
+	plan.ID = types.StringValue(stateIDFor("/system/ntp/client", plan.Router))
+}
+
+func systemNTPClientApply(ctx context.Context, obj client.Object, m *SystemNTPClientModel) {
+	_ = ctx
+	if v, ok := obj["enabled"]; ok {
+		_ = v
+		if b, err := client.ParseBool(v); err == nil {
+			m.Enabled = types.BoolValue(b)
+		} else {
+			m.Enabled = types.BoolNull()
+		}
+	}
+	if v, ok := obj["freq-drift"]; ok {
+		_ = v
+		if n, err := client.ParseInt64(v); err == nil {
+			m.FreqDrift = types.Int64Value(n)
+		} else {
+			m.FreqDrift = types.Int64Null()
+		}
+	}
+	if v, ok := obj["mode"]; ok {
+		_ = v
+		if v != "" {
+			m.Mode = types.StringValue(v)
+		} else {
+			m.Mode = types.StringNull()
+		}
+	}
+	if v, ok := obj["servers"]; ok {
+		_ = v
+		if v != "" {
+			m.Servers = types.StringValue(v)
+		} else {
+			m.Servers = types.StringNull()
+		}
+	}
+	if v, ok := obj["status"]; ok {
+		_ = v
+		if v != "" {
+			m.Status = types.StringValue(v)
+		} else {
+			m.Status = types.StringNull()
+		}
+	}
+	if v, ok := obj["vrf"]; ok {
+		_ = v
+		if v != "" {
+			m.Vrf = types.StringValue(v)
+		} else {
+			m.Vrf = types.StringNull()
+		}
+	}
+}
