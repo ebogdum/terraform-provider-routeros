@@ -36,7 +36,7 @@ resource "routeros_interface_wifi_channel" "channel_example" {
 This resource supports the following arguments:
 
 * `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `band` - (Optional) Type: `enum(2ghz-b|2ghz-only-g|2ghz-b/g|5ghz-a|5ghz-only-n|5ghz-a/n, ...)`. Default: `7`.
+* `band` - (Optional) Type: `enum(2ghz-b|2ghz-only-g|2ghz-b/g|5ghz-a|5ghz-only-n|5ghz-a/n|2ghz-only-n|2ghz-b/g/n|5ghz-a/n/ac|5ghz-only-ac|2ghz-g/n|5ghz-n/ac|2ghz-g|2ghz-n|2ghz-ax|2ghz-be|5ghz-n|5ghz-ac|5ghz-an|5ghz-ax|5ghz-be|6ghz-ax|6ghz-be)`. Default: `7`.
 * `channel_width` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `deprioritize_unii_3_4` - (Optional) Type: `string`.

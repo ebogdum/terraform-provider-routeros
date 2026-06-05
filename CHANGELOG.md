@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-06-05
+
+### Fixed
+
+- `routeros_interface_wifi_channel`: the `band` attribute now accepts the
+  RouterOS 7 `wifi` package values, including `2ghz-ax`/`5ghz-ax` (Wi-Fi 6),
+  `2ghz-be`/`5ghz-be` (Wi-Fi 7) and the 6 GHz bands (`6ghz-ax`, `6ghz-be`).
+  Previously only the legacy wireless band values were allowed, rejecting
+  valid Wi-Fi 6 configs on devices like the hAP ax3 (#1).
+
 ## [1.0.2] - 2026-05-24
 
 - Provider landing page (`docs/index.md`) rewritten so the Terraform
