@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-06-05
+
+### Added
+
+- Import IDs accept an explicit `<router>::<key>` form, removing the
+  ambiguity of the legacy `<router>/<key>` form.
+- Natural-key import now matches across the common key columns (name,
+  addresses, gateway, interface, host, comment, ...) instead of `name` only.
+- Secret attributes (e.g. user SSH key material) are now marked
+  `Sensitive`, so Terraform masks them in plan/apply output and state diffs.
+
+### Fixed
+
+- RouterOS `.id` URL encoding: special characters in keys (spaces, `#`,
+  `?`, non-ASCII) are now encoded correctly while the literal `*` required
+  by `/rest` is preserved.
+- Import IDs shaped like CIDRs (e.g. `10.0.0.1/24`) are no longer
+  misparsed as a `<router>/<key>` pair.
+- Invalid values that fail normalization are now reported at plan time
+  instead of being silently deferred.
+
+### Changed
+
+- Ordered writes are serialized per resource with internal locks, avoiding
+  interleaving when multiple resources of the same type apply concurrently.
+- HTTP client hardening: HTTP/2 is defensively disabled for the RouterOS
+  REST endpoint, the response-header timeout is bounded, and in-flight
+  requests stop retrying once the context is cancelled or times out.
+- Internal: provider sources are maintained directly (generation markers
+  and `_gen` filename suffixes removed); per-resource import/lookup
+  boilerplate consolidated into shared helpers. No change to provider
+  behavior or schema.
+
 ## [1.1.1] - 2026-06-05
 
 ### Fixed
