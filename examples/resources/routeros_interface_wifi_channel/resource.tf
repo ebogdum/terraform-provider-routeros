@@ -6,7 +6,7 @@ resource "routeros_interface_wifi_channel" "channel_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
-  # band = "2ghz-b/g/n"
+  # band = "5ghz-ax"
   # channel_width = "replace-me"
   # deprioritize_unii_3_4 = "replace-me"
   # frequency = "2.412e+06"
