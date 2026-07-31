@@ -41,7 +41,7 @@ resource "routeros_interface_pppoe_client" "pppoe_client_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `ac_name` - (Optional) Type: `string`.
 * `add_default_route` - (Optional) Type: `string`.
 * `allow` - (Optional) Type: `string`.
@@ -49,17 +49,23 @@ This resource supports the following arguments:
 * `default_route_distance` - (Optional) Type: `string`.
 * `dial_on_demand` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `host_uniq` - (Optional) Type: `string`. RouterOS `host-uniq`.
 * `interface` - (Optional) Type: `string`.
 * `keepalive_timeout` - (Optional) Type: `string`.
 * `max_mru` - (Optional) Type: `string`.
 * `max_mtu` - (Optional) Type: `string`.
 * `mrru` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
-* `password` - (Optional) Type: `string`.
+* `password` - (Optional) Type: `string`. **Sensitive.**
 * `profile` - (Optional) Type: `string`.
 * `service_name` - (Optional) Type: `string`.
 * `use_peer_dns` - (Optional) Type: `string`.
 * `user` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

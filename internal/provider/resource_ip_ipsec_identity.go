@@ -32,6 +32,17 @@ type IPIpsecIdentityResource struct {
 
 type IPIpsecIdentityModel struct {
 	ID                  types.String `tfsdk:"id"`
+	Username            types.String `tfsdk:"username"`
+	Secret              types.String `tfsdk:"secret"`
+	RemoteKey           types.String `tfsdk:"remote_key"`
+	RemoteId            types.String `tfsdk:"remote_id"`
+	RemoteCertificate   types.String `tfsdk:"remote_certificate"`
+	Password            types.String `tfsdk:"password"`
+	MyId                types.String `tfsdk:"my_id"`
+	ModeConfig          types.String `tfsdk:"mode_config"`
+	Key                 types.String `tfsdk:"key"`
+	EapMethods          types.String `tfsdk:"eap_methods"`
+	Certificate         types.String `tfsdk:"certificate"`
 	AuthMethod          types.String `tfsdk:"auth_method"`
 	Comment             types.String `tfsdk:"comment"`
 	Disabled            types.Bool   `tfsdk:"disabled"`
@@ -59,7 +70,6 @@ func (r *IPIpsecIdentityResource) Configure(_ context.Context, req resource.Conf
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPIpsecIdentityResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -70,6 +80,63 @@ func (r *IPIpsecIdentityResource) Schema(_ context.Context, _ resource.SchemaReq
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"username": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `username`.",
+			},
+			"secret": schema.StringAttribute{
+				Optional:    true,
+				Sensitive:   true,
+				Computed:    true,
+				Description: "RouterOS `secret`.",
+			},
+			"remote_key": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `remote-key`.",
+			},
+			"remote_id": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `remote-id`.",
+			},
+			"remote_certificate": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `remote-certificate`.",
+			},
+			"password": schema.StringAttribute{
+				Optional:    true,
+				Sensitive:   true,
+				Computed:    true,
+				Description: "RouterOS `password`.",
+			},
+			"my_id": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `my-id`.",
+			},
+			"mode_config": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `mode-config`.",
+			},
+			"key": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `key`.",
+			},
+			"eap_methods": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `eap-methods`.",
+			},
+			"certificate": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `certificate`.",
 			},
 			"auth_method": schema.StringAttribute{
 				Optional:    true,
@@ -88,7 +155,6 @@ func (r *IPIpsecIdentityResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "Whether the entry is disabled.",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -105,12 +171,10 @@ func (r *IPIpsecIdentityResource) Schema(_ context.Context, _ resource.SchemaReq
 				Validators:  []validator.String{schemautil.OneOf([]string{"certificate", "remote-id"}...)},
 			},
 			"mode_configuration": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"my_id_type": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.OneOf([]string{"fqdn", "user-fqdn", "key-id", "address", "dn", "auto"}...)},
@@ -131,7 +195,6 @@ func (r *IPIpsecIdentityResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "",
 			},
 			"remote_id_type": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.OneOf([]string{"fqdn", "user-fqdn", "key-id", "address", "dn", "auto", "ignore"}...)},
@@ -170,12 +233,6 @@ func (r *IPIpsecIdentityResource) Create(ctx context.Context, req resource.Creat
 	if !(plan.MatchBy.IsNull() || plan.MatchBy.IsUnknown()) {
 		body["match-by"] = plan.MatchBy.ValueString()
 	}
-	if !(plan.ModeConfiguration.IsNull() || plan.ModeConfiguration.IsUnknown()) {
-		body["mode-configuration"] = plan.ModeConfiguration.ValueString()
-	}
-	if !(plan.MyIDType.IsNull() || plan.MyIDType.IsUnknown()) {
-		body["my-id-type"] = plan.MyIDType.ValueString()
-	}
 	if !(plan.NotrackChain.IsNull() || plan.NotrackChain.IsUnknown()) {
 		body["notrack-chain"] = plan.NotrackChain.ValueString()
 	}
@@ -185,8 +242,38 @@ func (r *IPIpsecIdentityResource) Create(ctx context.Context, req resource.Creat
 	if !(plan.PolicyTemplateGroup.IsNull() || plan.PolicyTemplateGroup.IsUnknown()) {
 		body["policy-template-group"] = plan.PolicyTemplateGroup.ValueString()
 	}
-	if !(plan.RemoteIDType.IsNull() || plan.RemoteIDType.IsUnknown()) {
-		body["remote-id-type"] = plan.RemoteIDType.ValueString()
+	if !(plan.Certificate.IsNull() || plan.Certificate.IsUnknown()) {
+		body["certificate"] = plan.Certificate.ValueString()
+	}
+	if !(plan.EapMethods.IsNull() || plan.EapMethods.IsUnknown()) {
+		body["eap-methods"] = plan.EapMethods.ValueString()
+	}
+	if !(plan.Key.IsNull() || plan.Key.IsUnknown()) {
+		body["key"] = plan.Key.ValueString()
+	}
+	if !(plan.ModeConfig.IsNull() || plan.ModeConfig.IsUnknown()) {
+		body["mode-config"] = plan.ModeConfig.ValueString()
+	}
+	if !(plan.MyId.IsNull() || plan.MyId.IsUnknown()) {
+		body["my-id"] = plan.MyId.ValueString()
+	}
+	if !(plan.Password.IsNull() || plan.Password.IsUnknown()) {
+		body["password"] = plan.Password.ValueString()
+	}
+	if !(plan.RemoteCertificate.IsNull() || plan.RemoteCertificate.IsUnknown()) {
+		body["remote-certificate"] = plan.RemoteCertificate.ValueString()
+	}
+	if !(plan.RemoteId.IsNull() || plan.RemoteId.IsUnknown()) {
+		body["remote-id"] = plan.RemoteId.ValueString()
+	}
+	if !(plan.RemoteKey.IsNull() || plan.RemoteKey.IsUnknown()) {
+		body["remote-key"] = plan.RemoteKey.ValueString()
+	}
+	if !(plan.Secret.IsNull() || plan.Secret.IsUnknown()) {
+		body["secret"] = plan.Secret.ValueString()
+	}
+	if !(plan.Username.IsNull() || plan.Username.IsUnknown()) {
+		body["username"] = plan.Username.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ip/ipsec/identity", body)
 	if err != nil {
@@ -250,12 +337,6 @@ func (r *IPIpsecIdentityResource) Update(ctx context.Context, req resource.Updat
 	if !plan.MatchBy.Equal(state.MatchBy) {
 		body["match-by"] = plan.MatchBy.ValueString()
 	}
-	if !plan.ModeConfiguration.Equal(state.ModeConfiguration) {
-		body["mode-configuration"] = plan.ModeConfiguration.ValueString()
-	}
-	if !plan.MyIDType.Equal(state.MyIDType) {
-		body["my-id-type"] = plan.MyIDType.ValueString()
-	}
 	if !plan.NotrackChain.Equal(state.NotrackChain) {
 		body["notrack-chain"] = plan.NotrackChain.ValueString()
 	}
@@ -265,8 +346,38 @@ func (r *IPIpsecIdentityResource) Update(ctx context.Context, req resource.Updat
 	if !plan.PolicyTemplateGroup.Equal(state.PolicyTemplateGroup) {
 		body["policy-template-group"] = plan.PolicyTemplateGroup.ValueString()
 	}
-	if !plan.RemoteIDType.Equal(state.RemoteIDType) {
-		body["remote-id-type"] = plan.RemoteIDType.ValueString()
+	if !plan.Certificate.Equal(state.Certificate) && !plan.Certificate.IsUnknown() {
+		body["certificate"] = plan.Certificate.ValueString()
+	}
+	if !plan.EapMethods.Equal(state.EapMethods) && !plan.EapMethods.IsUnknown() {
+		body["eap-methods"] = plan.EapMethods.ValueString()
+	}
+	if !plan.Key.Equal(state.Key) && !plan.Key.IsUnknown() {
+		body["key"] = plan.Key.ValueString()
+	}
+	if !plan.ModeConfig.Equal(state.ModeConfig) && !plan.ModeConfig.IsUnknown() {
+		body["mode-config"] = plan.ModeConfig.ValueString()
+	}
+	if !plan.MyId.Equal(state.MyId) && !plan.MyId.IsUnknown() {
+		body["my-id"] = plan.MyId.ValueString()
+	}
+	if !plan.Password.Equal(state.Password) && !plan.Password.IsUnknown() {
+		body["password"] = plan.Password.ValueString()
+	}
+	if !plan.RemoteCertificate.Equal(state.RemoteCertificate) && !plan.RemoteCertificate.IsUnknown() {
+		body["remote-certificate"] = plan.RemoteCertificate.ValueString()
+	}
+	if !plan.RemoteId.Equal(state.RemoteId) && !plan.RemoteId.IsUnknown() {
+		body["remote-id"] = plan.RemoteId.ValueString()
+	}
+	if !plan.RemoteKey.Equal(state.RemoteKey) && !plan.RemoteKey.IsUnknown() {
+		body["remote-key"] = plan.RemoteKey.ValueString()
+	}
+	if !plan.Secret.Equal(state.Secret) && !plan.Secret.IsUnknown() {
+		body["secret"] = plan.Secret.ValueString()
+	}
+	if !plan.Username.Equal(state.Username) && !plan.Username.IsUnknown() {
+		body["username"] = plan.Username.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/ipsec/identity", state.ID.ValueString(), body)
@@ -334,6 +445,61 @@ func iPIpsecIdentityLookupByNaturalKey(ctx context.Context, c *client.Client, id
 func iPIpsecIdentityApply(ctx context.Context, obj client.Object, m *IPIpsecIdentityModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["username"]; ok && v != "" {
+		m.Username = types.StringValue(v)
+	} else {
+		m.Username = types.StringNull()
+	}
+	if v, ok := obj["secret"]; ok && v != "" {
+		m.Secret = types.StringValue(v)
+	} else {
+		m.Secret = types.StringNull()
+	}
+	if v, ok := obj["remote-key"]; ok && v != "" {
+		m.RemoteKey = types.StringValue(v)
+	} else {
+		m.RemoteKey = types.StringNull()
+	}
+	if v, ok := obj["remote-id"]; ok && v != "" {
+		m.RemoteId = types.StringValue(v)
+	} else {
+		m.RemoteId = types.StringNull()
+	}
+	if v, ok := obj["remote-certificate"]; ok && v != "" {
+		m.RemoteCertificate = types.StringValue(v)
+	} else {
+		m.RemoteCertificate = types.StringNull()
+	}
+	if v, ok := obj["password"]; ok && v != "" {
+		m.Password = types.StringValue(v)
+	} else {
+		m.Password = types.StringNull()
+	}
+	if v, ok := obj["my-id"]; ok && v != "" {
+		m.MyId = types.StringValue(v)
+	} else {
+		m.MyId = types.StringNull()
+	}
+	if v, ok := obj["mode-config"]; ok && v != "" {
+		m.ModeConfig = types.StringValue(v)
+	} else {
+		m.ModeConfig = types.StringNull()
+	}
+	if v, ok := obj["key"]; ok && v != "" {
+		m.Key = types.StringValue(v)
+	} else {
+		m.Key = types.StringNull()
+	}
+	if v, ok := obj["eap-methods"]; ok && v != "" {
+		m.EapMethods = types.StringValue(v)
+	} else {
+		m.EapMethods = types.StringNull()
+	}
+	if v, ok := obj["certificate"]; ok && v != "" {
+		m.Certificate = types.StringValue(v)
+	} else {
+		m.Certificate = types.StringNull()
+	}
 	if v, ok := obj["auth-method"]; ok {
 		_ = v
 		if v != "" {

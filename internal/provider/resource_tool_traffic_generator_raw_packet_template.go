@@ -32,6 +32,9 @@ type ToolTrafficGeneratorRawPacketTemplateResource struct {
 
 type ToolTrafficGeneratorRawPacketTemplateModel struct {
 	ID                        types.String `tfsdk:"id"`
+	UdpComputeChecksum        types.String `tfsdk:"udp_compute_checksum"`
+	TcpHeaderOffset           types.String `tfsdk:"tcp_header_offset"`
+	ComputeChecksumFromOffset types.String `tfsdk:"compute_checksum_from_offset"`
 	Comment                   types.String `tfsdk:"comment"`
 	Data                      types.String `tfsdk:"data"`
 	DataByte                  types.Int64  `tfsdk:"data_byte"`
@@ -65,7 +68,6 @@ func (r *ToolTrafficGeneratorRawPacketTemplateResource) Configure(_ context.Cont
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *ToolTrafficGeneratorRawPacketTemplateResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -76,6 +78,21 @@ func (r *ToolTrafficGeneratorRawPacketTemplateResource) Schema(_ context.Context
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"udp_compute_checksum": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `udp-compute-checksum`.",
+			},
+			"tcp_header_offset": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `tcp-header-offset`.",
+			},
+			"compute_checksum_from_offset": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `compute-checksum-from-offset`.",
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -94,7 +111,6 @@ func (r *ToolTrafficGeneratorRawPacketTemplateResource) Schema(_ context.Context
 				Description: "",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -104,7 +120,6 @@ func (r *ToolTrafficGeneratorRawPacketTemplateResource) Schema(_ context.Context
 				Description: "",
 			},
 			"header_length": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -129,7 +144,6 @@ func (r *ToolTrafficGeneratorRawPacketTemplateResource) Schema(_ context.Context
 				Description: "",
 			},
 			"random": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -144,7 +158,6 @@ func (r *ToolTrafficGeneratorRawPacketTemplateResource) Schema(_ context.Context
 				Description: "",
 			},
 			"specbyte": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -201,23 +214,26 @@ func (r *ToolTrafficGeneratorRawPacketTemplateResource) Create(ctx context.Conte
 	if !(plan.Port.IsNull() || plan.Port.IsUnknown()) {
 		body["port"] = plan.Port.ValueString()
 	}
-	if !(plan.Random.IsNull() || plan.Random.IsUnknown()) {
-		body["random"] = plan.Random.ValueString()
-	}
 	if !(plan.RandomByteOffsetsAndMasks.IsNull() || plan.RandomByteOffsetsAndMasks.IsUnknown()) {
 		body["random-byte-offsets-and-masks"] = plan.RandomByteOffsetsAndMasks.ValueString()
 	}
 	if !(plan.RandomRanges.IsNull() || plan.RandomRanges.IsUnknown()) {
 		body["random-ranges"] = plan.RandomRanges.ValueString()
 	}
-	if !(plan.Specbyte.IsNull() || plan.Specbyte.IsUnknown()) {
-		body["specbyte"] = plan.Specbyte.ValueString()
-	}
 	if !(plan.SpecialFooter.IsNull() || plan.SpecialFooter.IsUnknown()) {
 		body["special-footer"] = client.FormatBool(plan.SpecialFooter.ValueBool())
 	}
 	if !(plan.UDPHeaderOffset.IsNull() || plan.UDPHeaderOffset.IsUnknown()) {
 		body["udp-header-offset"] = plan.UDPHeaderOffset.ValueString()
+	}
+	if !(plan.ComputeChecksumFromOffset.IsNull() || plan.ComputeChecksumFromOffset.IsUnknown()) {
+		body["compute-checksum-from-offset"] = plan.ComputeChecksumFromOffset.ValueString()
+	}
+	if !(plan.TcpHeaderOffset.IsNull() || plan.TcpHeaderOffset.IsUnknown()) {
+		body["tcp-header-offset"] = plan.TcpHeaderOffset.ValueString()
+	}
+	if !(plan.UdpComputeChecksum.IsNull() || plan.UdpComputeChecksum.IsUnknown()) {
+		body["udp-compute-checksum"] = plan.UdpComputeChecksum.ValueString()
 	}
 	obj, err := c.Add(ctx, "/tool/traffic-generator/raw-packet-template", body)
 	if err != nil {
@@ -290,23 +306,26 @@ func (r *ToolTrafficGeneratorRawPacketTemplateResource) Update(ctx context.Conte
 	if !plan.Port.Equal(state.Port) {
 		body["port"] = plan.Port.ValueString()
 	}
-	if !plan.Random.Equal(state.Random) {
-		body["random"] = plan.Random.ValueString()
-	}
 	if !plan.RandomByteOffsetsAndMasks.Equal(state.RandomByteOffsetsAndMasks) {
 		body["random-byte-offsets-and-masks"] = plan.RandomByteOffsetsAndMasks.ValueString()
 	}
 	if !plan.RandomRanges.Equal(state.RandomRanges) {
 		body["random-ranges"] = plan.RandomRanges.ValueString()
 	}
-	if !plan.Specbyte.Equal(state.Specbyte) {
-		body["specbyte"] = plan.Specbyte.ValueString()
-	}
 	if !plan.SpecialFooter.Equal(state.SpecialFooter) {
 		body["special-footer"] = client.FormatBool(plan.SpecialFooter.ValueBool())
 	}
 	if !plan.UDPHeaderOffset.Equal(state.UDPHeaderOffset) {
 		body["udp-header-offset"] = plan.UDPHeaderOffset.ValueString()
+	}
+	if !plan.ComputeChecksumFromOffset.Equal(state.ComputeChecksumFromOffset) && !plan.ComputeChecksumFromOffset.IsUnknown() {
+		body["compute-checksum-from-offset"] = plan.ComputeChecksumFromOffset.ValueString()
+	}
+	if !plan.TcpHeaderOffset.Equal(state.TcpHeaderOffset) && !plan.TcpHeaderOffset.IsUnknown() {
+		body["tcp-header-offset"] = plan.TcpHeaderOffset.ValueString()
+	}
+	if !plan.UdpComputeChecksum.Equal(state.UdpComputeChecksum) && !plan.UdpComputeChecksum.IsUnknown() {
+		body["udp-compute-checksum"] = plan.UdpComputeChecksum.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/tool/traffic-generator/raw-packet-template", state.ID.ValueString(), body)
@@ -374,6 +393,21 @@ func toolTrafficGeneratorRawPacketTemplateLookupByNaturalKey(ctx context.Context
 func toolTrafficGeneratorRawPacketTemplateApply(ctx context.Context, obj client.Object, m *ToolTrafficGeneratorRawPacketTemplateModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["udp-compute-checksum"]; ok && v != "" {
+		m.UdpComputeChecksum = types.StringValue(v)
+	} else {
+		m.UdpComputeChecksum = types.StringNull()
+	}
+	if v, ok := obj["tcp-header-offset"]; ok && v != "" {
+		m.TcpHeaderOffset = types.StringValue(v)
+	} else {
+		m.TcpHeaderOffset = types.StringNull()
+	}
+	if v, ok := obj["compute-checksum-from-offset"]; ok && v != "" {
+		m.ComputeChecksumFromOffset = types.StringValue(v)
+	} else {
+		m.ComputeChecksumFromOffset = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {

@@ -39,7 +39,7 @@ type IPHotspotUserProfileModel struct {
 	KeepaliveTimeout  types.String `tfsdk:"keepalive_timeout"`
 	MACCookieTimeout  types.String `tfsdk:"mac_cookie_timeout"`
 	Name              types.String `tfsdk:"name"`
-	SharedUsers       types.Int64  `tfsdk:"shared_users"`
+	SharedUsers       types.String `tfsdk:"shared_users"`
 	StatusAutorefresh types.String `tfsdk:"status_autorefresh"`
 	TransparentProxy  types.Bool   `tfsdk:"transparent_proxy"`
 	Router            types.String `tfsdk:"router"`
@@ -57,7 +57,6 @@ func (r *IPHotspotUserProfileResource) Configure(_ context.Context, req resource
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPHotspotUserProfileResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -80,7 +79,6 @@ func (r *IPHotspotUserProfileResource) Schema(_ context.Context, _ resource.Sche
 				Description: "",
 			},
 			"default": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -108,10 +106,10 @@ func (r *IPHotspotUserProfileResource) Schema(_ context.Context, _ resource.Sche
 				Computed:    true,
 				Description: "",
 			},
-			"shared_users": schema.Int64Attribute{
+			"shared_users": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "",
+				Description: "A number, or `unlimited`.",
 			},
 			"status_autorefresh": schema.StringAttribute{
 				Optional:      true,
@@ -163,7 +161,7 @@ func (r *IPHotspotUserProfileResource) Create(ctx context.Context, req resource.
 		body["name"] = plan.Name.ValueString()
 	}
 	if !(plan.SharedUsers.IsNull() || plan.SharedUsers.IsUnknown()) {
-		body["shared-users"] = client.FormatInt64(plan.SharedUsers.ValueInt64())
+		body["shared-users"] = plan.SharedUsers.ValueString()
 	}
 	if !(plan.StatusAutorefresh.IsNull() || plan.StatusAutorefresh.IsUnknown()) {
 		body["status-autorefresh"] = plan.StatusAutorefresh.ValueString()
@@ -237,7 +235,7 @@ func (r *IPHotspotUserProfileResource) Update(ctx context.Context, req resource.
 		body["name"] = plan.Name.ValueString()
 	}
 	if !plan.SharedUsers.Equal(state.SharedUsers) {
-		body["shared-users"] = client.FormatInt64(plan.SharedUsers.ValueInt64())
+		body["shared-users"] = plan.SharedUsers.ValueString()
 	}
 	if !plan.StatusAutorefresh.Equal(state.StatusAutorefresh) {
 		body["status-autorefresh"] = plan.StatusAutorefresh.ValueString()
@@ -383,13 +381,13 @@ func iPHotspotUserProfileApply(ctx context.Context, obj client.Object, m *IPHots
 	}
 	if v, ok := obj["shared-users"]; ok {
 		_ = v
-		if n, err := client.ParseInt64(v); err == nil {
-			m.SharedUsers = types.Int64Value(n)
+		if v != "" {
+			m.SharedUsers = types.StringValue(v)
 		} else {
-			m.SharedUsers = types.Int64Null()
+			m.SharedUsers = types.StringNull()
 		}
 	} else {
-		m.SharedUsers = types.Int64Null()
+		m.SharedUsers = types.StringNull()
 	}
 	if v, ok := obj["status-autorefresh"]; ok {
 		_ = v

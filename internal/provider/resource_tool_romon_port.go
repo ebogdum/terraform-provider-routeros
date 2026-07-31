@@ -53,7 +53,6 @@ func (r *ToolRomonPortResource) Configure(_ context.Context, req resource.Config
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *ToolRomonPortResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -76,7 +75,6 @@ func (r *ToolRomonPortResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"default": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -86,7 +84,6 @@ func (r *ToolRomonPortResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},

@@ -29,13 +29,20 @@ resource "routeros_certificate_scep_server" "scep_server_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `ca_certificate` - (Optional) Type: `string`.
-* `days_valid` - (Optional) Type: `int`. Default: `1`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `ca_cert` - (Optional) Type: `string`. RouterOS `ca-cert`.
+* `ca_certificate` - (Read-only) Type: `string`.
+* `days_valid` - (Optional) Type: `int`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `next_ca_certificate` - (Optional) Type: `string`.
+* `next_ca_cert` - (Optional) Type: `string`. RouterOS `next-ca-cert`.
+* `next_ca_certificate` - (Read-only) Type: `string`.
 * `path` - (Optional) Type: `string`.
-* `request_lifetime` - (Optional) Type: `duration`. Default: `3600`.
+* `request_lifetime` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

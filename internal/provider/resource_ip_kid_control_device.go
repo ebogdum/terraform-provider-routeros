@@ -57,7 +57,6 @@ func (r *IPKidControlDeviceResource) Configure(_ context.Context, req resource.C
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPKidControlDeviceResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -70,17 +69,14 @@ func (r *IPKidControlDeviceResource) Schema(_ context.Context, _ resource.Schema
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"activity": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"blocked": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"bytes": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -90,12 +86,10 @@ func (r *IPKidControlDeviceResource) Schema(_ context.Context, _ resource.Schema
 				Description: "",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"ip_address": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -110,17 +104,14 @@ func (r *IPKidControlDeviceResource) Schema(_ context.Context, _ resource.Schema
 				Description: "",
 			},
 			"rate_limited": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rate_up_down": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"reset_counters": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -148,12 +139,6 @@ func (r *IPKidControlDeviceResource) Create(ctx context.Context, req resource.Cr
 		return
 	}
 	body := client.Object{}
-	if !(plan.Blocked.IsNull() || plan.Blocked.IsUnknown()) {
-		body["blocked"] = client.FormatBool(plan.Blocked.ValueBool())
-	}
-	if !(plan.Bytes.IsNull() || plan.Bytes.IsUnknown()) {
-		body["bytes"] = plan.Bytes.ValueString()
-	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
@@ -162,15 +147,6 @@ func (r *IPKidControlDeviceResource) Create(ctx context.Context, req resource.Cr
 	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
-	}
-	if !(plan.RateLimited.IsNull() || plan.RateLimited.IsUnknown()) {
-		body["rate-limited"] = client.FormatBool(plan.RateLimited.ValueBool())
-	}
-	if !(plan.RateUpDown.IsNull() || plan.RateUpDown.IsUnknown()) {
-		body["rate-up-down"] = plan.RateUpDown.ValueString()
-	}
-	if !(plan.ResetCounters.IsNull() || plan.ResetCounters.IsUnknown()) {
-		body["reset-counters"] = plan.ResetCounters.ValueString()
 	}
 	if !(plan.User.IsNull() || plan.User.IsUnknown()) {
 		body["user"] = plan.User.ValueString()
@@ -222,12 +198,6 @@ func (r *IPKidControlDeviceResource) Update(ctx context.Context, req resource.Up
 		return
 	}
 	body := client.Object{}
-	if !plan.Blocked.Equal(state.Blocked) {
-		body["blocked"] = client.FormatBool(plan.Blocked.ValueBool())
-	}
-	if !plan.Bytes.Equal(state.Bytes) {
-		body["bytes"] = plan.Bytes.ValueString()
-	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
@@ -236,15 +206,6 @@ func (r *IPKidControlDeviceResource) Update(ctx context.Context, req resource.Up
 	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
-	}
-	if !plan.RateLimited.Equal(state.RateLimited) {
-		body["rate-limited"] = client.FormatBool(plan.RateLimited.ValueBool())
-	}
-	if !plan.RateUpDown.Equal(state.RateUpDown) {
-		body["rate-up-down"] = plan.RateUpDown.ValueString()
-	}
-	if !plan.ResetCounters.Equal(state.ResetCounters) {
-		body["reset-counters"] = plan.ResetCounters.ValueString()
 	}
 	if !plan.User.Equal(state.User) {
 		body["user"] = plan.User.ValueString()

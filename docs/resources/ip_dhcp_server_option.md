@@ -29,19 +29,18 @@ resource "routeros_ip_dhcp_server_option" "option_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `code` - (Required) Type: `int`. Default: `60`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `code` - (Required) Type: `int`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `force` - (Optional) Type: `bool`.
-* `name` - (Required) Type: `string`. Default: `tf_acc_opt`.
-* `value` - (Required) Type: `string`. Default: `'tf-acc'`.
+* `name` - (Required) Type: `string`.
+* `raw_value` - (Read-only) Type: `string`.
+* `value` - (Required) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `raw_value` - Type: `string`.
 
 ## Import
 

@@ -30,6 +30,7 @@ type IPUpnpInterfacesResource struct {
 
 type IPUpnpInterfacesModel struct {
 	ID        types.String `tfsdk:"id"`
+	ForcedIp  types.String `tfsdk:"forced_ip"`
 	Disabled  types.Bool   `tfsdk:"disabled"`
 	Interface types.String `tfsdk:"interface"`
 	Type      types.String `tfsdk:"type"`
@@ -48,7 +49,6 @@ func (r *IPUpnpInterfacesResource) Configure(_ context.Context, req resource.Con
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPUpnpInterfacesResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -59,6 +59,11 @@ func (r *IPUpnpInterfacesResource) Schema(_ context.Context, _ resource.SchemaRe
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"forced_ip": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `forced-ip`.",
 			},
 			"disabled": schema.BoolAttribute{
 				Optional:    true,
@@ -100,6 +105,9 @@ func (r *IPUpnpInterfacesResource) Create(ctx context.Context, req resource.Crea
 	}
 	if !(plan.Type.IsNull() || plan.Type.IsUnknown()) {
 		body["type"] = plan.Type.ValueString()
+	}
+	if !(plan.ForcedIp.IsNull() || plan.ForcedIp.IsUnknown()) {
+		body["forced-ip"] = plan.ForcedIp.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ip/upnp/interfaces", body)
 	if err != nil {
@@ -156,6 +164,9 @@ func (r *IPUpnpInterfacesResource) Update(ctx context.Context, req resource.Upda
 	}
 	if !plan.Type.Equal(state.Type) {
 		body["type"] = plan.Type.ValueString()
+	}
+	if !plan.ForcedIp.Equal(state.ForcedIp) && !plan.ForcedIp.IsUnknown() {
+		body["forced-ip"] = plan.ForcedIp.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/upnp/interfaces", state.ID.ValueString(), body)
@@ -223,6 +234,11 @@ func iPUpnpInterfacesLookupByNaturalKey(ctx context.Context, c *client.Client, i
 func iPUpnpInterfacesApply(ctx context.Context, obj client.Object, m *IPUpnpInterfacesModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["forced-ip"]; ok && v != "" {
+		m.ForcedIp = types.StringValue(v)
+	} else {
+		m.ForcedIp = types.StringNull()
+	}
 	if v, ok := obj["disabled"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {

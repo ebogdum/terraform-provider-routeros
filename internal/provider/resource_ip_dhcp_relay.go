@@ -32,6 +32,7 @@ type IPDHCPRelayResource struct {
 
 type IPDHCPRelayModel struct {
 	ID                     types.String `tfsdk:"id"`
+	LocalAddressAsSrcIp    types.String `tfsdk:"local_address_as_src_ip"`
 	AddRelayInfo           types.Bool   `tfsdk:"add_relay_info"`
 	DelayThreshold         types.String `tfsdk:"delay_threshold"`
 	DHCPServer             types.String `tfsdk:"dhcp_server"`
@@ -59,7 +60,6 @@ func (r *IPDHCPRelayResource) Configure(_ context.Context, req resource.Configur
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPDHCPRelayResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -70,6 +70,11 @@ func (r *IPDHCPRelayResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"local_address_as_src_ip": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `local-address-as-src-ip`.",
 			},
 			"add_relay_info": schema.BoolAttribute{
 				Optional:    true,
@@ -102,7 +107,6 @@ func (r *IPDHCPRelayResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Description: "",
 			},
 			"invalid": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -113,7 +117,6 @@ func (r *IPDHCPRelayResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Validators:  []validator.String{schemautil.IsIP()},
 			},
 			"local_address_as_source_ip": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -127,7 +130,6 @@ func (r *IPDHCPRelayResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Description: "",
 			},
 			"reset_counters": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -171,17 +173,14 @@ func (r *IPDHCPRelayResource) Create(ctx context.Context, req resource.CreateReq
 	if !(plan.LocalAddress.IsNull() || plan.LocalAddress.IsUnknown()) {
 		body["local-address"] = plan.LocalAddress.ValueString()
 	}
-	if !(plan.LocalAddressAsSourceIP.IsNull() || plan.LocalAddressAsSourceIP.IsUnknown()) {
-		body["local-address-as-source-ip"] = client.FormatBool(plan.LocalAddressAsSourceIP.ValueBool())
-	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
 	}
 	if !(plan.RelayInfoRemoteID.IsNull() || plan.RelayInfoRemoteID.IsUnknown()) {
 		body["relay-info-remote-id"] = plan.RelayInfoRemoteID.ValueString()
 	}
-	if !(plan.ResetCounters.IsNull() || plan.ResetCounters.IsUnknown()) {
-		body["reset-counters"] = plan.ResetCounters.ValueString()
+	if !(plan.LocalAddressAsSrcIp.IsNull() || plan.LocalAddressAsSrcIp.IsUnknown()) {
+		body["local-address-as-src-ip"] = plan.LocalAddressAsSrcIp.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ip/dhcp-relay", body)
 	if err != nil {
@@ -251,17 +250,14 @@ func (r *IPDHCPRelayResource) Update(ctx context.Context, req resource.UpdateReq
 	if !plan.LocalAddress.Equal(state.LocalAddress) {
 		body["local-address"] = plan.LocalAddress.ValueString()
 	}
-	if !plan.LocalAddressAsSourceIP.Equal(state.LocalAddressAsSourceIP) {
-		body["local-address-as-source-ip"] = client.FormatBool(plan.LocalAddressAsSourceIP.ValueBool())
-	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
 	}
 	if !plan.RelayInfoRemoteID.Equal(state.RelayInfoRemoteID) {
 		body["relay-info-remote-id"] = plan.RelayInfoRemoteID.ValueString()
 	}
-	if !plan.ResetCounters.Equal(state.ResetCounters) {
-		body["reset-counters"] = plan.ResetCounters.ValueString()
+	if !plan.LocalAddressAsSrcIp.Equal(state.LocalAddressAsSrcIp) && !plan.LocalAddressAsSrcIp.IsUnknown() {
+		body["local-address-as-src-ip"] = plan.LocalAddressAsSrcIp.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/dhcp-relay", state.ID.ValueString(), body)
@@ -329,6 +325,11 @@ func iPDHCPRelayLookupByNaturalKey(ctx context.Context, c *client.Client, id str
 func iPDHCPRelayApply(ctx context.Context, obj client.Object, m *IPDHCPRelayModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["local-address-as-src-ip"]; ok && v != "" {
+		m.LocalAddressAsSrcIp = types.StringValue(v)
+	} else {
+		m.LocalAddressAsSrcIp = types.StringNull()
+	}
 	if v, ok := obj["add-relay-info"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {

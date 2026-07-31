@@ -63,66 +63,65 @@ resource "routeros_certificate" "certificate_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `acme` - (Optional) Type: `bool`.
-* `add_acme` - (Optional) Type: `string`.
-* `authority` - (Optional) Type: `bool`.
-* `card_reinstall` - (Optional) Type: `string`.
-* `card_verify` - (Optional) Type: `string`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `acme` - (Read-only) Type: `bool`.
+* `acme_status` - (Read-only) Type: `string`.
+* `add_acme` - (Read-only) Type: `string`.
+* `akid` - (Read-only) Type: `string`.
+* `authority` - (Read-only) Type: `bool`.
+* `ca` - (Read-only) Type: `string`.
+* `ca_crl_host` - (Read-only) Type: `string`.
+* `ca_fingerprint` - (Read-only) Type: `string`.
+* `card_reinstall` - (Read-only) Type: `string`.
+* `card_verify` - (Read-only) Type: `string`.
 * `common_name` - (Optional) Type: `string`.
 * `country` - (Optional) Type: `string`.
-* `create_cert_request` - (Optional) Type: `string`.
-* `crl` - (Optional) Type: `bool`.
-* `days_valid` - (Optional) Type: `int`. Default: `365`.
-* `digest_algorithm` - (Optional) Type: `enum(md5|sha1|sha256|sha384|sha512)`.
-* `dynamic` - (Optional) Type: `bool`.
-* `expired` - (Optional) Type: `bool`.
-* `export` - (Optional) Type: `string`.
-* `has_acme_status` - (Optional) Type: `string`.
-* `import` - (Optional) Type: `string`.
-* `issued` - (Optional) Type: `bool`.
-* `key_size` - (Optional) Type: `enum(prime256v1|secp384r1|secp521r1|1024|1536|2048, ...)`. Default: `2048`.
-* `key_usage` - (Optional) Type: `string`. Default: `109`.
+* `create_cert_request` - (Read-only) Type: `string`.
+* `crl` - (Read-only) Type: `bool`.
+* `days_valid` - (Optional) Type: `int`.
+* `digest_algorithm` - (Optional) Type: `string`.
+* `dynamic` - (Read-only) Type: `bool`.
+* `expired` - (Read-only) Type: `bool`.
+* `expires_after` - (Read-only) Type: `string`.
+* `export` - (Read-only) Type: `string`.
+* `fingerprint` - (Read-only) Type: `string`.
+* `has_acme_status` - (Read-only) Type: `string`.
+* `import` - (Read-only) Type: `string`.
+* `invalid_after` - (Read-only) Type: `string`.
+* `invalid_before` - (Read-only) Type: `string`.
+* `issued` - (Read-only) Type: `bool`.
+* `issuer` - (Read-only) Type: `string`.
+* `key_size` - (Optional) Type: `string`.
+* `key_type` - (Read-only) Type: `string`.
+* `key_usage` - (Optional) Type: `string`.
 * `locality` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
-* `notsealed` - (Optional) Type: `string`.
+* `notsealed` - (Read-only) Type: `string`.
 * `organization` - (Optional) Type: `string`.
-* `private_key` - (Optional) Type: `bool`.
-* `revoke` - (Optional) Type: `string`.
-* `revoked` - (Optional) Type: `bool`.
-* `sealed` - (Optional) Type: `string`.
-* `sealed_and_hide` - (Optional) Type: `string`.
-* `sign` - (Optional) Type: `string`.
-* `sign_via_scep` - (Optional) Type: `string`.
-* `smart_card_key` - (Optional) Type: `bool`.
+* `private_key` - (Read-only) Type: `bool`. **Sensitive.**
+* `req_fingerprint` - (Read-only) Type: `string`.
+* `revoke` - (Read-only) Type: `string`.
+* `revoked` - (Read-only) Type: `bool`.
+* `revoked_time` - (Read-only) Type: `string`.
+* `scep_url` - (Read-only) Type: `string`.
+* `sealed` - (Read-only) Type: `string`.
+* `sealed_and_hide` - (Read-only) Type: `string`.
+* `serial_number` - (Read-only) Type: `string`.
+* `sign` - (Read-only) Type: `string`.
+* `sign_via_scep` - (Read-only) Type: `string`.
+* `skid` - (Read-only) Type: `string`.
+* `smart_card_key` - (Read-only) Type: `bool`.
 * `state` - (Optional) Type: `string`.
 * `subject_alt_name` - (Optional) Type: `string`.
-* `trust_store` - (Optional) Type: `string`. Default: `4.294967295e+09`.
-* `trusted` - (Optional) Type: `bool`. Default: `1`.
-* `type` - (Optional) Type: `int`.
+* `trust_store` - (Optional) Type: `string`.
+* `trusted` - (Optional) Type: `bool`.
+* `type` - (Read-only) Type: `int`.
 * `unit` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `acme_status` - Type: `string`.
-* `akid` - Type: `string`.
-* `ca` - Type: `string`.
-* `ca_crl_host` - Type: `string`.
-* `ca_fingerprint` - Type: `string`.
-* `expires_after` - Type: `string`.
-* `fingerprint` - Type: `string`.
-* `invalid_after` - Type: `string`.
-* `invalid_before` - Type: `string`.
-* `issuer` - Type: `string`.
-* `key_type` - Type: `enum(rsa|dsa|ec)`.
-* `req_fingerprint` - Type: `string`.
-* `revoked_time` - Type: `string`.
-* `scep_url` - Type: `string`.
-* `serial_number` - Type: `string`.
-* `skid` - Type: `string`.
 
 ## Import
 

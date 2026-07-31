@@ -31,21 +31,21 @@ resource "routeros_ip_dhcp_server_alert" "alert_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `alert_timeout` - (Optional) Type: `duration`. Default: `3600`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `alert_timeout` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `interface` - (Required) Type: `string`.
 * `on_alert` - (Optional) Type: `string`.
-* `reset_alert` - (Optional) Type: `string`.
-* `valid_servers` - (Optional) Type: `string`.
+* `reset_alert` - (Read-only) Type: `string`.
+* `unknown_servers` - (Read-only) Type: `string`.
+* `valid_server` - (Optional) Type: `string`. RouterOS `valid-server`.
+* `valid_servers` - (Read-only) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `unknown_servers` - Type: `string`.
 
 ## Import
 

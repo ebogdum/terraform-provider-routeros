@@ -29,21 +29,20 @@ resource "routeros_partition" "partition_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `activate` - (Optional) Type: `string`.
-* `active` - (Optional) Type: `bool`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `activate` - (Read-only) Type: `string`.
+* `active` - (Read-only) Type: `bool`.
 * `comment` - (Optional) Type: `string`.
 * `fallback_to` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
-* `running` - (Optional) Type: `bool`.
+* `running` - (Read-only) Type: `bool`.
+* `size` - (Read-only) Type: `int`.
+* `version` - (Read-only) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `size` - Type: `int`.
-* `version` - Type: `string`.
 
 ## Import
 

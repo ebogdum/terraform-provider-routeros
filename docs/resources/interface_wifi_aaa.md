@@ -33,7 +33,7 @@ resource "routeros_interface_wifi_aaa" "aaa_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `called_format` - (Optional) Type: `string`.
 * `calling_format` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`.
@@ -44,6 +44,11 @@ This resource supports the following arguments:
 * `nas_identifier` - (Optional) Type: `string`.
 * `password_format` - (Optional) Type: `string`.
 * `username_format` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

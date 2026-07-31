@@ -29,9 +29,9 @@ resource "routeros_interface_ethernet" "ethernet_example" {
   # non_mgmt = "replace-me"
   # orig_mac_address = "10.99.0.0/24"
   # passthrough_interface = "replace-me"
-  # po_e_out = "off"
-  # po_e_priority = 0
-  # po_e_voltage = "auto"
+  # poe_out = "off"
+  # poe_priority = 0
+  # poe_voltage = "auto"
   # poe = "replace-me"
   # poeping = "replace-me"
   # power_cycle = "replace-me"

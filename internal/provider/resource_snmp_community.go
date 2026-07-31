@@ -59,7 +59,6 @@ func (r *SNMPCommunityResource) Configure(_ context.Context, req resource.Config
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *SNMPCommunityResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -85,10 +84,11 @@ func (r *SNMPCommunityResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"authentication_protocol": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"md5", "sha1"}...)},
+				Optional:      true,
+				Computed:      true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.OneOfFold([]string{"MD5", "SHA1"}...)},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeCase([]string{"MD5", "SHA1"}...)},
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -96,7 +96,6 @@ func (r *SNMPCommunityResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "Free-form comment.",
 			},
 			"default": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -112,10 +111,11 @@ func (r *SNMPCommunityResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"encryption_protocol": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"des", "aes"}...)},
+				Optional:      true,
+				Computed:      true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.OneOfFold([]string{"DES", "AES"}...)},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeCase([]string{"DES", "AES"}...)},
 			},
 			"name": schema.StringAttribute{
 				Required:    true,

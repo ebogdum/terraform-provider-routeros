@@ -47,30 +47,37 @@ resource "routeros_ip_dhcp_server_network" "network_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `address` - (Required) Type: `cidr`. Default: `10.255.255.0/30`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `address` - (Required) Type: `string`.
 * `boot_file_name` - (Optional) Type: `string`.
 * `caps_manager` - (Optional) Type: `string`.
-* `caps_managers` - (Optional) Type: `string`.
+* `caps_managers` - (Read-only) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `dhcp_option` - (Optional) Type: `string`.
-* `dhcp_option_set` - (Optional) Type: `string`. Default: `4.294967295e+09`.
-* `dhcp_options` - (Optional) Type: `string`.
+* `dhcp_option_set` - (Optional) Type: `string`.
+* `dhcp_options` - (Read-only) Type: `string`.
+* `dns_none` - (Optional) Type: `string`. RouterOS `dns-none`.
 * `dns_server` - (Optional) Type: `string`.
-* `dns_servers` - (Optional) Type: `string`.
+* `dns_servers` - (Read-only) Type: `string`.
 * `domain` - (Optional) Type: `string`.
-* `dynamic` - (Optional) Type: `string`.
-* `gateway` - (Optional) Type: `string`. Default: `10.255.255.1`.
+* `dynamic` - (Read-only) Type: `string`.
+* `gateway` - (Optional) Type: `string`.
 * `netmask` - (Optional) Type: `string`.
 * `next_server` - (Optional) Type: `string`.
-* `nndns` - (Optional) Type: `string`.
-* `nnntp` - (Optional) Type: `string`.
-* `no_dns` - (Optional) Type: `bool`.
-* `no_ntp` - (Optional) Type: `bool`.
+* `nndns` - (Read-only) Type: `string`.
+* `nnntp` - (Read-only) Type: `string`.
+* `no_dns` - (Read-only) Type: `bool`.
+* `no_ntp` - (Read-only) Type: `bool`.
+* `ntp_none` - (Optional) Type: `string`. RouterOS `ntp-none`.
 * `ntp_server` - (Optional) Type: `string`.
-* `ntp_servers` - (Optional) Type: `string`.
+* `ntp_servers` - (Read-only) Type: `string`.
 * `wins_server` - (Optional) Type: `string`.
-* `wins_servers` - (Optional) Type: `string`.
+* `wins_servers` - (Read-only) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

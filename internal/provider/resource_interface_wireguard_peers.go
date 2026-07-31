@@ -76,7 +76,6 @@ func (r *InterfaceWireguardPeersResource) Configure(_ context.Context, req resou
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceWireguardPeersResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -104,7 +103,6 @@ func (r *InterfaceWireguardPeersResource) Schema(_ context.Context, _ resource.S
 				Description: "",
 			},
 			"client_config": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -131,7 +129,6 @@ func (r *InterfaceWireguardPeersResource) Schema(_ context.Context, _ resource.S
 				Description: "",
 			},
 			"client_qr": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -141,12 +138,10 @@ func (r *InterfaceWireguardPeersResource) Schema(_ context.Context, _ resource.S
 				Description: "Free-form comment.",
 			},
 			"current_endpoint_address": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"current_endpoint_port": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -156,12 +151,10 @@ func (r *InterfaceWireguardPeersResource) Schema(_ context.Context, _ resource.S
 				Description: "Whether the entry is disabled.",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"endpoint": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -181,7 +174,6 @@ func (r *InterfaceWireguardPeersResource) Schema(_ context.Context, _ resource.S
 				Description: "",
 			},
 			"last_handshake": schema.StringAttribute{
-				Optional:      true,
 				Computed:      true,
 				Description:   "",
 				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
@@ -222,12 +214,10 @@ func (r *InterfaceWireguardPeersResource) Schema(_ context.Context, _ resource.S
 				Description: "",
 			},
 			"rx": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -276,9 +266,6 @@ func (r *InterfaceWireguardPeersResource) Create(ctx context.Context, req resour
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
-	}
-	if !(plan.Endpoint.IsNull() || plan.Endpoint.IsUnknown()) {
-		body["endpoint"] = plan.Endpoint.ValueString()
 	}
 	if !(plan.EndpointAddress.IsNull() || plan.EndpointAddress.IsUnknown()) {
 		body["endpoint-address"] = plan.EndpointAddress.ValueString()
@@ -380,9 +367,6 @@ func (r *InterfaceWireguardPeersResource) Update(ctx context.Context, req resour
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
-	}
-	if !plan.Endpoint.Equal(state.Endpoint) {
-		body["endpoint"] = plan.Endpoint.ValueString()
 	}
 	if !plan.EndpointAddress.Equal(state.EndpointAddress) {
 		body["endpoint-address"] = plan.EndpointAddress.ValueString()

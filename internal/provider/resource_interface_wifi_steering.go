@@ -30,6 +30,7 @@ type InterfaceWifiSteeringResource struct {
 
 type InterfaceWifiSteeringModel struct {
 	ID                        types.String `tfsdk:"id"`
+	TransitionRequestPeriod   types.String `tfsdk:"transition_request_period"`
 	X2gProbeDelay             types.String `tfsdk:"x2g_probe_delay"`
 	Comment                   types.String `tfsdk:"comment"`
 	Disabled                  types.Bool   `tfsdk:"disabled"`
@@ -58,7 +59,6 @@ func (r *InterfaceWifiSteeringResource) Configure(_ context.Context, req resourc
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceWifiSteeringResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -69,6 +69,11 @@ func (r *InterfaceWifiSteeringResource) Schema(_ context.Context, _ resource.Sch
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"transition_request_period": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `transition-request-period`.",
 			},
 			"x2g_probe_delay": schema.StringAttribute{
 				Optional:    true,
@@ -192,6 +197,9 @@ func (r *InterfaceWifiSteeringResource) Create(ctx context.Context, req resource
 	if !(plan.Wnm.IsNull() || plan.Wnm.IsUnknown()) {
 		body["wnm"] = plan.Wnm.ValueString()
 	}
+	if !(plan.TransitionRequestPeriod.IsNull() || plan.TransitionRequestPeriod.IsUnknown()) {
+		body["transition-request-period"] = plan.TransitionRequestPeriod.ValueString()
+	}
 	obj, err := c.Add(ctx, "/interface/wifi/steering", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /interface/wifi/steering failed", err.Error())
@@ -278,6 +286,9 @@ func (r *InterfaceWifiSteeringResource) Update(ctx context.Context, req resource
 	if !plan.Wnm.Equal(state.Wnm) {
 		body["wnm"] = plan.Wnm.ValueString()
 	}
+	if !plan.TransitionRequestPeriod.Equal(state.TransitionRequestPeriod) && !plan.TransitionRequestPeriod.IsUnknown() {
+		body["transition-request-period"] = plan.TransitionRequestPeriod.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/wifi/steering", state.ID.ValueString(), body)
 		if err != nil {
@@ -344,6 +355,11 @@ func interfaceWifiSteeringLookupByNaturalKey(ctx context.Context, c *client.Clie
 func interfaceWifiSteeringApply(ctx context.Context, obj client.Object, m *InterfaceWifiSteeringModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["transition-request-period"]; ok && v != "" {
+		m.TransitionRequestPeriod = types.StringValue(v)
+	} else {
+		m.TransitionRequestPeriod = types.StringNull()
+	}
 	if v, ok := obj["2g-probe-delay"]; ok {
 		_ = v
 		if v != "" {

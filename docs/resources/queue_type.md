@@ -46,20 +46,49 @@ resource "routeros_queue_type" "type_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `kind` - (Required) Type: `enum(|bfifo|pfifo|red|sfq|pcq, ...)`. Default: `pfifo`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `bfifo_limit` - (Optional) Type: `string`. RouterOS `bfifo-limit`.
+* `cake_ack_filter` - (Optional) Type: `string`. RouterOS `cake-ack-filter`.
+* `cake_atm` - (Optional) Type: `string`. RouterOS `cake-atm`.
+* `cake_autorate_ingress` - (Optional) Type: `string`. RouterOS `cake-autorate-ingress`.
+* `cake_bandwidth` - (Optional) Type: `string`. RouterOS `cake-bandwidth`.
+* `cake_diffserv` - (Optional) Type: `string`. RouterOS `cake-diffserv`.
+* `cake_flowmode` - (Optional) Type: `string`. RouterOS `cake-flowmode`.
+* `cake_memlimit` - (Optional) Type: `string`. RouterOS `cake-memlimit`.
+* `cake_mpu` - (Optional) Type: `string`. RouterOS `cake-mpu`.
+* `cake_nat` - (Optional) Type: `string`. RouterOS `cake-nat`.
+* `cake_overhead` - (Optional) Type: `string`. RouterOS `cake-overhead`.
+* `cake_overhead_scheme` - (Optional) Type: `string`. RouterOS `cake-overhead-scheme`.
+* `cake_rtt` - (Optional) Type: `string`. RouterOS `cake-rtt`.
+* `cake_rtt_scheme` - (Optional) Type: `string`. RouterOS `cake-rtt-scheme`.
+* `cake_wash` - (Optional) Type: `string`. RouterOS `cake-wash`.
+* `codel_ce_threshold` - (Optional) Type: `string`. RouterOS `codel-ce-threshold`.
+* `codel_ecn` - (Optional) Type: `string`. RouterOS `codel-ecn`.
+* `codel_interval` - (Optional) Type: `string`. RouterOS `codel-interval`.
+* `codel_limit` - (Optional) Type: `string`. RouterOS `codel-limit`.
+* `codel_target` - (Optional) Type: `string`. RouterOS `codel-target`.
+* `default` - (Read-only) Type: `bool`.
+* `fq_codel_ce_threshold` - (Optional) Type: `string`. RouterOS `fq-codel-ce-threshold`.
+* `fq_codel_ecn` - (Optional) Type: `string`. RouterOS `fq-codel-ecn`.
+* `fq_codel_flows` - (Optional) Type: `string`. RouterOS `fq-codel-flows`.
+* `fq_codel_interval` - (Optional) Type: `string`. RouterOS `fq-codel-interval`.
+* `fq_codel_limit` - (Optional) Type: `string`. RouterOS `fq-codel-limit`.
+* `fq_codel_memlimit` - (Optional) Type: `string`. RouterOS `fq-codel-memlimit`.
+* `fq_codel_quantum` - (Optional) Type: `string`. RouterOS `fq-codel-quantum`.
+* `fq_codel_target` - (Optional) Type: `string`. RouterOS `fq-codel-target`.
+* `kind` - (Required) Type: `string`.
 * `mq_pfifo_limit` - (Optional) Type: `int`.
-* `name` - (Required) Type: `string`. Default: `tf-acc-qtype`.
+* `name` - (Required) Type: `string`.
 * `pcq_burst_rate` - (Optional) Type: `int`.
 * `pcq_burst_threshold` - (Optional) Type: `int`.
-* `pcq_burst_time` - (Optional) Type: `duration`.
+* `pcq_burst_time` - (Optional) Type: `string`.
 * `pcq_classifier` - (Optional) Type: `string`.
-* `pcq_dst_address_mask` - (Optional) Type: `int`.
 * `pcq_dst_address6_mask` - (Optional) Type: `int`.
+* `pcq_dst_address_mask` - (Optional) Type: `int`.
 * `pcq_limit` - (Optional) Type: `int`.
 * `pcq_rate` - (Optional) Type: `int`.
-* `pcq_src_address_mask` - (Optional) Type: `int`.
 * `pcq_src_address6_mask` - (Optional) Type: `int`.
+* `pcq_src_address_mask` - (Optional) Type: `int`.
 * `pcq_total_limit` - (Optional) Type: `int`.
 * `pfifo_limit` - (Optional) Type: `int`.
 * `red_avg_packet` - (Optional) Type: `int`.
@@ -69,14 +98,12 @@ This resource supports the following arguments:
 * `red_min_threshold` - (Optional) Type: `int`.
 * `sfq_allot` - (Optional) Type: `int`.
 * `sfq_perturb` - (Optional) Type: `int`.
-* `type_name` - (Optional) Type: `string`.
+* `type_name` - (Read-only) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `default` - Type: `bool`.
 
 ## Import
 

@@ -58,7 +58,6 @@ func (r *UserSSHKeysResource) Configure(_ context.Context, req resource.Configur
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *UserSSHKeysResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -71,7 +70,6 @@ func (r *UserSSHKeysResource) Schema(_ context.Context, _ resource.SchemaRequest
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"bits": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -86,7 +84,6 @@ func (r *UserSSHKeysResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Description: "Whether the entry is disabled.",
 			},
 			"fingerprint": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -96,7 +93,6 @@ func (r *UserSSHKeysResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Description: "",
 			},
 			"info": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -107,7 +103,6 @@ func (r *UserSSHKeysResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Description: "",
 			},
 			"key_type": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.OneOf([]string{"rsa", "ed25519", "ed25519-sk"}...)},
@@ -123,7 +118,6 @@ func (r *UserSSHKeysResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Description: "",
 			},
 			"user": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},

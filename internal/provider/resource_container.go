@@ -67,7 +67,6 @@ func (r *ContainerResource) Configure(_ context.Context, req resource.ConfigureR
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *ContainerResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {

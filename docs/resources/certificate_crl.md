@@ -27,26 +27,25 @@ resource "routeros_certificate_crl" "crl_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `download` - (Optional) Type: `string`.
-* `expired` - (Optional) Type: `bool`.
-* `flush` - (Optional) Type: `string`.
-* `url` - (Required) Type: `string`. Default: `http://invalid.example/crl`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `akid` - (Read-only) Type: `string`.
+* `certificate` - (Read-only) Type: `string`.
+* `download` - (Read-only) Type: `string`.
+* `dynamic` - (Read-only) Type: `bool`.
+* `expired` - (Read-only) Type: `bool`.
+* `flush` - (Read-only) Type: `string`.
+* `invalid` - (Read-only) Type: `bool`.
+* `last_update` - (Read-only) Type: `string`.
+* `next_update` - (Read-only) Type: `string`.
+* `num` - (Read-only) Type: `int`.
+* `revoked` - (Read-only) Type: `int`.
+* `signature` - (Read-only) Type: `string`.
+* `url` - (Required) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `akid` - Type: `string`.
-* `certificate` - Type: `string`.
-* `dynamic` - Type: `bool`.
-* `invalid` - Type: `bool`.
-* `last_update` - Type: `string`.
-* `next_update` - Type: `string`.
-* `num` - Type: `int`.
-* `revoked` - Type: `int`.
-* `signature` - Type: `string`.
 
 ## Import
 

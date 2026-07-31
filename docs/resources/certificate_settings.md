@@ -28,12 +28,17 @@ resource "routeros_certificate_settings" "settings_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `builtin_trust_store` - (Optional) Type: `string`.
 * `crl_download` - (Optional) Type: `bool`.
 * `crl_store` - (Optional) Type: `string`.
 * `crl_use` - (Optional) Type: `bool`.
 * `current_defaults` - (Optional) Type: `list`.
+
+## Attribute Reference
+
+* `id` - Stable identifier (the singleton's menu path, optionally namespaced by router).
+
 
 ## Import
 

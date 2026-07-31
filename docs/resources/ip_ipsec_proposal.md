@@ -31,22 +31,21 @@ resource "routeros_ip_ipsec_proposal" "proposal_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `auth_algorithms` - (Optional) Type: `enum(md5|sha1|null|sha256|sha512)`. Default: `128`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `auth_algorithms` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `default` - (Read-only) Type: `bool`.
 * `disabled` - (Optional) Type: `bool`.
 * `enc_algorithms` - (Optional) Type: `list`.
-* `encr_algorithms` - (Optional) Type: `string`. Default: `4`.
-* `lifetime` - (Optional) Type: `duration`. Default: `1800`.
+* `encr_algorithms` - (Read-only) Type: `string`.
+* `lifetime` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
 * `pfs_group` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `default` - Type: `bool`.
 
 ## Import
 

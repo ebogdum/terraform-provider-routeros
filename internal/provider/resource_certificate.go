@@ -100,7 +100,6 @@ func (r *CertificateResource) Configure(_ context.Context, req resource.Configur
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *CertificateResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -113,52 +112,42 @@ func (r *CertificateResource) Schema(_ context.Context, _ resource.SchemaRequest
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"acme": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"acme_status": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"add_acme": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"akid": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"authority": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"ca": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"ca_crl_host": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"ca_fingerprint": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"card_reinstall": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"card_verify": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -173,12 +162,10 @@ func (r *CertificateResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Description: "",
 			},
 			"create_cert_request": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"crl": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -194,57 +181,46 @@ func (r *CertificateResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Validators:  []validator.String{schemautil.OneOf([]string{"md5", "sha1", "sha256", "sha384", "sha512"}...)},
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"expired": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"expires_after": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"export": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"fingerprint": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"has_acme_status": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"import": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"invalid_after": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"invalid_before": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"issued": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"issuer": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -255,7 +231,6 @@ func (r *CertificateResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Validators:  []validator.String{schemautil.OneOf([]string{"prime256v1", "secp384r1", "secp521r1", "1024", "1536", "2048", "4096", "8192", "16384"}...)},
 			},
 			"key_type": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.OneOf([]string{"rsa", "dsa", "ec"}...)},
@@ -276,7 +251,6 @@ func (r *CertificateResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Description: "",
 			},
 			"notsealed": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -286,67 +260,55 @@ func (r *CertificateResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Description: "",
 			},
 			"private_key": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
+				Sensitive:   true,
 				Description: "",
 			},
 			"req_fingerprint": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"revoke": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"revoked": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"revoked_time": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"scep_url": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"sealed": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"sealed_and_hide": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"serial_number": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"sign": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"sign_via_scep": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"skid": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"smart_card_key": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -371,7 +333,6 @@ func (r *CertificateResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Description: "",
 			},
 			"type": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -399,56 +360,17 @@ func (r *CertificateResource) Create(ctx context.Context, req resource.CreateReq
 		return
 	}
 	body := client.Object{}
-	if !(plan.Acme.IsNull() || plan.Acme.IsUnknown()) {
-		body["acme"] = client.FormatBool(plan.Acme.ValueBool())
-	}
-	if !(plan.AddAcme.IsNull() || plan.AddAcme.IsUnknown()) {
-		body["add-acme"] = plan.AddAcme.ValueString()
-	}
-	if !(plan.Authority.IsNull() || plan.Authority.IsUnknown()) {
-		body["authority"] = client.FormatBool(plan.Authority.ValueBool())
-	}
-	if !(plan.CardReinstall.IsNull() || plan.CardReinstall.IsUnknown()) {
-		body["card-reinstall"] = plan.CardReinstall.ValueString()
-	}
-	if !(plan.CardVerify.IsNull() || plan.CardVerify.IsUnknown()) {
-		body["card-verify"] = plan.CardVerify.ValueString()
-	}
 	if !(plan.CommonName.IsNull() || plan.CommonName.IsUnknown()) {
 		body["common-name"] = plan.CommonName.ValueString()
 	}
 	if !(plan.Country.IsNull() || plan.Country.IsUnknown()) {
 		body["country"] = plan.Country.ValueString()
 	}
-	if !(plan.CreateCertRequest.IsNull() || plan.CreateCertRequest.IsUnknown()) {
-		body["create-cert-request"] = plan.CreateCertRequest.ValueString()
-	}
-	if !(plan.Crl.IsNull() || plan.Crl.IsUnknown()) {
-		body["crl"] = client.FormatBool(plan.Crl.ValueBool())
-	}
 	if !(plan.DaysValid.IsNull() || plan.DaysValid.IsUnknown()) {
 		body["days-valid"] = client.FormatInt64(plan.DaysValid.ValueInt64())
 	}
 	if !(plan.DigestAlgorithm.IsNull() || plan.DigestAlgorithm.IsUnknown()) {
 		body["digest-algorithm"] = plan.DigestAlgorithm.ValueString()
-	}
-	if !(plan.Dynamic.IsNull() || plan.Dynamic.IsUnknown()) {
-		body["dynamic"] = client.FormatBool(plan.Dynamic.ValueBool())
-	}
-	if !(plan.Expired.IsNull() || plan.Expired.IsUnknown()) {
-		body["expired"] = client.FormatBool(plan.Expired.ValueBool())
-	}
-	if !(plan.Export.IsNull() || plan.Export.IsUnknown()) {
-		body["export"] = plan.Export.ValueString()
-	}
-	if !(plan.HasAcmeStatus.IsNull() || plan.HasAcmeStatus.IsUnknown()) {
-		body["has-acme-status"] = plan.HasAcmeStatus.ValueString()
-	}
-	if !(plan.Import.IsNull() || plan.Import.IsUnknown()) {
-		body["import"] = plan.Import.ValueString()
-	}
-	if !(plan.Issued.IsNull() || plan.Issued.IsUnknown()) {
-		body["issued"] = client.FormatBool(plan.Issued.ValueBool())
 	}
 	if !(plan.KeySize.IsNull() || plan.KeySize.IsUnknown()) {
 		body["key-size"] = plan.KeySize.ValueString()
@@ -462,35 +384,8 @@ func (r *CertificateResource) Create(ctx context.Context, req resource.CreateReq
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !(plan.Notsealed.IsNull() || plan.Notsealed.IsUnknown()) {
-		body["notsealed"] = plan.Notsealed.ValueString()
-	}
 	if !(plan.Organization.IsNull() || plan.Organization.IsUnknown()) {
 		body["organization"] = plan.Organization.ValueString()
-	}
-	if !(plan.PrivateKey.IsNull() || plan.PrivateKey.IsUnknown()) {
-		body["private-key"] = client.FormatBool(plan.PrivateKey.ValueBool())
-	}
-	if !(plan.Revoke.IsNull() || plan.Revoke.IsUnknown()) {
-		body["revoke"] = plan.Revoke.ValueString()
-	}
-	if !(plan.Revoked.IsNull() || plan.Revoked.IsUnknown()) {
-		body["revoked"] = client.FormatBool(plan.Revoked.ValueBool())
-	}
-	if !(plan.Sealed.IsNull() || plan.Sealed.IsUnknown()) {
-		body["sealed"] = plan.Sealed.ValueString()
-	}
-	if !(plan.SealedAndHide.IsNull() || plan.SealedAndHide.IsUnknown()) {
-		body["sealed-and-hide"] = plan.SealedAndHide.ValueString()
-	}
-	if !(plan.Sign.IsNull() || plan.Sign.IsUnknown()) {
-		body["sign"] = plan.Sign.ValueString()
-	}
-	if !(plan.SignViaScep.IsNull() || plan.SignViaScep.IsUnknown()) {
-		body["sign-via-scep"] = plan.SignViaScep.ValueString()
-	}
-	if !(plan.SmartCardKey.IsNull() || plan.SmartCardKey.IsUnknown()) {
-		body["smart-card-key"] = client.FormatBool(plan.SmartCardKey.ValueBool())
 	}
 	if !(plan.State.IsNull() || plan.State.IsUnknown()) {
 		body["state"] = plan.State.ValueString()
@@ -503,9 +398,6 @@ func (r *CertificateResource) Create(ctx context.Context, req resource.CreateReq
 	}
 	if !(plan.Trusted.IsNull() || plan.Trusted.IsUnknown()) {
 		body["trusted"] = client.FormatBool(plan.Trusted.ValueBool())
-	}
-	if !(plan.Type.IsNull() || plan.Type.IsUnknown()) {
-		body["type"] = client.FormatInt64(plan.Type.ValueInt64())
 	}
 	if !(plan.Unit.IsNull() || plan.Unit.IsUnknown()) {
 		body["unit"] = plan.Unit.ValueString()
@@ -557,56 +449,17 @@ func (r *CertificateResource) Update(ctx context.Context, req resource.UpdateReq
 		return
 	}
 	body := client.Object{}
-	if !plan.Acme.Equal(state.Acme) {
-		body["acme"] = client.FormatBool(plan.Acme.ValueBool())
-	}
-	if !plan.AddAcme.Equal(state.AddAcme) {
-		body["add-acme"] = plan.AddAcme.ValueString()
-	}
-	if !plan.Authority.Equal(state.Authority) {
-		body["authority"] = client.FormatBool(plan.Authority.ValueBool())
-	}
-	if !plan.CardReinstall.Equal(state.CardReinstall) {
-		body["card-reinstall"] = plan.CardReinstall.ValueString()
-	}
-	if !plan.CardVerify.Equal(state.CardVerify) {
-		body["card-verify"] = plan.CardVerify.ValueString()
-	}
 	if !plan.CommonName.Equal(state.CommonName) {
 		body["common-name"] = plan.CommonName.ValueString()
 	}
 	if !plan.Country.Equal(state.Country) {
 		body["country"] = plan.Country.ValueString()
 	}
-	if !plan.CreateCertRequest.Equal(state.CreateCertRequest) {
-		body["create-cert-request"] = plan.CreateCertRequest.ValueString()
-	}
-	if !plan.Crl.Equal(state.Crl) {
-		body["crl"] = client.FormatBool(plan.Crl.ValueBool())
-	}
 	if !plan.DaysValid.Equal(state.DaysValid) {
 		body["days-valid"] = client.FormatInt64(plan.DaysValid.ValueInt64())
 	}
 	if !plan.DigestAlgorithm.Equal(state.DigestAlgorithm) {
 		body["digest-algorithm"] = plan.DigestAlgorithm.ValueString()
-	}
-	if !plan.Dynamic.Equal(state.Dynamic) {
-		body["dynamic"] = client.FormatBool(plan.Dynamic.ValueBool())
-	}
-	if !plan.Expired.Equal(state.Expired) {
-		body["expired"] = client.FormatBool(plan.Expired.ValueBool())
-	}
-	if !plan.Export.Equal(state.Export) {
-		body["export"] = plan.Export.ValueString()
-	}
-	if !plan.HasAcmeStatus.Equal(state.HasAcmeStatus) {
-		body["has-acme-status"] = plan.HasAcmeStatus.ValueString()
-	}
-	if !plan.Import.Equal(state.Import) {
-		body["import"] = plan.Import.ValueString()
-	}
-	if !plan.Issued.Equal(state.Issued) {
-		body["issued"] = client.FormatBool(plan.Issued.ValueBool())
 	}
 	if !plan.KeySize.Equal(state.KeySize) {
 		body["key-size"] = plan.KeySize.ValueString()
@@ -620,35 +473,8 @@ func (r *CertificateResource) Update(ctx context.Context, req resource.UpdateReq
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Notsealed.Equal(state.Notsealed) {
-		body["notsealed"] = plan.Notsealed.ValueString()
-	}
 	if !plan.Organization.Equal(state.Organization) {
 		body["organization"] = plan.Organization.ValueString()
-	}
-	if !plan.PrivateKey.Equal(state.PrivateKey) {
-		body["private-key"] = client.FormatBool(plan.PrivateKey.ValueBool())
-	}
-	if !plan.Revoke.Equal(state.Revoke) {
-		body["revoke"] = plan.Revoke.ValueString()
-	}
-	if !plan.Revoked.Equal(state.Revoked) {
-		body["revoked"] = client.FormatBool(plan.Revoked.ValueBool())
-	}
-	if !plan.Sealed.Equal(state.Sealed) {
-		body["sealed"] = plan.Sealed.ValueString()
-	}
-	if !plan.SealedAndHide.Equal(state.SealedAndHide) {
-		body["sealed-and-hide"] = plan.SealedAndHide.ValueString()
-	}
-	if !plan.Sign.Equal(state.Sign) {
-		body["sign"] = plan.Sign.ValueString()
-	}
-	if !plan.SignViaScep.Equal(state.SignViaScep) {
-		body["sign-via-scep"] = plan.SignViaScep.ValueString()
-	}
-	if !plan.SmartCardKey.Equal(state.SmartCardKey) {
-		body["smart-card-key"] = client.FormatBool(plan.SmartCardKey.ValueBool())
 	}
 	if !plan.State.Equal(state.State) {
 		body["state"] = plan.State.ValueString()
@@ -661,9 +487,6 @@ func (r *CertificateResource) Update(ctx context.Context, req resource.UpdateReq
 	}
 	if !plan.Trusted.Equal(state.Trusted) {
 		body["trusted"] = client.FormatBool(plan.Trusted.ValueBool())
-	}
-	if !plan.Type.Equal(state.Type) {
-		body["type"] = client.FormatInt64(plan.Type.ValueInt64())
 	}
 	if !plan.Unit.Equal(state.Unit) {
 		body["unit"] = plan.Unit.ValueString()

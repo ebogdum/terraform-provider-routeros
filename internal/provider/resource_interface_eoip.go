@@ -49,7 +49,7 @@ type InterfaceEoipModel struct {
 	LoopProtectDisableTime  types.String `tfsdk:"loop_protect_disable_time"`
 	LoopProtectSendInterval types.String `tfsdk:"loop_protect_send_interval"`
 	MACAddress              types.String `tfsdk:"mac_address"`
-	MTU                     types.Int64  `tfsdk:"mtu"`
+	MTU                     types.String `tfsdk:"mtu"`
 	Name                    types.String `tfsdk:"name"`
 	RemoteAddress           types.String `tfsdk:"remote_address"`
 	SendInterval            types.String `tfsdk:"send_interval"`
@@ -70,7 +70,6 @@ func (r *InterfaceEoipResource) Configure(_ context.Context, req resource.Config
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceEoipResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -83,7 +82,6 @@ func (r *InterfaceEoipResource) Schema(_ context.Context, _ resource.SchemaReque
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"actual_mtu": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -102,7 +100,7 @@ func (r *InterfaceEoipResource) Schema(_ context.Context, _ resource.SchemaReque
 				Optional:      true,
 				Computed:      true,
 				Description:   "Time interval in which ARP entries should time out.",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
+				Validators:    []validator.String{schemautil.IsDurationOrKeyword("auto")},
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
 			},
 			"clamp_tcp_mss": schema.BoolAttribute{
@@ -116,7 +114,6 @@ func (r *InterfaceEoipResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "Free-form comment.",
 			},
 			"disable_time": schema.StringAttribute{
-				Optional:      true,
 				Computed:      true,
 				Description:   "",
 				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
@@ -177,10 +174,10 @@ func (r *InterfaceEoipResource) Schema(_ context.Context, _ resource.SchemaReque
 				Computed:    true,
 				Description: "Media Access Control number of an interface. The address numeration authority IANA allows the use of MAC addresses in the range from 00:00:5E:80:00:00 - 00:00:5E:FF:FF:FF freely",
 			},
-			"mtu": schema.Int64Attribute{
+			"mtu": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "Layer3 Maximum transmission unit",
+				Description: "Layer3 Maximum transmission unit A number, or `auto`.",
 			},
 			"name": schema.StringAttribute{
 				Required:    true,
@@ -191,14 +188,12 @@ func (r *InterfaceEoipResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "IP address of remote end of EoIP tunnel",
 			},
 			"send_interval": schema.StringAttribute{
-				Optional:      true,
 				Computed:      true,
 				Description:   "",
 				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
 			},
 			"status": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.OneOf([]string{"", "off", "on", "disabled"}...)},
@@ -241,9 +236,6 @@ func (r *InterfaceEoipResource) Create(ctx context.Context, req resource.CreateR
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !(plan.DisableTime.IsNull() || plan.DisableTime.IsUnknown()) {
-		body["disable-time"] = plan.DisableTime.ValueString()
-	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
@@ -275,16 +267,13 @@ func (r *InterfaceEoipResource) Create(ctx context.Context, req resource.CreateR
 		body["mac-address"] = plan.MACAddress.ValueString()
 	}
 	if !(plan.MTU.IsNull() || plan.MTU.IsUnknown()) {
-		body["mtu"] = client.FormatInt64(plan.MTU.ValueInt64())
+		body["mtu"] = plan.MTU.ValueString()
 	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
 	}
 	if !(plan.RemoteAddress.IsNull() || plan.RemoteAddress.IsUnknown()) {
 		body["remote-address"] = plan.RemoteAddress.ValueString()
-	}
-	if !(plan.SendInterval.IsNull() || plan.SendInterval.IsUnknown()) {
-		body["send-interval"] = plan.SendInterval.ValueString()
 	}
 	if !(plan.TunnelID.IsNull() || plan.TunnelID.IsUnknown()) {
 		body["tunnel-id"] = client.FormatInt64(plan.TunnelID.ValueInt64())
@@ -351,9 +340,6 @@ func (r *InterfaceEoipResource) Update(ctx context.Context, req resource.UpdateR
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.DisableTime.Equal(state.DisableTime) {
-		body["disable-time"] = plan.DisableTime.ValueString()
-	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
@@ -385,16 +371,13 @@ func (r *InterfaceEoipResource) Update(ctx context.Context, req resource.UpdateR
 		body["mac-address"] = plan.MACAddress.ValueString()
 	}
 	if !plan.MTU.Equal(state.MTU) {
-		body["mtu"] = client.FormatInt64(plan.MTU.ValueInt64())
+		body["mtu"] = plan.MTU.ValueString()
 	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
 	}
 	if !plan.RemoteAddress.Equal(state.RemoteAddress) {
 		body["remote-address"] = plan.RemoteAddress.ValueString()
-	}
-	if !plan.SendInterval.Equal(state.SendInterval) {
-		body["send-interval"] = plan.SendInterval.ValueString()
 	}
 	if !plan.TunnelID.Equal(state.TunnelID) {
 		body["tunnel-id"] = client.FormatInt64(plan.TunnelID.ValueInt64())
@@ -641,13 +624,13 @@ func interfaceEoipApply(ctx context.Context, obj client.Object, m *InterfaceEoip
 	}
 	if v, ok := obj["mtu"]; ok {
 		_ = v
-		if n, err := client.ParseInt64(v); err == nil {
-			m.MTU = types.Int64Value(n)
+		if v != "" {
+			m.MTU = types.StringValue(v)
 		} else {
-			m.MTU = types.Int64Null()
+			m.MTU = types.StringNull()
 		}
 	} else {
-		m.MTU = types.Int64Null()
+		m.MTU = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
 		_ = v

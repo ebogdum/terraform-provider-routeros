@@ -29,15 +29,30 @@ type InterfaceL2TPEtherResource struct {
 }
 
 type InterfaceL2TPEtherModel struct {
-	ID           types.String `tfsdk:"id"`
-	Comment      types.String `tfsdk:"comment"`
-	Disabled     types.Bool   `tfsdk:"disabled"`
-	IpsecSecret  types.String `tfsdk:"ipsec_secret"`
-	LocalAddress types.String `tfsdk:"local_address"`
-	MACAddress   types.String `tfsdk:"mac_address"`
-	MTU          types.String `tfsdk:"mtu"`
-	Name         types.String `tfsdk:"name"`
-	Router       types.String `tfsdk:"router"`
+	ID                    types.String `tfsdk:"id"`
+	UseL2SpecificSublayer types.String `tfsdk:"use_l2_specific_sublayer"`
+	UseIpsec              types.String `tfsdk:"use_ipsec"`
+	UnmanagedMode         types.String `tfsdk:"unmanaged_mode"`
+	SendCookie            types.String `tfsdk:"send_cookie"`
+	RemoteTunnelId        types.String `tfsdk:"remote_tunnel_id"`
+	RemoteSessionId       types.String `tfsdk:"remote_session_id"`
+	PeerCookie            types.String `tfsdk:"peer_cookie"`
+	LocalTunnelId         types.String `tfsdk:"local_tunnel_id"`
+	LocalSessionId        types.String `tfsdk:"local_session_id"`
+	L2tpProtoVersion      types.String `tfsdk:"l2tp_proto_version"`
+	DigestHash            types.String `tfsdk:"digest_hash"`
+	CookieLength          types.String `tfsdk:"cookie_length"`
+	ConnectTo             types.String `tfsdk:"connect_to"`
+	CircuitId             types.String `tfsdk:"circuit_id"`
+	AllowFastPath         types.String `tfsdk:"allow_fast_path"`
+	Comment               types.String `tfsdk:"comment"`
+	Disabled              types.Bool   `tfsdk:"disabled"`
+	IpsecSecret           types.String `tfsdk:"ipsec_secret"`
+	LocalAddress          types.String `tfsdk:"local_address"`
+	MACAddress            types.String `tfsdk:"mac_address"`
+	MTU                   types.String `tfsdk:"mtu"`
+	Name                  types.String `tfsdk:"name"`
+	Router                types.String `tfsdk:"router"`
 }
 
 func NewInterfaceL2TPEtherResource() resource.Resource { return &InterfaceL2TPEtherResource{} }
@@ -52,7 +67,6 @@ func (r *InterfaceL2TPEtherResource) Configure(_ context.Context, req resource.C
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceL2TPEtherResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -63,6 +77,81 @@ func (r *InterfaceL2TPEtherResource) Schema(_ context.Context, _ resource.Schema
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"use_l2_specific_sublayer": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `use-l2-specific-sublayer`.",
+			},
+			"use_ipsec": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `use-ipsec`.",
+			},
+			"unmanaged_mode": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `unmanaged-mode`.",
+			},
+			"send_cookie": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `send-cookie`.",
+			},
+			"remote_tunnel_id": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `remote-tunnel-id`.",
+			},
+			"remote_session_id": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `remote-session-id`.",
+			},
+			"peer_cookie": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `peer-cookie`.",
+			},
+			"local_tunnel_id": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `local-tunnel-id`.",
+			},
+			"local_session_id": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `local-session-id`.",
+			},
+			"l2tp_proto_version": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `l2tp-proto-version`.",
+			},
+			"digest_hash": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `digest-hash`.",
+			},
+			"cookie_length": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `cookie-length`.",
+			},
+			"connect_to": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `connect-to`.",
+			},
+			"circuit_id": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `circuit-id`.",
+			},
+			"allow_fast_path": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `allow-fast-path`.",
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -76,6 +165,7 @@ func (r *InterfaceL2TPEtherResource) Schema(_ context.Context, _ resource.Schema
 			},
 			"ipsec_secret": schema.StringAttribute{
 				Optional:    true,
+				Sensitive:   true,
 				Computed:    true,
 				Description: "",
 			},
@@ -138,6 +228,51 @@ func (r *InterfaceL2TPEtherResource) Create(ctx context.Context, req resource.Cr
 	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
+	}
+	if !(plan.AllowFastPath.IsNull() || plan.AllowFastPath.IsUnknown()) {
+		body["allow-fast-path"] = plan.AllowFastPath.ValueString()
+	}
+	if !(plan.CircuitId.IsNull() || plan.CircuitId.IsUnknown()) {
+		body["circuit-id"] = plan.CircuitId.ValueString()
+	}
+	if !(plan.ConnectTo.IsNull() || plan.ConnectTo.IsUnknown()) {
+		body["connect-to"] = plan.ConnectTo.ValueString()
+	}
+	if !(plan.CookieLength.IsNull() || plan.CookieLength.IsUnknown()) {
+		body["cookie-length"] = plan.CookieLength.ValueString()
+	}
+	if !(plan.DigestHash.IsNull() || plan.DigestHash.IsUnknown()) {
+		body["digest-hash"] = plan.DigestHash.ValueString()
+	}
+	if !(plan.L2tpProtoVersion.IsNull() || plan.L2tpProtoVersion.IsUnknown()) {
+		body["l2tp-proto-version"] = plan.L2tpProtoVersion.ValueString()
+	}
+	if !(plan.LocalSessionId.IsNull() || plan.LocalSessionId.IsUnknown()) {
+		body["local-session-id"] = plan.LocalSessionId.ValueString()
+	}
+	if !(plan.LocalTunnelId.IsNull() || plan.LocalTunnelId.IsUnknown()) {
+		body["local-tunnel-id"] = plan.LocalTunnelId.ValueString()
+	}
+	if !(plan.PeerCookie.IsNull() || plan.PeerCookie.IsUnknown()) {
+		body["peer-cookie"] = plan.PeerCookie.ValueString()
+	}
+	if !(plan.RemoteSessionId.IsNull() || plan.RemoteSessionId.IsUnknown()) {
+		body["remote-session-id"] = plan.RemoteSessionId.ValueString()
+	}
+	if !(plan.RemoteTunnelId.IsNull() || plan.RemoteTunnelId.IsUnknown()) {
+		body["remote-tunnel-id"] = plan.RemoteTunnelId.ValueString()
+	}
+	if !(plan.SendCookie.IsNull() || plan.SendCookie.IsUnknown()) {
+		body["send-cookie"] = plan.SendCookie.ValueString()
+	}
+	if !(plan.UnmanagedMode.IsNull() || plan.UnmanagedMode.IsUnknown()) {
+		body["unmanaged-mode"] = plan.UnmanagedMode.ValueString()
+	}
+	if !(plan.UseIpsec.IsNull() || plan.UseIpsec.IsUnknown()) {
+		body["use-ipsec"] = plan.UseIpsec.ValueString()
+	}
+	if !(plan.UseL2SpecificSublayer.IsNull() || plan.UseL2SpecificSublayer.IsUnknown()) {
+		body["use-l2-specific-sublayer"] = plan.UseL2SpecificSublayer.ValueString()
 	}
 	obj, err := c.Add(ctx, "/interface/l2tp-ether", body)
 	if err != nil {
@@ -207,6 +342,51 @@ func (r *InterfaceL2TPEtherResource) Update(ctx context.Context, req resource.Up
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
 	}
+	if !plan.AllowFastPath.Equal(state.AllowFastPath) && !plan.AllowFastPath.IsUnknown() {
+		body["allow-fast-path"] = plan.AllowFastPath.ValueString()
+	}
+	if !plan.CircuitId.Equal(state.CircuitId) && !plan.CircuitId.IsUnknown() {
+		body["circuit-id"] = plan.CircuitId.ValueString()
+	}
+	if !plan.ConnectTo.Equal(state.ConnectTo) && !plan.ConnectTo.IsUnknown() {
+		body["connect-to"] = plan.ConnectTo.ValueString()
+	}
+	if !plan.CookieLength.Equal(state.CookieLength) && !plan.CookieLength.IsUnknown() {
+		body["cookie-length"] = plan.CookieLength.ValueString()
+	}
+	if !plan.DigestHash.Equal(state.DigestHash) && !plan.DigestHash.IsUnknown() {
+		body["digest-hash"] = plan.DigestHash.ValueString()
+	}
+	if !plan.L2tpProtoVersion.Equal(state.L2tpProtoVersion) && !plan.L2tpProtoVersion.IsUnknown() {
+		body["l2tp-proto-version"] = plan.L2tpProtoVersion.ValueString()
+	}
+	if !plan.LocalSessionId.Equal(state.LocalSessionId) && !plan.LocalSessionId.IsUnknown() {
+		body["local-session-id"] = plan.LocalSessionId.ValueString()
+	}
+	if !plan.LocalTunnelId.Equal(state.LocalTunnelId) && !plan.LocalTunnelId.IsUnknown() {
+		body["local-tunnel-id"] = plan.LocalTunnelId.ValueString()
+	}
+	if !plan.PeerCookie.Equal(state.PeerCookie) && !plan.PeerCookie.IsUnknown() {
+		body["peer-cookie"] = plan.PeerCookie.ValueString()
+	}
+	if !plan.RemoteSessionId.Equal(state.RemoteSessionId) && !plan.RemoteSessionId.IsUnknown() {
+		body["remote-session-id"] = plan.RemoteSessionId.ValueString()
+	}
+	if !plan.RemoteTunnelId.Equal(state.RemoteTunnelId) && !plan.RemoteTunnelId.IsUnknown() {
+		body["remote-tunnel-id"] = plan.RemoteTunnelId.ValueString()
+	}
+	if !plan.SendCookie.Equal(state.SendCookie) && !plan.SendCookie.IsUnknown() {
+		body["send-cookie"] = plan.SendCookie.ValueString()
+	}
+	if !plan.UnmanagedMode.Equal(state.UnmanagedMode) && !plan.UnmanagedMode.IsUnknown() {
+		body["unmanaged-mode"] = plan.UnmanagedMode.ValueString()
+	}
+	if !plan.UseIpsec.Equal(state.UseIpsec) && !plan.UseIpsec.IsUnknown() {
+		body["use-ipsec"] = plan.UseIpsec.ValueString()
+	}
+	if !plan.UseL2SpecificSublayer.Equal(state.UseL2SpecificSublayer) && !plan.UseL2SpecificSublayer.IsUnknown() {
+		body["use-l2-specific-sublayer"] = plan.UseL2SpecificSublayer.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/l2tp-ether", state.ID.ValueString(), body)
 		if err != nil {
@@ -273,6 +453,81 @@ func interfaceL2TPEtherLookupByNaturalKey(ctx context.Context, c *client.Client,
 func interfaceL2TPEtherApply(ctx context.Context, obj client.Object, m *InterfaceL2TPEtherModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["use-l2-specific-sublayer"]; ok && v != "" {
+		m.UseL2SpecificSublayer = types.StringValue(v)
+	} else {
+		m.UseL2SpecificSublayer = types.StringNull()
+	}
+	if v, ok := obj["use-ipsec"]; ok && v != "" {
+		m.UseIpsec = types.StringValue(v)
+	} else {
+		m.UseIpsec = types.StringNull()
+	}
+	if v, ok := obj["unmanaged-mode"]; ok && v != "" {
+		m.UnmanagedMode = types.StringValue(v)
+	} else {
+		m.UnmanagedMode = types.StringNull()
+	}
+	if v, ok := obj["send-cookie"]; ok && v != "" {
+		m.SendCookie = types.StringValue(v)
+	} else {
+		m.SendCookie = types.StringNull()
+	}
+	if v, ok := obj["remote-tunnel-id"]; ok && v != "" {
+		m.RemoteTunnelId = types.StringValue(v)
+	} else {
+		m.RemoteTunnelId = types.StringNull()
+	}
+	if v, ok := obj["remote-session-id"]; ok && v != "" {
+		m.RemoteSessionId = types.StringValue(v)
+	} else {
+		m.RemoteSessionId = types.StringNull()
+	}
+	if v, ok := obj["peer-cookie"]; ok && v != "" {
+		m.PeerCookie = types.StringValue(v)
+	} else {
+		m.PeerCookie = types.StringNull()
+	}
+	if v, ok := obj["local-tunnel-id"]; ok && v != "" {
+		m.LocalTunnelId = types.StringValue(v)
+	} else {
+		m.LocalTunnelId = types.StringNull()
+	}
+	if v, ok := obj["local-session-id"]; ok && v != "" {
+		m.LocalSessionId = types.StringValue(v)
+	} else {
+		m.LocalSessionId = types.StringNull()
+	}
+	if v, ok := obj["l2tp-proto-version"]; ok && v != "" {
+		m.L2tpProtoVersion = types.StringValue(v)
+	} else {
+		m.L2tpProtoVersion = types.StringNull()
+	}
+	if v, ok := obj["digest-hash"]; ok && v != "" {
+		m.DigestHash = types.StringValue(v)
+	} else {
+		m.DigestHash = types.StringNull()
+	}
+	if v, ok := obj["cookie-length"]; ok && v != "" {
+		m.CookieLength = types.StringValue(v)
+	} else {
+		m.CookieLength = types.StringNull()
+	}
+	if v, ok := obj["connect-to"]; ok && v != "" {
+		m.ConnectTo = types.StringValue(v)
+	} else {
+		m.ConnectTo = types.StringNull()
+	}
+	if v, ok := obj["circuit-id"]; ok && v != "" {
+		m.CircuitId = types.StringValue(v)
+	} else {
+		m.CircuitId = types.StringNull()
+	}
+	if v, ok := obj["allow-fast-path"]; ok && v != "" {
+		m.AllowFastPath = types.StringValue(v)
+	} else {
+		m.AllowFastPath = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {

@@ -29,8 +29,14 @@ type UserManagerProfileResource struct {
 }
 
 type UserManagerProfileModel struct {
-	ID     types.String `tfsdk:"id"`
-	Router types.String `tfsdk:"router"`
+	ID                  types.String `tfsdk:"id"`
+	Validity            types.String `tfsdk:"validity"`
+	StartsWhen          types.String `tfsdk:"starts_when"`
+	Price               types.String `tfsdk:"price"`
+	OverrideSharedUsers types.String `tfsdk:"override_shared_users"`
+	NameForUsers        types.String `tfsdk:"name_for_users"`
+	Name                types.String `tfsdk:"name"`
+	Router              types.String `tfsdk:"router"`
 }
 
 func NewUserManagerProfileResource() resource.Resource { return &UserManagerProfileResource{} }
@@ -45,7 +51,6 @@ func (r *UserManagerProfileResource) Configure(_ context.Context, req resource.C
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *UserManagerProfileResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -56,6 +61,36 @@ func (r *UserManagerProfileResource) Schema(_ context.Context, _ resource.Schema
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"validity": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `validity`.",
+			},
+			"starts_when": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `starts-when`.",
+			},
+			"price": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `price`.",
+			},
+			"override_shared_users": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `override-shared-users`.",
+			},
+			"name_for_users": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `name-for-users`.",
+			},
+			"name": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `name`.",
 			},
 			"router": schema.StringAttribute{
 				Optional:    true,
@@ -76,6 +111,24 @@ func (r *UserManagerProfileResource) Create(ctx context.Context, req resource.Cr
 		return
 	}
 	body := client.Object{}
+	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
+		body["name"] = plan.Name.ValueString()
+	}
+	if !(plan.NameForUsers.IsNull() || plan.NameForUsers.IsUnknown()) {
+		body["name-for-users"] = plan.NameForUsers.ValueString()
+	}
+	if !(plan.OverrideSharedUsers.IsNull() || plan.OverrideSharedUsers.IsUnknown()) {
+		body["override-shared-users"] = plan.OverrideSharedUsers.ValueString()
+	}
+	if !(plan.Price.IsNull() || plan.Price.IsUnknown()) {
+		body["price"] = plan.Price.ValueString()
+	}
+	if !(plan.StartsWhen.IsNull() || plan.StartsWhen.IsUnknown()) {
+		body["starts-when"] = plan.StartsWhen.ValueString()
+	}
+	if !(plan.Validity.IsNull() || plan.Validity.IsUnknown()) {
+		body["validity"] = plan.Validity.ValueString()
+	}
 	obj, err := c.Add(ctx, "/user-manager/profile", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /user-manager/profile failed", err.Error())
@@ -189,4 +242,34 @@ func userManagerProfileLookupByNaturalKey(ctx context.Context, c *client.Client,
 func userManagerProfileApply(ctx context.Context, obj client.Object, m *UserManagerProfileModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["validity"]; ok && v != "" {
+		m.Validity = types.StringValue(v)
+	} else {
+		m.Validity = types.StringNull()
+	}
+	if v, ok := obj["starts-when"]; ok && v != "" {
+		m.StartsWhen = types.StringValue(v)
+	} else {
+		m.StartsWhen = types.StringNull()
+	}
+	if v, ok := obj["price"]; ok && v != "" {
+		m.Price = types.StringValue(v)
+	} else {
+		m.Price = types.StringNull()
+	}
+	if v, ok := obj["override-shared-users"]; ok && v != "" {
+		m.OverrideSharedUsers = types.StringValue(v)
+	} else {
+		m.OverrideSharedUsers = types.StringNull()
+	}
+	if v, ok := obj["name-for-users"]; ok && v != "" {
+		m.NameForUsers = types.StringValue(v)
+	} else {
+		m.NameForUsers = types.StringNull()
+	}
+	if v, ok := obj["name"]; ok && v != "" {
+		m.Name = types.StringValue(v)
+	} else {
+		m.Name = types.StringNull()
+	}
 }

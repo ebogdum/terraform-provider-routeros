@@ -56,7 +56,6 @@ func (r *RoutingOSPFStaticNeighborResource) Configure(_ context.Context, req res
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *RoutingOSPFStaticNeighborResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -94,7 +93,6 @@ func (r *RoutingOSPFStaticNeighborResource) Schema(_ context.Context, _ resource
 				Description: "",
 			},
 			"invalid": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},

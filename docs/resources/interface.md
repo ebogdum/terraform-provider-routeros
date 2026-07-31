@@ -42,61 +42,60 @@ resource "routeros_interface" "interface_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `actual_mtu` - (Read-only) Type: `int`.
+* `answer_time` - (Read-only) Type: `string`.
+* `caps` - (Read-only) Type: `int`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `default_name` - (Read-only) Type: `string`.
 * `disabled` - (Optional) Type: `bool`.
-* `fp_tx_rx_packet_rate` - (Optional) Type: `string`.
-* `fp_tx_rx_rate` - (Optional) Type: `string`.
-* `inactive` - (Optional) Type: `bool`.
-* `mtu` - (Optional) Type: `int`. Default: `1500`.
+* `dynamic` - (Read-only) Type: `bool`.
+* `fp_rps_drop` - (Read-only) Type: `int`.
+* `fp_rx_byte` - (Read-only) Type: `int`.
+* `fp_rx_packet` - (Read-only) Type: `int`.
+* `fp_tx_byte` - (Read-only) Type: `int`.
+* `fp_tx_packet` - (Read-only) Type: `int`.
+* `fp_tx_rx_packet_rate` - (Read-only) Type: `string`.
+* `fp_tx_rx_rate` - (Read-only) Type: `string`.
+* `inactive` - (Read-only) Type: `bool`.
+* `l2_mtu` - (Read-only) Type: `int`.
+* `last_link_down_time` - (Read-only) Type: `string`.
+* `last_link_up_time` - (Read-only) Type: `string`.
+* `link` - (Read-only) Type: `int`.
+* `link_downs` - (Read-only) Type: `int`.
+* `mac_address` - (Read-only) Type: `string`.
+* `mtu` - (Optional) Type: `string`. A number, or `auto`.
 * `name` - (Optional) Type: `string`.
-* `nodefname` - (Optional) Type: `string`.
-* `notrunning` - (Optional) Type: `string`.
-* `passthrough` - (Optional) Type: `bool`.
-* `reset_traffic_counters` - (Optional) Type: `string`.
-* `slave` - (Optional) Type: `bool`.
-* `torch` - (Optional) Type: `string`.
-* `tx_rx_bytes` - (Optional) Type: `string`.
-* `tx_rx_drops` - (Optional) Type: `string`.
-* `tx_rx_errors` - (Optional) Type: `string`.
-* `tx_rx_packet_rate` - (Optional) Type: `string`.
-* `tx_rx_packets` - (Optional) Type: `string`.
-* `tx_rx_rate` - (Optional) Type: `string`.
+* `nodefname` - (Read-only) Type: `string`.
+* `notrunning` - (Read-only) Type: `string`.
+* `passthrough` - (Read-only) Type: `bool`.
+* `reset_traffic_counters` - (Read-only) Type: `string`.
+* `running` - (Read-only) Type: `bool`.
+* `rx_byte` - (Read-only) Type: `int`.
+* `rx_drop` - (Read-only) Type: `int`.
+* `rx_error` - (Read-only) Type: `int`.
+* `rx_packet` - (Read-only) Type: `int`.
+* `slave` - (Read-only) Type: `bool`.
+* `torch` - (Read-only) Type: `string`.
+* `tx_byte` - (Read-only) Type: `int`.
+* `tx_drop` - (Read-only) Type: `int`.
+* `tx_error` - (Read-only) Type: `int`.
+* `tx_packet` - (Read-only) Type: `int`.
+* `tx_queue_drop` - (Read-only) Type: `int`.
+* `tx_queue_drops` - (Read-only) Type: `string`.
+* `tx_rx_bytes` - (Read-only) Type: `string`.
+* `tx_rx_drops` - (Read-only) Type: `string`.
+* `tx_rx_errors` - (Read-only) Type: `string`.
+* `tx_rx_packet_rate` - (Read-only) Type: `string`.
+* `tx_rx_packets` - (Read-only) Type: `string`.
+* `tx_rx_rate` - (Read-only) Type: `string`.
+* `type` - (Read-only) Type: `int`.
+* `vrf` - (Read-only) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `actual_mtu` - Type: `int`.
-* `answer_time` - Type: `string`.
-* `caps` - Type: `int`.
-* `default_name` - Type: `string`.
-* `dynamic` - Type: `bool`.
-* `fp_rps_drop` - Type: `int`.
-* `fp_rx_byte` - Type: `int`.
-* `fp_rx_packet` - Type: `int`.
-* `fp_tx_byte` - Type: `int`.
-* `fp_tx_packet` - Type: `int`.
-* `l2_mtu` - Type: `int`.
-* `last_link_down_time` - Type: `string`.
-* `last_link_up_time` - Type: `string`.
-* `link` - Type: `int`.
-* `link_downs` - Type: `int`.
-* `mac_address` - Type: `mac`.
-* `running` - Type: `bool`.
-* `rx_byte` - Type: `int`.
-* `rx_drop` - Type: `int`.
-* `rx_error` - Type: `int`.
-* `rx_packet` - Type: `int`.
-* `tx_byte` - Type: `int`.
-* `tx_drop` - Type: `int`.
-* `tx_error` - Type: `int`.
-* `tx_packet` - Type: `int`.
-* `tx_queue_drop` - Type: `int`.
-* `tx_queue_drops` - Type: `string`.
-* `type` - Type: `int`.
-* `vrf` - Type: `string`.
 
 ## Import
 

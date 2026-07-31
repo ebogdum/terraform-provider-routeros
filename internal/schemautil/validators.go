@@ -7,6 +7,7 @@ import (
 	"context"
 	"fmt"
 	"regexp"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 
@@ -73,6 +74,51 @@ func OneOf(values ...string) validator.String {
 	return stringValidator{desc: fmt.Sprintf("must be one of %v", values), fn: func(s string) error {
 		if _, ok := set[s]; !ok {
 			return fmt.Errorf("%q not in %v", s, values)
+		}
+		return nil
+	}}
+}
+
+// OneOfFold restricts a string to one of the listed values, ignoring case.
+//
+// Several RouterOS menus report an enum in a different case than they accept it
+// in -- /snmp/community, for instance, prints authentication-protocol=MD5 and
+// encryption-protocol=DES while the CLI documents them lower-case. A
+// case-sensitive OneOf rejects the device's own factory default, which makes the
+// menu impossible to import or manage. Pair this with NormalizeCase so the
+// canonical spelling reaches state and no permadiff appears.
+func OneOfFold(values ...string) validator.String {
+	set := make(map[string]struct{}, len(values))
+	for _, v := range values {
+		set[strings.ToLower(v)] = struct{}{}
+	}
+	return stringValidator{desc: fmt.Sprintf("must be one of %v (case-insensitive)", values), fn: func(s string) error {
+		if _, ok := set[strings.ToLower(s)]; !ok {
+			return fmt.Errorf("%q not in %v", s, values)
+		}
+		return nil
+	}}
+}
+
+// IsDurationOrKeyword validates a RouterOS duration or one of the sentinel words
+// the menu accepts in place of one.
+//
+// RouterOS mixes durations and magic words in the same property: arp-timeout is
+// a duration or `auto`, dpd-interval is a duration or `disable-dpd`. Validating
+// such a property as a pure duration rejects the router's own default and makes
+// the attribute unusable. Keywords match case-insensitively.
+func IsDurationOrKeyword(keywords ...string) validator.String {
+	set := make(map[string]struct{}, len(keywords))
+	for _, k := range keywords {
+		set[strings.ToLower(k)] = struct{}{}
+	}
+	desc := fmt.Sprintf("must be a RouterOS duration (e.g. 1w2d3h, 30m, 120) or one of %v", keywords)
+	return stringValidator{desc: desc, fn: func(s string) error {
+		if _, ok := set[strings.ToLower(strings.TrimSpace(s))]; ok {
+			return nil
+		}
+		if _, err := client.ParseDuration(s); err != nil {
+			return fmt.Errorf("%q is neither a duration nor one of %v", s, keywords)
 		}
 		return nil
 	}}

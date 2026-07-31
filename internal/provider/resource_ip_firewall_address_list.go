@@ -53,7 +53,6 @@ func (r *IPFirewallAddressListResource) Configure(_ context.Context, req resourc
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPFirewallAddressListResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -75,7 +74,6 @@ func (r *IPFirewallAddressListResource) Schema(_ context.Context, _ resource.Sch
 				Description: "Free-form comment.",
 			},
 			"creation_time": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -85,7 +83,6 @@ func (r *IPFirewallAddressListResource) Schema(_ context.Context, _ resource.Sch
 				Description: "Whether the entry is disabled.",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -94,7 +91,6 @@ func (r *IPFirewallAddressListResource) Schema(_ context.Context, _ resource.Sch
 				Description: "",
 			},
 			"parent": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -133,9 +129,6 @@ func (r *IPFirewallAddressListResource) Create(ctx context.Context, req resource
 	}
 	if !(plan.List.IsNull() || plan.List.IsUnknown()) {
 		body["list"] = plan.List.ValueString()
-	}
-	if !(plan.Parent.IsNull() || plan.Parent.IsUnknown()) {
-		body["parent"] = client.FormatInt64(plan.Parent.ValueInt64())
 	}
 	if !(plan.Timeout.IsNull() || plan.Timeout.IsUnknown()) {
 		body["timeout"] = plan.Timeout.ValueString()
@@ -198,9 +191,6 @@ func (r *IPFirewallAddressListResource) Update(ctx context.Context, req resource
 	}
 	if !plan.List.Equal(state.List) {
 		body["list"] = plan.List.ValueString()
-	}
-	if !plan.Parent.Equal(state.Parent) {
-		body["parent"] = client.FormatInt64(plan.Parent.ValueInt64())
 	}
 	if !plan.Timeout.Equal(state.Timeout) {
 		body["timeout"] = plan.Timeout.ValueString()

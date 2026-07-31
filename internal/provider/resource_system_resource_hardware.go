@@ -31,28 +31,33 @@ type SystemResourceHardwareResource struct {
 }
 
 type SystemResourceHardwareModel struct {
-	ID           types.String `tfsdk:"id"`
-	Category     types.String `tfsdk:"category"`
-	DeviceID     types.String `tfsdk:"device_id"`
-	Devices      types.String `tfsdk:"devices"`
-	Io           types.String `tfsdk:"io"`
-	Irq          types.Int64  `tfsdk:"irq"`
-	Location     types.String `tfsdk:"location"`
-	Memory       types.String `tfsdk:"memory"`
-	Name         types.String `tfsdk:"name"`
-	Owner        types.String `tfsdk:"owner"`
-	Parent       types.Int64  `tfsdk:"parent"`
-	Pci          types.String `tfsdk:"pci"`
-	Ports        types.Int64  `tfsdk:"ports"`
-	SerialNumber types.String `tfsdk:"serial_number"`
-	Speed        types.String `tfsdk:"speed"`
-	StdDescr     types.String `tfsdk:"std_descr"`
-	Type         types.String `tfsdk:"type"`
-	Usb          types.String `tfsdk:"usb"`
-	UsbVersion   types.String `tfsdk:"usb_version"`
-	Vendor       types.String `tfsdk:"vendor"`
-	VendorID     types.String `tfsdk:"vendor_id"`
-	Router       types.String `tfsdk:"router"`
+	ID            types.String `tfsdk:"id"`
+	Slot          types.String `tfsdk:"slot"`
+	Duration      types.String `tfsdk:"duration"`
+	Bus           types.String `tfsdk:"bus"`
+	Authorization types.String `tfsdk:"authorization"`
+	Allow         types.String `tfsdk:"allow"`
+	Category      types.String `tfsdk:"category"`
+	DeviceID      types.String `tfsdk:"device_id"`
+	Devices       types.String `tfsdk:"devices"`
+	Io            types.String `tfsdk:"io"`
+	Irq           types.Int64  `tfsdk:"irq"`
+	Location      types.String `tfsdk:"location"`
+	Memory        types.String `tfsdk:"memory"`
+	Name          types.String `tfsdk:"name"`
+	Owner         types.String `tfsdk:"owner"`
+	Parent        types.Int64  `tfsdk:"parent"`
+	Pci           types.String `tfsdk:"pci"`
+	Ports         types.Int64  `tfsdk:"ports"`
+	SerialNumber  types.String `tfsdk:"serial_number"`
+	Speed         types.String `tfsdk:"speed"`
+	StdDescr      types.String `tfsdk:"std_descr"`
+	Type          types.String `tfsdk:"type"`
+	Usb           types.String `tfsdk:"usb"`
+	UsbVersion    types.String `tfsdk:"usb_version"`
+	Vendor        types.String `tfsdk:"vendor"`
+	VendorID      types.String `tfsdk:"vendor_id"`
+	Router        types.String `tfsdk:"router"`
 }
 
 func NewSystemResourceHardwareResource() resource.Resource { return &SystemResourceHardwareResource{} }
@@ -67,7 +72,6 @@ func (r *SystemResourceHardwareResource) Configure(_ context.Context, req resour
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *SystemResourceHardwareResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -78,6 +82,31 @@ func (r *SystemResourceHardwareResource) Schema(_ context.Context, _ resource.Sc
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"slot": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `slot`.",
+			},
+			"duration": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `duration`.",
+			},
+			"bus": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `bus`.",
+			},
+			"authorization": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `authorization`.",
+			},
+			"allow": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `allow`.",
 			},
 			"category": schema.StringAttribute{
 				Optional:    true,
@@ -259,6 +288,21 @@ func (r *SystemResourceHardwareResource) Create(ctx context.Context, req resourc
 	if !(plan.VendorID.IsNull() || plan.VendorID.IsUnknown()) {
 		body["vendor-id"] = plan.VendorID.ValueString()
 	}
+	if !(plan.Allow.IsNull() || plan.Allow.IsUnknown()) {
+		body["allow"] = plan.Allow.ValueString()
+	}
+	if !(plan.Authorization.IsNull() || plan.Authorization.IsUnknown()) {
+		body["authorization"] = plan.Authorization.ValueString()
+	}
+	if !(plan.Bus.IsNull() || plan.Bus.IsUnknown()) {
+		body["bus"] = plan.Bus.ValueString()
+	}
+	if !(plan.Duration.IsNull() || plan.Duration.IsUnknown()) {
+		body["duration"] = plan.Duration.ValueString()
+	}
+	if !(plan.Slot.IsNull() || plan.Slot.IsUnknown()) {
+		body["slot"] = plan.Slot.ValueString()
+	}
 	obj, err := c.Add(ctx, "/system/resource/hardware", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /system/resource/hardware failed", err.Error())
@@ -366,6 +410,21 @@ func (r *SystemResourceHardwareResource) Update(ctx context.Context, req resourc
 	if !plan.VendorID.Equal(state.VendorID) {
 		body["vendor-id"] = plan.VendorID.ValueString()
 	}
+	if !plan.Allow.Equal(state.Allow) && !plan.Allow.IsUnknown() {
+		body["allow"] = plan.Allow.ValueString()
+	}
+	if !plan.Authorization.Equal(state.Authorization) && !plan.Authorization.IsUnknown() {
+		body["authorization"] = plan.Authorization.ValueString()
+	}
+	if !plan.Bus.Equal(state.Bus) && !plan.Bus.IsUnknown() {
+		body["bus"] = plan.Bus.ValueString()
+	}
+	if !plan.Duration.Equal(state.Duration) && !plan.Duration.IsUnknown() {
+		body["duration"] = plan.Duration.ValueString()
+	}
+	if !plan.Slot.Equal(state.Slot) && !plan.Slot.IsUnknown() {
+		body["slot"] = plan.Slot.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/system/resource/hardware", state.ID.ValueString(), body)
 		if err != nil {
@@ -432,6 +491,31 @@ func systemResourceHardwareLookupByNaturalKey(ctx context.Context, c *client.Cli
 func systemResourceHardwareApply(ctx context.Context, obj client.Object, m *SystemResourceHardwareModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["slot"]; ok && v != "" {
+		m.Slot = types.StringValue(v)
+	} else {
+		m.Slot = types.StringNull()
+	}
+	if v, ok := obj["duration"]; ok && v != "" {
+		m.Duration = types.StringValue(v)
+	} else {
+		m.Duration = types.StringNull()
+	}
+	if v, ok := obj["bus"]; ok && v != "" {
+		m.Bus = types.StringValue(v)
+	} else {
+		m.Bus = types.StringNull()
+	}
+	if v, ok := obj["authorization"]; ok && v != "" {
+		m.Authorization = types.StringValue(v)
+	} else {
+		m.Authorization = types.StringNull()
+	}
+	if v, ok := obj["allow"]; ok && v != "" {
+		m.Allow = types.StringValue(v)
+	} else {
+		m.Allow = types.StringNull()
+	}
 	if v, ok := obj["category"]; ok {
 		_ = v
 		if v != "" {

@@ -83,7 +83,6 @@ func (r *IPDHCPClientResource) Configure(_ context.Context, req resource.Configu
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPDHCPClientResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -102,7 +101,6 @@ func (r *IPDHCPClientResource) Schema(_ context.Context, _ resource.SchemaReques
 				Validators:  []validator.String{schemautil.OneOf([]string{"no", "yes", "special-classless"}...)},
 			},
 			"address": schema.StringAttribute{
-				Optional:      true,
 				Computed:      true,
 				Description:   "",
 				Validators:    []validator.String{schemautil.IsCIDR()},
@@ -114,12 +112,10 @@ func (r *IPDHCPClientResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description: "",
 			},
 			"allow_reconfigure_messages": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"caps_managers": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -151,7 +147,6 @@ func (r *IPDHCPClientResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description: "",
 			},
 			"dhcp_server": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.IsIP()},
@@ -167,19 +162,16 @@ func (r *IPDHCPClientResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description: "",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"expires_after": schema.StringAttribute{
-				Optional:      true,
 				Computed:      true,
 				Description:   "",
 				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
 			},
 			"gateway": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.IsIP()},
@@ -190,19 +182,16 @@ func (r *IPDHCPClientResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description: "",
 			},
 			"invalid": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"ip_address": schema.StringAttribute{
-				Optional:      true,
 				Computed:      true,
 				Description:   "",
 				Validators:    []validator.String{schemautil.IsCIDR()},
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeCIDR()},
 			},
 			"last_received_counter": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -212,39 +201,32 @@ func (r *IPDHCPClientResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description: "",
 			},
 			"primary_dns": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.IsIP()},
 			},
 			"primary_ntp": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.IsIP()},
 			},
 			"reconfigure_key": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"release": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"renew": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"route": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"routing_tables": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -254,19 +236,16 @@ func (r *IPDHCPClientResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description: "",
 			},
 			"secondary_dns": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.IsIP()},
 			},
 			"secondary_ntp": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.IsIP()},
 			},
 			"status": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -316,9 +295,6 @@ func (r *IPDHCPClientResource) Create(ctx context.Context, req resource.CreateRe
 	if !(plan.AllowReconfigure.IsNull() || plan.AllowReconfigure.IsUnknown()) {
 		body["allow-reconfigure"] = client.FormatBool(plan.AllowReconfigure.ValueBool())
 	}
-	if !(plan.AllowReconfigureMessages.IsNull() || plan.AllowReconfigureMessages.IsUnknown()) {
-		body["allow-reconfigure-messages"] = client.FormatBool(plan.AllowReconfigureMessages.ValueBool())
-	}
 	if !(plan.CheckGateway.IsNull() || plan.CheckGateway.IsUnknown()) {
 		body["check-gateway"] = plan.CheckGateway.ValueString()
 	}
@@ -345,18 +321,6 @@ func (r *IPDHCPClientResource) Create(ctx context.Context, req resource.CreateRe
 	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
-	}
-	if !(plan.Release.IsNull() || plan.Release.IsUnknown()) {
-		body["release"] = plan.Release.ValueString()
-	}
-	if !(plan.Renew.IsNull() || plan.Renew.IsUnknown()) {
-		body["renew"] = plan.Renew.ValueString()
-	}
-	if !(plan.Route.IsNull() || plan.Route.IsUnknown()) {
-		body["route"] = plan.Route.ValueString()
-	}
-	if !(plan.RoutingTables.IsNull() || plan.RoutingTables.IsUnknown()) {
-		body["routing-tables"] = plan.RoutingTables.ValueString()
 	}
 	if !(plan.Script.IsNull() || plan.Script.IsUnknown()) {
 		body["script"] = plan.Script.ValueString()
@@ -426,9 +390,6 @@ func (r *IPDHCPClientResource) Update(ctx context.Context, req resource.UpdateRe
 	if !plan.AllowReconfigure.Equal(state.AllowReconfigure) {
 		body["allow-reconfigure"] = client.FormatBool(plan.AllowReconfigure.ValueBool())
 	}
-	if !plan.AllowReconfigureMessages.Equal(state.AllowReconfigureMessages) {
-		body["allow-reconfigure-messages"] = client.FormatBool(plan.AllowReconfigureMessages.ValueBool())
-	}
 	if !plan.CheckGateway.Equal(state.CheckGateway) {
 		body["check-gateway"] = plan.CheckGateway.ValueString()
 	}
@@ -455,18 +416,6 @@ func (r *IPDHCPClientResource) Update(ctx context.Context, req resource.UpdateRe
 	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
-	}
-	if !plan.Release.Equal(state.Release) {
-		body["release"] = plan.Release.ValueString()
-	}
-	if !plan.Renew.Equal(state.Renew) {
-		body["renew"] = plan.Renew.ValueString()
-	}
-	if !plan.Route.Equal(state.Route) {
-		body["route"] = plan.Route.ValueString()
-	}
-	if !plan.RoutingTables.Equal(state.RoutingTables) {
-		body["routing-tables"] = plan.RoutingTables.ValueString()
 	}
 	if !plan.Script.Equal(state.Script) {
 		body["script"] = plan.Script.ValueString()

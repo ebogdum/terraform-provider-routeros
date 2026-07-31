@@ -47,7 +47,6 @@ func (r *ToolGraphingInterfaceResource) Configure(_ context.Context, req resourc
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *ToolGraphingInterfaceResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {

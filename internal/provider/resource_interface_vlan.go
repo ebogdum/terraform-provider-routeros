@@ -29,18 +29,21 @@ type InterfaceVLANResource struct {
 }
 
 type InterfaceVLANModel struct {
-	ID            types.String `tfsdk:"id"`
-	ARP           types.String `tfsdk:"arp"`
-	ARPTimeout    types.String `tfsdk:"arp_timeout"`
-	Comment       types.String `tfsdk:"comment"`
-	Disabled      types.Bool   `tfsdk:"disabled"`
-	Interface     types.String `tfsdk:"interface"`
-	MTU           types.String `tfsdk:"mtu"`
-	Mvrp          types.String `tfsdk:"mvrp"`
-	Name          types.String `tfsdk:"name"`
-	UseServiceTag types.String `tfsdk:"use_service_tag"`
-	VLANID        types.String `tfsdk:"vlan_id"`
-	Router        types.String `tfsdk:"router"`
+	ID                      types.String `tfsdk:"id"`
+	ARP                     types.String `tfsdk:"arp"`
+	ARPTimeout              types.String `tfsdk:"arp_timeout"`
+	Comment                 types.String `tfsdk:"comment"`
+	Disabled                types.Bool   `tfsdk:"disabled"`
+	Interface               types.String `tfsdk:"interface"`
+	LoopProtect             types.String `tfsdk:"loop_protect"`
+	LoopProtectDisableTime  types.String `tfsdk:"loop_protect_disable_time"`
+	LoopProtectSendInterval types.String `tfsdk:"loop_protect_send_interval"`
+	MTU                     types.String `tfsdk:"mtu"`
+	Mvrp                    types.String `tfsdk:"mvrp"`
+	Name                    types.String `tfsdk:"name"`
+	UseServiceTag           types.String `tfsdk:"use_service_tag"`
+	VLANID                  types.String `tfsdk:"vlan_id"`
+	Router                  types.String `tfsdk:"router"`
 }
 
 func NewInterfaceVLANResource() resource.Resource { return &InterfaceVLANResource{} }
@@ -55,7 +58,6 @@ func (r *InterfaceVLANResource) Configure(_ context.Context, req resource.Config
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceVLANResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -90,6 +92,21 @@ func (r *InterfaceVLANResource) Schema(_ context.Context, _ resource.SchemaReque
 			"interface": schema.StringAttribute{
 				Required:    true,
 				Description: "Name of the interface on top of which VLAN will work. Adding a VLAN interface to a bridge with vlan-filtering enabled will automatically tag the bridge interface as a member port. A dynamic entry with the comment \"added by vlan on bridge\" will appear under the /interface/bridge/vlan menu.",
+			},
+			"loop_protect": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "Loop protection: `default`, `on` or `off`.",
+			},
+			"loop_protect_disable_time": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "How long the interface stays disabled after a loop is detected. `0s` disables the timeout.",
+			},
+			"loop_protect_send_interval": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "Interval between loop-protect probe packets.",
 			},
 			"mtu": schema.StringAttribute{
 				Optional:    true,
@@ -147,6 +164,15 @@ func (r *InterfaceVLANResource) Create(ctx context.Context, req resource.CreateR
 	}
 	if !(plan.Interface.IsNull() || plan.Interface.IsUnknown()) {
 		body["interface"] = plan.Interface.ValueString()
+	}
+	if !(plan.LoopProtect.IsNull() || plan.LoopProtect.IsUnknown()) {
+		body["loop-protect"] = plan.LoopProtect.ValueString()
+	}
+	if !(plan.LoopProtectDisableTime.IsNull() || plan.LoopProtectDisableTime.IsUnknown()) {
+		body["loop-protect-disable-time"] = plan.LoopProtectDisableTime.ValueString()
+	}
+	if !(plan.LoopProtectSendInterval.IsNull() || plan.LoopProtectSendInterval.IsUnknown()) {
+		body["loop-protect-send-interval"] = plan.LoopProtectSendInterval.ValueString()
 	}
 	if !(plan.MTU.IsNull() || plan.MTU.IsUnknown()) {
 		body["mtu"] = plan.MTU.ValueString()
@@ -224,6 +250,15 @@ func (r *InterfaceVLANResource) Update(ctx context.Context, req resource.UpdateR
 	}
 	if !plan.Interface.Equal(state.Interface) {
 		body["interface"] = plan.Interface.ValueString()
+	}
+	if !plan.LoopProtect.Equal(state.LoopProtect) {
+		body["loop-protect"] = plan.LoopProtect.ValueString()
+	}
+	if !plan.LoopProtectDisableTime.Equal(state.LoopProtectDisableTime) {
+		body["loop-protect-disable-time"] = plan.LoopProtectDisableTime.ValueString()
+	}
+	if !plan.LoopProtectSendInterval.Equal(state.LoopProtectSendInterval) {
+		body["loop-protect-send-interval"] = plan.LoopProtectSendInterval.ValueString()
 	}
 	if !plan.MTU.Equal(state.MTU) {
 		body["mtu"] = plan.MTU.ValueString()
@@ -355,6 +390,36 @@ func interfaceVLANApply(ctx context.Context, obj client.Object, m *InterfaceVLAN
 		}
 	} else {
 		m.Interface = types.StringNull()
+	}
+	if v, ok := obj["loop-protect"]; ok {
+		_ = v
+		if v != "" {
+			m.LoopProtect = types.StringValue(v)
+		} else {
+			m.LoopProtect = types.StringNull()
+		}
+	} else {
+		m.LoopProtect = types.StringNull()
+	}
+	if v, ok := obj["loop-protect-disable-time"]; ok {
+		_ = v
+		if v != "" {
+			m.LoopProtectDisableTime = types.StringValue(v)
+		} else {
+			m.LoopProtectDisableTime = types.StringNull()
+		}
+	} else {
+		m.LoopProtectDisableTime = types.StringNull()
+	}
+	if v, ok := obj["loop-protect-send-interval"]; ok {
+		_ = v
+		if v != "" {
+			m.LoopProtectSendInterval = types.StringValue(v)
+		} else {
+			m.LoopProtectSendInterval = types.StringNull()
+		}
+	} else {
+		m.LoopProtectSendInterval = types.StringNull()
 	}
 	if v, ok := obj["mtu"]; ok {
 		_ = v

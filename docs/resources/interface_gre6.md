@@ -30,14 +30,23 @@ resource "routeros_interface_gre6" "gre6_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `clamp_tcp_mss` - (Optional) Type: `string`. RouterOS `clamp-tcp-mss`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `ipsec_secret` - (Optional) Type: `string`.
+* `dont_fragment` - (Optional) Type: `string`. RouterOS `dont-fragment`.
+* `dscp` - (Optional) Type: `string`. RouterOS `dscp`.
+* `ipsec_secret` - (Optional) Type: `string`. **Sensitive.**
+* `keepalive` - (Optional) Type: `string`. RouterOS `keepalive`.
 * `local_address` - (Optional) Type: `string`.
 * `mtu` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
 * `remote_address` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

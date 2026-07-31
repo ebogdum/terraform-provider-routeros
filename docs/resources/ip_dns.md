@@ -40,20 +40,22 @@ resource "routeros_ip_dns" "dns_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `address_list_extra_time` - (Optional) Type: `duration`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `address_list_extra_time` - (Optional) Type: `string`.
 * `allow_remote_requests` - (Optional) Type: `bool`.
-* `cache_max_ttl` - (Optional) Type: `duration`.
+* `cache_max_ttl` - (Optional) Type: `string`.
 * `cache_size` - (Optional) Type: `int`.
+* `cache_used` - (Optional) Type: `int`.
 * `doh_max_concurrent_queries` - (Optional) Type: `int`.
 * `doh_max_server_connections` - (Optional) Type: `int`.
-* `doh_timeout` - (Optional) Type: `duration`.
+* `doh_timeout` - (Optional) Type: `string`.
+* `dynamic_servers` - (Optional) Type: `string`.
 * `max_concurrent_queries` - (Optional) Type: `int`.
 * `max_concurrent_tcp_sessions` - (Optional) Type: `int`.
 * `max_udp_packet_size` - (Optional) Type: `int`.
 * `mdns_repeat_ifaces` - (Optional) Type: `string`.
-* `query_server_timeout` - (Optional) Type: `duration`.
-* `query_total_timeout` - (Optional) Type: `duration`.
+* `query_server_timeout` - (Optional) Type: `string`.
+* `query_total_timeout` - (Optional) Type: `string`.
 * `servers` - (Optional) Type: `string`.
 * `use_doh_server` - (Optional) Type: `string`.
 * `verify_doh_cert` - (Optional) Type: `bool`.
@@ -61,11 +63,8 @@ This resource supports the following arguments:
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - Stable identifier (the singleton's menu path, optionally namespaced by router).
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `cache_used` - Type: `int`.
-* `dynamic_servers` - Type: `ip`.
 
 ## Import
 

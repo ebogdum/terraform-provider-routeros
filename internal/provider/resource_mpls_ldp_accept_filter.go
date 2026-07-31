@@ -30,6 +30,8 @@ type MPLSLdpAcceptFilterResource struct {
 
 type MPLSLdpAcceptFilterModel struct {
 	ID       types.String `tfsdk:"id"`
+	Neighbor types.String `tfsdk:"neighbor"`
+	Accept   types.String `tfsdk:"accept"`
 	Comment  types.String `tfsdk:"comment"`
 	Disabled types.Bool   `tfsdk:"disabled"`
 	Prefix   types.String `tfsdk:"prefix"`
@@ -49,7 +51,6 @@ func (r *MPLSLdpAcceptFilterResource) Configure(_ context.Context, req resource.
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *MPLSLdpAcceptFilterResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -60,6 +61,16 @@ func (r *MPLSLdpAcceptFilterResource) Schema(_ context.Context, _ resource.Schem
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"neighbor": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `neighbor`.",
+			},
+			"accept": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `accept`.",
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -111,6 +122,12 @@ func (r *MPLSLdpAcceptFilterResource) Create(ctx context.Context, req resource.C
 	}
 	if !(plan.Vrf.IsNull() || plan.Vrf.IsUnknown()) {
 		body["vrf"] = plan.Vrf.ValueString()
+	}
+	if !(plan.Accept.IsNull() || plan.Accept.IsUnknown()) {
+		body["accept"] = plan.Accept.ValueString()
+	}
+	if !(plan.Neighbor.IsNull() || plan.Neighbor.IsUnknown()) {
+		body["neighbor"] = plan.Neighbor.ValueString()
 	}
 	obj, err := c.Add(ctx, "/mpls/ldp/accept-filter", body)
 	if err != nil {
@@ -170,6 +187,12 @@ func (r *MPLSLdpAcceptFilterResource) Update(ctx context.Context, req resource.U
 	}
 	if !plan.Vrf.Equal(state.Vrf) {
 		body["vrf"] = plan.Vrf.ValueString()
+	}
+	if !plan.Accept.Equal(state.Accept) && !plan.Accept.IsUnknown() {
+		body["accept"] = plan.Accept.ValueString()
+	}
+	if !plan.Neighbor.Equal(state.Neighbor) && !plan.Neighbor.IsUnknown() {
+		body["neighbor"] = plan.Neighbor.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/mpls/ldp/accept-filter", state.ID.ValueString(), body)
@@ -237,6 +260,16 @@ func mPLSLdpAcceptFilterLookupByNaturalKey(ctx context.Context, c *client.Client
 func mPLSLdpAcceptFilterApply(ctx context.Context, obj client.Object, m *MPLSLdpAcceptFilterModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["neighbor"]; ok && v != "" {
+		m.Neighbor = types.StringValue(v)
+	} else {
+		m.Neighbor = types.StringNull()
+	}
+	if v, ok := obj["accept"]; ok && v != "" {
+		m.Accept = types.StringValue(v)
+	} else {
+		m.Accept = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {

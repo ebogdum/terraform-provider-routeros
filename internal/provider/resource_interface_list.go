@@ -51,7 +51,6 @@ func (r *InterfaceListResource) Configure(_ context.Context, req resource.Config
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceListResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -64,7 +63,6 @@ func (r *InterfaceListResource) Schema(_ context.Context, _ resource.SchemaReque
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"builtin": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -74,7 +72,6 @@ func (r *InterfaceListResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},

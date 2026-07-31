@@ -35,25 +35,25 @@ resource "routeros_ip_dhcp_relay" "dhcp_relay_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `add_relay_info` - (Optional) Type: `bool`.
-* `delay_threshold` - (Optional) Type: `duration`.
-* `dhcp_server` - (Required) Type: `string`. Default: `127.0.0.1`.
+* `delay_threshold` - (Optional) Type: `string`.
+* `dhcp_server` - (Required) Type: `string`.
 * `dhcp_server_vrf` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `interface` - (Required) Type: `string`.
-* `local_address` - (Optional) Type: `ip`.
-* `local_address_as_source_ip` - (Optional) Type: `bool`.
-* `name` - (Required) Type: `string`. Default: `tf-acc-relay`.
+* `invalid` - (Read-only) Type: `bool`.
+* `local_address` - (Optional) Type: `string`.
+* `local_address_as_source_ip` - (Read-only) Type: `bool`.
+* `local_address_as_src_ip` - (Optional) Type: `string`. RouterOS `local-address-as-src-ip`.
+* `name` - (Required) Type: `string`.
 * `relay_info_remote_id` - (Optional) Type: `string`.
-* `reset_counters` - (Optional) Type: `string`.
+* `reset_counters` - (Read-only) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `invalid` - Type: `bool`.
 
 ## Import
 

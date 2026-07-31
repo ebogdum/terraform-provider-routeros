@@ -29,10 +29,13 @@ type RoutingFilterCommunityListResource struct {
 }
 
 type RoutingFilterCommunityListModel struct {
-	ID       types.String `tfsdk:"id"`
-	Comment  types.String `tfsdk:"comment"`
-	Disabled types.Bool   `tfsdk:"disabled"`
-	Router   types.String `tfsdk:"router"`
+	ID          types.String `tfsdk:"id"`
+	Regexp      types.String `tfsdk:"regexp"`
+	List        types.String `tfsdk:"list"`
+	Communities types.String `tfsdk:"communities"`
+	Comment     types.String `tfsdk:"comment"`
+	Disabled    types.Bool   `tfsdk:"disabled"`
+	Router      types.String `tfsdk:"router"`
 }
 
 func NewRoutingFilterCommunityListResource() resource.Resource {
@@ -49,7 +52,6 @@ func (r *RoutingFilterCommunityListResource) Configure(_ context.Context, req re
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *RoutingFilterCommunityListResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -60,6 +62,21 @@ func (r *RoutingFilterCommunityListResource) Schema(_ context.Context, _ resourc
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"regexp": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `regexp`.",
+			},
+			"list": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `list`.",
+			},
+			"communities": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `communities`.",
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -95,6 +112,15 @@ func (r *RoutingFilterCommunityListResource) Create(ctx context.Context, req res
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !(plan.Communities.IsNull() || plan.Communities.IsUnknown()) {
+		body["communities"] = plan.Communities.ValueString()
+	}
+	if !(plan.List.IsNull() || plan.List.IsUnknown()) {
+		body["list"] = plan.List.ValueString()
+	}
+	if !(plan.Regexp.IsNull() || plan.Regexp.IsUnknown()) {
+		body["regexp"] = plan.Regexp.ValueString()
 	}
 	obj, err := c.Add(ctx, "/routing/filter/community-list", body)
 	if err != nil {
@@ -148,6 +174,15 @@ func (r *RoutingFilterCommunityListResource) Update(ctx context.Context, req res
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !plan.Communities.Equal(state.Communities) && !plan.Communities.IsUnknown() {
+		body["communities"] = plan.Communities.ValueString()
+	}
+	if !plan.List.Equal(state.List) && !plan.List.IsUnknown() {
+		body["list"] = plan.List.ValueString()
+	}
+	if !plan.Regexp.Equal(state.Regexp) && !plan.Regexp.IsUnknown() {
+		body["regexp"] = plan.Regexp.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/routing/filter/community-list", state.ID.ValueString(), body)
@@ -215,6 +250,21 @@ func routingFilterCommunityListLookupByNaturalKey(ctx context.Context, c *client
 func routingFilterCommunityListApply(ctx context.Context, obj client.Object, m *RoutingFilterCommunityListModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["regexp"]; ok && v != "" {
+		m.Regexp = types.StringValue(v)
+	} else {
+		m.Regexp = types.StringNull()
+	}
+	if v, ok := obj["list"]; ok && v != "" {
+		m.List = types.StringValue(v)
+	} else {
+		m.List = types.StringNull()
+	}
+	if v, ok := obj["communities"]; ok && v != "" {
+		m.Communities = types.StringValue(v)
+	} else {
+		m.Communities = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {

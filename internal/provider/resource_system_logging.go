@@ -54,7 +54,6 @@ func (r *SystemLoggingResource) Configure(_ context.Context, req resource.Config
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *SystemLoggingResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -77,7 +76,6 @@ func (r *SystemLoggingResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "Free-form comment.",
 			},
 			"default": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -87,12 +85,10 @@ func (r *SystemLoggingResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"invalid": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"name": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -138,9 +134,6 @@ func (r *SystemLoggingResource) Create(ctx context.Context, req resource.CreateR
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
-	}
-	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
-		body["name"] = plan.Name.ValueString()
 	}
 	if !(plan.Prefix.IsNull() || plan.Prefix.IsUnknown()) {
 		body["prefix"] = plan.Prefix.ValueString()
@@ -206,9 +199,6 @@ func (r *SystemLoggingResource) Update(ctx context.Context, req resource.UpdateR
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
-	}
-	if !plan.Name.Equal(state.Name) {
-		body["name"] = plan.Name.ValueString()
 	}
 	if !plan.Prefix.Equal(state.Prefix) {
 		body["prefix"] = plan.Prefix.ValueString()

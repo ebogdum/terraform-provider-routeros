@@ -49,7 +49,6 @@ func (r *CapsManSecurityResource) Configure(_ context.Context, req resource.Conf
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *CapsManSecurityResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {

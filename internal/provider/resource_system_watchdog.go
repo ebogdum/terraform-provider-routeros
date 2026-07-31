@@ -178,9 +178,6 @@ func systemWatchdogUpsert(ctx context.Context, reg *client.Registry, plan *Syste
 	if !(plan.AutomaticSupout.IsNull() || plan.AutomaticSupout.IsUnknown()) {
 		body["automatic-supout"] = client.FormatBool(plan.AutomaticSupout.ValueBool())
 	}
-	if !(plan.NoPingDelay.IsNull() || plan.NoPingDelay.IsUnknown()) {
-		body["no-ping-delay"] = plan.NoPingDelay.ValueString()
-	}
 	if !(plan.PingStartAfterBoot.IsNull() || plan.PingStartAfterBoot.IsUnknown()) {
 		body["ping-start-after-boot"] = plan.PingStartAfterBoot.ValueString()
 	}

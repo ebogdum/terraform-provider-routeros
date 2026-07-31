@@ -30,6 +30,8 @@ type IPHotspotWalledGardenResource struct {
 
 type IPHotspotWalledGardenModel struct {
 	ID         types.String `tfsdk:"id"`
+	Method     types.String `tfsdk:"method"`
+	DstHost    types.String `tfsdk:"dst_host"`
 	Action     types.String `tfsdk:"action"`
 	Comment    types.String `tfsdk:"comment"`
 	Disabled   types.Bool   `tfsdk:"disabled"`
@@ -52,7 +54,6 @@ func (r *IPHotspotWalledGardenResource) Configure(_ context.Context, req resourc
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPHotspotWalledGardenResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -63,6 +64,16 @@ func (r *IPHotspotWalledGardenResource) Schema(_ context.Context, _ resource.Sch
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"method": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `method`.",
+			},
+			"dst_host": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `dst-host`.",
 			},
 			"action": schema.StringAttribute{
 				Optional:    true,
@@ -139,6 +150,12 @@ func (r *IPHotspotWalledGardenResource) Create(ctx context.Context, req resource
 	if !(plan.SrcAddress.IsNull() || plan.SrcAddress.IsUnknown()) {
 		body["src-address"] = plan.SrcAddress.ValueString()
 	}
+	if !(plan.DstHost.IsNull() || plan.DstHost.IsUnknown()) {
+		body["dst-host"] = plan.DstHost.ValueString()
+	}
+	if !(plan.Method.IsNull() || plan.Method.IsUnknown()) {
+		body["method"] = plan.Method.ValueString()
+	}
 	obj, err := c.Add(ctx, "/ip/hotspot/walled-garden", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /ip/hotspot/walled-garden failed", err.Error())
@@ -207,6 +224,12 @@ func (r *IPHotspotWalledGardenResource) Update(ctx context.Context, req resource
 	if !plan.SrcAddress.Equal(state.SrcAddress) {
 		body["src-address"] = plan.SrcAddress.ValueString()
 	}
+	if !plan.DstHost.Equal(state.DstHost) && !plan.DstHost.IsUnknown() {
+		body["dst-host"] = plan.DstHost.ValueString()
+	}
+	if !plan.Method.Equal(state.Method) && !plan.Method.IsUnknown() {
+		body["method"] = plan.Method.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/hotspot/walled-garden", state.ID.ValueString(), body)
 		if err != nil {
@@ -273,6 +296,16 @@ func iPHotspotWalledGardenLookupByNaturalKey(ctx context.Context, c *client.Clie
 func iPHotspotWalledGardenApply(ctx context.Context, obj client.Object, m *IPHotspotWalledGardenModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["method"]; ok && v != "" {
+		m.Method = types.StringValue(v)
+	} else {
+		m.Method = types.StringNull()
+	}
+	if v, ok := obj["dst-host"]; ok && v != "" {
+		m.DstHost = types.StringValue(v)
+	} else {
+		m.DstHost = types.StringNull()
+	}
 	if v, ok := obj["action"]; ok {
 		_ = v
 		if v != "" {

@@ -28,19 +28,18 @@ resource "routeros_interface_list" "list_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `builtin` - (Read-only) Type: `bool`.
 * `comment` - (Optional) Type: `string`.
-* `exclude` - (Optional) Type: `string`. Defines interface list which members are excluded from the list. It is possible to add multiple lists separated by commas.
-* `include` - (Optional) Type: `string`. Defines interface list which members are included in the list. It is possible to add multiple lists separated by commas.
-* `name` - (Required) Type: `string`. Name of the interface list. Default: `tf_acc_iflist`.
+* `dynamic` - (Read-only) Type: `bool`.
+* `exclude` - (Optional) Type: `string`. Defines interface list which members are excluded from the list. It is possible to add multiple lists separated by commas
+* `include` - (Optional) Type: `string`. Defines interface list which members are included in the list. It is possible to add multiple lists separated by commas
+* `name` - (Required) Type: `string`. Name of the interface list
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `builtin` - Type: `bool`.
-* `dynamic` - Type: `bool`.
 
 ## Import
 

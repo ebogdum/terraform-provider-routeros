@@ -32,6 +32,7 @@ type IPDHCPServerAlertResource struct {
 
 type IPDHCPServerAlertModel struct {
 	ID             types.String `tfsdk:"id"`
+	ValidServer    types.String `tfsdk:"valid_server"`
 	AlertTimeout   types.String `tfsdk:"alert_timeout"`
 	Comment        types.String `tfsdk:"comment"`
 	Disabled       types.Bool   `tfsdk:"disabled"`
@@ -55,7 +56,6 @@ func (r *IPDHCPServerAlertResource) Configure(_ context.Context, req resource.Co
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPDHCPServerAlertResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -66,6 +66,11 @@ func (r *IPDHCPServerAlertResource) Schema(_ context.Context, _ resource.SchemaR
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"valid_server": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `valid-server`.",
 			},
 			"alert_timeout": schema.StringAttribute{
 				Optional:      true,
@@ -94,17 +99,14 @@ func (r *IPDHCPServerAlertResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"reset_alert": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"unknown_servers": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"valid_servers": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -142,11 +144,8 @@ func (r *IPDHCPServerAlertResource) Create(ctx context.Context, req resource.Cre
 	if !(plan.OnAlert.IsNull() || plan.OnAlert.IsUnknown()) {
 		body["on-alert"] = plan.OnAlert.ValueString()
 	}
-	if !(plan.ResetAlert.IsNull() || plan.ResetAlert.IsUnknown()) {
-		body["reset-alert"] = plan.ResetAlert.ValueString()
-	}
-	if !(plan.ValidServers.IsNull() || plan.ValidServers.IsUnknown()) {
-		body["valid-servers"] = plan.ValidServers.ValueString()
+	if !(plan.ValidServer.IsNull() || plan.ValidServer.IsUnknown()) {
+		body["valid-server"] = plan.ValidServer.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ip/dhcp-server/alert", body)
 	if err != nil {
@@ -210,11 +209,8 @@ func (r *IPDHCPServerAlertResource) Update(ctx context.Context, req resource.Upd
 	if !plan.OnAlert.Equal(state.OnAlert) {
 		body["on-alert"] = plan.OnAlert.ValueString()
 	}
-	if !plan.ResetAlert.Equal(state.ResetAlert) {
-		body["reset-alert"] = plan.ResetAlert.ValueString()
-	}
-	if !plan.ValidServers.Equal(state.ValidServers) {
-		body["valid-servers"] = plan.ValidServers.ValueString()
+	if !plan.ValidServer.Equal(state.ValidServer) && !plan.ValidServer.IsUnknown() {
+		body["valid-server"] = plan.ValidServer.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/dhcp-server/alert", state.ID.ValueString(), body)
@@ -282,6 +278,11 @@ func iPDHCPServerAlertLookupByNaturalKey(ctx context.Context, c *client.Client, 
 func iPDHCPServerAlertApply(ctx context.Context, obj client.Object, m *IPDHCPServerAlertModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["valid-server"]; ok && v != "" {
+		m.ValidServer = types.StringValue(v)
+	} else {
+		m.ValidServer = types.StringNull()
+	}
 	if v, ok := obj["alert-timeout"]; ok {
 		_ = v
 		if v != "" {

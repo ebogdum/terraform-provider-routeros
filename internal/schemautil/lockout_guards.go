@@ -79,11 +79,9 @@ func CheckUserGroupPolicyLockout(menuPath string, body client.Object, acknowledg
 // service rows after the planned change), not just the diff for one row,
 // since the test is global.
 //
-// /ip/service is currently surfaced only as a data source (RouterOS does not
-// permit add/remove on the rows -- only enable/disable). If a resource is
-// added later it MUST call this guard before applying a disable. The unit
-// tests in lockout_test.go cover the behaviour so it stays correct in the
-// meantime.
+// RouterOS does not permit add/remove on /ip/service rows, only enable/disable
+// and reconfiguration. The routeros_ip_service resource adopts a row by name
+// and calls this guard (via ipServiceCheckLockout) before every write.
 func CheckIPServiceLockout(menuPath string, allServices []client.Object, acknowledged bool) error {
 	if acknowledged {
 		return nil
@@ -129,21 +127,5 @@ func CheckMACServerLockout(menuPath string, body client.Object, acknowledged boo
 			"this disables MAC-Winbox recovery, leaving no out-of-band access if SSH/Winbox/web break; " +
 			"set lockout_ack=true to override")
 	}
-	return nil
-}
-
-// CheckSSHKeyImportLockout warns when an SSH key import would REPLACE the
-// last admin's authentication and password-authentication is disabled in
-// /ip/ssh -- leaving no fallback if the private key is lost.
-//
-// Returns nil for now; provided as a placeholder so callers can wire it
-// without code changes when we have multi-resource visibility.
-func CheckSSHKeyImportLockout(menuPath string, body client.Object, acknowledged bool) error {
-	// Multi-resource invariant; the current per-resource Create/Update path can't
-	// see /ip/ssh's password-authentication setting. Implement when we have a
-	// pre-apply hook with cross-resource state.
-	_ = menuPath
-	_ = body
-	_ = acknowledged
 	return nil
 }

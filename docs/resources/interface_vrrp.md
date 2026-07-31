@@ -35,18 +35,35 @@ resource "routeros_interface_vrrp" "vrrp_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `arp` - (Optional) Type: `string`.
 * `arp_timeout` - (Optional) Type: `string`.
 * `authentication` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `connection_tracking_mode` - (Optional) Type: `string`. RouterOS `connection-tracking-mode`.
+* `connection_tracking_port` - (Optional) Type: `string`. RouterOS `connection-tracking-port`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `group_authority` - (Optional) Type: `string`. RouterOS `group-authority`.
+* `group_master` - (Optional) Type: `string`. RouterOS `group-master`.
 * `interface` - (Required) Type: `string`.
 * `interval` - (Optional) Type: `string`.
-* `name` - (Required) Type: `string`. Default: `tf_acc_vrrp`.
-* `password` - (Optional) Type: `string`.
+* `name` - (Required) Type: `string`.
+* `on_backup` - (Optional) Type: `string`. RouterOS `on-backup`.
+* `on_fail` - (Optional) Type: `string`. RouterOS `on-fail`.
+* `on_master` - (Optional) Type: `string`. RouterOS `on-master`.
+* `password` - (Optional) Type: `string`. **Sensitive.**
+* `preemption_mode` - (Optional) Type: `string`. RouterOS `preemption-mode`.
 * `priority` - (Optional) Type: `string`.
 * `remote_address` - (Optional) Type: `string`.
+* `sync_connection_tracking` - (Optional) Type: `string`. RouterOS `sync-connection-tracking`.
+* `v3_protocol` - (Optional) Type: `string`. RouterOS `v3-protocol`.
+* `version` - (Optional) Type: `string`. RouterOS `version`.
+* `vrid` - (Optional) Type: `string`. RouterOS `vrid`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

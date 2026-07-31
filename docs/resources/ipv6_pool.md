@@ -29,23 +29,22 @@ resource "routeros_ipv6_pool" "pool_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `actual_prefix` - (Read-only) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `dynamic` - (Read-only) Type: `bool`.
 * `from_pool` - (Optional) Type: `string`.
-* `name` - (Required) Type: `string`. Default: `tf_acc_pool6`.
-* `prefix` - (Required) Type: `string`. Default: `fd00:db8::/56`.
-* `prefix_length` - (Required) Type: `int`. Default: `64`.
+* `invalid` - (Read-only) Type: `bool`.
+* `name` - (Required) Type: `string`.
+* `preferred_lifetime` - (Read-only) Type: `string`.
+* `prefix` - (Required) Type: `string`.
+* `prefix_length` - (Required) Type: `int`.
+* `valid_lifetime` - (Read-only) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `actual_prefix` - Type: `string`.
-* `dynamic` - Type: `bool`.
-* `invalid` - Type: `bool`.
-* `preferred_lifetime` - Type: `string`.
-* `valid_lifetime` - Type: `string`.
 
 ## Import
 

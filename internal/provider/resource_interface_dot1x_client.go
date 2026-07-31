@@ -54,7 +54,6 @@ func (r *InterfaceDot1xClientResource) Configure(_ context.Context, req resource
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceDot1xClientResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -102,7 +101,6 @@ func (r *InterfaceDot1xClientResource) Schema(_ context.Context, _ resource.Sche
 				Description: "",
 			},
 			"invalid": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},

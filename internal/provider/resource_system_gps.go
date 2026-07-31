@@ -53,7 +53,6 @@ func (r *SystemGpsResource) Configure(_ context.Context, req resource.ConfigureR
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *SystemGpsResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {

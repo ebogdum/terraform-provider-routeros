@@ -29,13 +29,16 @@ type InterfaceMacsecResource struct {
 }
 
 type InterfaceMacsecModel struct {
-	ID       types.String `tfsdk:"id"`
-	Comment  types.String `tfsdk:"comment"`
-	Disabled types.Bool   `tfsdk:"disabled"`
-	MTU      types.String `tfsdk:"mtu"`
-	Name     types.String `tfsdk:"name"`
-	Profile  types.String `tfsdk:"profile"`
-	Router   types.String `tfsdk:"router"`
+	ID        types.String `tfsdk:"id"`
+	Interface types.String `tfsdk:"interface"`
+	Ckn       types.String `tfsdk:"ckn"`
+	Cak       types.String `tfsdk:"cak"`
+	Comment   types.String `tfsdk:"comment"`
+	Disabled  types.Bool   `tfsdk:"disabled"`
+	MTU       types.String `tfsdk:"mtu"`
+	Name      types.String `tfsdk:"name"`
+	Profile   types.String `tfsdk:"profile"`
+	Router    types.String `tfsdk:"router"`
 }
 
 func NewInterfaceMacsecResource() resource.Resource { return &InterfaceMacsecResource{} }
@@ -50,7 +53,6 @@ func (r *InterfaceMacsecResource) Configure(_ context.Context, req resource.Conf
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceMacsecResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -61,6 +63,21 @@ func (r *InterfaceMacsecResource) Schema(_ context.Context, _ resource.SchemaReq
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"interface": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `interface`.",
+			},
+			"ckn": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `ckn`.",
+			},
+			"cak": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `cak`.",
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -120,6 +137,15 @@ func (r *InterfaceMacsecResource) Create(ctx context.Context, req resource.Creat
 	}
 	if !(plan.Profile.IsNull() || plan.Profile.IsUnknown()) {
 		body["profile"] = plan.Profile.ValueString()
+	}
+	if !(plan.Cak.IsNull() || plan.Cak.IsUnknown()) {
+		body["cak"] = plan.Cak.ValueString()
+	}
+	if !(plan.Ckn.IsNull() || plan.Ckn.IsUnknown()) {
+		body["ckn"] = plan.Ckn.ValueString()
+	}
+	if !(plan.Interface.IsNull() || plan.Interface.IsUnknown()) {
+		body["interface"] = plan.Interface.ValueString()
 	}
 	obj, err := c.Add(ctx, "/interface/macsec", body)
 	if err != nil {
@@ -182,6 +208,15 @@ func (r *InterfaceMacsecResource) Update(ctx context.Context, req resource.Updat
 	}
 	if !plan.Profile.Equal(state.Profile) {
 		body["profile"] = plan.Profile.ValueString()
+	}
+	if !plan.Cak.Equal(state.Cak) && !plan.Cak.IsUnknown() {
+		body["cak"] = plan.Cak.ValueString()
+	}
+	if !plan.Ckn.Equal(state.Ckn) && !plan.Ckn.IsUnknown() {
+		body["ckn"] = plan.Ckn.ValueString()
+	}
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
+		body["interface"] = plan.Interface.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/macsec", state.ID.ValueString(), body)
@@ -249,6 +284,21 @@ func interfaceMacsecLookupByNaturalKey(ctx context.Context, c *client.Client, id
 func interfaceMacsecApply(ctx context.Context, obj client.Object, m *InterfaceMacsecModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["interface"]; ok && v != "" {
+		m.Interface = types.StringValue(v)
+	} else {
+		m.Interface = types.StringNull()
+	}
+	if v, ok := obj["ckn"]; ok && v != "" {
+		m.Ckn = types.StringValue(v)
+	} else {
+		m.Ckn = types.StringNull()
+	}
+	if v, ok := obj["cak"]; ok && v != "" {
+		m.Cak = types.StringValue(v)
+	} else {
+		m.Cak = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {

@@ -53,60 +53,62 @@ resource "routeros_ip_dhcp_server_lease" "lease_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `active_address` - (Read-only) Type: `string`.
+* `active_agent_circuit_id` - (Read-only) Type: `string`.
+* `active_agent_remote_id` - (Read-only) Type: `string`.
+* `active_class_id` - (Read-only) Type: `string`.
+* `active_client_id` - (Read-only) Type: `string`.
+* `active_host_name` - (Read-only) Type: `string`.
+* `active_mac_address` - (Read-only) Type: `string`.
+* `active_server` - (Read-only) Type: `string`.
 * `address` - (Optional) Type: `string`.
-* `address_list` - (Optional) Type: `string`.
+* `address_list` - (Read-only) Type: `string`.
+* `address_lists` - (Optional) Type: `string`. RouterOS `address-lists`.
+* `age` - (Read-only) Type: `string`.
 * `agent_circuit_id` - (Optional) Type: `string`.
 * `agent_remote_id` - (Optional) Type: `string`.
 * `allow_dual_stack_queue` - (Optional) Type: `string`.
 * `always_broadcast` - (Optional) Type: `bool`.
 * `block_access` - (Optional) Type: `bool`.
-* `blocked` - (Optional) Type: `bool`.
-* `check_status` - (Optional) Type: `string`.
+* `blocked` - (Read-only) Type: `bool`.
+* `bridge_port` - (Read-only) Type: `string`.
+* `check_status` - (Read-only) Type: `string`.
 * `client_id` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
-* `dhcp_option_set` - (Optional) Type: `string`. Default: `4.294967295e+09`.
-* `dhcp_options` - (Optional) Type: `string`.
+* `dhcp_option` - (Optional) Type: `string`. RouterOS `dhcp-option`.
+* `dhcp_option_set` - (Optional) Type: `string`.
+* `dhcp_options` - (Read-only) Type: `string`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `dyn` - (Optional) Type: `string`.
+* `dyn` - (Read-only) Type: `string`.
+* `dynamic` - (Read-only) Type: `bool`.
+* `expires_after` - (Read-only) Type: `string`.
 * `insert_queue_before` - (Optional) Type: `string`.
-* `lease_time` - (Optional) Type: `duration`.
+* `last_seen` - (Read-only) Type: `string`.
+* `last_sent_counter` - (Read-only) Type: `string`.
+* `lease_time` - (Optional) Type: `string`.
 * `mac_address` - (Optional) Type: `string`.
-* `make_static` - (Optional) Type: `string`.
+* `make_static` - (Read-only) Type: `string`.
 * `parent_queue` - (Optional) Type: `string`.
-* `ping` - (Optional) Type: `string`.
+* `ping` - (Read-only) Type: `string`.
 * `queue_type` - (Optional) Type: `string`.
-* `radius` - (Optional) Type: `bool`.
+* `radius` - (Read-only) Type: `bool`.
 * `rate_limit` - (Optional) Type: `string`.
-* `rostat` - (Optional) Type: `string`.
+* `reconfigure_key` - (Read-only) Type: `string`.
+* `reconfigure_status` - (Read-only) Type: `string`.
+* `rostat` - (Read-only) Type: `string`.
 * `routes` - (Optional) Type: `string`.
-* `send_reconfigure` - (Optional) Type: `string`.
+* `send_reconfigure` - (Read-only) Type: `string`.
 * `server` - (Optional) Type: `string`.
-* `stat` - (Optional) Type: `string`.
-* `use_src_mac_address` - (Optional) Type: `bool`.
+* `src_mac_address` - (Read-only) Type: `string`.
+* `stat` - (Read-only) Type: `string`.
+* `use_src_mac` - (Optional) Type: `string`. RouterOS `use-src-mac`.
+* `use_src_mac_address` - (Read-only) Type: `bool`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `active_address` - Type: `ip`.
-* `active_agent_circuit_id` - Type: `string`.
-* `active_agent_remote_id` - Type: `string`.
-* `active_class_id` - Type: `string`.
-* `active_client_id` - Type: `string`.
-* `active_host_name` - Type: `string`.
-* `active_mac_address` - Type: `string`.
-* `active_server` - Type: `string`.
-* `age` - Type: `string`.
-* `bridge_port` - Type: `string`.
-* `dynamic` - Type: `bool`.
-* `expires_after` - Type: `string`.
-* `last_seen` - Type: `string`.
-* `last_sent_counter` - Type: `string`.
-* `reconfigure_key` - Type: `string`.
-* `reconfigure_status` - Type: `string`.
-* `src_mac_address` - Type: `string`.
 
 ## Import
 

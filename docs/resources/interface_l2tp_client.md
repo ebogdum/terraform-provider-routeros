@@ -39,22 +39,37 @@ resource "routeros_interface_l2tp_client" "l2tp_client_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `add_default_route` - (Optional) Type: `string`. RouterOS `add-default-route`.
 * `allow` - (Optional) Type: `string`.
+* `allow_fast_path` - (Optional) Type: `string`. RouterOS `allow-fast-path`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
-* `connect_to` - (Required) Type: `string`. Default: `127.0.0.1`.
+* `connect_to` - (Required) Type: `string`.
 * `default_route_distance` - (Optional) Type: `string`.
 * `dial_on_demand` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `ipsec_secret` - (Optional) Type: `string`.
+* `ipsec_secret` - (Optional) Type: `string`. **Sensitive.**
 * `keepalive_timeout` - (Optional) Type: `string`.
+* `l2tp_proto_version` - (Optional) Type: `string`. RouterOS `l2tp-proto-version`.
+* `l2tpv3_circuit_id` - (Optional) Type: `string`. RouterOS `l2tpv3-circuit-id`.
+* `l2tpv3_cookie_length` - (Optional) Type: `string`. RouterOS `l2tpv3-cookie-length`.
+* `l2tpv3_digest_hash` - (Optional) Type: `string`. RouterOS `l2tpv3-digest-hash`.
 * `max_mru` - (Optional) Type: `string`.
 * `max_mtu` - (Optional) Type: `string`.
 * `mrru` - (Optional) Type: `string`.
-* `name` - (Required) Type: `string`. Default: `tf_acc_l2tpc`.
-* `password` - (Optional) Type: `string`.
+* `name` - (Required) Type: `string`.
+* `password` - (Optional) Type: `string`. **Sensitive.**
 * `profile` - (Optional) Type: `string`.
-* `user` - (Required) Type: `string`. Default: `tf_acc_user`.
+* `random_source_port` - (Optional) Type: `string`. RouterOS `random-source-port`.
+* `src_address` - (Optional) Type: `string`. RouterOS `src-address`.
+* `use_ipsec` - (Optional) Type: `string`. RouterOS `use-ipsec`.
+* `use_peer_dns` - (Optional) Type: `string`. RouterOS `use-peer-dns`.
+* `user` - (Required) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

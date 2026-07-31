@@ -60,7 +60,6 @@ func (r *CapsManProvisioningResource) Configure(_ context.Context, req resource.
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *CapsManProvisioningResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {

@@ -31,7 +31,7 @@ type SystemScriptResource struct {
 type SystemScriptModel struct {
 	ID                     types.String `tfsdk:"id"`
 	Comment                types.String `tfsdk:"comment"`
-	DonTRequirePermissions types.Bool   `tfsdk:"don_t_require_permissions"`
+	DonTRequirePermissions types.Bool   `tfsdk:"dont_require_permissions"`
 	Invalid                types.Bool   `tfsdk:"invalid"`
 	LastTimeStarted        types.String `tfsdk:"last_time_started"`
 	Name                   types.String `tfsdk:"name"`
@@ -55,7 +55,6 @@ func (r *SystemScriptResource) Configure(_ context.Context, req resource.Configu
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *SystemScriptResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -72,18 +71,16 @@ func (r *SystemScriptResource) Schema(_ context.Context, _ resource.SchemaReques
 				Computed:    true,
 				Description: "Free-form comment.",
 			},
-			"don_t_require_permissions": schema.BoolAttribute{
+			"dont_require_permissions": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"invalid": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"last_time_started": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -92,7 +89,6 @@ func (r *SystemScriptResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description: "",
 			},
 			"owner": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -103,12 +99,10 @@ func (r *SystemScriptResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description: "",
 			},
 			"run_count": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"run_script": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -139,16 +133,13 @@ func (r *SystemScriptResource) Create(ctx context.Context, req resource.CreateRe
 		body["comment"] = plan.Comment.ValueString()
 	}
 	if !(plan.DonTRequirePermissions.IsNull() || plan.DonTRequirePermissions.IsUnknown()) {
-		body["don-t-require-permissions"] = client.FormatBool(plan.DonTRequirePermissions.ValueBool())
+		body["dont-require-permissions"] = client.FormatBool(plan.DonTRequirePermissions.ValueBool())
 	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
 	}
 	if !(plan.Policy.IsNull() || plan.Policy.IsUnknown()) {
 		body["policy"] = encodeStringList(ctx, plan.Policy, &resp.Diagnostics)
-	}
-	if !(plan.RunScript.IsNull() || plan.RunScript.IsUnknown()) {
-		body["run-script"] = plan.RunScript.ValueString()
 	}
 	if !(plan.Source.IsNull() || plan.Source.IsUnknown()) {
 		body["source"] = plan.Source.ValueString()
@@ -204,16 +195,13 @@ func (r *SystemScriptResource) Update(ctx context.Context, req resource.UpdateRe
 		body["comment"] = plan.Comment.ValueString()
 	}
 	if !plan.DonTRequirePermissions.Equal(state.DonTRequirePermissions) {
-		body["don-t-require-permissions"] = client.FormatBool(plan.DonTRequirePermissions.ValueBool())
+		body["dont-require-permissions"] = client.FormatBool(plan.DonTRequirePermissions.ValueBool())
 	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
 	}
 	if !plan.Policy.Equal(state.Policy) {
 		body["policy"] = encodeStringList(ctx, plan.Policy, &resp.Diagnostics)
-	}
-	if !plan.RunScript.Equal(state.RunScript) {
-		body["run-script"] = plan.RunScript.ValueString()
 	}
 	if !plan.Source.Equal(state.Source) {
 		body["source"] = plan.Source.ValueString()
@@ -294,7 +282,7 @@ func systemScriptApply(ctx context.Context, obj client.Object, m *SystemScriptMo
 	} else {
 		m.Comment = types.StringNull()
 	}
-	if v, ok := obj["don-t-require-permissions"]; ok {
+	if v, ok := obj["dont-require-permissions"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.DonTRequirePermissions = types.BoolValue(b)

@@ -30,6 +30,7 @@ type RoutingGmpResource struct {
 
 type RoutingGmpModel struct {
 	ID         types.String `tfsdk:"id"`
+	Groups     types.String `tfsdk:"groups"`
 	Disabled   types.Bool   `tfsdk:"disabled"`
 	Exclude    types.Bool   `tfsdk:"exclude"`
 	Group      types.String `tfsdk:"group"`
@@ -50,7 +51,6 @@ func (r *RoutingGmpResource) Configure(_ context.Context, req resource.Configure
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *RoutingGmpResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -61,6 +61,11 @@ func (r *RoutingGmpResource) Schema(_ context.Context, _ resource.SchemaRequest,
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"groups": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `groups`.",
 			},
 			"disabled": schema.BoolAttribute{
 				Optional:    true,
@@ -73,7 +78,6 @@ func (r *RoutingGmpResource) Schema(_ context.Context, _ resource.SchemaRequest,
 				Description: "",
 			},
 			"group": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -112,14 +116,14 @@ func (r *RoutingGmpResource) Create(ctx context.Context, req resource.CreateRequ
 	if !(plan.Exclude.IsNull() || plan.Exclude.IsUnknown()) {
 		body["exclude"] = client.FormatBool(plan.Exclude.ValueBool())
 	}
-	if !(plan.Group.IsNull() || plan.Group.IsUnknown()) {
-		body["group"] = plan.Group.ValueString()
-	}
 	if !(plan.Interfaces.IsNull() || plan.Interfaces.IsUnknown()) {
 		body["interfaces"] = plan.Interfaces.ValueString()
 	}
 	if !(plan.Sources.IsNull() || plan.Sources.IsUnknown()) {
 		body["sources"] = plan.Sources.ValueString()
+	}
+	if !(plan.Groups.IsNull() || plan.Groups.IsUnknown()) {
+		body["groups"] = plan.Groups.ValueString()
 	}
 	obj, err := c.Add(ctx, "/routing/gmp", body)
 	if err != nil {
@@ -174,14 +178,14 @@ func (r *RoutingGmpResource) Update(ctx context.Context, req resource.UpdateRequ
 	if !plan.Exclude.Equal(state.Exclude) {
 		body["exclude"] = client.FormatBool(plan.Exclude.ValueBool())
 	}
-	if !plan.Group.Equal(state.Group) {
-		body["group"] = plan.Group.ValueString()
-	}
 	if !plan.Interfaces.Equal(state.Interfaces) {
 		body["interfaces"] = plan.Interfaces.ValueString()
 	}
 	if !plan.Sources.Equal(state.Sources) {
 		body["sources"] = plan.Sources.ValueString()
+	}
+	if !plan.Groups.Equal(state.Groups) && !plan.Groups.IsUnknown() {
+		body["groups"] = plan.Groups.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/routing/gmp", state.ID.ValueString(), body)
@@ -249,6 +253,11 @@ func routingGmpLookupByNaturalKey(ctx context.Context, c *client.Client, id stri
 func routingGmpApply(ctx context.Context, obj client.Object, m *RoutingGmpModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["groups"]; ok && v != "" {
+		m.Groups = types.StringValue(v)
+	} else {
+		m.Groups = types.StringNull()
+	}
 	if v, ok := obj["disabled"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {

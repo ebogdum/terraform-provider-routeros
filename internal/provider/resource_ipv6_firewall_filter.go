@@ -31,6 +31,8 @@ type IPV6FirewallFilterResource struct {
 
 type IPV6FirewallFilterModel struct {
 	ID                      types.String `tfsdk:"id"`
+	Tos                     types.String `tfsdk:"tos"`
+	Headers                 types.String `tfsdk:"headers"`
 	Action                  types.String `tfsdk:"action"`
 	AddressList             types.String `tfsdk:"address_list"`
 	AddressListTimeout      types.String `tfsdk:"address_list_timeout"`
@@ -52,6 +54,7 @@ type IPV6FirewallFilterModel struct {
 	DstAddressType          types.String `tfsdk:"dst_address_type"`
 	DstLimit                types.String `tfsdk:"dst_limit"`
 	DstPort                 types.String `tfsdk:"dst_port"`
+	HopLimit                types.String `tfsdk:"hop_limit"`
 	IcmpOptions             types.String `tfsdk:"icmp_options"`
 	InBridgePort            types.String `tfsdk:"in_bridge_port"`
 	InBridgePortList        types.String `tfsdk:"in_bridge_port_list"`
@@ -104,7 +107,6 @@ func (r *IPV6FirewallFilterResource) Configure(_ context.Context, req resource.C
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPV6FirewallFilterResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -115,6 +117,16 @@ func (r *IPV6FirewallFilterResource) Schema(_ context.Context, _ resource.Schema
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"tos": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `tos`.",
+			},
+			"headers": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `headers`.",
 			},
 			"action": schema.StringAttribute{
 				Required:    true,
@@ -218,6 +230,11 @@ func (r *IPV6FirewallFilterResource) Schema(_ context.Context, _ resource.Schema
 				Optional:    true,
 				Computed:    true,
 				Description: "",
+			},
+			"hop_limit": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "Matches the IPv6 hop limit, as `<condition>:<value>` -- e.g. `equal:1`, `not-equal:1`, `less-than:5`, `greater-than:2`. Required to express the defconf rfc4890 rule; without it that rule matches all ICMPv6 instead of only hop-limit 1.",
 			},
 			"icmp_options": schema.StringAttribute{
 				Optional:    true,
@@ -483,6 +500,9 @@ func (r *IPV6FirewallFilterResource) Create(ctx context.Context, req resource.Cr
 	if !(plan.DstPort.IsNull() || plan.DstPort.IsUnknown()) {
 		body["dst-port"] = plan.DstPort.ValueString()
 	}
+	if !(plan.HopLimit.IsNull() || plan.HopLimit.IsUnknown()) {
+		body["hop-limit"] = plan.HopLimit.ValueString()
+	}
 	if !(plan.IcmpOptions.IsNull() || plan.IcmpOptions.IsUnknown()) {
 		body["icmp-options"] = plan.IcmpOptions.ValueString()
 	}
@@ -588,6 +608,12 @@ func (r *IPV6FirewallFilterResource) Create(ctx context.Context, req resource.Cr
 	if err := schemautil.CheckFirewallLockout("/ipv6/firewall/filter", body, !plan.LockoutAck.IsNull() && plan.LockoutAck.ValueBool()); err != nil {
 		resp.Diagnostics.AddError("Refusing dangerous firewall rule", err.Error())
 		return
+	}
+	if !(plan.Headers.IsNull() || plan.Headers.IsUnknown()) {
+		body["headers"] = plan.Headers.ValueString()
+	}
+	if !(plan.Tos.IsNull() || plan.Tos.IsUnknown()) {
+		body["tos"] = plan.Tos.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ipv6/firewall/filter", body)
 	if err != nil {
@@ -719,6 +745,9 @@ func (r *IPV6FirewallFilterResource) Update(ctx context.Context, req resource.Up
 	if !plan.DstPort.Equal(state.DstPort) {
 		body["dst-port"] = plan.DstPort.ValueString()
 	}
+	if !plan.HopLimit.Equal(state.HopLimit) {
+		body["hop-limit"] = plan.HopLimit.ValueString()
+	}
 	if !plan.IcmpOptions.Equal(state.IcmpOptions) {
 		body["icmp-options"] = plan.IcmpOptions.ValueString()
 	}
@@ -820,6 +849,12 @@ func (r *IPV6FirewallFilterResource) Update(ctx context.Context, req resource.Up
 	}
 	if !plan.TLSHost.Equal(state.TLSHost) {
 		body["tls-host"] = plan.TLSHost.ValueString()
+	}
+	if !plan.Headers.Equal(state.Headers) && !plan.Headers.IsUnknown() {
+		body["headers"] = plan.Headers.ValueString()
+	}
+	if !plan.Tos.Equal(state.Tos) && !plan.Tos.IsUnknown() {
+		body["tos"] = plan.Tos.ValueString()
 	}
 	// If position OR comment changed, re-encode the marker into the comment
 	// so the device-side prefix stays in sync.
@@ -1297,6 +1332,16 @@ func iPV6FirewallFilterLookupByNaturalKey(ctx context.Context, c *client.Client,
 func iPV6FirewallFilterApply(ctx context.Context, obj client.Object, m *IPV6FirewallFilterModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["tos"]; ok && v != "" {
+		m.Tos = types.StringValue(v)
+	} else {
+		m.Tos = types.StringNull()
+	}
+	if v, ok := obj["headers"]; ok && v != "" {
+		m.Headers = types.StringValue(v)
+	} else {
+		m.Headers = types.StringNull()
+	}
 	// Strip the [tf:pos=N] marker from the comment before exposing to state.
 	// Position is TF-state-only metadata; never written to the device. Keep
 	// whatever the user planned. Comment is left untouched.
@@ -1517,6 +1562,16 @@ func iPV6FirewallFilterApply(ctx context.Context, obj client.Object, m *IPV6Fire
 		}
 	} else {
 		m.DstPort = types.StringNull()
+	}
+	if v, ok := obj["hop-limit"]; ok {
+		_ = v
+		if v != "" {
+			m.HopLimit = types.StringValue(v)
+		} else {
+			m.HopLimit = types.StringNull()
+		}
+	} else {
+		m.HopLimit = types.StringNull()
 	}
 	if v, ok := obj["icmp-options"]; ok {
 		_ = v

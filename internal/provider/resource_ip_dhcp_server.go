@@ -32,6 +32,11 @@ type IPDHCPServerResource struct {
 
 type IPDHCPServerModel struct {
 	ID                            types.String `tfsdk:"id"`
+	SupportBroadbandTr101         types.String `tfsdk:"support_broadband_tr101"`
+	AddressLists                  types.String `tfsdk:"address_lists"`
+	AddDnsEntriesSuffix           types.String `tfsdk:"add_dns_entries_suffix"`
+	AddDnsEntries                 types.String `tfsdk:"add_dns_entries"`
+	AddArp                        types.String `tfsdk:"add_arp"`
 	AddARPForLeases               types.Bool   `tfsdk:"add_arp_for_leases"`
 	AddressList                   types.String `tfsdk:"address_list"`
 	AddressPool                   types.String `tfsdk:"address_pool"`
@@ -40,7 +45,7 @@ type IPDHCPServerModel struct {
 	Authoritative                 types.String `tfsdk:"authoritative"`
 	BootpLeaseTime                types.String `tfsdk:"bootp_lease_time"`
 	BootpSupport                  types.String `tfsdk:"bootp_support"`
-	ClientMACLimit                types.Int64  `tfsdk:"client_mac_limit"`
+	ClientMACLimit                types.String `tfsdk:"client_mac_limit"`
 	Comment                       types.String `tfsdk:"comment"`
 	ConflictDetection             types.Bool   `tfsdk:"conflict_detection"`
 	DelayThreshold                types.String `tfsdk:"delay_threshold"`
@@ -76,7 +81,6 @@ func (r *IPDHCPServerResource) Configure(_ context.Context, req resource.Configu
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPDHCPServerResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -88,13 +92,36 @@ func (r *IPDHCPServerResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
-			"add_arp_for_leases": schema.BoolAttribute{
+			"support_broadband_tr101": schema.StringAttribute{
 				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `support-broadband-tr101`.",
+			},
+			"address_lists": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `address-lists`.",
+			},
+			"add_dns_entries_suffix": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `add-dns-entries-suffix`.",
+			},
+			"add_dns_entries": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `add-dns-entries`.",
+			},
+			"add_arp": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `add-arp`.",
+			},
+			"add_arp_for_leases": schema.BoolAttribute{
 				Computed:    true,
 				Description: "",
 			},
 			"address_list": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -132,10 +159,10 @@ func (r *IPDHCPServerResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description: "",
 				Validators:  []validator.String{schemautil.OneOf([]string{"none", "static", "dynamic"}...)},
 			},
-			"client_mac_limit": schema.Int64Attribute{
+			"client_mac_limit": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "",
+				Description: "A number, or `unlimited`.",
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -170,7 +197,6 @@ func (r *IPDHCPServerResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description: "",
 			},
 			"dynbootp": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -184,7 +210,6 @@ func (r *IPDHCPServerResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description: "",
 			},
 			"invalid": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -222,7 +247,6 @@ func (r *IPDHCPServerResource) Schema(_ context.Context, _ resource.SchemaReques
 				Validators:  []validator.String{schemautil.IsIP()},
 			},
 			"support_the_broadband_forum_tr_101": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -261,12 +285,6 @@ func (r *IPDHCPServerResource) Create(ctx context.Context, req resource.CreateRe
 		return
 	}
 	body := client.Object{}
-	if !(plan.AddARPForLeases.IsNull() || plan.AddARPForLeases.IsUnknown()) {
-		body["add-arp-for-leases"] = client.FormatBool(plan.AddARPForLeases.ValueBool())
-	}
-	if !(plan.AddressList.IsNull() || plan.AddressList.IsUnknown()) {
-		body["address-list"] = plan.AddressList.ValueString()
-	}
 	if !(plan.AddressPool.IsNull() || plan.AddressPool.IsUnknown()) {
 		body["address-pool"] = plan.AddressPool.ValueString()
 	}
@@ -286,7 +304,7 @@ func (r *IPDHCPServerResource) Create(ctx context.Context, req resource.CreateRe
 		body["bootp-support"] = plan.BootpSupport.ValueString()
 	}
 	if !(plan.ClientMACLimit.IsNull() || plan.ClientMACLimit.IsUnknown()) {
-		body["client-mac-limit"] = client.FormatInt64(plan.ClientMACLimit.ValueInt64())
+		body["client-mac-limit"] = plan.ClientMACLimit.ValueString()
 	}
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
@@ -305,9 +323,6 @@ func (r *IPDHCPServerResource) Create(ctx context.Context, req resource.CreateRe
 	}
 	if !(plan.DynamicLeaseIdentifiers.IsNull() || plan.DynamicLeaseIdentifiers.IsUnknown()) {
 		body["dynamic-lease-identifiers"] = plan.DynamicLeaseIdentifiers.ValueString()
-	}
-	if !(plan.Dynbootp.IsNull() || plan.Dynbootp.IsUnknown()) {
-		body["dynbootp"] = plan.Dynbootp.ValueString()
 	}
 	if !(plan.InsertQueueBefore.IsNull() || plan.InsertQueueBefore.IsUnknown()) {
 		body["insert-queue-before"] = plan.InsertQueueBefore.ValueString()
@@ -333,9 +348,6 @@ func (r *IPDHCPServerResource) Create(ctx context.Context, req resource.CreateRe
 	if !(plan.ServerAddress.IsNull() || plan.ServerAddress.IsUnknown()) {
 		body["server-address"] = plan.ServerAddress.ValueString()
 	}
-	if !(plan.SupportTheBroadbandForumTr101.IsNull() || plan.SupportTheBroadbandForumTr101.IsUnknown()) {
-		body["support-the-broadband-forum-tr-101"] = client.FormatBool(plan.SupportTheBroadbandForumTr101.ValueBool())
-	}
 	if !(plan.UseFramedAsClassless.IsNull() || plan.UseFramedAsClassless.IsUnknown()) {
 		body["use-framed-as-classless"] = client.FormatBool(plan.UseFramedAsClassless.ValueBool())
 	}
@@ -344,6 +356,21 @@ func (r *IPDHCPServerResource) Create(ctx context.Context, req resource.CreateRe
 	}
 	if !(plan.UseReconfigure.IsNull() || plan.UseReconfigure.IsUnknown()) {
 		body["use-reconfigure"] = client.FormatBool(plan.UseReconfigure.ValueBool())
+	}
+	if !(plan.AddArp.IsNull() || plan.AddArp.IsUnknown()) {
+		body["add-arp"] = plan.AddArp.ValueString()
+	}
+	if !(plan.AddDnsEntries.IsNull() || plan.AddDnsEntries.IsUnknown()) {
+		body["add-dns-entries"] = plan.AddDnsEntries.ValueString()
+	}
+	if !(plan.AddDnsEntriesSuffix.IsNull() || plan.AddDnsEntriesSuffix.IsUnknown()) {
+		body["add-dns-entries-suffix"] = plan.AddDnsEntriesSuffix.ValueString()
+	}
+	if !(plan.AddressLists.IsNull() || plan.AddressLists.IsUnknown()) {
+		body["address-lists"] = plan.AddressLists.ValueString()
+	}
+	if !(plan.SupportBroadbandTr101.IsNull() || plan.SupportBroadbandTr101.IsUnknown()) {
+		body["support-broadband-tr101"] = plan.SupportBroadbandTr101.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ip/dhcp-server", body)
 	if err != nil {
@@ -392,12 +419,6 @@ func (r *IPDHCPServerResource) Update(ctx context.Context, req resource.UpdateRe
 		return
 	}
 	body := client.Object{}
-	if !plan.AddARPForLeases.Equal(state.AddARPForLeases) {
-		body["add-arp-for-leases"] = client.FormatBool(plan.AddARPForLeases.ValueBool())
-	}
-	if !plan.AddressList.Equal(state.AddressList) {
-		body["address-list"] = plan.AddressList.ValueString()
-	}
 	if !plan.AddressPool.Equal(state.AddressPool) {
 		body["address-pool"] = plan.AddressPool.ValueString()
 	}
@@ -417,7 +438,7 @@ func (r *IPDHCPServerResource) Update(ctx context.Context, req resource.UpdateRe
 		body["bootp-support"] = plan.BootpSupport.ValueString()
 	}
 	if !plan.ClientMACLimit.Equal(state.ClientMACLimit) {
-		body["client-mac-limit"] = client.FormatInt64(plan.ClientMACLimit.ValueInt64())
+		body["client-mac-limit"] = plan.ClientMACLimit.ValueString()
 	}
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
@@ -436,9 +457,6 @@ func (r *IPDHCPServerResource) Update(ctx context.Context, req resource.UpdateRe
 	}
 	if !plan.DynamicLeaseIdentifiers.Equal(state.DynamicLeaseIdentifiers) {
 		body["dynamic-lease-identifiers"] = plan.DynamicLeaseIdentifiers.ValueString()
-	}
-	if !plan.Dynbootp.Equal(state.Dynbootp) {
-		body["dynbootp"] = plan.Dynbootp.ValueString()
 	}
 	if !plan.InsertQueueBefore.Equal(state.InsertQueueBefore) {
 		body["insert-queue-before"] = plan.InsertQueueBefore.ValueString()
@@ -464,9 +482,6 @@ func (r *IPDHCPServerResource) Update(ctx context.Context, req resource.UpdateRe
 	if !plan.ServerAddress.Equal(state.ServerAddress) {
 		body["server-address"] = plan.ServerAddress.ValueString()
 	}
-	if !plan.SupportTheBroadbandForumTr101.Equal(state.SupportTheBroadbandForumTr101) {
-		body["support-the-broadband-forum-tr-101"] = client.FormatBool(plan.SupportTheBroadbandForumTr101.ValueBool())
-	}
 	if !plan.UseFramedAsClassless.Equal(state.UseFramedAsClassless) {
 		body["use-framed-as-classless"] = client.FormatBool(plan.UseFramedAsClassless.ValueBool())
 	}
@@ -475,6 +490,21 @@ func (r *IPDHCPServerResource) Update(ctx context.Context, req resource.UpdateRe
 	}
 	if !plan.UseReconfigure.Equal(state.UseReconfigure) {
 		body["use-reconfigure"] = client.FormatBool(plan.UseReconfigure.ValueBool())
+	}
+	if !plan.AddArp.Equal(state.AddArp) && !plan.AddArp.IsUnknown() {
+		body["add-arp"] = plan.AddArp.ValueString()
+	}
+	if !plan.AddDnsEntries.Equal(state.AddDnsEntries) && !plan.AddDnsEntries.IsUnknown() {
+		body["add-dns-entries"] = plan.AddDnsEntries.ValueString()
+	}
+	if !plan.AddDnsEntriesSuffix.Equal(state.AddDnsEntriesSuffix) && !plan.AddDnsEntriesSuffix.IsUnknown() {
+		body["add-dns-entries-suffix"] = plan.AddDnsEntriesSuffix.ValueString()
+	}
+	if !plan.AddressLists.Equal(state.AddressLists) && !plan.AddressLists.IsUnknown() {
+		body["address-lists"] = plan.AddressLists.ValueString()
+	}
+	if !plan.SupportBroadbandTr101.Equal(state.SupportBroadbandTr101) && !plan.SupportBroadbandTr101.IsUnknown() {
+		body["support-broadband-tr101"] = plan.SupportBroadbandTr101.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/dhcp-server", state.ID.ValueString(), body)
@@ -542,6 +572,31 @@ func iPDHCPServerLookupByNaturalKey(ctx context.Context, c *client.Client, id st
 func iPDHCPServerApply(ctx context.Context, obj client.Object, m *IPDHCPServerModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["support-broadband-tr101"]; ok && v != "" {
+		m.SupportBroadbandTr101 = types.StringValue(v)
+	} else {
+		m.SupportBroadbandTr101 = types.StringNull()
+	}
+	if v, ok := obj["address-lists"]; ok && v != "" {
+		m.AddressLists = types.StringValue(v)
+	} else {
+		m.AddressLists = types.StringNull()
+	}
+	if v, ok := obj["add-dns-entries-suffix"]; ok && v != "" {
+		m.AddDnsEntriesSuffix = types.StringValue(v)
+	} else {
+		m.AddDnsEntriesSuffix = types.StringNull()
+	}
+	if v, ok := obj["add-dns-entries"]; ok && v != "" {
+		m.AddDnsEntries = types.StringValue(v)
+	} else {
+		m.AddDnsEntries = types.StringNull()
+	}
+	if v, ok := obj["add-arp"]; ok && v != "" {
+		m.AddArp = types.StringValue(v)
+	} else {
+		m.AddArp = types.StringNull()
+	}
 	if v, ok := obj["add-arp-for-leases"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
@@ -624,13 +679,13 @@ func iPDHCPServerApply(ctx context.Context, obj client.Object, m *IPDHCPServerMo
 	}
 	if v, ok := obj["client-mac-limit"]; ok {
 		_ = v
-		if n, err := client.ParseInt64(v); err == nil {
-			m.ClientMACLimit = types.Int64Value(n)
+		if v != "" {
+			m.ClientMACLimit = types.StringValue(v)
 		} else {
-			m.ClientMACLimit = types.Int64Null()
+			m.ClientMACLimit = types.StringNull()
 		}
 	} else {
-		m.ClientMACLimit = types.Int64Null()
+		m.ClientMACLimit = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
 		_ = v

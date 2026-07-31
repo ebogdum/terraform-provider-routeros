@@ -31,7 +31,7 @@ resource "routeros_interface_dot1x_client" "client_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `anon_identity` - (Optional) Type: `string`.
 * `certificate` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
@@ -39,14 +39,13 @@ This resource supports the following arguments:
 * `eap_methods` - (Optional) Type: `string`.
 * `identity` - (Optional) Type: `string`.
 * `interface` - (Optional) Type: `string`.
+* `invalid` - (Read-only) Type: `bool`.
 * `password` - (Optional) Type: `string`. **Sensitive.**
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `invalid` - Type: `bool`.
 
 ## Import
 

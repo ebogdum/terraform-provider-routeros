@@ -22,7 +22,7 @@ terraform {
   required_providers {
     routeros = {
       source  = "ebogdum/routeros"
-      version = "~> 1.0"
+      version = "~> 2.0"
     }
   }
 }

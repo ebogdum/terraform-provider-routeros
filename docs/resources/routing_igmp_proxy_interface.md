@@ -30,27 +30,26 @@ resource "routeros_routing_igmp_proxy_interface" "interface_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `alternative_subnets` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`.
-* `inactive` - (Optional) Type: `bool`.
+* `dynamic` - (Read-only) Type: `bool`.
+* `inactive` - (Read-only) Type: `bool`.
 * `interface` - (Optional) Type: `string`.
-* `threshold` - (Optional) Type: `int`. Default: `1`.
+* `querier` - (Read-only) Type: `bool`.
+* `rx_bytes` - (Read-only) Type: `string`.
+* `rx_packets` - (Read-only) Type: `string`.
+* `source_ip_address` - (Read-only) Type: `string`.
+* `threshold` - (Optional) Type: `int`.
+* `tx_bytes` - (Read-only) Type: `string`.
+* `tx_packets` - (Read-only) Type: `string`.
 * `upstream` - (Optional) Type: `bool`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `dynamic` - Type: `bool`.
-* `querier` - Type: `bool`.
-* `rx_bytes` - Type: `string`.
-* `rx_packets` - Type: `string`.
-* `source_ip_address` - Type: `ip`.
-* `tx_bytes` - Type: `string`.
-* `tx_packets` - Type: `string`.
 
 ## Import
 

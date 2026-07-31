@@ -37,25 +37,24 @@ resource "routeros_routing_ospf_area" "area_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `area_id` - (Optional) Type: `ip`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `area_id` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `default_cost` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `dynamic` - (Read-only) Type: `bool`.
 * `instance` - (Optional) Type: `string`.
+* `invalid` - (Read-only) Type: `bool`.
 * `name` - (Optional) Type: `string`.
 * `no_summaries` - (Optional) Type: `bool`.
 * `nssa_translator` - (Optional) Type: `string`.
-* `type` - (Optional) Type: `enum(default|stub|nssa)`.
+* `transit_capable` - (Read-only) Type: `bool`.
+* `type` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `dynamic` - Type: `bool`.
-* `invalid` - Type: `bool`.
-* `transit_capable` - Type: `bool`.
 
 ## Import
 

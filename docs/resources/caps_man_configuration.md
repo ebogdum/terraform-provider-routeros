@@ -31,14 +31,22 @@ resource "routeros_caps_man_configuration" "configuration_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `channel` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `country` - (Optional) Type: `string`.
+* `datapath` - (Optional) Type: `string`. Name of a `/caps-man/datapath` profile to apply.
 * `distance` - (Optional) Type: `string`.
 * `mode` - (Optional) Type: `string`.
-* `name` - (Required) Type: `string`. Default: `ros_audit_20260523213235_4`.
+* `name` - (Required) Type: `string`.
+* `rates` - (Optional) Type: `string`. Name of a `/caps-man/rates` profile to apply.
+* `security` - (Optional) Type: `string`. Name of a `/caps-man/security` profile to apply.
 * `ssid` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

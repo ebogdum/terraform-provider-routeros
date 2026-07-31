@@ -32,6 +32,7 @@ type IPV6AddressResource struct {
 
 type IPV6AddressModel struct {
 	ID              types.String `tfsdk:"id"`
+	FromPoolPolicy  types.String `tfsdk:"from_pool_policy"`
 	ActualInterface types.String `tfsdk:"actual_interface"`
 	Address         types.String `tfsdk:"address"`
 	Advertise       types.Bool   `tfsdk:"advertise"`
@@ -67,7 +68,6 @@ func (r *IPV6AddressResource) Configure(_ context.Context, req resource.Configur
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPV6AddressResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -79,8 +79,12 @@ func (r *IPV6AddressResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
-			"actual_interface": schema.StringAttribute{
+			"from_pool_policy": schema.StringAttribute{
 				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `from-pool-policy`.",
+			},
+			"actual_interface": schema.StringAttribute{
 				Computed:    true,
 				Description: "",
 			},
@@ -106,7 +110,6 @@ func (r *IPV6AddressResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Description: "Free-form comment.",
 			},
 			"deprecated": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -116,12 +119,10 @@ func (r *IPV6AddressResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Description: "",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"dynglob": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -140,12 +141,10 @@ func (r *IPV6AddressResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Description: "",
 			},
 			"invalid": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"link_local": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -155,27 +154,22 @@ func (r *IPV6AddressResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Description: "",
 			},
 			"preferred": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"scope": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"slave": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"valid": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"vrf": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -213,9 +207,6 @@ func (r *IPV6AddressResource) Create(ctx context.Context, req resource.CreateReq
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !(plan.Dynglob.IsNull() || plan.Dynglob.IsUnknown()) {
-		body["dynglob"] = plan.Dynglob.ValueString()
-	}
 	if !(plan.Eui64.IsNull() || plan.Eui64.IsUnknown()) {
 		body["eui-64"] = client.FormatBool(plan.Eui64.ValueBool())
 	}
@@ -227,6 +218,9 @@ func (r *IPV6AddressResource) Create(ctx context.Context, req resource.CreateReq
 	}
 	if !(plan.NoDad.IsNull() || plan.NoDad.IsUnknown()) {
 		body["no-dad"] = client.FormatBool(plan.NoDad.ValueBool())
+	}
+	if !(plan.FromPoolPolicy.IsNull() || plan.FromPoolPolicy.IsUnknown()) {
+		body["from-pool-policy"] = plan.FromPoolPolicy.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ipv6/address", body)
 	if err != nil {
@@ -290,9 +284,6 @@ func (r *IPV6AddressResource) Update(ctx context.Context, req resource.UpdateReq
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Dynglob.Equal(state.Dynglob) {
-		body["dynglob"] = plan.Dynglob.ValueString()
-	}
 	if !plan.Eui64.Equal(state.Eui64) {
 		body["eui-64"] = client.FormatBool(plan.Eui64.ValueBool())
 	}
@@ -304,6 +295,9 @@ func (r *IPV6AddressResource) Update(ctx context.Context, req resource.UpdateReq
 	}
 	if !plan.NoDad.Equal(state.NoDad) {
 		body["no-dad"] = client.FormatBool(plan.NoDad.ValueBool())
+	}
+	if !plan.FromPoolPolicy.Equal(state.FromPoolPolicy) && !plan.FromPoolPolicy.IsUnknown() {
+		body["from-pool-policy"] = plan.FromPoolPolicy.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ipv6/address", state.ID.ValueString(), body)
@@ -371,6 +365,11 @@ func iPV6AddressLookupByNaturalKey(ctx context.Context, c *client.Client, id str
 func iPV6AddressApply(ctx context.Context, obj client.Object, m *IPV6AddressModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["from-pool-policy"]; ok && v != "" {
+		m.FromPoolPolicy = types.StringValue(v)
+	} else {
+		m.FromPoolPolicy = types.StringNull()
+	}
 	if v, ok := obj["actual-interface"]; ok {
 		_ = v
 		if v != "" {

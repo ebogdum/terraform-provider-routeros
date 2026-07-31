@@ -29,8 +29,13 @@ type UserManagerProfileLimitationResource struct {
 }
 
 type UserManagerProfileLimitationModel struct {
-	ID     types.String `tfsdk:"id"`
-	Router types.String `tfsdk:"router"`
+	ID         types.String `tfsdk:"id"`
+	Weekdays   types.String `tfsdk:"weekdays"`
+	TillTime   types.String `tfsdk:"till_time"`
+	Profile    types.String `tfsdk:"profile"`
+	Limitation types.String `tfsdk:"limitation"`
+	FromTime   types.String `tfsdk:"from_time"`
+	Router     types.String `tfsdk:"router"`
 }
 
 func NewUserManagerProfileLimitationResource() resource.Resource {
@@ -47,7 +52,6 @@ func (r *UserManagerProfileLimitationResource) Configure(_ context.Context, req 
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *UserManagerProfileLimitationResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -58,6 +62,31 @@ func (r *UserManagerProfileLimitationResource) Schema(_ context.Context, _ resou
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"weekdays": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `weekdays`.",
+			},
+			"till_time": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `till-time`.",
+			},
+			"profile": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `profile`.",
+			},
+			"limitation": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `limitation`.",
+			},
+			"from_time": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `from-time`.",
 			},
 			"router": schema.StringAttribute{
 				Optional:    true,
@@ -78,6 +107,21 @@ func (r *UserManagerProfileLimitationResource) Create(ctx context.Context, req r
 		return
 	}
 	body := client.Object{}
+	if !(plan.FromTime.IsNull() || plan.FromTime.IsUnknown()) {
+		body["from-time"] = plan.FromTime.ValueString()
+	}
+	if !(plan.Limitation.IsNull() || plan.Limitation.IsUnknown()) {
+		body["limitation"] = plan.Limitation.ValueString()
+	}
+	if !(plan.Profile.IsNull() || plan.Profile.IsUnknown()) {
+		body["profile"] = plan.Profile.ValueString()
+	}
+	if !(plan.TillTime.IsNull() || plan.TillTime.IsUnknown()) {
+		body["till-time"] = plan.TillTime.ValueString()
+	}
+	if !(plan.Weekdays.IsNull() || plan.Weekdays.IsUnknown()) {
+		body["weekdays"] = plan.Weekdays.ValueString()
+	}
 	obj, err := c.Add(ctx, "/user-manager/profile-limitation", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /user-manager/profile-limitation failed", err.Error())
@@ -191,4 +235,29 @@ func userManagerProfileLimitationLookupByNaturalKey(ctx context.Context, c *clie
 func userManagerProfileLimitationApply(ctx context.Context, obj client.Object, m *UserManagerProfileLimitationModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["weekdays"]; ok && v != "" {
+		m.Weekdays = types.StringValue(v)
+	} else {
+		m.Weekdays = types.StringNull()
+	}
+	if v, ok := obj["till-time"]; ok && v != "" {
+		m.TillTime = types.StringValue(v)
+	} else {
+		m.TillTime = types.StringNull()
+	}
+	if v, ok := obj["profile"]; ok && v != "" {
+		m.Profile = types.StringValue(v)
+	} else {
+		m.Profile = types.StringNull()
+	}
+	if v, ok := obj["limitation"]; ok && v != "" {
+		m.Limitation = types.StringValue(v)
+	} else {
+		m.Limitation = types.StringNull()
+	}
+	if v, ok := obj["from-time"]; ok && v != "" {
+		m.FromTime = types.StringValue(v)
+	} else {
+		m.FromTime = types.StringNull()
+	}
 }

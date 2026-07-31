@@ -36,7 +36,7 @@ resource "routeros_ipv6_settings" "settings_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `accept_redirects` - (Optional) Type: `string`.
 * `accept_router_advertisements` - (Optional) Type: `string`.
 * `accept_router_advertisements_on` - (Optional) Type: `string`.
@@ -44,6 +44,12 @@ This resource supports the following arguments:
 * `disable_ipv6` - (Optional) Type: `bool`.
 * `disable_link_local_address` - (Optional) Type: `bool`.
 * `forward` - (Optional) Type: `bool`.
+* `ipv6_fast_path_active` - (Optional) Type: `bool`.
+* `ipv6_fast_path_bytes` - (Optional) Type: `int`.
+* `ipv6_fast_path_packets` - (Optional) Type: `int`.
+* `ipv6_fasttrack_active` - (Optional) Type: `bool`.
+* `ipv6_fasttrack_bytes` - (Optional) Type: `int`.
+* `ipv6_fasttrack_packets` - (Optional) Type: `int`.
 * `max_neighbor_entries` - (Optional) Type: `int`.
 * `min_neighbor_entries` - (Optional) Type: `int`.
 * `multipath_hash_policy` - (Optional) Type: `string`.
@@ -53,15 +59,8 @@ This resource supports the following arguments:
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - Stable identifier (the singleton's menu path, optionally namespaced by router).
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `ipv6_fast_path_active` - Type: `bool`.
-* `ipv6_fast_path_bytes` - Type: `int`.
-* `ipv6_fast_path_packets` - Type: `int`.
-* `ipv6_fasttrack_active` - Type: `bool`.
-* `ipv6_fasttrack_bytes` - Type: `int`.
-* `ipv6_fasttrack_packets` - Type: `int`.
 
 ## Import
 

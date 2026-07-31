@@ -29,14 +29,27 @@ type IPV6DHCPServerResource struct {
 }
 
 type IPV6DHCPServerModel struct {
-	ID         types.String `tfsdk:"id"`
-	Comment    types.String `tfsdk:"comment"`
-	DHCPOption types.String `tfsdk:"dhcp_option"`
-	Disabled   types.Bool   `tfsdk:"disabled"`
-	Interface  types.String `tfsdk:"interface"`
-	LeaseTime  types.String `tfsdk:"lease_time"`
-	Name       types.String `tfsdk:"name"`
-	Router     types.String `tfsdk:"router"`
+	ID                  types.String `tfsdk:"id"`
+	UseReconfigure      types.String `tfsdk:"use_reconfigure"`
+	UseRadius           types.String `tfsdk:"use_radius"`
+	RouteDistance       types.String `tfsdk:"route_distance"`
+	RapidCommit         types.String `tfsdk:"rapid_commit"`
+	PrefixPool          types.String `tfsdk:"prefix_pool"`
+	Preference          types.String `tfsdk:"preference"`
+	ParentQueue         types.String `tfsdk:"parent_queue"`
+	InsertQueueBefore   types.String `tfsdk:"insert_queue_before"`
+	IgnoreIaNaBindings  types.String `tfsdk:"ignore_ia_na_bindings"`
+	BindingScript       types.String `tfsdk:"binding_script"`
+	AllowDualStackQueue types.String `tfsdk:"allow_dual_stack_queue"`
+	AddressPool         types.String `tfsdk:"address_pool"`
+	AddressLists        types.String `tfsdk:"address_lists"`
+	Comment             types.String `tfsdk:"comment"`
+	DHCPOption          types.String `tfsdk:"dhcp_option"`
+	Disabled            types.Bool   `tfsdk:"disabled"`
+	Interface           types.String `tfsdk:"interface"`
+	LeaseTime           types.String `tfsdk:"lease_time"`
+	Name                types.String `tfsdk:"name"`
+	Router              types.String `tfsdk:"router"`
 }
 
 func NewIPV6DHCPServerResource() resource.Resource { return &IPV6DHCPServerResource{} }
@@ -51,7 +64,6 @@ func (r *IPV6DHCPServerResource) Configure(_ context.Context, req resource.Confi
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPV6DHCPServerResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -62,6 +74,71 @@ func (r *IPV6DHCPServerResource) Schema(_ context.Context, _ resource.SchemaRequ
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"use_reconfigure": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `use-reconfigure`.",
+			},
+			"use_radius": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `use-radius`.",
+			},
+			"route_distance": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `route-distance`.",
+			},
+			"rapid_commit": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `rapid-commit`.",
+			},
+			"prefix_pool": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `prefix-pool`.",
+			},
+			"preference": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `preference`.",
+			},
+			"parent_queue": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `parent-queue`.",
+			},
+			"insert_queue_before": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `insert-queue-before`.",
+			},
+			"ignore_ia_na_bindings": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `ignore-ia-na-bindings`.",
+			},
+			"binding_script": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `binding-script`.",
+			},
+			"allow_dual_stack_queue": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `allow-dual-stack-queue`.",
+			},
+			"address_pool": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `address-pool`.",
+			},
+			"address_lists": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `address-lists`.",
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -128,6 +205,45 @@ func (r *IPV6DHCPServerResource) Create(ctx context.Context, req resource.Create
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
 	}
+	if !(plan.AddressLists.IsNull() || plan.AddressLists.IsUnknown()) {
+		body["address-lists"] = plan.AddressLists.ValueString()
+	}
+	if !(plan.AddressPool.IsNull() || plan.AddressPool.IsUnknown()) {
+		body["address-pool"] = plan.AddressPool.ValueString()
+	}
+	if !(plan.AllowDualStackQueue.IsNull() || plan.AllowDualStackQueue.IsUnknown()) {
+		body["allow-dual-stack-queue"] = plan.AllowDualStackQueue.ValueString()
+	}
+	if !(plan.BindingScript.IsNull() || plan.BindingScript.IsUnknown()) {
+		body["binding-script"] = plan.BindingScript.ValueString()
+	}
+	if !(plan.IgnoreIaNaBindings.IsNull() || plan.IgnoreIaNaBindings.IsUnknown()) {
+		body["ignore-ia-na-bindings"] = plan.IgnoreIaNaBindings.ValueString()
+	}
+	if !(plan.InsertQueueBefore.IsNull() || plan.InsertQueueBefore.IsUnknown()) {
+		body["insert-queue-before"] = plan.InsertQueueBefore.ValueString()
+	}
+	if !(plan.ParentQueue.IsNull() || plan.ParentQueue.IsUnknown()) {
+		body["parent-queue"] = plan.ParentQueue.ValueString()
+	}
+	if !(plan.Preference.IsNull() || plan.Preference.IsUnknown()) {
+		body["preference"] = plan.Preference.ValueString()
+	}
+	if !(plan.PrefixPool.IsNull() || plan.PrefixPool.IsUnknown()) {
+		body["prefix-pool"] = plan.PrefixPool.ValueString()
+	}
+	if !(plan.RapidCommit.IsNull() || plan.RapidCommit.IsUnknown()) {
+		body["rapid-commit"] = plan.RapidCommit.ValueString()
+	}
+	if !(plan.RouteDistance.IsNull() || plan.RouteDistance.IsUnknown()) {
+		body["route-distance"] = plan.RouteDistance.ValueString()
+	}
+	if !(plan.UseRadius.IsNull() || plan.UseRadius.IsUnknown()) {
+		body["use-radius"] = plan.UseRadius.ValueString()
+	}
+	if !(plan.UseReconfigure.IsNull() || plan.UseReconfigure.IsUnknown()) {
+		body["use-reconfigure"] = plan.UseReconfigure.ValueString()
+	}
 	obj, err := c.Add(ctx, "/ipv6/dhcp-server", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /ipv6/dhcp-server failed", err.Error())
@@ -192,6 +308,45 @@ func (r *IPV6DHCPServerResource) Update(ctx context.Context, req resource.Update
 	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
+	}
+	if !plan.AddressLists.Equal(state.AddressLists) && !plan.AddressLists.IsUnknown() {
+		body["address-lists"] = plan.AddressLists.ValueString()
+	}
+	if !plan.AddressPool.Equal(state.AddressPool) && !plan.AddressPool.IsUnknown() {
+		body["address-pool"] = plan.AddressPool.ValueString()
+	}
+	if !plan.AllowDualStackQueue.Equal(state.AllowDualStackQueue) && !plan.AllowDualStackQueue.IsUnknown() {
+		body["allow-dual-stack-queue"] = plan.AllowDualStackQueue.ValueString()
+	}
+	if !plan.BindingScript.Equal(state.BindingScript) && !plan.BindingScript.IsUnknown() {
+		body["binding-script"] = plan.BindingScript.ValueString()
+	}
+	if !plan.IgnoreIaNaBindings.Equal(state.IgnoreIaNaBindings) && !plan.IgnoreIaNaBindings.IsUnknown() {
+		body["ignore-ia-na-bindings"] = plan.IgnoreIaNaBindings.ValueString()
+	}
+	if !plan.InsertQueueBefore.Equal(state.InsertQueueBefore) && !plan.InsertQueueBefore.IsUnknown() {
+		body["insert-queue-before"] = plan.InsertQueueBefore.ValueString()
+	}
+	if !plan.ParentQueue.Equal(state.ParentQueue) && !plan.ParentQueue.IsUnknown() {
+		body["parent-queue"] = plan.ParentQueue.ValueString()
+	}
+	if !plan.Preference.Equal(state.Preference) && !plan.Preference.IsUnknown() {
+		body["preference"] = plan.Preference.ValueString()
+	}
+	if !plan.PrefixPool.Equal(state.PrefixPool) && !plan.PrefixPool.IsUnknown() {
+		body["prefix-pool"] = plan.PrefixPool.ValueString()
+	}
+	if !plan.RapidCommit.Equal(state.RapidCommit) && !plan.RapidCommit.IsUnknown() {
+		body["rapid-commit"] = plan.RapidCommit.ValueString()
+	}
+	if !plan.RouteDistance.Equal(state.RouteDistance) && !plan.RouteDistance.IsUnknown() {
+		body["route-distance"] = plan.RouteDistance.ValueString()
+	}
+	if !plan.UseRadius.Equal(state.UseRadius) && !plan.UseRadius.IsUnknown() {
+		body["use-radius"] = plan.UseRadius.ValueString()
+	}
+	if !plan.UseReconfigure.Equal(state.UseReconfigure) && !plan.UseReconfigure.IsUnknown() {
+		body["use-reconfigure"] = plan.UseReconfigure.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ipv6/dhcp-server", state.ID.ValueString(), body)
@@ -259,6 +414,71 @@ func iPV6DHCPServerLookupByNaturalKey(ctx context.Context, c *client.Client, id 
 func iPV6DHCPServerApply(ctx context.Context, obj client.Object, m *IPV6DHCPServerModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["use-reconfigure"]; ok && v != "" {
+		m.UseReconfigure = types.StringValue(v)
+	} else {
+		m.UseReconfigure = types.StringNull()
+	}
+	if v, ok := obj["use-radius"]; ok && v != "" {
+		m.UseRadius = types.StringValue(v)
+	} else {
+		m.UseRadius = types.StringNull()
+	}
+	if v, ok := obj["route-distance"]; ok && v != "" {
+		m.RouteDistance = types.StringValue(v)
+	} else {
+		m.RouteDistance = types.StringNull()
+	}
+	if v, ok := obj["rapid-commit"]; ok && v != "" {
+		m.RapidCommit = types.StringValue(v)
+	} else {
+		m.RapidCommit = types.StringNull()
+	}
+	if v, ok := obj["prefix-pool"]; ok && v != "" {
+		m.PrefixPool = types.StringValue(v)
+	} else {
+		m.PrefixPool = types.StringNull()
+	}
+	if v, ok := obj["preference"]; ok && v != "" {
+		m.Preference = types.StringValue(v)
+	} else {
+		m.Preference = types.StringNull()
+	}
+	if v, ok := obj["parent-queue"]; ok && v != "" {
+		m.ParentQueue = types.StringValue(v)
+	} else {
+		m.ParentQueue = types.StringNull()
+	}
+	if v, ok := obj["insert-queue-before"]; ok && v != "" {
+		m.InsertQueueBefore = types.StringValue(v)
+	} else {
+		m.InsertQueueBefore = types.StringNull()
+	}
+	if v, ok := obj["ignore-ia-na-bindings"]; ok && v != "" {
+		m.IgnoreIaNaBindings = types.StringValue(v)
+	} else {
+		m.IgnoreIaNaBindings = types.StringNull()
+	}
+	if v, ok := obj["binding-script"]; ok && v != "" {
+		m.BindingScript = types.StringValue(v)
+	} else {
+		m.BindingScript = types.StringNull()
+	}
+	if v, ok := obj["allow-dual-stack-queue"]; ok && v != "" {
+		m.AllowDualStackQueue = types.StringValue(v)
+	} else {
+		m.AllowDualStackQueue = types.StringNull()
+	}
+	if v, ok := obj["address-pool"]; ok && v != "" {
+		m.AddressPool = types.StringValue(v)
+	} else {
+		m.AddressPool = types.StringNull()
+	}
+	if v, ok := obj["address-lists"]; ok && v != "" {
+		m.AddressLists = types.StringValue(v)
+	} else {
+		m.AddressLists = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {

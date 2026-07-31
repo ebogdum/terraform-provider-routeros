@@ -120,7 +120,6 @@ func (r *ToolProfileCpuResource) Configure(_ context.Context, req resource.Confi
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *ToolProfileCpuResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {

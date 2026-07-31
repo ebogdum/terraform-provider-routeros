@@ -25,10 +25,17 @@ resource "routeros_ip_socks_users" "users_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `name` - (Required) Type: `string`. Default: `tf_acc_socksu`.
-* `password` - (Required) Type: `string`. Default: `tf_acc_pw`. **Sensitive.**
+* `name` - (Required) Type: `string`.
+* `only_one` - (Optional) Type: `string`. RouterOS `only-one`.
+* `password` - (Required) Type: `string`. **Sensitive.**
+* `rate_limit` - (Optional) Type: `string`. RouterOS `rate-limit`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

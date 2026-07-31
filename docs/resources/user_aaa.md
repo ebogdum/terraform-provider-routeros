@@ -28,12 +28,17 @@ resource "routeros_user_aaa" "aaa_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `accounting` - (Optional) Type: `bool`.
 * `default_group` - (Optional) Type: `string`.
 * `exclude_groups` - (Optional) Type: `string`.
-* `interim_update` - (Optional) Type: `duration`.
+* `interim_update` - (Optional) Type: `string`.
 * `use_radius` - (Optional) Type: `bool`.
+
+## Attribute Reference
+
+* `id` - Stable identifier (the singleton's menu path, optionally namespaced by router).
+
 
 ## Import
 

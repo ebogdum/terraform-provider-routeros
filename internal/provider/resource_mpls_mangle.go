@@ -57,7 +57,6 @@ func (r *MPLSMangleResource) Configure(_ context.Context, req resource.Configure
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *MPLSMangleResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -70,7 +69,6 @@ func (r *MPLSMangleResource) Schema(_ context.Context, _ resource.SchemaRequest,
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"builtin": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -97,17 +95,14 @@ func (r *MPLSMangleResource) Schema(_ context.Context, _ resource.SchemaRequest,
 				Validators:  []validator.String{schemautil.OneOf([]string{"0", "1", "2", "3", "4", "5", "6", "7"}...)},
 			},
 			"packets": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"reset_counters": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"reset_counters_all": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -141,9 +136,6 @@ func (r *MPLSMangleResource) Create(ctx context.Context, req resource.CreateRequ
 		return
 	}
 	body := client.Object{}
-	if !(plan.Builtin.IsNull() || plan.Builtin.IsUnknown()) {
-		body["builtin"] = client.FormatBool(plan.Builtin.ValueBool())
-	}
 	if !(plan.Chain.IsNull() || plan.Chain.IsUnknown()) {
 		body["chain"] = plan.Chain.ValueString()
 	}
@@ -155,12 +147,6 @@ func (r *MPLSMangleResource) Create(ctx context.Context, req resource.CreateRequ
 	}
 	if !(plan.Exp.IsNull() || plan.Exp.IsUnknown()) {
 		body["exp"] = plan.Exp.ValueString()
-	}
-	if !(plan.ResetCounters.IsNull() || plan.ResetCounters.IsUnknown()) {
-		body["reset-counters"] = plan.ResetCounters.ValueString()
-	}
-	if !(plan.ResetCountersAll.IsNull() || plan.ResetCountersAll.IsUnknown()) {
-		body["reset-counters-all"] = plan.ResetCountersAll.ValueString()
 	}
 	if !(plan.SetExp.IsNull() || plan.SetExp.IsUnknown()) {
 		body["set-exp"] = plan.SetExp.ValueString()
@@ -215,9 +201,6 @@ func (r *MPLSMangleResource) Update(ctx context.Context, req resource.UpdateRequ
 		return
 	}
 	body := client.Object{}
-	if !plan.Builtin.Equal(state.Builtin) {
-		body["builtin"] = client.FormatBool(plan.Builtin.ValueBool())
-	}
 	if !plan.Chain.Equal(state.Chain) {
 		body["chain"] = plan.Chain.ValueString()
 	}
@@ -229,12 +212,6 @@ func (r *MPLSMangleResource) Update(ctx context.Context, req resource.UpdateRequ
 	}
 	if !plan.Exp.Equal(state.Exp) {
 		body["exp"] = plan.Exp.ValueString()
-	}
-	if !plan.ResetCounters.Equal(state.ResetCounters) {
-		body["reset-counters"] = plan.ResetCounters.ValueString()
-	}
-	if !plan.ResetCountersAll.Equal(state.ResetCountersAll) {
-		body["reset-counters-all"] = plan.ResetCountersAll.ValueString()
 	}
 	if !plan.SetExp.Equal(state.SetExp) {
 		body["set-exp"] = plan.SetExp.ValueString()

@@ -53,7 +53,6 @@ func (r *UserManagerAttributeResource) Configure(_ context.Context, req resource
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *UserManagerAttributeResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {

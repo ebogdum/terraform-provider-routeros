@@ -31,14 +31,19 @@ resource "routeros_caps_man_datapath" "datapath_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `arp` - (Optional) Type: `string`.
 * `bridge` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `l2mtu` - (Optional) Type: `string`.
 * `mtu` - (Optional) Type: `string`.
-* `name` - (Required) Type: `string`. Default: `ros_audit_20260523213235_5`.
+* `name` - (Required) Type: `string`.
 * `vlan_id` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

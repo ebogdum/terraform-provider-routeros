@@ -44,35 +44,36 @@ resource "routeros_routing_ospf_interface_template" "interface_template_example"
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `area` - (Optional) Type: `string`.
+* `auth` - (Optional) Type: `string`. RouterOS `auth`.
 * `auth_id` - (Optional) Type: `string`.
 * `auth_key` - (Optional) Type: `string`. **Sensitive.**
-* `authentication` - (Optional) Type: `string`.
+* `authentication` - (Read-only) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `cost` - (Optional) Type: `int`.
-* `dead_interval` - (Optional) Type: `duration`.
+* `dead_interval` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `hello_interval` - (Optional) Type: `duration`.
+* `hello_interval` - (Optional) Type: `string`.
 * `instance_id` - (Optional) Type: `int`.
 * `interfaces` - (Optional) Type: `string`.
-* `network_type` - (Optional) Type: `enum(broadcast|nbma|ptp|ptp-unnumbered|ptmp|virtual-link, ...)`.
+* `invalid` - (Read-only) Type: `bool`.
+* `network_type` - (Read-only) Type: `string`.
 * `networks` - (Optional) Type: `string`.
 * `passive` - (Optional) Type: `bool`.
 * `prefix_list` - (Optional) Type: `string`.
 * `priority` - (Optional) Type: `int`.
-* `retransmit_interval` - (Optional) Type: `duration`.
+* `retransmit_interval` - (Optional) Type: `string`.
 * `transmit_delay` - (Optional) Type: `int`.
+* `type` - (Optional) Type: `string`. RouterOS `type`.
 * `use_bfd` - (Optional) Type: `string`.
-* `vlink_neighbor_id` - (Optional) Type: `string`.
-* `vlink_transit_area` - (Optional) Type: `string`.
+* `vlink_neighbor_id` - (Read-only) Type: `string`.
+* `vlink_transit_area` - (Read-only) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `invalid` - Type: `bool`.
 
 ## Import
 

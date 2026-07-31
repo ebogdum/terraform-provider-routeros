@@ -29,13 +29,18 @@ resource "routeros_user_manager_user_group" "group_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `attributes` - (Optional) Type: `string`.
 * `default` - (Optional) Type: `string`.
 * `default_name` - (Optional) Type: `string`.
 * `inner_auths` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
 * `outer_auths` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

@@ -53,7 +53,6 @@ func (r *UserGroupResource) Configure(_ context.Context, req resource.ConfigureR
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *UserGroupResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -75,7 +74,6 @@ func (r *UserGroupResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Description: "",
 			},
 			"policies": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -91,7 +89,6 @@ func (r *UserGroupResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Description: "",
 			},
 			"system": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -125,17 +122,11 @@ func (r *UserGroupResource) Create(ctx context.Context, req resource.CreateReque
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !(plan.Policies.IsNull() || plan.Policies.IsUnknown()) {
-		body["policies"] = plan.Policies.ValueString()
-	}
 	if !(plan.Policy.IsNull() || plan.Policy.IsUnknown()) {
 		body["policy"] = encodeStringList(ctx, plan.Policy, &resp.Diagnostics)
 	}
 	if !(plan.Skin.IsNull() || plan.Skin.IsUnknown()) {
 		body["skin"] = plan.Skin.ValueString()
-	}
-	if !(plan.System.IsNull() || plan.System.IsUnknown()) {
-		body["system"] = client.FormatBool(plan.System.ValueBool())
 	}
 	if err := schemautil.CheckUserGroupPolicyLockout("/user/group", body, !plan.LockoutAck.IsNull() && plan.LockoutAck.ValueBool()); err != nil {
 		resp.Diagnostics.AddError("Refusing user-group change", err.Error())
@@ -194,17 +185,11 @@ func (r *UserGroupResource) Update(ctx context.Context, req resource.UpdateReque
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Policies.Equal(state.Policies) {
-		body["policies"] = plan.Policies.ValueString()
-	}
 	if !plan.Policy.Equal(state.Policy) {
 		body["policy"] = encodeStringList(ctx, plan.Policy, &resp.Diagnostics)
 	}
 	if !plan.Skin.Equal(state.Skin) {
 		body["skin"] = plan.Skin.ValueString()
-	}
-	if !plan.System.Equal(state.System) {
-		body["system"] = client.FormatBool(plan.System.ValueBool())
 	}
 	if err := schemautil.CheckUserGroupPolicyLockout("/user/group", body, !plan.LockoutAck.IsNull() && plan.LockoutAck.ValueBool()); err != nil {
 		resp.Diagnostics.AddError("Refusing user-group change", err.Error())

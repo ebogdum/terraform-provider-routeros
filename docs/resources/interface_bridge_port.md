@@ -62,51 +62,51 @@ resource "routeros_interface_bridge_port" "port_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `auto_isolate` - (Optional) Type: `bool`.
 * `bpdu_guard` - (Optional) Type: `bool`.
 * `bridge` - (Optional) Type: `string`.
-* `broadcast_flood` - (Optional) Type: `bool`. Default: `1`.
+* `broadcast_flood` - (Optional) Type: `bool`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `edge` - (Optional) Type: `enum(auto|yes|no|yes-discover|no-discover)`.
+* `dynamic` - (Read-only) Type: `bool`.
+* `edge` - (Optional) Type: `string`.
 * `fast_leave` - (Optional) Type: `bool`.
-* `frame_types` - (Optional) Type: `enum(admit-all|admit-only-vlan-tagged|admit-only-untagged-and-priority-tagged)`.
-* `hardware_offload` - (Optional) Type: `bool`. Default: `1`.
-* `horizon` - (Optional) Type: `int`.
+* `frame_types` - (Optional) Type: `string`.
+* `hardware_offload` - (Read-only) Type: `bool`.
+* `horizon` - (Optional) Type: `string`. Split-horizon group used to isolate ports. A number, or `none` (the default).
 * `hw` - (Optional) Type: `string`.
-* `inactive` - (Optional) Type: `bool`.
-* `ingress_filtering` - (Optional) Type: `bool`. Default: `1`.
+* `hw_offload` - (Read-only) Type: `bool`.
+* `hw_offload_group` - (Read-only) Type: `string`.
+* `inactive` - (Read-only) Type: `bool`.
+* `ingress_filtering` - (Optional) Type: `bool`.
 * `interface` - (Optional) Type: `string`.
 * `internal_path_cost` - (Optional) Type: `string`.
-* `learn` - (Optional) Type: `enum(auto|no|yes)`.
-* `multicast_router` - (Optional) Type: `enum(disabled|temporary-query|permanent)`.
-* `mvrp_applicant_state` - (Optional) Type: `enum(normal-participant|non-participant)`.
-* `mvrp_registrar_state` - (Optional) Type: `enum(normal|fixed)`.
-* `parent` - (Optional) Type: `int`.
+* `learn` - (Optional) Type: `string`.
+* `multicast_router` - (Optional) Type: `string`.
+* `mvrp_applicant_state` - (Optional) Type: `string`.
+* `mvrp_registrar_state` - (Optional) Type: `string`.
+* `parent` - (Read-only) Type: `int`.
 * `path_cost` - (Optional) Type: `string`.
-* `point_to_point` - (Optional) Type: `enum(auto|yes|no)`.
-* `priority` - (Optional) Type: `int`. Default: `128`.
+* `point_to_point` - (Optional) Type: `string`.
+* `port_status` - (Read-only) Type: `string`.
+* `priority` - (Optional) Type: `int`.
 * `pvid` - (Optional) Type: `int`.
 * `restricted_role` - (Optional) Type: `bool`.
 * `restricted_tcn` - (Optional) Type: `bool`.
-* `role` - (Optional) Type: `int`.
-* `status` - (Optional) Type: `int`.
+* `role` - (Read-only) Type: `int`.
+* `status` - (Read-only) Type: `int`.
 * `tag_stacking` - (Optional) Type: `bool`.
 * `trusted` - (Optional) Type: `bool`.
+* `trusted_dhcpv6` - (Optional) Type: `string`. RouterOS `trusted-dhcpv6`.
 * `trusted_ra` - (Optional) Type: `bool`.
-* `unknown_multicast_flood` - (Optional) Type: `bool`. Default: `1`.
-* `unknown_unicast_flood` - (Optional) Type: `bool`. Default: `1`.
+* `unknown_multicast_flood` - (Optional) Type: `bool`.
+* `unknown_unicast_flood` - (Optional) Type: `bool`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `dynamic` - Type: `bool`.
-* `hw_offload` - Type: `bool`.
-* `hw_offload_group` - Type: `string`.
-* `port_status` - Type: `enum(|inactive|active|disabled)`.
 
 ## Import
 

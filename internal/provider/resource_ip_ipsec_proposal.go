@@ -56,7 +56,6 @@ func (r *IPIpsecProposalResource) Configure(_ context.Context, req resource.Conf
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPIpsecProposalResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -80,7 +79,6 @@ func (r *IPIpsecProposalResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "Free-form comment.",
 			},
 			"default": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -96,7 +94,6 @@ func (r *IPIpsecProposalResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "",
 			},
 			"encr_algorithms": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -147,9 +144,6 @@ func (r *IPIpsecProposalResource) Create(ctx context.Context, req resource.Creat
 	}
 	if !(plan.EncAlgorithms.IsNull() || plan.EncAlgorithms.IsUnknown()) {
 		body["enc-algorithms"] = encodeStringList(ctx, plan.EncAlgorithms, &resp.Diagnostics)
-	}
-	if !(plan.EncrAlgorithms.IsNull() || plan.EncrAlgorithms.IsUnknown()) {
-		body["encr-algorithms"] = plan.EncrAlgorithms.ValueString()
 	}
 	if !(plan.Lifetime.IsNull() || plan.Lifetime.IsUnknown()) {
 		body["lifetime"] = plan.Lifetime.ValueString()
@@ -218,9 +212,6 @@ func (r *IPIpsecProposalResource) Update(ctx context.Context, req resource.Updat
 	}
 	if !plan.EncAlgorithms.Equal(state.EncAlgorithms) {
 		body["enc-algorithms"] = encodeStringList(ctx, plan.EncAlgorithms, &resp.Diagnostics)
-	}
-	if !plan.EncrAlgorithms.Equal(state.EncrAlgorithms) {
-		body["encr-algorithms"] = plan.EncrAlgorithms.ValueString()
 	}
 	if !plan.Lifetime.Equal(state.Lifetime) {
 		body["lifetime"] = plan.Lifetime.ValueString()

@@ -29,10 +29,20 @@ type MPLSLdpResource struct {
 }
 
 type MPLSLdpModel struct {
-	ID       types.String `tfsdk:"id"`
-	Comment  types.String `tfsdk:"comment"`
-	Disabled types.Bool   `tfsdk:"disabled"`
-	Router   types.String `tfsdk:"router"`
+	ID                   types.String `tfsdk:"id"`
+	Vrf                  types.String `tfsdk:"vrf"`
+	UseExplicitNull      types.String `tfsdk:"use_explicit_null"`
+	TransportAddresses   types.String `tfsdk:"transport_addresses"`
+	PreferredAfi         types.String `tfsdk:"preferred_afi"`
+	PathVectorLimit      types.String `tfsdk:"path_vector_limit"`
+	LsrId                types.String `tfsdk:"lsr_id"`
+	LoopDetect           types.String `tfsdk:"loop_detect"`
+	HopLimit             types.String `tfsdk:"hop_limit"`
+	DistributeForDefault types.String `tfsdk:"distribute_for_default"`
+	Afi                  types.String `tfsdk:"afi"`
+	Comment              types.String `tfsdk:"comment"`
+	Disabled             types.Bool   `tfsdk:"disabled"`
+	Router               types.String `tfsdk:"router"`
 }
 
 func NewMPLSLdpResource() resource.Resource { return &MPLSLdpResource{} }
@@ -47,7 +57,6 @@ func (r *MPLSLdpResource) Configure(_ context.Context, req resource.ConfigureReq
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *MPLSLdpResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -58,6 +67,56 @@ func (r *MPLSLdpResource) Schema(_ context.Context, _ resource.SchemaRequest, re
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"vrf": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `vrf`.",
+			},
+			"use_explicit_null": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `use-explicit-null`.",
+			},
+			"transport_addresses": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `transport-addresses`.",
+			},
+			"preferred_afi": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `preferred-afi`.",
+			},
+			"path_vector_limit": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `path-vector-limit`.",
+			},
+			"lsr_id": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `lsr-id`.",
+			},
+			"loop_detect": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `loop-detect`.",
+			},
+			"hop_limit": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `hop-limit`.",
+			},
+			"distribute_for_default": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `distribute-for-default`.",
+			},
+			"afi": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `afi`.",
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -93,6 +152,36 @@ func (r *MPLSLdpResource) Create(ctx context.Context, req resource.CreateRequest
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !(plan.Afi.IsNull() || plan.Afi.IsUnknown()) {
+		body["afi"] = plan.Afi.ValueString()
+	}
+	if !(plan.DistributeForDefault.IsNull() || plan.DistributeForDefault.IsUnknown()) {
+		body["distribute-for-default"] = plan.DistributeForDefault.ValueString()
+	}
+	if !(plan.HopLimit.IsNull() || plan.HopLimit.IsUnknown()) {
+		body["hop-limit"] = plan.HopLimit.ValueString()
+	}
+	if !(plan.LoopDetect.IsNull() || plan.LoopDetect.IsUnknown()) {
+		body["loop-detect"] = plan.LoopDetect.ValueString()
+	}
+	if !(plan.LsrId.IsNull() || plan.LsrId.IsUnknown()) {
+		body["lsr-id"] = plan.LsrId.ValueString()
+	}
+	if !(plan.PathVectorLimit.IsNull() || plan.PathVectorLimit.IsUnknown()) {
+		body["path-vector-limit"] = plan.PathVectorLimit.ValueString()
+	}
+	if !(plan.PreferredAfi.IsNull() || plan.PreferredAfi.IsUnknown()) {
+		body["preferred-afi"] = plan.PreferredAfi.ValueString()
+	}
+	if !(plan.TransportAddresses.IsNull() || plan.TransportAddresses.IsUnknown()) {
+		body["transport-addresses"] = plan.TransportAddresses.ValueString()
+	}
+	if !(plan.UseExplicitNull.IsNull() || plan.UseExplicitNull.IsUnknown()) {
+		body["use-explicit-null"] = plan.UseExplicitNull.ValueString()
+	}
+	if !(plan.Vrf.IsNull() || plan.Vrf.IsUnknown()) {
+		body["vrf"] = plan.Vrf.ValueString()
 	}
 	obj, err := c.Add(ctx, "/mpls/ldp", body)
 	if err != nil {
@@ -146,6 +235,36 @@ func (r *MPLSLdpResource) Update(ctx context.Context, req resource.UpdateRequest
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !plan.Afi.Equal(state.Afi) && !plan.Afi.IsUnknown() {
+		body["afi"] = plan.Afi.ValueString()
+	}
+	if !plan.DistributeForDefault.Equal(state.DistributeForDefault) && !plan.DistributeForDefault.IsUnknown() {
+		body["distribute-for-default"] = plan.DistributeForDefault.ValueString()
+	}
+	if !plan.HopLimit.Equal(state.HopLimit) && !plan.HopLimit.IsUnknown() {
+		body["hop-limit"] = plan.HopLimit.ValueString()
+	}
+	if !plan.LoopDetect.Equal(state.LoopDetect) && !plan.LoopDetect.IsUnknown() {
+		body["loop-detect"] = plan.LoopDetect.ValueString()
+	}
+	if !plan.LsrId.Equal(state.LsrId) && !plan.LsrId.IsUnknown() {
+		body["lsr-id"] = plan.LsrId.ValueString()
+	}
+	if !plan.PathVectorLimit.Equal(state.PathVectorLimit) && !plan.PathVectorLimit.IsUnknown() {
+		body["path-vector-limit"] = plan.PathVectorLimit.ValueString()
+	}
+	if !plan.PreferredAfi.Equal(state.PreferredAfi) && !plan.PreferredAfi.IsUnknown() {
+		body["preferred-afi"] = plan.PreferredAfi.ValueString()
+	}
+	if !plan.TransportAddresses.Equal(state.TransportAddresses) && !plan.TransportAddresses.IsUnknown() {
+		body["transport-addresses"] = plan.TransportAddresses.ValueString()
+	}
+	if !plan.UseExplicitNull.Equal(state.UseExplicitNull) && !plan.UseExplicitNull.IsUnknown() {
+		body["use-explicit-null"] = plan.UseExplicitNull.ValueString()
+	}
+	if !plan.Vrf.Equal(state.Vrf) && !plan.Vrf.IsUnknown() {
+		body["vrf"] = plan.Vrf.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/mpls/ldp", state.ID.ValueString(), body)
@@ -213,6 +332,56 @@ func mPLSLdpLookupByNaturalKey(ctx context.Context, c *client.Client, id string)
 func mPLSLdpApply(ctx context.Context, obj client.Object, m *MPLSLdpModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["vrf"]; ok && v != "" {
+		m.Vrf = types.StringValue(v)
+	} else {
+		m.Vrf = types.StringNull()
+	}
+	if v, ok := obj["use-explicit-null"]; ok && v != "" {
+		m.UseExplicitNull = types.StringValue(v)
+	} else {
+		m.UseExplicitNull = types.StringNull()
+	}
+	if v, ok := obj["transport-addresses"]; ok && v != "" {
+		m.TransportAddresses = types.StringValue(v)
+	} else {
+		m.TransportAddresses = types.StringNull()
+	}
+	if v, ok := obj["preferred-afi"]; ok && v != "" {
+		m.PreferredAfi = types.StringValue(v)
+	} else {
+		m.PreferredAfi = types.StringNull()
+	}
+	if v, ok := obj["path-vector-limit"]; ok && v != "" {
+		m.PathVectorLimit = types.StringValue(v)
+	} else {
+		m.PathVectorLimit = types.StringNull()
+	}
+	if v, ok := obj["lsr-id"]; ok && v != "" {
+		m.LsrId = types.StringValue(v)
+	} else {
+		m.LsrId = types.StringNull()
+	}
+	if v, ok := obj["loop-detect"]; ok && v != "" {
+		m.LoopDetect = types.StringValue(v)
+	} else {
+		m.LoopDetect = types.StringNull()
+	}
+	if v, ok := obj["hop-limit"]; ok && v != "" {
+		m.HopLimit = types.StringValue(v)
+	} else {
+		m.HopLimit = types.StringNull()
+	}
+	if v, ok := obj["distribute-for-default"]; ok && v != "" {
+		m.DistributeForDefault = types.StringValue(v)
+	} else {
+		m.DistributeForDefault = types.StringNull()
+	}
+	if v, ok := obj["afi"]; ok && v != "" {
+		m.Afi = types.StringValue(v)
+	} else {
+		m.Afi = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {

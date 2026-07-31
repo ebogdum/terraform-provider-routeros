@@ -31,70 +31,76 @@ type InterfaceBridgeResource struct {
 }
 
 type InterfaceBridgeModel struct {
-	ID                    types.String `tfsdk:"id"`
-	ActiveRole            types.String `tfsdk:"active_role"`
-	AddDHCPOption82       types.Bool   `tfsdk:"add_dhcp_option_82"`
-	AdminMAC              types.String `tfsdk:"admin_mac"`
-	AdminMACAddress       types.String `tfsdk:"admin_mac_address"`
-	AgeingTime            types.String `tfsdk:"ageing_time"`
-	ARP                   types.String `tfsdk:"arp"`
-	ARPTimeout            types.String `tfsdk:"arp_timeout"`
-	AutoMAC               types.Bool   `tfsdk:"auto_mac"`
-	Comment               types.String `tfsdk:"comment"`
-	DHCPSnooping          types.Bool   `tfsdk:"dhcp_snooping"`
-	Disabled              types.Bool   `tfsdk:"disabled"`
-	Dumb                  types.String `tfsdk:"dumb"`
-	EtherType             types.String `tfsdk:"ether_type"`
-	FastForward           types.Bool   `tfsdk:"fast_forward"`
-	ForwardDelay          types.String `tfsdk:"forward_delay"`
-	ForwardReserved       types.Bool   `tfsdk:"forward_reserved"`
-	FpTxRxPacketRate      types.String `tfsdk:"fp_tx_rx_packet_rate"`
-	FpTxRxRate            types.String `tfsdk:"fp_tx_rx_rate"`
-	FrameTypes            types.String `tfsdk:"frame_types"`
-	Heartbeat             types.String `tfsdk:"heartbeat"`
-	Igmp                  types.String `tfsdk:"igmp"`
-	IgmpSnooping          types.Bool   `tfsdk:"igmp_snooping"`
-	IgmpVersion           types.String `tfsdk:"igmp_version"`
-	IngressFiltering      types.Bool   `tfsdk:"ingress_filtering"`
-	LastMemberInterval    types.String `tfsdk:"last_member_interval"`
-	LastMemberQueryCount  types.Int64  `tfsdk:"last_member_query_count"`
-	MACAddress            types.String `tfsdk:"mac_address"`
-	MaxHops               types.Int64  `tfsdk:"max_hops"`
-	MaxLearnedEntries     types.String `tfsdk:"max_learned_entries"`
-	MaxMessageAge         types.String `tfsdk:"max_message_age"`
-	MembershipInterval    types.String `tfsdk:"membership_interval"`
-	MlagHeartbeat         types.String `tfsdk:"mlag_heartbeat"`
-	MlagPeerPort          types.String `tfsdk:"mlag_peer_port"`
-	MlagPriority          types.Int64  `tfsdk:"mlag_priority"`
-	MldVersion            types.String `tfsdk:"mld_version"`
-	Mstp                  types.String `tfsdk:"mstp"`
-	MTU                   types.Int64  `tfsdk:"mtu"`
-	MulticastQuerier      types.Bool   `tfsdk:"multicast_querier"`
-	MulticastRouter       types.String `tfsdk:"multicast_router"`
-	Mvrp                  types.Bool   `tfsdk:"mvrp"`
-	Name                  types.String `tfsdk:"name"`
-	PeerPort              types.String `tfsdk:"peer_port"`
-	PortCostMode          types.String `tfsdk:"port_cost_mode"`
-	Priority              types.Int64  `tfsdk:"priority"`
-	ProtocolMode          types.String `tfsdk:"protocol_mode"`
-	Pvid                  types.Int64  `tfsdk:"pvid"`
-	QuerierInterval       types.String `tfsdk:"querier_interval"`
-	QueryInterval         types.String `tfsdk:"query_interval"`
-	QueryResponseInterval types.String `tfsdk:"query_response_interval"`
-	RaGuard               types.Bool   `tfsdk:"ra_guard"`
-	RegionName            types.String `tfsdk:"region_name"`
-	RegionRevision        types.Int64  `tfsdk:"region_revision"`
-	StartupQueryCount     types.Int64  `tfsdk:"startup_query_count"`
-	StartupQueryInterval  types.String `tfsdk:"startup_query_interval"`
-	State                 types.String `tfsdk:"state"`
-	Status                types.Int64  `tfsdk:"status"`
-	TransmitHoldCount     types.Int64  `tfsdk:"transmit_hold_count"`
-	TxRxPacketRate        types.String `tfsdk:"tx_rx_packet_rate"`
-	TxRxRate              types.String `tfsdk:"tx_rx_rate"`
-	Type                  types.String `tfsdk:"type"`
-	VLAN                  types.String `tfsdk:"vlan"`
-	VLANFiltering         types.Bool   `tfsdk:"vlan_filtering"`
-	Router                types.String `tfsdk:"router"`
+	ID                       types.String `tfsdk:"id"`
+	ForwardReservedAddresses types.String `tfsdk:"forward_reserved_addresses"`
+	Dhcpv6Snooping           types.String `tfsdk:"dhcpv6_snooping"`
+	Dhcpv6AgentRemoteId      types.String `tfsdk:"dhcpv6_agent_remote_id"`
+	Dhcpv6AgentCircuitId     types.String `tfsdk:"dhcpv6_agent_circuit_id"`
+	DhcpAgentRemoteId        types.String `tfsdk:"dhcp_agent_remote_id"`
+	DhcpAgentCircuitId       types.String `tfsdk:"dhcp_agent_circuit_id"`
+	ActiveRole               types.String `tfsdk:"active_role"`
+	AddDHCPOption82          types.Bool   `tfsdk:"add_dhcp_option_82"`
+	AdminMAC                 types.String `tfsdk:"admin_mac"`
+	AdminMACAddress          types.String `tfsdk:"admin_mac_address"`
+	AgeingTime               types.String `tfsdk:"ageing_time"`
+	ARP                      types.String `tfsdk:"arp"`
+	ARPTimeout               types.String `tfsdk:"arp_timeout"`
+	AutoMAC                  types.Bool   `tfsdk:"auto_mac"`
+	Comment                  types.String `tfsdk:"comment"`
+	DHCPSnooping             types.Bool   `tfsdk:"dhcp_snooping"`
+	Disabled                 types.Bool   `tfsdk:"disabled"`
+	Dumb                     types.String `tfsdk:"dumb"`
+	EtherType                types.String `tfsdk:"ether_type"`
+	FastForward              types.Bool   `tfsdk:"fast_forward"`
+	ForwardDelay             types.String `tfsdk:"forward_delay"`
+	ForwardReserved          types.Bool   `tfsdk:"forward_reserved"`
+	FpTxRxPacketRate         types.String `tfsdk:"fp_tx_rx_packet_rate"`
+	FpTxRxRate               types.String `tfsdk:"fp_tx_rx_rate"`
+	FrameTypes               types.String `tfsdk:"frame_types"`
+	Heartbeat                types.String `tfsdk:"heartbeat"`
+	Igmp                     types.String `tfsdk:"igmp"`
+	IgmpSnooping             types.Bool   `tfsdk:"igmp_snooping"`
+	IgmpVersion              types.String `tfsdk:"igmp_version"`
+	IngressFiltering         types.Bool   `tfsdk:"ingress_filtering"`
+	LastMemberInterval       types.String `tfsdk:"last_member_interval"`
+	LastMemberQueryCount     types.Int64  `tfsdk:"last_member_query_count"`
+	MACAddress               types.String `tfsdk:"mac_address"`
+	MaxHops                  types.Int64  `tfsdk:"max_hops"`
+	MaxLearnedEntries        types.String `tfsdk:"max_learned_entries"`
+	MaxMessageAge            types.String `tfsdk:"max_message_age"`
+	MembershipInterval       types.String `tfsdk:"membership_interval"`
+	MlagHeartbeat            types.String `tfsdk:"mlag_heartbeat"`
+	MlagPeerPort             types.String `tfsdk:"mlag_peer_port"`
+	MlagPriority             types.Int64  `tfsdk:"mlag_priority"`
+	MldVersion               types.String `tfsdk:"mld_version"`
+	Mstp                     types.String `tfsdk:"mstp"`
+	MTU                      types.String `tfsdk:"mtu"`
+	MulticastQuerier         types.Bool   `tfsdk:"multicast_querier"`
+	MulticastRouter          types.String `tfsdk:"multicast_router"`
+	Mvrp                     types.Bool   `tfsdk:"mvrp"`
+	Name                     types.String `tfsdk:"name"`
+	PeerPort                 types.String `tfsdk:"peer_port"`
+	PortCostMode             types.String `tfsdk:"port_cost_mode"`
+	Priority                 types.Int64  `tfsdk:"priority"`
+	ProtocolMode             types.String `tfsdk:"protocol_mode"`
+	Pvid                     types.Int64  `tfsdk:"pvid"`
+	QuerierInterval          types.String `tfsdk:"querier_interval"`
+	QueryInterval            types.String `tfsdk:"query_interval"`
+	QueryResponseInterval    types.String `tfsdk:"query_response_interval"`
+	RaGuard                  types.Bool   `tfsdk:"ra_guard"`
+	RegionName               types.String `tfsdk:"region_name"`
+	RegionRevision           types.Int64  `tfsdk:"region_revision"`
+	StartupQueryCount        types.Int64  `tfsdk:"startup_query_count"`
+	StartupQueryInterval     types.String `tfsdk:"startup_query_interval"`
+	State                    types.String `tfsdk:"state"`
+	Status                   types.Int64  `tfsdk:"status"`
+	TransmitHoldCount        types.Int64  `tfsdk:"transmit_hold_count"`
+	TxRxPacketRate           types.String `tfsdk:"tx_rx_packet_rate"`
+	TxRxRate                 types.String `tfsdk:"tx_rx_rate"`
+	Type                     types.String `tfsdk:"type"`
+	VLAN                     types.String `tfsdk:"vlan"`
+	VLANFiltering            types.Bool   `tfsdk:"vlan_filtering"`
+	Router                   types.String `tfsdk:"router"`
 }
 
 func NewInterfaceBridgeResource() resource.Resource { return &InterfaceBridgeResource{} }
@@ -109,7 +115,6 @@ func (r *InterfaceBridgeResource) Configure(_ context.Context, req resource.Conf
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceBridgeResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -121,14 +126,42 @@ func (r *InterfaceBridgeResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
-			"active_role": schema.StringAttribute{
+			"forward_reserved_addresses": schema.StringAttribute{
 				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `forward-reserved-addresses`.",
+			},
+			"dhcpv6_snooping": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `dhcpv6-snooping`.",
+			},
+			"dhcpv6_agent_remote_id": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `dhcpv6-agent-remote-id`.",
+			},
+			"dhcpv6_agent_circuit_id": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `dhcpv6-agent-circuit-id`.",
+			},
+			"dhcp_agent_remote_id": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `dhcp-agent-remote-id`.",
+			},
+			"dhcp_agent_circuit_id": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `dhcp-agent-circuit-id`.",
+			},
+			"active_role": schema.StringAttribute{
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.OneOf([]string{"primary", "secondary"}...)},
 			},
 			"add_dhcp_option_82": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -138,7 +171,6 @@ func (r *InterfaceBridgeResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "",
 			},
 			"admin_mac_address": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -159,7 +191,7 @@ func (r *InterfaceBridgeResource) Schema(_ context.Context, _ resource.SchemaReq
 				Optional:      true,
 				Computed:      true,
 				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
+				Validators:    []validator.String{schemautil.IsDurationOrKeyword("auto")},
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
 			},
 			"auto_mac": schema.BoolAttribute{
@@ -183,7 +215,6 @@ func (r *InterfaceBridgeResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "Whether the entry is disabled.",
 			},
 			"dumb": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -206,17 +237,14 @@ func (r *InterfaceBridgeResource) Schema(_ context.Context, _ resource.SchemaReq
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
 			},
 			"forward_reserved": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"fp_tx_rx_packet_rate": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"fp_tx_rx_rate": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -227,14 +255,12 @@ func (r *InterfaceBridgeResource) Schema(_ context.Context, _ resource.SchemaReq
 				Validators:  []validator.String{schemautil.OneOf([]string{"admit-all", "admit-only-vlan-tagged", "admit-only-untagged-and-priority-tagged"}...)},
 			},
 			"heartbeat": schema.StringAttribute{
-				Optional:      true,
 				Computed:      true,
 				Description:   "",
 				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
 			},
 			"igmp": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -265,7 +291,6 @@ func (r *InterfaceBridgeResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "",
 			},
 			"mac_address": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -316,14 +341,13 @@ func (r *InterfaceBridgeResource) Schema(_ context.Context, _ resource.SchemaReq
 				Validators:  []validator.String{schemautil.OneOf([]string{"", "1", "2"}...)},
 			},
 			"mstp": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
-			"mtu": schema.Int64Attribute{
+			"mtu": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "",
+				Description: "Bridge MTU. A number, or `auto` (the default) to follow the smallest port MTU.",
 			},
 			"multicast_querier": schema.BoolAttribute{
 				Optional:    true,
@@ -347,7 +371,6 @@ func (r *InterfaceBridgeResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "",
 			},
 			"peer_port": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -414,12 +437,10 @@ func (r *InterfaceBridgeResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "",
 			},
 			"state": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"status": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -429,22 +450,18 @@ func (r *InterfaceBridgeResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "",
 			},
 			"tx_rx_packet_rate": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_rx_rate": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"type": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"vlan": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -472,14 +489,8 @@ func (r *InterfaceBridgeResource) Create(ctx context.Context, req resource.Creat
 		return
 	}
 	body := client.Object{}
-	if !(plan.AddDHCPOption82.IsNull() || plan.AddDHCPOption82.IsUnknown()) {
-		body["add-dhcp-option-82"] = client.FormatBool(plan.AddDHCPOption82.ValueBool())
-	}
 	if !(plan.AdminMAC.IsNull() || plan.AdminMAC.IsUnknown()) {
 		body["admin-mac"] = plan.AdminMAC.ValueString()
-	}
-	if !(plan.AdminMACAddress.IsNull() || plan.AdminMACAddress.IsUnknown()) {
-		body["admin-mac-address"] = plan.AdminMACAddress.ValueString()
 	}
 	if !(plan.AgeingTime.IsNull() || plan.AgeingTime.IsUnknown()) {
 		body["ageing-time"] = plan.AgeingTime.ValueString()
@@ -502,9 +513,6 @@ func (r *InterfaceBridgeResource) Create(ctx context.Context, req resource.Creat
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !(plan.Dumb.IsNull() || plan.Dumb.IsUnknown()) {
-		body["dumb"] = plan.Dumb.ValueString()
-	}
 	if !(plan.EtherType.IsNull() || plan.EtherType.IsUnknown()) {
 		body["ether-type"] = plan.EtherType.ValueString()
 	}
@@ -514,23 +522,8 @@ func (r *InterfaceBridgeResource) Create(ctx context.Context, req resource.Creat
 	if !(plan.ForwardDelay.IsNull() || plan.ForwardDelay.IsUnknown()) {
 		body["forward-delay"] = plan.ForwardDelay.ValueString()
 	}
-	if !(plan.ForwardReserved.IsNull() || plan.ForwardReserved.IsUnknown()) {
-		body["forward-reserved"] = client.FormatBool(plan.ForwardReserved.ValueBool())
-	}
-	if !(plan.FpTxRxPacketRate.IsNull() || plan.FpTxRxPacketRate.IsUnknown()) {
-		body["fp-tx-rx-packet-rate"] = plan.FpTxRxPacketRate.ValueString()
-	}
-	if !(plan.FpTxRxRate.IsNull() || plan.FpTxRxRate.IsUnknown()) {
-		body["fp-tx-rx-rate"] = plan.FpTxRxRate.ValueString()
-	}
 	if !(plan.FrameTypes.IsNull() || plan.FrameTypes.IsUnknown()) {
 		body["frame-types"] = plan.FrameTypes.ValueString()
-	}
-	if !(plan.Heartbeat.IsNull() || plan.Heartbeat.IsUnknown()) {
-		body["heartbeat"] = plan.Heartbeat.ValueString()
-	}
-	if !(plan.Igmp.IsNull() || plan.Igmp.IsUnknown()) {
-		body["igmp"] = plan.Igmp.ValueString()
 	}
 	if !(plan.IgmpSnooping.IsNull() || plan.IgmpSnooping.IsUnknown()) {
 		body["igmp-snooping"] = client.FormatBool(plan.IgmpSnooping.ValueBool())
@@ -571,11 +564,8 @@ func (r *InterfaceBridgeResource) Create(ctx context.Context, req resource.Creat
 	if !(plan.MldVersion.IsNull() || plan.MldVersion.IsUnknown()) {
 		body["mld-version"] = plan.MldVersion.ValueString()
 	}
-	if !(plan.Mstp.IsNull() || plan.Mstp.IsUnknown()) {
-		body["mstp"] = plan.Mstp.ValueString()
-	}
 	if !(plan.MTU.IsNull() || plan.MTU.IsUnknown()) {
-		body["mtu"] = client.FormatInt64(plan.MTU.ValueInt64())
+		body["mtu"] = plan.MTU.ValueString()
 	}
 	if !(plan.MulticastQuerier.IsNull() || plan.MulticastQuerier.IsUnknown()) {
 		body["multicast-querier"] = client.FormatBool(plan.MulticastQuerier.ValueBool())
@@ -588,9 +578,6 @@ func (r *InterfaceBridgeResource) Create(ctx context.Context, req resource.Creat
 	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
-	}
-	if !(plan.PeerPort.IsNull() || plan.PeerPort.IsUnknown()) {
-		body["peer-port"] = plan.PeerPort.ValueString()
 	}
 	if !(plan.PortCostMode.IsNull() || plan.PortCostMode.IsUnknown()) {
 		body["port-cost-mode"] = plan.PortCostMode.ValueString()
@@ -628,26 +615,29 @@ func (r *InterfaceBridgeResource) Create(ctx context.Context, req resource.Creat
 	if !(plan.StartupQueryInterval.IsNull() || plan.StartupQueryInterval.IsUnknown()) {
 		body["startup-query-interval"] = plan.StartupQueryInterval.ValueString()
 	}
-	if !(plan.Status.IsNull() || plan.Status.IsUnknown()) {
-		body["status"] = client.FormatInt64(plan.Status.ValueInt64())
-	}
 	if !(plan.TransmitHoldCount.IsNull() || plan.TransmitHoldCount.IsUnknown()) {
 		body["transmit-hold-count"] = client.FormatInt64(plan.TransmitHoldCount.ValueInt64())
 	}
-	if !(plan.TxRxPacketRate.IsNull() || plan.TxRxPacketRate.IsUnknown()) {
-		body["tx-rx-packet-rate"] = plan.TxRxPacketRate.ValueString()
-	}
-	if !(plan.TxRxRate.IsNull() || plan.TxRxRate.IsUnknown()) {
-		body["tx-rx-rate"] = plan.TxRxRate.ValueString()
-	}
-	if !(plan.Type.IsNull() || plan.Type.IsUnknown()) {
-		body["type"] = plan.Type.ValueString()
-	}
-	if !(plan.VLAN.IsNull() || plan.VLAN.IsUnknown()) {
-		body["vlan"] = plan.VLAN.ValueString()
-	}
 	if !(plan.VLANFiltering.IsNull() || plan.VLANFiltering.IsUnknown()) {
 		body["vlan-filtering"] = client.FormatBool(plan.VLANFiltering.ValueBool())
+	}
+	if !(plan.DhcpAgentCircuitId.IsNull() || plan.DhcpAgentCircuitId.IsUnknown()) {
+		body["dhcp-agent-circuit-id"] = plan.DhcpAgentCircuitId.ValueString()
+	}
+	if !(plan.DhcpAgentRemoteId.IsNull() || plan.DhcpAgentRemoteId.IsUnknown()) {
+		body["dhcp-agent-remote-id"] = plan.DhcpAgentRemoteId.ValueString()
+	}
+	if !(plan.Dhcpv6AgentCircuitId.IsNull() || plan.Dhcpv6AgentCircuitId.IsUnknown()) {
+		body["dhcpv6-agent-circuit-id"] = plan.Dhcpv6AgentCircuitId.ValueString()
+	}
+	if !(plan.Dhcpv6AgentRemoteId.IsNull() || plan.Dhcpv6AgentRemoteId.IsUnknown()) {
+		body["dhcpv6-agent-remote-id"] = plan.Dhcpv6AgentRemoteId.ValueString()
+	}
+	if !(plan.Dhcpv6Snooping.IsNull() || plan.Dhcpv6Snooping.IsUnknown()) {
+		body["dhcpv6-snooping"] = plan.Dhcpv6Snooping.ValueString()
+	}
+	if !(plan.ForwardReservedAddresses.IsNull() || plan.ForwardReservedAddresses.IsUnknown()) {
+		body["forward-reserved-addresses"] = plan.ForwardReservedAddresses.ValueString()
 	}
 	obj, err := c.Add(ctx, "/interface/bridge", body)
 	if err != nil {
@@ -696,14 +686,8 @@ func (r *InterfaceBridgeResource) Update(ctx context.Context, req resource.Updat
 		return
 	}
 	body := client.Object{}
-	if !plan.AddDHCPOption82.Equal(state.AddDHCPOption82) {
-		body["add-dhcp-option-82"] = client.FormatBool(plan.AddDHCPOption82.ValueBool())
-	}
 	if !plan.AdminMAC.Equal(state.AdminMAC) {
 		body["admin-mac"] = plan.AdminMAC.ValueString()
-	}
-	if !plan.AdminMACAddress.Equal(state.AdminMACAddress) {
-		body["admin-mac-address"] = plan.AdminMACAddress.ValueString()
 	}
 	if !plan.AgeingTime.Equal(state.AgeingTime) {
 		body["ageing-time"] = plan.AgeingTime.ValueString()
@@ -726,9 +710,6 @@ func (r *InterfaceBridgeResource) Update(ctx context.Context, req resource.Updat
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Dumb.Equal(state.Dumb) {
-		body["dumb"] = plan.Dumb.ValueString()
-	}
 	if !plan.EtherType.Equal(state.EtherType) {
 		body["ether-type"] = plan.EtherType.ValueString()
 	}
@@ -738,23 +719,8 @@ func (r *InterfaceBridgeResource) Update(ctx context.Context, req resource.Updat
 	if !plan.ForwardDelay.Equal(state.ForwardDelay) {
 		body["forward-delay"] = plan.ForwardDelay.ValueString()
 	}
-	if !plan.ForwardReserved.Equal(state.ForwardReserved) {
-		body["forward-reserved"] = client.FormatBool(plan.ForwardReserved.ValueBool())
-	}
-	if !plan.FpTxRxPacketRate.Equal(state.FpTxRxPacketRate) {
-		body["fp-tx-rx-packet-rate"] = plan.FpTxRxPacketRate.ValueString()
-	}
-	if !plan.FpTxRxRate.Equal(state.FpTxRxRate) {
-		body["fp-tx-rx-rate"] = plan.FpTxRxRate.ValueString()
-	}
 	if !plan.FrameTypes.Equal(state.FrameTypes) {
 		body["frame-types"] = plan.FrameTypes.ValueString()
-	}
-	if !plan.Heartbeat.Equal(state.Heartbeat) {
-		body["heartbeat"] = plan.Heartbeat.ValueString()
-	}
-	if !plan.Igmp.Equal(state.Igmp) {
-		body["igmp"] = plan.Igmp.ValueString()
 	}
 	if !plan.IgmpSnooping.Equal(state.IgmpSnooping) {
 		body["igmp-snooping"] = client.FormatBool(plan.IgmpSnooping.ValueBool())
@@ -795,11 +761,8 @@ func (r *InterfaceBridgeResource) Update(ctx context.Context, req resource.Updat
 	if !plan.MldVersion.Equal(state.MldVersion) {
 		body["mld-version"] = plan.MldVersion.ValueString()
 	}
-	if !plan.Mstp.Equal(state.Mstp) {
-		body["mstp"] = plan.Mstp.ValueString()
-	}
 	if !plan.MTU.Equal(state.MTU) {
-		body["mtu"] = client.FormatInt64(plan.MTU.ValueInt64())
+		body["mtu"] = plan.MTU.ValueString()
 	}
 	if !plan.MulticastQuerier.Equal(state.MulticastQuerier) {
 		body["multicast-querier"] = client.FormatBool(plan.MulticastQuerier.ValueBool())
@@ -812,9 +775,6 @@ func (r *InterfaceBridgeResource) Update(ctx context.Context, req resource.Updat
 	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
-	}
-	if !plan.PeerPort.Equal(state.PeerPort) {
-		body["peer-port"] = plan.PeerPort.ValueString()
 	}
 	if !plan.PortCostMode.Equal(state.PortCostMode) {
 		body["port-cost-mode"] = plan.PortCostMode.ValueString()
@@ -852,26 +812,29 @@ func (r *InterfaceBridgeResource) Update(ctx context.Context, req resource.Updat
 	if !plan.StartupQueryInterval.Equal(state.StartupQueryInterval) {
 		body["startup-query-interval"] = plan.StartupQueryInterval.ValueString()
 	}
-	if !plan.Status.Equal(state.Status) {
-		body["status"] = client.FormatInt64(plan.Status.ValueInt64())
-	}
 	if !plan.TransmitHoldCount.Equal(state.TransmitHoldCount) {
 		body["transmit-hold-count"] = client.FormatInt64(plan.TransmitHoldCount.ValueInt64())
 	}
-	if !plan.TxRxPacketRate.Equal(state.TxRxPacketRate) {
-		body["tx-rx-packet-rate"] = plan.TxRxPacketRate.ValueString()
-	}
-	if !plan.TxRxRate.Equal(state.TxRxRate) {
-		body["tx-rx-rate"] = plan.TxRxRate.ValueString()
-	}
-	if !plan.Type.Equal(state.Type) {
-		body["type"] = plan.Type.ValueString()
-	}
-	if !plan.VLAN.Equal(state.VLAN) {
-		body["vlan"] = plan.VLAN.ValueString()
-	}
 	if !plan.VLANFiltering.Equal(state.VLANFiltering) {
 		body["vlan-filtering"] = client.FormatBool(plan.VLANFiltering.ValueBool())
+	}
+	if !plan.DhcpAgentCircuitId.Equal(state.DhcpAgentCircuitId) && !plan.DhcpAgentCircuitId.IsUnknown() {
+		body["dhcp-agent-circuit-id"] = plan.DhcpAgentCircuitId.ValueString()
+	}
+	if !plan.DhcpAgentRemoteId.Equal(state.DhcpAgentRemoteId) && !plan.DhcpAgentRemoteId.IsUnknown() {
+		body["dhcp-agent-remote-id"] = plan.DhcpAgentRemoteId.ValueString()
+	}
+	if !plan.Dhcpv6AgentCircuitId.Equal(state.Dhcpv6AgentCircuitId) && !plan.Dhcpv6AgentCircuitId.IsUnknown() {
+		body["dhcpv6-agent-circuit-id"] = plan.Dhcpv6AgentCircuitId.ValueString()
+	}
+	if !plan.Dhcpv6AgentRemoteId.Equal(state.Dhcpv6AgentRemoteId) && !plan.Dhcpv6AgentRemoteId.IsUnknown() {
+		body["dhcpv6-agent-remote-id"] = plan.Dhcpv6AgentRemoteId.ValueString()
+	}
+	if !plan.Dhcpv6Snooping.Equal(state.Dhcpv6Snooping) && !plan.Dhcpv6Snooping.IsUnknown() {
+		body["dhcpv6-snooping"] = plan.Dhcpv6Snooping.ValueString()
+	}
+	if !plan.ForwardReservedAddresses.Equal(state.ForwardReservedAddresses) && !plan.ForwardReservedAddresses.IsUnknown() {
+		body["forward-reserved-addresses"] = plan.ForwardReservedAddresses.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/bridge", state.ID.ValueString(), body)
@@ -939,6 +902,36 @@ func interfaceBridgeLookupByNaturalKey(ctx context.Context, c *client.Client, id
 func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBridgeModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["forward-reserved-addresses"]; ok && v != "" {
+		m.ForwardReservedAddresses = types.StringValue(v)
+	} else {
+		m.ForwardReservedAddresses = types.StringNull()
+	}
+	if v, ok := obj["dhcpv6-snooping"]; ok && v != "" {
+		m.Dhcpv6Snooping = types.StringValue(v)
+	} else {
+		m.Dhcpv6Snooping = types.StringNull()
+	}
+	if v, ok := obj["dhcpv6-agent-remote-id"]; ok && v != "" {
+		m.Dhcpv6AgentRemoteId = types.StringValue(v)
+	} else {
+		m.Dhcpv6AgentRemoteId = types.StringNull()
+	}
+	if v, ok := obj["dhcpv6-agent-circuit-id"]; ok && v != "" {
+		m.Dhcpv6AgentCircuitId = types.StringValue(v)
+	} else {
+		m.Dhcpv6AgentCircuitId = types.StringNull()
+	}
+	if v, ok := obj["dhcp-agent-remote-id"]; ok && v != "" {
+		m.DhcpAgentRemoteId = types.StringValue(v)
+	} else {
+		m.DhcpAgentRemoteId = types.StringNull()
+	}
+	if v, ok := obj["dhcp-agent-circuit-id"]; ok && v != "" {
+		m.DhcpAgentCircuitId = types.StringValue(v)
+	} else {
+		m.DhcpAgentCircuitId = types.StringNull()
+	}
 	if v, ok := obj["active-role"]; ok {
 		_ = v
 		if v != "" {
@@ -1301,13 +1294,13 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 	}
 	if v, ok := obj["mtu"]; ok {
 		_ = v
-		if n, err := client.ParseInt64(v); err == nil {
-			m.MTU = types.Int64Value(n)
+		if v != "" {
+			m.MTU = types.StringValue(v)
 		} else {
-			m.MTU = types.Int64Null()
+			m.MTU = types.StringNull()
 		}
 	} else {
-		m.MTU = types.Int64Null()
+		m.MTU = types.StringNull()
 	}
 	if v, ok := obj["multicast-querier"]; ok {
 		_ = v

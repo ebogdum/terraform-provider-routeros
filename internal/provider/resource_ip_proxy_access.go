@@ -32,6 +32,10 @@ type IPProxyAccessResource struct {
 
 type IPProxyAccessModel struct {
 	ID         types.String `tfsdk:"id"`
+	Method     types.String `tfsdk:"method"`
+	LocalPort  types.String `tfsdk:"local_port"`
+	DstHost    types.String `tfsdk:"dst_host"`
+	ActionData types.String `tfsdk:"action_data"`
 	Action     types.String `tfsdk:"action"`
 	Comment    types.String `tfsdk:"comment"`
 	Disabled   types.Bool   `tfsdk:"disabled"`
@@ -55,7 +59,6 @@ func (r *IPProxyAccessResource) Configure(_ context.Context, req resource.Config
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPProxyAccessResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -66,6 +69,26 @@ func (r *IPProxyAccessResource) Schema(_ context.Context, _ resource.SchemaReque
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"method": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `method`.",
+			},
+			"local_port": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `local-port`.",
+			},
+			"dst_host": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `dst-host`.",
+			},
+			"action_data": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `action-data`.",
 			},
 			"action": schema.StringAttribute{
 				Optional:    true,
@@ -104,7 +127,6 @@ func (r *IPProxyAccessResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"src_port": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -148,8 +170,17 @@ func (r *IPProxyAccessResource) Create(ctx context.Context, req resource.CreateR
 	if !(plan.SrcAddress.IsNull() || plan.SrcAddress.IsUnknown()) {
 		body["src-address"] = plan.SrcAddress.ValueString()
 	}
-	if !(plan.SrcPort.IsNull() || plan.SrcPort.IsUnknown()) {
-		body["src-port"] = plan.SrcPort.ValueString()
+	if !(plan.ActionData.IsNull() || plan.ActionData.IsUnknown()) {
+		body["action-data"] = plan.ActionData.ValueString()
+	}
+	if !(plan.DstHost.IsNull() || plan.DstHost.IsUnknown()) {
+		body["dst-host"] = plan.DstHost.ValueString()
+	}
+	if !(plan.LocalPort.IsNull() || plan.LocalPort.IsUnknown()) {
+		body["local-port"] = plan.LocalPort.ValueString()
+	}
+	if !(plan.Method.IsNull() || plan.Method.IsUnknown()) {
+		body["method"] = plan.Method.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ip/proxy/access", body)
 	if err != nil {
@@ -219,8 +250,17 @@ func (r *IPProxyAccessResource) Update(ctx context.Context, req resource.UpdateR
 	if !plan.SrcAddress.Equal(state.SrcAddress) {
 		body["src-address"] = plan.SrcAddress.ValueString()
 	}
-	if !plan.SrcPort.Equal(state.SrcPort) {
-		body["src-port"] = plan.SrcPort.ValueString()
+	if !plan.ActionData.Equal(state.ActionData) && !plan.ActionData.IsUnknown() {
+		body["action-data"] = plan.ActionData.ValueString()
+	}
+	if !plan.DstHost.Equal(state.DstHost) && !plan.DstHost.IsUnknown() {
+		body["dst-host"] = plan.DstHost.ValueString()
+	}
+	if !plan.LocalPort.Equal(state.LocalPort) && !plan.LocalPort.IsUnknown() {
+		body["local-port"] = plan.LocalPort.ValueString()
+	}
+	if !plan.Method.Equal(state.Method) && !plan.Method.IsUnknown() {
+		body["method"] = plan.Method.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/proxy/access", state.ID.ValueString(), body)
@@ -288,6 +328,26 @@ func iPProxyAccessLookupByNaturalKey(ctx context.Context, c *client.Client, id s
 func iPProxyAccessApply(ctx context.Context, obj client.Object, m *IPProxyAccessModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["method"]; ok && v != "" {
+		m.Method = types.StringValue(v)
+	} else {
+		m.Method = types.StringNull()
+	}
+	if v, ok := obj["local-port"]; ok && v != "" {
+		m.LocalPort = types.StringValue(v)
+	} else {
+		m.LocalPort = types.StringNull()
+	}
+	if v, ok := obj["dst-host"]; ok && v != "" {
+		m.DstHost = types.StringValue(v)
+	} else {
+		m.DstHost = types.StringNull()
+	}
+	if v, ok := obj["action-data"]; ok && v != "" {
+		m.ActionData = types.StringValue(v)
+	} else {
+		m.ActionData = types.StringNull()
+	}
 	if v, ok := obj["action"]; ok {
 		_ = v
 		if v != "" {

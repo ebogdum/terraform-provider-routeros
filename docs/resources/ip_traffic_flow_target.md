@@ -31,15 +31,22 @@ resource "routeros_ip_traffic_flow_target" "target_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `disabled` - (Optional) Type: `bool`.
 * `dst_address` - (Optional) Type: `string`.
-* `port` - (Optional) Type: `int`. Default: `1234`.
+* `port` - (Optional) Type: `int`.
 * `src_address` - (Optional) Type: `string`.
-* `v9` - (Optional) Type: `string`.
-* `v9_ipfix_template_refresh` - (Optional) Type: `int`. Default: `20`.
-* `v9_ipfix_template_timeout` - (Optional) Type: `int`. Default: `1800`.
-* `version` - (Optional) Type: `enum(1|5|9|ipfix)`. Default: `9`.
+* `v9` - (Read-only) Type: `string`.
+* `v9_ipfix_template_refresh` - (Read-only) Type: `int`.
+* `v9_ipfix_template_timeout` - (Read-only) Type: `int`.
+* `v9_template_refresh` - (Optional) Type: `string`. RouterOS `v9-template-refresh`.
+* `v9_template_timeout` - (Optional) Type: `string`. RouterOS `v9-template-timeout`.
+* `version` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

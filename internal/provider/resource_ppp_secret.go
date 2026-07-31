@@ -65,7 +65,6 @@ func (r *PPPSecretResource) Configure(_ context.Context, req resource.ConfigureR
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *PPPSecretResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -93,7 +92,6 @@ func (r *PPPSecretResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Description: "Whether the entry is disabled.",
 			},
 			"ipv6": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -103,18 +101,15 @@ func (r *PPPSecretResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Description: "",
 			},
 			"last_caller_id": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"last_disconnect_reason": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.OneOf([]string{"", "peer-request", "hung-up", "idle-timeout", "session-timeout", "reset", "reboot", "port-error", "nas-error", "nas-request"}...)},
 			},
 			"last_logged_out": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -196,9 +191,6 @@ func (r *PPPSecretResource) Create(ctx context.Context, req resource.CreateReque
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
-	}
-	if !(plan.IPV6.IsNull() || plan.IPV6.IsUnknown()) {
-		body["ipv6"] = plan.IPV6.ValueString()
 	}
 	if !(plan.IPV6Routes.IsNull() || plan.IPV6Routes.IsUnknown()) {
 		body["ipv6-routes"] = plan.IPV6Routes.ValueString()
@@ -288,9 +280,6 @@ func (r *PPPSecretResource) Update(ctx context.Context, req resource.UpdateReque
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
-	}
-	if !plan.IPV6.Equal(state.IPV6) {
-		body["ipv6"] = plan.IPV6.ValueString()
 	}
 	if !plan.IPV6Routes.Equal(state.IPV6Routes) {
 		body["ipv6-routes"] = plan.IPV6Routes.ValueString()

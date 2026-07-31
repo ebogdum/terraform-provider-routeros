@@ -23,9 +23,16 @@ resource "routeros_tool_graphing_resource" "resource_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `allow_address` - (Optional) Type: `string`. RouterOS `allow-address`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `store_on_disk` - (Optional) Type: `string`. RouterOS `store-on-disk`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

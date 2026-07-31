@@ -30,13 +30,19 @@ resource "routeros_user_group" "group_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `comment` - (Optional) Type: `string`. Free-form comment.
-* `name` - (Required) Type: `string`. Default: `tf-acc-group`.
-* `policies` - (Optional) Type: `string`.
-* `policy` - (Optional) Type: `list`. Default: `read`.
+* `lockout_ack` - (Optional) Type: `bool`. Acknowledge that this rule may sever management traffic (required for unconditional input/forward drop/reject/tarpit rules with no match).
+* `name` - (Required) Type: `string`.
+* `policies` - (Read-only) Type: `string`.
+* `policy` - (Optional) Type: `list`.
 * `skin` - (Optional) Type: `string`.
-* `system` - (Optional) Type: `bool`.
+* `system` - (Read-only) Type: `bool`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

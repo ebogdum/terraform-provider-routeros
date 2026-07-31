@@ -33,17 +33,22 @@ resource "routeros_system_watchdog" "watchdog_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `auto_send_supout` - (Optional) Type: `bool`. After the support output file is automatically generated, it can be sent by email.
 * `automatic_supout` - (Optional) Type: `bool`. When software failure happens, a file named "autosupout.rif" is generated automatically. The previous "autosupout.rif" file is renamed to "autosupout.old.rif".
 * `no_ping_delay` - (Optional) Type: `string`. Specifies how long will it wait before trying to reach the watch-address.
-* `ping_start_after_boot` - (Optional) Type: `duration`.
-* `ping_timeout` - (Optional) Type: `duration`. Specifies the time interval in which the device will be pinged 6 times (after "no-ping-delay").
+* `ping_start_after_boot` - (Optional) Type: `string`.
+* `ping_timeout` - (Optional) Type: `string`. Specifies the time interval in which the device will be pinged 6 times (after "no-ping-delay").
 * `send_email_from` - (Optional) Type: `string`. The e-mail address to send the support output file from. If not set, the value set in /tool e-mail is used.
 * `send_email_to` - (Optional) Type: `string`. The e-mail address to send the support output file to.
 * `send_smtp_server` - (Optional) Type: `string`. SMTP server address to send the support output file through. If not set, the value set in /tool e-mail is used.
 * `watch_address` - (Optional) Type: `string`. The system will reboot, in case 6 sequential pings to the given IP address will fail. If set to none this feature is disabled. By default, the router will reboot every 6 minutes if the watch-address is set and not reachable.
 * `watchdog_timer` - (Optional) Type: `bool`. Whether to reboot if a system is unresponsive for a minute.
+
+## Attribute Reference
+
+* `id` - Stable identifier (the singleton's menu path, optionally namespaced by router).
+
 
 ## Import
 

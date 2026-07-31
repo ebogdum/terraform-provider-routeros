@@ -60,7 +60,8 @@ resource "routeros_interface_wifi_security" "security_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `authentication_types` - (Optional) Type: `string`. RouterOS `authentication-types`.
 * `beacon_protection` - (Optional) Type: `string`.
 * `ciphers` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
@@ -73,30 +74,38 @@ This resource supports the following arguments:
 * `eap_anonymous_identity` - (Optional) Type: `string`.
 * `eap_certificate_mode` - (Optional) Type: `string`.
 * `eap_methods` - (Optional) Type: `string`.
-* `eap_password` - (Optional) Type: `string`.
+* `eap_password` - (Optional) Type: `string`. **Sensitive.**
 * `eap_tls_certificate` - (Optional) Type: `string`.
 * `eap_username` - (Optional) Type: `string`.
 * `encryption` - (Optional) Type: `string`.
+* `ft` - (Optional) Type: `string`. RouterOS `ft`.
 * `ft_enabled` - (Optional) Type: `string`.
 * `ft_mobility_domain` - (Optional) Type: `string`.
 * `ft_nas_identifier` - (Optional) Type: `string`.
 * `ft_over_ds` - (Optional) Type: `string`.
 * `ft_preserve_vlan_id` - (Optional) Type: `string`.
+* `ft_preserve_vlanid` - (Optional) Type: `string`. RouterOS `ft-preserve-vlanid`.
 * `ft_r0_key_lifetime` - (Optional) Type: `string`.
 * `ft_reassoc_deadline` - (Optional) Type: `string`.
+* `ft_reassociation_deadline` - (Optional) Type: `string`. RouterOS `ft-reassociation-deadline`.
 * `group_encryption` - (Optional) Type: `string`.
 * `group_key_update` - (Optional) Type: `string`.
 * `management_encryption` - (Optional) Type: `string`.
 * `management_protection` - (Optional) Type: `string`.
 * `multi_passphrase_group` - (Optional) Type: `string`.
-* `name` - (Required) Type: `string`. Default: `tf_acc_wsec`.
+* `name` - (Required) Type: `string`.
 * `owe_transition_interface` - (Optional) Type: `string`.
-* `passphrase` - (Optional) Type: `string`.
+* `passphrase` - (Optional) Type: `string`. **Sensitive.**
 * `sae_anti_clogging_threshold` - (Optional) Type: `string`.
 * `sae_max_failure_rate` - (Optional) Type: `string`.
 * `sae_pwe` - (Optional) Type: `string`.
 * `types` - (Optional) Type: `string`.
 * `wps` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

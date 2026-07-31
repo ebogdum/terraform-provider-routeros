@@ -21,7 +21,14 @@ resource "routeros_ip_dhcp_server_option_sets" "sets_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `name` - (Optional) Type: `string`. Name of the option set, referenced by `/ip/dhcp-server` `dhcp-option-set`.
+* `options` - (Optional) Type: `string`. Comma-separated list of `/ip/dhcp-server/option` names in this set.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

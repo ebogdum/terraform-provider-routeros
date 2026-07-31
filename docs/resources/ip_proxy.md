@@ -40,7 +40,7 @@ resource "routeros_ip_proxy" "proxy_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `always_from_cache` - (Optional) Type: `bool`.
 * `anonymous` - (Optional) Type: `bool`.
 * `cache_administrator` - (Optional) Type: `string`.
@@ -51,13 +51,18 @@ This resource supports the following arguments:
 * `max_cache_object_size` - (Optional) Type: `int`.
 * `max_cache_size` - (Optional) Type: `string`.
 * `max_client_connections` - (Optional) Type: `int`.
-* `max_fresh_time` - (Optional) Type: `duration`.
+* `max_fresh_time` - (Optional) Type: `string`.
 * `max_server_connections` - (Optional) Type: `int`.
-* `parent_proxy` - (Optional) Type: `ip`.
+* `parent_proxy` - (Optional) Type: `string`.
 * `parent_proxy_port` - (Optional) Type: `int`.
 * `port` - (Optional) Type: `int`.
 * `serialize_connections` - (Optional) Type: `bool`.
-* `src_address` - (Optional) Type: `ip`.
+* `src_address` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - Stable identifier (the singleton's menu path, optionally namespaced by router).
+
 
 ## Import
 

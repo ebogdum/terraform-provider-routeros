@@ -29,23 +29,22 @@ resource "routeros_system_console" "console_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `channel` - (Optional) Type: `int`.
+* `default` - (Read-only) Type: `bool`.
 * `disabled` - (Optional) Type: `bool`.
+* `free` - (Read-only) Type: `bool`.
 * `port` - (Optional) Type: `string`.
 * `term` - (Optional) Type: `string`.
-* `used` - (Optional) Type: `bool`.
-* `wedged` - (Optional) Type: `bool`.
+* `used` - (Read-only) Type: `bool`.
+* `vc` - (Read-only) Type: `int`.
+* `vcno` - (Read-only) Type: `int`.
+* `wedged` - (Read-only) Type: `bool`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `default` - Type: `bool`.
-* `free` - Type: `bool`.
-* `vc` - Type: `int`.
-* `vcno` - Type: `int`.
 
 ## Import
 

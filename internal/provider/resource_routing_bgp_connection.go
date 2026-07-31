@@ -31,63 +31,86 @@ type RoutingBGPConnectionResource struct {
 }
 
 type RoutingBGPConnectionModel struct {
-	ID                          types.String `tfsdk:"id"`
-	Afi                         types.String `tfsdk:"afi"`
-	AllowAsIn                   types.String `tfsdk:"allow_as_in"`
-	As                          types.String `tfsdk:"as"`
-	AsOverride                  types.String `tfsdk:"as_override"`
-	CiscoVplsNlriLengthFormat   types.String `tfsdk:"cisco_vpls_nlri_length_format"`
-	Comment                     types.String `tfsdk:"comment"`
-	Connect                     types.String `tfsdk:"connect"`
-	DefaultOriginate            types.String `tfsdk:"default_originate"`
-	DefaultPrepend              types.String `tfsdk:"default_prepend"`
-	Disabled                    types.Bool   `tfsdk:"disabled"`
-	Dynamic                     types.Bool   `tfsdk:"dynamic"`
-	HoldTime                    types.String `tfsdk:"hold_time"`
-	IgnoreAsPathLength          types.String `tfsdk:"ignore_as_path_length"`
-	InputAcceptCommunities      types.String `tfsdk:"input_accept_communities"`
-	InputAcceptExtCommunities   types.String `tfsdk:"input_accept_ext_communities"`
-	InputAcceptLargeCommunities types.String `tfsdk:"input_accept_large_communities"`
-	InputAcceptNlri             types.String `tfsdk:"input_accept_nlri"`
-	InputAffinity               types.String `tfsdk:"input_affinity"`
-	InputFilter                 types.String `tfsdk:"input_filter"`
-	InputFilterCommunities      types.String `tfsdk:"input_filter_communities"`
-	InputFilterExtCommunities   types.String `tfsdk:"input_filter_ext_communities"`
-	InputFilterLargeCommunities types.String `tfsdk:"input_filter_large_communities"`
-	InputFilterUnknown          types.String `tfsdk:"input_filter_unknown"`
-	Instance                    types.String `tfsdk:"instance"`
-	Invalid                     types.Bool   `tfsdk:"invalid"`
-	KeepSentAttributes          types.String `tfsdk:"keep_sent_attributes"`
-	KeepaliveTime               types.String `tfsdk:"keepalive_time"`
-	Listen                      types.String `tfsdk:"listen"`
-	LocalAddress                types.String `tfsdk:"local_address"`
-	LocalPort                   types.String `tfsdk:"local_port"`
-	LocalRole                   types.String `tfsdk:"local_role"`
-	Multihop                    types.String `tfsdk:"multihop"`
-	Name                        types.String `tfsdk:"name"`
-	NetworkBlackhole            types.String `tfsdk:"network_blackhole"`
-	NexthopChoice               types.String `tfsdk:"nexthop_choice"`
-	NoClientToClientReflection  types.String `tfsdk:"no_client_to_client_reflection"`
-	NoEarlyCut                  types.String `tfsdk:"no_early_cut"`
-	OutputAffinity              types.String `tfsdk:"output_affinity"`
-	OutputFilter                types.String `tfsdk:"output_filter"`
-	OutputNetwork               types.String `tfsdk:"output_network"`
-	OutputRedistribute          types.String `tfsdk:"output_redistribute"`
-	OutputSelectionPolicy       types.String `tfsdk:"output_selection_policy"`
-	RemoteAddress               types.String `tfsdk:"remote_address"`
-	RemoteAllowAs               types.String `tfsdk:"remote_allow_as"`
-	RemoteAs                    types.String `tfsdk:"remote_as"`
-	RemotePort                  types.String `tfsdk:"remote_port"`
-	RemovePrivateAs             types.String `tfsdk:"remove_private_as"`
-	RouterID                    types.String `tfsdk:"router_id"`
-	RoutingTable                types.String `tfsdk:"routing_table"`
-	RxMinTtl                    types.String `tfsdk:"rx_min_ttl"`
-	TCPMd5Key                   types.String `tfsdk:"tcp_md5_key"`
-	Template                    types.String `tfsdk:"template"`
-	TxTtl                       types.String `tfsdk:"tx_ttl"`
-	UseBfd                      types.String `tfsdk:"use_bfd"`
-	Vrf                         types.String `tfsdk:"vrf"`
-	Router                      types.String `tfsdk:"router"`
+	ID                               types.String `tfsdk:"id"`
+	Templates                        types.String `tfsdk:"templates"`
+	SaveTo                           types.String `tfsdk:"save_to"`
+	CiscoVplsNlriLenFmt              types.String `tfsdk:"cisco_vpls_nlri_len_fmt"`
+	RemoteTtl                        types.String `tfsdk:"remote_ttl"`
+	RemoteAllowedAs                  types.String `tfsdk:"remote_allowed_as"`
+	OutputRemovePrivateAs            types.String `tfsdk:"output_remove_private_as"`
+	OutputNoEarlyCut                 types.String `tfsdk:"output_no_early_cut"`
+	OutputNoClientToClientReflection types.String `tfsdk:"output_no_client_to_client_reflection"`
+	OutputNetworkBlackhole           types.String `tfsdk:"output_network_blackhole"`
+	OutputKeepSentAttributes         types.String `tfsdk:"output_keep_sent_attributes"`
+	OutputFilterSelect               types.String `tfsdk:"output_filter_select"`
+	OutputFilterChain                types.String `tfsdk:"output_filter_chain"`
+	OutputDefaultPrepend             types.String `tfsdk:"output_default_prepend"`
+	OutputDefaultOriginate           types.String `tfsdk:"output_default_originate"`
+	OutputAsOverride                 types.String `tfsdk:"output_as_override"`
+	OutputAddPath                    types.String `tfsdk:"output_add_path"`
+	LocalTtl                         types.String `tfsdk:"local_ttl"`
+	InputLimitProcessRoutesIpv6      types.String `tfsdk:"input_limit_process_routes_ipv6"`
+	InputLimitProcessRoutesIpv4      types.String `tfsdk:"input_limit_process_routes_ipv4"`
+	InputFilterNlri                  types.String `tfsdk:"input_filter_nlri"`
+	InputAttrErrorHandling           types.String `tfsdk:"input_attr_error_handling"`
+	InputAllowAs                     types.String `tfsdk:"input_allow_as"`
+	InputAddPath                     types.String `tfsdk:"input_add_path"`
+	Afi                              types.String `tfsdk:"afi"`
+	AllowAsIn                        types.String `tfsdk:"allow_as_in"`
+	As                               types.String `tfsdk:"as"`
+	AsOverride                       types.String `tfsdk:"as_override"`
+	CiscoVplsNlriLengthFormat        types.String `tfsdk:"cisco_vpls_nlri_length_format"`
+	Comment                          types.String `tfsdk:"comment"`
+	Connect                          types.String `tfsdk:"connect"`
+	DefaultOriginate                 types.String `tfsdk:"default_originate"`
+	DefaultPrepend                   types.String `tfsdk:"default_prepend"`
+	Disabled                         types.Bool   `tfsdk:"disabled"`
+	Dynamic                          types.Bool   `tfsdk:"dynamic"`
+	HoldTime                         types.String `tfsdk:"hold_time"`
+	IgnoreAsPathLength               types.String `tfsdk:"ignore_as_path_length"`
+	InputAcceptCommunities           types.String `tfsdk:"input_accept_communities"`
+	InputAcceptExtCommunities        types.String `tfsdk:"input_accept_ext_communities"`
+	InputAcceptLargeCommunities      types.String `tfsdk:"input_accept_large_communities"`
+	InputAcceptNlri                  types.String `tfsdk:"input_accept_nlri"`
+	InputAffinity                    types.String `tfsdk:"input_affinity"`
+	InputFilter                      types.String `tfsdk:"input_filter"`
+	InputFilterCommunities           types.String `tfsdk:"input_filter_communities"`
+	InputFilterExtCommunities        types.String `tfsdk:"input_filter_ext_communities"`
+	InputFilterLargeCommunities      types.String `tfsdk:"input_filter_large_communities"`
+	InputFilterUnknown               types.String `tfsdk:"input_filter_unknown"`
+	Instance                         types.String `tfsdk:"instance"`
+	Invalid                          types.Bool   `tfsdk:"invalid"`
+	KeepSentAttributes               types.String `tfsdk:"keep_sent_attributes"`
+	KeepaliveTime                    types.String `tfsdk:"keepalive_time"`
+	Listen                           types.String `tfsdk:"listen"`
+	LocalAddress                     types.String `tfsdk:"local_address"`
+	LocalPort                        types.String `tfsdk:"local_port"`
+	LocalRole                        types.String `tfsdk:"local_role"`
+	Multihop                         types.String `tfsdk:"multihop"`
+	Name                             types.String `tfsdk:"name"`
+	NetworkBlackhole                 types.String `tfsdk:"network_blackhole"`
+	NexthopChoice                    types.String `tfsdk:"nexthop_choice"`
+	NoClientToClientReflection       types.String `tfsdk:"no_client_to_client_reflection"`
+	NoEarlyCut                       types.String `tfsdk:"no_early_cut"`
+	OutputAffinity                   types.String `tfsdk:"output_affinity"`
+	OutputFilter                     types.String `tfsdk:"output_filter"`
+	OutputNetwork                    types.String `tfsdk:"output_network"`
+	OutputRedistribute               types.String `tfsdk:"output_redistribute"`
+	OutputSelectionPolicy            types.String `tfsdk:"output_selection_policy"`
+	RemoteAddress                    types.String `tfsdk:"remote_address"`
+	RemoteAllowAs                    types.String `tfsdk:"remote_allow_as"`
+	RemoteAs                         types.String `tfsdk:"remote_as"`
+	RemotePort                       types.String `tfsdk:"remote_port"`
+	RemovePrivateAs                  types.String `tfsdk:"remove_private_as"`
+	RouterID                         types.String `tfsdk:"router_id"`
+	RoutingTable                     types.String `tfsdk:"routing_table"`
+	RxMinTtl                         types.String `tfsdk:"rx_min_ttl"`
+	TCPMd5Key                        types.String `tfsdk:"tcp_md5_key"`
+	Template                         types.String `tfsdk:"template"`
+	TxTtl                            types.String `tfsdk:"tx_ttl"`
+	UseBfd                           types.String `tfsdk:"use_bfd"`
+	Vrf                              types.String `tfsdk:"vrf"`
+	Router                           types.String `tfsdk:"router"`
 }
 
 func NewRoutingBGPConnectionResource() resource.Resource { return &RoutingBGPConnectionResource{} }
@@ -102,7 +125,6 @@ func (r *RoutingBGPConnectionResource) Configure(_ context.Context, req resource
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *RoutingBGPConnectionResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -114,13 +136,127 @@ func (r *RoutingBGPConnectionResource) Schema(_ context.Context, _ resource.Sche
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
+			"templates": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `templates`.",
+			},
+			"save_to": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `save-to`.",
+			},
+			"cisco_vpls_nlri_len_fmt": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `cisco-vpls-nlri-len-fmt`.",
+			},
+			"remote_ttl": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `remote.ttl`.",
+			},
+			"remote_allowed_as": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `remote.allowed-as`.",
+			},
+			"output_remove_private_as": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `output.remove-private-as`.",
+			},
+			"output_no_early_cut": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `output.no-early-cut`.",
+			},
+			"output_no_client_to_client_reflection": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `output.no-client-to-client-reflection`.",
+			},
+			"output_network_blackhole": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `output.network-blackhole`.",
+			},
+			"output_keep_sent_attributes": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `output.keep-sent-attributes`.",
+			},
+			"output_filter_select": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `output.filter-select`.",
+			},
+			"output_filter_chain": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `output.filter-chain`.",
+			},
+			"output_default_prepend": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `output.default-prepend`.",
+			},
+			"output_default_originate": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `output.default-originate`.",
+			},
+			"output_as_override": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `output.as-override`.",
+			},
+			"output_add_path": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `output.add-path`.",
+			},
+			"local_ttl": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `local.ttl`.",
+			},
+			"input_limit_process_routes_ipv6": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `input.limit-process-routes-ipv6`.",
+			},
+			"input_limit_process_routes_ipv4": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `input.limit-process-routes-ipv4`.",
+			},
+			"input_filter_nlri": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `input.filter-nlri`.",
+			},
+			"input_attr_error_handling": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `input.attr-error-handling`.",
+			},
+			"input_allow_as": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `input.allow-as`.",
+			},
+			"input_add_path": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `input.add-path`.",
+			},
 			"afi": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"allow_as_in": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -130,12 +266,10 @@ func (r *RoutingBGPConnectionResource) Schema(_ context.Context, _ resource.Sche
 				Description: "",
 			},
 			"as_override": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"cisco_vpls_nlri_length_format": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -150,12 +284,10 @@ func (r *RoutingBGPConnectionResource) Schema(_ context.Context, _ resource.Sche
 				Description: "",
 			},
 			"default_originate": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"default_prepend": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -165,7 +297,6 @@ func (r *RoutingBGPConnectionResource) Schema(_ context.Context, _ resource.Sche
 				Description: "Whether the entry is disabled.",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -175,7 +306,6 @@ func (r *RoutingBGPConnectionResource) Schema(_ context.Context, _ resource.Sche
 				Description: "",
 			},
 			"ignore_as_path_length": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -235,12 +365,10 @@ func (r *RoutingBGPConnectionResource) Schema(_ context.Context, _ resource.Sche
 				Description: "",
 			},
 			"invalid": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"keep_sent_attributes": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -281,7 +409,6 @@ func (r *RoutingBGPConnectionResource) Schema(_ context.Context, _ resource.Sche
 				Description: "",
 			},
 			"network_blackhole": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -291,12 +418,10 @@ func (r *RoutingBGPConnectionResource) Schema(_ context.Context, _ resource.Sche
 				Description: "",
 			},
 			"no_client_to_client_reflection": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"no_early_cut": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -306,7 +431,6 @@ func (r *RoutingBGPConnectionResource) Schema(_ context.Context, _ resource.Sche
 				Description: "",
 			},
 			"output_filter": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -321,7 +445,6 @@ func (r *RoutingBGPConnectionResource) Schema(_ context.Context, _ resource.Sche
 				Description: "",
 			},
 			"output_selection_policy": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -331,7 +454,6 @@ func (r *RoutingBGPConnectionResource) Schema(_ context.Context, _ resource.Sche
 				Description: "",
 			},
 			"remote_allow_as": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -346,12 +468,10 @@ func (r *RoutingBGPConnectionResource) Schema(_ context.Context, _ resource.Sche
 				Description: "",
 			},
 			"remove_private_as": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"router_id": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -361,7 +481,6 @@ func (r *RoutingBGPConnectionResource) Schema(_ context.Context, _ resource.Sche
 				Description: "",
 			},
 			"rx_min_ttl": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -372,12 +491,10 @@ func (r *RoutingBGPConnectionResource) Schema(_ context.Context, _ resource.Sche
 				Description: "",
 			},
 			"template": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_ttl": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -413,17 +530,8 @@ func (r *RoutingBGPConnectionResource) Create(ctx context.Context, req resource.
 	if !(plan.Afi.IsNull() || plan.Afi.IsUnknown()) {
 		body["afi"] = plan.Afi.ValueString()
 	}
-	if !(plan.AllowAsIn.IsNull() || plan.AllowAsIn.IsUnknown()) {
-		body["allow-as-in"] = plan.AllowAsIn.ValueString()
-	}
 	if !(plan.As.IsNull() || plan.As.IsUnknown()) {
 		body["as"] = plan.As.ValueString()
-	}
-	if !(plan.AsOverride.IsNull() || plan.AsOverride.IsUnknown()) {
-		body["as-override"] = plan.AsOverride.ValueString()
-	}
-	if !(plan.CiscoVplsNlriLengthFormat.IsNull() || plan.CiscoVplsNlriLengthFormat.IsUnknown()) {
-		body["cisco-vpls-nlri-length-format"] = plan.CiscoVplsNlriLengthFormat.ValueString()
 	}
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
@@ -431,56 +539,44 @@ func (r *RoutingBGPConnectionResource) Create(ctx context.Context, req resource.
 	if !(plan.Connect.IsNull() || plan.Connect.IsUnknown()) {
 		body["connect"] = plan.Connect.ValueString()
 	}
-	if !(plan.DefaultOriginate.IsNull() || plan.DefaultOriginate.IsUnknown()) {
-		body["default-originate"] = plan.DefaultOriginate.ValueString()
-	}
-	if !(plan.DefaultPrepend.IsNull() || plan.DefaultPrepend.IsUnknown()) {
-		body["default-prepend"] = plan.DefaultPrepend.ValueString()
-	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
 	if !(plan.HoldTime.IsNull() || plan.HoldTime.IsUnknown()) {
 		body["hold-time"] = plan.HoldTime.ValueString()
 	}
-	if !(plan.IgnoreAsPathLength.IsNull() || plan.IgnoreAsPathLength.IsUnknown()) {
-		body["ignore-as-path-length"] = plan.IgnoreAsPathLength.ValueString()
-	}
 	if !(plan.InputAcceptCommunities.IsNull() || plan.InputAcceptCommunities.IsUnknown()) {
-		body["input-accept-communities"] = plan.InputAcceptCommunities.ValueString()
+		body["input.accept-communities"] = plan.InputAcceptCommunities.ValueString()
 	}
 	if !(plan.InputAcceptExtCommunities.IsNull() || plan.InputAcceptExtCommunities.IsUnknown()) {
-		body["input-accept-ext-communities"] = plan.InputAcceptExtCommunities.ValueString()
+		body["input.accept-ext-communities"] = plan.InputAcceptExtCommunities.ValueString()
 	}
 	if !(plan.InputAcceptLargeCommunities.IsNull() || plan.InputAcceptLargeCommunities.IsUnknown()) {
-		body["input-accept-large-communities"] = plan.InputAcceptLargeCommunities.ValueString()
+		body["input.accept-large-communities"] = plan.InputAcceptLargeCommunities.ValueString()
 	}
 	if !(plan.InputAcceptNlri.IsNull() || plan.InputAcceptNlri.IsUnknown()) {
-		body["input-accept-nlri"] = plan.InputAcceptNlri.ValueString()
+		body["input.accept-nlri"] = plan.InputAcceptNlri.ValueString()
 	}
 	if !(plan.InputAffinity.IsNull() || plan.InputAffinity.IsUnknown()) {
-		body["input-affinity"] = plan.InputAffinity.ValueString()
+		body["input.affinity"] = plan.InputAffinity.ValueString()
 	}
 	if !(plan.InputFilter.IsNull() || plan.InputFilter.IsUnknown()) {
-		body["input-filter"] = plan.InputFilter.ValueString()
+		body["input.filter"] = plan.InputFilter.ValueString()
 	}
 	if !(plan.InputFilterCommunities.IsNull() || plan.InputFilterCommunities.IsUnknown()) {
-		body["input-filter-communities"] = plan.InputFilterCommunities.ValueString()
+		body["input.filter-communities"] = plan.InputFilterCommunities.ValueString()
 	}
 	if !(plan.InputFilterExtCommunities.IsNull() || plan.InputFilterExtCommunities.IsUnknown()) {
-		body["input-filter-ext-communities"] = plan.InputFilterExtCommunities.ValueString()
+		body["input.filter-ext-communities"] = plan.InputFilterExtCommunities.ValueString()
 	}
 	if !(plan.InputFilterLargeCommunities.IsNull() || plan.InputFilterLargeCommunities.IsUnknown()) {
-		body["input-filter-large-communities"] = plan.InputFilterLargeCommunities.ValueString()
+		body["input.filter-large-communities"] = plan.InputFilterLargeCommunities.ValueString()
 	}
 	if !(plan.InputFilterUnknown.IsNull() || plan.InputFilterUnknown.IsUnknown()) {
-		body["input-filter-unknown"] = plan.InputFilterUnknown.ValueString()
+		body["input.filter-unknown"] = plan.InputFilterUnknown.ValueString()
 	}
 	if !(plan.Instance.IsNull() || plan.Instance.IsUnknown()) {
 		body["instance"] = plan.Instance.ValueString()
-	}
-	if !(plan.KeepSentAttributes.IsNull() || plan.KeepSentAttributes.IsUnknown()) {
-		body["keep-sent-attributes"] = plan.KeepSentAttributes.ValueString()
 	}
 	if !(plan.KeepaliveTime.IsNull() || plan.KeepaliveTime.IsUnknown()) {
 		body["keepalive-time"] = plan.KeepaliveTime.ValueString()
@@ -489,13 +585,13 @@ func (r *RoutingBGPConnectionResource) Create(ctx context.Context, req resource.
 		body["listen"] = plan.Listen.ValueString()
 	}
 	if !(plan.LocalAddress.IsNull() || plan.LocalAddress.IsUnknown()) {
-		body["local-address"] = plan.LocalAddress.ValueString()
+		body["local.address"] = plan.LocalAddress.ValueString()
 	}
 	if !(plan.LocalPort.IsNull() || plan.LocalPort.IsUnknown()) {
-		body["local-port"] = plan.LocalPort.ValueString()
+		body["local.port"] = plan.LocalPort.ValueString()
 	}
 	if !(plan.LocalRole.IsNull() || plan.LocalRole.IsUnknown()) {
-		body["local-role"] = plan.LocalRole.ValueString()
+		body["local.role"] = plan.LocalRole.ValueString()
 	}
 	if !(plan.Multihop.IsNull() || plan.Multihop.IsUnknown()) {
 		body["multihop"] = plan.Multihop.ValueString()
@@ -503,71 +599,107 @@ func (r *RoutingBGPConnectionResource) Create(ctx context.Context, req resource.
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !(plan.NetworkBlackhole.IsNull() || plan.NetworkBlackhole.IsUnknown()) {
-		body["network-blackhole"] = plan.NetworkBlackhole.ValueString()
-	}
 	if !(plan.NexthopChoice.IsNull() || plan.NexthopChoice.IsUnknown()) {
 		body["nexthop-choice"] = plan.NexthopChoice.ValueString()
 	}
-	if !(plan.NoClientToClientReflection.IsNull() || plan.NoClientToClientReflection.IsUnknown()) {
-		body["no-client-to-client-reflection"] = plan.NoClientToClientReflection.ValueString()
-	}
-	if !(plan.NoEarlyCut.IsNull() || plan.NoEarlyCut.IsUnknown()) {
-		body["no-early-cut"] = plan.NoEarlyCut.ValueString()
-	}
 	if !(plan.OutputAffinity.IsNull() || plan.OutputAffinity.IsUnknown()) {
-		body["output-affinity"] = plan.OutputAffinity.ValueString()
-	}
-	if !(plan.OutputFilter.IsNull() || plan.OutputFilter.IsUnknown()) {
-		body["output-filter"] = plan.OutputFilter.ValueString()
+		body["output.affinity"] = plan.OutputAffinity.ValueString()
 	}
 	if !(plan.OutputNetwork.IsNull() || plan.OutputNetwork.IsUnknown()) {
-		body["output-network"] = plan.OutputNetwork.ValueString()
+		body["output.network"] = plan.OutputNetwork.ValueString()
 	}
 	if !(plan.OutputRedistribute.IsNull() || plan.OutputRedistribute.IsUnknown()) {
-		body["output-redistribute"] = plan.OutputRedistribute.ValueString()
-	}
-	if !(plan.OutputSelectionPolicy.IsNull() || plan.OutputSelectionPolicy.IsUnknown()) {
-		body["output-selection-policy"] = plan.OutputSelectionPolicy.ValueString()
+		body["output.redistribute"] = plan.OutputRedistribute.ValueString()
 	}
 	if !(plan.RemoteAddress.IsNull() || plan.RemoteAddress.IsUnknown()) {
-		body["remote-address"] = plan.RemoteAddress.ValueString()
-	}
-	if !(plan.RemoteAllowAs.IsNull() || plan.RemoteAllowAs.IsUnknown()) {
-		body["remote-allow-as"] = plan.RemoteAllowAs.ValueString()
+		body["remote.address"] = plan.RemoteAddress.ValueString()
 	}
 	if !(plan.RemoteAs.IsNull() || plan.RemoteAs.IsUnknown()) {
-		body["remote-as"] = plan.RemoteAs.ValueString()
+		body["remote.as"] = plan.RemoteAs.ValueString()
 	}
 	if !(plan.RemotePort.IsNull() || plan.RemotePort.IsUnknown()) {
-		body["remote-port"] = plan.RemotePort.ValueString()
-	}
-	if !(plan.RemovePrivateAs.IsNull() || plan.RemovePrivateAs.IsUnknown()) {
-		body["remove-private-as"] = plan.RemovePrivateAs.ValueString()
-	}
-	if !(plan.RouterID.IsNull() || plan.RouterID.IsUnknown()) {
-		body["router-id"] = plan.RouterID.ValueString()
+		body["remote.port"] = plan.RemotePort.ValueString()
 	}
 	if !(plan.RoutingTable.IsNull() || plan.RoutingTable.IsUnknown()) {
 		body["routing-table"] = plan.RoutingTable.ValueString()
 	}
-	if !(plan.RxMinTtl.IsNull() || plan.RxMinTtl.IsUnknown()) {
-		body["rx-min-ttl"] = plan.RxMinTtl.ValueString()
-	}
 	if !(plan.TCPMd5Key.IsNull() || plan.TCPMd5Key.IsUnknown()) {
 		body["tcp-md5-key"] = plan.TCPMd5Key.ValueString()
-	}
-	if !(plan.Template.IsNull() || plan.Template.IsUnknown()) {
-		body["template"] = plan.Template.ValueString()
-	}
-	if !(plan.TxTtl.IsNull() || plan.TxTtl.IsUnknown()) {
-		body["tx-ttl"] = plan.TxTtl.ValueString()
 	}
 	if !(plan.UseBfd.IsNull() || plan.UseBfd.IsUnknown()) {
 		body["use-bfd"] = plan.UseBfd.ValueString()
 	}
 	if !(plan.Vrf.IsNull() || plan.Vrf.IsUnknown()) {
 		body["vrf"] = plan.Vrf.ValueString()
+	}
+	if !(plan.InputAddPath.IsNull() || plan.InputAddPath.IsUnknown()) {
+		body["input.add-path"] = plan.InputAddPath.ValueString()
+	}
+	if !(plan.InputAllowAs.IsNull() || plan.InputAllowAs.IsUnknown()) {
+		body["input.allow-as"] = plan.InputAllowAs.ValueString()
+	}
+	if !(plan.InputAttrErrorHandling.IsNull() || plan.InputAttrErrorHandling.IsUnknown()) {
+		body["input.attr-error-handling"] = plan.InputAttrErrorHandling.ValueString()
+	}
+	if !(plan.InputFilterNlri.IsNull() || plan.InputFilterNlri.IsUnknown()) {
+		body["input.filter-nlri"] = plan.InputFilterNlri.ValueString()
+	}
+	if !(plan.InputLimitProcessRoutesIpv4.IsNull() || plan.InputLimitProcessRoutesIpv4.IsUnknown()) {
+		body["input.limit-process-routes-ipv4"] = plan.InputLimitProcessRoutesIpv4.ValueString()
+	}
+	if !(plan.InputLimitProcessRoutesIpv6.IsNull() || plan.InputLimitProcessRoutesIpv6.IsUnknown()) {
+		body["input.limit-process-routes-ipv6"] = plan.InputLimitProcessRoutesIpv6.ValueString()
+	}
+	if !(plan.LocalTtl.IsNull() || plan.LocalTtl.IsUnknown()) {
+		body["local.ttl"] = plan.LocalTtl.ValueString()
+	}
+	if !(plan.OutputAddPath.IsNull() || plan.OutputAddPath.IsUnknown()) {
+		body["output.add-path"] = plan.OutputAddPath.ValueString()
+	}
+	if !(plan.OutputAsOverride.IsNull() || plan.OutputAsOverride.IsUnknown()) {
+		body["output.as-override"] = plan.OutputAsOverride.ValueString()
+	}
+	if !(plan.OutputDefaultOriginate.IsNull() || plan.OutputDefaultOriginate.IsUnknown()) {
+		body["output.default-originate"] = plan.OutputDefaultOriginate.ValueString()
+	}
+	if !(plan.OutputDefaultPrepend.IsNull() || plan.OutputDefaultPrepend.IsUnknown()) {
+		body["output.default-prepend"] = plan.OutputDefaultPrepend.ValueString()
+	}
+	if !(plan.OutputFilterChain.IsNull() || plan.OutputFilterChain.IsUnknown()) {
+		body["output.filter-chain"] = plan.OutputFilterChain.ValueString()
+	}
+	if !(plan.OutputFilterSelect.IsNull() || plan.OutputFilterSelect.IsUnknown()) {
+		body["output.filter-select"] = plan.OutputFilterSelect.ValueString()
+	}
+	if !(plan.OutputKeepSentAttributes.IsNull() || plan.OutputKeepSentAttributes.IsUnknown()) {
+		body["output.keep-sent-attributes"] = plan.OutputKeepSentAttributes.ValueString()
+	}
+	if !(plan.OutputNetworkBlackhole.IsNull() || plan.OutputNetworkBlackhole.IsUnknown()) {
+		body["output.network-blackhole"] = plan.OutputNetworkBlackhole.ValueString()
+	}
+	if !(plan.OutputNoClientToClientReflection.IsNull() || plan.OutputNoClientToClientReflection.IsUnknown()) {
+		body["output.no-client-to-client-reflection"] = plan.OutputNoClientToClientReflection.ValueString()
+	}
+	if !(plan.OutputNoEarlyCut.IsNull() || plan.OutputNoEarlyCut.IsUnknown()) {
+		body["output.no-early-cut"] = plan.OutputNoEarlyCut.ValueString()
+	}
+	if !(plan.OutputRemovePrivateAs.IsNull() || plan.OutputRemovePrivateAs.IsUnknown()) {
+		body["output.remove-private-as"] = plan.OutputRemovePrivateAs.ValueString()
+	}
+	if !(plan.RemoteAllowedAs.IsNull() || plan.RemoteAllowedAs.IsUnknown()) {
+		body["remote.allowed-as"] = plan.RemoteAllowedAs.ValueString()
+	}
+	if !(plan.RemoteTtl.IsNull() || plan.RemoteTtl.IsUnknown()) {
+		body["remote.ttl"] = plan.RemoteTtl.ValueString()
+	}
+	if !(plan.CiscoVplsNlriLenFmt.IsNull() || plan.CiscoVplsNlriLenFmt.IsUnknown()) {
+		body["cisco-vpls-nlri-len-fmt"] = plan.CiscoVplsNlriLenFmt.ValueString()
+	}
+	if !(plan.SaveTo.IsNull() || plan.SaveTo.IsUnknown()) {
+		body["save-to"] = plan.SaveTo.ValueString()
+	}
+	if !(plan.Templates.IsNull() || plan.Templates.IsUnknown()) {
+		body["templates"] = plan.Templates.ValueString()
 	}
 	obj, err := c.Add(ctx, "/routing/bgp/connection", body)
 	if err != nil {
@@ -619,17 +751,8 @@ func (r *RoutingBGPConnectionResource) Update(ctx context.Context, req resource.
 	if !plan.Afi.Equal(state.Afi) {
 		body["afi"] = plan.Afi.ValueString()
 	}
-	if !plan.AllowAsIn.Equal(state.AllowAsIn) {
-		body["allow-as-in"] = plan.AllowAsIn.ValueString()
-	}
 	if !plan.As.Equal(state.As) {
 		body["as"] = plan.As.ValueString()
-	}
-	if !plan.AsOverride.Equal(state.AsOverride) {
-		body["as-override"] = plan.AsOverride.ValueString()
-	}
-	if !plan.CiscoVplsNlriLengthFormat.Equal(state.CiscoVplsNlriLengthFormat) {
-		body["cisco-vpls-nlri-length-format"] = plan.CiscoVplsNlriLengthFormat.ValueString()
 	}
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
@@ -637,56 +760,44 @@ func (r *RoutingBGPConnectionResource) Update(ctx context.Context, req resource.
 	if !plan.Connect.Equal(state.Connect) {
 		body["connect"] = plan.Connect.ValueString()
 	}
-	if !plan.DefaultOriginate.Equal(state.DefaultOriginate) {
-		body["default-originate"] = plan.DefaultOriginate.ValueString()
-	}
-	if !plan.DefaultPrepend.Equal(state.DefaultPrepend) {
-		body["default-prepend"] = plan.DefaultPrepend.ValueString()
-	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
 	if !plan.HoldTime.Equal(state.HoldTime) {
 		body["hold-time"] = plan.HoldTime.ValueString()
 	}
-	if !plan.IgnoreAsPathLength.Equal(state.IgnoreAsPathLength) {
-		body["ignore-as-path-length"] = plan.IgnoreAsPathLength.ValueString()
-	}
 	if !plan.InputAcceptCommunities.Equal(state.InputAcceptCommunities) {
-		body["input-accept-communities"] = plan.InputAcceptCommunities.ValueString()
+		body["input.accept-communities"] = plan.InputAcceptCommunities.ValueString()
 	}
 	if !plan.InputAcceptExtCommunities.Equal(state.InputAcceptExtCommunities) {
-		body["input-accept-ext-communities"] = plan.InputAcceptExtCommunities.ValueString()
+		body["input.accept-ext-communities"] = plan.InputAcceptExtCommunities.ValueString()
 	}
 	if !plan.InputAcceptLargeCommunities.Equal(state.InputAcceptLargeCommunities) {
-		body["input-accept-large-communities"] = plan.InputAcceptLargeCommunities.ValueString()
+		body["input.accept-large-communities"] = plan.InputAcceptLargeCommunities.ValueString()
 	}
 	if !plan.InputAcceptNlri.Equal(state.InputAcceptNlri) {
-		body["input-accept-nlri"] = plan.InputAcceptNlri.ValueString()
+		body["input.accept-nlri"] = plan.InputAcceptNlri.ValueString()
 	}
 	if !plan.InputAffinity.Equal(state.InputAffinity) {
-		body["input-affinity"] = plan.InputAffinity.ValueString()
+		body["input.affinity"] = plan.InputAffinity.ValueString()
 	}
 	if !plan.InputFilter.Equal(state.InputFilter) {
-		body["input-filter"] = plan.InputFilter.ValueString()
+		body["input.filter"] = plan.InputFilter.ValueString()
 	}
 	if !plan.InputFilterCommunities.Equal(state.InputFilterCommunities) {
-		body["input-filter-communities"] = plan.InputFilterCommunities.ValueString()
+		body["input.filter-communities"] = plan.InputFilterCommunities.ValueString()
 	}
 	if !plan.InputFilterExtCommunities.Equal(state.InputFilterExtCommunities) {
-		body["input-filter-ext-communities"] = plan.InputFilterExtCommunities.ValueString()
+		body["input.filter-ext-communities"] = plan.InputFilterExtCommunities.ValueString()
 	}
 	if !plan.InputFilterLargeCommunities.Equal(state.InputFilterLargeCommunities) {
-		body["input-filter-large-communities"] = plan.InputFilterLargeCommunities.ValueString()
+		body["input.filter-large-communities"] = plan.InputFilterLargeCommunities.ValueString()
 	}
 	if !plan.InputFilterUnknown.Equal(state.InputFilterUnknown) {
-		body["input-filter-unknown"] = plan.InputFilterUnknown.ValueString()
+		body["input.filter-unknown"] = plan.InputFilterUnknown.ValueString()
 	}
 	if !plan.Instance.Equal(state.Instance) {
 		body["instance"] = plan.Instance.ValueString()
-	}
-	if !plan.KeepSentAttributes.Equal(state.KeepSentAttributes) {
-		body["keep-sent-attributes"] = plan.KeepSentAttributes.ValueString()
 	}
 	if !plan.KeepaliveTime.Equal(state.KeepaliveTime) {
 		body["keepalive-time"] = plan.KeepaliveTime.ValueString()
@@ -695,13 +806,13 @@ func (r *RoutingBGPConnectionResource) Update(ctx context.Context, req resource.
 		body["listen"] = plan.Listen.ValueString()
 	}
 	if !plan.LocalAddress.Equal(state.LocalAddress) {
-		body["local-address"] = plan.LocalAddress.ValueString()
+		body["local.address"] = plan.LocalAddress.ValueString()
 	}
 	if !plan.LocalPort.Equal(state.LocalPort) {
-		body["local-port"] = plan.LocalPort.ValueString()
+		body["local.port"] = plan.LocalPort.ValueString()
 	}
 	if !plan.LocalRole.Equal(state.LocalRole) {
-		body["local-role"] = plan.LocalRole.ValueString()
+		body["local.role"] = plan.LocalRole.ValueString()
 	}
 	if !plan.Multihop.Equal(state.Multihop) {
 		body["multihop"] = plan.Multihop.ValueString()
@@ -709,71 +820,107 @@ func (r *RoutingBGPConnectionResource) Update(ctx context.Context, req resource.
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.NetworkBlackhole.Equal(state.NetworkBlackhole) {
-		body["network-blackhole"] = plan.NetworkBlackhole.ValueString()
-	}
 	if !plan.NexthopChoice.Equal(state.NexthopChoice) {
 		body["nexthop-choice"] = plan.NexthopChoice.ValueString()
 	}
-	if !plan.NoClientToClientReflection.Equal(state.NoClientToClientReflection) {
-		body["no-client-to-client-reflection"] = plan.NoClientToClientReflection.ValueString()
-	}
-	if !plan.NoEarlyCut.Equal(state.NoEarlyCut) {
-		body["no-early-cut"] = plan.NoEarlyCut.ValueString()
-	}
 	if !plan.OutputAffinity.Equal(state.OutputAffinity) {
-		body["output-affinity"] = plan.OutputAffinity.ValueString()
-	}
-	if !plan.OutputFilter.Equal(state.OutputFilter) {
-		body["output-filter"] = plan.OutputFilter.ValueString()
+		body["output.affinity"] = plan.OutputAffinity.ValueString()
 	}
 	if !plan.OutputNetwork.Equal(state.OutputNetwork) {
-		body["output-network"] = plan.OutputNetwork.ValueString()
+		body["output.network"] = plan.OutputNetwork.ValueString()
 	}
 	if !plan.OutputRedistribute.Equal(state.OutputRedistribute) {
-		body["output-redistribute"] = plan.OutputRedistribute.ValueString()
-	}
-	if !plan.OutputSelectionPolicy.Equal(state.OutputSelectionPolicy) {
-		body["output-selection-policy"] = plan.OutputSelectionPolicy.ValueString()
+		body["output.redistribute"] = plan.OutputRedistribute.ValueString()
 	}
 	if !plan.RemoteAddress.Equal(state.RemoteAddress) {
-		body["remote-address"] = plan.RemoteAddress.ValueString()
-	}
-	if !plan.RemoteAllowAs.Equal(state.RemoteAllowAs) {
-		body["remote-allow-as"] = plan.RemoteAllowAs.ValueString()
+		body["remote.address"] = plan.RemoteAddress.ValueString()
 	}
 	if !plan.RemoteAs.Equal(state.RemoteAs) {
-		body["remote-as"] = plan.RemoteAs.ValueString()
+		body["remote.as"] = plan.RemoteAs.ValueString()
 	}
 	if !plan.RemotePort.Equal(state.RemotePort) {
-		body["remote-port"] = plan.RemotePort.ValueString()
-	}
-	if !plan.RemovePrivateAs.Equal(state.RemovePrivateAs) {
-		body["remove-private-as"] = plan.RemovePrivateAs.ValueString()
-	}
-	if !plan.RouterID.Equal(state.RouterID) {
-		body["router-id"] = plan.RouterID.ValueString()
+		body["remote.port"] = plan.RemotePort.ValueString()
 	}
 	if !plan.RoutingTable.Equal(state.RoutingTable) {
 		body["routing-table"] = plan.RoutingTable.ValueString()
 	}
-	if !plan.RxMinTtl.Equal(state.RxMinTtl) {
-		body["rx-min-ttl"] = plan.RxMinTtl.ValueString()
-	}
 	if !plan.TCPMd5Key.Equal(state.TCPMd5Key) {
 		body["tcp-md5-key"] = plan.TCPMd5Key.ValueString()
-	}
-	if !plan.Template.Equal(state.Template) {
-		body["template"] = plan.Template.ValueString()
-	}
-	if !plan.TxTtl.Equal(state.TxTtl) {
-		body["tx-ttl"] = plan.TxTtl.ValueString()
 	}
 	if !plan.UseBfd.Equal(state.UseBfd) {
 		body["use-bfd"] = plan.UseBfd.ValueString()
 	}
 	if !plan.Vrf.Equal(state.Vrf) {
 		body["vrf"] = plan.Vrf.ValueString()
+	}
+	if !plan.InputAddPath.Equal(state.InputAddPath) && !plan.InputAddPath.IsUnknown() {
+		body["input.add-path"] = plan.InputAddPath.ValueString()
+	}
+	if !plan.InputAllowAs.Equal(state.InputAllowAs) && !plan.InputAllowAs.IsUnknown() {
+		body["input.allow-as"] = plan.InputAllowAs.ValueString()
+	}
+	if !plan.InputAttrErrorHandling.Equal(state.InputAttrErrorHandling) && !plan.InputAttrErrorHandling.IsUnknown() {
+		body["input.attr-error-handling"] = plan.InputAttrErrorHandling.ValueString()
+	}
+	if !plan.InputFilterNlri.Equal(state.InputFilterNlri) && !plan.InputFilterNlri.IsUnknown() {
+		body["input.filter-nlri"] = plan.InputFilterNlri.ValueString()
+	}
+	if !plan.InputLimitProcessRoutesIpv4.Equal(state.InputLimitProcessRoutesIpv4) && !plan.InputLimitProcessRoutesIpv4.IsUnknown() {
+		body["input.limit-process-routes-ipv4"] = plan.InputLimitProcessRoutesIpv4.ValueString()
+	}
+	if !plan.InputLimitProcessRoutesIpv6.Equal(state.InputLimitProcessRoutesIpv6) && !plan.InputLimitProcessRoutesIpv6.IsUnknown() {
+		body["input.limit-process-routes-ipv6"] = plan.InputLimitProcessRoutesIpv6.ValueString()
+	}
+	if !plan.LocalTtl.Equal(state.LocalTtl) && !plan.LocalTtl.IsUnknown() {
+		body["local.ttl"] = plan.LocalTtl.ValueString()
+	}
+	if !plan.OutputAddPath.Equal(state.OutputAddPath) && !plan.OutputAddPath.IsUnknown() {
+		body["output.add-path"] = plan.OutputAddPath.ValueString()
+	}
+	if !plan.OutputAsOverride.Equal(state.OutputAsOverride) && !plan.OutputAsOverride.IsUnknown() {
+		body["output.as-override"] = plan.OutputAsOverride.ValueString()
+	}
+	if !plan.OutputDefaultOriginate.Equal(state.OutputDefaultOriginate) && !plan.OutputDefaultOriginate.IsUnknown() {
+		body["output.default-originate"] = plan.OutputDefaultOriginate.ValueString()
+	}
+	if !plan.OutputDefaultPrepend.Equal(state.OutputDefaultPrepend) && !plan.OutputDefaultPrepend.IsUnknown() {
+		body["output.default-prepend"] = plan.OutputDefaultPrepend.ValueString()
+	}
+	if !plan.OutputFilterChain.Equal(state.OutputFilterChain) && !plan.OutputFilterChain.IsUnknown() {
+		body["output.filter-chain"] = plan.OutputFilterChain.ValueString()
+	}
+	if !plan.OutputFilterSelect.Equal(state.OutputFilterSelect) && !plan.OutputFilterSelect.IsUnknown() {
+		body["output.filter-select"] = plan.OutputFilterSelect.ValueString()
+	}
+	if !plan.OutputKeepSentAttributes.Equal(state.OutputKeepSentAttributes) && !plan.OutputKeepSentAttributes.IsUnknown() {
+		body["output.keep-sent-attributes"] = plan.OutputKeepSentAttributes.ValueString()
+	}
+	if !plan.OutputNetworkBlackhole.Equal(state.OutputNetworkBlackhole) && !plan.OutputNetworkBlackhole.IsUnknown() {
+		body["output.network-blackhole"] = plan.OutputNetworkBlackhole.ValueString()
+	}
+	if !plan.OutputNoClientToClientReflection.Equal(state.OutputNoClientToClientReflection) && !plan.OutputNoClientToClientReflection.IsUnknown() {
+		body["output.no-client-to-client-reflection"] = plan.OutputNoClientToClientReflection.ValueString()
+	}
+	if !plan.OutputNoEarlyCut.Equal(state.OutputNoEarlyCut) && !plan.OutputNoEarlyCut.IsUnknown() {
+		body["output.no-early-cut"] = plan.OutputNoEarlyCut.ValueString()
+	}
+	if !plan.OutputRemovePrivateAs.Equal(state.OutputRemovePrivateAs) && !plan.OutputRemovePrivateAs.IsUnknown() {
+		body["output.remove-private-as"] = plan.OutputRemovePrivateAs.ValueString()
+	}
+	if !plan.RemoteAllowedAs.Equal(state.RemoteAllowedAs) && !plan.RemoteAllowedAs.IsUnknown() {
+		body["remote.allowed-as"] = plan.RemoteAllowedAs.ValueString()
+	}
+	if !plan.RemoteTtl.Equal(state.RemoteTtl) && !plan.RemoteTtl.IsUnknown() {
+		body["remote.ttl"] = plan.RemoteTtl.ValueString()
+	}
+	if !plan.CiscoVplsNlriLenFmt.Equal(state.CiscoVplsNlriLenFmt) && !plan.CiscoVplsNlriLenFmt.IsUnknown() {
+		body["cisco-vpls-nlri-len-fmt"] = plan.CiscoVplsNlriLenFmt.ValueString()
+	}
+	if !plan.SaveTo.Equal(state.SaveTo) && !plan.SaveTo.IsUnknown() {
+		body["save-to"] = plan.SaveTo.ValueString()
+	}
+	if !plan.Templates.Equal(state.Templates) && !plan.Templates.IsUnknown() {
+		body["templates"] = plan.Templates.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/routing/bgp/connection", state.ID.ValueString(), body)
@@ -841,6 +988,121 @@ func routingBGPConnectionLookupByNaturalKey(ctx context.Context, c *client.Clien
 func routingBGPConnectionApply(ctx context.Context, obj client.Object, m *RoutingBGPConnectionModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["templates"]; ok && v != "" {
+		m.Templates = types.StringValue(v)
+	} else {
+		m.Templates = types.StringNull()
+	}
+	if v, ok := obj["save-to"]; ok && v != "" {
+		m.SaveTo = types.StringValue(v)
+	} else {
+		m.SaveTo = types.StringNull()
+	}
+	if v, ok := obj["cisco-vpls-nlri-len-fmt"]; ok && v != "" {
+		m.CiscoVplsNlriLenFmt = types.StringValue(v)
+	} else {
+		m.CiscoVplsNlriLenFmt = types.StringNull()
+	}
+	if v, ok := obj["remote.ttl"]; ok && v != "" {
+		m.RemoteTtl = types.StringValue(v)
+	} else {
+		m.RemoteTtl = types.StringNull()
+	}
+	if v, ok := obj["remote.allowed-as"]; ok && v != "" {
+		m.RemoteAllowedAs = types.StringValue(v)
+	} else {
+		m.RemoteAllowedAs = types.StringNull()
+	}
+	if v, ok := obj["output.remove-private-as"]; ok && v != "" {
+		m.OutputRemovePrivateAs = types.StringValue(v)
+	} else {
+		m.OutputRemovePrivateAs = types.StringNull()
+	}
+	if v, ok := obj["output.no-early-cut"]; ok && v != "" {
+		m.OutputNoEarlyCut = types.StringValue(v)
+	} else {
+		m.OutputNoEarlyCut = types.StringNull()
+	}
+	if v, ok := obj["output.no-client-to-client-reflection"]; ok && v != "" {
+		m.OutputNoClientToClientReflection = types.StringValue(v)
+	} else {
+		m.OutputNoClientToClientReflection = types.StringNull()
+	}
+	if v, ok := obj["output.network-blackhole"]; ok && v != "" {
+		m.OutputNetworkBlackhole = types.StringValue(v)
+	} else {
+		m.OutputNetworkBlackhole = types.StringNull()
+	}
+	if v, ok := obj["output.keep-sent-attributes"]; ok && v != "" {
+		m.OutputKeepSentAttributes = types.StringValue(v)
+	} else {
+		m.OutputKeepSentAttributes = types.StringNull()
+	}
+	if v, ok := obj["output.filter-select"]; ok && v != "" {
+		m.OutputFilterSelect = types.StringValue(v)
+	} else {
+		m.OutputFilterSelect = types.StringNull()
+	}
+	if v, ok := obj["output.filter-chain"]; ok && v != "" {
+		m.OutputFilterChain = types.StringValue(v)
+	} else {
+		m.OutputFilterChain = types.StringNull()
+	}
+	if v, ok := obj["output.default-prepend"]; ok && v != "" {
+		m.OutputDefaultPrepend = types.StringValue(v)
+	} else {
+		m.OutputDefaultPrepend = types.StringNull()
+	}
+	if v, ok := obj["output.default-originate"]; ok && v != "" {
+		m.OutputDefaultOriginate = types.StringValue(v)
+	} else {
+		m.OutputDefaultOriginate = types.StringNull()
+	}
+	if v, ok := obj["output.as-override"]; ok && v != "" {
+		m.OutputAsOverride = types.StringValue(v)
+	} else {
+		m.OutputAsOverride = types.StringNull()
+	}
+	if v, ok := obj["output.add-path"]; ok && v != "" {
+		m.OutputAddPath = types.StringValue(v)
+	} else {
+		m.OutputAddPath = types.StringNull()
+	}
+	if v, ok := obj["local.ttl"]; ok && v != "" {
+		m.LocalTtl = types.StringValue(v)
+	} else {
+		m.LocalTtl = types.StringNull()
+	}
+	if v, ok := obj["input.limit-process-routes-ipv6"]; ok && v != "" {
+		m.InputLimitProcessRoutesIpv6 = types.StringValue(v)
+	} else {
+		m.InputLimitProcessRoutesIpv6 = types.StringNull()
+	}
+	if v, ok := obj["input.limit-process-routes-ipv4"]; ok && v != "" {
+		m.InputLimitProcessRoutesIpv4 = types.StringValue(v)
+	} else {
+		m.InputLimitProcessRoutesIpv4 = types.StringNull()
+	}
+	if v, ok := obj["input.filter-nlri"]; ok && v != "" {
+		m.InputFilterNlri = types.StringValue(v)
+	} else {
+		m.InputFilterNlri = types.StringNull()
+	}
+	if v, ok := obj["input.attr-error-handling"]; ok && v != "" {
+		m.InputAttrErrorHandling = types.StringValue(v)
+	} else {
+		m.InputAttrErrorHandling = types.StringNull()
+	}
+	if v, ok := obj["input.allow-as"]; ok && v != "" {
+		m.InputAllowAs = types.StringValue(v)
+	} else {
+		m.InputAllowAs = types.StringNull()
+	}
+	if v, ok := obj["input.add-path"]; ok && v != "" {
+		m.InputAddPath = types.StringValue(v)
+	} else {
+		m.InputAddPath = types.StringNull()
+	}
 	if v, ok := obj["afi"]; ok {
 		_ = v
 		if v != "" {
@@ -971,7 +1233,7 @@ func routingBGPConnectionApply(ctx context.Context, obj client.Object, m *Routin
 	} else {
 		m.IgnoreAsPathLength = types.StringNull()
 	}
-	if v, ok := obj["input-accept-communities"]; ok {
+	if v, ok := obj["input.accept-communities"]; ok {
 		_ = v
 		if v != "" {
 			m.InputAcceptCommunities = types.StringValue(v)
@@ -981,7 +1243,7 @@ func routingBGPConnectionApply(ctx context.Context, obj client.Object, m *Routin
 	} else {
 		m.InputAcceptCommunities = types.StringNull()
 	}
-	if v, ok := obj["input-accept-ext-communities"]; ok {
+	if v, ok := obj["input.accept-ext-communities"]; ok {
 		_ = v
 		if v != "" {
 			m.InputAcceptExtCommunities = types.StringValue(v)
@@ -991,7 +1253,7 @@ func routingBGPConnectionApply(ctx context.Context, obj client.Object, m *Routin
 	} else {
 		m.InputAcceptExtCommunities = types.StringNull()
 	}
-	if v, ok := obj["input-accept-large-communities"]; ok {
+	if v, ok := obj["input.accept-large-communities"]; ok {
 		_ = v
 		if v != "" {
 			m.InputAcceptLargeCommunities = types.StringValue(v)
@@ -1001,7 +1263,7 @@ func routingBGPConnectionApply(ctx context.Context, obj client.Object, m *Routin
 	} else {
 		m.InputAcceptLargeCommunities = types.StringNull()
 	}
-	if v, ok := obj["input-accept-nlri"]; ok {
+	if v, ok := obj["input.accept-nlri"]; ok {
 		_ = v
 		if v != "" {
 			m.InputAcceptNlri = types.StringValue(v)
@@ -1011,7 +1273,7 @@ func routingBGPConnectionApply(ctx context.Context, obj client.Object, m *Routin
 	} else {
 		m.InputAcceptNlri = types.StringNull()
 	}
-	if v, ok := obj["input-affinity"]; ok {
+	if v, ok := obj["input.affinity"]; ok {
 		_ = v
 		if v != "" {
 			m.InputAffinity = types.StringValue(v)
@@ -1021,7 +1283,7 @@ func routingBGPConnectionApply(ctx context.Context, obj client.Object, m *Routin
 	} else {
 		m.InputAffinity = types.StringNull()
 	}
-	if v, ok := obj["input-filter"]; ok {
+	if v, ok := obj["input.filter"]; ok {
 		_ = v
 		if v != "" {
 			m.InputFilter = types.StringValue(v)
@@ -1031,7 +1293,7 @@ func routingBGPConnectionApply(ctx context.Context, obj client.Object, m *Routin
 	} else {
 		m.InputFilter = types.StringNull()
 	}
-	if v, ok := obj["input-filter-communities"]; ok {
+	if v, ok := obj["input.filter-communities"]; ok {
 		_ = v
 		if v != "" {
 			m.InputFilterCommunities = types.StringValue(v)
@@ -1041,7 +1303,7 @@ func routingBGPConnectionApply(ctx context.Context, obj client.Object, m *Routin
 	} else {
 		m.InputFilterCommunities = types.StringNull()
 	}
-	if v, ok := obj["input-filter-ext-communities"]; ok {
+	if v, ok := obj["input.filter-ext-communities"]; ok {
 		_ = v
 		if v != "" {
 			m.InputFilterExtCommunities = types.StringValue(v)
@@ -1051,7 +1313,7 @@ func routingBGPConnectionApply(ctx context.Context, obj client.Object, m *Routin
 	} else {
 		m.InputFilterExtCommunities = types.StringNull()
 	}
-	if v, ok := obj["input-filter-large-communities"]; ok {
+	if v, ok := obj["input.filter-large-communities"]; ok {
 		_ = v
 		if v != "" {
 			m.InputFilterLargeCommunities = types.StringValue(v)
@@ -1061,7 +1323,7 @@ func routingBGPConnectionApply(ctx context.Context, obj client.Object, m *Routin
 	} else {
 		m.InputFilterLargeCommunities = types.StringNull()
 	}
-	if v, ok := obj["input-filter-unknown"]; ok {
+	if v, ok := obj["input.filter-unknown"]; ok {
 		_ = v
 		if v != "" {
 			m.InputFilterUnknown = types.StringValue(v)
@@ -1121,7 +1383,7 @@ func routingBGPConnectionApply(ctx context.Context, obj client.Object, m *Routin
 	} else {
 		m.Listen = types.StringNull()
 	}
-	if v, ok := obj["local-address"]; ok {
+	if v, ok := obj["local.address"]; ok {
 		_ = v
 		if v != "" {
 			m.LocalAddress = types.StringValue(v)
@@ -1131,7 +1393,7 @@ func routingBGPConnectionApply(ctx context.Context, obj client.Object, m *Routin
 	} else {
 		m.LocalAddress = types.StringNull()
 	}
-	if v, ok := obj["local-port"]; ok {
+	if v, ok := obj["local.port"]; ok {
 		_ = v
 		if v != "" {
 			m.LocalPort = types.StringValue(v)
@@ -1141,7 +1403,7 @@ func routingBGPConnectionApply(ctx context.Context, obj client.Object, m *Routin
 	} else {
 		m.LocalPort = types.StringNull()
 	}
-	if v, ok := obj["local-role"]; ok {
+	if v, ok := obj["local.role"]; ok {
 		_ = v
 		if v != "" {
 			m.LocalRole = types.StringValue(v)
@@ -1211,7 +1473,7 @@ func routingBGPConnectionApply(ctx context.Context, obj client.Object, m *Routin
 	} else {
 		m.NoEarlyCut = types.StringNull()
 	}
-	if v, ok := obj["output-affinity"]; ok {
+	if v, ok := obj["output.affinity"]; ok {
 		_ = v
 		if v != "" {
 			m.OutputAffinity = types.StringValue(v)
@@ -1231,7 +1493,7 @@ func routingBGPConnectionApply(ctx context.Context, obj client.Object, m *Routin
 	} else {
 		m.OutputFilter = types.StringNull()
 	}
-	if v, ok := obj["output-network"]; ok {
+	if v, ok := obj["output.network"]; ok {
 		_ = v
 		if v != "" {
 			m.OutputNetwork = types.StringValue(v)
@@ -1241,7 +1503,7 @@ func routingBGPConnectionApply(ctx context.Context, obj client.Object, m *Routin
 	} else {
 		m.OutputNetwork = types.StringNull()
 	}
-	if v, ok := obj["output-redistribute"]; ok {
+	if v, ok := obj["output.redistribute"]; ok {
 		_ = v
 		if v != "" {
 			m.OutputRedistribute = types.StringValue(v)
@@ -1261,7 +1523,7 @@ func routingBGPConnectionApply(ctx context.Context, obj client.Object, m *Routin
 	} else {
 		m.OutputSelectionPolicy = types.StringNull()
 	}
-	if v, ok := obj["remote-address"]; ok {
+	if v, ok := obj["remote.address"]; ok {
 		_ = v
 		if v != "" {
 			m.RemoteAddress = types.StringValue(v)
@@ -1281,7 +1543,7 @@ func routingBGPConnectionApply(ctx context.Context, obj client.Object, m *Routin
 	} else {
 		m.RemoteAllowAs = types.StringNull()
 	}
-	if v, ok := obj["remote-as"]; ok {
+	if v, ok := obj["remote.as"]; ok {
 		_ = v
 		if v != "" {
 			m.RemoteAs = types.StringValue(v)
@@ -1291,7 +1553,7 @@ func routingBGPConnectionApply(ctx context.Context, obj client.Object, m *Routin
 	} else {
 		m.RemoteAs = types.StringNull()
 	}
-	if v, ok := obj["remote-port"]; ok {
+	if v, ok := obj["remote.port"]; ok {
 		_ = v
 		if v != "" {
 			m.RemotePort = types.StringValue(v)

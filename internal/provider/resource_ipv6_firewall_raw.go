@@ -30,6 +30,9 @@ type IPV6FirewallRawResource struct {
 
 type IPV6FirewallRawModel struct {
 	ID                      types.String `tfsdk:"id"`
+	Tos                     types.String `tfsdk:"tos"`
+	HopLimit                types.String `tfsdk:"hop_limit"`
+	Headers                 types.String `tfsdk:"headers"`
 	Action                  types.String `tfsdk:"action"`
 	AddressList             types.String `tfsdk:"address_list"`
 	AddressListTimeout      types.String `tfsdk:"address_list_timeout"`
@@ -93,7 +96,6 @@ func (r *IPV6FirewallRawResource) Configure(_ context.Context, req resource.Conf
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPV6FirewallRawResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -104,6 +106,21 @@ func (r *IPV6FirewallRawResource) Schema(_ context.Context, _ resource.SchemaReq
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"tos": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `tos`.",
+			},
+			"hop_limit": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `hop-limit`.",
+			},
+			"headers": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `headers`.",
 			},
 			"action": schema.StringAttribute{
 				Required:    true,
@@ -497,6 +514,15 @@ func (r *IPV6FirewallRawResource) Create(ctx context.Context, req resource.Creat
 	if !(plan.TLSHost.IsNull() || plan.TLSHost.IsUnknown()) {
 		body["tls-host"] = plan.TLSHost.ValueString()
 	}
+	if !(plan.Headers.IsNull() || plan.Headers.IsUnknown()) {
+		body["headers"] = plan.Headers.ValueString()
+	}
+	if !(plan.HopLimit.IsNull() || plan.HopLimit.IsUnknown()) {
+		body["hop-limit"] = plan.HopLimit.ValueString()
+	}
+	if !(plan.Tos.IsNull() || plan.Tos.IsUnknown()) {
+		body["tos"] = plan.Tos.ValueString()
+	}
 	obj, err := c.Add(ctx, "/ipv6/firewall/raw", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /ipv6/firewall/raw failed", err.Error())
@@ -702,6 +728,15 @@ func (r *IPV6FirewallRawResource) Update(ctx context.Context, req resource.Updat
 	if !plan.TLSHost.Equal(state.TLSHost) {
 		body["tls-host"] = plan.TLSHost.ValueString()
 	}
+	if !plan.Headers.Equal(state.Headers) && !plan.Headers.IsUnknown() {
+		body["headers"] = plan.Headers.ValueString()
+	}
+	if !plan.HopLimit.Equal(state.HopLimit) && !plan.HopLimit.IsUnknown() {
+		body["hop-limit"] = plan.HopLimit.ValueString()
+	}
+	if !plan.Tos.Equal(state.Tos) && !plan.Tos.IsUnknown() {
+		body["tos"] = plan.Tos.ValueString()
+	}
 	// If position OR comment changed, re-encode the marker into the comment
 	// so the device-side prefix stays in sync.
 	if !plan.Comment.Equal(state.Comment) {
@@ -791,6 +826,21 @@ func iPV6FirewallRawLookupByNaturalKey(ctx context.Context, c *client.Client, id
 func iPV6FirewallRawApply(ctx context.Context, obj client.Object, m *IPV6FirewallRawModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["tos"]; ok && v != "" {
+		m.Tos = types.StringValue(v)
+	} else {
+		m.Tos = types.StringNull()
+	}
+	if v, ok := obj["hop-limit"]; ok && v != "" {
+		m.HopLimit = types.StringValue(v)
+	} else {
+		m.HopLimit = types.StringNull()
+	}
+	if v, ok := obj["headers"]; ok && v != "" {
+		m.Headers = types.StringValue(v)
+	} else {
+		m.Headers = types.StringNull()
+	}
 	// Strip the [tf:pos=N] marker from the comment before exposing to state.
 	// Position is TF-state-only metadata; never written to the device. Keep
 	// whatever the user planned. Comment is left untouched.

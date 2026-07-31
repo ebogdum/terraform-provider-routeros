@@ -32,6 +32,7 @@ type IPV6NdPrefixResource struct {
 
 type IPV6NdPrefixModel struct {
 	ID                types.String `tfsdk:"id"`
+	Dhcp6PdPreferred  types.String `tfsdk:"dhcp6_pd_preferred"`
 	X6to4Interface    types.String `tfsdk:"x6to4_interface"`
 	Autonomous        types.Bool   `tfsdk:"autonomous"`
 	Dhcpv6PdPreferred types.Bool   `tfsdk:"dhcpv6_pd_preferred"`
@@ -59,7 +60,6 @@ func (r *IPV6NdPrefixResource) Configure(_ context.Context, req resource.Configu
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPV6NdPrefixResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -70,6 +70,11 @@ func (r *IPV6NdPrefixResource) Schema(_ context.Context, _ resource.SchemaReques
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"dhcp6_pd_preferred": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `dhcp6-pd-preferred`.",
 			},
 			"x6to4_interface": schema.StringAttribute{
 				Optional:    true,
@@ -82,7 +87,6 @@ func (r *IPV6NdPrefixResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description: "",
 			},
 			"dhcpv6_pd_preferred": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -92,7 +96,6 @@ func (r *IPV6NdPrefixResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description: "",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -102,12 +105,10 @@ func (r *IPV6NdPrefixResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description: "",
 			},
 			"invalid": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"no6to4": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -160,17 +161,11 @@ func (r *IPV6NdPrefixResource) Create(ctx context.Context, req resource.CreateRe
 	if !(plan.Autonomous.IsNull() || plan.Autonomous.IsUnknown()) {
 		body["autonomous"] = client.FormatBool(plan.Autonomous.ValueBool())
 	}
-	if !(plan.Dhcpv6PdPreferred.IsNull() || plan.Dhcpv6PdPreferred.IsUnknown()) {
-		body["dhcpv6-pd-preferred"] = client.FormatBool(plan.Dhcpv6PdPreferred.ValueBool())
-	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
 	if !(plan.Interface.IsNull() || plan.Interface.IsUnknown()) {
 		body["interface"] = plan.Interface.ValueString()
-	}
-	if !(plan.No6to4.IsNull() || plan.No6to4.IsUnknown()) {
-		body["no6to4"] = plan.No6to4.ValueString()
 	}
 	if !(plan.OnLink.IsNull() || plan.OnLink.IsUnknown()) {
 		body["on-link"] = client.FormatBool(plan.OnLink.ValueBool())
@@ -183,6 +178,9 @@ func (r *IPV6NdPrefixResource) Create(ctx context.Context, req resource.CreateRe
 	}
 	if !(plan.ValidLifetime.IsNull() || plan.ValidLifetime.IsUnknown()) {
 		body["valid-lifetime"] = plan.ValidLifetime.ValueString()
+	}
+	if !(plan.Dhcp6PdPreferred.IsNull() || plan.Dhcp6PdPreferred.IsUnknown()) {
+		body["dhcp6-pd-preferred"] = plan.Dhcp6PdPreferred.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ipv6/nd/prefix", body)
 	if err != nil {
@@ -237,17 +235,11 @@ func (r *IPV6NdPrefixResource) Update(ctx context.Context, req resource.UpdateRe
 	if !plan.Autonomous.Equal(state.Autonomous) {
 		body["autonomous"] = client.FormatBool(plan.Autonomous.ValueBool())
 	}
-	if !plan.Dhcpv6PdPreferred.Equal(state.Dhcpv6PdPreferred) {
-		body["dhcpv6-pd-preferred"] = client.FormatBool(plan.Dhcpv6PdPreferred.ValueBool())
-	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
 	if !plan.Interface.Equal(state.Interface) {
 		body["interface"] = plan.Interface.ValueString()
-	}
-	if !plan.No6to4.Equal(state.No6to4) {
-		body["no6to4"] = plan.No6to4.ValueString()
 	}
 	if !plan.OnLink.Equal(state.OnLink) {
 		body["on-link"] = client.FormatBool(plan.OnLink.ValueBool())
@@ -260,6 +252,9 @@ func (r *IPV6NdPrefixResource) Update(ctx context.Context, req resource.UpdateRe
 	}
 	if !plan.ValidLifetime.Equal(state.ValidLifetime) {
 		body["valid-lifetime"] = plan.ValidLifetime.ValueString()
+	}
+	if !plan.Dhcp6PdPreferred.Equal(state.Dhcp6PdPreferred) && !plan.Dhcp6PdPreferred.IsUnknown() {
+		body["dhcp6-pd-preferred"] = plan.Dhcp6PdPreferred.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ipv6/nd/prefix", state.ID.ValueString(), body)
@@ -327,6 +322,11 @@ func iPV6NdPrefixLookupByNaturalKey(ctx context.Context, c *client.Client, id st
 func iPV6NdPrefixApply(ctx context.Context, obj client.Object, m *IPV6NdPrefixModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["dhcp6-pd-preferred"]; ok && v != "" {
+		m.Dhcp6PdPreferred = types.StringValue(v)
+	} else {
+		m.Dhcp6PdPreferred = types.StringNull()
+	}
 	if v, ok := obj["6to4-interface"]; ok {
 		_ = v
 		if v != "" {

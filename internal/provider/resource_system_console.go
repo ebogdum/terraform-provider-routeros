@@ -55,7 +55,6 @@ func (r *SystemConsoleResource) Configure(_ context.Context, req resource.Config
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *SystemConsoleResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -73,7 +72,6 @@ func (r *SystemConsoleResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"default": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -83,7 +81,6 @@ func (r *SystemConsoleResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"free": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -98,22 +95,18 @@ func (r *SystemConsoleResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"used": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"vc": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"vcno": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"wedged": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -147,12 +140,6 @@ func (r *SystemConsoleResource) Create(ctx context.Context, req resource.CreateR
 	}
 	if !(plan.Term.IsNull() || plan.Term.IsUnknown()) {
 		body["term"] = plan.Term.ValueString()
-	}
-	if !(plan.Used.IsNull() || plan.Used.IsUnknown()) {
-		body["used"] = client.FormatBool(plan.Used.ValueBool())
-	}
-	if !(plan.Wedged.IsNull() || plan.Wedged.IsUnknown()) {
-		body["wedged"] = client.FormatBool(plan.Wedged.ValueBool())
 	}
 	obj, err := c.Add(ctx, "/system/console", body)
 	if err != nil {
@@ -212,12 +199,6 @@ func (r *SystemConsoleResource) Update(ctx context.Context, req resource.UpdateR
 	}
 	if !plan.Term.Equal(state.Term) {
 		body["term"] = plan.Term.ValueString()
-	}
-	if !plan.Used.Equal(state.Used) {
-		body["used"] = client.FormatBool(plan.Used.ValueBool())
-	}
-	if !plan.Wedged.Equal(state.Wedged) {
-		body["wedged"] = client.FormatBool(plan.Wedged.ValueBool())
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/system/console", state.ID.ValueString(), body)

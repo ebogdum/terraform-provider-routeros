@@ -21,7 +21,17 @@ resource "routeros_user_manager_profile_limitation" "profile_limitation_example"
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `from_time` - (Optional) Type: `string`. RouterOS `from-time`.
+* `limitation` - (Optional) Type: `string`. RouterOS `limitation`.
+* `profile` - (Optional) Type: `string`. RouterOS `profile`.
+* `till_time` - (Optional) Type: `string`. RouterOS `till-time`.
+* `weekdays` - (Optional) Type: `string`. RouterOS `weekdays`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

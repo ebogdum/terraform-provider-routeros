@@ -29,18 +29,24 @@ type InterfaceLteApnResource struct {
 }
 
 type InterfaceLteApnModel struct {
-	ID                   types.String `tfsdk:"id"`
-	AddDefaultRoute      types.Bool   `tfsdk:"add_default_route"`
-	Apn                  types.String `tfsdk:"apn"`
-	Authentication       types.String `tfsdk:"authentication"`
-	Comment              types.String `tfsdk:"comment"`
-	Default              types.Bool   `tfsdk:"default"`
-	DefaultRouteDistance types.Int64  `tfsdk:"default_route_distance"`
-	IPType               types.String `tfsdk:"ip_type"`
-	Name                 types.String `tfsdk:"name"`
-	UseNetworkApn        types.Bool   `tfsdk:"use_network_apn"`
-	UsePeerDNS           types.Bool   `tfsdk:"use_peer_dns"`
-	Router               types.String `tfsdk:"router"`
+	ID                    types.String `tfsdk:"id"`
+	User                  types.String `tfsdk:"user"`
+	Password              types.String `tfsdk:"password"`
+	PassthroughSubnetSize types.String `tfsdk:"passthrough_subnet_size"`
+	PassthroughMac        types.String `tfsdk:"passthrough_mac"`
+	PassthroughInterface  types.String `tfsdk:"passthrough_interface"`
+	Ipv6Interface         types.String `tfsdk:"ipv6_interface"`
+	AddDefaultRoute       types.Bool   `tfsdk:"add_default_route"`
+	Apn                   types.String `tfsdk:"apn"`
+	Authentication        types.String `tfsdk:"authentication"`
+	Comment               types.String `tfsdk:"comment"`
+	Default               types.Bool   `tfsdk:"default"`
+	DefaultRouteDistance  types.Int64  `tfsdk:"default_route_distance"`
+	IPType                types.String `tfsdk:"ip_type"`
+	Name                  types.String `tfsdk:"name"`
+	UseNetworkApn         types.Bool   `tfsdk:"use_network_apn"`
+	UsePeerDNS            types.Bool   `tfsdk:"use_peer_dns"`
+	Router                types.String `tfsdk:"router"`
 }
 
 func NewInterfaceLteApnResource() resource.Resource { return &InterfaceLteApnResource{} }
@@ -55,7 +61,6 @@ func (r *InterfaceLteApnResource) Configure(_ context.Context, req resource.Conf
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceLteApnResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -66,6 +71,37 @@ func (r *InterfaceLteApnResource) Schema(_ context.Context, _ resource.SchemaReq
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"user": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `user`.",
+			},
+			"password": schema.StringAttribute{
+				Optional:    true,
+				Sensitive:   true,
+				Computed:    true,
+				Description: "RouterOS `password`.",
+			},
+			"passthrough_subnet_size": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `passthrough-subnet-size`.",
+			},
+			"passthrough_mac": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `passthrough-mac`.",
+			},
+			"passthrough_interface": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `passthrough-interface`.",
+			},
+			"ipv6_interface": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `ipv6-interface`.",
 			},
 			"add_default_route": schema.BoolAttribute{
 				Optional:    true,
@@ -87,7 +123,6 @@ func (r *InterfaceLteApnResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "Free-form comment.",
 			},
 			"default": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -160,6 +195,24 @@ func (r *InterfaceLteApnResource) Create(ctx context.Context, req resource.Creat
 	}
 	if !(plan.UsePeerDNS.IsNull() || plan.UsePeerDNS.IsUnknown()) {
 		body["use-peer-dns"] = client.FormatBool(plan.UsePeerDNS.ValueBool())
+	}
+	if !(plan.Ipv6Interface.IsNull() || plan.Ipv6Interface.IsUnknown()) {
+		body["ipv6-interface"] = plan.Ipv6Interface.ValueString()
+	}
+	if !(plan.PassthroughInterface.IsNull() || plan.PassthroughInterface.IsUnknown()) {
+		body["passthrough-interface"] = plan.PassthroughInterface.ValueString()
+	}
+	if !(plan.PassthroughMac.IsNull() || plan.PassthroughMac.IsUnknown()) {
+		body["passthrough-mac"] = plan.PassthroughMac.ValueString()
+	}
+	if !(plan.PassthroughSubnetSize.IsNull() || plan.PassthroughSubnetSize.IsUnknown()) {
+		body["passthrough-subnet-size"] = plan.PassthroughSubnetSize.ValueString()
+	}
+	if !(plan.Password.IsNull() || plan.Password.IsUnknown()) {
+		body["password"] = plan.Password.ValueString()
+	}
+	if !(plan.User.IsNull() || plan.User.IsUnknown()) {
+		body["user"] = plan.User.ValueString()
 	}
 	obj, err := c.Add(ctx, "/interface/lte/apn", body)
 	if err != nil {
@@ -235,6 +288,24 @@ func (r *InterfaceLteApnResource) Update(ctx context.Context, req resource.Updat
 	if !plan.UsePeerDNS.Equal(state.UsePeerDNS) {
 		body["use-peer-dns"] = client.FormatBool(plan.UsePeerDNS.ValueBool())
 	}
+	if !plan.Ipv6Interface.Equal(state.Ipv6Interface) && !plan.Ipv6Interface.IsUnknown() {
+		body["ipv6-interface"] = plan.Ipv6Interface.ValueString()
+	}
+	if !plan.PassthroughInterface.Equal(state.PassthroughInterface) && !plan.PassthroughInterface.IsUnknown() {
+		body["passthrough-interface"] = plan.PassthroughInterface.ValueString()
+	}
+	if !plan.PassthroughMac.Equal(state.PassthroughMac) && !plan.PassthroughMac.IsUnknown() {
+		body["passthrough-mac"] = plan.PassthroughMac.ValueString()
+	}
+	if !plan.PassthroughSubnetSize.Equal(state.PassthroughSubnetSize) && !plan.PassthroughSubnetSize.IsUnknown() {
+		body["passthrough-subnet-size"] = plan.PassthroughSubnetSize.ValueString()
+	}
+	if !plan.Password.Equal(state.Password) && !plan.Password.IsUnknown() {
+		body["password"] = plan.Password.ValueString()
+	}
+	if !plan.User.Equal(state.User) && !plan.User.IsUnknown() {
+		body["user"] = plan.User.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/lte/apn", state.ID.ValueString(), body)
 		if err != nil {
@@ -301,6 +372,36 @@ func interfaceLteApnLookupByNaturalKey(ctx context.Context, c *client.Client, id
 func interfaceLteApnApply(ctx context.Context, obj client.Object, m *InterfaceLteApnModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["user"]; ok && v != "" {
+		m.User = types.StringValue(v)
+	} else {
+		m.User = types.StringNull()
+	}
+	if v, ok := obj["password"]; ok && v != "" {
+		m.Password = types.StringValue(v)
+	} else {
+		m.Password = types.StringNull()
+	}
+	if v, ok := obj["passthrough-subnet-size"]; ok && v != "" {
+		m.PassthroughSubnetSize = types.StringValue(v)
+	} else {
+		m.PassthroughSubnetSize = types.StringNull()
+	}
+	if v, ok := obj["passthrough-mac"]; ok && v != "" {
+		m.PassthroughMac = types.StringValue(v)
+	} else {
+		m.PassthroughMac = types.StringNull()
+	}
+	if v, ok := obj["passthrough-interface"]; ok && v != "" {
+		m.PassthroughInterface = types.StringValue(v)
+	} else {
+		m.PassthroughInterface = types.StringNull()
+	}
+	if v, ok := obj["ipv6-interface"]; ok && v != "" {
+		m.Ipv6Interface = types.StringValue(v)
+	} else {
+		m.Ipv6Interface = types.StringNull()
+	}
 	if v, ok := obj["add-default-route"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {

@@ -49,7 +49,6 @@ func (r *InterfaceL2TPServerResource) Configure(_ context.Context, req resource.
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceL2TPServerResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {

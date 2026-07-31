@@ -29,14 +29,17 @@ type PortRemoteAccessResource struct {
 }
 
 type PortRemoteAccessModel struct {
-	ID           types.String `tfsdk:"id"`
-	Channel      types.String `tfsdk:"channel"`
-	Comment      types.String `tfsdk:"comment"`
-	Disabled     types.Bool   `tfsdk:"disabled"`
-	LocalAddress types.String `tfsdk:"local_address"`
-	Port         types.String `tfsdk:"port"`
-	Protocol     types.String `tfsdk:"protocol"`
-	Router       types.String `tfsdk:"router"`
+	ID              types.String `tfsdk:"id"`
+	RemoteAddresses types.String `tfsdk:"remote_addresses"`
+	LogFile         types.String `tfsdk:"log_file"`
+	IpPort          types.String `tfsdk:"ip_port"`
+	Channel         types.String `tfsdk:"channel"`
+	Comment         types.String `tfsdk:"comment"`
+	Disabled        types.Bool   `tfsdk:"disabled"`
+	LocalAddress    types.String `tfsdk:"local_address"`
+	Port            types.String `tfsdk:"port"`
+	Protocol        types.String `tfsdk:"protocol"`
+	Router          types.String `tfsdk:"router"`
 }
 
 func NewPortRemoteAccessResource() resource.Resource { return &PortRemoteAccessResource{} }
@@ -51,7 +54,6 @@ func (r *PortRemoteAccessResource) Configure(_ context.Context, req resource.Con
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *PortRemoteAccessResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -62,6 +64,21 @@ func (r *PortRemoteAccessResource) Schema(_ context.Context, _ resource.SchemaRe
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"remote_addresses": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `remote-addresses`.",
+			},
+			"log_file": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `log-file`.",
+			},
+			"ip_port": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `ip-port`.",
 			},
 			"channel": schema.StringAttribute{
 				Optional:    true,
@@ -130,6 +147,15 @@ func (r *PortRemoteAccessResource) Create(ctx context.Context, req resource.Crea
 	if !(plan.Protocol.IsNull() || plan.Protocol.IsUnknown()) {
 		body["protocol"] = plan.Protocol.ValueString()
 	}
+	if !(plan.IpPort.IsNull() || plan.IpPort.IsUnknown()) {
+		body["ip-port"] = plan.IpPort.ValueString()
+	}
+	if !(plan.LogFile.IsNull() || plan.LogFile.IsUnknown()) {
+		body["log-file"] = plan.LogFile.ValueString()
+	}
+	if !(plan.RemoteAddresses.IsNull() || plan.RemoteAddresses.IsUnknown()) {
+		body["remote-addresses"] = plan.RemoteAddresses.ValueString()
+	}
 	obj, err := c.Add(ctx, "/port/remote-access", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /port/remote-access failed", err.Error())
@@ -194,6 +220,15 @@ func (r *PortRemoteAccessResource) Update(ctx context.Context, req resource.Upda
 	}
 	if !plan.Protocol.Equal(state.Protocol) {
 		body["protocol"] = plan.Protocol.ValueString()
+	}
+	if !plan.IpPort.Equal(state.IpPort) && !plan.IpPort.IsUnknown() {
+		body["ip-port"] = plan.IpPort.ValueString()
+	}
+	if !plan.LogFile.Equal(state.LogFile) && !plan.LogFile.IsUnknown() {
+		body["log-file"] = plan.LogFile.ValueString()
+	}
+	if !plan.RemoteAddresses.Equal(state.RemoteAddresses) && !plan.RemoteAddresses.IsUnknown() {
+		body["remote-addresses"] = plan.RemoteAddresses.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/port/remote-access", state.ID.ValueString(), body)
@@ -261,6 +296,21 @@ func portRemoteAccessLookupByNaturalKey(ctx context.Context, c *client.Client, i
 func portRemoteAccessApply(ctx context.Context, obj client.Object, m *PortRemoteAccessModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["remote-addresses"]; ok && v != "" {
+		m.RemoteAddresses = types.StringValue(v)
+	} else {
+		m.RemoteAddresses = types.StringNull()
+	}
+	if v, ok := obj["log-file"]; ok && v != "" {
+		m.LogFile = types.StringValue(v)
+	} else {
+		m.LogFile = types.StringNull()
+	}
+	if v, ok := obj["ip-port"]; ok && v != "" {
+		m.IpPort = types.StringValue(v)
+	} else {
+		m.IpPort = types.StringNull()
+	}
 	if v, ok := obj["channel"]; ok {
 		_ = v
 		if v != "" {

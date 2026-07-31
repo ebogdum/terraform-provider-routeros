@@ -34,33 +34,33 @@ resource "routeros_ipv6_address" "address_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `address` - (Required) Type: `cidr`. Default: `fd00:db8::1/64`.
-* `advertise` - (Optional) Type: `bool`. Default: `1`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `actual_interface` - (Read-only) Type: `string`.
+* `address` - (Required) Type: `string`.
+* `advertise` - (Optional) Type: `bool`.
 * `auto_link_local` - (Optional) Type: `bool`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `deprecated` - (Read-only) Type: `bool`.
 * `disabled` - (Optional) Type: `bool`.
-* `dynglob` - (Optional) Type: `string`.
+* `dynamic` - (Read-only) Type: `bool`.
+* `dynglob` - (Read-only) Type: `string`.
 * `eui_64` - (Optional) Type: `bool`.
 * `from_pool` - (Optional) Type: `string`.
+* `from_pool_policy` - (Optional) Type: `string`. RouterOS `from-pool-policy`.
 * `interface` - (Required) Type: `string`.
+* `invalid` - (Read-only) Type: `bool`.
+* `link_local` - (Read-only) Type: `bool`.
 * `no_dad` - (Optional) Type: `bool`.
+* `preferred` - (Read-only) Type: `string`.
+* `scope` - (Read-only) Type: `int`.
+* `slave` - (Read-only) Type: `bool`.
+* `valid` - (Read-only) Type: `string`.
+* `vrf` - (Read-only) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `actual_interface` - Type: `string`.
-* `deprecated` - Type: `bool`.
-* `dynamic` - Type: `bool`.
-* `invalid` - Type: `bool`.
-* `link_local` - Type: `bool`.
-* `preferred` - Type: `string`.
-* `scope` - Type: `int`.
-* `slave` - Type: `bool`.
-* `valid` - Type: `string`.
-* `vrf` - Type: `string`.
 
 ## Import
 

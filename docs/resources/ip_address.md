@@ -26,23 +26,24 @@ resource "routeros_ip_address" "address_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `address` - (Required) Type: `cidr`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `actual_interface` - (Read-only) Type: `string`.
+* `address` - (Required) Type: `string`.
+* `broadcast` - (Optional) Type: `string`. RouterOS `broadcast`.
 * `comment` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`.
+* `dynamic` - (Read-only) Type: `bool`.
 * `interface` - (Required) Type: `string`.
+* `invalid` - (Read-only) Type: `bool`.
+* `netmask` - (Optional) Type: `string`. RouterOS `netmask`.
+* `network` - (Optional) Type: `string`.
+* `slave` - (Read-only) Type: `bool`.
+* `vrf` - (Read-only) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `actual_interface` - Type: `string`.
-* `dynamic` - Type: `bool`.
-* `invalid` - Type: `bool`.
-* `network` - Type: `ip`.
-* `slave` - Type: `bool`.
-* `vrf` - Type: `string`.
 
 ## Import
 

@@ -30,6 +30,9 @@ type IPProxyCacheResource struct {
 
 type IPProxyCacheModel struct {
 	ID         types.String `tfsdk:"id"`
+	Method     types.String `tfsdk:"method"`
+	LocalPort  types.String `tfsdk:"local_port"`
+	DstHost    types.String `tfsdk:"dst_host"`
 	Action     types.String `tfsdk:"action"`
 	Comment    types.String `tfsdk:"comment"`
 	Disabled   types.Bool   `tfsdk:"disabled"`
@@ -52,7 +55,6 @@ func (r *IPProxyCacheResource) Configure(_ context.Context, req resource.Configu
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPProxyCacheResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -63,6 +65,21 @@ func (r *IPProxyCacheResource) Schema(_ context.Context, _ resource.SchemaReques
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"method": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `method`.",
+			},
+			"local_port": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `local-port`.",
+			},
+			"dst_host": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `dst-host`.",
 			},
 			"action": schema.StringAttribute{
 				Optional:    true,
@@ -139,6 +156,15 @@ func (r *IPProxyCacheResource) Create(ctx context.Context, req resource.CreateRe
 	if !(plan.SrcAddress.IsNull() || plan.SrcAddress.IsUnknown()) {
 		body["src-address"] = plan.SrcAddress.ValueString()
 	}
+	if !(plan.DstHost.IsNull() || plan.DstHost.IsUnknown()) {
+		body["dst-host"] = plan.DstHost.ValueString()
+	}
+	if !(plan.LocalPort.IsNull() || plan.LocalPort.IsUnknown()) {
+		body["local-port"] = plan.LocalPort.ValueString()
+	}
+	if !(plan.Method.IsNull() || plan.Method.IsUnknown()) {
+		body["method"] = plan.Method.ValueString()
+	}
 	obj, err := c.Add(ctx, "/ip/proxy/cache", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /ip/proxy/cache failed", err.Error())
@@ -207,6 +233,15 @@ func (r *IPProxyCacheResource) Update(ctx context.Context, req resource.UpdateRe
 	if !plan.SrcAddress.Equal(state.SrcAddress) {
 		body["src-address"] = plan.SrcAddress.ValueString()
 	}
+	if !plan.DstHost.Equal(state.DstHost) && !plan.DstHost.IsUnknown() {
+		body["dst-host"] = plan.DstHost.ValueString()
+	}
+	if !plan.LocalPort.Equal(state.LocalPort) && !plan.LocalPort.IsUnknown() {
+		body["local-port"] = plan.LocalPort.ValueString()
+	}
+	if !plan.Method.Equal(state.Method) && !plan.Method.IsUnknown() {
+		body["method"] = plan.Method.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/proxy/cache", state.ID.ValueString(), body)
 		if err != nil {
@@ -273,6 +308,21 @@ func iPProxyCacheLookupByNaturalKey(ctx context.Context, c *client.Client, id st
 func iPProxyCacheApply(ctx context.Context, obj client.Object, m *IPProxyCacheModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["method"]; ok && v != "" {
+		m.Method = types.StringValue(v)
+	} else {
+		m.Method = types.StringNull()
+	}
+	if v, ok := obj["local-port"]; ok && v != "" {
+		m.LocalPort = types.StringValue(v)
+	} else {
+		m.LocalPort = types.StringNull()
+	}
+	if v, ok := obj["dst-host"]; ok && v != "" {
+		m.DstHost = types.StringValue(v)
+	} else {
+		m.DstHost = types.StringNull()
+	}
 	if v, ok := obj["action"]; ok {
 		_ = v
 		if v != "" {

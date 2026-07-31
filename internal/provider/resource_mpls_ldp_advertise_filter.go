@@ -29,12 +29,14 @@ type MPLSLdpAdvertiseFilterResource struct {
 }
 
 type MPLSLdpAdvertiseFilterModel struct {
-	ID       types.String `tfsdk:"id"`
-	Comment  types.String `tfsdk:"comment"`
-	Disabled types.Bool   `tfsdk:"disabled"`
-	Prefix   types.String `tfsdk:"prefix"`
-	Vrf      types.String `tfsdk:"vrf"`
-	Router   types.String `tfsdk:"router"`
+	ID        types.String `tfsdk:"id"`
+	Neighbor  types.String `tfsdk:"neighbor"`
+	Advertise types.String `tfsdk:"advertise"`
+	Comment   types.String `tfsdk:"comment"`
+	Disabled  types.Bool   `tfsdk:"disabled"`
+	Prefix    types.String `tfsdk:"prefix"`
+	Vrf       types.String `tfsdk:"vrf"`
+	Router    types.String `tfsdk:"router"`
 }
 
 func NewMPLSLdpAdvertiseFilterResource() resource.Resource { return &MPLSLdpAdvertiseFilterResource{} }
@@ -49,7 +51,6 @@ func (r *MPLSLdpAdvertiseFilterResource) Configure(_ context.Context, req resour
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *MPLSLdpAdvertiseFilterResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -60,6 +61,16 @@ func (r *MPLSLdpAdvertiseFilterResource) Schema(_ context.Context, _ resource.Sc
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"neighbor": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `neighbor`.",
+			},
+			"advertise": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `advertise`.",
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -111,6 +122,12 @@ func (r *MPLSLdpAdvertiseFilterResource) Create(ctx context.Context, req resourc
 	}
 	if !(plan.Vrf.IsNull() || plan.Vrf.IsUnknown()) {
 		body["vrf"] = plan.Vrf.ValueString()
+	}
+	if !(plan.Advertise.IsNull() || plan.Advertise.IsUnknown()) {
+		body["advertise"] = plan.Advertise.ValueString()
+	}
+	if !(plan.Neighbor.IsNull() || plan.Neighbor.IsUnknown()) {
+		body["neighbor"] = plan.Neighbor.ValueString()
 	}
 	obj, err := c.Add(ctx, "/mpls/ldp/advertise-filter", body)
 	if err != nil {
@@ -170,6 +187,12 @@ func (r *MPLSLdpAdvertiseFilterResource) Update(ctx context.Context, req resourc
 	}
 	if !plan.Vrf.Equal(state.Vrf) {
 		body["vrf"] = plan.Vrf.ValueString()
+	}
+	if !plan.Advertise.Equal(state.Advertise) && !plan.Advertise.IsUnknown() {
+		body["advertise"] = plan.Advertise.ValueString()
+	}
+	if !plan.Neighbor.Equal(state.Neighbor) && !plan.Neighbor.IsUnknown() {
+		body["neighbor"] = plan.Neighbor.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/mpls/ldp/advertise-filter", state.ID.ValueString(), body)
@@ -237,6 +260,16 @@ func mPLSLdpAdvertiseFilterLookupByNaturalKey(ctx context.Context, c *client.Cli
 func mPLSLdpAdvertiseFilterApply(ctx context.Context, obj client.Object, m *MPLSLdpAdvertiseFilterModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["neighbor"]; ok && v != "" {
+		m.Neighbor = types.StringValue(v)
+	} else {
+		m.Neighbor = types.StringNull()
+	}
+	if v, ok := obj["advertise"]; ok && v != "" {
+		m.Advertise = types.StringValue(v)
+	} else {
+		m.Advertise = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {

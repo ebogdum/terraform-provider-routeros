@@ -30,6 +30,9 @@ type CapsManConfigurationResource struct {
 
 type CapsManConfigurationModel struct {
 	ID       types.String `tfsdk:"id"`
+	Datapath types.String `tfsdk:"datapath"`
+	Security types.String `tfsdk:"security"`
+	Rates    types.String `tfsdk:"rates"`
 	Channel  types.String `tfsdk:"channel"`
 	Comment  types.String `tfsdk:"comment"`
 	Country  types.String `tfsdk:"country"`
@@ -52,7 +55,6 @@ func (r *CapsManConfigurationResource) Configure(_ context.Context, req resource
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *CapsManConfigurationResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -63,6 +65,21 @@ func (r *CapsManConfigurationResource) Schema(_ context.Context, _ resource.Sche
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"datapath": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "Name of a `/caps-man/datapath` profile to apply.",
+			},
+			"security": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "Name of a `/caps-man/security` profile to apply.",
+			},
+			"rates": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "Name of a `/caps-man/rates` profile to apply.",
 			},
 			"channel": schema.StringAttribute{
 				Optional:    true,
@@ -117,6 +134,15 @@ func (r *CapsManConfigurationResource) Create(ctx context.Context, req resource.
 		return
 	}
 	body := client.Object{}
+	if !(plan.Datapath.IsNull() || plan.Datapath.IsUnknown()) {
+		body["datapath"] = plan.Datapath.ValueString()
+	}
+	if !(plan.Security.IsNull() || plan.Security.IsUnknown()) {
+		body["security"] = plan.Security.ValueString()
+	}
+	if !(plan.Rates.IsNull() || plan.Rates.IsUnknown()) {
+		body["rates"] = plan.Rates.ValueString()
+	}
 	if !(plan.Channel.IsNull() || plan.Channel.IsUnknown()) {
 		body["channel"] = plan.Channel.ValueString()
 	}
@@ -185,6 +211,15 @@ func (r *CapsManConfigurationResource) Update(ctx context.Context, req resource.
 		return
 	}
 	body := client.Object{}
+	if !plan.Datapath.Equal(state.Datapath) {
+		body["datapath"] = plan.Datapath.ValueString()
+	}
+	if !plan.Security.Equal(state.Security) {
+		body["security"] = plan.Security.ValueString()
+	}
+	if !plan.Rates.Equal(state.Rates) {
+		body["rates"] = plan.Rates.ValueString()
+	}
 	if !plan.Channel.Equal(state.Channel) {
 		body["channel"] = plan.Channel.ValueString()
 	}
@@ -272,6 +307,21 @@ func capsManConfigurationLookupByNaturalKey(ctx context.Context, c *client.Clien
 func capsManConfigurationApply(ctx context.Context, obj client.Object, m *CapsManConfigurationModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["datapath"]; ok && v != "" {
+		m.Datapath = types.StringValue(v)
+	} else {
+		m.Datapath = types.StringNull()
+	}
+	if v, ok := obj["security"]; ok && v != "" {
+		m.Security = types.StringValue(v)
+	} else {
+		m.Security = types.StringNull()
+	}
+	if v, ok := obj["rates"]; ok && v != "" {
+		m.Rates = types.StringValue(v)
+	} else {
+		m.Rates = types.StringNull()
+	}
 	if v, ok := obj["channel"]; ok {
 		_ = v
 		if v != "" {

@@ -28,21 +28,20 @@ resource "routeros_routing_table" "table_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `dynamic` - (Read-only) Type: `bool`.
 * `fib` - (Optional) Type: `bool`.
+* `invalid` - (Read-only) Type: `bool`.
 * `name` - (Optional) Type: `string`.
-* `used` - (Optional) Type: `bool`.
+* `usage` - (Read-only) Type: `int`.
+* `used` - (Read-only) Type: `bool`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `dynamic` - Type: `bool`.
-* `invalid` - Type: `bool`.
-* `usage` - Type: `int`.
 
 ## Import
 

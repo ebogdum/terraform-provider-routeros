@@ -52,42 +52,46 @@ resource "routeros_ip_dhcp_server" "dhcp_server_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `add_arp_for_leases` - (Optional) Type: `bool`.
-* `address_list` - (Optional) Type: `string`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `add_arp` - (Optional) Type: `string`. RouterOS `add-arp`.
+* `add_arp_for_leases` - (Read-only) Type: `bool`.
+* `add_dns_entries` - (Optional) Type: `string`. RouterOS `add-dns-entries`.
+* `add_dns_entries_suffix` - (Optional) Type: `string`. RouterOS `add-dns-entries-suffix`.
+* `address_list` - (Read-only) Type: `string`.
+* `address_lists` - (Optional) Type: `string`. RouterOS `address-lists`.
 * `address_pool` - (Optional) Type: `string`.
-* `allow_dual_stack_queue` - (Optional) Type: `bool`. Default: `1`.
+* `allow_dual_stack_queue` - (Optional) Type: `bool`.
 * `always_broadcast` - (Optional) Type: `bool`.
-* `authoritative` - (Optional) Type: `enum(yes|after-2s-delay|after-10s-delay|no)`. Default: `0`.
-* `bootp_lease_time` - (Optional) Type: `duration`. Default: `4.294967295e+09`.
-* `bootp_support` - (Optional) Type: `enum(none|static|dynamic)`. Default: `1`.
-* `client_mac_limit` - (Optional) Type: `int`. Default: `4.294967295e+09`.
+* `authoritative` - (Optional) Type: `string`.
+* `bootp_lease_time` - (Optional) Type: `string`.
+* `bootp_support` - (Optional) Type: `string`.
+* `client_mac_limit` - (Optional) Type: `string`. A number, or `unlimited`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
-* `conflict_detection` - (Optional) Type: `bool`. Default: `1`.
-* `delay_threshold` - (Optional) Type: `duration`.
-* `dhcp_option_set` - (Optional) Type: `string`. Default: `4.294967295e+09`.
+* `conflict_detection` - (Optional) Type: `bool`.
+* `delay_threshold` - (Optional) Type: `string`.
+* `dhcp_option_set` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `dynamic_lease_identifiers` - (Optional) Type: `string`.
-* `dynbootp` - (Optional) Type: `string`.
-* `insert_queue_before` - (Optional) Type: `string`. Default: `0`.
+* `dynbootp` - (Read-only) Type: `string`.
+* `insert_queue_before` - (Optional) Type: `string`.
 * `interface` - (Required) Type: `string`.
+* `invalid` - (Read-only) Type: `bool`.
 * `lease_script` - (Optional) Type: `string`.
-* `lease_time` - (Optional) Type: `duration`. Default: `1800`.
-* `name` - (Required) Type: `string`. Default: `tf_acc_dhcps`.
+* `lease_time` - (Optional) Type: `string`.
+* `name` - (Required) Type: `string`.
 * `parent_queue` - (Optional) Type: `string`.
-* `relay` - (Optional) Type: `ip`.
-* `server_address` - (Optional) Type: `ip`.
-* `support_the_broadband_forum_tr_101` - (Optional) Type: `bool`.
-* `use_framed_as_classless` - (Optional) Type: `bool`. Default: `1`.
-* `use_radius` - (Optional) Type: `enum(no|yes|accounting)`.
+* `relay` - (Optional) Type: `string`.
+* `server_address` - (Optional) Type: `string`.
+* `support_broadband_tr101` - (Optional) Type: `string`. RouterOS `support-broadband-tr101`.
+* `support_the_broadband_forum_tr_101` - (Read-only) Type: `bool`.
+* `use_framed_as_classless` - (Optional) Type: `bool`.
+* `use_radius` - (Optional) Type: `string`.
 * `use_reconfigure` - (Optional) Type: `bool`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `invalid` - Type: `bool`.
 
 ## Import
 

@@ -27,7 +27,7 @@ This data source supports the following arguments:
 * `filter` - (Optional) Map of field=value pairs to narrow the result set.
 * `proplist` - (Optional) List of property names to project; smaller payload.
 * `comment` - (Optional) Type: `string`. Free-form comment.
-* `don_t_require_permissions` - (Optional) Type: `bool`.
+* `dont_require_permissions` - (Optional) Type: `bool`.
 * `name` - (Required) Type: `string`. Default: `tf-acc-script`.
 * `policy` - (Optional) Type: `list`.
 * `run_script` - (Optional) Type: `string`.

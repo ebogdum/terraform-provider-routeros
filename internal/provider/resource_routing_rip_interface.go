@@ -57,7 +57,6 @@ func (r *RoutingRipInterfaceResource) Configure(_ context.Context, req resource.
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *RoutingRipInterfaceResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {

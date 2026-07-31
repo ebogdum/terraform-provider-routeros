@@ -24,8 +24,19 @@ resource "routeros_interface_wifi_capsman" "capsman_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `ca_certificate` - (Optional) Type: `string`. RouterOS `ca-certificate`.
+* `certificate` - (Optional) Type: `string`. RouterOS `certificate`.
 * `enabled` - (Optional) Type: `bool`.
+* `interfaces` - (Optional) Type: `string`. RouterOS `interfaces`.
+* `package_path` - (Optional) Type: `string`. RouterOS `package-path`.
+* `require_peer_certificate` - (Optional) Type: `string`. RouterOS `require-peer-certificate`.
+* `upgrade_policy` - (Optional) Type: `string`. RouterOS `upgrade-policy`.
+
+## Attribute Reference
+
+* `id` - Stable identifier (the singleton's menu path, optionally namespaced by router).
+
 
 ## Import
 

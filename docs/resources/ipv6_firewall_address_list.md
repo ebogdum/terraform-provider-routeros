@@ -30,21 +30,20 @@ resource "routeros_ipv6_firewall_address_list" "address_list_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `address` - (Required) Type: `string`. Default: `fd00:db8::/64`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `address` - (Required) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `creation_time` - (Read-only) Type: `string`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `list` - (Required) Type: `string`. Default: `tf_acc_list6`.
-* `parent` - (Optional) Type: `int`. Default: `4.294967295e+09`.
+* `dynamic` - (Read-only) Type: `bool`.
+* `list` - (Required) Type: `string`.
+* `parent` - (Read-only) Type: `int`.
 * `timeout` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `creation_time` - Type: `string`.
-* `dynamic` - Type: `bool`.
 
 ## Import
 

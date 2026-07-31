@@ -30,6 +30,8 @@ type IPDNSForwardersResource struct {
 
 type IPDNSForwardersModel struct {
 	ID                   types.String `tfsdk:"id"`
+	VerifyDohCert        types.String `tfsdk:"verify_doh_cert"`
+	DohServers           types.String `tfsdk:"doh_servers"`
 	Comment              types.String `tfsdk:"comment"`
 	Disabled             types.Bool   `tfsdk:"disabled"`
 	DNSServers           types.String `tfsdk:"dns_servers"`
@@ -51,7 +53,6 @@ func (r *IPDNSForwardersResource) Configure(_ context.Context, req resource.Conf
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPDNSForwardersResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -62,6 +63,16 @@ func (r *IPDNSForwardersResource) Schema(_ context.Context, _ resource.SchemaReq
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"verify_doh_cert": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `verify-doh-cert`.",
+			},
+			"doh_servers": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `doh-servers`.",
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -79,7 +90,6 @@ func (r *IPDNSForwardersResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "",
 			},
 			"do_h_servers": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -89,7 +99,6 @@ func (r *IPDNSForwardersResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "",
 			},
 			"verify_do_h_certificate": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -121,14 +130,14 @@ func (r *IPDNSForwardersResource) Create(ctx context.Context, req resource.Creat
 	if !(plan.DNSServers.IsNull() || plan.DNSServers.IsUnknown()) {
 		body["dns-servers"] = plan.DNSServers.ValueString()
 	}
-	if !(plan.DoHServers.IsNull() || plan.DoHServers.IsUnknown()) {
-		body["do-h-servers"] = plan.DoHServers.ValueString()
-	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !(plan.VerifyDoHCertificate.IsNull() || plan.VerifyDoHCertificate.IsUnknown()) {
-		body["verify-do-h-certificate"] = client.FormatBool(plan.VerifyDoHCertificate.ValueBool())
+	if !(plan.DohServers.IsNull() || plan.DohServers.IsUnknown()) {
+		body["doh-servers"] = plan.DohServers.ValueString()
+	}
+	if !(plan.VerifyDohCert.IsNull() || plan.VerifyDohCert.IsUnknown()) {
+		body["verify-doh-cert"] = plan.VerifyDohCert.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ip/dns/forwarders", body)
 	if err != nil {
@@ -186,14 +195,14 @@ func (r *IPDNSForwardersResource) Update(ctx context.Context, req resource.Updat
 	if !plan.DNSServers.Equal(state.DNSServers) {
 		body["dns-servers"] = plan.DNSServers.ValueString()
 	}
-	if !plan.DoHServers.Equal(state.DoHServers) {
-		body["do-h-servers"] = plan.DoHServers.ValueString()
-	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.VerifyDoHCertificate.Equal(state.VerifyDoHCertificate) {
-		body["verify-do-h-certificate"] = client.FormatBool(plan.VerifyDoHCertificate.ValueBool())
+	if !plan.DohServers.Equal(state.DohServers) && !plan.DohServers.IsUnknown() {
+		body["doh-servers"] = plan.DohServers.ValueString()
+	}
+	if !plan.VerifyDohCert.Equal(state.VerifyDohCert) && !plan.VerifyDohCert.IsUnknown() {
+		body["verify-doh-cert"] = plan.VerifyDohCert.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/dns/forwarders", state.ID.ValueString(), body)
@@ -261,6 +270,16 @@ func iPDNSForwardersLookupByNaturalKey(ctx context.Context, c *client.Client, id
 func iPDNSForwardersApply(ctx context.Context, obj client.Object, m *IPDNSForwardersModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["verify-doh-cert"]; ok && v != "" {
+		m.VerifyDohCert = types.StringValue(v)
+	} else {
+		m.VerifyDohCert = types.StringNull()
+	}
+	if v, ok := obj["doh-servers"]; ok && v != "" {
+		m.DohServers = types.StringValue(v)
+	} else {
+		m.DohServers = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {

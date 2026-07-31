@@ -29,24 +29,33 @@ type InterfaceSSTPClientResource struct {
 }
 
 type InterfaceSSTPClientModel struct {
-	ID                      types.String `tfsdk:"id"`
-	Authentication          types.String `tfsdk:"authentication"`
-	Certificate             types.String `tfsdk:"certificate"`
-	Comment                 types.String `tfsdk:"comment"`
-	ConnectTo               types.String `tfsdk:"connect_to"`
-	DefaultRouteDistance    types.String `tfsdk:"default_route_distance"`
-	DialOnDemand            types.String `tfsdk:"dial_on_demand"`
-	Disabled                types.Bool   `tfsdk:"disabled"`
-	KeepaliveTimeout        types.String `tfsdk:"keepalive_timeout"`
-	MaxMru                  types.String `tfsdk:"max_mru"`
-	MaxMTU                  types.String `tfsdk:"max_mtu"`
-	Mrru                    types.String `tfsdk:"mrru"`
-	Name                    types.String `tfsdk:"name"`
-	Password                types.String `tfsdk:"password"`
-	Profile                 types.String `tfsdk:"profile"`
-	User                    types.String `tfsdk:"user"`
-	VerifyServerCertificate types.String `tfsdk:"verify_server_certificate"`
-	Router                  types.String `tfsdk:"router"`
+	ID                                 types.String `tfsdk:"id"`
+	VerifyServerAddressFromCertificate types.String `tfsdk:"verify_server_address_from_certificate"`
+	TlsVersion                         types.String `tfsdk:"tls_version"`
+	ProxyPort                          types.String `tfsdk:"proxy_port"`
+	Port                               types.String `tfsdk:"port"`
+	Pfs                                types.String `tfsdk:"pfs"`
+	HttpProxy                          types.String `tfsdk:"http_proxy"`
+	Ciphers                            types.String `tfsdk:"ciphers"`
+	AddSni                             types.String `tfsdk:"add_sni"`
+	AddDefaultRoute                    types.String `tfsdk:"add_default_route"`
+	Authentication                     types.String `tfsdk:"authentication"`
+	Certificate                        types.String `tfsdk:"certificate"`
+	Comment                            types.String `tfsdk:"comment"`
+	ConnectTo                          types.String `tfsdk:"connect_to"`
+	DefaultRouteDistance               types.String `tfsdk:"default_route_distance"`
+	DialOnDemand                       types.String `tfsdk:"dial_on_demand"`
+	Disabled                           types.Bool   `tfsdk:"disabled"`
+	KeepaliveTimeout                   types.String `tfsdk:"keepalive_timeout"`
+	MaxMru                             types.String `tfsdk:"max_mru"`
+	MaxMTU                             types.String `tfsdk:"max_mtu"`
+	Mrru                               types.String `tfsdk:"mrru"`
+	Name                               types.String `tfsdk:"name"`
+	Password                           types.String `tfsdk:"password"`
+	Profile                            types.String `tfsdk:"profile"`
+	User                               types.String `tfsdk:"user"`
+	VerifyServerCertificate            types.String `tfsdk:"verify_server_certificate"`
+	Router                             types.String `tfsdk:"router"`
 }
 
 func NewInterfaceSSTPClientResource() resource.Resource { return &InterfaceSSTPClientResource{} }
@@ -61,7 +70,6 @@ func (r *InterfaceSSTPClientResource) Configure(_ context.Context, req resource.
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceSSTPClientResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -72,6 +80,51 @@ func (r *InterfaceSSTPClientResource) Schema(_ context.Context, _ resource.Schem
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"verify_server_address_from_certificate": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `verify-server-address-from-certificate`.",
+			},
+			"tls_version": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `tls-version`.",
+			},
+			"proxy_port": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `proxy-port`.",
+			},
+			"port": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `port`.",
+			},
+			"pfs": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `pfs`.",
+			},
+			"http_proxy": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `http-proxy`.",
+			},
+			"ciphers": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `ciphers`.",
+			},
+			"add_sni": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `add-sni`.",
+			},
+			"add_default_route": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `add-default-route`.",
 			},
 			"authentication": schema.StringAttribute{
 				Optional:    true,
@@ -218,6 +271,33 @@ func (r *InterfaceSSTPClientResource) Create(ctx context.Context, req resource.C
 	if !(plan.VerifyServerCertificate.IsNull() || plan.VerifyServerCertificate.IsUnknown()) {
 		body["verify-server-certificate"] = plan.VerifyServerCertificate.ValueString()
 	}
+	if !(plan.AddDefaultRoute.IsNull() || plan.AddDefaultRoute.IsUnknown()) {
+		body["add-default-route"] = plan.AddDefaultRoute.ValueString()
+	}
+	if !(plan.AddSni.IsNull() || plan.AddSni.IsUnknown()) {
+		body["add-sni"] = plan.AddSni.ValueString()
+	}
+	if !(plan.Ciphers.IsNull() || plan.Ciphers.IsUnknown()) {
+		body["ciphers"] = plan.Ciphers.ValueString()
+	}
+	if !(plan.HttpProxy.IsNull() || plan.HttpProxy.IsUnknown()) {
+		body["http-proxy"] = plan.HttpProxy.ValueString()
+	}
+	if !(plan.Pfs.IsNull() || plan.Pfs.IsUnknown()) {
+		body["pfs"] = plan.Pfs.ValueString()
+	}
+	if !(plan.Port.IsNull() || plan.Port.IsUnknown()) {
+		body["port"] = plan.Port.ValueString()
+	}
+	if !(plan.ProxyPort.IsNull() || plan.ProxyPort.IsUnknown()) {
+		body["proxy-port"] = plan.ProxyPort.ValueString()
+	}
+	if !(plan.TlsVersion.IsNull() || plan.TlsVersion.IsUnknown()) {
+		body["tls-version"] = plan.TlsVersion.ValueString()
+	}
+	if !(plan.VerifyServerAddressFromCertificate.IsNull() || plan.VerifyServerAddressFromCertificate.IsUnknown()) {
+		body["verify-server-address-from-certificate"] = plan.VerifyServerAddressFromCertificate.ValueString()
+	}
 	obj, err := c.Add(ctx, "/interface/sstp-client", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /interface/sstp-client failed", err.Error())
@@ -313,6 +393,33 @@ func (r *InterfaceSSTPClientResource) Update(ctx context.Context, req resource.U
 	if !plan.VerifyServerCertificate.Equal(state.VerifyServerCertificate) {
 		body["verify-server-certificate"] = plan.VerifyServerCertificate.ValueString()
 	}
+	if !plan.AddDefaultRoute.Equal(state.AddDefaultRoute) && !plan.AddDefaultRoute.IsUnknown() {
+		body["add-default-route"] = plan.AddDefaultRoute.ValueString()
+	}
+	if !plan.AddSni.Equal(state.AddSni) && !plan.AddSni.IsUnknown() {
+		body["add-sni"] = plan.AddSni.ValueString()
+	}
+	if !plan.Ciphers.Equal(state.Ciphers) && !plan.Ciphers.IsUnknown() {
+		body["ciphers"] = plan.Ciphers.ValueString()
+	}
+	if !plan.HttpProxy.Equal(state.HttpProxy) && !plan.HttpProxy.IsUnknown() {
+		body["http-proxy"] = plan.HttpProxy.ValueString()
+	}
+	if !plan.Pfs.Equal(state.Pfs) && !plan.Pfs.IsUnknown() {
+		body["pfs"] = plan.Pfs.ValueString()
+	}
+	if !plan.Port.Equal(state.Port) && !plan.Port.IsUnknown() {
+		body["port"] = plan.Port.ValueString()
+	}
+	if !plan.ProxyPort.Equal(state.ProxyPort) && !plan.ProxyPort.IsUnknown() {
+		body["proxy-port"] = plan.ProxyPort.ValueString()
+	}
+	if !plan.TlsVersion.Equal(state.TlsVersion) && !plan.TlsVersion.IsUnknown() {
+		body["tls-version"] = plan.TlsVersion.ValueString()
+	}
+	if !plan.VerifyServerAddressFromCertificate.Equal(state.VerifyServerAddressFromCertificate) && !plan.VerifyServerAddressFromCertificate.IsUnknown() {
+		body["verify-server-address-from-certificate"] = plan.VerifyServerAddressFromCertificate.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/sstp-client", state.ID.ValueString(), body)
 		if err != nil {
@@ -379,6 +486,51 @@ func interfaceSSTPClientLookupByNaturalKey(ctx context.Context, c *client.Client
 func interfaceSSTPClientApply(ctx context.Context, obj client.Object, m *InterfaceSSTPClientModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["verify-server-address-from-certificate"]; ok && v != "" {
+		m.VerifyServerAddressFromCertificate = types.StringValue(v)
+	} else {
+		m.VerifyServerAddressFromCertificate = types.StringNull()
+	}
+	if v, ok := obj["tls-version"]; ok && v != "" {
+		m.TlsVersion = types.StringValue(v)
+	} else {
+		m.TlsVersion = types.StringNull()
+	}
+	if v, ok := obj["proxy-port"]; ok && v != "" {
+		m.ProxyPort = types.StringValue(v)
+	} else {
+		m.ProxyPort = types.StringNull()
+	}
+	if v, ok := obj["port"]; ok && v != "" {
+		m.Port = types.StringValue(v)
+	} else {
+		m.Port = types.StringNull()
+	}
+	if v, ok := obj["pfs"]; ok && v != "" {
+		m.Pfs = types.StringValue(v)
+	} else {
+		m.Pfs = types.StringNull()
+	}
+	if v, ok := obj["http-proxy"]; ok && v != "" {
+		m.HttpProxy = types.StringValue(v)
+	} else {
+		m.HttpProxy = types.StringNull()
+	}
+	if v, ok := obj["ciphers"]; ok && v != "" {
+		m.Ciphers = types.StringValue(v)
+	} else {
+		m.Ciphers = types.StringNull()
+	}
+	if v, ok := obj["add-sni"]; ok && v != "" {
+		m.AddSni = types.StringValue(v)
+	} else {
+		m.AddSni = types.StringNull()
+	}
+	if v, ok := obj["add-default-route"]; ok && v != "" {
+		m.AddDefaultRoute = types.StringValue(v)
+	} else {
+		m.AddDefaultRoute = types.StringNull()
+	}
 	if v, ok := obj["authentication"]; ok {
 		_ = v
 		if v != "" {

@@ -49,7 +49,6 @@ func (r *CapsManActualInterfaceConfigurationResource) Configure(_ context.Contex
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *CapsManActualInterfaceConfigurationResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {

@@ -165,7 +165,6 @@ func (r *DiskResource) Configure(_ context.Context, req resource.ConfigureReques
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -183,17 +182,14 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"active_time": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"available_spare": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"available_spare_threshold": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -213,31 +209,26 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "Free-form comment.",
 			},
 			"controller_burst_time": schema.StringAttribute{
-				Optional:      true,
 				Computed:      true,
 				Description:   "",
 				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
 			},
 			"critical_temperature": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"critical_temperature_time": schema.StringAttribute{
-				Optional:      true,
 				Computed:      true,
 				Description:   "",
 				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
 			},
 			"critical_warning": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"default_slot": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -247,22 +238,18 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "Whether the entry is disabled.",
 			},
 			"discard_bytes": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"discard_merges": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"discard_ops": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"discard_time": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -282,12 +269,10 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"flush_ops": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"flush_time": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -297,18 +282,15 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"free": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"fs": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.OneOf([]string{"fat32", "ext4", "btrfs", "nfs", "smb", "wipe", "tmpfs", "exfat", "ntfs", "wipe-quck", "sshfs", "squashfs", "iso", "discard", "discard-secure", "xfs", "unknown"}...)},
 			},
 			"fw_version": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -318,22 +300,18 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"host_read_bytes": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"host_read_commands": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"host_write_bytes": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"host_write_commands": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -353,17 +331,14 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"in_flight_ops": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"interface": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"interface_speed": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -373,7 +348,6 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"label": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -388,7 +362,6 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"model": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -403,7 +376,6 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"mount_point": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -454,6 +426,7 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			},
 			"nvme_tcp_server_password": schema.StringAttribute{
 				Optional:    true,
+				Sensitive:   true,
 				Computed:    true,
 				Description: "",
 			},
@@ -463,8 +436,8 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"nvme_tcp_server_secret": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
+				Sensitive:   true,
 				Description: "",
 			},
 			"oldfileman": schema.StringAttribute{
@@ -488,7 +461,6 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"partition_number": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -503,17 +475,14 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"percentage_used": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"power_cycles": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"power_on_time": schema.StringAttribute{
-				Optional:      true,
 				Computed:      true,
 				Description:   "",
 				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
@@ -561,12 +530,10 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"read_bytes": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"read_merges": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -576,22 +543,18 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"read_ops": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"read_ops_per_second": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"read_rate": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"read_time": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -622,6 +585,7 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			},
 			"self_encryption_password": schema.StringAttribute{
 				Optional:    true,
+				Sensitive:   true,
 				Computed:    true,
 				Description: "",
 			},
@@ -631,12 +595,10 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"serial": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"size": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -667,7 +629,6 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"state": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -682,12 +643,10 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"temperature": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"temperatures": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -712,69 +671,56 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"unrecovered_integrity_errors": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"unsafe_shutdown": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"use": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"uuid": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"wait_time": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"warning_temperature": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"warning_temperature_time": schema.StringAttribute{
-				Optional:      true,
 				Computed:      true,
 				Description:   "",
 				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
 			},
 			"write_bytes": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"write_merges": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"write_ops": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"write_ops_per_second": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"write_rate": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"write_time": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},

@@ -29,12 +29,21 @@ resource "routeros_ip_hotspot" "hotspot_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `address_pool` - (Optional) Type: `string`. RouterOS `address-pool`.
+* `addresses_per_mac` - (Optional) Type: `string`. RouterOS `addresses-per-mac`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `idle_timeout` - (Optional) Type: `string`. RouterOS `idle-timeout`.
 * `interface` - (Required) Type: `string`.
 * `keepalive_timeout` - (Optional) Type: `string`.
-* `name` - (Required) Type: `string`. Descriptive name of the profile. Default: `tf_acc_hotspot`.
+* `login_timeout` - (Optional) Type: `string`. RouterOS `login-timeout`.
+* `name` - (Required) Type: `string`. Descriptive name of the profile
 * `profile` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

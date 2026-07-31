@@ -46,38 +46,37 @@ resource "routeros_ip_ipsec_policy" "policy_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `action` - (Optional) Type: `enum(discard|none|encrypt)`. Default: `2`.
-* `active` - (Optional) Type: `bool`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `action` - (Optional) Type: `string`.
+* `active` - (Read-only) Type: `bool`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `default` - (Read-only) Type: `bool`.
 * `disabled` - (Optional) Type: `bool`.
-* `dst_address` - (Optional) Type: `cidr`.
+* `dst_address` - (Optional) Type: `string`.
 * `dst_port` - (Optional) Type: `int`.
+* `dynamic` - (Read-only) Type: `bool`.
 * `group` - (Optional) Type: `string`.
-* `ipsec_protocols` - (Optional) Type: `enum(|ah|esp)`. Default: `2`.
-* `level` - (Optional) Type: `enum(use|require|unique)`. Default: `2`.
-* `nopeer` - (Optional) Type: `string`.
+* `invalid` - (Read-only) Type: `bool`.
+* `ipsec_protocols` - (Optional) Type: `string`.
+* `level` - (Optional) Type: `string`.
+* `nopeer` - (Read-only) Type: `string`.
 * `notemplate` - (Optional) Type: `string`.
 * `peer` - (Optional) Type: `string`.
+* `ph2_count` - (Read-only) Type: `int`.
+* `ph2_state` - (Read-only) Type: `string`.
 * `proposal` - (Optional) Type: `string`.
-* `protocol` - (Optional) Type: `enum(icmp|igmp|ggp|ip-encap|tcp|egp, ...)`. Default: `255`.
-* `src_address` - (Optional) Type: `cidr`.
+* `protocol` - (Optional) Type: `string`.
+* `sa_dst_address` - (Read-only) Type: `string`.
+* `sa_src_address` - (Read-only) Type: `string`.
+* `src_address` - (Optional) Type: `string`.
 * `src_port` - (Optional) Type: `int`.
 * `template` - (Optional) Type: `bool`.
 * `tunnel` - (Optional) Type: `bool`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `default` - Type: `bool`.
-* `dynamic` - Type: `bool`.
-* `invalid` - Type: `bool`.
-* `ph2_count` - Type: `int`.
-* `ph2_state` - Type: `enum(spawning|starting|message-1-received|message-1-sent|message-2-received|message-2-sent, ...)`.
-* `sa_dst_address` - Type: `string`.
-* `sa_src_address` - Type: `string`.
 
 ## Import
 

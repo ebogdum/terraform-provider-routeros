@@ -82,75 +82,80 @@ resource "routeros_interface_bridge" "bridge_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `add_dhcp_option_82` - (Optional) Type: `bool`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `active_role` - (Read-only) Type: `string`.
+* `add_dhcp_option_82` - (Read-only) Type: `bool`.
 * `admin_mac` - (Optional) Type: `string`.
-* `admin_mac_address` - (Optional) Type: `string`.
-* `ageing_time` - (Optional) Type: `duration`. Default: `300`.
-* `arp` - (Optional) Type: `enum(disabled|enabled|proxy-arp|reply-only|local-proxy-arp)`. Default: `1`.
-* `arp_timeout` - (Optional) Type: `duration`.
+* `admin_mac_address` - (Read-only) Type: `string`.
+* `ageing_time` - (Optional) Type: `string`.
+* `arp` - (Optional) Type: `string`.
+* `arp_timeout` - (Optional) Type: `string`.
 * `auto_mac` - (Optional) Type: `bool`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `dhcp_agent_circuit_id` - (Optional) Type: `string`. RouterOS `dhcp-agent-circuit-id`.
+* `dhcp_agent_remote_id` - (Optional) Type: `string`. RouterOS `dhcp-agent-remote-id`.
 * `dhcp_snooping` - (Optional) Type: `bool`.
+* `dhcpv6_agent_circuit_id` - (Optional) Type: `string`. RouterOS `dhcpv6-agent-circuit-id`.
+* `dhcpv6_agent_remote_id` - (Optional) Type: `string`. RouterOS `dhcpv6-agent-remote-id`.
+* `dhcpv6_snooping` - (Optional) Type: `string`. RouterOS `dhcpv6-snooping`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `dumb` - (Optional) Type: `string`.
-* `ether_type` - (Optional) Type: `enum(0x8100|0x88a8|0x9100)`. Default: `33024`.
-* `fast_forward` - (Optional) Type: `bool`. Default: `1`.
-* `forward_delay` - (Optional) Type: `duration`. Default: `15`.
-* `forward_reserved` - (Optional) Type: `bool`.
-* `fp_tx_rx_packet_rate` - (Optional) Type: `string`.
-* `fp_tx_rx_rate` - (Optional) Type: `string`.
-* `frame_types` - (Optional) Type: `enum(admit-all|admit-only-vlan-tagged|admit-only-untagged-and-priority-tagged)`.
-* `heartbeat` - (Optional) Type: `duration`. Default: `5`.
-* `igmp` - (Optional) Type: `string`.
+* `dumb` - (Read-only) Type: `string`.
+* `ether_type` - (Optional) Type: `string`.
+* `fast_forward` - (Optional) Type: `bool`.
+* `forward_delay` - (Optional) Type: `string`.
+* `forward_reserved` - (Read-only) Type: `bool`.
+* `forward_reserved_addresses` - (Optional) Type: `string`. RouterOS `forward-reserved-addresses`.
+* `fp_tx_rx_packet_rate` - (Read-only) Type: `string`.
+* `fp_tx_rx_rate` - (Read-only) Type: `string`.
+* `frame_types` - (Optional) Type: `string`.
+* `heartbeat` - (Read-only) Type: `string`.
+* `igmp` - (Read-only) Type: `string`.
 * `igmp_snooping` - (Optional) Type: `bool`.
-* `igmp_version` - (Optional) Type: `enum(2|3)`. Default: `2`.
-* `ingress_filtering` - (Optional) Type: `bool`. Default: `1`.
-* `last_member_interval` - (Optional) Type: `string`. Default: `100`.
-* `last_member_query_count` - (Optional) Type: `int`. Default: `2`.
-* `max_hops` - (Optional) Type: `int`. Default: `20`.
-* `max_learned_entries` - (Optional) Type: `enum(unlimited|auto)`. Default: `4.294967295e+09`.
-* `max_message_age` - (Optional) Type: `duration`. Default: `20`.
-* `membership_interval` - (Optional) Type: `string`. Default: `26000`.
-* `mlag_heartbeat` - (Optional) Type: `duration`.
+* `igmp_version` - (Optional) Type: `string`.
+* `ingress_filtering` - (Optional) Type: `bool`.
+* `last_member_interval` - (Optional) Type: `string`.
+* `last_member_query_count` - (Optional) Type: `int`.
+* `mac_address` - (Read-only) Type: `string`.
+* `max_hops` - (Optional) Type: `int`.
+* `max_learned_entries` - (Optional) Type: `string`.
+* `max_message_age` - (Optional) Type: `string`.
+* `membership_interval` - (Optional) Type: `string`.
+* `mlag_heartbeat` - (Optional) Type: `string`.
 * `mlag_peer_port` - (Optional) Type: `string`.
 * `mlag_priority` - (Optional) Type: `int`.
-* `mld_version` - (Optional) Type: `enum(|1|2)`. Default: `1`.
-* `mstp` - (Optional) Type: `string`.
-* `mtu` - (Optional) Type: `int`. Default: `0`.
+* `mld_version` - (Optional) Type: `string`.
+* `mstp` - (Read-only) Type: `string`.
+* `mtu` - (Optional) Type: `string`. Bridge MTU. A number, or `auto` (the default) to follow the smallest port MTU.
 * `multicast_querier` - (Optional) Type: `bool`.
-* `multicast_router` - (Optional) Type: `enum(disabled|temporary-query|permanent)`. Default: `1`.
+* `multicast_router` - (Optional) Type: `string`.
 * `mvrp` - (Optional) Type: `bool`.
 * `name` - (Optional) Type: `string`.
-* `peer_port` - (Optional) Type: `string`.
-* `port_cost_mode` - (Optional) Type: `enum(short|long)`. Default: `1`.
-* `priority` - (Optional) Type: `int`. Default: `32768`.
-* `protocol_mode` - (Optional) Type: `enum(none|stp|rstp|mstp)`. Default: `2`.
+* `peer_port` - (Read-only) Type: `string`.
+* `port_cost_mode` - (Optional) Type: `string`.
+* `priority` - (Optional) Type: `int`.
+* `protocol_mode` - (Optional) Type: `string`.
 * `pvid` - (Optional) Type: `int`.
-* `querier_interval` - (Optional) Type: `string`. Default: `25500`.
-* `query_interval` - (Optional) Type: `string`. Default: `12500`.
-* `query_response_interval` - (Optional) Type: `string`. Default: `1000`.
+* `querier_interval` - (Optional) Type: `string`.
+* `query_interval` - (Optional) Type: `string`.
+* `query_response_interval` - (Optional) Type: `string`.
 * `ra_guard` - (Optional) Type: `bool`.
 * `region_name` - (Optional) Type: `string`.
 * `region_revision` - (Optional) Type: `int`.
-* `startup_query_count` - (Optional) Type: `int`. Default: `2`.
-* `startup_query_interval` - (Optional) Type: `string`. Default: `3125`.
-* `status` - (Optional) Type: `int`.
-* `transmit_hold_count` - (Optional) Type: `int`. Default: `6`.
-* `tx_rx_packet_rate` - (Optional) Type: `string`.
-* `tx_rx_rate` - (Optional) Type: `string`.
-* `type` - (Optional) Type: `string`.
-* `vlan` - (Optional) Type: `string`.
+* `startup_query_count` - (Optional) Type: `int`.
+* `startup_query_interval` - (Optional) Type: `string`.
+* `state` - (Read-only) Type: `string`.
+* `status` - (Read-only) Type: `int`.
+* `transmit_hold_count` - (Optional) Type: `int`.
+* `tx_rx_packet_rate` - (Read-only) Type: `string`.
+* `tx_rx_rate` - (Read-only) Type: `string`.
+* `type` - (Read-only) Type: `string`.
+* `vlan` - (Read-only) Type: `string`.
 * `vlan_filtering` - (Optional) Type: `bool`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `active_role` - Type: `enum(primary|secondary)`.
-* `mac_address` - Type: `string`.
-* `state` - Type: `string`.
 
 ## Import
 

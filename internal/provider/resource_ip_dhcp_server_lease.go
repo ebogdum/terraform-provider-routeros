@@ -32,6 +32,9 @@ type IPDHCPServerLeaseResource struct {
 
 type IPDHCPServerLeaseModel struct {
 	ID                   types.String `tfsdk:"id"`
+	UseSrcMac            types.String `tfsdk:"use_src_mac"`
+	DhcpOption           types.String `tfsdk:"dhcp_option"`
+	AddressLists         types.String `tfsdk:"address_lists"`
 	ActiveAddress        types.String `tfsdk:"active_address"`
 	ActiveAgentCircuitID types.String `tfsdk:"active_agent_circuit_id"`
 	ActiveAgentRemoteID  types.String `tfsdk:"active_agent_remote_id"`
@@ -94,7 +97,6 @@ func (r *IPDHCPServerLeaseResource) Configure(_ context.Context, req resource.Co
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPDHCPServerLeaseResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -106,44 +108,51 @@ func (r *IPDHCPServerLeaseResource) Schema(_ context.Context, _ resource.SchemaR
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
-			"active_address": schema.StringAttribute{
+			"use_src_mac": schema.StringAttribute{
 				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `use-src-mac`.",
+			},
+			"dhcp_option": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `dhcp-option`.",
+			},
+			"address_lists": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `address-lists`.",
+			},
+			"active_address": schema.StringAttribute{
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.IsIP()},
 			},
 			"active_agent_circuit_id": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"active_agent_remote_id": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"active_class_id": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"active_client_id": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"active_host_name": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"active_mac_address": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"active_server": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -153,12 +162,10 @@ func (r *IPDHCPServerLeaseResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"address_list": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"age": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -188,17 +195,14 @@ func (r *IPDHCPServerLeaseResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"blocked": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"bridge_port": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"check_status": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -218,7 +222,6 @@ func (r *IPDHCPServerLeaseResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"dhcp_options": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -228,17 +231,14 @@ func (r *IPDHCPServerLeaseResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "Whether the entry is disabled.",
 			},
 			"dyn": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"expires_after": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -248,12 +248,10 @@ func (r *IPDHCPServerLeaseResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"last_seen": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"last_sent_counter": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -270,7 +268,6 @@ func (r *IPDHCPServerLeaseResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"make_static": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -280,7 +277,6 @@ func (r *IPDHCPServerLeaseResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"ping": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -290,7 +286,6 @@ func (r *IPDHCPServerLeaseResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"radius": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -300,17 +295,14 @@ func (r *IPDHCPServerLeaseResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"reconfigure_key": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"reconfigure_status": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rostat": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -320,7 +312,6 @@ func (r *IPDHCPServerLeaseResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"send_reconfigure": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -330,17 +321,14 @@ func (r *IPDHCPServerLeaseResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"src_mac_address": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"stat": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"use_src_mac_address": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -366,9 +354,6 @@ func (r *IPDHCPServerLeaseResource) Create(ctx context.Context, req resource.Cre
 	if !(plan.Address.IsNull() || plan.Address.IsUnknown()) {
 		body["address"] = plan.Address.ValueString()
 	}
-	if !(plan.AddressList.IsNull() || plan.AddressList.IsUnknown()) {
-		body["address-list"] = plan.AddressList.ValueString()
-	}
 	if !(plan.AgentCircuitID.IsNull() || plan.AgentCircuitID.IsUnknown()) {
 		body["agent-circuit-id"] = plan.AgentCircuitID.ValueString()
 	}
@@ -384,12 +369,6 @@ func (r *IPDHCPServerLeaseResource) Create(ctx context.Context, req resource.Cre
 	if !(plan.BlockAccess.IsNull() || plan.BlockAccess.IsUnknown()) {
 		body["block-access"] = client.FormatBool(plan.BlockAccess.ValueBool())
 	}
-	if !(plan.Blocked.IsNull() || plan.Blocked.IsUnknown()) {
-		body["blocked"] = client.FormatBool(plan.Blocked.ValueBool())
-	}
-	if !(plan.CheckStatus.IsNull() || plan.CheckStatus.IsUnknown()) {
-		body["check-status"] = plan.CheckStatus.ValueString()
-	}
 	if !(plan.ClientID.IsNull() || plan.ClientID.IsUnknown()) {
 		body["client-id"] = plan.ClientID.ValueString()
 	}
@@ -399,14 +378,8 @@ func (r *IPDHCPServerLeaseResource) Create(ctx context.Context, req resource.Cre
 	if !(plan.DHCPOptionSet.IsNull() || plan.DHCPOptionSet.IsUnknown()) {
 		body["dhcp-option-set"] = plan.DHCPOptionSet.ValueString()
 	}
-	if !(plan.DHCPOptions.IsNull() || plan.DHCPOptions.IsUnknown()) {
-		body["dhcp-options"] = plan.DHCPOptions.ValueString()
-	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
-	}
-	if !(plan.Dyn.IsNull() || plan.Dyn.IsUnknown()) {
-		body["dyn"] = plan.Dyn.ValueString()
 	}
 	if !(plan.InsertQueueBefore.IsNull() || plan.InsertQueueBefore.IsUnknown()) {
 		body["insert-queue-before"] = plan.InsertQueueBefore.ValueString()
@@ -417,41 +390,29 @@ func (r *IPDHCPServerLeaseResource) Create(ctx context.Context, req resource.Cre
 	if !(plan.MACAddress.IsNull() || plan.MACAddress.IsUnknown()) {
 		body["mac-address"] = plan.MACAddress.ValueString()
 	}
-	if !(plan.MakeStatic.IsNull() || plan.MakeStatic.IsUnknown()) {
-		body["make-static"] = plan.MakeStatic.ValueString()
-	}
 	if !(plan.ParentQueue.IsNull() || plan.ParentQueue.IsUnknown()) {
 		body["parent-queue"] = plan.ParentQueue.ValueString()
-	}
-	if !(plan.Ping.IsNull() || plan.Ping.IsUnknown()) {
-		body["ping"] = plan.Ping.ValueString()
 	}
 	if !(plan.QueueType.IsNull() || plan.QueueType.IsUnknown()) {
 		body["queue-type"] = plan.QueueType.ValueString()
 	}
-	if !(plan.RADIUS.IsNull() || plan.RADIUS.IsUnknown()) {
-		body["radius"] = client.FormatBool(plan.RADIUS.ValueBool())
-	}
 	if !(plan.RateLimit.IsNull() || plan.RateLimit.IsUnknown()) {
 		body["rate-limit"] = plan.RateLimit.ValueString()
-	}
-	if !(plan.Rostat.IsNull() || plan.Rostat.IsUnknown()) {
-		body["rostat"] = plan.Rostat.ValueString()
 	}
 	if !(plan.Routes.IsNull() || plan.Routes.IsUnknown()) {
 		body["routes"] = plan.Routes.ValueString()
 	}
-	if !(plan.SendReconfigure.IsNull() || plan.SendReconfigure.IsUnknown()) {
-		body["send-reconfigure"] = plan.SendReconfigure.ValueString()
-	}
 	if !(plan.Server.IsNull() || plan.Server.IsUnknown()) {
 		body["server"] = plan.Server.ValueString()
 	}
-	if !(plan.Stat.IsNull() || plan.Stat.IsUnknown()) {
-		body["stat"] = plan.Stat.ValueString()
+	if !(plan.AddressLists.IsNull() || plan.AddressLists.IsUnknown()) {
+		body["address-lists"] = plan.AddressLists.ValueString()
 	}
-	if !(plan.UseSrcMACAddress.IsNull() || plan.UseSrcMACAddress.IsUnknown()) {
-		body["use-src-mac-address"] = client.FormatBool(plan.UseSrcMACAddress.ValueBool())
+	if !(plan.DhcpOption.IsNull() || plan.DhcpOption.IsUnknown()) {
+		body["dhcp-option"] = plan.DhcpOption.ValueString()
+	}
+	if !(plan.UseSrcMac.IsNull() || plan.UseSrcMac.IsUnknown()) {
+		body["use-src-mac"] = plan.UseSrcMac.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ip/dhcp-server/lease", body)
 	if err != nil {
@@ -503,9 +464,6 @@ func (r *IPDHCPServerLeaseResource) Update(ctx context.Context, req resource.Upd
 	if !plan.Address.Equal(state.Address) {
 		body["address"] = plan.Address.ValueString()
 	}
-	if !plan.AddressList.Equal(state.AddressList) {
-		body["address-list"] = plan.AddressList.ValueString()
-	}
 	if !plan.AgentCircuitID.Equal(state.AgentCircuitID) {
 		body["agent-circuit-id"] = plan.AgentCircuitID.ValueString()
 	}
@@ -521,12 +479,6 @@ func (r *IPDHCPServerLeaseResource) Update(ctx context.Context, req resource.Upd
 	if !plan.BlockAccess.Equal(state.BlockAccess) {
 		body["block-access"] = client.FormatBool(plan.BlockAccess.ValueBool())
 	}
-	if !plan.Blocked.Equal(state.Blocked) {
-		body["blocked"] = client.FormatBool(plan.Blocked.ValueBool())
-	}
-	if !plan.CheckStatus.Equal(state.CheckStatus) {
-		body["check-status"] = plan.CheckStatus.ValueString()
-	}
 	if !plan.ClientID.Equal(state.ClientID) {
 		body["client-id"] = plan.ClientID.ValueString()
 	}
@@ -536,14 +488,8 @@ func (r *IPDHCPServerLeaseResource) Update(ctx context.Context, req resource.Upd
 	if !plan.DHCPOptionSet.Equal(state.DHCPOptionSet) {
 		body["dhcp-option-set"] = plan.DHCPOptionSet.ValueString()
 	}
-	if !plan.DHCPOptions.Equal(state.DHCPOptions) {
-		body["dhcp-options"] = plan.DHCPOptions.ValueString()
-	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
-	}
-	if !plan.Dyn.Equal(state.Dyn) {
-		body["dyn"] = plan.Dyn.ValueString()
 	}
 	if !plan.InsertQueueBefore.Equal(state.InsertQueueBefore) {
 		body["insert-queue-before"] = plan.InsertQueueBefore.ValueString()
@@ -554,41 +500,29 @@ func (r *IPDHCPServerLeaseResource) Update(ctx context.Context, req resource.Upd
 	if !plan.MACAddress.Equal(state.MACAddress) {
 		body["mac-address"] = plan.MACAddress.ValueString()
 	}
-	if !plan.MakeStatic.Equal(state.MakeStatic) {
-		body["make-static"] = plan.MakeStatic.ValueString()
-	}
 	if !plan.ParentQueue.Equal(state.ParentQueue) {
 		body["parent-queue"] = plan.ParentQueue.ValueString()
-	}
-	if !plan.Ping.Equal(state.Ping) {
-		body["ping"] = plan.Ping.ValueString()
 	}
 	if !plan.QueueType.Equal(state.QueueType) {
 		body["queue-type"] = plan.QueueType.ValueString()
 	}
-	if !plan.RADIUS.Equal(state.RADIUS) {
-		body["radius"] = client.FormatBool(plan.RADIUS.ValueBool())
-	}
 	if !plan.RateLimit.Equal(state.RateLimit) {
 		body["rate-limit"] = plan.RateLimit.ValueString()
-	}
-	if !plan.Rostat.Equal(state.Rostat) {
-		body["rostat"] = plan.Rostat.ValueString()
 	}
 	if !plan.Routes.Equal(state.Routes) {
 		body["routes"] = plan.Routes.ValueString()
 	}
-	if !plan.SendReconfigure.Equal(state.SendReconfigure) {
-		body["send-reconfigure"] = plan.SendReconfigure.ValueString()
-	}
 	if !plan.Server.Equal(state.Server) {
 		body["server"] = plan.Server.ValueString()
 	}
-	if !plan.Stat.Equal(state.Stat) {
-		body["stat"] = plan.Stat.ValueString()
+	if !plan.AddressLists.Equal(state.AddressLists) && !plan.AddressLists.IsUnknown() {
+		body["address-lists"] = plan.AddressLists.ValueString()
 	}
-	if !plan.UseSrcMACAddress.Equal(state.UseSrcMACAddress) {
-		body["use-src-mac-address"] = client.FormatBool(plan.UseSrcMACAddress.ValueBool())
+	if !plan.DhcpOption.Equal(state.DhcpOption) && !plan.DhcpOption.IsUnknown() {
+		body["dhcp-option"] = plan.DhcpOption.ValueString()
+	}
+	if !plan.UseSrcMac.Equal(state.UseSrcMac) && !plan.UseSrcMac.IsUnknown() {
+		body["use-src-mac"] = plan.UseSrcMac.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/dhcp-server/lease", state.ID.ValueString(), body)
@@ -656,6 +590,21 @@ func iPDHCPServerLeaseLookupByNaturalKey(ctx context.Context, c *client.Client, 
 func iPDHCPServerLeaseApply(ctx context.Context, obj client.Object, m *IPDHCPServerLeaseModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["use-src-mac"]; ok && v != "" {
+		m.UseSrcMac = types.StringValue(v)
+	} else {
+		m.UseSrcMac = types.StringNull()
+	}
+	if v, ok := obj["dhcp-option"]; ok && v != "" {
+		m.DhcpOption = types.StringValue(v)
+	} else {
+		m.DhcpOption = types.StringNull()
+	}
+	if v, ok := obj["address-lists"]; ok && v != "" {
+		m.AddressLists = types.StringValue(v)
+	} else {
+		m.AddressLists = types.StringNull()
+	}
 	if v, ok := obj["active-address"]; ok {
 		_ = v
 		if v != "" {

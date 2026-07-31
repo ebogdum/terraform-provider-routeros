@@ -32,6 +32,8 @@ type CertificateScepServerResource struct {
 
 type CertificateScepServerModel struct {
 	ID                types.String `tfsdk:"id"`
+	NextCaCert        types.String `tfsdk:"next_ca_cert"`
+	CaCert            types.String `tfsdk:"ca_cert"`
 	CACertificate     types.String `tfsdk:"ca_certificate"`
 	DaysValid         types.Int64  `tfsdk:"days_valid"`
 	Disabled          types.Bool   `tfsdk:"disabled"`
@@ -53,7 +55,6 @@ func (r *CertificateScepServerResource) Configure(_ context.Context, req resourc
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *CertificateScepServerResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -65,8 +66,17 @@ func (r *CertificateScepServerResource) Schema(_ context.Context, _ resource.Sch
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
-			"ca_certificate": schema.StringAttribute{
+			"next_ca_cert": schema.StringAttribute{
 				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `next-ca-cert`.",
+			},
+			"ca_cert": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `ca-cert`.",
+			},
+			"ca_certificate": schema.StringAttribute{
 				Computed:    true,
 				Description: "",
 			},
@@ -81,7 +91,6 @@ func (r *CertificateScepServerResource) Schema(_ context.Context, _ resource.Sch
 				Description: "Whether the entry is disabled.",
 			},
 			"next_ca_certificate": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -116,23 +125,23 @@ func (r *CertificateScepServerResource) Create(ctx context.Context, req resource
 		return
 	}
 	body := client.Object{}
-	if !(plan.CACertificate.IsNull() || plan.CACertificate.IsUnknown()) {
-		body["ca-certificate"] = plan.CACertificate.ValueString()
-	}
 	if !(plan.DaysValid.IsNull() || plan.DaysValid.IsUnknown()) {
 		body["days-valid"] = client.FormatInt64(plan.DaysValid.ValueInt64())
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !(plan.NextCACertificate.IsNull() || plan.NextCACertificate.IsUnknown()) {
-		body["next-ca-certificate"] = plan.NextCACertificate.ValueString()
-	}
 	if !(plan.Path.IsNull() || plan.Path.IsUnknown()) {
 		body["path"] = plan.Path.ValueString()
 	}
 	if !(plan.RequestLifetime.IsNull() || plan.RequestLifetime.IsUnknown()) {
 		body["request-lifetime"] = plan.RequestLifetime.ValueString()
+	}
+	if !(plan.CaCert.IsNull() || plan.CaCert.IsUnknown()) {
+		body["ca-cert"] = plan.CaCert.ValueString()
+	}
+	if !(plan.NextCaCert.IsNull() || plan.NextCaCert.IsUnknown()) {
+		body["next-ca-cert"] = plan.NextCaCert.ValueString()
 	}
 	obj, err := c.Add(ctx, "/certificate/scep-server", body)
 	if err != nil {
@@ -181,23 +190,23 @@ func (r *CertificateScepServerResource) Update(ctx context.Context, req resource
 		return
 	}
 	body := client.Object{}
-	if !plan.CACertificate.Equal(state.CACertificate) {
-		body["ca-certificate"] = plan.CACertificate.ValueString()
-	}
 	if !plan.DaysValid.Equal(state.DaysValid) {
 		body["days-valid"] = client.FormatInt64(plan.DaysValid.ValueInt64())
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.NextCACertificate.Equal(state.NextCACertificate) {
-		body["next-ca-certificate"] = plan.NextCACertificate.ValueString()
-	}
 	if !plan.Path.Equal(state.Path) {
 		body["path"] = plan.Path.ValueString()
 	}
 	if !plan.RequestLifetime.Equal(state.RequestLifetime) {
 		body["request-lifetime"] = plan.RequestLifetime.ValueString()
+	}
+	if !plan.CaCert.Equal(state.CaCert) && !plan.CaCert.IsUnknown() {
+		body["ca-cert"] = plan.CaCert.ValueString()
+	}
+	if !plan.NextCaCert.Equal(state.NextCaCert) && !plan.NextCaCert.IsUnknown() {
+		body["next-ca-cert"] = plan.NextCaCert.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/certificate/scep-server", state.ID.ValueString(), body)
@@ -265,6 +274,16 @@ func certificateScepServerLookupByNaturalKey(ctx context.Context, c *client.Clie
 func certificateScepServerApply(ctx context.Context, obj client.Object, m *CertificateScepServerModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["next-ca-cert"]; ok && v != "" {
+		m.NextCaCert = types.StringValue(v)
+	} else {
+		m.NextCaCert = types.StringNull()
+	}
+	if v, ok := obj["ca-cert"]; ok && v != "" {
+		m.CaCert = types.StringValue(v)
+	} else {
+		m.CaCert = types.StringNull()
+	}
 	if v, ok := obj["ca-certificate"]; ok {
 		_ = v
 		if v != "" {

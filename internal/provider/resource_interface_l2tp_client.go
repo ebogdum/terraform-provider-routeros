@@ -30,6 +30,16 @@ type InterfaceL2TPClientResource struct {
 
 type InterfaceL2TPClientModel struct {
 	ID                   types.String `tfsdk:"id"`
+	UsePeerDns           types.String `tfsdk:"use_peer_dns"`
+	UseIpsec             types.String `tfsdk:"use_ipsec"`
+	SrcAddress           types.String `tfsdk:"src_address"`
+	RandomSourcePort     types.String `tfsdk:"random_source_port"`
+	L2tpv3DigestHash     types.String `tfsdk:"l2tpv3_digest_hash"`
+	L2tpv3CookieLength   types.String `tfsdk:"l2tpv3_cookie_length"`
+	L2tpv3CircuitId      types.String `tfsdk:"l2tpv3_circuit_id"`
+	L2tpProtoVersion     types.String `tfsdk:"l2tp_proto_version"`
+	AllowFastPath        types.String `tfsdk:"allow_fast_path"`
+	AddDefaultRoute      types.String `tfsdk:"add_default_route"`
 	Allow                types.String `tfsdk:"allow"`
 	Comment              types.String `tfsdk:"comment"`
 	ConnectTo            types.String `tfsdk:"connect_to"`
@@ -60,7 +70,6 @@ func (r *InterfaceL2TPClientResource) Configure(_ context.Context, req resource.
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceL2TPClientResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -71,6 +80,56 @@ func (r *InterfaceL2TPClientResource) Schema(_ context.Context, _ resource.Schem
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"use_peer_dns": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `use-peer-dns`.",
+			},
+			"use_ipsec": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `use-ipsec`.",
+			},
+			"src_address": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `src-address`.",
+			},
+			"random_source_port": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `random-source-port`.",
+			},
+			"l2tpv3_digest_hash": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `l2tpv3-digest-hash`.",
+			},
+			"l2tpv3_cookie_length": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `l2tpv3-cookie-length`.",
+			},
+			"l2tpv3_circuit_id": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `l2tpv3-circuit-id`.",
+			},
+			"l2tp_proto_version": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `l2tp-proto-version`.",
+			},
+			"allow_fast_path": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `allow-fast-path`.",
+			},
+			"add_default_route": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `add-default-route`.",
 			},
 			"allow": schema.StringAttribute{
 				Optional:    true,
@@ -103,6 +162,7 @@ func (r *InterfaceL2TPClientResource) Schema(_ context.Context, _ resource.Schem
 			},
 			"ipsec_secret": schema.StringAttribute{
 				Optional:    true,
+				Sensitive:   true,
 				Computed:    true,
 				Description: "",
 			},
@@ -209,6 +269,36 @@ func (r *InterfaceL2TPClientResource) Create(ctx context.Context, req resource.C
 	if !(plan.User.IsNull() || plan.User.IsUnknown()) {
 		body["user"] = plan.User.ValueString()
 	}
+	if !(plan.AddDefaultRoute.IsNull() || plan.AddDefaultRoute.IsUnknown()) {
+		body["add-default-route"] = plan.AddDefaultRoute.ValueString()
+	}
+	if !(plan.AllowFastPath.IsNull() || plan.AllowFastPath.IsUnknown()) {
+		body["allow-fast-path"] = plan.AllowFastPath.ValueString()
+	}
+	if !(plan.L2tpProtoVersion.IsNull() || plan.L2tpProtoVersion.IsUnknown()) {
+		body["l2tp-proto-version"] = plan.L2tpProtoVersion.ValueString()
+	}
+	if !(plan.L2tpv3CircuitId.IsNull() || plan.L2tpv3CircuitId.IsUnknown()) {
+		body["l2tpv3-circuit-id"] = plan.L2tpv3CircuitId.ValueString()
+	}
+	if !(plan.L2tpv3CookieLength.IsNull() || plan.L2tpv3CookieLength.IsUnknown()) {
+		body["l2tpv3-cookie-length"] = plan.L2tpv3CookieLength.ValueString()
+	}
+	if !(plan.L2tpv3DigestHash.IsNull() || plan.L2tpv3DigestHash.IsUnknown()) {
+		body["l2tpv3-digest-hash"] = plan.L2tpv3DigestHash.ValueString()
+	}
+	if !(plan.RandomSourcePort.IsNull() || plan.RandomSourcePort.IsUnknown()) {
+		body["random-source-port"] = plan.RandomSourcePort.ValueString()
+	}
+	if !(plan.SrcAddress.IsNull() || plan.SrcAddress.IsUnknown()) {
+		body["src-address"] = plan.SrcAddress.ValueString()
+	}
+	if !(plan.UseIpsec.IsNull() || plan.UseIpsec.IsUnknown()) {
+		body["use-ipsec"] = plan.UseIpsec.ValueString()
+	}
+	if !(plan.UsePeerDns.IsNull() || plan.UsePeerDns.IsUnknown()) {
+		body["use-peer-dns"] = plan.UsePeerDns.ValueString()
+	}
 	obj, err := c.Add(ctx, "/interface/l2tp-client", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /interface/l2tp-client failed", err.Error())
@@ -301,6 +391,36 @@ func (r *InterfaceL2TPClientResource) Update(ctx context.Context, req resource.U
 	if !plan.User.Equal(state.User) {
 		body["user"] = plan.User.ValueString()
 	}
+	if !plan.AddDefaultRoute.Equal(state.AddDefaultRoute) && !plan.AddDefaultRoute.IsUnknown() {
+		body["add-default-route"] = plan.AddDefaultRoute.ValueString()
+	}
+	if !plan.AllowFastPath.Equal(state.AllowFastPath) && !plan.AllowFastPath.IsUnknown() {
+		body["allow-fast-path"] = plan.AllowFastPath.ValueString()
+	}
+	if !plan.L2tpProtoVersion.Equal(state.L2tpProtoVersion) && !plan.L2tpProtoVersion.IsUnknown() {
+		body["l2tp-proto-version"] = plan.L2tpProtoVersion.ValueString()
+	}
+	if !plan.L2tpv3CircuitId.Equal(state.L2tpv3CircuitId) && !plan.L2tpv3CircuitId.IsUnknown() {
+		body["l2tpv3-circuit-id"] = plan.L2tpv3CircuitId.ValueString()
+	}
+	if !plan.L2tpv3CookieLength.Equal(state.L2tpv3CookieLength) && !plan.L2tpv3CookieLength.IsUnknown() {
+		body["l2tpv3-cookie-length"] = plan.L2tpv3CookieLength.ValueString()
+	}
+	if !plan.L2tpv3DigestHash.Equal(state.L2tpv3DigestHash) && !plan.L2tpv3DigestHash.IsUnknown() {
+		body["l2tpv3-digest-hash"] = plan.L2tpv3DigestHash.ValueString()
+	}
+	if !plan.RandomSourcePort.Equal(state.RandomSourcePort) && !plan.RandomSourcePort.IsUnknown() {
+		body["random-source-port"] = plan.RandomSourcePort.ValueString()
+	}
+	if !plan.SrcAddress.Equal(state.SrcAddress) && !plan.SrcAddress.IsUnknown() {
+		body["src-address"] = plan.SrcAddress.ValueString()
+	}
+	if !plan.UseIpsec.Equal(state.UseIpsec) && !plan.UseIpsec.IsUnknown() {
+		body["use-ipsec"] = plan.UseIpsec.ValueString()
+	}
+	if !plan.UsePeerDns.Equal(state.UsePeerDns) && !plan.UsePeerDns.IsUnknown() {
+		body["use-peer-dns"] = plan.UsePeerDns.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/l2tp-client", state.ID.ValueString(), body)
 		if err != nil {
@@ -367,6 +487,56 @@ func interfaceL2TPClientLookupByNaturalKey(ctx context.Context, c *client.Client
 func interfaceL2TPClientApply(ctx context.Context, obj client.Object, m *InterfaceL2TPClientModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["use-peer-dns"]; ok && v != "" {
+		m.UsePeerDns = types.StringValue(v)
+	} else {
+		m.UsePeerDns = types.StringNull()
+	}
+	if v, ok := obj["use-ipsec"]; ok && v != "" {
+		m.UseIpsec = types.StringValue(v)
+	} else {
+		m.UseIpsec = types.StringNull()
+	}
+	if v, ok := obj["src-address"]; ok && v != "" {
+		m.SrcAddress = types.StringValue(v)
+	} else {
+		m.SrcAddress = types.StringNull()
+	}
+	if v, ok := obj["random-source-port"]; ok && v != "" {
+		m.RandomSourcePort = types.StringValue(v)
+	} else {
+		m.RandomSourcePort = types.StringNull()
+	}
+	if v, ok := obj["l2tpv3-digest-hash"]; ok && v != "" {
+		m.L2tpv3DigestHash = types.StringValue(v)
+	} else {
+		m.L2tpv3DigestHash = types.StringNull()
+	}
+	if v, ok := obj["l2tpv3-cookie-length"]; ok && v != "" {
+		m.L2tpv3CookieLength = types.StringValue(v)
+	} else {
+		m.L2tpv3CookieLength = types.StringNull()
+	}
+	if v, ok := obj["l2tpv3-circuit-id"]; ok && v != "" {
+		m.L2tpv3CircuitId = types.StringValue(v)
+	} else {
+		m.L2tpv3CircuitId = types.StringNull()
+	}
+	if v, ok := obj["l2tp-proto-version"]; ok && v != "" {
+		m.L2tpProtoVersion = types.StringValue(v)
+	} else {
+		m.L2tpProtoVersion = types.StringNull()
+	}
+	if v, ok := obj["allow-fast-path"]; ok && v != "" {
+		m.AllowFastPath = types.StringValue(v)
+	} else {
+		m.AllowFastPath = types.StringNull()
+	}
+	if v, ok := obj["add-default-route"]; ok && v != "" {
+		m.AddDefaultRoute = types.StringValue(v)
+	} else {
+		m.AddDefaultRoute = types.StringNull()
+	}
 	if v, ok := obj["allow"]; ok {
 		_ = v
 		if v != "" {

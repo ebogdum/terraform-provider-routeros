@@ -39,30 +39,29 @@ resource "routeros_ip_ipsec_mode_config" "mode_config_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `address` - (Optional) Type: `ip`.
-* `address_pool` - (Optional) Type: `string`. Default: `4.294967295e+09`.
-* `address_prefix_length` - (Optional) Type: `int`. Default: `24`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `address` - (Optional) Type: `string`.
+* `address_pool` - (Optional) Type: `string`.
+* `address_prefix_length` - (Optional) Type: `int`.
 * `connection_mark` - (Optional) Type: `string`.
-* `name` - (Required) Type: `string`. Default: `tf_acc_modecfg`.
+* `default` - (Read-only) Type: `bool`.
+* `name` - (Required) Type: `string`.
 * `nonresp` - (Optional) Type: `string`.
-* `pool` - (Optional) Type: `string`.
+* `pool` - (Read-only) Type: `string`.
 * `resp` - (Optional) Type: `string`.
 * `responder` - (Optional) Type: `bool`.
-* `sdns` - (Optional) Type: `string`.
+* `sdns` - (Read-only) Type: `string`.
 * `split_dns` - (Optional) Type: `string`.
 * `split_include` - (Optional) Type: `string`.
 * `src_address_list` - (Optional) Type: `string`.
 * `static_dns` - (Optional) Type: `string`.
 * `system_dns` - (Optional) Type: `bool`.
-* `use_responder_dns` - (Optional) Type: `enum(no|yes|exclusively)`. Default: `2`.
+* `use_responder_dns` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `default` - Type: `bool`.
 
 ## Import
 

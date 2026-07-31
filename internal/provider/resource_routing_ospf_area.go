@@ -59,7 +59,6 @@ func (r *RoutingOSPFAreaResource) Configure(_ context.Context, req resource.Conf
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *RoutingOSPFAreaResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -93,7 +92,6 @@ func (r *RoutingOSPFAreaResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "Whether the entry is disabled.",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -103,7 +101,6 @@ func (r *RoutingOSPFAreaResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "",
 			},
 			"invalid": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -123,7 +120,6 @@ func (r *RoutingOSPFAreaResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "",
 			},
 			"transit_capable": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},

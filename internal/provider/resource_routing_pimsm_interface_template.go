@@ -59,7 +59,6 @@ func (r *RoutingPimsmInterfaceTemplateResource) Configure(_ context.Context, req
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *RoutingPimsmInterfaceTemplateResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -97,7 +96,6 @@ func (r *RoutingPimsmInterfaceTemplateResource) Schema(_ context.Context, _ reso
 				Description: "",
 			},
 			"invalid": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},

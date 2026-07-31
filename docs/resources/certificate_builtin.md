@@ -41,7 +41,7 @@ resource "routeros_certificate_builtin" "builtin_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `akid` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `common_name` - (Optional) Type: `string`.
@@ -51,6 +51,7 @@ This resource supports the following arguments:
 * `invalid_after` - (Optional) Type: `string`.
 * `invalid_before` - (Optional) Type: `string`.
 * `issuer` - (Optional) Type: `string`.
+* `key_size` - (Optional) Type: `string`. RouterOS `key-size`.
 * `key_type` - (Optional) Type: `string`.
 * `key_usage` - (Optional) Type: `list`.
 * `locality` - (Optional) Type: `string`.
@@ -60,6 +61,11 @@ This resource supports the following arguments:
 * `state` - (Optional) Type: `string`.
 * `subject_alt_name` - (Optional) Type: `string`.
 * `unit` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

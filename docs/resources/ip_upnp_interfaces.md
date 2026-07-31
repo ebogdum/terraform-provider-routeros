@@ -25,10 +25,16 @@ resource "routeros_ip_upnp_interfaces" "interfaces_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `forced_ip` - (Optional) Type: `string`. RouterOS `forced-ip`.
 * `interface` - (Required) Type: `string`.
-* `type` - (Required) Type: `string`. Default: `internal`.
+* `type` - (Required) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

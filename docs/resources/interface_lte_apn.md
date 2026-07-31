@@ -33,23 +33,28 @@ resource "routeros_interface_lte_apn" "apn_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `add_default_route` - (Optional) Type: `bool`.
-* `apn` - (Required) Type: `string`. Default: `internet`.
+* `apn` - (Required) Type: `string`.
 * `authentication` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `default` - (Read-only) Type: `bool`.
 * `default_route_distance` - (Optional) Type: `int`.
 * `ip_type` - (Optional) Type: `string`.
-* `name` - (Required) Type: `string`. Default: `tf-acc-apn`.
+* `ipv6_interface` - (Optional) Type: `string`. RouterOS `ipv6-interface`.
+* `name` - (Required) Type: `string`.
+* `passthrough_interface` - (Optional) Type: `string`. RouterOS `passthrough-interface`.
+* `passthrough_mac` - (Optional) Type: `string`. RouterOS `passthrough-mac`.
+* `passthrough_subnet_size` - (Optional) Type: `string`. RouterOS `passthrough-subnet-size`.
+* `password` - (Optional) Type: `string`. RouterOS `password`. **Sensitive.**
 * `use_network_apn` - (Optional) Type: `bool`.
 * `use_peer_dns` - (Optional) Type: `bool`.
+* `user` - (Optional) Type: `string`. RouterOS `user`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `default` - Type: `bool`.
 
 ## Import
 

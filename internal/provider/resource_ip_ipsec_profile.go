@@ -32,6 +32,7 @@ type IPIpsecProfileResource struct {
 
 type IPIpsecProfileModel struct {
 	ID                  types.String `tfsdk:"id"`
+	PrfAlgorithm        types.String `tfsdk:"prf_algorithm"`
 	Default             types.Bool   `tfsdk:"default"`
 	DhGroup             types.List   `tfsdk:"dh_group"`
 	DpdInterval         types.String `tfsdk:"dpd_interval"`
@@ -62,7 +63,6 @@ func (r *IPIpsecProfileResource) Configure(_ context.Context, req resource.Confi
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPIpsecProfileResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -74,8 +74,12 @@ func (r *IPIpsecProfileResource) Schema(_ context.Context, _ resource.SchemaRequ
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
-			"default": schema.BoolAttribute{
+			"prf_algorithm": schema.StringAttribute{
 				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `prf-algorithm`.",
+			},
+			"default": schema.BoolAttribute{
 				Computed:    true,
 				Description: "",
 			},
@@ -86,10 +90,11 @@ func (r *IPIpsecProfileResource) Schema(_ context.Context, _ resource.SchemaRequ
 				Description: "",
 			},
 			"dpd_interval": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"disable-dpd"}...)},
+				Optional:      true,
+				Computed:      true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsDurationOrKeyword("disable-dpd")},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeDurationExcept("disable-dpd")},
 			},
 			"dpd_maximum_failures": schema.Int64Attribute{
 				Optional:    true,
@@ -103,7 +108,6 @@ func (r *IPIpsecProfileResource) Schema(_ context.Context, _ resource.SchemaRequ
 				Description: "",
 			},
 			"encryption_algorithm": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -113,7 +117,6 @@ func (r *IPIpsecProfileResource) Schema(_ context.Context, _ resource.SchemaRequ
 				Description: "",
 			},
 			"hash_algorithms": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.OneOf([]string{"md5", "sha1", "sha256", "sha384", "sha512"}...)},
@@ -146,7 +149,6 @@ func (r *IPIpsecProfileResource) Schema(_ context.Context, _ resource.SchemaRequ
 				Validators:  []validator.String{schemautil.OneOf([]string{"no", "psk", "qkd", "psk-ike-initial"}...)},
 			},
 			"prf_algorithms": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.OneOf([]string{"auto", "sha1", "sha256", "sha384", "sha512"}...)},
@@ -188,14 +190,8 @@ func (r *IPIpsecProfileResource) Create(ctx context.Context, req resource.Create
 	if !(plan.EncAlgorithm.IsNull() || plan.EncAlgorithm.IsUnknown()) {
 		body["enc-algorithm"] = encodeStringList(ctx, plan.EncAlgorithm, &resp.Diagnostics)
 	}
-	if !(plan.EncryptionAlgorithm.IsNull() || plan.EncryptionAlgorithm.IsUnknown()) {
-		body["encryption-algorithm"] = plan.EncryptionAlgorithm.ValueString()
-	}
 	if !(plan.HashAlgorithm.IsNull() || plan.HashAlgorithm.IsUnknown()) {
 		body["hash-algorithm"] = plan.HashAlgorithm.ValueString()
-	}
-	if !(plan.HashAlgorithms.IsNull() || plan.HashAlgorithms.IsUnknown()) {
-		body["hash-algorithms"] = plan.HashAlgorithms.ValueString()
 	}
 	if !(plan.Lifebytes.IsNull() || plan.Lifebytes.IsUnknown()) {
 		body["lifebytes"] = client.FormatInt64(plan.Lifebytes.ValueInt64())
@@ -212,11 +208,11 @@ func (r *IPIpsecProfileResource) Create(ctx context.Context, req resource.Create
 	if !(plan.Ppk.IsNull() || plan.Ppk.IsUnknown()) {
 		body["ppk"] = plan.Ppk.ValueString()
 	}
-	if !(plan.PrfAlgorithms.IsNull() || plan.PrfAlgorithms.IsUnknown()) {
-		body["prf-algorithms"] = plan.PrfAlgorithms.ValueString()
-	}
 	if !(plan.ProposalCheck.IsNull() || plan.ProposalCheck.IsUnknown()) {
 		body["proposal-check"] = plan.ProposalCheck.ValueString()
+	}
+	if !(plan.PrfAlgorithm.IsNull() || plan.PrfAlgorithm.IsUnknown()) {
+		body["prf-algorithm"] = plan.PrfAlgorithm.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ip/ipsec/profile", body)
 	if err != nil {
@@ -277,14 +273,8 @@ func (r *IPIpsecProfileResource) Update(ctx context.Context, req resource.Update
 	if !plan.EncAlgorithm.Equal(state.EncAlgorithm) {
 		body["enc-algorithm"] = encodeStringList(ctx, plan.EncAlgorithm, &resp.Diagnostics)
 	}
-	if !plan.EncryptionAlgorithm.Equal(state.EncryptionAlgorithm) {
-		body["encryption-algorithm"] = plan.EncryptionAlgorithm.ValueString()
-	}
 	if !plan.HashAlgorithm.Equal(state.HashAlgorithm) {
 		body["hash-algorithm"] = plan.HashAlgorithm.ValueString()
-	}
-	if !plan.HashAlgorithms.Equal(state.HashAlgorithms) {
-		body["hash-algorithms"] = plan.HashAlgorithms.ValueString()
 	}
 	if !plan.Lifebytes.Equal(state.Lifebytes) {
 		body["lifebytes"] = client.FormatInt64(plan.Lifebytes.ValueInt64())
@@ -301,11 +291,11 @@ func (r *IPIpsecProfileResource) Update(ctx context.Context, req resource.Update
 	if !plan.Ppk.Equal(state.Ppk) {
 		body["ppk"] = plan.Ppk.ValueString()
 	}
-	if !plan.PrfAlgorithms.Equal(state.PrfAlgorithms) {
-		body["prf-algorithms"] = plan.PrfAlgorithms.ValueString()
-	}
 	if !plan.ProposalCheck.Equal(state.ProposalCheck) {
 		body["proposal-check"] = plan.ProposalCheck.ValueString()
+	}
+	if !plan.PrfAlgorithm.Equal(state.PrfAlgorithm) && !plan.PrfAlgorithm.IsUnknown() {
+		body["prf-algorithm"] = plan.PrfAlgorithm.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/ipsec/profile", state.ID.ValueString(), body)
@@ -373,6 +363,11 @@ func iPIpsecProfileLookupByNaturalKey(ctx context.Context, c *client.Client, id 
 func iPIpsecProfileApply(ctx context.Context, obj client.Object, m *IPIpsecProfileModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["prf-algorithm"]; ok && v != "" {
+		m.PrfAlgorithm = types.StringValue(v)
+	} else {
+		m.PrfAlgorithm = types.StringNull()
+	}
 	if v, ok := obj["default"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {

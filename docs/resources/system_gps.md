@@ -31,15 +31,20 @@ resource "routeros_system_gps" "gps_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `channel` - (Optional) Type: `string`. Port channel used by the device.
-* `coordinate_format` - (Optional) Type: `string`. Which coordinate format to use, "Decimal Degrees", "Degrees Minutes Seconds" or "NMEA format DDDMM.MM[MM]".
-* `enabled` - (Optional) Type: `string`. Whether GPS is enabled.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `channel` - (Optional) Type: `string`. Port channel used by the device
+* `coordinate_format` - (Optional) Type: `string`. Which coordinate format to use, "Decimal Degrees", "Degrees Minutes Seconds" or "NMEA format DDDMM.MM[MM]"
+* `enabled` - (Optional) Type: `string`. Whether GPS is enabled
 * `gps_antenna_select` - (Optional) Type: `string`. Depending on the model. Internal antenna can be selected, if the device has one installed.
-* `init_channel` - (Optional) Type: `string`. Channel for init-string execution.
-* `init_string` - (Optional) Type: `string`. AT init string for GPS initialization.
-* `port` - (Optional) Type: `string`. Name of the USB/Serial port where the GPS receiver is connected.
+* `init_channel` - (Optional) Type: `string`. Channel for init-string execution
+* `init_string` - (Optional) Type: `string`. AT init string for GPS initialization
+* `port` - (Optional) Type: `string`. Name of the USB/Serial port where the GPS receiver is connected
 * `set_system_time` - (Optional) Type: `string`. Whether to set the router's date and time to one received from GPS.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

@@ -31,23 +31,22 @@ resource "routeros_system_ntp_client_servers" "servers_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `address` - (Optional) Type: `string`.
 * `auth_key` - (Optional) Type: `string`. **Sensitive.**
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`.
-* `iburst` - (Optional) Type: `bool`. Default: `1`.
-* `keys` - (Optional) Type: `string`.
-* `max_poll` - (Optional) Type: `int`. Default: `10`.
-* `min_poll` - (Optional) Type: `int`. Default: `6`.
+* `dynamic` - (Read-only) Type: `bool`.
+* `iburst` - (Optional) Type: `bool`.
+* `keys` - (Read-only) Type: `string`.
+* `max_poll` - (Optional) Type: `int`.
+* `min_poll` - (Optional) Type: `int`.
+* `resolved_address` - (Read-only) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `dynamic` - Type: `bool`.
-* `resolved_address` - Type: `string`.
 
 ## Import
 

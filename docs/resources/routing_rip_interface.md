@@ -35,7 +35,7 @@ resource "routeros_routing_rip_interface" "interface_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `cost` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`.
 * `instance` - (Optional) Type: `string`.
@@ -48,6 +48,11 @@ This resource supports the following arguments:
 * `source_addresses` - (Optional) Type: `string`.
 * `split_horizon` - (Optional) Type: `string`.
 * `use_bfd` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

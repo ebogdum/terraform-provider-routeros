@@ -31,14 +31,21 @@ type RoutingFilterSelectRuleResource struct {
 }
 
 type RoutingFilterSelectRuleModel struct {
-	ID       types.String `tfsdk:"id"`
-	Chain    types.String `tfsdk:"chain"`
-	Comment  types.String `tfsdk:"comment"`
-	Disabled types.Bool   `tfsdk:"disabled"`
-	Do       types.String `tfsdk:"do"`
-	Invalid  types.Bool   `tfsdk:"invalid"`
-	Type     types.String `tfsdk:"type"`
-	Router   types.String `tfsdk:"router"`
+	ID           types.String `tfsdk:"id"`
+	DoWhere      types.String `tfsdk:"do_where"`
+	DoTake       types.String `tfsdk:"do_take"`
+	DoSelectPrfx types.String `tfsdk:"do_select_prfx"`
+	DoSelectNum  types.String `tfsdk:"do_select_num"`
+	DoJump       types.String `tfsdk:"do_jump"`
+	DoGroupPrfx  types.String `tfsdk:"do_group_prfx"`
+	DoGroupNum   types.String `tfsdk:"do_group_num"`
+	Chain        types.String `tfsdk:"chain"`
+	Comment      types.String `tfsdk:"comment"`
+	Disabled     types.Bool   `tfsdk:"disabled"`
+	Do           types.String `tfsdk:"do"`
+	Invalid      types.Bool   `tfsdk:"invalid"`
+	Type         types.String `tfsdk:"type"`
+	Router       types.String `tfsdk:"router"`
 }
 
 func NewRoutingFilterSelectRuleResource() resource.Resource {
@@ -55,7 +62,6 @@ func (r *RoutingFilterSelectRuleResource) Configure(_ context.Context, req resou
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *RoutingFilterSelectRuleResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -66,6 +72,41 @@ func (r *RoutingFilterSelectRuleResource) Schema(_ context.Context, _ resource.S
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"do_where": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `do-where`.",
+			},
+			"do_take": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `do-take`.",
+			},
+			"do_select_prfx": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `do-select-prfx`.",
+			},
+			"do_select_num": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `do-select-num`.",
+			},
+			"do_jump": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `do-jump`.",
+			},
+			"do_group_prfx": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `do-group-prfx`.",
+			},
+			"do_group_num": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `do-group-num`.",
 			},
 			"chain": schema.StringAttribute{
 				Optional:    true,
@@ -83,17 +124,14 @@ func (r *RoutingFilterSelectRuleResource) Schema(_ context.Context, _ resource.S
 				Description: "Whether the entry is disabled.",
 			},
 			"do": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"invalid": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"type": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.OneOf([]string{"where", "group-num", "group-prfx", "select-num", "select-prfx", "take", "jump"}...)},
@@ -126,8 +164,26 @@ func (r *RoutingFilterSelectRuleResource) Create(ctx context.Context, req resour
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !(plan.Type.IsNull() || plan.Type.IsUnknown()) {
-		body["type"] = plan.Type.ValueString()
+	if !(plan.DoGroupNum.IsNull() || plan.DoGroupNum.IsUnknown()) {
+		body["do-group-num"] = plan.DoGroupNum.ValueString()
+	}
+	if !(plan.DoGroupPrfx.IsNull() || plan.DoGroupPrfx.IsUnknown()) {
+		body["do-group-prfx"] = plan.DoGroupPrfx.ValueString()
+	}
+	if !(plan.DoJump.IsNull() || plan.DoJump.IsUnknown()) {
+		body["do-jump"] = plan.DoJump.ValueString()
+	}
+	if !(plan.DoSelectNum.IsNull() || plan.DoSelectNum.IsUnknown()) {
+		body["do-select-num"] = plan.DoSelectNum.ValueString()
+	}
+	if !(plan.DoSelectPrfx.IsNull() || plan.DoSelectPrfx.IsUnknown()) {
+		body["do-select-prfx"] = plan.DoSelectPrfx.ValueString()
+	}
+	if !(plan.DoTake.IsNull() || plan.DoTake.IsUnknown()) {
+		body["do-take"] = plan.DoTake.ValueString()
+	}
+	if !(plan.DoWhere.IsNull() || plan.DoWhere.IsUnknown()) {
+		body["do-where"] = plan.DoWhere.ValueString()
 	}
 	obj, err := c.Add(ctx, "/routing/filter/select-rule", body)
 	if err != nil {
@@ -185,8 +241,26 @@ func (r *RoutingFilterSelectRuleResource) Update(ctx context.Context, req resour
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Type.Equal(state.Type) {
-		body["type"] = plan.Type.ValueString()
+	if !plan.DoGroupNum.Equal(state.DoGroupNum) && !plan.DoGroupNum.IsUnknown() {
+		body["do-group-num"] = plan.DoGroupNum.ValueString()
+	}
+	if !plan.DoGroupPrfx.Equal(state.DoGroupPrfx) && !plan.DoGroupPrfx.IsUnknown() {
+		body["do-group-prfx"] = plan.DoGroupPrfx.ValueString()
+	}
+	if !plan.DoJump.Equal(state.DoJump) && !plan.DoJump.IsUnknown() {
+		body["do-jump"] = plan.DoJump.ValueString()
+	}
+	if !plan.DoSelectNum.Equal(state.DoSelectNum) && !plan.DoSelectNum.IsUnknown() {
+		body["do-select-num"] = plan.DoSelectNum.ValueString()
+	}
+	if !plan.DoSelectPrfx.Equal(state.DoSelectPrfx) && !plan.DoSelectPrfx.IsUnknown() {
+		body["do-select-prfx"] = plan.DoSelectPrfx.ValueString()
+	}
+	if !plan.DoTake.Equal(state.DoTake) && !plan.DoTake.IsUnknown() {
+		body["do-take"] = plan.DoTake.ValueString()
+	}
+	if !plan.DoWhere.Equal(state.DoWhere) && !plan.DoWhere.IsUnknown() {
+		body["do-where"] = plan.DoWhere.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/routing/filter/select-rule", state.ID.ValueString(), body)
@@ -254,6 +328,41 @@ func routingFilterSelectRuleLookupByNaturalKey(ctx context.Context, c *client.Cl
 func routingFilterSelectRuleApply(ctx context.Context, obj client.Object, m *RoutingFilterSelectRuleModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["do-where"]; ok && v != "" {
+		m.DoWhere = types.StringValue(v)
+	} else {
+		m.DoWhere = types.StringNull()
+	}
+	if v, ok := obj["do-take"]; ok && v != "" {
+		m.DoTake = types.StringValue(v)
+	} else {
+		m.DoTake = types.StringNull()
+	}
+	if v, ok := obj["do-select-prfx"]; ok && v != "" {
+		m.DoSelectPrfx = types.StringValue(v)
+	} else {
+		m.DoSelectPrfx = types.StringNull()
+	}
+	if v, ok := obj["do-select-num"]; ok && v != "" {
+		m.DoSelectNum = types.StringValue(v)
+	} else {
+		m.DoSelectNum = types.StringNull()
+	}
+	if v, ok := obj["do-jump"]; ok && v != "" {
+		m.DoJump = types.StringValue(v)
+	} else {
+		m.DoJump = types.StringNull()
+	}
+	if v, ok := obj["do-group-prfx"]; ok && v != "" {
+		m.DoGroupPrfx = types.StringValue(v)
+	} else {
+		m.DoGroupPrfx = types.StringNull()
+	}
+	if v, ok := obj["do-group-num"]; ok && v != "" {
+		m.DoGroupNum = types.StringValue(v)
+	} else {
+		m.DoGroupNum = types.StringNull()
+	}
 	if v, ok := obj["chain"]; ok {
 		_ = v
 		if v != "" {

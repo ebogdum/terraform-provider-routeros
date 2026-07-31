@@ -27,11 +27,16 @@ resource "routeros_system_backup" "backup_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `dont_encrypt` - (Optional) Type: `string`. Disable backup file encryption. Note that since RouterOS v6.43 without a provided   password,   the backup file is unencrypted.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `dont_encrypt` - (Optional) Type: `string`. Disable backup file encryption. Note that since RouterOS v6.43 without a provided password, the backup file is unencrypted.
 * `encryption` - (Optional) Type: `string`. The encryption algorithm to use for encrypting the backup file. Note that is not considered a secure encryption method and is only available for compatibility reasons with older RouterOS versions.
 * `name` - (Optional) Type: `string`. The filename for the backup file.
-* `password` - (Optional) Type: `string`. Password for the encrypted backup file. Note that since RouterOS v6.43 without a provided   password,   the backup file is unencrypted. **Sensitive.**
+* `password` - (Optional) Type: `string`. Password for the encrypted backup file. Note that since RouterOS v6.43 without a provided password, the backup file is unencrypted. **Sensitive.**
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

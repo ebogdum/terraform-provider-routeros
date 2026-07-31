@@ -53,7 +53,6 @@ func (r *RoutingTableResource) Configure(_ context.Context, req resource.Configu
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *RoutingTableResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -76,7 +75,6 @@ func (r *RoutingTableResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description: "Whether the entry is disabled.",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -86,7 +84,6 @@ func (r *RoutingTableResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description: "",
 			},
 			"invalid": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -96,12 +93,10 @@ func (r *RoutingTableResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description: "",
 			},
 			"usage": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"used": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -135,9 +130,6 @@ func (r *RoutingTableResource) Create(ctx context.Context, req resource.CreateRe
 	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
-	}
-	if !(plan.Used.IsNull() || plan.Used.IsUnknown()) {
-		body["used"] = client.FormatBool(plan.Used.ValueBool())
 	}
 	obj, err := c.Add(ctx, "/routing/table", body)
 	if err != nil {
@@ -197,9 +189,6 @@ func (r *RoutingTableResource) Update(ctx context.Context, req resource.UpdateRe
 	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
-	}
-	if !plan.Used.Equal(state.Used) {
-		body["used"] = client.FormatBool(plan.Used.ValueBool())
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/routing/table", state.ID.ValueString(), body)

@@ -60,7 +60,6 @@ func (r *IPHotspotWalledGardenIPResource) Configure(_ context.Context, req resou
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPHotspotWalledGardenIPResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {

@@ -30,6 +30,11 @@ type IPFirewallNATResource struct {
 
 type IPFirewallNATModel struct {
 	ID                      types.String `tfsdk:"id"`
+	Tos                     types.String `tfsdk:"tos"`
+	SocksifyService         types.String `tfsdk:"socksify_service"`
+	Socks5Server            types.String `tfsdk:"socks5_server"`
+	Socks5Port              types.String `tfsdk:"socks5_port"`
+	RandomisePorts          types.String `tfsdk:"randomise_ports"`
 	Action                  types.String `tfsdk:"action"`
 	AddressList             types.String `tfsdk:"address_list"`
 	AddressListTimeout      types.String `tfsdk:"address_list_timeout"`
@@ -107,7 +112,6 @@ func (r *IPFirewallNATResource) Configure(_ context.Context, req resource.Config
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPFirewallNATResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -118,6 +122,31 @@ func (r *IPFirewallNATResource) Schema(_ context.Context, _ resource.SchemaReque
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"tos": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `tos`.",
+			},
+			"socksify_service": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `socksify-service`.",
+			},
+			"socks5_server": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `socks5-server`.",
+			},
+			"socks5_port": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `socks5-port`.",
+			},
+			"randomise_ports": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `randomise-ports`.",
 			},
 			"action": schema.StringAttribute{
 				Required:    true,
@@ -623,6 +652,21 @@ func (r *IPFirewallNATResource) Create(ctx context.Context, req resource.CreateR
 	if !(plan.Ttl.IsNull() || plan.Ttl.IsUnknown()) {
 		body["ttl"] = plan.Ttl.ValueString()
 	}
+	if !(plan.RandomisePorts.IsNull() || plan.RandomisePorts.IsUnknown()) {
+		body["randomise-ports"] = plan.RandomisePorts.ValueString()
+	}
+	if !(plan.Socks5Port.IsNull() || plan.Socks5Port.IsUnknown()) {
+		body["socks5-port"] = plan.Socks5Port.ValueString()
+	}
+	if !(plan.Socks5Server.IsNull() || plan.Socks5Server.IsUnknown()) {
+		body["socks5-server"] = plan.Socks5Server.ValueString()
+	}
+	if !(plan.SocksifyService.IsNull() || plan.SocksifyService.IsUnknown()) {
+		body["socksify-service"] = plan.SocksifyService.ValueString()
+	}
+	if !(plan.Tos.IsNull() || plan.Tos.IsUnknown()) {
+		body["tos"] = plan.Tos.ValueString()
+	}
 	obj, err := c.Add(ctx, "/ip/firewall/nat", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /ip/firewall/nat failed", err.Error())
@@ -870,6 +914,21 @@ func (r *IPFirewallNATResource) Update(ctx context.Context, req resource.UpdateR
 	if !plan.Ttl.Equal(state.Ttl) {
 		body["ttl"] = plan.Ttl.ValueString()
 	}
+	if !plan.RandomisePorts.Equal(state.RandomisePorts) && !plan.RandomisePorts.IsUnknown() {
+		body["randomise-ports"] = plan.RandomisePorts.ValueString()
+	}
+	if !plan.Socks5Port.Equal(state.Socks5Port) && !plan.Socks5Port.IsUnknown() {
+		body["socks5-port"] = plan.Socks5Port.ValueString()
+	}
+	if !plan.Socks5Server.Equal(state.Socks5Server) && !plan.Socks5Server.IsUnknown() {
+		body["socks5-server"] = plan.Socks5Server.ValueString()
+	}
+	if !plan.SocksifyService.Equal(state.SocksifyService) && !plan.SocksifyService.IsUnknown() {
+		body["socksify-service"] = plan.SocksifyService.ValueString()
+	}
+	if !plan.Tos.Equal(state.Tos) && !plan.Tos.IsUnknown() {
+		body["tos"] = plan.Tos.ValueString()
+	}
 	// If position OR comment changed, re-encode the marker into the comment
 	// so the device-side prefix stays in sync.
 	if !plan.Comment.Equal(state.Comment) {
@@ -959,6 +1018,31 @@ func iPFirewallNATLookupByNaturalKey(ctx context.Context, c *client.Client, id s
 func iPFirewallNATApply(ctx context.Context, obj client.Object, m *IPFirewallNATModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["tos"]; ok && v != "" {
+		m.Tos = types.StringValue(v)
+	} else {
+		m.Tos = types.StringNull()
+	}
+	if v, ok := obj["socksify-service"]; ok && v != "" {
+		m.SocksifyService = types.StringValue(v)
+	} else {
+		m.SocksifyService = types.StringNull()
+	}
+	if v, ok := obj["socks5-server"]; ok && v != "" {
+		m.Socks5Server = types.StringValue(v)
+	} else {
+		m.Socks5Server = types.StringNull()
+	}
+	if v, ok := obj["socks5-port"]; ok && v != "" {
+		m.Socks5Port = types.StringValue(v)
+	} else {
+		m.Socks5Port = types.StringNull()
+	}
+	if v, ok := obj["randomise-ports"]; ok && v != "" {
+		m.RandomisePorts = types.StringValue(v)
+	} else {
+		m.RandomisePorts = types.StringNull()
+	}
 	// Strip the [tf:pos=N] marker from the comment before exposing to state.
 	// Position is TF-state-only metadata; never written to the device. Keep
 	// whatever the user planned. Comment is left untouched.

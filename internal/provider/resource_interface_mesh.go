@@ -31,27 +31,39 @@ type InterfaceMeshResource struct {
 }
 
 type InterfaceMeshModel struct {
-	ID                   types.String `tfsdk:"id"`
-	AdminMACAddress      types.String `tfsdk:"admin_mac_address"`
-	ARP                  types.String `tfsdk:"arp"`
-	ARPTimeout           types.String `tfsdk:"arp_timeout"`
-	Comment              types.String `tfsdk:"comment"`
-	DefaultHoplimit      types.Int64  `tfsdk:"default_hoplimit"`
-	Disabled             types.Bool   `tfsdk:"disabled"`
-	MACAddress           types.String `tfsdk:"mac_address"`
-	MeshPortal           types.Bool   `tfsdk:"mesh_portal"`
-	MeshTraceroute       types.String `tfsdk:"mesh_traceroute"`
-	MTU                  types.Int64  `tfsdk:"mtu"`
-	PrepLifetime         types.String `tfsdk:"prep_lifetime"`
-	PreqDestinationOnly  types.Bool   `tfsdk:"preq_destination_only"`
-	PreqReplyAndForward  types.Bool   `tfsdk:"preq_reply_and_forward"`
-	PreqRetries          types.Int64  `tfsdk:"preq_retries"`
-	PreqWaitingTime      types.Int64  `tfsdk:"preq_waiting_time"`
-	RannInterval         types.String `tfsdk:"rann_interval"`
-	RannLifetime         types.String `tfsdk:"rann_lifetime"`
-	RannPropagationDelay types.Int64  `tfsdk:"rann_propagation_delay"`
-	ReoptimizePaths      types.Bool   `tfsdk:"reoptimize_paths"`
-	Router               types.String `tfsdk:"router"`
+	ID                       types.String `tfsdk:"id"`
+	Name                     types.String `tfsdk:"name"`
+	HwmpRannPropagationDelay types.String `tfsdk:"hwmp_rann_propagation_delay"`
+	HwmpRannLifetime         types.String `tfsdk:"hwmp_rann_lifetime"`
+	HwmpRannInterval         types.String `tfsdk:"hwmp_rann_interval"`
+	HwmpPreqWaitingTime      types.String `tfsdk:"hwmp_preq_waiting_time"`
+	HwmpPreqRetries          types.String `tfsdk:"hwmp_preq_retries"`
+	HwmpPreqReplyAndForward  types.String `tfsdk:"hwmp_preq_reply_and_forward"`
+	HwmpPreqDestinationOnly  types.String `tfsdk:"hwmp_preq_destination_only"`
+	HwmpPrepLifetime         types.String `tfsdk:"hwmp_prep_lifetime"`
+	HwmpDefaultHoplimit      types.String `tfsdk:"hwmp_default_hoplimit"`
+	AutoMac                  types.String `tfsdk:"auto_mac"`
+	AdminMac                 types.String `tfsdk:"admin_mac"`
+	AdminMACAddress          types.String `tfsdk:"admin_mac_address"`
+	ARP                      types.String `tfsdk:"arp"`
+	ARPTimeout               types.String `tfsdk:"arp_timeout"`
+	Comment                  types.String `tfsdk:"comment"`
+	DefaultHoplimit          types.Int64  `tfsdk:"default_hoplimit"`
+	Disabled                 types.Bool   `tfsdk:"disabled"`
+	MACAddress               types.String `tfsdk:"mac_address"`
+	MeshPortal               types.Bool   `tfsdk:"mesh_portal"`
+	MeshTraceroute           types.String `tfsdk:"mesh_traceroute"`
+	MTU                      types.Int64  `tfsdk:"mtu"`
+	PrepLifetime             types.String `tfsdk:"prep_lifetime"`
+	PreqDestinationOnly      types.Bool   `tfsdk:"preq_destination_only"`
+	PreqReplyAndForward      types.Bool   `tfsdk:"preq_reply_and_forward"`
+	PreqRetries              types.Int64  `tfsdk:"preq_retries"`
+	PreqWaitingTime          types.Int64  `tfsdk:"preq_waiting_time"`
+	RannInterval             types.String `tfsdk:"rann_interval"`
+	RannLifetime             types.String `tfsdk:"rann_lifetime"`
+	RannPropagationDelay     types.Int64  `tfsdk:"rann_propagation_delay"`
+	ReoptimizePaths          types.Bool   `tfsdk:"reoptimize_paths"`
+	Router                   types.String `tfsdk:"router"`
 }
 
 func NewInterfaceMeshResource() resource.Resource { return &InterfaceMeshResource{} }
@@ -66,7 +78,6 @@ func (r *InterfaceMeshResource) Configure(_ context.Context, req resource.Config
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceMeshResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -78,8 +89,67 @@ func (r *InterfaceMeshResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
-			"admin_mac_address": schema.StringAttribute{
+			"name": schema.StringAttribute{
 				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `name`.",
+			},
+			"hwmp_rann_propagation_delay": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `hwmp-rann-propagation-delay`.",
+			},
+			"hwmp_rann_lifetime": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `hwmp-rann-lifetime`.",
+			},
+			"hwmp_rann_interval": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `hwmp-rann-interval`.",
+			},
+			"hwmp_preq_waiting_time": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `hwmp-preq-waiting-time`.",
+			},
+			"hwmp_preq_retries": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `hwmp-preq-retries`.",
+			},
+			"hwmp_preq_reply_and_forward": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `hwmp-preq-reply-and-forward`.",
+			},
+			"hwmp_preq_destination_only": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `hwmp-preq-destination-only`.",
+			},
+			"hwmp_prep_lifetime": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `hwmp-prep-lifetime`.",
+			},
+			"hwmp_default_hoplimit": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `hwmp-default-hoplimit`.",
+			},
+			"auto_mac": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `auto-mac`.",
+			},
+			"admin_mac": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `admin-mac`.",
+			},
+			"admin_mac_address": schema.StringAttribute{
 				Computed:    true,
 				Description: "",
 			},
@@ -93,7 +163,7 @@ func (r *InterfaceMeshResource) Schema(_ context.Context, _ resource.SchemaReque
 				Optional:      true,
 				Computed:      true,
 				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
+				Validators:    []validator.String{schemautil.IsDurationOrKeyword("auto")},
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
 			},
 			"comment": schema.StringAttribute{
@@ -102,7 +172,6 @@ func (r *InterfaceMeshResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "Free-form comment.",
 			},
 			"default_hoplimit": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -112,7 +181,6 @@ func (r *InterfaceMeshResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "Whether the entry is disabled.",
 			},
 			"mac_address": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -122,7 +190,6 @@ func (r *InterfaceMeshResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"mesh_traceroute": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -132,48 +199,40 @@ func (r *InterfaceMeshResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"prep_lifetime": schema.StringAttribute{
-				Optional:      true,
 				Computed:      true,
 				Description:   "",
 				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
 			},
 			"preq_destination_only": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"preq_reply_and_forward": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"preq_retries": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"preq_waiting_time": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rann_interval": schema.StringAttribute{
-				Optional:      true,
 				Computed:      true,
 				Description:   "",
 				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
 			},
 			"rann_lifetime": schema.StringAttribute{
-				Optional:      true,
 				Computed:      true,
 				Description:   "",
 				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
 			},
 			"rann_propagation_delay": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -201,9 +260,6 @@ func (r *InterfaceMeshResource) Create(ctx context.Context, req resource.CreateR
 		return
 	}
 	body := client.Object{}
-	if !(plan.AdminMACAddress.IsNull() || plan.AdminMACAddress.IsUnknown()) {
-		body["admin-mac-address"] = plan.AdminMACAddress.ValueString()
-	}
 	if !(plan.ARP.IsNull() || plan.ARP.IsUnknown()) {
 		body["arp"] = plan.ARP.ValueString()
 	}
@@ -213,47 +269,53 @@ func (r *InterfaceMeshResource) Create(ctx context.Context, req resource.CreateR
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !(plan.DefaultHoplimit.IsNull() || plan.DefaultHoplimit.IsUnknown()) {
-		body["default-hoplimit"] = client.FormatInt64(plan.DefaultHoplimit.ValueInt64())
-	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
 	if !(plan.MeshPortal.IsNull() || plan.MeshPortal.IsUnknown()) {
 		body["mesh-portal"] = client.FormatBool(plan.MeshPortal.ValueBool())
 	}
-	if !(plan.MeshTraceroute.IsNull() || plan.MeshTraceroute.IsUnknown()) {
-		body["mesh-traceroute"] = plan.MeshTraceroute.ValueString()
-	}
 	if !(plan.MTU.IsNull() || plan.MTU.IsUnknown()) {
 		body["mtu"] = client.FormatInt64(plan.MTU.ValueInt64())
 	}
-	if !(plan.PrepLifetime.IsNull() || plan.PrepLifetime.IsUnknown()) {
-		body["prep-lifetime"] = plan.PrepLifetime.ValueString()
-	}
-	if !(plan.PreqDestinationOnly.IsNull() || plan.PreqDestinationOnly.IsUnknown()) {
-		body["preq-destination-only"] = client.FormatBool(plan.PreqDestinationOnly.ValueBool())
-	}
-	if !(plan.PreqReplyAndForward.IsNull() || plan.PreqReplyAndForward.IsUnknown()) {
-		body["preq-reply-and-forward"] = client.FormatBool(plan.PreqReplyAndForward.ValueBool())
-	}
-	if !(plan.PreqRetries.IsNull() || plan.PreqRetries.IsUnknown()) {
-		body["preq-retries"] = client.FormatInt64(plan.PreqRetries.ValueInt64())
-	}
-	if !(plan.PreqWaitingTime.IsNull() || plan.PreqWaitingTime.IsUnknown()) {
-		body["preq-waiting-time"] = client.FormatInt64(plan.PreqWaitingTime.ValueInt64())
-	}
-	if !(plan.RannInterval.IsNull() || plan.RannInterval.IsUnknown()) {
-		body["rann-interval"] = plan.RannInterval.ValueString()
-	}
-	if !(plan.RannLifetime.IsNull() || plan.RannLifetime.IsUnknown()) {
-		body["rann-lifetime"] = plan.RannLifetime.ValueString()
-	}
-	if !(plan.RannPropagationDelay.IsNull() || plan.RannPropagationDelay.IsUnknown()) {
-		body["rann-propagation-delay"] = client.FormatInt64(plan.RannPropagationDelay.ValueInt64())
-	}
 	if !(plan.ReoptimizePaths.IsNull() || plan.ReoptimizePaths.IsUnknown()) {
 		body["reoptimize-paths"] = client.FormatBool(plan.ReoptimizePaths.ValueBool())
+	}
+	if !(plan.AdminMac.IsNull() || plan.AdminMac.IsUnknown()) {
+		body["admin-mac"] = plan.AdminMac.ValueString()
+	}
+	if !(plan.AutoMac.IsNull() || plan.AutoMac.IsUnknown()) {
+		body["auto-mac"] = plan.AutoMac.ValueString()
+	}
+	if !(plan.HwmpDefaultHoplimit.IsNull() || plan.HwmpDefaultHoplimit.IsUnknown()) {
+		body["hwmp-default-hoplimit"] = plan.HwmpDefaultHoplimit.ValueString()
+	}
+	if !(plan.HwmpPrepLifetime.IsNull() || plan.HwmpPrepLifetime.IsUnknown()) {
+		body["hwmp-prep-lifetime"] = plan.HwmpPrepLifetime.ValueString()
+	}
+	if !(plan.HwmpPreqDestinationOnly.IsNull() || plan.HwmpPreqDestinationOnly.IsUnknown()) {
+		body["hwmp-preq-destination-only"] = plan.HwmpPreqDestinationOnly.ValueString()
+	}
+	if !(plan.HwmpPreqReplyAndForward.IsNull() || plan.HwmpPreqReplyAndForward.IsUnknown()) {
+		body["hwmp-preq-reply-and-forward"] = plan.HwmpPreqReplyAndForward.ValueString()
+	}
+	if !(plan.HwmpPreqRetries.IsNull() || plan.HwmpPreqRetries.IsUnknown()) {
+		body["hwmp-preq-retries"] = plan.HwmpPreqRetries.ValueString()
+	}
+	if !(plan.HwmpPreqWaitingTime.IsNull() || plan.HwmpPreqWaitingTime.IsUnknown()) {
+		body["hwmp-preq-waiting-time"] = plan.HwmpPreqWaitingTime.ValueString()
+	}
+	if !(plan.HwmpRannInterval.IsNull() || plan.HwmpRannInterval.IsUnknown()) {
+		body["hwmp-rann-interval"] = plan.HwmpRannInterval.ValueString()
+	}
+	if !(plan.HwmpRannLifetime.IsNull() || plan.HwmpRannLifetime.IsUnknown()) {
+		body["hwmp-rann-lifetime"] = plan.HwmpRannLifetime.ValueString()
+	}
+	if !(plan.HwmpRannPropagationDelay.IsNull() || plan.HwmpRannPropagationDelay.IsUnknown()) {
+		body["hwmp-rann-propagation-delay"] = plan.HwmpRannPropagationDelay.ValueString()
+	}
+	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
+		body["name"] = plan.Name.ValueString()
 	}
 	obj, err := c.Add(ctx, "/interface/mesh", body)
 	if err != nil {
@@ -302,9 +364,6 @@ func (r *InterfaceMeshResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 	body := client.Object{}
-	if !plan.AdminMACAddress.Equal(state.AdminMACAddress) {
-		body["admin-mac-address"] = plan.AdminMACAddress.ValueString()
-	}
 	if !plan.ARP.Equal(state.ARP) {
 		body["arp"] = plan.ARP.ValueString()
 	}
@@ -314,47 +373,53 @@ func (r *InterfaceMeshResource) Update(ctx context.Context, req resource.UpdateR
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.DefaultHoplimit.Equal(state.DefaultHoplimit) {
-		body["default-hoplimit"] = client.FormatInt64(plan.DefaultHoplimit.ValueInt64())
-	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
 	if !plan.MeshPortal.Equal(state.MeshPortal) {
 		body["mesh-portal"] = client.FormatBool(plan.MeshPortal.ValueBool())
 	}
-	if !plan.MeshTraceroute.Equal(state.MeshTraceroute) {
-		body["mesh-traceroute"] = plan.MeshTraceroute.ValueString()
-	}
 	if !plan.MTU.Equal(state.MTU) {
 		body["mtu"] = client.FormatInt64(plan.MTU.ValueInt64())
 	}
-	if !plan.PrepLifetime.Equal(state.PrepLifetime) {
-		body["prep-lifetime"] = plan.PrepLifetime.ValueString()
-	}
-	if !plan.PreqDestinationOnly.Equal(state.PreqDestinationOnly) {
-		body["preq-destination-only"] = client.FormatBool(plan.PreqDestinationOnly.ValueBool())
-	}
-	if !plan.PreqReplyAndForward.Equal(state.PreqReplyAndForward) {
-		body["preq-reply-and-forward"] = client.FormatBool(plan.PreqReplyAndForward.ValueBool())
-	}
-	if !plan.PreqRetries.Equal(state.PreqRetries) {
-		body["preq-retries"] = client.FormatInt64(plan.PreqRetries.ValueInt64())
-	}
-	if !plan.PreqWaitingTime.Equal(state.PreqWaitingTime) {
-		body["preq-waiting-time"] = client.FormatInt64(plan.PreqWaitingTime.ValueInt64())
-	}
-	if !plan.RannInterval.Equal(state.RannInterval) {
-		body["rann-interval"] = plan.RannInterval.ValueString()
-	}
-	if !plan.RannLifetime.Equal(state.RannLifetime) {
-		body["rann-lifetime"] = plan.RannLifetime.ValueString()
-	}
-	if !plan.RannPropagationDelay.Equal(state.RannPropagationDelay) {
-		body["rann-propagation-delay"] = client.FormatInt64(plan.RannPropagationDelay.ValueInt64())
-	}
 	if !plan.ReoptimizePaths.Equal(state.ReoptimizePaths) {
 		body["reoptimize-paths"] = client.FormatBool(plan.ReoptimizePaths.ValueBool())
+	}
+	if !plan.AdminMac.Equal(state.AdminMac) && !plan.AdminMac.IsUnknown() {
+		body["admin-mac"] = plan.AdminMac.ValueString()
+	}
+	if !plan.AutoMac.Equal(state.AutoMac) && !plan.AutoMac.IsUnknown() {
+		body["auto-mac"] = plan.AutoMac.ValueString()
+	}
+	if !plan.HwmpDefaultHoplimit.Equal(state.HwmpDefaultHoplimit) && !plan.HwmpDefaultHoplimit.IsUnknown() {
+		body["hwmp-default-hoplimit"] = plan.HwmpDefaultHoplimit.ValueString()
+	}
+	if !plan.HwmpPrepLifetime.Equal(state.HwmpPrepLifetime) && !plan.HwmpPrepLifetime.IsUnknown() {
+		body["hwmp-prep-lifetime"] = plan.HwmpPrepLifetime.ValueString()
+	}
+	if !plan.HwmpPreqDestinationOnly.Equal(state.HwmpPreqDestinationOnly) && !plan.HwmpPreqDestinationOnly.IsUnknown() {
+		body["hwmp-preq-destination-only"] = plan.HwmpPreqDestinationOnly.ValueString()
+	}
+	if !plan.HwmpPreqReplyAndForward.Equal(state.HwmpPreqReplyAndForward) && !plan.HwmpPreqReplyAndForward.IsUnknown() {
+		body["hwmp-preq-reply-and-forward"] = plan.HwmpPreqReplyAndForward.ValueString()
+	}
+	if !plan.HwmpPreqRetries.Equal(state.HwmpPreqRetries) && !plan.HwmpPreqRetries.IsUnknown() {
+		body["hwmp-preq-retries"] = plan.HwmpPreqRetries.ValueString()
+	}
+	if !plan.HwmpPreqWaitingTime.Equal(state.HwmpPreqWaitingTime) && !plan.HwmpPreqWaitingTime.IsUnknown() {
+		body["hwmp-preq-waiting-time"] = plan.HwmpPreqWaitingTime.ValueString()
+	}
+	if !plan.HwmpRannInterval.Equal(state.HwmpRannInterval) && !plan.HwmpRannInterval.IsUnknown() {
+		body["hwmp-rann-interval"] = plan.HwmpRannInterval.ValueString()
+	}
+	if !plan.HwmpRannLifetime.Equal(state.HwmpRannLifetime) && !plan.HwmpRannLifetime.IsUnknown() {
+		body["hwmp-rann-lifetime"] = plan.HwmpRannLifetime.ValueString()
+	}
+	if !plan.HwmpRannPropagationDelay.Equal(state.HwmpRannPropagationDelay) && !plan.HwmpRannPropagationDelay.IsUnknown() {
+		body["hwmp-rann-propagation-delay"] = plan.HwmpRannPropagationDelay.ValueString()
+	}
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
+		body["name"] = plan.Name.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/mesh", state.ID.ValueString(), body)
@@ -422,6 +487,66 @@ func interfaceMeshLookupByNaturalKey(ctx context.Context, c *client.Client, id s
 func interfaceMeshApply(ctx context.Context, obj client.Object, m *InterfaceMeshModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["name"]; ok && v != "" {
+		m.Name = types.StringValue(v)
+	} else {
+		m.Name = types.StringNull()
+	}
+	if v, ok := obj["hwmp-rann-propagation-delay"]; ok && v != "" {
+		m.HwmpRannPropagationDelay = types.StringValue(v)
+	} else {
+		m.HwmpRannPropagationDelay = types.StringNull()
+	}
+	if v, ok := obj["hwmp-rann-lifetime"]; ok && v != "" {
+		m.HwmpRannLifetime = types.StringValue(v)
+	} else {
+		m.HwmpRannLifetime = types.StringNull()
+	}
+	if v, ok := obj["hwmp-rann-interval"]; ok && v != "" {
+		m.HwmpRannInterval = types.StringValue(v)
+	} else {
+		m.HwmpRannInterval = types.StringNull()
+	}
+	if v, ok := obj["hwmp-preq-waiting-time"]; ok && v != "" {
+		m.HwmpPreqWaitingTime = types.StringValue(v)
+	} else {
+		m.HwmpPreqWaitingTime = types.StringNull()
+	}
+	if v, ok := obj["hwmp-preq-retries"]; ok && v != "" {
+		m.HwmpPreqRetries = types.StringValue(v)
+	} else {
+		m.HwmpPreqRetries = types.StringNull()
+	}
+	if v, ok := obj["hwmp-preq-reply-and-forward"]; ok && v != "" {
+		m.HwmpPreqReplyAndForward = types.StringValue(v)
+	} else {
+		m.HwmpPreqReplyAndForward = types.StringNull()
+	}
+	if v, ok := obj["hwmp-preq-destination-only"]; ok && v != "" {
+		m.HwmpPreqDestinationOnly = types.StringValue(v)
+	} else {
+		m.HwmpPreqDestinationOnly = types.StringNull()
+	}
+	if v, ok := obj["hwmp-prep-lifetime"]; ok && v != "" {
+		m.HwmpPrepLifetime = types.StringValue(v)
+	} else {
+		m.HwmpPrepLifetime = types.StringNull()
+	}
+	if v, ok := obj["hwmp-default-hoplimit"]; ok && v != "" {
+		m.HwmpDefaultHoplimit = types.StringValue(v)
+	} else {
+		m.HwmpDefaultHoplimit = types.StringNull()
+	}
+	if v, ok := obj["auto-mac"]; ok && v != "" {
+		m.AutoMac = types.StringValue(v)
+	} else {
+		m.AutoMac = types.StringNull()
+	}
+	if v, ok := obj["admin-mac"]; ok && v != "" {
+		m.AdminMac = types.StringValue(v)
+	} else {
+		m.AdminMac = types.StringNull()
+	}
 	if v, ok := obj["admin-mac-address"]; ok {
 		_ = v
 		if v != "" {

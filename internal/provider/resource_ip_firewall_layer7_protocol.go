@@ -30,6 +30,8 @@ type IPFirewallLayer7ProtocolResource struct {
 
 type IPFirewallLayer7ProtocolModel struct {
 	ID      types.String `tfsdk:"id"`
+	Regexp  types.String `tfsdk:"regexp"`
+	Name    types.String `tfsdk:"name"`
 	Comment types.String `tfsdk:"comment"`
 	Router  types.String `tfsdk:"router"`
 }
@@ -48,7 +50,6 @@ func (r *IPFirewallLayer7ProtocolResource) Configure(_ context.Context, req reso
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPFirewallLayer7ProtocolResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -59,6 +60,16 @@ func (r *IPFirewallLayer7ProtocolResource) Schema(_ context.Context, _ resource.
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"regexp": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `regexp`.",
+			},
+			"name": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `name`.",
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -86,6 +97,12 @@ func (r *IPFirewallLayer7ProtocolResource) Create(ctx context.Context, req resou
 	body := client.Object{}
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
+	}
+	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
+		body["name"] = plan.Name.ValueString()
+	}
+	if !(plan.Regexp.IsNull() || plan.Regexp.IsUnknown()) {
+		body["regexp"] = plan.Regexp.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ip/firewall/layer7-protocol", body)
 	if err != nil {
@@ -136,6 +153,12 @@ func (r *IPFirewallLayer7ProtocolResource) Update(ctx context.Context, req resou
 	body := client.Object{}
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
+	}
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
+		body["name"] = plan.Name.ValueString()
+	}
+	if !plan.Regexp.Equal(state.Regexp) && !plan.Regexp.IsUnknown() {
+		body["regexp"] = plan.Regexp.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/firewall/layer7-protocol", state.ID.ValueString(), body)
@@ -203,6 +226,16 @@ func iPFirewallLayer7ProtocolLookupByNaturalKey(ctx context.Context, c *client.C
 func iPFirewallLayer7ProtocolApply(ctx context.Context, obj client.Object, m *IPFirewallLayer7ProtocolModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["regexp"]; ok && v != "" {
+		m.Regexp = types.StringValue(v)
+	} else {
+		m.Regexp = types.StringNull()
+	}
+	if v, ok := obj["name"]; ok && v != "" {
+		m.Name = types.StringValue(v)
+	} else {
+		m.Name = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {

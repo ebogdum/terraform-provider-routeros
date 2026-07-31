@@ -38,15 +38,23 @@ resource "routeros_ip_settings" "settings_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `accept_redirects` - (Optional) Type: `bool`.
 * `accept_source_route` - (Optional) Type: `bool`.
 * `allow_fast_path` - (Optional) Type: `bool`.
-* `arp_timeout` - (Optional) Type: `duration`.
+* `arp_timeout` - (Optional) Type: `string`.
 * `icmp_errors_use_inbound_interface_address` - (Optional) Type: `bool`.
 * `icmp_rate_limit` - (Optional) Type: `int`.
 * `icmp_rate_mask` - (Optional) Type: `int`.
 * `ip_forward` - (Optional) Type: `bool`.
+* `ipv4_fast_path_active` - (Optional) Type: `bool`.
+* `ipv4_fast_path_bytes` - (Optional) Type: `int`.
+* `ipv4_fast_path_packets` - (Optional) Type: `int`.
+* `ipv4_fasttrack_active` - (Optional) Type: `bool`.
+* `ipv4_fasttrack_bytes` - (Optional) Type: `int`.
+* `ipv4_fasttrack_packets` - (Optional) Type: `int`.
+* `ipv4_fragment_time` - (Optional) Type: `string`. RouterOS `ipv4-fragment-time`.
+* `ipv4_high_fragment_thresh` - (Optional) Type: `string`. RouterOS `ipv4-high-fragment-thresh`.
 * `ipv4_multipath_hash_policy` - (Optional) Type: `string`.
 * `max_neighbor_entries` - (Optional) Type: `int`.
 * `rp_filter` - (Optional) Type: `bool`.
@@ -57,15 +65,8 @@ This resource supports the following arguments:
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - Stable identifier (the singleton's menu path, optionally namespaced by router).
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `ipv4_fast_path_active` - Type: `bool`.
-* `ipv4_fast_path_bytes` - Type: `int`.
-* `ipv4_fast_path_packets` - Type: `int`.
-* `ipv4_fasttrack_active` - Type: `bool`.
-* `ipv4_fasttrack_bytes` - Type: `int`.
-* `ipv4_fasttrack_packets` - Type: `int`.
 
 ## Import
 

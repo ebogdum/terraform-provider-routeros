@@ -29,11 +29,13 @@ type IPSocksUsersResource struct {
 }
 
 type IPSocksUsersModel struct {
-	ID       types.String `tfsdk:"id"`
-	Disabled types.Bool   `tfsdk:"disabled"`
-	Name     types.String `tfsdk:"name"`
-	Password types.String `tfsdk:"password"`
-	Router   types.String `tfsdk:"router"`
+	ID        types.String `tfsdk:"id"`
+	RateLimit types.String `tfsdk:"rate_limit"`
+	OnlyOne   types.String `tfsdk:"only_one"`
+	Disabled  types.Bool   `tfsdk:"disabled"`
+	Name      types.String `tfsdk:"name"`
+	Password  types.String `tfsdk:"password"`
+	Router    types.String `tfsdk:"router"`
 }
 
 func NewIPSocksUsersResource() resource.Resource { return &IPSocksUsersResource{} }
@@ -48,7 +50,6 @@ func (r *IPSocksUsersResource) Configure(_ context.Context, req resource.Configu
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPSocksUsersResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -59,6 +60,16 @@ func (r *IPSocksUsersResource) Schema(_ context.Context, _ resource.SchemaReques
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"rate_limit": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `rate-limit`.",
+			},
+			"only_one": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `only-one`.",
 			},
 			"disabled": schema.BoolAttribute{
 				Optional:    true,
@@ -101,6 +112,12 @@ func (r *IPSocksUsersResource) Create(ctx context.Context, req resource.CreateRe
 	}
 	if !(plan.Password.IsNull() || plan.Password.IsUnknown()) {
 		body["password"] = plan.Password.ValueString()
+	}
+	if !(plan.OnlyOne.IsNull() || plan.OnlyOne.IsUnknown()) {
+		body["only-one"] = plan.OnlyOne.ValueString()
+	}
+	if !(plan.RateLimit.IsNull() || plan.RateLimit.IsUnknown()) {
+		body["rate-limit"] = plan.RateLimit.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ip/socks/users", body)
 	if err != nil {
@@ -157,6 +174,12 @@ func (r *IPSocksUsersResource) Update(ctx context.Context, req resource.UpdateRe
 	}
 	if !plan.Password.Equal(state.Password) {
 		body["password"] = plan.Password.ValueString()
+	}
+	if !plan.OnlyOne.Equal(state.OnlyOne) && !plan.OnlyOne.IsUnknown() {
+		body["only-one"] = plan.OnlyOne.ValueString()
+	}
+	if !plan.RateLimit.Equal(state.RateLimit) && !plan.RateLimit.IsUnknown() {
+		body["rate-limit"] = plan.RateLimit.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/socks/users", state.ID.ValueString(), body)
@@ -224,6 +247,16 @@ func iPSocksUsersLookupByNaturalKey(ctx context.Context, c *client.Client, id st
 func iPSocksUsersApply(ctx context.Context, obj client.Object, m *IPSocksUsersModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["rate-limit"]; ok && v != "" {
+		m.RateLimit = types.StringValue(v)
+	} else {
+		m.RateLimit = types.StringNull()
+	}
+	if v, ok := obj["only-one"]; ok && v != "" {
+		m.OnlyOne = types.StringValue(v)
+	} else {
+		m.OnlyOne = types.StringNull()
+	}
 	if v, ok := obj["disabled"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {

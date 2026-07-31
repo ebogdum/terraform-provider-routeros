@@ -32,6 +32,8 @@ type RoutingOSPFInterfaceTemplateResource struct {
 
 type RoutingOSPFInterfaceTemplateModel struct {
 	ID                 types.String `tfsdk:"id"`
+	Type               types.String `tfsdk:"type"`
+	Auth               types.String `tfsdk:"auth"`
 	Area               types.String `tfsdk:"area"`
 	AuthID             types.String `tfsdk:"auth_id"`
 	AuthKey            types.String `tfsdk:"auth_key"`
@@ -71,7 +73,6 @@ func (r *RoutingOSPFInterfaceTemplateResource) Configure(_ context.Context, req 
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *RoutingOSPFInterfaceTemplateResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -82,6 +83,16 @@ func (r *RoutingOSPFInterfaceTemplateResource) Schema(_ context.Context, _ resou
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"type": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `type`.",
+			},
+			"auth": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `auth`.",
 			},
 			"area": schema.StringAttribute{
 				Optional:    true,
@@ -100,7 +111,6 @@ func (r *RoutingOSPFInterfaceTemplateResource) Schema(_ context.Context, _ resou
 				Description: "",
 			},
 			"authentication": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -144,12 +154,10 @@ func (r *RoutingOSPFInterfaceTemplateResource) Schema(_ context.Context, _ resou
 				Description: "",
 			},
 			"invalid": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"network_type": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.OneOf([]string{"broadcast", "nbma", "ptp", "ptp-unnumbered", "ptmp", "virtual-link", "ptmp-broadcast"}...)},
@@ -192,12 +200,10 @@ func (r *RoutingOSPFInterfaceTemplateResource) Schema(_ context.Context, _ resou
 				Description: "",
 			},
 			"vlink_neighbor_id": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"vlink_transit_area": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -229,9 +235,6 @@ func (r *RoutingOSPFInterfaceTemplateResource) Create(ctx context.Context, req r
 	if !(plan.AuthKey.IsNull() || plan.AuthKey.IsUnknown()) {
 		body["auth-key"] = plan.AuthKey.ValueString()
 	}
-	if !(plan.Authentication.IsNull() || plan.Authentication.IsUnknown()) {
-		body["authentication"] = plan.Authentication.ValueString()
-	}
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
 	}
@@ -252,9 +255,6 @@ func (r *RoutingOSPFInterfaceTemplateResource) Create(ctx context.Context, req r
 	}
 	if !(plan.Interfaces.IsNull() || plan.Interfaces.IsUnknown()) {
 		body["interfaces"] = plan.Interfaces.ValueString()
-	}
-	if !(plan.NetworkType.IsNull() || plan.NetworkType.IsUnknown()) {
-		body["network-type"] = plan.NetworkType.ValueString()
 	}
 	if !(plan.Networks.IsNull() || plan.Networks.IsUnknown()) {
 		body["networks"] = plan.Networks.ValueString()
@@ -277,11 +277,11 @@ func (r *RoutingOSPFInterfaceTemplateResource) Create(ctx context.Context, req r
 	if !(plan.UseBfd.IsNull() || plan.UseBfd.IsUnknown()) {
 		body["use-bfd"] = plan.UseBfd.ValueString()
 	}
-	if !(plan.VlinkNeighborID.IsNull() || plan.VlinkNeighborID.IsUnknown()) {
-		body["vlink-neighbor-id"] = plan.VlinkNeighborID.ValueString()
+	if !(plan.Auth.IsNull() || plan.Auth.IsUnknown()) {
+		body["auth"] = plan.Auth.ValueString()
 	}
-	if !(plan.VlinkTransitArea.IsNull() || plan.VlinkTransitArea.IsUnknown()) {
-		body["vlink-transit-area"] = plan.VlinkTransitArea.ValueString()
+	if !(plan.Type.IsNull() || plan.Type.IsUnknown()) {
+		body["type"] = plan.Type.ValueString()
 	}
 	obj, err := c.Add(ctx, "/routing/ospf/interface-template", body)
 	if err != nil {
@@ -339,9 +339,6 @@ func (r *RoutingOSPFInterfaceTemplateResource) Update(ctx context.Context, req r
 	if !plan.AuthKey.Equal(state.AuthKey) {
 		body["auth-key"] = plan.AuthKey.ValueString()
 	}
-	if !plan.Authentication.Equal(state.Authentication) {
-		body["authentication"] = plan.Authentication.ValueString()
-	}
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
 	}
@@ -362,9 +359,6 @@ func (r *RoutingOSPFInterfaceTemplateResource) Update(ctx context.Context, req r
 	}
 	if !plan.Interfaces.Equal(state.Interfaces) {
 		body["interfaces"] = plan.Interfaces.ValueString()
-	}
-	if !plan.NetworkType.Equal(state.NetworkType) {
-		body["network-type"] = plan.NetworkType.ValueString()
 	}
 	if !plan.Networks.Equal(state.Networks) {
 		body["networks"] = plan.Networks.ValueString()
@@ -387,11 +381,11 @@ func (r *RoutingOSPFInterfaceTemplateResource) Update(ctx context.Context, req r
 	if !plan.UseBfd.Equal(state.UseBfd) {
 		body["use-bfd"] = plan.UseBfd.ValueString()
 	}
-	if !plan.VlinkNeighborID.Equal(state.VlinkNeighborID) {
-		body["vlink-neighbor-id"] = plan.VlinkNeighborID.ValueString()
+	if !plan.Auth.Equal(state.Auth) && !plan.Auth.IsUnknown() {
+		body["auth"] = plan.Auth.ValueString()
 	}
-	if !plan.VlinkTransitArea.Equal(state.VlinkTransitArea) {
-		body["vlink-transit-area"] = plan.VlinkTransitArea.ValueString()
+	if !plan.Type.Equal(state.Type) && !plan.Type.IsUnknown() {
+		body["type"] = plan.Type.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/routing/ospf/interface-template", state.ID.ValueString(), body)
@@ -459,6 +453,16 @@ func routingOSPFInterfaceTemplateLookupByNaturalKey(ctx context.Context, c *clie
 func routingOSPFInterfaceTemplateApply(ctx context.Context, obj client.Object, m *RoutingOSPFInterfaceTemplateModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["type"]; ok && v != "" {
+		m.Type = types.StringValue(v)
+	} else {
+		m.Type = types.StringNull()
+	}
+	if v, ok := obj["auth"]; ok && v != "" {
+		m.Auth = types.StringValue(v)
+	} else {
+		m.Auth = types.StringNull()
+	}
 	if v, ok := obj["area"]; ok {
 		_ = v
 		if v != "" {

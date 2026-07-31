@@ -34,25 +34,25 @@ resource "routeros_user" "user_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `address` - (Optional) Type: `string`.
-* `alias` - (Optional) Type: `string`.
+* `alias` - (Read-only) Type: `string`.
 * `comment` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`.
-* `group` - (Required) Type: `string`. Default: `read`.
+* `expired` - (Read-only) Type: `bool`.
+* `group` - (Required) Type: `string`.
 * `inactivity_policy` - (Optional) Type: `string`.
-* `inactivity_timeout` - (Optional) Type: `duration`.
-* `name` - (Required) Type: `string`. Default: `tf_user`.
-* `password` - (Required) Type: `string`. Default: `tf_pw`. **Sensitive.**
-* `type` - (Optional) Type: `int`.
+* `inactivity_timeout` - (Optional) Type: `string`.
+* `last_logged_in` - (Read-only) Type: `string`.
+* `lockout_ack` - (Optional) Type: `bool`. Acknowledge that this rule may sever management traffic (required for unconditional input/forward drop/reject/tarpit rules with no match).
+* `name` - (Required) Type: `string`.
+* `password` - (Required) Type: `string`. **Sensitive.**
+* `type` - (Read-only) Type: `int`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `expired` - Type: `bool`.
-* `last_logged_in` - Type: `string`.
 
 ## Import
 

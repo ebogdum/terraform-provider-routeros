@@ -32,6 +32,8 @@ type IPDHCPServerNetworkResource struct {
 
 type IPDHCPServerNetworkModel struct {
 	ID            types.String `tfsdk:"id"`
+	NtpNone       types.String `tfsdk:"ntp_none"`
+	DnsNone       types.String `tfsdk:"dns_none"`
 	Address       types.String `tfsdk:"address"`
 	BootFileName  types.String `tfsdk:"boot_file_name"`
 	CapsManager   types.String `tfsdk:"caps_manager"`
@@ -70,7 +72,6 @@ func (r *IPDHCPServerNetworkResource) Configure(_ context.Context, req resource.
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPDHCPServerNetworkResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -81,6 +82,16 @@ func (r *IPDHCPServerNetworkResource) Schema(_ context.Context, _ resource.Schem
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"ntp_none": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `ntp-none`.",
+			},
+			"dns_none": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `dns-none`.",
 			},
 			"address": schema.StringAttribute{
 				Required:      true,
@@ -99,7 +110,6 @@ func (r *IPDHCPServerNetworkResource) Schema(_ context.Context, _ resource.Schem
 				Description: "",
 			},
 			"caps_managers": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -119,7 +129,6 @@ func (r *IPDHCPServerNetworkResource) Schema(_ context.Context, _ resource.Schem
 				Description: "",
 			},
 			"dhcp_options": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -129,7 +138,6 @@ func (r *IPDHCPServerNetworkResource) Schema(_ context.Context, _ resource.Schem
 				Description: "",
 			},
 			"dns_servers": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -139,7 +147,6 @@ func (r *IPDHCPServerNetworkResource) Schema(_ context.Context, _ resource.Schem
 				Description: "",
 			},
 			"dynamic": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -159,22 +166,18 @@ func (r *IPDHCPServerNetworkResource) Schema(_ context.Context, _ resource.Schem
 				Description: "",
 			},
 			"nndns": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"nnntp": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"no_dns": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"no_ntp": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -184,7 +187,6 @@ func (r *IPDHCPServerNetworkResource) Schema(_ context.Context, _ resource.Schem
 				Description: "",
 			},
 			"ntp_servers": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -194,7 +196,6 @@ func (r *IPDHCPServerNetworkResource) Schema(_ context.Context, _ resource.Schem
 				Description: "",
 			},
 			"wins_servers": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -226,9 +227,6 @@ func (r *IPDHCPServerNetworkResource) Create(ctx context.Context, req resource.C
 	if !(plan.CapsManager.IsNull() || plan.CapsManager.IsUnknown()) {
 		body["caps-manager"] = plan.CapsManager.ValueString()
 	}
-	if !(plan.CapsManagers.IsNull() || plan.CapsManagers.IsUnknown()) {
-		body["caps-managers"] = plan.CapsManagers.ValueString()
-	}
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
 	}
@@ -238,20 +236,11 @@ func (r *IPDHCPServerNetworkResource) Create(ctx context.Context, req resource.C
 	if !(plan.DHCPOptionSet.IsNull() || plan.DHCPOptionSet.IsUnknown()) {
 		body["dhcp-option-set"] = plan.DHCPOptionSet.ValueString()
 	}
-	if !(plan.DHCPOptions.IsNull() || plan.DHCPOptions.IsUnknown()) {
-		body["dhcp-options"] = plan.DHCPOptions.ValueString()
-	}
 	if !(plan.DNSServer.IsNull() || plan.DNSServer.IsUnknown()) {
 		body["dns-server"] = plan.DNSServer.ValueString()
 	}
-	if !(plan.DNSServers.IsNull() || plan.DNSServers.IsUnknown()) {
-		body["dns-servers"] = plan.DNSServers.ValueString()
-	}
 	if !(plan.Domain.IsNull() || plan.Domain.IsUnknown()) {
 		body["domain"] = plan.Domain.ValueString()
-	}
-	if !(plan.Dynamic.IsNull() || plan.Dynamic.IsUnknown()) {
-		body["dynamic"] = plan.Dynamic.ValueString()
 	}
 	if !(plan.Gateway.IsNull() || plan.Gateway.IsUnknown()) {
 		body["gateway"] = plan.Gateway.ValueString()
@@ -262,29 +251,17 @@ func (r *IPDHCPServerNetworkResource) Create(ctx context.Context, req resource.C
 	if !(plan.NextServer.IsNull() || plan.NextServer.IsUnknown()) {
 		body["next-server"] = plan.NextServer.ValueString()
 	}
-	if !(plan.Nndns.IsNull() || plan.Nndns.IsUnknown()) {
-		body["nndns"] = plan.Nndns.ValueString()
-	}
-	if !(plan.Nnntp.IsNull() || plan.Nnntp.IsUnknown()) {
-		body["nnntp"] = plan.Nnntp.ValueString()
-	}
-	if !(plan.NoDNS.IsNull() || plan.NoDNS.IsUnknown()) {
-		body["no-dns"] = client.FormatBool(plan.NoDNS.ValueBool())
-	}
-	if !(plan.NoNTP.IsNull() || plan.NoNTP.IsUnknown()) {
-		body["no-ntp"] = client.FormatBool(plan.NoNTP.ValueBool())
-	}
 	if !(plan.NTPServer.IsNull() || plan.NTPServer.IsUnknown()) {
 		body["ntp-server"] = plan.NTPServer.ValueString()
-	}
-	if !(plan.NTPServers.IsNull() || plan.NTPServers.IsUnknown()) {
-		body["ntp-servers"] = plan.NTPServers.ValueString()
 	}
 	if !(plan.WinsServer.IsNull() || plan.WinsServer.IsUnknown()) {
 		body["wins-server"] = plan.WinsServer.ValueString()
 	}
-	if !(plan.WinsServers.IsNull() || plan.WinsServers.IsUnknown()) {
-		body["wins-servers"] = plan.WinsServers.ValueString()
+	if !(plan.DnsNone.IsNull() || plan.DnsNone.IsUnknown()) {
+		body["dns-none"] = plan.DnsNone.ValueString()
+	}
+	if !(plan.NtpNone.IsNull() || plan.NtpNone.IsUnknown()) {
+		body["ntp-none"] = plan.NtpNone.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ip/dhcp-server/network", body)
 	if err != nil {
@@ -342,9 +319,6 @@ func (r *IPDHCPServerNetworkResource) Update(ctx context.Context, req resource.U
 	if !plan.CapsManager.Equal(state.CapsManager) {
 		body["caps-manager"] = plan.CapsManager.ValueString()
 	}
-	if !plan.CapsManagers.Equal(state.CapsManagers) {
-		body["caps-managers"] = plan.CapsManagers.ValueString()
-	}
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
 	}
@@ -354,20 +328,11 @@ func (r *IPDHCPServerNetworkResource) Update(ctx context.Context, req resource.U
 	if !plan.DHCPOptionSet.Equal(state.DHCPOptionSet) {
 		body["dhcp-option-set"] = plan.DHCPOptionSet.ValueString()
 	}
-	if !plan.DHCPOptions.Equal(state.DHCPOptions) {
-		body["dhcp-options"] = plan.DHCPOptions.ValueString()
-	}
 	if !plan.DNSServer.Equal(state.DNSServer) {
 		body["dns-server"] = plan.DNSServer.ValueString()
 	}
-	if !plan.DNSServers.Equal(state.DNSServers) {
-		body["dns-servers"] = plan.DNSServers.ValueString()
-	}
 	if !plan.Domain.Equal(state.Domain) {
 		body["domain"] = plan.Domain.ValueString()
-	}
-	if !plan.Dynamic.Equal(state.Dynamic) {
-		body["dynamic"] = plan.Dynamic.ValueString()
 	}
 	if !plan.Gateway.Equal(state.Gateway) {
 		body["gateway"] = plan.Gateway.ValueString()
@@ -378,29 +343,17 @@ func (r *IPDHCPServerNetworkResource) Update(ctx context.Context, req resource.U
 	if !plan.NextServer.Equal(state.NextServer) {
 		body["next-server"] = plan.NextServer.ValueString()
 	}
-	if !plan.Nndns.Equal(state.Nndns) {
-		body["nndns"] = plan.Nndns.ValueString()
-	}
-	if !plan.Nnntp.Equal(state.Nnntp) {
-		body["nnntp"] = plan.Nnntp.ValueString()
-	}
-	if !plan.NoDNS.Equal(state.NoDNS) {
-		body["no-dns"] = client.FormatBool(plan.NoDNS.ValueBool())
-	}
-	if !plan.NoNTP.Equal(state.NoNTP) {
-		body["no-ntp"] = client.FormatBool(plan.NoNTP.ValueBool())
-	}
 	if !plan.NTPServer.Equal(state.NTPServer) {
 		body["ntp-server"] = plan.NTPServer.ValueString()
-	}
-	if !plan.NTPServers.Equal(state.NTPServers) {
-		body["ntp-servers"] = plan.NTPServers.ValueString()
 	}
 	if !plan.WinsServer.Equal(state.WinsServer) {
 		body["wins-server"] = plan.WinsServer.ValueString()
 	}
-	if !plan.WinsServers.Equal(state.WinsServers) {
-		body["wins-servers"] = plan.WinsServers.ValueString()
+	if !plan.DnsNone.Equal(state.DnsNone) && !plan.DnsNone.IsUnknown() {
+		body["dns-none"] = plan.DnsNone.ValueString()
+	}
+	if !plan.NtpNone.Equal(state.NtpNone) && !plan.NtpNone.IsUnknown() {
+		body["ntp-none"] = plan.NtpNone.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/dhcp-server/network", state.ID.ValueString(), body)
@@ -468,6 +421,16 @@ func iPDHCPServerNetworkLookupByNaturalKey(ctx context.Context, c *client.Client
 func iPDHCPServerNetworkApply(ctx context.Context, obj client.Object, m *IPDHCPServerNetworkModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["ntp-none"]; ok && v != "" {
+		m.NtpNone = types.StringValue(v)
+	} else {
+		m.NtpNone = types.StringNull()
+	}
+	if v, ok := obj["dns-none"]; ok && v != "" {
+		m.DnsNone = types.StringValue(v)
+	} else {
+		m.DnsNone = types.StringNull()
+	}
 	if v, ok := obj["address"]; ok {
 		_ = v
 		if v != "" {

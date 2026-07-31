@@ -32,6 +32,9 @@ type InterfaceWifiResource struct {
 
 type InterfaceWifiModel struct {
 	ID                        types.String `tfsdk:"id"`
+	RadioMac                  types.String `tfsdk:"radio_mac"`
+	MasterInterface           types.String `tfsdk:"master_interface"`
+	DisableRunningCheck       types.String `tfsdk:"disable_running_check"`
 	X2gProbeDelay             types.String `tfsdk:"x2g_probe_delay"`
 	X3gppInfo                 types.String `tfsdk:"x3gpp_info"`
 	X3gppInfoRaw              types.String `tfsdk:"x3gpp_info_raw"`
@@ -198,7 +201,6 @@ func (r *InterfaceWifiResource) Configure(_ context.Context, req resource.Config
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceWifiResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -209,6 +211,21 @@ func (r *InterfaceWifiResource) Schema(_ context.Context, _ resource.SchemaReque
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"radio_mac": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `radio-mac`.",
+			},
+			"master_interface": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `master-interface`.",
+			},
+			"disable_running_check": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `disable-running-check`.",
 			},
 			"x2g_probe_delay": schema.StringAttribute{
 				Optional:    true,
@@ -296,7 +313,6 @@ func (r *InterfaceWifiResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"cap": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -316,7 +332,6 @@ func (r *InterfaceWifiResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"channel_priorities": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -366,7 +381,6 @@ func (r *InterfaceWifiResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"current_channel": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -437,6 +451,7 @@ func (r *InterfaceWifiResource) Schema(_ context.Context, _ resource.SchemaReque
 			},
 			"eap_password": schema.StringAttribute{
 				Optional:    true,
+				Sensitive:   true,
 				Computed:    true,
 				Description: "",
 			},
@@ -561,7 +576,6 @@ func (r *InterfaceWifiResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"invalid": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -808,7 +822,6 @@ func (r *InterfaceWifiResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"state": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -868,7 +881,6 @@ func (r *InterfaceWifiResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"tx_power": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -999,7 +1011,7 @@ func (r *InterfaceWifiResource) Create(ctx context.Context, req resource.CreateR
 		body["aaa"] = plan.Aaa.ValueString()
 	}
 	if !(plan.AntennaGain.IsNull() || plan.AntennaGain.IsUnknown()) {
-		body["antenna-gain"] = plan.AntennaGain.ValueString()
+		body["configuration.antenna-gain"] = plan.AntennaGain.ValueString()
 	}
 	if !(plan.ARP.IsNull() || plan.ARP.IsUnknown()) {
 		body["arp"] = plan.ARP.ValueString()
@@ -1008,13 +1020,13 @@ func (r *InterfaceWifiResource) Create(ctx context.Context, req resource.CreateR
 		body["arp-timeout"] = plan.ARPTimeout.ValueString()
 	}
 	if !(plan.AuthenticationTypes.IsNull() || plan.AuthenticationTypes.IsUnknown()) {
-		body["authentication-types"] = plan.AuthenticationTypes.ValueString()
+		body["security.authentication-types"] = plan.AuthenticationTypes.ValueString()
 	}
 	if !(plan.Band.IsNull() || plan.Band.IsUnknown()) {
-		body["band"] = plan.Band.ValueString()
+		body["channel.band"] = plan.Band.ValueString()
 	}
 	if !(plan.BeaconInterval.IsNull() || plan.BeaconInterval.IsUnknown()) {
-		body["beacon-interval"] = plan.BeaconInterval.ValueString()
+		body["configuration.beacon-interval"] = plan.BeaconInterval.ValueString()
 	}
 	if !(plan.BeaconProtection.IsNull() || plan.BeaconProtection.IsUnknown()) {
 		body["beacon-protection"] = plan.BeaconProtection.ValueString()
@@ -1023,25 +1035,25 @@ func (r *InterfaceWifiResource) Create(ctx context.Context, req resource.CreateR
 		body["bound"] = client.FormatBool(plan.Bound.ValueBool())
 	}
 	if !(plan.Bridge.IsNull() || plan.Bridge.IsUnknown()) {
-		body["bridge"] = plan.Bridge.ValueString()
+		body["datapath.bridge"] = plan.Bridge.ValueString()
 	}
 	if !(plan.BridgeCost.IsNull() || plan.BridgeCost.IsUnknown()) {
-		body["bridge-cost"] = plan.BridgeCost.ValueString()
+		body["datapath.bridge-cost"] = plan.BridgeCost.ValueString()
 	}
 	if !(plan.BridgeHorizon.IsNull() || plan.BridgeHorizon.IsUnknown()) {
-		body["bridge-horizon"] = plan.BridgeHorizon.ValueString()
+		body["datapath.bridge-horizon"] = plan.BridgeHorizon.ValueString()
 	}
 	if !(plan.CalledFormat.IsNull() || plan.CalledFormat.IsUnknown()) {
-		body["called-format"] = plan.CalledFormat.ValueString()
+		body["aaa.called-format"] = plan.CalledFormat.ValueString()
 	}
 	if !(plan.CallingFormat.IsNull() || plan.CallingFormat.IsUnknown()) {
-		body["calling-format"] = plan.CallingFormat.ValueString()
+		body["aaa.calling-format"] = plan.CallingFormat.ValueString()
 	}
 	if !(plan.Capcond.IsNull() || plan.Capcond.IsUnknown()) {
 		body["capcond"] = plan.Capcond.ValueString()
 	}
 	if !(plan.Chains.IsNull() || plan.Chains.IsUnknown()) {
-		body["chains"] = plan.Chains.ValueString()
+		body["configuration.chains"] = plan.Chains.ValueString()
 	}
 	if !(plan.Channel.IsNull() || plan.Channel.IsUnknown()) {
 		body["channel"] = plan.Channel.ValueString()
@@ -1053,7 +1065,7 @@ func (r *InterfaceWifiResource) Create(ctx context.Context, req resource.CreateR
 		body["ciphers"] = plan.Ciphers.ValueString()
 	}
 	if !(plan.ClientIsolation.IsNull() || plan.ClientIsolation.IsUnknown()) {
-		body["client-isolation"] = plan.ClientIsolation.ValueString()
+		body["datapath.client-isolation"] = plan.ClientIsolation.ValueString()
 	}
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
@@ -1065,13 +1077,13 @@ func (r *InterfaceWifiResource) Create(ctx context.Context, req resource.CreateR
 		body["connect-group"] = plan.ConnectGroup.ValueString()
 	}
 	if !(plan.ConnectPriority.IsNull() || plan.ConnectPriority.IsUnknown()) {
-		body["connect-priority"] = plan.ConnectPriority.ValueString()
+		body["security.connect-priority"] = plan.ConnectPriority.ValueString()
 	}
 	if !(plan.ConnectionCapabilities.IsNull() || plan.ConnectionCapabilities.IsUnknown()) {
 		body["connection-capabilities"] = plan.ConnectionCapabilities.ValueString()
 	}
 	if !(plan.Country.IsNull() || plan.Country.IsUnknown()) {
-		body["country"] = plan.Country.ValueString()
+		body["configuration.country"] = plan.Country.ValueString()
 	}
 	if !(plan.Datapath.IsNull() || plan.Datapath.IsUnknown()) {
 		body["datapath"] = plan.Datapath.ValueString()
@@ -1083,10 +1095,10 @@ func (r *InterfaceWifiResource) Create(ctx context.Context, req resource.CreateR
 		body["dgaf"] = plan.Dgaf.ValueString()
 	}
 	if !(plan.DhGroups.IsNull() || plan.DhGroups.IsUnknown()) {
-		body["dh-groups"] = plan.DhGroups.ValueString()
+		body["security.dh-groups"] = plan.DhGroups.ValueString()
 	}
 	if !(plan.DisablePmkid.IsNull() || plan.DisablePmkid.IsUnknown()) {
-		body["disable-pmkid"] = plan.DisablePmkid.ValueString()
+		body["security.disable-pmkid"] = plan.DisablePmkid.ValueString()
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
@@ -1098,28 +1110,28 @@ func (r *InterfaceWifiResource) Create(ctx context.Context, req resource.CreateR
 		body["domain-names"] = plan.DomainNames.ValueString()
 	}
 	if !(plan.DtimPeriod.IsNull() || plan.DtimPeriod.IsUnknown()) {
-		body["dtim-period"] = plan.DtimPeriod.ValueString()
+		body["configuration.dtim-period"] = plan.DtimPeriod.ValueString()
 	}
 	if !(plan.EAPAccounting.IsNull() || plan.EAPAccounting.IsUnknown()) {
-		body["eap-accounting"] = plan.EAPAccounting.ValueString()
+		body["security.eap-accounting"] = plan.EAPAccounting.ValueString()
 	}
 	if !(plan.EAPAnonymousIdentity.IsNull() || plan.EAPAnonymousIdentity.IsUnknown()) {
-		body["eap-anonymous-identity"] = plan.EAPAnonymousIdentity.ValueString()
+		body["security.eap-anonymous-identity"] = plan.EAPAnonymousIdentity.ValueString()
 	}
 	if !(plan.EAPCertificateMode.IsNull() || plan.EAPCertificateMode.IsUnknown()) {
-		body["eap-certificate-mode"] = plan.EAPCertificateMode.ValueString()
+		body["security.eap-certificate-mode"] = plan.EAPCertificateMode.ValueString()
 	}
 	if !(plan.EAPMethods.IsNull() || plan.EAPMethods.IsUnknown()) {
-		body["eap-methods"] = plan.EAPMethods.ValueString()
+		body["security.eap-methods"] = plan.EAPMethods.ValueString()
 	}
 	if !(plan.EAPPassword.IsNull() || plan.EAPPassword.IsUnknown()) {
-		body["eap-password"] = plan.EAPPassword.ValueString()
+		body["security.eap-password"] = plan.EAPPassword.ValueString()
 	}
 	if !(plan.EAPTLSCertificate.IsNull() || plan.EAPTLSCertificate.IsUnknown()) {
 		body["eap-tls-certificate"] = plan.EAPTLSCertificate.ValueString()
 	}
 	if !(plan.EAPUsername.IsNull() || plan.EAPUsername.IsUnknown()) {
-		body["eap-username"] = plan.EAPUsername.ValueString()
+		body["security.eap-username"] = plan.EAPUsername.ValueString()
 	}
 	if !(plan.Esr.IsNull() || plan.Esr.IsUnknown()) {
 		body["esr"] = plan.Esr.ValueString()
@@ -1131,7 +1143,7 @@ func (r *InterfaceWifiResource) Create(ctx context.Context, req resource.CreateR
 		body["freq-usage"] = plan.FreqUsage.ValueString()
 	}
 	if !(plan.Frequency.IsNull() || plan.Frequency.IsUnknown()) {
-		body["frequency"] = plan.Frequency.ValueString()
+		body["channel.frequency"] = plan.Frequency.ValueString()
 	}
 	if !(plan.FtEnabled.IsNull() || plan.FtEnabled.IsUnknown()) {
 		body["ft-enabled"] = plan.FtEnabled.ValueString()
@@ -1143,7 +1155,7 @@ func (r *InterfaceWifiResource) Create(ctx context.Context, req resource.CreateR
 		body["ft-nas-identifier"] = plan.FtNasIdentifier.ValueString()
 	}
 	if !(plan.FtOverDs.IsNull() || plan.FtOverDs.IsUnknown()) {
-		body["ft-over-ds"] = plan.FtOverDs.ValueString()
+		body["security.ft-over-ds"] = plan.FtOverDs.ValueString()
 	}
 	if !(plan.FtPreserveVLANID.IsNull() || plan.FtPreserveVLANID.IsUnknown()) {
 		body["ft-preserve-vlan-id"] = plan.FtPreserveVLANID.ValueString()
@@ -1155,16 +1167,16 @@ func (r *InterfaceWifiResource) Create(ctx context.Context, req resource.CreateR
 		body["ft-reassoc-deadline"] = plan.FtReassocDeadline.ValueString()
 	}
 	if !(plan.GroupEncryption.IsNull() || plan.GroupEncryption.IsUnknown()) {
-		body["group-encryption"] = plan.GroupEncryption.ValueString()
+		body["security.group-encryption"] = plan.GroupEncryption.ValueString()
 	}
 	if !(plan.GroupKeyUpdate.IsNull() || plan.GroupKeyUpdate.IsUnknown()) {
-		body["group-key-update"] = plan.GroupKeyUpdate.ValueString()
+		body["security.group-key-update"] = plan.GroupKeyUpdate.ValueString()
 	}
 	if !(plan.Hessid.IsNull() || plan.Hessid.IsUnknown()) {
 		body["hessid"] = plan.Hessid.ValueString()
 	}
 	if !(plan.HideSsid.IsNull() || plan.HideSsid.IsUnknown()) {
-		body["hide-ssid"] = plan.HideSsid.ValueString()
+		body["configuration.hide-ssid"] = plan.HideSsid.ValueString()
 	}
 	if !(plan.Hotspot20.IsNull() || plan.Hotspot20.IsUnknown()) {
 		body["hotspot-2-0"] = plan.Hotspot20.ValueString()
@@ -1173,13 +1185,13 @@ func (r *InterfaceWifiResource) Create(ctx context.Context, req resource.CreateR
 		body["hw-protection-mode"] = plan.HwProtectionMode.ValueString()
 	}
 	if !(plan.Installation.IsNull() || plan.Installation.IsUnknown()) {
-		body["installation"] = plan.Installation.ValueString()
+		body["configuration.installation"] = plan.Installation.ValueString()
 	}
 	if !(plan.InterfaceList.IsNull() || plan.InterfaceList.IsUnknown()) {
-		body["interface-list"] = plan.InterfaceList.ValueString()
+		body["datapath.interface-list"] = plan.InterfaceList.ValueString()
 	}
 	if !(plan.InterimUpdate.IsNull() || plan.InterimUpdate.IsUnknown()) {
-		body["interim-update"] = plan.InterimUpdate.ValueString()
+		body["aaa.interim-update"] = plan.InterimUpdate.ValueString()
 	}
 	if !(plan.Internet.IsNull() || plan.Internet.IsUnknown()) {
 		body["internet"] = plan.Internet.ValueString()
@@ -1200,16 +1212,16 @@ func (r *InterfaceWifiResource) Create(ctx context.Context, req resource.CreateR
 		body["mac-address"] = plan.MACAddress.ValueString()
 	}
 	if !(plan.MACCaching.IsNull() || plan.MACCaching.IsUnknown()) {
-		body["mac-caching"] = plan.MACCaching.ValueString()
+		body["aaa.mac-caching"] = plan.MACCaching.ValueString()
 	}
 	if !(plan.ManagementEncryption.IsNull() || plan.ManagementEncryption.IsUnknown()) {
 		body["management-encryption"] = plan.ManagementEncryption.ValueString()
 	}
 	if !(plan.ManagementProtection.IsNull() || plan.ManagementProtection.IsUnknown()) {
-		body["management-protection"] = plan.ManagementProtection.ValueString()
+		body["security.management-protection"] = plan.ManagementProtection.ValueString()
 	}
 	if !(plan.Manager.IsNull() || plan.Manager.IsUnknown()) {
-		body["manager"] = plan.Manager.ValueString()
+		body["configuration.manager"] = plan.Manager.ValueString()
 	}
 	if !(plan.Master.IsNull() || plan.Master.IsUnknown()) {
 		body["master"] = client.FormatBool(plan.Master.ValueBool())
@@ -1230,7 +1242,7 @@ func (r *InterfaceWifiResource) Create(ctx context.Context, req resource.CreateR
 		body["mldslv"] = plan.Mldslv.ValueString()
 	}
 	if !(plan.Mode.IsNull() || plan.Mode.IsUnknown()) {
-		body["mode"] = plan.Mode.ValueString()
+		body["configuration.mode"] = plan.Mode.ValueString()
 	}
 	if !(plan.MTU.IsNull() || plan.MTU.IsUnknown()) {
 		body["mtu"] = plan.MTU.ValueString()
@@ -1239,16 +1251,16 @@ func (r *InterfaceWifiResource) Create(ctx context.Context, req resource.CreateR
 		body["multi-passphrase-group"] = plan.MultiPassphraseGroup.ValueString()
 	}
 	if !(plan.MulticastEnhance.IsNull() || plan.MulticastEnhance.IsUnknown()) {
-		body["multicast-enhance"] = plan.MulticastEnhance.ValueString()
+		body["configuration.multicast-enhance"] = plan.MulticastEnhance.ValueString()
 	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
 	}
 	if !(plan.NasIdentifier.IsNull() || plan.NasIdentifier.IsUnknown()) {
-		body["nas-identifier"] = plan.NasIdentifier.ValueString()
+		body["aaa.nas-identifier"] = plan.NasIdentifier.ValueString()
 	}
 	if !(plan.NeighborGroup.IsNull() || plan.NeighborGroup.IsUnknown()) {
-		body["neighbor-group"] = plan.NeighborGroup.ValueString()
+		body["steering.neighbor-group"] = plan.NeighborGroup.ValueString()
 	}
 	if !(plan.NetworkType.IsNull() || plan.NetworkType.IsUnknown()) {
 		body["network-type"] = plan.NetworkType.ValueString()
@@ -1272,13 +1284,13 @@ func (r *InterfaceWifiResource) Create(ctx context.Context, req resource.CreateR
 		body["operator-names"] = plan.OperatorNames.ValueString()
 	}
 	if !(plan.OweTransitionInterface.IsNull() || plan.OweTransitionInterface.IsUnknown()) {
-		body["owe-transition-interface"] = plan.OweTransitionInterface.ValueString()
+		body["security.owe-transition-interface"] = plan.OweTransitionInterface.ValueString()
 	}
 	if !(plan.Passphrase.IsNull() || plan.Passphrase.IsUnknown()) {
-		body["passphrase"] = plan.Passphrase.ValueString()
+		body["security.passphrase"] = plan.Passphrase.ValueString()
 	}
 	if !(plan.PasswordFormat.IsNull() || plan.PasswordFormat.IsUnknown()) {
-		body["password-format"] = plan.PasswordFormat.ValueString()
+		body["aaa.password-format"] = plan.PasswordFormat.ValueString()
 	}
 	if !(plan.QoSClassifier.IsNull() || plan.QoSClassifier.IsUnknown()) {
 		body["qo-s-classifier"] = plan.QoSClassifier.ValueString()
@@ -1290,10 +1302,10 @@ func (r *InterfaceWifiResource) Create(ctx context.Context, req resource.CreateR
 		body["realms-raw"] = plan.RealmsRaw.ValueString()
 	}
 	if !(plan.ReselectInterval.IsNull() || plan.ReselectInterval.IsUnknown()) {
-		body["reselect-interval"] = plan.ReselectInterval.ValueString()
+		body["channel.reselect-interval"] = plan.ReselectInterval.ValueString()
 	}
 	if !(plan.ReselectTime.IsNull() || plan.ReselectTime.IsUnknown()) {
-		body["reselect-time"] = plan.ReselectTime.ValueString()
+		body["channel.reselect-time"] = plan.ReselectTime.ValueString()
 	}
 	if !(plan.ResetMACAddress.IsNull() || plan.ResetMACAddress.IsUnknown()) {
 		body["reset-mac-address"] = plan.ResetMACAddress.ValueString()
@@ -1302,37 +1314,37 @@ func (r *InterfaceWifiResource) Create(ctx context.Context, req resource.CreateR
 		body["roaming-ois"] = plan.RoamingOis.ValueString()
 	}
 	if !(plan.Rrm.IsNull() || plan.Rrm.IsUnknown()) {
-		body["rrm"] = plan.Rrm.ValueString()
+		body["steering.rrm"] = plan.Rrm.ValueString()
 	}
 	if !(plan.SaeAntiCloggingThreshold.IsNull() || plan.SaeAntiCloggingThreshold.IsUnknown()) {
 		body["sae-anti-clogging-threshold"] = plan.SaeAntiCloggingThreshold.ValueString()
 	}
 	if !(plan.SaeMaxFailureRate.IsNull() || plan.SaeMaxFailureRate.IsUnknown()) {
-		body["sae-max-failure-rate"] = plan.SaeMaxFailureRate.ValueString()
+		body["security.sae-max-failure-rate"] = plan.SaeMaxFailureRate.ValueString()
 	}
 	if !(plan.SaePwe.IsNull() || plan.SaePwe.IsUnknown()) {
-		body["sae-pwe"] = plan.SaePwe.ValueString()
+		body["security.sae-pwe"] = plan.SaePwe.ValueString()
 	}
 	if !(plan.Scan.IsNull() || plan.Scan.IsUnknown()) {
 		body["scan"] = plan.Scan.ValueString()
 	}
 	if !(plan.SecondaryFrequency.IsNull() || plan.SecondaryFrequency.IsUnknown()) {
-		body["secondary-frequency"] = plan.SecondaryFrequency.ValueString()
+		body["channel.secondary-frequency"] = plan.SecondaryFrequency.ValueString()
 	}
 	if !(plan.Security.IsNull() || plan.Security.IsUnknown()) {
 		body["security"] = plan.Security.ValueString()
 	}
 	if !(plan.SkipDfsChannels.IsNull() || plan.SkipDfsChannels.IsUnknown()) {
-		body["skip-dfs-channels"] = plan.SkipDfsChannels.ValueString()
+		body["channel.skip-dfs-channels"] = plan.SkipDfsChannels.ValueString()
 	}
 	if !(plan.Sniffer.IsNull() || plan.Sniffer.IsUnknown()) {
 		body["sniffer"] = plan.Sniffer.ValueString()
 	}
 	if !(plan.Ssid.IsNull() || plan.Ssid.IsUnknown()) {
-		body["ssid"] = plan.Ssid.ValueString()
+		body["configuration.ssid"] = plan.Ssid.ValueString()
 	}
 	if !(plan.StationRoaming.IsNull() || plan.StationRoaming.IsUnknown()) {
-		body["station-roaming"] = plan.StationRoaming.ValueString()
+		body["configuration.station-roaming"] = plan.StationRoaming.ValueString()
 	}
 	if !(plan.Steering.IsNull() || plan.Steering.IsUnknown()) {
 		body["steering"] = plan.Steering.ValueString()
@@ -1344,7 +1356,7 @@ func (r *InterfaceWifiResource) Create(ctx context.Context, req resource.CreateR
 		body["suppchans"] = client.FormatInt64(plan.Suppchans.ValueInt64())
 	}
 	if !(plan.TrafficProcessing.IsNull() || plan.TrafficProcessing.IsUnknown()) {
-		body["traffic-processing"] = plan.TrafficProcessing.ValueString()
+		body["datapath.traffic-processing"] = plan.TrafficProcessing.ValueString()
 	}
 	if !(plan.TransitionRequestCount.IsNull() || plan.TransitionRequestCount.IsUnknown()) {
 		body["transition-request-count"] = plan.TransitionRequestCount.ValueString()
@@ -1362,7 +1374,7 @@ func (r *InterfaceWifiResource) Create(ctx context.Context, req resource.CreateR
 		body["transition-time"] = plan.TransitionTime.ValueString()
 	}
 	if !(plan.TxChains.IsNull() || plan.TxChains.IsUnknown()) {
-		body["tx-chains"] = plan.TxChains.ValueString()
+		body["configuration.tx-chains"] = plan.TxChains.ValueString()
 	}
 	if !(plan.Types.IsNull() || plan.Types.IsUnknown()) {
 		body["types"] = plan.Types.ValueString()
@@ -1371,7 +1383,7 @@ func (r *InterfaceWifiResource) Create(ctx context.Context, req resource.CreateR
 		body["uesa"] = plan.Uesa.ValueString()
 	}
 	if !(plan.UsernameFormat.IsNull() || plan.UsernameFormat.IsUnknown()) {
-		body["username-format"] = plan.UsernameFormat.ValueString()
+		body["aaa.username-format"] = plan.UsernameFormat.ValueString()
 	}
 	if !(plan.Venue.IsNull() || plan.Venue.IsUnknown()) {
 		body["venue"] = plan.Venue.ValueString()
@@ -1383,7 +1395,7 @@ func (r *InterfaceWifiResource) Create(ctx context.Context, req resource.CreateR
 		body["virt"] = plan.Virt.ValueString()
 	}
 	if !(plan.VLANID.IsNull() || plan.VLANID.IsUnknown()) {
-		body["vlan-id"] = plan.VLANID.ValueString()
+		body["datapath.vlan-id"] = plan.VLANID.ValueString()
 	}
 	if !(plan.WanAtCapacity.IsNull() || plan.WanAtCapacity.IsUnknown()) {
 		body["wan-at-capacity"] = plan.WanAtCapacity.ValueString()
@@ -1410,16 +1422,25 @@ func (r *InterfaceWifiResource) Create(ctx context.Context, req resource.CreateR
 		body["wan-uplink-load"] = plan.WanUplinkLoad.ValueString()
 	}
 	if !(plan.Wnm.IsNull() || plan.Wnm.IsUnknown()) {
-		body["wnm"] = plan.Wnm.ValueString()
+		body["steering.wnm"] = plan.Wnm.ValueString()
 	}
 	if !(plan.Wps.IsNull() || plan.Wps.IsUnknown()) {
-		body["wps"] = plan.Wps.ValueString()
+		body["security.wps"] = plan.Wps.ValueString()
 	}
 	if !(plan.WpsAccept.IsNull() || plan.WpsAccept.IsUnknown()) {
 		body["wps-accept"] = plan.WpsAccept.ValueString()
 	}
 	if !(plan.WpsClient.IsNull() || plan.WpsClient.IsUnknown()) {
 		body["wps-client"] = plan.WpsClient.ValueString()
+	}
+	if !(plan.DisableRunningCheck.IsNull() || plan.DisableRunningCheck.IsUnknown()) {
+		body["disable-running-check"] = plan.DisableRunningCheck.ValueString()
+	}
+	if !(plan.MasterInterface.IsNull() || plan.MasterInterface.IsUnknown()) {
+		body["master-interface"] = plan.MasterInterface.ValueString()
+	}
+	if !(plan.RadioMac.IsNull() || plan.RadioMac.IsUnknown()) {
+		body["radio-mac"] = plan.RadioMac.ValueString()
 	}
 	obj, err := c.Add(ctx, "/interface/wifi", body)
 	if err != nil {
@@ -1481,7 +1502,7 @@ func (r *InterfaceWifiResource) Update(ctx context.Context, req resource.UpdateR
 		body["aaa"] = plan.Aaa.ValueString()
 	}
 	if !plan.AntennaGain.Equal(state.AntennaGain) {
-		body["antenna-gain"] = plan.AntennaGain.ValueString()
+		body["configuration.antenna-gain"] = plan.AntennaGain.ValueString()
 	}
 	if !plan.ARP.Equal(state.ARP) {
 		body["arp"] = plan.ARP.ValueString()
@@ -1490,13 +1511,13 @@ func (r *InterfaceWifiResource) Update(ctx context.Context, req resource.UpdateR
 		body["arp-timeout"] = plan.ARPTimeout.ValueString()
 	}
 	if !plan.AuthenticationTypes.Equal(state.AuthenticationTypes) {
-		body["authentication-types"] = plan.AuthenticationTypes.ValueString()
+		body["security.authentication-types"] = plan.AuthenticationTypes.ValueString()
 	}
 	if !plan.Band.Equal(state.Band) {
-		body["band"] = plan.Band.ValueString()
+		body["channel.band"] = plan.Band.ValueString()
 	}
 	if !plan.BeaconInterval.Equal(state.BeaconInterval) {
-		body["beacon-interval"] = plan.BeaconInterval.ValueString()
+		body["configuration.beacon-interval"] = plan.BeaconInterval.ValueString()
 	}
 	if !plan.BeaconProtection.Equal(state.BeaconProtection) {
 		body["beacon-protection"] = plan.BeaconProtection.ValueString()
@@ -1505,25 +1526,25 @@ func (r *InterfaceWifiResource) Update(ctx context.Context, req resource.UpdateR
 		body["bound"] = client.FormatBool(plan.Bound.ValueBool())
 	}
 	if !plan.Bridge.Equal(state.Bridge) {
-		body["bridge"] = plan.Bridge.ValueString()
+		body["datapath.bridge"] = plan.Bridge.ValueString()
 	}
 	if !plan.BridgeCost.Equal(state.BridgeCost) {
-		body["bridge-cost"] = plan.BridgeCost.ValueString()
+		body["datapath.bridge-cost"] = plan.BridgeCost.ValueString()
 	}
 	if !plan.BridgeHorizon.Equal(state.BridgeHorizon) {
-		body["bridge-horizon"] = plan.BridgeHorizon.ValueString()
+		body["datapath.bridge-horizon"] = plan.BridgeHorizon.ValueString()
 	}
 	if !plan.CalledFormat.Equal(state.CalledFormat) {
-		body["called-format"] = plan.CalledFormat.ValueString()
+		body["aaa.called-format"] = plan.CalledFormat.ValueString()
 	}
 	if !plan.CallingFormat.Equal(state.CallingFormat) {
-		body["calling-format"] = plan.CallingFormat.ValueString()
+		body["aaa.calling-format"] = plan.CallingFormat.ValueString()
 	}
 	if !plan.Capcond.Equal(state.Capcond) {
 		body["capcond"] = plan.Capcond.ValueString()
 	}
 	if !plan.Chains.Equal(state.Chains) {
-		body["chains"] = plan.Chains.ValueString()
+		body["configuration.chains"] = plan.Chains.ValueString()
 	}
 	if !plan.Channel.Equal(state.Channel) {
 		body["channel"] = plan.Channel.ValueString()
@@ -1535,7 +1556,7 @@ func (r *InterfaceWifiResource) Update(ctx context.Context, req resource.UpdateR
 		body["ciphers"] = plan.Ciphers.ValueString()
 	}
 	if !plan.ClientIsolation.Equal(state.ClientIsolation) {
-		body["client-isolation"] = plan.ClientIsolation.ValueString()
+		body["datapath.client-isolation"] = plan.ClientIsolation.ValueString()
 	}
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
@@ -1547,13 +1568,13 @@ func (r *InterfaceWifiResource) Update(ctx context.Context, req resource.UpdateR
 		body["connect-group"] = plan.ConnectGroup.ValueString()
 	}
 	if !plan.ConnectPriority.Equal(state.ConnectPriority) {
-		body["connect-priority"] = plan.ConnectPriority.ValueString()
+		body["security.connect-priority"] = plan.ConnectPriority.ValueString()
 	}
 	if !plan.ConnectionCapabilities.Equal(state.ConnectionCapabilities) {
 		body["connection-capabilities"] = plan.ConnectionCapabilities.ValueString()
 	}
 	if !plan.Country.Equal(state.Country) {
-		body["country"] = plan.Country.ValueString()
+		body["configuration.country"] = plan.Country.ValueString()
 	}
 	if !plan.Datapath.Equal(state.Datapath) {
 		body["datapath"] = plan.Datapath.ValueString()
@@ -1565,10 +1586,10 @@ func (r *InterfaceWifiResource) Update(ctx context.Context, req resource.UpdateR
 		body["dgaf"] = plan.Dgaf.ValueString()
 	}
 	if !plan.DhGroups.Equal(state.DhGroups) {
-		body["dh-groups"] = plan.DhGroups.ValueString()
+		body["security.dh-groups"] = plan.DhGroups.ValueString()
 	}
 	if !plan.DisablePmkid.Equal(state.DisablePmkid) {
-		body["disable-pmkid"] = plan.DisablePmkid.ValueString()
+		body["security.disable-pmkid"] = plan.DisablePmkid.ValueString()
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
@@ -1580,28 +1601,28 @@ func (r *InterfaceWifiResource) Update(ctx context.Context, req resource.UpdateR
 		body["domain-names"] = plan.DomainNames.ValueString()
 	}
 	if !plan.DtimPeriod.Equal(state.DtimPeriod) {
-		body["dtim-period"] = plan.DtimPeriod.ValueString()
+		body["configuration.dtim-period"] = plan.DtimPeriod.ValueString()
 	}
 	if !plan.EAPAccounting.Equal(state.EAPAccounting) {
-		body["eap-accounting"] = plan.EAPAccounting.ValueString()
+		body["security.eap-accounting"] = plan.EAPAccounting.ValueString()
 	}
 	if !plan.EAPAnonymousIdentity.Equal(state.EAPAnonymousIdentity) {
-		body["eap-anonymous-identity"] = plan.EAPAnonymousIdentity.ValueString()
+		body["security.eap-anonymous-identity"] = plan.EAPAnonymousIdentity.ValueString()
 	}
 	if !plan.EAPCertificateMode.Equal(state.EAPCertificateMode) {
-		body["eap-certificate-mode"] = plan.EAPCertificateMode.ValueString()
+		body["security.eap-certificate-mode"] = plan.EAPCertificateMode.ValueString()
 	}
 	if !plan.EAPMethods.Equal(state.EAPMethods) {
-		body["eap-methods"] = plan.EAPMethods.ValueString()
+		body["security.eap-methods"] = plan.EAPMethods.ValueString()
 	}
 	if !plan.EAPPassword.Equal(state.EAPPassword) {
-		body["eap-password"] = plan.EAPPassword.ValueString()
+		body["security.eap-password"] = plan.EAPPassword.ValueString()
 	}
 	if !plan.EAPTLSCertificate.Equal(state.EAPTLSCertificate) {
 		body["eap-tls-certificate"] = plan.EAPTLSCertificate.ValueString()
 	}
 	if !plan.EAPUsername.Equal(state.EAPUsername) {
-		body["eap-username"] = plan.EAPUsername.ValueString()
+		body["security.eap-username"] = plan.EAPUsername.ValueString()
 	}
 	if !plan.Esr.Equal(state.Esr) {
 		body["esr"] = plan.Esr.ValueString()
@@ -1613,7 +1634,7 @@ func (r *InterfaceWifiResource) Update(ctx context.Context, req resource.UpdateR
 		body["freq-usage"] = plan.FreqUsage.ValueString()
 	}
 	if !plan.Frequency.Equal(state.Frequency) {
-		body["frequency"] = plan.Frequency.ValueString()
+		body["channel.frequency"] = plan.Frequency.ValueString()
 	}
 	if !plan.FtEnabled.Equal(state.FtEnabled) {
 		body["ft-enabled"] = plan.FtEnabled.ValueString()
@@ -1625,7 +1646,7 @@ func (r *InterfaceWifiResource) Update(ctx context.Context, req resource.UpdateR
 		body["ft-nas-identifier"] = plan.FtNasIdentifier.ValueString()
 	}
 	if !plan.FtOverDs.Equal(state.FtOverDs) {
-		body["ft-over-ds"] = plan.FtOverDs.ValueString()
+		body["security.ft-over-ds"] = plan.FtOverDs.ValueString()
 	}
 	if !plan.FtPreserveVLANID.Equal(state.FtPreserveVLANID) {
 		body["ft-preserve-vlan-id"] = plan.FtPreserveVLANID.ValueString()
@@ -1637,16 +1658,16 @@ func (r *InterfaceWifiResource) Update(ctx context.Context, req resource.UpdateR
 		body["ft-reassoc-deadline"] = plan.FtReassocDeadline.ValueString()
 	}
 	if !plan.GroupEncryption.Equal(state.GroupEncryption) {
-		body["group-encryption"] = plan.GroupEncryption.ValueString()
+		body["security.group-encryption"] = plan.GroupEncryption.ValueString()
 	}
 	if !plan.GroupKeyUpdate.Equal(state.GroupKeyUpdate) {
-		body["group-key-update"] = plan.GroupKeyUpdate.ValueString()
+		body["security.group-key-update"] = plan.GroupKeyUpdate.ValueString()
 	}
 	if !plan.Hessid.Equal(state.Hessid) {
 		body["hessid"] = plan.Hessid.ValueString()
 	}
 	if !plan.HideSsid.Equal(state.HideSsid) {
-		body["hide-ssid"] = plan.HideSsid.ValueString()
+		body["configuration.hide-ssid"] = plan.HideSsid.ValueString()
 	}
 	if !plan.Hotspot20.Equal(state.Hotspot20) {
 		body["hotspot-2-0"] = plan.Hotspot20.ValueString()
@@ -1655,13 +1676,13 @@ func (r *InterfaceWifiResource) Update(ctx context.Context, req resource.UpdateR
 		body["hw-protection-mode"] = plan.HwProtectionMode.ValueString()
 	}
 	if !plan.Installation.Equal(state.Installation) {
-		body["installation"] = plan.Installation.ValueString()
+		body["configuration.installation"] = plan.Installation.ValueString()
 	}
 	if !plan.InterfaceList.Equal(state.InterfaceList) {
-		body["interface-list"] = plan.InterfaceList.ValueString()
+		body["datapath.interface-list"] = plan.InterfaceList.ValueString()
 	}
 	if !plan.InterimUpdate.Equal(state.InterimUpdate) {
-		body["interim-update"] = plan.InterimUpdate.ValueString()
+		body["aaa.interim-update"] = plan.InterimUpdate.ValueString()
 	}
 	if !plan.Internet.Equal(state.Internet) {
 		body["internet"] = plan.Internet.ValueString()
@@ -1682,16 +1703,16 @@ func (r *InterfaceWifiResource) Update(ctx context.Context, req resource.UpdateR
 		body["mac-address"] = plan.MACAddress.ValueString()
 	}
 	if !plan.MACCaching.Equal(state.MACCaching) {
-		body["mac-caching"] = plan.MACCaching.ValueString()
+		body["aaa.mac-caching"] = plan.MACCaching.ValueString()
 	}
 	if !plan.ManagementEncryption.Equal(state.ManagementEncryption) {
 		body["management-encryption"] = plan.ManagementEncryption.ValueString()
 	}
 	if !plan.ManagementProtection.Equal(state.ManagementProtection) {
-		body["management-protection"] = plan.ManagementProtection.ValueString()
+		body["security.management-protection"] = plan.ManagementProtection.ValueString()
 	}
 	if !plan.Manager.Equal(state.Manager) {
-		body["manager"] = plan.Manager.ValueString()
+		body["configuration.manager"] = plan.Manager.ValueString()
 	}
 	if !plan.Master.Equal(state.Master) {
 		body["master"] = client.FormatBool(plan.Master.ValueBool())
@@ -1712,7 +1733,7 @@ func (r *InterfaceWifiResource) Update(ctx context.Context, req resource.UpdateR
 		body["mldslv"] = plan.Mldslv.ValueString()
 	}
 	if !plan.Mode.Equal(state.Mode) {
-		body["mode"] = plan.Mode.ValueString()
+		body["configuration.mode"] = plan.Mode.ValueString()
 	}
 	if !plan.MTU.Equal(state.MTU) {
 		body["mtu"] = plan.MTU.ValueString()
@@ -1721,16 +1742,16 @@ func (r *InterfaceWifiResource) Update(ctx context.Context, req resource.UpdateR
 		body["multi-passphrase-group"] = plan.MultiPassphraseGroup.ValueString()
 	}
 	if !plan.MulticastEnhance.Equal(state.MulticastEnhance) {
-		body["multicast-enhance"] = plan.MulticastEnhance.ValueString()
+		body["configuration.multicast-enhance"] = plan.MulticastEnhance.ValueString()
 	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
 	}
 	if !plan.NasIdentifier.Equal(state.NasIdentifier) {
-		body["nas-identifier"] = plan.NasIdentifier.ValueString()
+		body["aaa.nas-identifier"] = plan.NasIdentifier.ValueString()
 	}
 	if !plan.NeighborGroup.Equal(state.NeighborGroup) {
-		body["neighbor-group"] = plan.NeighborGroup.ValueString()
+		body["steering.neighbor-group"] = plan.NeighborGroup.ValueString()
 	}
 	if !plan.NetworkType.Equal(state.NetworkType) {
 		body["network-type"] = plan.NetworkType.ValueString()
@@ -1754,13 +1775,13 @@ func (r *InterfaceWifiResource) Update(ctx context.Context, req resource.UpdateR
 		body["operator-names"] = plan.OperatorNames.ValueString()
 	}
 	if !plan.OweTransitionInterface.Equal(state.OweTransitionInterface) {
-		body["owe-transition-interface"] = plan.OweTransitionInterface.ValueString()
+		body["security.owe-transition-interface"] = plan.OweTransitionInterface.ValueString()
 	}
 	if !plan.Passphrase.Equal(state.Passphrase) {
-		body["passphrase"] = plan.Passphrase.ValueString()
+		body["security.passphrase"] = plan.Passphrase.ValueString()
 	}
 	if !plan.PasswordFormat.Equal(state.PasswordFormat) {
-		body["password-format"] = plan.PasswordFormat.ValueString()
+		body["aaa.password-format"] = plan.PasswordFormat.ValueString()
 	}
 	if !plan.QoSClassifier.Equal(state.QoSClassifier) {
 		body["qo-s-classifier"] = plan.QoSClassifier.ValueString()
@@ -1772,10 +1793,10 @@ func (r *InterfaceWifiResource) Update(ctx context.Context, req resource.UpdateR
 		body["realms-raw"] = plan.RealmsRaw.ValueString()
 	}
 	if !plan.ReselectInterval.Equal(state.ReselectInterval) {
-		body["reselect-interval"] = plan.ReselectInterval.ValueString()
+		body["channel.reselect-interval"] = plan.ReselectInterval.ValueString()
 	}
 	if !plan.ReselectTime.Equal(state.ReselectTime) {
-		body["reselect-time"] = plan.ReselectTime.ValueString()
+		body["channel.reselect-time"] = plan.ReselectTime.ValueString()
 	}
 	if !plan.ResetMACAddress.Equal(state.ResetMACAddress) {
 		body["reset-mac-address"] = plan.ResetMACAddress.ValueString()
@@ -1784,37 +1805,37 @@ func (r *InterfaceWifiResource) Update(ctx context.Context, req resource.UpdateR
 		body["roaming-ois"] = plan.RoamingOis.ValueString()
 	}
 	if !plan.Rrm.Equal(state.Rrm) {
-		body["rrm"] = plan.Rrm.ValueString()
+		body["steering.rrm"] = plan.Rrm.ValueString()
 	}
 	if !plan.SaeAntiCloggingThreshold.Equal(state.SaeAntiCloggingThreshold) {
 		body["sae-anti-clogging-threshold"] = plan.SaeAntiCloggingThreshold.ValueString()
 	}
 	if !plan.SaeMaxFailureRate.Equal(state.SaeMaxFailureRate) {
-		body["sae-max-failure-rate"] = plan.SaeMaxFailureRate.ValueString()
+		body["security.sae-max-failure-rate"] = plan.SaeMaxFailureRate.ValueString()
 	}
 	if !plan.SaePwe.Equal(state.SaePwe) {
-		body["sae-pwe"] = plan.SaePwe.ValueString()
+		body["security.sae-pwe"] = plan.SaePwe.ValueString()
 	}
 	if !plan.Scan.Equal(state.Scan) {
 		body["scan"] = plan.Scan.ValueString()
 	}
 	if !plan.SecondaryFrequency.Equal(state.SecondaryFrequency) {
-		body["secondary-frequency"] = plan.SecondaryFrequency.ValueString()
+		body["channel.secondary-frequency"] = plan.SecondaryFrequency.ValueString()
 	}
 	if !plan.Security.Equal(state.Security) {
 		body["security"] = plan.Security.ValueString()
 	}
 	if !plan.SkipDfsChannels.Equal(state.SkipDfsChannels) {
-		body["skip-dfs-channels"] = plan.SkipDfsChannels.ValueString()
+		body["channel.skip-dfs-channels"] = plan.SkipDfsChannels.ValueString()
 	}
 	if !plan.Sniffer.Equal(state.Sniffer) {
 		body["sniffer"] = plan.Sniffer.ValueString()
 	}
 	if !plan.Ssid.Equal(state.Ssid) {
-		body["ssid"] = plan.Ssid.ValueString()
+		body["configuration.ssid"] = plan.Ssid.ValueString()
 	}
 	if !plan.StationRoaming.Equal(state.StationRoaming) {
-		body["station-roaming"] = plan.StationRoaming.ValueString()
+		body["configuration.station-roaming"] = plan.StationRoaming.ValueString()
 	}
 	if !plan.Steering.Equal(state.Steering) {
 		body["steering"] = plan.Steering.ValueString()
@@ -1826,7 +1847,7 @@ func (r *InterfaceWifiResource) Update(ctx context.Context, req resource.UpdateR
 		body["suppchans"] = client.FormatInt64(plan.Suppchans.ValueInt64())
 	}
 	if !plan.TrafficProcessing.Equal(state.TrafficProcessing) {
-		body["traffic-processing"] = plan.TrafficProcessing.ValueString()
+		body["datapath.traffic-processing"] = plan.TrafficProcessing.ValueString()
 	}
 	if !plan.TransitionRequestCount.Equal(state.TransitionRequestCount) {
 		body["transition-request-count"] = plan.TransitionRequestCount.ValueString()
@@ -1844,7 +1865,7 @@ func (r *InterfaceWifiResource) Update(ctx context.Context, req resource.UpdateR
 		body["transition-time"] = plan.TransitionTime.ValueString()
 	}
 	if !plan.TxChains.Equal(state.TxChains) {
-		body["tx-chains"] = plan.TxChains.ValueString()
+		body["configuration.tx-chains"] = plan.TxChains.ValueString()
 	}
 	if !plan.Types.Equal(state.Types) {
 		body["types"] = plan.Types.ValueString()
@@ -1853,7 +1874,7 @@ func (r *InterfaceWifiResource) Update(ctx context.Context, req resource.UpdateR
 		body["uesa"] = plan.Uesa.ValueString()
 	}
 	if !plan.UsernameFormat.Equal(state.UsernameFormat) {
-		body["username-format"] = plan.UsernameFormat.ValueString()
+		body["aaa.username-format"] = plan.UsernameFormat.ValueString()
 	}
 	if !plan.Venue.Equal(state.Venue) {
 		body["venue"] = plan.Venue.ValueString()
@@ -1865,7 +1886,7 @@ func (r *InterfaceWifiResource) Update(ctx context.Context, req resource.UpdateR
 		body["virt"] = plan.Virt.ValueString()
 	}
 	if !plan.VLANID.Equal(state.VLANID) {
-		body["vlan-id"] = plan.VLANID.ValueString()
+		body["datapath.vlan-id"] = plan.VLANID.ValueString()
 	}
 	if !plan.WanAtCapacity.Equal(state.WanAtCapacity) {
 		body["wan-at-capacity"] = plan.WanAtCapacity.ValueString()
@@ -1892,16 +1913,25 @@ func (r *InterfaceWifiResource) Update(ctx context.Context, req resource.UpdateR
 		body["wan-uplink-load"] = plan.WanUplinkLoad.ValueString()
 	}
 	if !plan.Wnm.Equal(state.Wnm) {
-		body["wnm"] = plan.Wnm.ValueString()
+		body["steering.wnm"] = plan.Wnm.ValueString()
 	}
 	if !plan.Wps.Equal(state.Wps) {
-		body["wps"] = plan.Wps.ValueString()
+		body["security.wps"] = plan.Wps.ValueString()
 	}
 	if !plan.WpsAccept.Equal(state.WpsAccept) {
 		body["wps-accept"] = plan.WpsAccept.ValueString()
 	}
 	if !plan.WpsClient.Equal(state.WpsClient) {
 		body["wps-client"] = plan.WpsClient.ValueString()
+	}
+	if !plan.DisableRunningCheck.Equal(state.DisableRunningCheck) && !plan.DisableRunningCheck.IsUnknown() {
+		body["disable-running-check"] = plan.DisableRunningCheck.ValueString()
+	}
+	if !plan.MasterInterface.Equal(state.MasterInterface) && !plan.MasterInterface.IsUnknown() {
+		body["master-interface"] = plan.MasterInterface.ValueString()
+	}
+	if !plan.RadioMac.Equal(state.RadioMac) && !plan.RadioMac.IsUnknown() {
+		body["radio-mac"] = plan.RadioMac.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/wifi", state.ID.ValueString(), body)
@@ -1969,6 +1999,21 @@ func interfaceWifiLookupByNaturalKey(ctx context.Context, c *client.Client, id s
 func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifiModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["radio-mac"]; ok && v != "" {
+		m.RadioMac = types.StringValue(v)
+	} else {
+		m.RadioMac = types.StringNull()
+	}
+	if v, ok := obj["master-interface"]; ok && v != "" {
+		m.MasterInterface = types.StringValue(v)
+	} else {
+		m.MasterInterface = types.StringNull()
+	}
+	if v, ok := obj["disable-running-check"]; ok && v != "" {
+		m.DisableRunningCheck = types.StringValue(v)
+	} else {
+		m.DisableRunningCheck = types.StringNull()
+	}
 	if v, ok := obj["2g-probe-delay"]; ok {
 		_ = v
 		if v != "" {
@@ -2009,7 +2054,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.Aaa = types.StringNull()
 	}
-	if v, ok := obj["antenna-gain"]; ok {
+	if v, ok := obj["configuration.antenna-gain"]; ok {
 		_ = v
 		if v != "" {
 			m.AntennaGain = types.StringValue(v)
@@ -2039,7 +2084,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.ARPTimeout = types.StringNull()
 	}
-	if v, ok := obj["authentication-types"]; ok {
+	if v, ok := obj["security.authentication-types"]; ok {
 		_ = v
 		if v != "" {
 			m.AuthenticationTypes = types.StringValue(v)
@@ -2049,7 +2094,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.AuthenticationTypes = types.StringNull()
 	}
-	if v, ok := obj["band"]; ok {
+	if v, ok := obj["channel.band"]; ok {
 		_ = v
 		if v != "" {
 			m.Band = types.StringValue(v)
@@ -2059,7 +2104,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.Band = types.StringNull()
 	}
-	if v, ok := obj["beacon-interval"]; ok {
+	if v, ok := obj["configuration.beacon-interval"]; ok {
 		_ = v
 		if v != "" {
 			m.BeaconInterval = types.StringValue(v)
@@ -2089,7 +2134,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.Bound = types.BoolNull()
 	}
-	if v, ok := obj["bridge"]; ok {
+	if v, ok := obj["datapath.bridge"]; ok {
 		_ = v
 		if v != "" {
 			m.Bridge = types.StringValue(v)
@@ -2099,7 +2144,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.Bridge = types.StringNull()
 	}
-	if v, ok := obj["bridge-cost"]; ok {
+	if v, ok := obj["datapath.bridge-cost"]; ok {
 		_ = v
 		if v != "" {
 			m.BridgeCost = types.StringValue(v)
@@ -2109,7 +2154,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.BridgeCost = types.StringNull()
 	}
-	if v, ok := obj["bridge-horizon"]; ok {
+	if v, ok := obj["datapath.bridge-horizon"]; ok {
 		_ = v
 		if v != "" {
 			m.BridgeHorizon = types.StringValue(v)
@@ -2119,7 +2164,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.BridgeHorizon = types.StringNull()
 	}
-	if v, ok := obj["called-format"]; ok {
+	if v, ok := obj["aaa.called-format"]; ok {
 		_ = v
 		if v != "" {
 			m.CalledFormat = types.StringValue(v)
@@ -2129,7 +2174,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.CalledFormat = types.StringNull()
 	}
-	if v, ok := obj["calling-format"]; ok {
+	if v, ok := obj["aaa.calling-format"]; ok {
 		_ = v
 		if v != "" {
 			m.CallingFormat = types.StringValue(v)
@@ -2159,7 +2204,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.Capcond = types.StringNull()
 	}
-	if v, ok := obj["chains"]; ok {
+	if v, ok := obj["configuration.chains"]; ok {
 		_ = v
 		if v != "" {
 			m.Chains = types.StringValue(v)
@@ -2209,7 +2254,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.Ciphers = types.StringNull()
 	}
-	if v, ok := obj["client-isolation"]; ok {
+	if v, ok := obj["datapath.client-isolation"]; ok {
 		_ = v
 		if v != "" {
 			m.ClientIsolation = types.StringValue(v)
@@ -2249,7 +2294,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.ConnectGroup = types.StringNull()
 	}
-	if v, ok := obj["connect-priority"]; ok {
+	if v, ok := obj["security.connect-priority"]; ok {
 		_ = v
 		if v != "" {
 			m.ConnectPriority = types.StringValue(v)
@@ -2269,7 +2314,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.ConnectionCapabilities = types.StringNull()
 	}
-	if v, ok := obj["country"]; ok {
+	if v, ok := obj["configuration.country"]; ok {
 		_ = v
 		if v != "" {
 			m.Country = types.StringValue(v)
@@ -2319,7 +2364,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.Dgaf = types.StringNull()
 	}
-	if v, ok := obj["dh-groups"]; ok {
+	if v, ok := obj["security.dh-groups"]; ok {
 		_ = v
 		if v != "" {
 			m.DhGroups = types.StringValue(v)
@@ -2329,7 +2374,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.DhGroups = types.StringNull()
 	}
-	if v, ok := obj["disable-pmkid"]; ok {
+	if v, ok := obj["security.disable-pmkid"]; ok {
 		_ = v
 		if v != "" {
 			m.DisablePmkid = types.StringValue(v)
@@ -2369,7 +2414,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.DomainNames = types.StringNull()
 	}
-	if v, ok := obj["dtim-period"]; ok {
+	if v, ok := obj["configuration.dtim-period"]; ok {
 		_ = v
 		if v != "" {
 			m.DtimPeriod = types.StringValue(v)
@@ -2379,7 +2424,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.DtimPeriod = types.StringNull()
 	}
-	if v, ok := obj["eap-accounting"]; ok {
+	if v, ok := obj["security.eap-accounting"]; ok {
 		_ = v
 		if v != "" {
 			m.EAPAccounting = types.StringValue(v)
@@ -2389,7 +2434,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.EAPAccounting = types.StringNull()
 	}
-	if v, ok := obj["eap-anonymous-identity"]; ok {
+	if v, ok := obj["security.eap-anonymous-identity"]; ok {
 		_ = v
 		if v != "" {
 			m.EAPAnonymousIdentity = types.StringValue(v)
@@ -2399,7 +2444,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.EAPAnonymousIdentity = types.StringNull()
 	}
-	if v, ok := obj["eap-certificate-mode"]; ok {
+	if v, ok := obj["security.eap-certificate-mode"]; ok {
 		_ = v
 		if v != "" {
 			m.EAPCertificateMode = types.StringValue(v)
@@ -2409,7 +2454,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.EAPCertificateMode = types.StringNull()
 	}
-	if v, ok := obj["eap-methods"]; ok {
+	if v, ok := obj["security.eap-methods"]; ok {
 		_ = v
 		if v != "" {
 			m.EAPMethods = types.StringValue(v)
@@ -2419,7 +2464,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.EAPMethods = types.StringNull()
 	}
-	if v, ok := obj["eap-password"]; ok {
+	if v, ok := obj["security.eap-password"]; ok {
 		_ = v
 		if v != "" {
 			m.EAPPassword = types.StringValue(v)
@@ -2439,7 +2484,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.EAPTLSCertificate = types.StringNull()
 	}
-	if v, ok := obj["eap-username"]; ok {
+	if v, ok := obj["security.eap-username"]; ok {
 		_ = v
 		if v != "" {
 			m.EAPUsername = types.StringValue(v)
@@ -2479,7 +2524,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.FreqUsage = types.StringNull()
 	}
-	if v, ok := obj["frequency"]; ok {
+	if v, ok := obj["channel.frequency"]; ok {
 		_ = v
 		if v != "" {
 			m.Frequency = types.StringValue(v)
@@ -2519,7 +2564,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.FtNasIdentifier = types.StringNull()
 	}
-	if v, ok := obj["ft-over-ds"]; ok {
+	if v, ok := obj["security.ft-over-ds"]; ok {
 		_ = v
 		if v != "" {
 			m.FtOverDs = types.StringValue(v)
@@ -2559,7 +2604,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.FtReassocDeadline = types.StringNull()
 	}
-	if v, ok := obj["group-encryption"]; ok {
+	if v, ok := obj["security.group-encryption"]; ok {
 		_ = v
 		if v != "" {
 			m.GroupEncryption = types.StringValue(v)
@@ -2569,7 +2614,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.GroupEncryption = types.StringNull()
 	}
-	if v, ok := obj["group-key-update"]; ok {
+	if v, ok := obj["security.group-key-update"]; ok {
 		_ = v
 		if v != "" {
 			m.GroupKeyUpdate = types.StringValue(v)
@@ -2589,7 +2634,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.Hessid = types.StringNull()
 	}
-	if v, ok := obj["hide-ssid"]; ok {
+	if v, ok := obj["configuration.hide-ssid"]; ok {
 		_ = v
 		if v != "" {
 			m.HideSsid = types.StringValue(v)
@@ -2619,7 +2664,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.HwProtectionMode = types.StringNull()
 	}
-	if v, ok := obj["installation"]; ok {
+	if v, ok := obj["configuration.installation"]; ok {
 		_ = v
 		if v != "" {
 			m.Installation = types.StringValue(v)
@@ -2629,7 +2674,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.Installation = types.StringNull()
 	}
-	if v, ok := obj["interface-list"]; ok {
+	if v, ok := obj["datapath.interface-list"]; ok {
 		_ = v
 		if v != "" {
 			m.InterfaceList = types.StringValue(v)
@@ -2639,7 +2684,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.InterfaceList = types.StringNull()
 	}
-	if v, ok := obj["interim-update"]; ok {
+	if v, ok := obj["aaa.interim-update"]; ok {
 		_ = v
 		if v != "" {
 			m.InterimUpdate = types.StringValue(v)
@@ -2719,7 +2764,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.MACAddress = types.StringNull()
 	}
-	if v, ok := obj["mac-caching"]; ok {
+	if v, ok := obj["aaa.mac-caching"]; ok {
 		_ = v
 		if v != "" {
 			m.MACCaching = types.StringValue(v)
@@ -2739,7 +2784,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.ManagementEncryption = types.StringNull()
 	}
-	if v, ok := obj["management-protection"]; ok {
+	if v, ok := obj["security.management-protection"]; ok {
 		_ = v
 		if v != "" {
 			m.ManagementProtection = types.StringValue(v)
@@ -2749,7 +2794,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.ManagementProtection = types.StringNull()
 	}
-	if v, ok := obj["manager"]; ok {
+	if v, ok := obj["configuration.manager"]; ok {
 		_ = v
 		if v != "" {
 			m.Manager = types.StringValue(v)
@@ -2819,7 +2864,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.Mldslv = types.StringNull()
 	}
-	if v, ok := obj["mode"]; ok {
+	if v, ok := obj["configuration.mode"]; ok {
 		_ = v
 		if v != "" {
 			m.Mode = types.StringValue(v)
@@ -2849,7 +2894,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.MultiPassphraseGroup = types.StringNull()
 	}
-	if v, ok := obj["multicast-enhance"]; ok {
+	if v, ok := obj["configuration.multicast-enhance"]; ok {
 		_ = v
 		if v != "" {
 			m.MulticastEnhance = types.StringValue(v)
@@ -2869,7 +2914,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.Name = types.StringNull()
 	}
-	if v, ok := obj["nas-identifier"]; ok {
+	if v, ok := obj["aaa.nas-identifier"]; ok {
 		_ = v
 		if v != "" {
 			m.NasIdentifier = types.StringValue(v)
@@ -2879,7 +2924,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.NasIdentifier = types.StringNull()
 	}
-	if v, ok := obj["neighbor-group"]; ok {
+	if v, ok := obj["steering.neighbor-group"]; ok {
 		_ = v
 		if v != "" {
 			m.NeighborGroup = types.StringValue(v)
@@ -2959,7 +3004,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.OperatorNames = types.StringNull()
 	}
-	if v, ok := obj["owe-transition-interface"]; ok {
+	if v, ok := obj["security.owe-transition-interface"]; ok {
 		_ = v
 		if v != "" {
 			m.OweTransitionInterface = types.StringValue(v)
@@ -2969,7 +3014,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.OweTransitionInterface = types.StringNull()
 	}
-	if v, ok := obj["passphrase"]; ok {
+	if v, ok := obj["security.passphrase"]; ok {
 		_ = v
 		if v != "" {
 			m.Passphrase = types.StringValue(v)
@@ -2979,7 +3024,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.Passphrase = types.StringNull()
 	}
-	if v, ok := obj["password-format"]; ok {
+	if v, ok := obj["aaa.password-format"]; ok {
 		_ = v
 		if v != "" {
 			m.PasswordFormat = types.StringValue(v)
@@ -3019,7 +3064,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.RealmsRaw = types.StringNull()
 	}
-	if v, ok := obj["reselect-interval"]; ok {
+	if v, ok := obj["channel.reselect-interval"]; ok {
 		_ = v
 		if v != "" {
 			m.ReselectInterval = types.StringValue(v)
@@ -3029,7 +3074,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.ReselectInterval = types.StringNull()
 	}
-	if v, ok := obj["reselect-time"]; ok {
+	if v, ok := obj["channel.reselect-time"]; ok {
 		_ = v
 		if v != "" {
 			m.ReselectTime = types.StringValue(v)
@@ -3059,7 +3104,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.RoamingOis = types.StringNull()
 	}
-	if v, ok := obj["rrm"]; ok {
+	if v, ok := obj["steering.rrm"]; ok {
 		_ = v
 		if v != "" {
 			m.Rrm = types.StringValue(v)
@@ -3079,7 +3124,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.SaeAntiCloggingThreshold = types.StringNull()
 	}
-	if v, ok := obj["sae-max-failure-rate"]; ok {
+	if v, ok := obj["security.sae-max-failure-rate"]; ok {
 		_ = v
 		if v != "" {
 			m.SaeMaxFailureRate = types.StringValue(v)
@@ -3089,7 +3134,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.SaeMaxFailureRate = types.StringNull()
 	}
-	if v, ok := obj["sae-pwe"]; ok {
+	if v, ok := obj["security.sae-pwe"]; ok {
 		_ = v
 		if v != "" {
 			m.SaePwe = types.StringValue(v)
@@ -3109,7 +3154,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.Scan = types.StringNull()
 	}
-	if v, ok := obj["secondary-frequency"]; ok {
+	if v, ok := obj["channel.secondary-frequency"]; ok {
 		_ = v
 		if v != "" {
 			m.SecondaryFrequency = types.StringValue(v)
@@ -3129,7 +3174,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.Security = types.StringNull()
 	}
-	if v, ok := obj["skip-dfs-channels"]; ok {
+	if v, ok := obj["channel.skip-dfs-channels"]; ok {
 		_ = v
 		if v != "" {
 			m.SkipDfsChannels = types.StringValue(v)
@@ -3149,7 +3194,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.Sniffer = types.StringNull()
 	}
-	if v, ok := obj["ssid"]; ok {
+	if v, ok := obj["configuration.ssid"]; ok {
 		_ = v
 		if v != "" {
 			m.Ssid = types.StringValue(v)
@@ -3169,7 +3214,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.State = types.StringNull()
 	}
-	if v, ok := obj["station-roaming"]; ok {
+	if v, ok := obj["configuration.station-roaming"]; ok {
 		_ = v
 		if v != "" {
 			m.StationRoaming = types.StringValue(v)
@@ -3209,7 +3254,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.Suppchans = types.Int64Null()
 	}
-	if v, ok := obj["traffic-processing"]; ok {
+	if v, ok := obj["datapath.traffic-processing"]; ok {
 		_ = v
 		if v != "" {
 			m.TrafficProcessing = types.StringValue(v)
@@ -3269,7 +3314,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.TransitionTime = types.StringNull()
 	}
-	if v, ok := obj["tx-chains"]; ok {
+	if v, ok := obj["configuration.tx-chains"]; ok {
 		_ = v
 		if v != "" {
 			m.TxChains = types.StringValue(v)
@@ -3279,7 +3324,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.TxChains = types.StringNull()
 	}
-	if v, ok := obj["tx-power"]; ok {
+	if v, ok := obj["configuration.tx-power"]; ok {
 		_ = v
 		if v != "" {
 			m.TxPower = types.StringValue(v)
@@ -3309,7 +3354,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.Uesa = types.StringNull()
 	}
-	if v, ok := obj["username-format"]; ok {
+	if v, ok := obj["aaa.username-format"]; ok {
 		_ = v
 		if v != "" {
 			m.UsernameFormat = types.StringValue(v)
@@ -3349,7 +3394,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.Virt = types.StringNull()
 	}
-	if v, ok := obj["vlan-id"]; ok {
+	if v, ok := obj["datapath.vlan-id"]; ok {
 		_ = v
 		if v != "" {
 			m.VLANID = types.StringValue(v)
@@ -3439,7 +3484,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.WanUplinkLoad = types.StringNull()
 	}
-	if v, ok := obj["wnm"]; ok {
+	if v, ok := obj["steering.wnm"]; ok {
 		_ = v
 		if v != "" {
 			m.Wnm = types.StringValue(v)
@@ -3449,7 +3494,7 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	} else {
 		m.Wnm = types.StringNull()
 	}
-	if v, ok := obj["wps"]; ok {
+	if v, ok := obj["security.wps"]; ok {
 		_ = v
 		if v != "" {
 			m.Wps = types.StringValue(v)

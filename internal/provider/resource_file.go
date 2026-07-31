@@ -48,7 +48,7 @@ type FileModel struct {
 	Share        types.String `tfsdk:"share"`
 	Shared       types.Bool   `tfsdk:"shared"`
 	Size         types.String `tfsdk:"size"`
-	Type         types.Int64  `tfsdk:"type"`
+	Type         types.String `tfsdk:"type"`
 	Unshare      types.String `tfsdk:"unshare"`
 	Valid        types.String `tfsdk:"valid"`
 	Router       types.String `tfsdk:"router"`
@@ -66,7 +66,6 @@ func (r *FileResource) Configure(_ context.Context, req resource.ConfigureReques
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *FileResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -79,17 +78,14 @@ func (r *FileResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"backup": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"basename": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"container": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -99,42 +95,34 @@ func (r *FileResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"directory": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"family": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"file_name": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"file_share_url": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"hasvpn": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"invalid": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"invalidfile": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"last_modified": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -144,42 +132,34 @@ func (r *FileResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"nondir": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"restore": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"share": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"shared": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"size": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
-			"type": schema.Int64Attribute{
-				Optional:    true,
+			"type": schema.StringAttribute{
 				Computed:    true,
 				Description: "",
 			},
 			"unshare": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"valid": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -202,56 +182,11 @@ func (r *FileResource) Create(ctx context.Context, req resource.CreateRequest, r
 		return
 	}
 	body := client.Object{}
-	if !(plan.Backup.IsNull() || plan.Backup.IsUnknown()) {
-		body["backup"] = plan.Backup.ValueString()
-	}
-	if !(plan.Basename.IsNull() || plan.Basename.IsUnknown()) {
-		body["basename"] = plan.Basename.ValueString()
-	}
-	if !(plan.Container.IsNull() || plan.Container.IsUnknown()) {
-		body["container"] = client.FormatInt64(plan.Container.ValueInt64())
-	}
 	if !(plan.Contents.IsNull() || plan.Contents.IsUnknown()) {
 		body["contents"] = plan.Contents.ValueString()
 	}
-	if !(plan.Directory.IsNull() || plan.Directory.IsUnknown()) {
-		body["directory"] = plan.Directory.ValueString()
-	}
-	if !(plan.FileName.IsNull() || plan.FileName.IsUnknown()) {
-		body["file-name"] = plan.FileName.ValueString()
-	}
-	if !(plan.Hasvpn.IsNull() || plan.Hasvpn.IsUnknown()) {
-		body["hasvpn"] = plan.Hasvpn.ValueString()
-	}
-	if !(plan.Invalid.IsNull() || plan.Invalid.IsUnknown()) {
-		body["invalid"] = plan.Invalid.ValueString()
-	}
-	if !(plan.Invalidfile.IsNull() || plan.Invalidfile.IsUnknown()) {
-		body["invalidfile"] = plan.Invalidfile.ValueString()
-	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
-	}
-	if !(plan.Nondir.IsNull() || plan.Nondir.IsUnknown()) {
-		body["nondir"] = plan.Nondir.ValueString()
-	}
-	if !(plan.Restore.IsNull() || plan.Restore.IsUnknown()) {
-		body["restore"] = plan.Restore.ValueString()
-	}
-	if !(plan.Share.IsNull() || plan.Share.IsUnknown()) {
-		body["share"] = plan.Share.ValueString()
-	}
-	if !(plan.Shared.IsNull() || plan.Shared.IsUnknown()) {
-		body["shared"] = client.FormatBool(plan.Shared.ValueBool())
-	}
-	if !(plan.Type.IsNull() || plan.Type.IsUnknown()) {
-		body["type"] = client.FormatInt64(plan.Type.ValueInt64())
-	}
-	if !(plan.Unshare.IsNull() || plan.Unshare.IsUnknown()) {
-		body["unshare"] = plan.Unshare.ValueString()
-	}
-	if !(plan.Valid.IsNull() || plan.Valid.IsUnknown()) {
-		body["valid"] = plan.Valid.ValueString()
 	}
 	obj, err := c.Add(ctx, "/file", body)
 	if err != nil {
@@ -300,56 +235,11 @@ func (r *FileResource) Update(ctx context.Context, req resource.UpdateRequest, r
 		return
 	}
 	body := client.Object{}
-	if !plan.Backup.Equal(state.Backup) {
-		body["backup"] = plan.Backup.ValueString()
-	}
-	if !plan.Basename.Equal(state.Basename) {
-		body["basename"] = plan.Basename.ValueString()
-	}
-	if !plan.Container.Equal(state.Container) {
-		body["container"] = client.FormatInt64(plan.Container.ValueInt64())
-	}
 	if !plan.Contents.Equal(state.Contents) {
 		body["contents"] = plan.Contents.ValueString()
 	}
-	if !plan.Directory.Equal(state.Directory) {
-		body["directory"] = plan.Directory.ValueString()
-	}
-	if !plan.FileName.Equal(state.FileName) {
-		body["file-name"] = plan.FileName.ValueString()
-	}
-	if !plan.Hasvpn.Equal(state.Hasvpn) {
-		body["hasvpn"] = plan.Hasvpn.ValueString()
-	}
-	if !plan.Invalid.Equal(state.Invalid) {
-		body["invalid"] = plan.Invalid.ValueString()
-	}
-	if !plan.Invalidfile.Equal(state.Invalidfile) {
-		body["invalidfile"] = plan.Invalidfile.ValueString()
-	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
-	}
-	if !plan.Nondir.Equal(state.Nondir) {
-		body["nondir"] = plan.Nondir.ValueString()
-	}
-	if !plan.Restore.Equal(state.Restore) {
-		body["restore"] = plan.Restore.ValueString()
-	}
-	if !plan.Share.Equal(state.Share) {
-		body["share"] = plan.Share.ValueString()
-	}
-	if !plan.Shared.Equal(state.Shared) {
-		body["shared"] = client.FormatBool(plan.Shared.ValueBool())
-	}
-	if !plan.Type.Equal(state.Type) {
-		body["type"] = client.FormatInt64(plan.Type.ValueInt64())
-	}
-	if !plan.Unshare.Equal(state.Unshare) {
-		body["unshare"] = plan.Unshare.ValueString()
-	}
-	if !plan.Valid.Equal(state.Valid) {
-		body["valid"] = plan.Valid.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/file", state.ID.ValueString(), body)
@@ -597,15 +487,10 @@ func fileApply(ctx context.Context, obj client.Object, m *FileModel) {
 	} else {
 		m.Size = types.StringNull()
 	}
-	if v, ok := obj["type"]; ok {
-		_ = v
-		if n, err := client.ParseInt64(v); err == nil {
-			m.Type = types.Int64Value(n)
-		} else {
-			m.Type = types.Int64Null()
-		}
+	if v, ok := obj["type"]; ok && v != "" {
+		m.Type = types.StringValue(v)
 	} else {
-		m.Type = types.Int64Null()
+		m.Type = types.StringNull()
 	}
 	if v, ok := obj["unshare"]; ok {
 		_ = v

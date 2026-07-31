@@ -38,8 +38,8 @@ resource "routeros_interface_wifi_provisioning" "provisioning_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `action` - (Required) Type: `enum(none|create-enabled|create-disabled|create-dynamic-enabled)`. Default: `create-dynamic-enabled`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `action` - (Required) Type: `string`.
 * `address_ranges` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `common_name_regexp` - (Optional) Type: `string`.
@@ -53,6 +53,11 @@ This resource supports the following arguments:
 * `slave_name_format` - (Optional) Type: `string`.
 * `supported_bands` - (Optional) Type: `string`.
 * `supported_hw_caps` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

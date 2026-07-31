@@ -27,22 +27,21 @@ resource "routeros_interface_bridge_settings" "settings_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `allow_fast_path` - (Optional) Type: `bool`.
+* `bridge_fast_forward_bytes` - (Optional) Type: `int`.
+* `bridge_fast_forward_packets` - (Optional) Type: `int`.
+* `bridge_fast_path_active` - (Optional) Type: `bool`.
+* `bridge_fast_path_bytes` - (Optional) Type: `int`.
+* `bridge_fast_path_packets` - (Optional) Type: `int`.
 * `use_ip_firewall` - (Optional) Type: `bool`.
 * `use_ip_firewall_for_pppoe` - (Optional) Type: `bool`.
 * `use_ip_firewall_for_vlan` - (Optional) Type: `bool`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - Stable identifier (the singleton's menu path, optionally namespaced by router).
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `bridge_fast_forward_bytes` - Type: `int`.
-* `bridge_fast_forward_packets` - Type: `int`.
-* `bridge_fast_path_active` - Type: `bool`.
-* `bridge_fast_path_bytes` - Type: `int`.
-* `bridge_fast_path_packets` - Type: `int`.
 
 ## Import
 

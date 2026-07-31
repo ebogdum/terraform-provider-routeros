@@ -29,12 +29,17 @@ resource "routeros_caps_man_channel" "channel_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `band` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `frequency` - (Optional) Type: `string`.
-* `name` - (Required) Type: `string`. Default: `ros_audit_20260523213235_3`.
+* `name` - (Required) Type: `string`.
 * `tx_power` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

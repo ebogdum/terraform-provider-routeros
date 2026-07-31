@@ -42,7 +42,7 @@ type InterfaceGreModel struct {
 	IpsecSecret   types.String `tfsdk:"ipsec_secret"`
 	Keepalive     types.String `tfsdk:"keepalive"`
 	LocalAddress  types.String `tfsdk:"local_address"`
-	MTU           types.Int64  `tfsdk:"mtu"`
+	MTU           types.String `tfsdk:"mtu"`
 	Name          types.String `tfsdk:"name"`
 	RemoteAddress types.String `tfsdk:"remote_address"`
 	Router        types.String `tfsdk:"router"`
@@ -60,7 +60,6 @@ func (r *InterfaceGreResource) Configure(_ context.Context, req resource.Configu
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceGreResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -73,7 +72,6 @@ func (r *InterfaceGreResource) Schema(_ context.Context, _ resource.SchemaReques
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"actual_mtu": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -126,10 +124,10 @@ func (r *InterfaceGreResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description: "IP address that will be used for local tunnel end. If set to 0.0.0.0 then IP address of outgoing interface will be used.",
 				Validators:  []validator.String{schemautil.IsIP()},
 			},
-			"mtu": schema.Int64Attribute{
+			"mtu": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "Layer3 Maximum transmission unit.",
+				Description: "Layer3 Maximum transmission unit. A number, or `auto`.",
 			},
 			"name": schema.StringAttribute{
 				Optional:    true,
@@ -188,7 +186,7 @@ func (r *InterfaceGreResource) Create(ctx context.Context, req resource.CreateRe
 		body["local-address"] = plan.LocalAddress.ValueString()
 	}
 	if !(plan.MTU.IsNull() || plan.MTU.IsUnknown()) {
-		body["mtu"] = client.FormatInt64(plan.MTU.ValueInt64())
+		body["mtu"] = plan.MTU.ValueString()
 	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
@@ -271,7 +269,7 @@ func (r *InterfaceGreResource) Update(ctx context.Context, req resource.UpdateRe
 		body["local-address"] = plan.LocalAddress.ValueString()
 	}
 	if !plan.MTU.Equal(state.MTU) {
-		body["mtu"] = client.FormatInt64(plan.MTU.ValueInt64())
+		body["mtu"] = plan.MTU.ValueString()
 	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
@@ -451,13 +449,13 @@ func interfaceGreApply(ctx context.Context, obj client.Object, m *InterfaceGreMo
 	}
 	if v, ok := obj["mtu"]; ok {
 		_ = v
-		if n, err := client.ParseInt64(v); err == nil {
-			m.MTU = types.Int64Value(n)
+		if v != "" {
+			m.MTU = types.StringValue(v)
 		} else {
-			m.MTU = types.Int64Null()
+			m.MTU = types.StringNull()
 		}
 	} else {
-		m.MTU = types.Int64Null()
+		m.MTU = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
 		_ = v

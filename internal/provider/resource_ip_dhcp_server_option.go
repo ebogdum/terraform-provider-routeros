@@ -51,7 +51,6 @@ func (r *IPDHCPServerOptionResource) Configure(_ context.Context, req resource.C
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPDHCPServerOptionResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -82,7 +81,6 @@ func (r *IPDHCPServerOptionResource) Schema(_ context.Context, _ resource.Schema
 				Description: "",
 			},
 			"raw_value": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},

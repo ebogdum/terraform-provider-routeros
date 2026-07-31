@@ -31,26 +31,29 @@ resource "routeros_ipv6_route" "route_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `active` - (Read-only) Type: `bool`.
+* `blackhole` - (Optional) Type: `string`. RouterOS `blackhole`.
+* `check_gateway` - (Optional) Type: `string`. RouterOS `check-gateway`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `connect` - (Read-only) Type: `bool`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `distance` - (Optional) Type: `int`.
-* `dst_address` - (Optional) Type: `cidr`.
+* `dst_address` - (Optional) Type: `string`.
+* `dynamic` - (Read-only) Type: `bool`.
 * `gateway` - (Optional) Type: `string`.
+* `immediate_gw` - (Read-only) Type: `string`.
+* `inactive` - (Read-only) Type: `bool`.
+* `pref_src` - (Optional) Type: `string`. RouterOS `pref-src`.
 * `routing_table` - (Optional) Type: `string`.
 * `scope` - (Optional) Type: `int`.
 * `target_scope` - (Optional) Type: `int`.
+* `vrf_interface` - (Optional) Type: `string`. RouterOS `vrf-interface`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `active` - Type: `bool`.
-* `connect` - Type: `bool`.
-* `dynamic` - Type: `bool`.
-* `immediate_gw` - Type: `string`.
-* `inactive` - Type: `bool`.
 
 ## Import
 

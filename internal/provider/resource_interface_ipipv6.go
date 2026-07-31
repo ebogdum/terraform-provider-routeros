@@ -30,6 +30,10 @@ type InterfaceIpipv6Resource struct {
 
 type InterfaceIpipv6Model struct {
 	ID            types.String `tfsdk:"id"`
+	Keepalive     types.String `tfsdk:"keepalive"`
+	Dscp          types.String `tfsdk:"dscp"`
+	DontFragment  types.String `tfsdk:"dont_fragment"`
+	ClampTcpMss   types.String `tfsdk:"clamp_tcp_mss"`
 	Comment       types.String `tfsdk:"comment"`
 	Disabled      types.Bool   `tfsdk:"disabled"`
 	IpsecSecret   types.String `tfsdk:"ipsec_secret"`
@@ -52,7 +56,6 @@ func (r *InterfaceIpipv6Resource) Configure(_ context.Context, req resource.Conf
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceIpipv6Resource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -63,6 +66,26 @@ func (r *InterfaceIpipv6Resource) Schema(_ context.Context, _ resource.SchemaReq
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"keepalive": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `keepalive`.",
+			},
+			"dscp": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `dscp`.",
+			},
+			"dont_fragment": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `dont-fragment`.",
+			},
+			"clamp_tcp_mss": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `clamp-tcp-mss`.",
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -76,6 +99,7 @@ func (r *InterfaceIpipv6Resource) Schema(_ context.Context, _ resource.SchemaReq
 			},
 			"ipsec_secret": schema.StringAttribute{
 				Optional:    true,
+				Sensitive:   true,
 				Computed:    true,
 				Description: "",
 			},
@@ -138,6 +162,18 @@ func (r *InterfaceIpipv6Resource) Create(ctx context.Context, req resource.Creat
 	}
 	if !(plan.RemoteAddress.IsNull() || plan.RemoteAddress.IsUnknown()) {
 		body["remote-address"] = plan.RemoteAddress.ValueString()
+	}
+	if !(plan.ClampTcpMss.IsNull() || plan.ClampTcpMss.IsUnknown()) {
+		body["clamp-tcp-mss"] = plan.ClampTcpMss.ValueString()
+	}
+	if !(plan.DontFragment.IsNull() || plan.DontFragment.IsUnknown()) {
+		body["dont-fragment"] = plan.DontFragment.ValueString()
+	}
+	if !(plan.Dscp.IsNull() || plan.Dscp.IsUnknown()) {
+		body["dscp"] = plan.Dscp.ValueString()
+	}
+	if !(plan.Keepalive.IsNull() || plan.Keepalive.IsUnknown()) {
+		body["keepalive"] = plan.Keepalive.ValueString()
 	}
 	obj, err := c.Add(ctx, "/interface/ipipv6", body)
 	if err != nil {
@@ -207,6 +243,18 @@ func (r *InterfaceIpipv6Resource) Update(ctx context.Context, req resource.Updat
 	if !plan.RemoteAddress.Equal(state.RemoteAddress) {
 		body["remote-address"] = plan.RemoteAddress.ValueString()
 	}
+	if !plan.ClampTcpMss.Equal(state.ClampTcpMss) && !plan.ClampTcpMss.IsUnknown() {
+		body["clamp-tcp-mss"] = plan.ClampTcpMss.ValueString()
+	}
+	if !plan.DontFragment.Equal(state.DontFragment) && !plan.DontFragment.IsUnknown() {
+		body["dont-fragment"] = plan.DontFragment.ValueString()
+	}
+	if !plan.Dscp.Equal(state.Dscp) && !plan.Dscp.IsUnknown() {
+		body["dscp"] = plan.Dscp.ValueString()
+	}
+	if !plan.Keepalive.Equal(state.Keepalive) && !plan.Keepalive.IsUnknown() {
+		body["keepalive"] = plan.Keepalive.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/ipipv6", state.ID.ValueString(), body)
 		if err != nil {
@@ -273,6 +321,26 @@ func interfaceIpipv6LookupByNaturalKey(ctx context.Context, c *client.Client, id
 func interfaceIpipv6Apply(ctx context.Context, obj client.Object, m *InterfaceIpipv6Model) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["keepalive"]; ok && v != "" {
+		m.Keepalive = types.StringValue(v)
+	} else {
+		m.Keepalive = types.StringNull()
+	}
+	if v, ok := obj["dscp"]; ok && v != "" {
+		m.Dscp = types.StringValue(v)
+	} else {
+		m.Dscp = types.StringNull()
+	}
+	if v, ok := obj["dont-fragment"]; ok && v != "" {
+		m.DontFragment = types.StringValue(v)
+	} else {
+		m.DontFragment = types.StringNull()
+	}
+	if v, ok := obj["clamp-tcp-mss"]; ok && v != "" {
+		m.ClampTcpMss = types.StringValue(v)
+	} else {
+		m.ClampTcpMss = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {

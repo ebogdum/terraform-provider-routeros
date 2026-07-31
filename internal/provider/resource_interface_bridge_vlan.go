@@ -56,7 +56,6 @@ func (r *InterfaceBridgeVLANResource) Configure(_ context.Context, req resource.
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceBridgeVLANResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -79,12 +78,10 @@ func (r *InterfaceBridgeVLANResource) Schema(_ context.Context, _ resource.Schem
 				Description: "Free-form comment.",
 			},
 			"current_tagged": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"current_untagged": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -94,12 +91,10 @@ func (r *InterfaceBridgeVLANResource) Schema(_ context.Context, _ resource.Schem
 				Description: "Whether the entry is disabled.",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"mvrp_attributes": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -150,9 +145,6 @@ func (r *InterfaceBridgeVLANResource) Create(ctx context.Context, req resource.C
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
-	}
-	if !(plan.MvrpAttributes.IsNull() || plan.MvrpAttributes.IsUnknown()) {
-		body["mvrp-attributes"] = plan.MvrpAttributes.ValueString()
 	}
 	if !(plan.MvrpForbidden.IsNull() || plan.MvrpForbidden.IsUnknown()) {
 		body["mvrp-forbidden"] = plan.MvrpForbidden.ValueString()
@@ -221,9 +213,6 @@ func (r *InterfaceBridgeVLANResource) Update(ctx context.Context, req resource.U
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
-	}
-	if !plan.MvrpAttributes.Equal(state.MvrpAttributes) {
-		body["mvrp-attributes"] = plan.MvrpAttributes.ValueString()
 	}
 	if !plan.MvrpForbidden.Equal(state.MvrpForbidden) {
 		body["mvrp-forbidden"] = plan.MvrpForbidden.ValueString()

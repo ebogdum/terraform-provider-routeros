@@ -30,7 +30,7 @@ type IPDHCPClientOptionResource struct {
 
 type IPDHCPClientOptionModel struct {
 	ID       types.String `tfsdk:"id"`
-	Code     types.Int64  `tfsdk:"code"`
+	Code     types.String `tfsdk:"code"`
 	Comment  types.String `tfsdk:"comment"`
 	Default  types.Bool   `tfsdk:"default"`
 	Name     types.String `tfsdk:"name"`
@@ -51,7 +51,6 @@ func (r *IPDHCPClientOptionResource) Configure(_ context.Context, req resource.C
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPDHCPClientOptionResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -63,7 +62,7 @@ func (r *IPDHCPClientOptionResource) Schema(_ context.Context, _ resource.Schema
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
-			"code": schema.Int64Attribute{
+			"code": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -74,7 +73,6 @@ func (r *IPDHCPClientOptionResource) Schema(_ context.Context, _ resource.Schema
 				Description: "Free-form comment.",
 			},
 			"default": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -84,7 +82,6 @@ func (r *IPDHCPClientOptionResource) Schema(_ context.Context, _ resource.Schema
 				Description: "",
 			},
 			"raw_value": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -113,7 +110,7 @@ func (r *IPDHCPClientOptionResource) Create(ctx context.Context, req resource.Cr
 	}
 	body := client.Object{}
 	if !(plan.Code.IsNull() || plan.Code.IsUnknown()) {
-		body["code"] = client.FormatInt64(plan.Code.ValueInt64())
+		body["code"] = plan.Code.ValueString()
 	}
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
@@ -172,7 +169,7 @@ func (r *IPDHCPClientOptionResource) Update(ctx context.Context, req resource.Up
 	}
 	body := client.Object{}
 	if !plan.Code.Equal(state.Code) {
-		body["code"] = client.FormatInt64(plan.Code.ValueInt64())
+		body["code"] = plan.Code.ValueString()
 	}
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
@@ -251,13 +248,13 @@ func iPDHCPClientOptionApply(ctx context.Context, obj client.Object, m *IPDHCPCl
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["code"]; ok {
 		_ = v
-		if n, err := client.ParseInt64(v); err == nil {
-			m.Code = types.Int64Value(n)
+		if v != "" {
+			m.Code = types.StringValue(v)
 		} else {
-			m.Code = types.Int64Null()
+			m.Code = types.StringNull()
 		}
 	} else {
-		m.Code = types.Int64Null()
+		m.Code = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
 		_ = v

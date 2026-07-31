@@ -29,11 +29,14 @@ type IPMediaResource struct {
 }
 
 type IPMediaModel struct {
-	ID        types.String `tfsdk:"id"`
-	Disabled  types.Bool   `tfsdk:"disabled"`
-	Interface types.String `tfsdk:"interface"`
-	Path      types.String `tfsdk:"path"`
-	Router    types.String `tfsdk:"router"`
+	ID              types.String `tfsdk:"id"`
+	FriendlyName    types.String `tfsdk:"friendly_name"`
+	AllowedIp       types.String `tfsdk:"allowed_ip"`
+	AllowedHostname types.String `tfsdk:"allowed_hostname"`
+	Disabled        types.Bool   `tfsdk:"disabled"`
+	Interface       types.String `tfsdk:"interface"`
+	Path            types.String `tfsdk:"path"`
+	Router          types.String `tfsdk:"router"`
 }
 
 func NewIPMediaResource() resource.Resource { return &IPMediaResource{} }
@@ -48,7 +51,6 @@ func (r *IPMediaResource) Configure(_ context.Context, req resource.ConfigureReq
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPMediaResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -59,6 +61,21 @@ func (r *IPMediaResource) Schema(_ context.Context, _ resource.SchemaRequest, re
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"friendly_name": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `friendly-name`.",
+			},
+			"allowed_ip": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `allowed-ip`.",
+			},
+			"allowed_hostname": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `allowed-hostname`.",
 			},
 			"disabled": schema.BoolAttribute{
 				Optional:    true,
@@ -101,6 +118,15 @@ func (r *IPMediaResource) Create(ctx context.Context, req resource.CreateRequest
 	}
 	if !(plan.Path.IsNull() || plan.Path.IsUnknown()) {
 		body["path"] = plan.Path.ValueString()
+	}
+	if !(plan.AllowedHostname.IsNull() || plan.AllowedHostname.IsUnknown()) {
+		body["allowed-hostname"] = plan.AllowedHostname.ValueString()
+	}
+	if !(plan.AllowedIp.IsNull() || plan.AllowedIp.IsUnknown()) {
+		body["allowed-ip"] = plan.AllowedIp.ValueString()
+	}
+	if !(plan.FriendlyName.IsNull() || plan.FriendlyName.IsUnknown()) {
+		body["friendly-name"] = plan.FriendlyName.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ip/media", body)
 	if err != nil {
@@ -157,6 +183,15 @@ func (r *IPMediaResource) Update(ctx context.Context, req resource.UpdateRequest
 	}
 	if !plan.Path.Equal(state.Path) {
 		body["path"] = plan.Path.ValueString()
+	}
+	if !plan.AllowedHostname.Equal(state.AllowedHostname) && !plan.AllowedHostname.IsUnknown() {
+		body["allowed-hostname"] = plan.AllowedHostname.ValueString()
+	}
+	if !plan.AllowedIp.Equal(state.AllowedIp) && !plan.AllowedIp.IsUnknown() {
+		body["allowed-ip"] = plan.AllowedIp.ValueString()
+	}
+	if !plan.FriendlyName.Equal(state.FriendlyName) && !plan.FriendlyName.IsUnknown() {
+		body["friendly-name"] = plan.FriendlyName.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/media", state.ID.ValueString(), body)
@@ -224,6 +259,21 @@ func iPMediaLookupByNaturalKey(ctx context.Context, c *client.Client, id string)
 func iPMediaApply(ctx context.Context, obj client.Object, m *IPMediaModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["friendly-name"]; ok && v != "" {
+		m.FriendlyName = types.StringValue(v)
+	} else {
+		m.FriendlyName = types.StringNull()
+	}
+	if v, ok := obj["allowed-ip"]; ok && v != "" {
+		m.AllowedIp = types.StringValue(v)
+	} else {
+		m.AllowedIp = types.StringNull()
+	}
+	if v, ok := obj["allowed-hostname"]; ok && v != "" {
+		m.AllowedHostname = types.StringValue(v)
+	} else {
+		m.AllowedHostname = types.StringNull()
+	}
 	if v, ok := obj["disabled"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {

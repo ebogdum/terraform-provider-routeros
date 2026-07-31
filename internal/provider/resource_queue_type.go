@@ -31,32 +31,60 @@ type QueueTypeResource struct {
 }
 
 type QueueTypeModel struct {
-	ID                 types.String `tfsdk:"id"`
-	Default            types.Bool   `tfsdk:"default"`
-	Kind               types.String `tfsdk:"kind"`
-	MqPfifoLimit       types.Int64  `tfsdk:"mq_pfifo_limit"`
-	Name               types.String `tfsdk:"name"`
-	PcqBurstRate       types.Int64  `tfsdk:"pcq_burst_rate"`
-	PcqBurstThreshold  types.Int64  `tfsdk:"pcq_burst_threshold"`
-	PcqBurstTime       types.String `tfsdk:"pcq_burst_time"`
-	PcqClassifier      types.String `tfsdk:"pcq_classifier"`
-	PcqDstAddressMask  types.Int64  `tfsdk:"pcq_dst_address_mask"`
-	PcqDstAddress6Mask types.Int64  `tfsdk:"pcq_dst_address6_mask"`
-	PcqLimit           types.Int64  `tfsdk:"pcq_limit"`
-	PcqRate            types.Int64  `tfsdk:"pcq_rate"`
-	PcqSrcAddressMask  types.Int64  `tfsdk:"pcq_src_address_mask"`
-	PcqSrcAddress6Mask types.Int64  `tfsdk:"pcq_src_address6_mask"`
-	PcqTotalLimit      types.Int64  `tfsdk:"pcq_total_limit"`
-	PfifoLimit         types.Int64  `tfsdk:"pfifo_limit"`
-	RedAvgPacket       types.Int64  `tfsdk:"red_avg_packet"`
-	RedBurst           types.Int64  `tfsdk:"red_burst"`
-	RedLimit           types.Int64  `tfsdk:"red_limit"`
-	RedMaxThreshold    types.Int64  `tfsdk:"red_max_threshold"`
-	RedMinThreshold    types.Int64  `tfsdk:"red_min_threshold"`
-	SfqAllot           types.Int64  `tfsdk:"sfq_allot"`
-	SfqPerturb         types.Int64  `tfsdk:"sfq_perturb"`
-	TypeName           types.String `tfsdk:"type_name"`
-	Router             types.String `tfsdk:"router"`
+	ID                  types.String `tfsdk:"id"`
+	FqCodelTarget       types.String `tfsdk:"fq_codel_target"`
+	FqCodelQuantum      types.String `tfsdk:"fq_codel_quantum"`
+	FqCodelMemlimit     types.String `tfsdk:"fq_codel_memlimit"`
+	FqCodelLimit        types.String `tfsdk:"fq_codel_limit"`
+	FqCodelInterval     types.String `tfsdk:"fq_codel_interval"`
+	FqCodelFlows        types.String `tfsdk:"fq_codel_flows"`
+	FqCodelEcn          types.String `tfsdk:"fq_codel_ecn"`
+	FqCodelCeThreshold  types.String `tfsdk:"fq_codel_ce_threshold"`
+	CodelTarget         types.String `tfsdk:"codel_target"`
+	CodelLimit          types.String `tfsdk:"codel_limit"`
+	CodelInterval       types.String `tfsdk:"codel_interval"`
+	CodelEcn            types.String `tfsdk:"codel_ecn"`
+	CodelCeThreshold    types.String `tfsdk:"codel_ce_threshold"`
+	CakeWash            types.String `tfsdk:"cake_wash"`
+	CakeRttScheme       types.String `tfsdk:"cake_rtt_scheme"`
+	CakeRtt             types.String `tfsdk:"cake_rtt"`
+	CakeOverheadScheme  types.String `tfsdk:"cake_overhead_scheme"`
+	CakeOverhead        types.String `tfsdk:"cake_overhead"`
+	CakeNat             types.String `tfsdk:"cake_nat"`
+	CakeMpu             types.String `tfsdk:"cake_mpu"`
+	CakeMemlimit        types.String `tfsdk:"cake_memlimit"`
+	CakeFlowmode        types.String `tfsdk:"cake_flowmode"`
+	CakeDiffserv        types.String `tfsdk:"cake_diffserv"`
+	CakeBandwidth       types.String `tfsdk:"cake_bandwidth"`
+	CakeAutorateIngress types.String `tfsdk:"cake_autorate_ingress"`
+	CakeAtm             types.String `tfsdk:"cake_atm"`
+	CakeAckFilter       types.String `tfsdk:"cake_ack_filter"`
+	BfifoLimit          types.String `tfsdk:"bfifo_limit"`
+	Default             types.Bool   `tfsdk:"default"`
+	Kind                types.String `tfsdk:"kind"`
+	MqPfifoLimit        types.Int64  `tfsdk:"mq_pfifo_limit"`
+	Name                types.String `tfsdk:"name"`
+	PcqBurstRate        types.Int64  `tfsdk:"pcq_burst_rate"`
+	PcqBurstThreshold   types.Int64  `tfsdk:"pcq_burst_threshold"`
+	PcqBurstTime        types.String `tfsdk:"pcq_burst_time"`
+	PcqClassifier       types.String `tfsdk:"pcq_classifier"`
+	PcqDstAddressMask   types.Int64  `tfsdk:"pcq_dst_address_mask"`
+	PcqDstAddress6Mask  types.Int64  `tfsdk:"pcq_dst_address6_mask"`
+	PcqLimit            types.Int64  `tfsdk:"pcq_limit"`
+	PcqRate             types.Int64  `tfsdk:"pcq_rate"`
+	PcqSrcAddressMask   types.Int64  `tfsdk:"pcq_src_address_mask"`
+	PcqSrcAddress6Mask  types.Int64  `tfsdk:"pcq_src_address6_mask"`
+	PcqTotalLimit       types.Int64  `tfsdk:"pcq_total_limit"`
+	PfifoLimit          types.Int64  `tfsdk:"pfifo_limit"`
+	RedAvgPacket        types.Int64  `tfsdk:"red_avg_packet"`
+	RedBurst            types.Int64  `tfsdk:"red_burst"`
+	RedLimit            types.Int64  `tfsdk:"red_limit"`
+	RedMaxThreshold     types.Int64  `tfsdk:"red_max_threshold"`
+	RedMinThreshold     types.Int64  `tfsdk:"red_min_threshold"`
+	SfqAllot            types.Int64  `tfsdk:"sfq_allot"`
+	SfqPerturb          types.Int64  `tfsdk:"sfq_perturb"`
+	TypeName            types.String `tfsdk:"type_name"`
+	Router              types.String `tfsdk:"router"`
 }
 
 func NewQueueTypeResource() resource.Resource { return &QueueTypeResource{} }
@@ -71,7 +99,6 @@ func (r *QueueTypeResource) Configure(_ context.Context, req resource.ConfigureR
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *QueueTypeResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -83,8 +110,147 @@ func (r *QueueTypeResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
-			"default": schema.BoolAttribute{
+			"fq_codel_target": schema.StringAttribute{
 				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `fq-codel-target`.",
+			},
+			"fq_codel_quantum": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `fq-codel-quantum`.",
+			},
+			"fq_codel_memlimit": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `fq-codel-memlimit`.",
+			},
+			"fq_codel_limit": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `fq-codel-limit`.",
+			},
+			"fq_codel_interval": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `fq-codel-interval`.",
+			},
+			"fq_codel_flows": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `fq-codel-flows`.",
+			},
+			"fq_codel_ecn": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `fq-codel-ecn`.",
+			},
+			"fq_codel_ce_threshold": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `fq-codel-ce-threshold`.",
+			},
+			"codel_target": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `codel-target`.",
+			},
+			"codel_limit": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `codel-limit`.",
+			},
+			"codel_interval": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `codel-interval`.",
+			},
+			"codel_ecn": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `codel-ecn`.",
+			},
+			"codel_ce_threshold": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `codel-ce-threshold`.",
+			},
+			"cake_wash": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `cake-wash`.",
+			},
+			"cake_rtt_scheme": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `cake-rtt-scheme`.",
+			},
+			"cake_rtt": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `cake-rtt`.",
+			},
+			"cake_overhead_scheme": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `cake-overhead-scheme`.",
+			},
+			"cake_overhead": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `cake-overhead`.",
+			},
+			"cake_nat": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `cake-nat`.",
+			},
+			"cake_mpu": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `cake-mpu`.",
+			},
+			"cake_memlimit": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `cake-memlimit`.",
+			},
+			"cake_flowmode": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `cake-flowmode`.",
+			},
+			"cake_diffserv": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `cake-diffserv`.",
+			},
+			"cake_bandwidth": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `cake-bandwidth`.",
+			},
+			"cake_autorate_ingress": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `cake-autorate-ingress`.",
+			},
+			"cake_atm": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `cake-atm`.",
+			},
+			"cake_ack_filter": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `cake-ack-filter`.",
+			},
+			"bfifo_limit": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `bfifo-limit`.",
+			},
+			"default": schema.BoolAttribute{
 				Computed:    true,
 				Description: "",
 			},
@@ -200,7 +366,6 @@ func (r *QueueTypeResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Description: "",
 			},
 			"type_name": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -289,8 +454,89 @@ func (r *QueueTypeResource) Create(ctx context.Context, req resource.CreateReque
 	if !(plan.SfqPerturb.IsNull() || plan.SfqPerturb.IsUnknown()) {
 		body["sfq-perturb"] = client.FormatInt64(plan.SfqPerturb.ValueInt64())
 	}
-	if !(plan.TypeName.IsNull() || plan.TypeName.IsUnknown()) {
-		body["type-name"] = plan.TypeName.ValueString()
+	if !(plan.BfifoLimit.IsNull() || plan.BfifoLimit.IsUnknown()) {
+		body["bfifo-limit"] = plan.BfifoLimit.ValueString()
+	}
+	if !(plan.CakeAckFilter.IsNull() || plan.CakeAckFilter.IsUnknown()) {
+		body["cake-ack-filter"] = plan.CakeAckFilter.ValueString()
+	}
+	if !(plan.CakeAtm.IsNull() || plan.CakeAtm.IsUnknown()) {
+		body["cake-atm"] = plan.CakeAtm.ValueString()
+	}
+	if !(plan.CakeAutorateIngress.IsNull() || plan.CakeAutorateIngress.IsUnknown()) {
+		body["cake-autorate-ingress"] = plan.CakeAutorateIngress.ValueString()
+	}
+	if !(plan.CakeBandwidth.IsNull() || plan.CakeBandwidth.IsUnknown()) {
+		body["cake-bandwidth"] = plan.CakeBandwidth.ValueString()
+	}
+	if !(plan.CakeDiffserv.IsNull() || plan.CakeDiffserv.IsUnknown()) {
+		body["cake-diffserv"] = plan.CakeDiffserv.ValueString()
+	}
+	if !(plan.CakeFlowmode.IsNull() || plan.CakeFlowmode.IsUnknown()) {
+		body["cake-flowmode"] = plan.CakeFlowmode.ValueString()
+	}
+	if !(plan.CakeMemlimit.IsNull() || plan.CakeMemlimit.IsUnknown()) {
+		body["cake-memlimit"] = plan.CakeMemlimit.ValueString()
+	}
+	if !(plan.CakeMpu.IsNull() || plan.CakeMpu.IsUnknown()) {
+		body["cake-mpu"] = plan.CakeMpu.ValueString()
+	}
+	if !(plan.CakeNat.IsNull() || plan.CakeNat.IsUnknown()) {
+		body["cake-nat"] = plan.CakeNat.ValueString()
+	}
+	if !(plan.CakeOverhead.IsNull() || plan.CakeOverhead.IsUnknown()) {
+		body["cake-overhead"] = plan.CakeOverhead.ValueString()
+	}
+	if !(plan.CakeOverheadScheme.IsNull() || plan.CakeOverheadScheme.IsUnknown()) {
+		body["cake-overhead-scheme"] = plan.CakeOverheadScheme.ValueString()
+	}
+	if !(plan.CakeRtt.IsNull() || plan.CakeRtt.IsUnknown()) {
+		body["cake-rtt"] = plan.CakeRtt.ValueString()
+	}
+	if !(plan.CakeRttScheme.IsNull() || plan.CakeRttScheme.IsUnknown()) {
+		body["cake-rtt-scheme"] = plan.CakeRttScheme.ValueString()
+	}
+	if !(plan.CakeWash.IsNull() || plan.CakeWash.IsUnknown()) {
+		body["cake-wash"] = plan.CakeWash.ValueString()
+	}
+	if !(plan.CodelCeThreshold.IsNull() || plan.CodelCeThreshold.IsUnknown()) {
+		body["codel-ce-threshold"] = plan.CodelCeThreshold.ValueString()
+	}
+	if !(plan.CodelEcn.IsNull() || plan.CodelEcn.IsUnknown()) {
+		body["codel-ecn"] = plan.CodelEcn.ValueString()
+	}
+	if !(plan.CodelInterval.IsNull() || plan.CodelInterval.IsUnknown()) {
+		body["codel-interval"] = plan.CodelInterval.ValueString()
+	}
+	if !(plan.CodelLimit.IsNull() || plan.CodelLimit.IsUnknown()) {
+		body["codel-limit"] = plan.CodelLimit.ValueString()
+	}
+	if !(plan.CodelTarget.IsNull() || plan.CodelTarget.IsUnknown()) {
+		body["codel-target"] = plan.CodelTarget.ValueString()
+	}
+	if !(plan.FqCodelCeThreshold.IsNull() || plan.FqCodelCeThreshold.IsUnknown()) {
+		body["fq-codel-ce-threshold"] = plan.FqCodelCeThreshold.ValueString()
+	}
+	if !(plan.FqCodelEcn.IsNull() || plan.FqCodelEcn.IsUnknown()) {
+		body["fq-codel-ecn"] = plan.FqCodelEcn.ValueString()
+	}
+	if !(plan.FqCodelFlows.IsNull() || plan.FqCodelFlows.IsUnknown()) {
+		body["fq-codel-flows"] = plan.FqCodelFlows.ValueString()
+	}
+	if !(plan.FqCodelInterval.IsNull() || plan.FqCodelInterval.IsUnknown()) {
+		body["fq-codel-interval"] = plan.FqCodelInterval.ValueString()
+	}
+	if !(plan.FqCodelLimit.IsNull() || plan.FqCodelLimit.IsUnknown()) {
+		body["fq-codel-limit"] = plan.FqCodelLimit.ValueString()
+	}
+	if !(plan.FqCodelMemlimit.IsNull() || plan.FqCodelMemlimit.IsUnknown()) {
+		body["fq-codel-memlimit"] = plan.FqCodelMemlimit.ValueString()
+	}
+	if !(plan.FqCodelQuantum.IsNull() || plan.FqCodelQuantum.IsUnknown()) {
+		body["fq-codel-quantum"] = plan.FqCodelQuantum.ValueString()
+	}
+	if !(plan.FqCodelTarget.IsNull() || plan.FqCodelTarget.IsUnknown()) {
+		body["fq-codel-target"] = plan.FqCodelTarget.ValueString()
 	}
 	obj, err := c.Add(ctx, "/queue/type", body)
 	if err != nil {
@@ -405,8 +651,89 @@ func (r *QueueTypeResource) Update(ctx context.Context, req resource.UpdateReque
 	if !plan.SfqPerturb.Equal(state.SfqPerturb) {
 		body["sfq-perturb"] = client.FormatInt64(plan.SfqPerturb.ValueInt64())
 	}
-	if !plan.TypeName.Equal(state.TypeName) {
-		body["type-name"] = plan.TypeName.ValueString()
+	if !plan.BfifoLimit.Equal(state.BfifoLimit) && !plan.BfifoLimit.IsUnknown() {
+		body["bfifo-limit"] = plan.BfifoLimit.ValueString()
+	}
+	if !plan.CakeAckFilter.Equal(state.CakeAckFilter) && !plan.CakeAckFilter.IsUnknown() {
+		body["cake-ack-filter"] = plan.CakeAckFilter.ValueString()
+	}
+	if !plan.CakeAtm.Equal(state.CakeAtm) && !plan.CakeAtm.IsUnknown() {
+		body["cake-atm"] = plan.CakeAtm.ValueString()
+	}
+	if !plan.CakeAutorateIngress.Equal(state.CakeAutorateIngress) && !plan.CakeAutorateIngress.IsUnknown() {
+		body["cake-autorate-ingress"] = plan.CakeAutorateIngress.ValueString()
+	}
+	if !plan.CakeBandwidth.Equal(state.CakeBandwidth) && !plan.CakeBandwidth.IsUnknown() {
+		body["cake-bandwidth"] = plan.CakeBandwidth.ValueString()
+	}
+	if !plan.CakeDiffserv.Equal(state.CakeDiffserv) && !plan.CakeDiffserv.IsUnknown() {
+		body["cake-diffserv"] = plan.CakeDiffserv.ValueString()
+	}
+	if !plan.CakeFlowmode.Equal(state.CakeFlowmode) && !plan.CakeFlowmode.IsUnknown() {
+		body["cake-flowmode"] = plan.CakeFlowmode.ValueString()
+	}
+	if !plan.CakeMemlimit.Equal(state.CakeMemlimit) && !plan.CakeMemlimit.IsUnknown() {
+		body["cake-memlimit"] = plan.CakeMemlimit.ValueString()
+	}
+	if !plan.CakeMpu.Equal(state.CakeMpu) && !plan.CakeMpu.IsUnknown() {
+		body["cake-mpu"] = plan.CakeMpu.ValueString()
+	}
+	if !plan.CakeNat.Equal(state.CakeNat) && !plan.CakeNat.IsUnknown() {
+		body["cake-nat"] = plan.CakeNat.ValueString()
+	}
+	if !plan.CakeOverhead.Equal(state.CakeOverhead) && !plan.CakeOverhead.IsUnknown() {
+		body["cake-overhead"] = plan.CakeOverhead.ValueString()
+	}
+	if !plan.CakeOverheadScheme.Equal(state.CakeOverheadScheme) && !plan.CakeOverheadScheme.IsUnknown() {
+		body["cake-overhead-scheme"] = plan.CakeOverheadScheme.ValueString()
+	}
+	if !plan.CakeRtt.Equal(state.CakeRtt) && !plan.CakeRtt.IsUnknown() {
+		body["cake-rtt"] = plan.CakeRtt.ValueString()
+	}
+	if !plan.CakeRttScheme.Equal(state.CakeRttScheme) && !plan.CakeRttScheme.IsUnknown() {
+		body["cake-rtt-scheme"] = plan.CakeRttScheme.ValueString()
+	}
+	if !plan.CakeWash.Equal(state.CakeWash) && !plan.CakeWash.IsUnknown() {
+		body["cake-wash"] = plan.CakeWash.ValueString()
+	}
+	if !plan.CodelCeThreshold.Equal(state.CodelCeThreshold) && !plan.CodelCeThreshold.IsUnknown() {
+		body["codel-ce-threshold"] = plan.CodelCeThreshold.ValueString()
+	}
+	if !plan.CodelEcn.Equal(state.CodelEcn) && !plan.CodelEcn.IsUnknown() {
+		body["codel-ecn"] = plan.CodelEcn.ValueString()
+	}
+	if !plan.CodelInterval.Equal(state.CodelInterval) && !plan.CodelInterval.IsUnknown() {
+		body["codel-interval"] = plan.CodelInterval.ValueString()
+	}
+	if !plan.CodelLimit.Equal(state.CodelLimit) && !plan.CodelLimit.IsUnknown() {
+		body["codel-limit"] = plan.CodelLimit.ValueString()
+	}
+	if !plan.CodelTarget.Equal(state.CodelTarget) && !plan.CodelTarget.IsUnknown() {
+		body["codel-target"] = plan.CodelTarget.ValueString()
+	}
+	if !plan.FqCodelCeThreshold.Equal(state.FqCodelCeThreshold) && !plan.FqCodelCeThreshold.IsUnknown() {
+		body["fq-codel-ce-threshold"] = plan.FqCodelCeThreshold.ValueString()
+	}
+	if !plan.FqCodelEcn.Equal(state.FqCodelEcn) && !plan.FqCodelEcn.IsUnknown() {
+		body["fq-codel-ecn"] = plan.FqCodelEcn.ValueString()
+	}
+	if !plan.FqCodelFlows.Equal(state.FqCodelFlows) && !plan.FqCodelFlows.IsUnknown() {
+		body["fq-codel-flows"] = plan.FqCodelFlows.ValueString()
+	}
+	if !plan.FqCodelInterval.Equal(state.FqCodelInterval) && !plan.FqCodelInterval.IsUnknown() {
+		body["fq-codel-interval"] = plan.FqCodelInterval.ValueString()
+	}
+	if !plan.FqCodelLimit.Equal(state.FqCodelLimit) && !plan.FqCodelLimit.IsUnknown() {
+		body["fq-codel-limit"] = plan.FqCodelLimit.ValueString()
+	}
+	if !plan.FqCodelMemlimit.Equal(state.FqCodelMemlimit) && !plan.FqCodelMemlimit.IsUnknown() {
+		body["fq-codel-memlimit"] = plan.FqCodelMemlimit.ValueString()
+	}
+	if !plan.FqCodelQuantum.Equal(state.FqCodelQuantum) && !plan.FqCodelQuantum.IsUnknown() {
+		body["fq-codel-quantum"] = plan.FqCodelQuantum.ValueString()
+	}
+	if !plan.FqCodelTarget.Equal(state.FqCodelTarget) && !plan.FqCodelTarget.IsUnknown() {
+		body["fq-codel-target"] = plan.FqCodelTarget.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/queue/type", state.ID.ValueString(), body)
@@ -474,6 +801,146 @@ func queueTypeLookupByNaturalKey(ctx context.Context, c *client.Client, id strin
 func queueTypeApply(ctx context.Context, obj client.Object, m *QueueTypeModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["fq-codel-target"]; ok && v != "" {
+		m.FqCodelTarget = types.StringValue(v)
+	} else {
+		m.FqCodelTarget = types.StringNull()
+	}
+	if v, ok := obj["fq-codel-quantum"]; ok && v != "" {
+		m.FqCodelQuantum = types.StringValue(v)
+	} else {
+		m.FqCodelQuantum = types.StringNull()
+	}
+	if v, ok := obj["fq-codel-memlimit"]; ok && v != "" {
+		m.FqCodelMemlimit = types.StringValue(v)
+	} else {
+		m.FqCodelMemlimit = types.StringNull()
+	}
+	if v, ok := obj["fq-codel-limit"]; ok && v != "" {
+		m.FqCodelLimit = types.StringValue(v)
+	} else {
+		m.FqCodelLimit = types.StringNull()
+	}
+	if v, ok := obj["fq-codel-interval"]; ok && v != "" {
+		m.FqCodelInterval = types.StringValue(v)
+	} else {
+		m.FqCodelInterval = types.StringNull()
+	}
+	if v, ok := obj["fq-codel-flows"]; ok && v != "" {
+		m.FqCodelFlows = types.StringValue(v)
+	} else {
+		m.FqCodelFlows = types.StringNull()
+	}
+	if v, ok := obj["fq-codel-ecn"]; ok && v != "" {
+		m.FqCodelEcn = types.StringValue(v)
+	} else {
+		m.FqCodelEcn = types.StringNull()
+	}
+	if v, ok := obj["fq-codel-ce-threshold"]; ok && v != "" {
+		m.FqCodelCeThreshold = types.StringValue(v)
+	} else {
+		m.FqCodelCeThreshold = types.StringNull()
+	}
+	if v, ok := obj["codel-target"]; ok && v != "" {
+		m.CodelTarget = types.StringValue(v)
+	} else {
+		m.CodelTarget = types.StringNull()
+	}
+	if v, ok := obj["codel-limit"]; ok && v != "" {
+		m.CodelLimit = types.StringValue(v)
+	} else {
+		m.CodelLimit = types.StringNull()
+	}
+	if v, ok := obj["codel-interval"]; ok && v != "" {
+		m.CodelInterval = types.StringValue(v)
+	} else {
+		m.CodelInterval = types.StringNull()
+	}
+	if v, ok := obj["codel-ecn"]; ok && v != "" {
+		m.CodelEcn = types.StringValue(v)
+	} else {
+		m.CodelEcn = types.StringNull()
+	}
+	if v, ok := obj["codel-ce-threshold"]; ok && v != "" {
+		m.CodelCeThreshold = types.StringValue(v)
+	} else {
+		m.CodelCeThreshold = types.StringNull()
+	}
+	if v, ok := obj["cake-wash"]; ok && v != "" {
+		m.CakeWash = types.StringValue(v)
+	} else {
+		m.CakeWash = types.StringNull()
+	}
+	if v, ok := obj["cake-rtt-scheme"]; ok && v != "" {
+		m.CakeRttScheme = types.StringValue(v)
+	} else {
+		m.CakeRttScheme = types.StringNull()
+	}
+	if v, ok := obj["cake-rtt"]; ok && v != "" {
+		m.CakeRtt = types.StringValue(v)
+	} else {
+		m.CakeRtt = types.StringNull()
+	}
+	if v, ok := obj["cake-overhead-scheme"]; ok && v != "" {
+		m.CakeOverheadScheme = types.StringValue(v)
+	} else {
+		m.CakeOverheadScheme = types.StringNull()
+	}
+	if v, ok := obj["cake-overhead"]; ok && v != "" {
+		m.CakeOverhead = types.StringValue(v)
+	} else {
+		m.CakeOverhead = types.StringNull()
+	}
+	if v, ok := obj["cake-nat"]; ok && v != "" {
+		m.CakeNat = types.StringValue(v)
+	} else {
+		m.CakeNat = types.StringNull()
+	}
+	if v, ok := obj["cake-mpu"]; ok && v != "" {
+		m.CakeMpu = types.StringValue(v)
+	} else {
+		m.CakeMpu = types.StringNull()
+	}
+	if v, ok := obj["cake-memlimit"]; ok && v != "" {
+		m.CakeMemlimit = types.StringValue(v)
+	} else {
+		m.CakeMemlimit = types.StringNull()
+	}
+	if v, ok := obj["cake-flowmode"]; ok && v != "" {
+		m.CakeFlowmode = types.StringValue(v)
+	} else {
+		m.CakeFlowmode = types.StringNull()
+	}
+	if v, ok := obj["cake-diffserv"]; ok && v != "" {
+		m.CakeDiffserv = types.StringValue(v)
+	} else {
+		m.CakeDiffserv = types.StringNull()
+	}
+	if v, ok := obj["cake-bandwidth"]; ok && v != "" {
+		m.CakeBandwidth = types.StringValue(v)
+	} else {
+		m.CakeBandwidth = types.StringNull()
+	}
+	if v, ok := obj["cake-autorate-ingress"]; ok && v != "" {
+		m.CakeAutorateIngress = types.StringValue(v)
+	} else {
+		m.CakeAutorateIngress = types.StringNull()
+	}
+	if v, ok := obj["cake-atm"]; ok && v != "" {
+		m.CakeAtm = types.StringValue(v)
+	} else {
+		m.CakeAtm = types.StringNull()
+	}
+	if v, ok := obj["cake-ack-filter"]; ok && v != "" {
+		m.CakeAckFilter = types.StringValue(v)
+	} else {
+		m.CakeAckFilter = types.StringNull()
+	}
+	if v, ok := obj["bfifo-limit"]; ok && v != "" {
+		m.BfifoLimit = types.StringValue(v)
+	} else {
+		m.BfifoLimit = types.StringNull()
+	}
 	if v, ok := obj["default"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {

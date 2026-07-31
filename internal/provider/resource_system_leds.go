@@ -29,12 +29,14 @@ type SystemLedsResource struct {
 }
 
 type SystemLedsModel struct {
-	ID        types.String `tfsdk:"id"`
-	Disabled  types.Bool   `tfsdk:"disabled"`
-	Interface types.String `tfsdk:"interface"`
-	Leds      types.String `tfsdk:"leds"`
-	Type      types.String `tfsdk:"type"`
-	Router    types.String `tfsdk:"router"`
+	ID                   types.String `tfsdk:"id"`
+	ModemSignalThreshold types.String `tfsdk:"modem_signal_threshold"`
+	Color                types.String `tfsdk:"color"`
+	Disabled             types.Bool   `tfsdk:"disabled"`
+	Interface            types.String `tfsdk:"interface"`
+	Leds                 types.String `tfsdk:"leds"`
+	Type                 types.String `tfsdk:"type"`
+	Router               types.String `tfsdk:"router"`
 }
 
 func NewSystemLedsResource() resource.Resource { return &SystemLedsResource{} }
@@ -49,7 +51,6 @@ func (r *SystemLedsResource) Configure(_ context.Context, req resource.Configure
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *SystemLedsResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -60,6 +61,16 @@ func (r *SystemLedsResource) Schema(_ context.Context, _ resource.SchemaRequest,
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"modem_signal_threshold": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `modem-signal-threshold`.",
+			},
+			"color": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `color`.",
 			},
 			"disabled": schema.BoolAttribute{
 				Optional:    true,
@@ -111,6 +122,12 @@ func (r *SystemLedsResource) Create(ctx context.Context, req resource.CreateRequ
 	}
 	if !(plan.Type.IsNull() || plan.Type.IsUnknown()) {
 		body["type"] = plan.Type.ValueString()
+	}
+	if !(plan.Color.IsNull() || plan.Color.IsUnknown()) {
+		body["color"] = plan.Color.ValueString()
+	}
+	if !(plan.ModemSignalThreshold.IsNull() || plan.ModemSignalThreshold.IsUnknown()) {
+		body["modem-signal-threshold"] = plan.ModemSignalThreshold.ValueString()
 	}
 	obj, err := c.Add(ctx, "/system/leds", body)
 	if err != nil {
@@ -170,6 +187,12 @@ func (r *SystemLedsResource) Update(ctx context.Context, req resource.UpdateRequ
 	}
 	if !plan.Type.Equal(state.Type) {
 		body["type"] = plan.Type.ValueString()
+	}
+	if !plan.Color.Equal(state.Color) && !plan.Color.IsUnknown() {
+		body["color"] = plan.Color.ValueString()
+	}
+	if !plan.ModemSignalThreshold.Equal(state.ModemSignalThreshold) && !plan.ModemSignalThreshold.IsUnknown() {
+		body["modem-signal-threshold"] = plan.ModemSignalThreshold.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/system/leds", state.ID.ValueString(), body)
@@ -237,6 +260,16 @@ func systemLedsLookupByNaturalKey(ctx context.Context, c *client.Client, id stri
 func systemLedsApply(ctx context.Context, obj client.Object, m *SystemLedsModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["modem-signal-threshold"]; ok && v != "" {
+		m.ModemSignalThreshold = types.StringValue(v)
+	} else {
+		m.ModemSignalThreshold = types.StringNull()
+	}
+	if v, ok := obj["color"]; ok && v != "" {
+		m.Color = types.StringValue(v)
+	} else {
+		m.Color = types.StringNull()
+	}
 	if v, ok := obj["disabled"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {

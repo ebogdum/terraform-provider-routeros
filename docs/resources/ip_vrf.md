@@ -27,7 +27,8 @@ resource "routeros_ip_vrf" "vrf_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `builtin` - (Read-only) Type: `bool`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`.
 * `interfaces` - (Optional) Type: `string`.
@@ -35,10 +36,8 @@ This resource supports the following arguments:
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `builtin` - Type: `bool`.
 
 ## Import
 

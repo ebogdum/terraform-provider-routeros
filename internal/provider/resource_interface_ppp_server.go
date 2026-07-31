@@ -30,6 +30,11 @@ type InterfacePPPServerResource struct {
 
 type InterfacePPPServerModel struct {
 	ID             types.String `tfsdk:"id"`
+	RingCount      types.String `tfsdk:"ring_count"`
+	Port           types.String `tfsdk:"port"`
+	NullModem      types.String `tfsdk:"null_modem"`
+	ModemInit      types.String `tfsdk:"modem_init"`
+	DataChannel    types.String `tfsdk:"data_channel"`
 	Authentication types.String `tfsdk:"authentication"`
 	Comment        types.String `tfsdk:"comment"`
 	Disabled       types.Bool   `tfsdk:"disabled"`
@@ -53,7 +58,6 @@ func (r *InterfacePPPServerResource) Configure(_ context.Context, req resource.C
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfacePPPServerResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -64,6 +68,31 @@ func (r *InterfacePPPServerResource) Schema(_ context.Context, _ resource.Schema
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"ring_count": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `ring-count`.",
+			},
+			"port": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `port`.",
+			},
+			"null_modem": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `null-modem`.",
+			},
+			"modem_init": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `modem-init`.",
+			},
+			"data_channel": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `data-channel`.",
 			},
 			"authentication": schema.StringAttribute{
 				Optional:    true,
@@ -148,6 +177,21 @@ func (r *InterfacePPPServerResource) Create(ctx context.Context, req resource.Cr
 	if !(plan.Profile.IsNull() || plan.Profile.IsUnknown()) {
 		body["profile"] = plan.Profile.ValueString()
 	}
+	if !(plan.DataChannel.IsNull() || plan.DataChannel.IsUnknown()) {
+		body["data-channel"] = plan.DataChannel.ValueString()
+	}
+	if !(plan.ModemInit.IsNull() || plan.ModemInit.IsUnknown()) {
+		body["modem-init"] = plan.ModemInit.ValueString()
+	}
+	if !(plan.NullModem.IsNull() || plan.NullModem.IsUnknown()) {
+		body["null-modem"] = plan.NullModem.ValueString()
+	}
+	if !(plan.Port.IsNull() || plan.Port.IsUnknown()) {
+		body["port"] = plan.Port.ValueString()
+	}
+	if !(plan.RingCount.IsNull() || plan.RingCount.IsUnknown()) {
+		body["ring-count"] = plan.RingCount.ValueString()
+	}
 	obj, err := c.Add(ctx, "/interface/ppp-server", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /interface/ppp-server failed", err.Error())
@@ -219,6 +263,21 @@ func (r *InterfacePPPServerResource) Update(ctx context.Context, req resource.Up
 	if !plan.Profile.Equal(state.Profile) {
 		body["profile"] = plan.Profile.ValueString()
 	}
+	if !plan.DataChannel.Equal(state.DataChannel) && !plan.DataChannel.IsUnknown() {
+		body["data-channel"] = plan.DataChannel.ValueString()
+	}
+	if !plan.ModemInit.Equal(state.ModemInit) && !plan.ModemInit.IsUnknown() {
+		body["modem-init"] = plan.ModemInit.ValueString()
+	}
+	if !plan.NullModem.Equal(state.NullModem) && !plan.NullModem.IsUnknown() {
+		body["null-modem"] = plan.NullModem.ValueString()
+	}
+	if !plan.Port.Equal(state.Port) && !plan.Port.IsUnknown() {
+		body["port"] = plan.Port.ValueString()
+	}
+	if !plan.RingCount.Equal(state.RingCount) && !plan.RingCount.IsUnknown() {
+		body["ring-count"] = plan.RingCount.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/ppp-server", state.ID.ValueString(), body)
 		if err != nil {
@@ -285,6 +344,31 @@ func interfacePPPServerLookupByNaturalKey(ctx context.Context, c *client.Client,
 func interfacePPPServerApply(ctx context.Context, obj client.Object, m *InterfacePPPServerModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["ring-count"]; ok && v != "" {
+		m.RingCount = types.StringValue(v)
+	} else {
+		m.RingCount = types.StringNull()
+	}
+	if v, ok := obj["port"]; ok && v != "" {
+		m.Port = types.StringValue(v)
+	} else {
+		m.Port = types.StringNull()
+	}
+	if v, ok := obj["null-modem"]; ok && v != "" {
+		m.NullModem = types.StringValue(v)
+	} else {
+		m.NullModem = types.StringNull()
+	}
+	if v, ok := obj["modem-init"]; ok && v != "" {
+		m.ModemInit = types.StringValue(v)
+	} else {
+		m.ModemInit = types.StringNull()
+	}
+	if v, ok := obj["data-channel"]; ok && v != "" {
+		m.DataChannel = types.StringValue(v)
+	} else {
+		m.DataChannel = types.StringNull()
+	}
 	if v, ok := obj["authentication"]; ok {
 		_ = v
 		if v != "" {

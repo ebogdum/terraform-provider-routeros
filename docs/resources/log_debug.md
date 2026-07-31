@@ -22,6 +22,14 @@ resource "routeros_log_debug" "debug_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `message` - (Required) Type: `string`. Default: `tf-acc-test`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `message` - (Required) Type: `string`.
+* `output` - (Read-only) Type: `list`. Server response rows.
+* `params` - (Optional) Type: `map`. Extra parameters forwarded to RouterOS verbatim. Keys with dots are allowed. Example: { ca = "my-ca", name = "new-cert" }.
+* `target_id` - (Optional) Type: `string`. RouterOS .id of the row this action targets. Required by per-row actions (e.g. /certificate/sign, /interface/reset-counters, /disk/format).
+* `trigger` - (Optional) Type: `string`. Change to force re-execution.
+
+## Attribute Reference
+
+* `id` - Hash of the inputs that produced this run.
 

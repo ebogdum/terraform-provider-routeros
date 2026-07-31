@@ -35,30 +35,29 @@ resource "routeros_ipv6_neighbor" "neighbor_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `address` - (Optional) Type: `ipv6`.
+* `router` - (Read-only) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `address` - (Optional) Type: `string`.
+* `bridge_port` - (Read-only) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `dynamic` - (Read-only) Type: `bool`.
+* `host_name` - (Read-only) Type: `string`.
 * `interface` - (Optional) Type: `string`.
 * `mac_address` - (Optional) Type: `string`.
-* `mac_ping` - (Optional) Type: `string`.
-* `mac_telnet` - (Optional) Type: `string`.
-* `make_static` - (Optional) Type: `string`.
-* `ping` - (Optional) Type: `string`.
-* `router` - (Optional) Type: `bool`.
-* `telnet` - (Optional) Type: `string`.
-* `torch` - (Optional) Type: `string`.
+* `mac_ping` - (Read-only) Type: `string`.
+* `mac_telnet` - (Read-only) Type: `string`.
+* `make_static` - (Read-only) Type: `string`.
+* `ping` - (Read-only) Type: `string`.
+* `router_ros` - (Optional) Type: `bool`.
+* `status` - (Read-only) Type: `string`.
+* `telnet` - (Read-only) Type: `string`.
+* `torch` - (Read-only) Type: `string`.
+* `vrf` - (Read-only) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `bridge_port` - Type: `string`.
-* `dynamic` - Type: `bool`.
-* `host_name` - Type: `string`.
-* `status` - Type: `string`.
-* `vrf` - Type: `string`.
 
 ## Import
 

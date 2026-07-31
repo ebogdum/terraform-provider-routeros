@@ -37,7 +37,8 @@ resource "routeros_queue_tree" "tree_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `bucket_size` - (Optional) Type: `string`. RouterOS `bucket-size`.
 * `burst_limit` - (Optional) Type: `string`.
 * `burst_threshold` - (Optional) Type: `string`.
 * `burst_time` - (Optional) Type: `string`.
@@ -45,12 +46,18 @@ This resource supports the following arguments:
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `limit_at` - (Optional) Type: `string`.
 * `max_limit` - (Optional) Type: `string`.
-* `name` - (Required) Type: `string`. Default: `tf_acc_qtree`.
+* `name` - (Required) Type: `string`.
 * `packet_mark` - (Optional) Type: `string`.
-* `parent` - (Required) Type: `string`. Parent queue ("global" for top-level, or another queue's name/id). Default: `global`.
-* `place_before` - (Optional) Type: `string`.
+* `parent` - (Required) Type: `string`. Parent queue ("global" for top-level, or another queue's name/id).
+* `place_before` - (Read-only) Type: `string`. RouterOS .id (e.g. *3) of the entry this one should be moved before. Use to enforce explicit ordering on ordered menus.
+* `place_before_ros` - (Optional) Type: `string`.
 * `priority` - (Optional) Type: `string`.
 * `queue` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

@@ -47,7 +47,6 @@ func (r *TaskResource) Configure(_ context.Context, req resource.ConfigureReques
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *TaskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {

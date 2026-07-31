@@ -27,6 +27,9 @@ type SystemPackageUpdateResource struct {
 
 type SystemPackageUpdateModel struct {
 	ID               types.String `tfsdk:"id"`
+	Mode             types.String `tfsdk:"mode"`
+	IpVersion        types.String `tfsdk:"ip_version"`
+	CheckCertificate types.String `tfsdk:"check_certificate"`
 	Channel          types.String `tfsdk:"channel"`
 	InstalledVersion types.String `tfsdk:"installed_version"`
 	Router           types.String `tfsdk:"router"`
@@ -54,6 +57,21 @@ func (r *SystemPackageUpdateResource) Schema(_ context.Context, _ resource.Schem
 				Computed:      true,
 				Description:   "Stable identifier (the singleton's menu path, optionally namespaced by router).",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"mode": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `mode`.",
+			},
+			"ip_version": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `ip-version`.",
+			},
+			"check_certificate": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `check-certificate`.",
 			},
 			"channel": schema.StringAttribute{Optional: true, Computed: true,
 				Description: "",
@@ -137,6 +155,15 @@ func systemPackageUpdateUpsert(ctx context.Context, reg *client.Registry, plan *
 	if !(plan.Channel.IsNull() || plan.Channel.IsUnknown()) {
 		body["channel"] = plan.Channel.ValueString()
 	}
+	if !(plan.CheckCertificate.IsNull() || plan.CheckCertificate.IsUnknown()) {
+		body["check-certificate"] = plan.CheckCertificate.ValueString()
+	}
+	if !(plan.IpVersion.IsNull() || plan.IpVersion.IsUnknown()) {
+		body["ip-version"] = plan.IpVersion.ValueString()
+	}
+	if !(plan.Mode.IsNull() || plan.Mode.IsUnknown()) {
+		body["mode"] = plan.Mode.ValueString()
+	}
 	obj, err := c.SetSingleton(ctx, "/system/package/update", body)
 	if err != nil {
 		diags.AddError("Upsert /system/package/update failed", err.Error())
@@ -148,6 +175,21 @@ func systemPackageUpdateUpsert(ctx context.Context, reg *client.Registry, plan *
 
 func systemPackageUpdateApply(ctx context.Context, obj client.Object, m *SystemPackageUpdateModel) {
 	_ = ctx
+	if v, ok := obj["mode"]; ok && v != "" {
+		m.Mode = types.StringValue(v)
+	} else {
+		m.Mode = types.StringNull()
+	}
+	if v, ok := obj["ip-version"]; ok && v != "" {
+		m.IpVersion = types.StringValue(v)
+	} else {
+		m.IpVersion = types.StringNull()
+	}
+	if v, ok := obj["check-certificate"]; ok && v != "" {
+		m.CheckCertificate = types.StringValue(v)
+	} else {
+		m.CheckCertificate = types.StringNull()
+	}
 	if v, ok := obj["channel"]; ok {
 		_ = v
 		if v != "" {

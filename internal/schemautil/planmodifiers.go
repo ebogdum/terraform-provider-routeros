@@ -2,6 +2,8 @@ package schemautil
 
 import (
 	"context"
+	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 
@@ -51,11 +53,54 @@ func NormalizeMAC() planmodifier.String {
 // NormalizeDuration converts equivalent duration strings to RouterOS canonical
 // (1w2d3h4m5s).
 func NormalizeDuration() planmodifier.String {
-	return normalizeStringPM{desc: "normalize RouterOS duration", fn: func(s string) (string, error) {
+	return NormalizeDurationExcept()
+}
+
+// NormalizeDurationExcept is NormalizeDuration that leaves the given sentinel
+// words alone.
+//
+// Attributes like arp-timeout and dpd-interval hold either a duration or a magic
+// word (`auto`, `disable-dpd`). Running those words through the duration parser
+// raises "Invalid value" at plan time, so a router sitting on its own default
+// cannot be planned at all. Keywords are matched case-insensitively and passed
+// through verbatim; anything else is normalised as usual.
+func NormalizeDurationExcept(keywords ...string) planmodifier.String {
+	set := make(map[string]struct{}, len(keywords))
+	for _, k := range keywords {
+		set[strings.ToLower(k)] = struct{}{}
+	}
+	desc := "normalize RouterOS duration"
+	if len(keywords) > 0 {
+		desc += fmt.Sprintf(" (passing through %v)", keywords)
+	}
+	return normalizeStringPM{desc: desc, fn: func(s string) (string, error) {
+		if _, ok := set[strings.ToLower(strings.TrimSpace(s))]; ok {
+			return s, nil
+		}
 		d, err := client.ParseDuration(s)
 		if err != nil {
 			return "", err
 		}
 		return client.FormatDuration(d), nil
 	}}
+}
+
+// NormalizeCase rewrites a value to the spelling RouterOS itself reports, so a
+// config written as `md5` does not permadiff against a device that answers
+// `MD5`. Unlisted values are left untouched -- a validator, not this modifier,
+// is responsible for rejecting them.
+func NormalizeCase(canonical ...string) planmodifier.String {
+	byLower := make(map[string]string, len(canonical))
+	for _, v := range canonical {
+		byLower[strings.ToLower(v)] = v
+	}
+	return normalizeStringPM{
+		desc: fmt.Sprintf("normalize case to one of %v", canonical),
+		fn: func(s string) (string, error) {
+			if c, ok := byLower[strings.ToLower(strings.TrimSpace(s))]; ok {
+				return c, nil
+			}
+			return s, nil
+		},
+	}
 }

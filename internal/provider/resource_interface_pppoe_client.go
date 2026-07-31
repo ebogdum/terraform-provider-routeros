@@ -30,6 +30,7 @@ type InterfacePppoeClientResource struct {
 
 type InterfacePppoeClientModel struct {
 	ID                   types.String `tfsdk:"id"`
+	HostUniq             types.String `tfsdk:"host_uniq"`
 	AcName               types.String `tfsdk:"ac_name"`
 	AddDefaultRoute      types.String `tfsdk:"add_default_route"`
 	Allow                types.String `tfsdk:"allow"`
@@ -63,7 +64,6 @@ func (r *InterfacePppoeClientResource) Configure(_ context.Context, req resource
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfacePppoeClientResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -74,6 +74,11 @@ func (r *InterfacePppoeClientResource) Schema(_ context.Context, _ resource.Sche
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"host_uniq": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `host-uniq`.",
 			},
 			"ac_name": schema.StringAttribute{
 				Optional:    true,
@@ -239,6 +244,9 @@ func (r *InterfacePppoeClientResource) Create(ctx context.Context, req resource.
 	if !(plan.User.IsNull() || plan.User.IsUnknown()) {
 		body["user"] = plan.User.ValueString()
 	}
+	if !(plan.HostUniq.IsNull() || plan.HostUniq.IsUnknown()) {
+		body["host-uniq"] = plan.HostUniq.ValueString()
+	}
 	obj, err := c.Add(ctx, "/interface/pppoe-client", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /interface/pppoe-client failed", err.Error())
@@ -340,6 +348,9 @@ func (r *InterfacePppoeClientResource) Update(ctx context.Context, req resource.
 	if !plan.User.Equal(state.User) {
 		body["user"] = plan.User.ValueString()
 	}
+	if !plan.HostUniq.Equal(state.HostUniq) && !plan.HostUniq.IsUnknown() {
+		body["host-uniq"] = plan.HostUniq.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/pppoe-client", state.ID.ValueString(), body)
 		if err != nil {
@@ -406,6 +417,11 @@ func interfacePppoeClientLookupByNaturalKey(ctx context.Context, c *client.Clien
 func interfacePppoeClientApply(ctx context.Context, obj client.Object, m *InterfacePppoeClientModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["host-uniq"]; ok && v != "" {
+		m.HostUniq = types.StringValue(v)
+	} else {
+		m.HostUniq = types.StringNull()
+	}
 	if v, ok := obj["ac-name"]; ok {
 		_ = v
 		if v != "" {

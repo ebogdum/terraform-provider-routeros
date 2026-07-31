@@ -35,26 +35,39 @@ resource "routeros_ip_hotspot_profile" "profile_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `default` - (Read-only) Type: `bool`.
 * `dns_name` - (Optional) Type: `string`.
-* `hotspot_address` - (Optional) Type: `ip`.
+* `hotspot_address` - (Optional) Type: `string`.
 * `html_directory` - (Optional) Type: `string`.
 * `html_directory_override` - (Optional) Type: `string`.
-* `http_cookie_lifetime` - (Optional) Type: `duration`.
+* `http_cookie_lifetime` - (Optional) Type: `string`.
 * `http_proxy` - (Optional) Type: `string`.
 * `install_hotspot_queue` - (Optional) Type: `bool`.
 * `login_by` - (Optional) Type: `list`.
+* `mac_auth_mode` - (Optional) Type: `string`. RouterOS `mac-auth-mode`.
+* `mac_auth_password` - (Optional) Type: `string`. RouterOS `mac-auth-password`. **Sensitive.**
 * `name` - (Optional) Type: `string`.
-* `smtp_server` - (Optional) Type: `ip`.
+* `nas_port_type` - (Optional) Type: `string`. RouterOS `nas-port-type`.
+* `radius_accounting` - (Optional) Type: `string`. RouterOS `radius-accounting`.
+* `radius_default_domain` - (Optional) Type: `string`. RouterOS `radius-default-domain`.
+* `radius_interim_update` - (Optional) Type: `string`. RouterOS `radius-interim-update`.
+* `radius_location_id` - (Optional) Type: `string`. RouterOS `radius-location-id`.
+* `radius_location_name` - (Optional) Type: `string`. RouterOS `radius-location-name`.
+* `radius_mac_format` - (Optional) Type: `string`. RouterOS `radius-mac-format`.
+* `rate_limit` - (Optional) Type: `string`. RouterOS `rate-limit`.
+* `smtp_server` - (Optional) Type: `string`.
 * `split_user_domain` - (Optional) Type: `bool`.
+* `ssl_certificate` - (Optional) Type: `string`. RouterOS `ssl-certificate`.
+* `trial_uptime_limit` - (Optional) Type: `string`. RouterOS `trial-uptime-limit`.
+* `trial_uptime_reset` - (Optional) Type: `string`. RouterOS `trial-uptime-reset`.
+* `trial_user_profile` - (Optional) Type: `string`. RouterOS `trial-user-profile`.
 * `use_radius` - (Optional) Type: `bool`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `default` - Type: `bool`.
 
 ## Import
 

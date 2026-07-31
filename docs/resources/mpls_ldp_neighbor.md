@@ -23,9 +23,16 @@ resource "routeros_mpls_ldp_neighbor" "neighbor_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `send_targeted` - (Optional) Type: `string`. RouterOS `send-targeted`.
+* `transport` - (Optional) Type: `string`. RouterOS `transport`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

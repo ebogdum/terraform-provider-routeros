@@ -29,8 +29,10 @@ type IPDHCPServerOptionSetsResource struct {
 }
 
 type IPDHCPServerOptionSetsModel struct {
-	ID     types.String `tfsdk:"id"`
-	Router types.String `tfsdk:"router"`
+	ID      types.String `tfsdk:"id"`
+	Name    types.String `tfsdk:"name"`
+	Options types.String `tfsdk:"options"`
+	Router  types.String `tfsdk:"router"`
 }
 
 func NewIPDHCPServerOptionSetsResource() resource.Resource { return &IPDHCPServerOptionSetsResource{} }
@@ -45,7 +47,6 @@ func (r *IPDHCPServerOptionSetsResource) Configure(_ context.Context, req resour
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPDHCPServerOptionSetsResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -56,6 +57,16 @@ func (r *IPDHCPServerOptionSetsResource) Schema(_ context.Context, _ resource.Sc
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"name": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "Name of the option set, referenced by `/ip/dhcp-server` `dhcp-option-set`.",
+			},
+			"options": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "Comma-separated list of `/ip/dhcp-server/option` names in this set.",
 			},
 			"router": schema.StringAttribute{
 				Optional:    true,
@@ -76,6 +87,12 @@ func (r *IPDHCPServerOptionSetsResource) Create(ctx context.Context, req resourc
 		return
 	}
 	body := client.Object{}
+	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
+		body["name"] = plan.Name.ValueString()
+	}
+	if !(plan.Options.IsNull() || plan.Options.IsUnknown()) {
+		body["options"] = plan.Options.ValueString()
+	}
 	obj, err := c.Add(ctx, "/ip/dhcp-server/option/sets", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /ip/dhcp-server/option/sets failed", err.Error())
@@ -123,6 +140,12 @@ func (r *IPDHCPServerOptionSetsResource) Update(ctx context.Context, req resourc
 		return
 	}
 	body := client.Object{}
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
+		body["name"] = plan.Name.ValueString()
+	}
+	if !plan.Options.Equal(state.Options) && !plan.Options.IsUnknown() {
+		body["options"] = plan.Options.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/dhcp-server/option/sets", state.ID.ValueString(), body)
 		if err != nil {
@@ -189,4 +212,14 @@ func iPDHCPServerOptionSetsLookupByNaturalKey(ctx context.Context, c *client.Cli
 func iPDHCPServerOptionSetsApply(ctx context.Context, obj client.Object, m *IPDHCPServerOptionSetsModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["name"]; ok && v != "" {
+		m.Name = types.StringValue(v)
+	} else {
+		m.Name = types.StringNull()
+	}
+	if v, ok := obj["options"]; ok && v != "" {
+		m.Options = types.StringValue(v)
+	} else {
+		m.Options = types.StringNull()
+	}
 }

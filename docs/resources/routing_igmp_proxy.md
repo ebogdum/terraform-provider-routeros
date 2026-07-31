@@ -26,10 +26,15 @@ resource "routeros_routing_igmp_proxy" "igmp_proxy_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `query_interval` - (Optional) Type: `duration`.
-* `query_response_interval` - (Optional) Type: `duration`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `query_interval` - (Optional) Type: `string`.
+* `query_response_interval` - (Optional) Type: `string`.
 * `quick_leave` - (Optional) Type: `bool`.
+
+## Attribute Reference
+
+* `id` - Stable identifier (the singleton's menu path, optionally namespaced by router).
+
 
 ## Import
 

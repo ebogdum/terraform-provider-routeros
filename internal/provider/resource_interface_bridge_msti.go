@@ -53,7 +53,6 @@ func (r *InterfaceBridgeMstiResource) Configure(_ context.Context, req resource.
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceBridgeMstiResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -81,7 +80,6 @@ func (r *InterfaceBridgeMstiResource) Schema(_ context.Context, _ resource.Schem
 				Description: "Whether the entry is disabled.",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -96,7 +94,6 @@ func (r *InterfaceBridgeMstiResource) Schema(_ context.Context, _ resource.Schem
 				Description: "",
 			},
 			"status": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -138,9 +135,6 @@ func (r *InterfaceBridgeMstiResource) Create(ctx context.Context, req resource.C
 	}
 	if !(plan.Priority.IsNull() || plan.Priority.IsUnknown()) {
 		body["priority"] = client.FormatInt64(plan.Priority.ValueInt64())
-	}
-	if !(plan.Status.IsNull() || plan.Status.IsUnknown()) {
-		body["status"] = client.FormatInt64(plan.Status.ValueInt64())
 	}
 	if !(plan.VLANMapping.IsNull() || plan.VLANMapping.IsUnknown()) {
 		body["vlan-mapping"] = plan.VLANMapping.ValueString()
@@ -206,9 +200,6 @@ func (r *InterfaceBridgeMstiResource) Update(ctx context.Context, req resource.U
 	}
 	if !plan.Priority.Equal(state.Priority) {
 		body["priority"] = client.FormatInt64(plan.Priority.ValueInt64())
-	}
-	if !plan.Status.Equal(state.Status) {
-		body["status"] = client.FormatInt64(plan.Status.ValueInt64())
 	}
 	if !plan.VLANMapping.Equal(state.VLANMapping) {
 		body["vlan-mapping"] = plan.VLANMapping.ValueString()

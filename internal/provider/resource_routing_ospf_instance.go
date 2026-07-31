@@ -32,6 +32,9 @@ type RoutingOSPFInstanceResource struct {
 
 type RoutingOSPFInstanceModel struct {
 	ID               types.String `tfsdk:"id"`
+	UseDn            types.String `tfsdk:"use_dn"`
+	OutFilterChain   types.String `tfsdk:"out_filter_chain"`
+	InFilterChain    types.String `tfsdk:"in_filter_chain"`
 	Comment          types.String `tfsdk:"comment"`
 	Disabled         types.Bool   `tfsdk:"disabled"`
 	DomainID         types.String `tfsdk:"domain_id"`
@@ -64,7 +67,6 @@ func (r *RoutingOSPFInstanceResource) Configure(_ context.Context, req resource.
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *RoutingOSPFInstanceResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -75,6 +77,21 @@ func (r *RoutingOSPFInstanceResource) Schema(_ context.Context, _ resource.Schem
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"use_dn": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `use-dn`.",
+			},
+			"out_filter_chain": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `out-filter-chain`.",
+			},
+			"in_filter_chain": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `in-filter-chain`.",
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -97,12 +114,10 @@ func (r *RoutingOSPFInstanceResource) Schema(_ context.Context, _ resource.Schem
 				Description: "",
 			},
 			"in_filter": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"invalid": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -127,7 +142,6 @@ func (r *RoutingOSPFInstanceResource) Schema(_ context.Context, _ resource.Schem
 				Description: "",
 			},
 			"out_filter": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -193,9 +207,6 @@ func (r *RoutingOSPFInstanceResource) Create(ctx context.Context, req resource.C
 	if !(plan.DomainTag.IsNull() || plan.DomainTag.IsUnknown()) {
 		body["domain-tag"] = plan.DomainTag.ValueString()
 	}
-	if !(plan.InFilter.IsNull() || plan.InFilter.IsUnknown()) {
-		body["in-filter"] = plan.InFilter.ValueString()
-	}
 	if !(plan.MPLSTeAddress.IsNull() || plan.MPLSTeAddress.IsUnknown()) {
 		body["mpls-te-address"] = plan.MPLSTeAddress.ValueString()
 	}
@@ -207,9 +218,6 @@ func (r *RoutingOSPFInstanceResource) Create(ctx context.Context, req resource.C
 	}
 	if !(plan.OriginateDefault.IsNull() || plan.OriginateDefault.IsUnknown()) {
 		body["originate-default"] = plan.OriginateDefault.ValueString()
-	}
-	if !(plan.OutFilter.IsNull() || plan.OutFilter.IsUnknown()) {
-		body["out-filter"] = plan.OutFilter.ValueString()
 	}
 	if !(plan.OutFilterSelect.IsNull() || plan.OutFilterSelect.IsUnknown()) {
 		body["out-filter-select"] = plan.OutFilterSelect.ValueString()
@@ -228,6 +236,15 @@ func (r *RoutingOSPFInstanceResource) Create(ctx context.Context, req resource.C
 	}
 	if !(plan.Vrf.IsNull() || plan.Vrf.IsUnknown()) {
 		body["vrf"] = plan.Vrf.ValueString()
+	}
+	if !(plan.InFilterChain.IsNull() || plan.InFilterChain.IsUnknown()) {
+		body["in-filter-chain"] = plan.InFilterChain.ValueString()
+	}
+	if !(plan.OutFilterChain.IsNull() || plan.OutFilterChain.IsUnknown()) {
+		body["out-filter-chain"] = plan.OutFilterChain.ValueString()
+	}
+	if !(plan.UseDn.IsNull() || plan.UseDn.IsUnknown()) {
+		body["use-dn"] = plan.UseDn.ValueString()
 	}
 	obj, err := c.Add(ctx, "/routing/ospf/instance", body)
 	if err != nil {
@@ -288,9 +305,6 @@ func (r *RoutingOSPFInstanceResource) Update(ctx context.Context, req resource.U
 	if !plan.DomainTag.Equal(state.DomainTag) {
 		body["domain-tag"] = plan.DomainTag.ValueString()
 	}
-	if !plan.InFilter.Equal(state.InFilter) {
-		body["in-filter"] = plan.InFilter.ValueString()
-	}
 	if !plan.MPLSTeAddress.Equal(state.MPLSTeAddress) {
 		body["mpls-te-address"] = plan.MPLSTeAddress.ValueString()
 	}
@@ -302,9 +316,6 @@ func (r *RoutingOSPFInstanceResource) Update(ctx context.Context, req resource.U
 	}
 	if !plan.OriginateDefault.Equal(state.OriginateDefault) {
 		body["originate-default"] = plan.OriginateDefault.ValueString()
-	}
-	if !plan.OutFilter.Equal(state.OutFilter) {
-		body["out-filter"] = plan.OutFilter.ValueString()
 	}
 	if !plan.OutFilterSelect.Equal(state.OutFilterSelect) {
 		body["out-filter-select"] = plan.OutFilterSelect.ValueString()
@@ -323,6 +334,15 @@ func (r *RoutingOSPFInstanceResource) Update(ctx context.Context, req resource.U
 	}
 	if !plan.Vrf.Equal(state.Vrf) {
 		body["vrf"] = plan.Vrf.ValueString()
+	}
+	if !plan.InFilterChain.Equal(state.InFilterChain) && !plan.InFilterChain.IsUnknown() {
+		body["in-filter-chain"] = plan.InFilterChain.ValueString()
+	}
+	if !plan.OutFilterChain.Equal(state.OutFilterChain) && !plan.OutFilterChain.IsUnknown() {
+		body["out-filter-chain"] = plan.OutFilterChain.ValueString()
+	}
+	if !plan.UseDn.Equal(state.UseDn) && !plan.UseDn.IsUnknown() {
+		body["use-dn"] = plan.UseDn.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/routing/ospf/instance", state.ID.ValueString(), body)
@@ -390,6 +410,21 @@ func routingOSPFInstanceLookupByNaturalKey(ctx context.Context, c *client.Client
 func routingOSPFInstanceApply(ctx context.Context, obj client.Object, m *RoutingOSPFInstanceModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["use-dn"]; ok && v != "" {
+		m.UseDn = types.StringValue(v)
+	} else {
+		m.UseDn = types.StringNull()
+	}
+	if v, ok := obj["out-filter-chain"]; ok && v != "" {
+		m.OutFilterChain = types.StringValue(v)
+	} else {
+		m.OutFilterChain = types.StringNull()
+	}
+	if v, ok := obj["in-filter-chain"]; ok && v != "" {
+		m.InFilterChain = types.StringValue(v)
+	} else {
+		m.InFilterChain = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {

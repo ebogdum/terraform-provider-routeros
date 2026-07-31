@@ -31,23 +31,22 @@ resource "routeros_interface_mesh_port" "port_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `comment` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`.
-* `hello_interval` - (Optional) Type: `int`. Default: `10`.
-* `inactive` - (Optional) Type: `bool`.
+* `dr_address` - (Read-only) Type: `string`.
+* `dynamic` - (Read-only) Type: `bool`.
+* `hello_interval` - (Optional) Type: `int`.
+* `inactive` - (Read-only) Type: `bool`.
 * `interface` - (Optional) Type: `string`.
 * `mesh` - (Optional) Type: `string`.
-* `path_cost` - (Optional) Type: `int`. Default: `10`.
-* `port_type` - (Optional) Type: `enum(auto|wds|wireless|ethernet)`.
+* `path_cost` - (Optional) Type: `int`.
+* `port_type` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `dr_address` - Type: `string`.
-* `dynamic` - Type: `bool`.
 
 ## Import
 

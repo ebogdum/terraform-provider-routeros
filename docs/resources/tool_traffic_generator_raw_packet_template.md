@@ -37,29 +37,31 @@ resource "routeros_tool_traffic_generator_raw_packet_template" "raw_packet_templ
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `comment` - (Optional) Type: `string`.
-* `data` - (Optional) Type: `enum(uninitialized|random|specific-byte|incrementing)`.
+* `compute_checksum_from_offset` - (Optional) Type: `string`. RouterOS `compute-checksum-from-offset`.
+* `data` - (Optional) Type: `string`.
 * `data_byte` - (Optional) Type: `int`.
+* `dynamic` - (Read-only) Type: `bool`.
 * `header` - (Optional) Type: `string`.
+* `header_length` - (Read-only) Type: `int`.
 * `ip_header_offset` - (Optional) Type: `string`.
 * `ipv6_header_offset` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
 * `port` - (Optional) Type: `string`.
-* `random` - (Optional) Type: `string`.
+* `random` - (Read-only) Type: `string`.
 * `random_byte_offsets_and_masks` - (Optional) Type: `string`.
 * `random_ranges` - (Optional) Type: `string`.
-* `specbyte` - (Optional) Type: `string`.
+* `specbyte` - (Read-only) Type: `string`.
 * `special_footer` - (Optional) Type: `bool`.
+* `tcp_header_offset` - (Optional) Type: `string`. RouterOS `tcp-header-offset`.
+* `udp_compute_checksum` - (Optional) Type: `string`. RouterOS `udp-compute-checksum`.
 * `udp_header_offset` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `dynamic` - Type: `bool`.
-* `header_length` - Type: `int`.
 
 ## Import
 

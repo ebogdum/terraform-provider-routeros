@@ -32,25 +32,27 @@ type IPV6NdResource struct {
 
 type IPV6NdModel struct {
 	ID                          types.String `tfsdk:"id"`
+	Pref64                      types.String `tfsdk:"pref64"`
+	Dns                         types.String `tfsdk:"dns"`
 	AdvertiseDNS                types.String `tfsdk:"advertise_dns"`
 	AdvertiseMACAddress         types.Bool   `tfsdk:"advertise_mac_address"`
 	Comment                     types.String `tfsdk:"comment"`
 	Default                     types.Bool   `tfsdk:"default"`
 	Disabled                    types.Bool   `tfsdk:"disabled"`
 	DNSServers                  types.String `tfsdk:"dns_servers"`
-	HopLimit                    types.Int64  `tfsdk:"hop_limit"`
+	HopLimit                    types.String `tfsdk:"hop_limit"`
 	Interface                   types.String `tfsdk:"interface"`
 	Invalid                     types.Bool   `tfsdk:"invalid"`
 	ManagedAddressConfiguration types.Bool   `tfsdk:"managed_address_configuration"`
-	MTU                         types.Int64  `tfsdk:"mtu"`
+	MTU                         types.String `tfsdk:"mtu"`
 	OtherConfiguration          types.Bool   `tfsdk:"other_configuration"`
 	Pref64Prefixes              types.String `tfsdk:"pref64_prefixes"`
 	RaDelay                     types.String `tfsdk:"ra_delay"`
 	RaInterval                  types.String `tfsdk:"ra_interval"`
 	RaLifetime                  types.String `tfsdk:"ra_lifetime"`
 	RaPreference                types.String `tfsdk:"ra_preference"`
-	ReachableTime               types.Int64  `tfsdk:"reachable_time"`
-	RetransmitInterval          types.Int64  `tfsdk:"retransmit_interval"`
+	ReachableTime               types.String `tfsdk:"reachable_time"`
+	RetransmitInterval          types.String `tfsdk:"retransmit_interval"`
 	Router                      types.String `tfsdk:"router"`
 }
 
@@ -66,7 +68,6 @@ func (r *IPV6NdResource) Configure(_ context.Context, req resource.ConfigureRequ
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPV6NdResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -77,6 +78,16 @@ func (r *IPV6NdResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"pref64": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `pref64`.",
+			},
+			"dns": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `dns`.",
 			},
 			"advertise_dns": schema.StringAttribute{
 				Optional:    true,
@@ -95,7 +106,6 @@ func (r *IPV6NdResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 				Description: "Free-form comment.",
 			},
 			"default": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -105,14 +115,13 @@ func (r *IPV6NdResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 				Description: "",
 			},
 			"dns_servers": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
-			"hop_limit": schema.Int64Attribute{
+			"hop_limit": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "",
+				Description: "Hop limit advertised in router advertisements. A number, or `unspecified` (the default).",
 			},
 			"interface": schema.StringAttribute{
 				Optional:    true,
@@ -120,7 +129,6 @@ func (r *IPV6NdResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 				Description: "",
 			},
 			"invalid": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -129,10 +137,10 @@ func (r *IPV6NdResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 				Computed:    true,
 				Description: "",
 			},
-			"mtu": schema.Int64Attribute{
+			"mtu": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "",
+				Description: "MTU advertised in router advertisements. A number, or `unspecified` (the default).",
 			},
 			"other_configuration": schema.BoolAttribute{
 				Optional:    true,
@@ -140,7 +148,6 @@ func (r *IPV6NdResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 				Description: "",
 			},
 			"pref64_prefixes": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -169,15 +176,15 @@ func (r *IPV6NdResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 				Description: "",
 				Validators:  []validator.String{schemautil.OneOf([]string{"medium", "high", "low"}...)},
 			},
-			"reachable_time": schema.Int64Attribute{
+			"reachable_time": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "",
+				Description: "Reachable time advertised in router advertisements. A number, or `unspecified` (the default).",
 			},
-			"retransmit_interval": schema.Int64Attribute{
+			"retransmit_interval": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "",
+				Description: "Retransmit interval advertised in router advertisements. A number, or `unspecified` (the default).",
 			},
 			"router": schema.StringAttribute{
 				Optional:    true,
@@ -210,11 +217,8 @@ func (r *IPV6NdResource) Create(ctx context.Context, req resource.CreateRequest,
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !(plan.DNSServers.IsNull() || plan.DNSServers.IsUnknown()) {
-		body["dns-servers"] = plan.DNSServers.ValueString()
-	}
 	if !(plan.HopLimit.IsNull() || plan.HopLimit.IsUnknown()) {
-		body["hop-limit"] = client.FormatInt64(plan.HopLimit.ValueInt64())
+		body["hop-limit"] = plan.HopLimit.ValueString()
 	}
 	if !(plan.Interface.IsNull() || plan.Interface.IsUnknown()) {
 		body["interface"] = plan.Interface.ValueString()
@@ -223,13 +227,10 @@ func (r *IPV6NdResource) Create(ctx context.Context, req resource.CreateRequest,
 		body["managed-address-configuration"] = client.FormatBool(plan.ManagedAddressConfiguration.ValueBool())
 	}
 	if !(plan.MTU.IsNull() || plan.MTU.IsUnknown()) {
-		body["mtu"] = client.FormatInt64(plan.MTU.ValueInt64())
+		body["mtu"] = plan.MTU.ValueString()
 	}
 	if !(plan.OtherConfiguration.IsNull() || plan.OtherConfiguration.IsUnknown()) {
 		body["other-configuration"] = client.FormatBool(plan.OtherConfiguration.ValueBool())
-	}
-	if !(plan.Pref64Prefixes.IsNull() || plan.Pref64Prefixes.IsUnknown()) {
-		body["pref64-prefixes"] = plan.Pref64Prefixes.ValueString()
 	}
 	if !(plan.RaDelay.IsNull() || plan.RaDelay.IsUnknown()) {
 		body["ra-delay"] = plan.RaDelay.ValueString()
@@ -244,10 +245,16 @@ func (r *IPV6NdResource) Create(ctx context.Context, req resource.CreateRequest,
 		body["ra-preference"] = plan.RaPreference.ValueString()
 	}
 	if !(plan.ReachableTime.IsNull() || plan.ReachableTime.IsUnknown()) {
-		body["reachable-time"] = client.FormatInt64(plan.ReachableTime.ValueInt64())
+		body["reachable-time"] = plan.ReachableTime.ValueString()
 	}
 	if !(plan.RetransmitInterval.IsNull() || plan.RetransmitInterval.IsUnknown()) {
-		body["retransmit-interval"] = client.FormatInt64(plan.RetransmitInterval.ValueInt64())
+		body["retransmit-interval"] = plan.RetransmitInterval.ValueString()
+	}
+	if !(plan.Dns.IsNull() || plan.Dns.IsUnknown()) {
+		body["dns"] = plan.Dns.ValueString()
+	}
+	if !(plan.Pref64.IsNull() || plan.Pref64.IsUnknown()) {
+		body["pref64"] = plan.Pref64.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ipv6/nd", body)
 	if err != nil {
@@ -308,11 +315,8 @@ func (r *IPV6NdResource) Update(ctx context.Context, req resource.UpdateRequest,
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.DNSServers.Equal(state.DNSServers) {
-		body["dns-servers"] = plan.DNSServers.ValueString()
-	}
 	if !plan.HopLimit.Equal(state.HopLimit) {
-		body["hop-limit"] = client.FormatInt64(plan.HopLimit.ValueInt64())
+		body["hop-limit"] = plan.HopLimit.ValueString()
 	}
 	if !plan.Interface.Equal(state.Interface) {
 		body["interface"] = plan.Interface.ValueString()
@@ -321,13 +325,10 @@ func (r *IPV6NdResource) Update(ctx context.Context, req resource.UpdateRequest,
 		body["managed-address-configuration"] = client.FormatBool(plan.ManagedAddressConfiguration.ValueBool())
 	}
 	if !plan.MTU.Equal(state.MTU) {
-		body["mtu"] = client.FormatInt64(plan.MTU.ValueInt64())
+		body["mtu"] = plan.MTU.ValueString()
 	}
 	if !plan.OtherConfiguration.Equal(state.OtherConfiguration) {
 		body["other-configuration"] = client.FormatBool(plan.OtherConfiguration.ValueBool())
-	}
-	if !plan.Pref64Prefixes.Equal(state.Pref64Prefixes) {
-		body["pref64-prefixes"] = plan.Pref64Prefixes.ValueString()
 	}
 	if !plan.RaDelay.Equal(state.RaDelay) {
 		body["ra-delay"] = plan.RaDelay.ValueString()
@@ -342,10 +343,16 @@ func (r *IPV6NdResource) Update(ctx context.Context, req resource.UpdateRequest,
 		body["ra-preference"] = plan.RaPreference.ValueString()
 	}
 	if !plan.ReachableTime.Equal(state.ReachableTime) {
-		body["reachable-time"] = client.FormatInt64(plan.ReachableTime.ValueInt64())
+		body["reachable-time"] = plan.ReachableTime.ValueString()
 	}
 	if !plan.RetransmitInterval.Equal(state.RetransmitInterval) {
-		body["retransmit-interval"] = client.FormatInt64(plan.RetransmitInterval.ValueInt64())
+		body["retransmit-interval"] = plan.RetransmitInterval.ValueString()
+	}
+	if !plan.Dns.Equal(state.Dns) && !plan.Dns.IsUnknown() {
+		body["dns"] = plan.Dns.ValueString()
+	}
+	if !plan.Pref64.Equal(state.Pref64) && !plan.Pref64.IsUnknown() {
+		body["pref64"] = plan.Pref64.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ipv6/nd", state.ID.ValueString(), body)
@@ -413,6 +420,16 @@ func iPV6NdLookupByNaturalKey(ctx context.Context, c *client.Client, id string) 
 func iPV6NdApply(ctx context.Context, obj client.Object, m *IPV6NdModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["pref64"]; ok && v != "" {
+		m.Pref64 = types.StringValue(v)
+	} else {
+		m.Pref64 = types.StringNull()
+	}
+	if v, ok := obj["dns"]; ok && v != "" {
+		m.Dns = types.StringValue(v)
+	} else {
+		m.Dns = types.StringNull()
+	}
 	if v, ok := obj["advertise-dns"]; ok {
 		_ = v
 		if v != "" {
@@ -475,13 +492,13 @@ func iPV6NdApply(ctx context.Context, obj client.Object, m *IPV6NdModel) {
 	}
 	if v, ok := obj["hop-limit"]; ok {
 		_ = v
-		if n, err := client.ParseInt64(v); err == nil {
-			m.HopLimit = types.Int64Value(n)
+		if v != "" {
+			m.HopLimit = types.StringValue(v)
 		} else {
-			m.HopLimit = types.Int64Null()
+			m.HopLimit = types.StringNull()
 		}
 	} else {
-		m.HopLimit = types.Int64Null()
+		m.HopLimit = types.StringNull()
 	}
 	if v, ok := obj["interface"]; ok {
 		_ = v
@@ -515,13 +532,13 @@ func iPV6NdApply(ctx context.Context, obj client.Object, m *IPV6NdModel) {
 	}
 	if v, ok := obj["mtu"]; ok {
 		_ = v
-		if n, err := client.ParseInt64(v); err == nil {
-			m.MTU = types.Int64Value(n)
+		if v != "" {
+			m.MTU = types.StringValue(v)
 		} else {
-			m.MTU = types.Int64Null()
+			m.MTU = types.StringNull()
 		}
 	} else {
-		m.MTU = types.Int64Null()
+		m.MTU = types.StringNull()
 	}
 	if v, ok := obj["other-configuration"]; ok {
 		_ = v
@@ -585,22 +602,22 @@ func iPV6NdApply(ctx context.Context, obj client.Object, m *IPV6NdModel) {
 	}
 	if v, ok := obj["reachable-time"]; ok {
 		_ = v
-		if n, err := client.ParseInt64(v); err == nil {
-			m.ReachableTime = types.Int64Value(n)
+		if v != "" {
+			m.ReachableTime = types.StringValue(v)
 		} else {
-			m.ReachableTime = types.Int64Null()
+			m.ReachableTime = types.StringNull()
 		}
 	} else {
-		m.ReachableTime = types.Int64Null()
+		m.ReachableTime = types.StringNull()
 	}
 	if v, ok := obj["retransmit-interval"]; ok {
 		_ = v
-		if n, err := client.ParseInt64(v); err == nil {
-			m.RetransmitInterval = types.Int64Value(n)
+		if v != "" {
+			m.RetransmitInterval = types.StringValue(v)
 		} else {
-			m.RetransmitInterval = types.Int64Null()
+			m.RetransmitInterval = types.StringNull()
 		}
 	} else {
-		m.RetransmitInterval = types.Int64Null()
+		m.RetransmitInterval = types.StringNull()
 	}
 }

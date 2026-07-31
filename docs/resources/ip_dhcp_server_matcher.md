@@ -23,9 +23,21 @@ resource "routeros_ip_dhcp_server_matcher" "matcher_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `address_pool` - (Optional) Type: `string`. RouterOS `address-pool`.
+* `code` - (Optional) Type: `string`. RouterOS `code`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `matching_type` - (Optional) Type: `string`. RouterOS `matching-type`.
+* `name` - (Optional) Type: `string`. RouterOS `name`.
+* `option_set` - (Optional) Type: `string`. RouterOS `option-set`.
+* `server` - (Optional) Type: `string`. RouterOS `server`.
+* `value` - (Optional) Type: `string`. RouterOS `value`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

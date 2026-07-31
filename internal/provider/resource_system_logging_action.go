@@ -31,25 +31,35 @@ type SystemLoggingActionResource struct {
 }
 
 type SystemLoggingActionModel struct {
-	ID               types.String `tfsdk:"id"`
-	Comment          types.String `tfsdk:"comment"`
-	Default          types.Bool   `tfsdk:"default"`
-	DiskFileCount    types.Int64  `tfsdk:"disk_file_count"`
-	DiskFileName     types.String `tfsdk:"disk_file_name"`
-	DiskLinesPerFile types.Int64  `tfsdk:"disk_lines_per_file"`
-	DiskStopOnFull   types.Bool   `tfsdk:"disk_stop_on_full"`
-	MemoryLines      types.Int64  `tfsdk:"memory_lines"`
-	MemoryStopOnFull types.Bool   `tfsdk:"memory_stop_on_full"`
-	Name             types.String `tfsdk:"name"`
-	Remember         types.Bool   `tfsdk:"remember"`
-	Remote           types.String `tfsdk:"remote"`
-	RemoteLogFormat  types.String `tfsdk:"remote_log_format"`
-	RemotePort       types.Int64  `tfsdk:"remote_port"`
-	RemoteProtocol   types.String `tfsdk:"remote_protocol"`
-	SrcAddress       types.String `tfsdk:"src_address"`
-	Target           types.String `tfsdk:"target"`
-	Vrf              types.String `tfsdk:"vrf"`
-	Router           types.String `tfsdk:"router"`
+	ID                types.String `tfsdk:"id"`
+	SyslogTimeFormat  types.String `tfsdk:"syslog_time_format"`
+	SyslogSeverity    types.String `tfsdk:"syslog_severity"`
+	SyslogFacility    types.String `tfsdk:"syslog_facility"`
+	Script            types.String `tfsdk:"script"`
+	EmailTo           types.String `tfsdk:"email_to"`
+	EmailStartTls     types.String `tfsdk:"email_start_tls"`
+	EmailCc           types.String `tfsdk:"email_cc"`
+	CheckCertificate  types.String `tfsdk:"check_certificate"`
+	CefEventDelimiter types.String `tfsdk:"cef_event_delimiter"`
+	AddTopicsString   types.String `tfsdk:"add_topics_string"`
+	Comment           types.String `tfsdk:"comment"`
+	Default           types.Bool   `tfsdk:"default"`
+	DiskFileCount     types.Int64  `tfsdk:"disk_file_count"`
+	DiskFileName      types.String `tfsdk:"disk_file_name"`
+	DiskLinesPerFile  types.Int64  `tfsdk:"disk_lines_per_file"`
+	DiskStopOnFull    types.Bool   `tfsdk:"disk_stop_on_full"`
+	MemoryLines       types.Int64  `tfsdk:"memory_lines"`
+	MemoryStopOnFull  types.Bool   `tfsdk:"memory_stop_on_full"`
+	Name              types.String `tfsdk:"name"`
+	Remember          types.Bool   `tfsdk:"remember"`
+	Remote            types.String `tfsdk:"remote"`
+	RemoteLogFormat   types.String `tfsdk:"remote_log_format"`
+	RemotePort        types.Int64  `tfsdk:"remote_port"`
+	RemoteProtocol    types.String `tfsdk:"remote_protocol"`
+	SrcAddress        types.String `tfsdk:"src_address"`
+	Target            types.String `tfsdk:"target"`
+	Vrf               types.String `tfsdk:"vrf"`
+	Router            types.String `tfsdk:"router"`
 }
 
 func NewSystemLoggingActionResource() resource.Resource { return &SystemLoggingActionResource{} }
@@ -64,7 +74,6 @@ func (r *SystemLoggingActionResource) Configure(_ context.Context, req resource.
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *SystemLoggingActionResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -76,13 +85,62 @@ func (r *SystemLoggingActionResource) Schema(_ context.Context, _ resource.Schem
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
+			"syslog_time_format": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `syslog-time-format`.",
+			},
+			"syslog_severity": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `syslog-severity`.",
+			},
+			"syslog_facility": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `syslog-facility`.",
+			},
+			"script": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `script`.",
+			},
+			"email_to": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `email-to`.",
+			},
+			"email_start_tls": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `email-start-tls`.",
+			},
+			"email_cc": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `email-cc`.",
+			},
+			"check_certificate": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `check-certificate`.",
+			},
+			"cef_event_delimiter": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `cef-event-delimiter`.",
+			},
+			"add_topics_string": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `add-topics-string`.",
+			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "Free-form comment.",
 			},
 			"default": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -229,6 +287,36 @@ func (r *SystemLoggingActionResource) Create(ctx context.Context, req resource.C
 	if !(plan.Vrf.IsNull() || plan.Vrf.IsUnknown()) {
 		body["vrf"] = plan.Vrf.ValueString()
 	}
+	if !(plan.AddTopicsString.IsNull() || plan.AddTopicsString.IsUnknown()) {
+		body["add-topics-string"] = plan.AddTopicsString.ValueString()
+	}
+	if !(plan.CefEventDelimiter.IsNull() || plan.CefEventDelimiter.IsUnknown()) {
+		body["cef-event-delimiter"] = plan.CefEventDelimiter.ValueString()
+	}
+	if !(plan.CheckCertificate.IsNull() || plan.CheckCertificate.IsUnknown()) {
+		body["check-certificate"] = plan.CheckCertificate.ValueString()
+	}
+	if !(plan.EmailCc.IsNull() || plan.EmailCc.IsUnknown()) {
+		body["email-cc"] = plan.EmailCc.ValueString()
+	}
+	if !(plan.EmailStartTls.IsNull() || plan.EmailStartTls.IsUnknown()) {
+		body["email-start-tls"] = plan.EmailStartTls.ValueString()
+	}
+	if !(plan.EmailTo.IsNull() || plan.EmailTo.IsUnknown()) {
+		body["email-to"] = plan.EmailTo.ValueString()
+	}
+	if !(plan.Script.IsNull() || plan.Script.IsUnknown()) {
+		body["script"] = plan.Script.ValueString()
+	}
+	if !(plan.SyslogFacility.IsNull() || plan.SyslogFacility.IsUnknown()) {
+		body["syslog-facility"] = plan.SyslogFacility.ValueString()
+	}
+	if !(plan.SyslogSeverity.IsNull() || plan.SyslogSeverity.IsUnknown()) {
+		body["syslog-severity"] = plan.SyslogSeverity.ValueString()
+	}
+	if !(plan.SyslogTimeFormat.IsNull() || plan.SyslogTimeFormat.IsUnknown()) {
+		body["syslog-time-format"] = plan.SyslogTimeFormat.ValueString()
+	}
 	obj, err := c.Add(ctx, "/system/logging/action", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /system/logging/action failed", err.Error())
@@ -324,6 +412,36 @@ func (r *SystemLoggingActionResource) Update(ctx context.Context, req resource.U
 	if !plan.Vrf.Equal(state.Vrf) {
 		body["vrf"] = plan.Vrf.ValueString()
 	}
+	if !plan.AddTopicsString.Equal(state.AddTopicsString) && !plan.AddTopicsString.IsUnknown() {
+		body["add-topics-string"] = plan.AddTopicsString.ValueString()
+	}
+	if !plan.CefEventDelimiter.Equal(state.CefEventDelimiter) && !plan.CefEventDelimiter.IsUnknown() {
+		body["cef-event-delimiter"] = plan.CefEventDelimiter.ValueString()
+	}
+	if !plan.CheckCertificate.Equal(state.CheckCertificate) && !plan.CheckCertificate.IsUnknown() {
+		body["check-certificate"] = plan.CheckCertificate.ValueString()
+	}
+	if !plan.EmailCc.Equal(state.EmailCc) && !plan.EmailCc.IsUnknown() {
+		body["email-cc"] = plan.EmailCc.ValueString()
+	}
+	if !plan.EmailStartTls.Equal(state.EmailStartTls) && !plan.EmailStartTls.IsUnknown() {
+		body["email-start-tls"] = plan.EmailStartTls.ValueString()
+	}
+	if !plan.EmailTo.Equal(state.EmailTo) && !plan.EmailTo.IsUnknown() {
+		body["email-to"] = plan.EmailTo.ValueString()
+	}
+	if !plan.Script.Equal(state.Script) && !plan.Script.IsUnknown() {
+		body["script"] = plan.Script.ValueString()
+	}
+	if !plan.SyslogFacility.Equal(state.SyslogFacility) && !plan.SyslogFacility.IsUnknown() {
+		body["syslog-facility"] = plan.SyslogFacility.ValueString()
+	}
+	if !plan.SyslogSeverity.Equal(state.SyslogSeverity) && !plan.SyslogSeverity.IsUnknown() {
+		body["syslog-severity"] = plan.SyslogSeverity.ValueString()
+	}
+	if !plan.SyslogTimeFormat.Equal(state.SyslogTimeFormat) && !plan.SyslogTimeFormat.IsUnknown() {
+		body["syslog-time-format"] = plan.SyslogTimeFormat.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/system/logging/action", state.ID.ValueString(), body)
 		if err != nil {
@@ -390,6 +508,56 @@ func systemLoggingActionLookupByNaturalKey(ctx context.Context, c *client.Client
 func systemLoggingActionApply(ctx context.Context, obj client.Object, m *SystemLoggingActionModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["syslog-time-format"]; ok && v != "" {
+		m.SyslogTimeFormat = types.StringValue(v)
+	} else {
+		m.SyslogTimeFormat = types.StringNull()
+	}
+	if v, ok := obj["syslog-severity"]; ok && v != "" {
+		m.SyslogSeverity = types.StringValue(v)
+	} else {
+		m.SyslogSeverity = types.StringNull()
+	}
+	if v, ok := obj["syslog-facility"]; ok && v != "" {
+		m.SyslogFacility = types.StringValue(v)
+	} else {
+		m.SyslogFacility = types.StringNull()
+	}
+	if v, ok := obj["script"]; ok && v != "" {
+		m.Script = types.StringValue(v)
+	} else {
+		m.Script = types.StringNull()
+	}
+	if v, ok := obj["email-to"]; ok && v != "" {
+		m.EmailTo = types.StringValue(v)
+	} else {
+		m.EmailTo = types.StringNull()
+	}
+	if v, ok := obj["email-start-tls"]; ok && v != "" {
+		m.EmailStartTls = types.StringValue(v)
+	} else {
+		m.EmailStartTls = types.StringNull()
+	}
+	if v, ok := obj["email-cc"]; ok && v != "" {
+		m.EmailCc = types.StringValue(v)
+	} else {
+		m.EmailCc = types.StringNull()
+	}
+	if v, ok := obj["check-certificate"]; ok && v != "" {
+		m.CheckCertificate = types.StringValue(v)
+	} else {
+		m.CheckCertificate = types.StringNull()
+	}
+	if v, ok := obj["cef-event-delimiter"]; ok && v != "" {
+		m.CefEventDelimiter = types.StringValue(v)
+	} else {
+		m.CefEventDelimiter = types.StringNull()
+	}
+	if v, ok := obj["add-topics-string"]; ok && v != "" {
+		m.AddTopicsString = types.StringValue(v)
+	} else {
+		m.AddTopicsString = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {

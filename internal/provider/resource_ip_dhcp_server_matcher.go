@@ -29,10 +29,17 @@ type IPDHCPServerMatcherResource struct {
 }
 
 type IPDHCPServerMatcherModel struct {
-	ID       types.String `tfsdk:"id"`
-	Comment  types.String `tfsdk:"comment"`
-	Disabled types.Bool   `tfsdk:"disabled"`
-	Router   types.String `tfsdk:"router"`
+	ID           types.String `tfsdk:"id"`
+	Value        types.String `tfsdk:"value"`
+	Server       types.String `tfsdk:"server"`
+	OptionSet    types.String `tfsdk:"option_set"`
+	Name         types.String `tfsdk:"name"`
+	MatchingType types.String `tfsdk:"matching_type"`
+	Code         types.String `tfsdk:"code"`
+	AddressPool  types.String `tfsdk:"address_pool"`
+	Comment      types.String `tfsdk:"comment"`
+	Disabled     types.Bool   `tfsdk:"disabled"`
+	Router       types.String `tfsdk:"router"`
 }
 
 func NewIPDHCPServerMatcherResource() resource.Resource { return &IPDHCPServerMatcherResource{} }
@@ -47,7 +54,6 @@ func (r *IPDHCPServerMatcherResource) Configure(_ context.Context, req resource.
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPDHCPServerMatcherResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -58,6 +64,41 @@ func (r *IPDHCPServerMatcherResource) Schema(_ context.Context, _ resource.Schem
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"value": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `value`.",
+			},
+			"server": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `server`.",
+			},
+			"option_set": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `option-set`.",
+			},
+			"name": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `name`.",
+			},
+			"matching_type": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `matching-type`.",
+			},
+			"code": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `code`.",
+			},
+			"address_pool": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `address-pool`.",
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -93,6 +134,27 @@ func (r *IPDHCPServerMatcherResource) Create(ctx context.Context, req resource.C
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !(plan.AddressPool.IsNull() || plan.AddressPool.IsUnknown()) {
+		body["address-pool"] = plan.AddressPool.ValueString()
+	}
+	if !(plan.Code.IsNull() || plan.Code.IsUnknown()) {
+		body["code"] = plan.Code.ValueString()
+	}
+	if !(plan.MatchingType.IsNull() || plan.MatchingType.IsUnknown()) {
+		body["matching-type"] = plan.MatchingType.ValueString()
+	}
+	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
+		body["name"] = plan.Name.ValueString()
+	}
+	if !(plan.OptionSet.IsNull() || plan.OptionSet.IsUnknown()) {
+		body["option-set"] = plan.OptionSet.ValueString()
+	}
+	if !(plan.Server.IsNull() || plan.Server.IsUnknown()) {
+		body["server"] = plan.Server.ValueString()
+	}
+	if !(plan.Value.IsNull() || plan.Value.IsUnknown()) {
+		body["value"] = plan.Value.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ip/dhcp-server/matcher", body)
 	if err != nil {
@@ -146,6 +208,27 @@ func (r *IPDHCPServerMatcherResource) Update(ctx context.Context, req resource.U
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !plan.AddressPool.Equal(state.AddressPool) && !plan.AddressPool.IsUnknown() {
+		body["address-pool"] = plan.AddressPool.ValueString()
+	}
+	if !plan.Code.Equal(state.Code) && !plan.Code.IsUnknown() {
+		body["code"] = plan.Code.ValueString()
+	}
+	if !plan.MatchingType.Equal(state.MatchingType) && !plan.MatchingType.IsUnknown() {
+		body["matching-type"] = plan.MatchingType.ValueString()
+	}
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
+		body["name"] = plan.Name.ValueString()
+	}
+	if !plan.OptionSet.Equal(state.OptionSet) && !plan.OptionSet.IsUnknown() {
+		body["option-set"] = plan.OptionSet.ValueString()
+	}
+	if !plan.Server.Equal(state.Server) && !plan.Server.IsUnknown() {
+		body["server"] = plan.Server.ValueString()
+	}
+	if !plan.Value.Equal(state.Value) && !plan.Value.IsUnknown() {
+		body["value"] = plan.Value.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/dhcp-server/matcher", state.ID.ValueString(), body)
@@ -213,6 +296,41 @@ func iPDHCPServerMatcherLookupByNaturalKey(ctx context.Context, c *client.Client
 func iPDHCPServerMatcherApply(ctx context.Context, obj client.Object, m *IPDHCPServerMatcherModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["value"]; ok && v != "" {
+		m.Value = types.StringValue(v)
+	} else {
+		m.Value = types.StringNull()
+	}
+	if v, ok := obj["server"]; ok && v != "" {
+		m.Server = types.StringValue(v)
+	} else {
+		m.Server = types.StringNull()
+	}
+	if v, ok := obj["option-set"]; ok && v != "" {
+		m.OptionSet = types.StringValue(v)
+	} else {
+		m.OptionSet = types.StringNull()
+	}
+	if v, ok := obj["name"]; ok && v != "" {
+		m.Name = types.StringValue(v)
+	} else {
+		m.Name = types.StringNull()
+	}
+	if v, ok := obj["matching-type"]; ok && v != "" {
+		m.MatchingType = types.StringValue(v)
+	} else {
+		m.MatchingType = types.StringNull()
+	}
+	if v, ok := obj["code"]; ok && v != "" {
+		m.Code = types.StringValue(v)
+	} else {
+		m.Code = types.StringNull()
+	}
+	if v, ok := obj["address-pool"]; ok && v != "" {
+		m.AddressPool = types.StringValue(v)
+	} else {
+		m.AddressPool = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {

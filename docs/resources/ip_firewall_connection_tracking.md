@@ -40,36 +40,35 @@ resource "routeros_ip_firewall_connection_tracking" "tracking_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `active_ipv4` - (Optional) Type: `bool`.
+* `active_ipv6` - (Optional) Type: `bool`.
 * `enabled` - (Optional) Type: `string`.
-* `generic_timeout` - (Optional) Type: `duration`.
-* `icmp_timeout` - (Optional) Type: `duration`.
+* `generic_timeout` - (Optional) Type: `string`.
+* `icmp_timeout` - (Optional) Type: `string`.
 * `liberal_tcp_tracking` - (Optional) Type: `bool`.
 * `loose_tcp_tracking` - (Optional) Type: `bool`.
-* `tcp_close_timeout` - (Optional) Type: `duration`.
-* `tcp_close_wait_timeout` - (Optional) Type: `duration`.
-* `tcp_established_timeout` - (Optional) Type: `duration`.
-* `tcp_fin_wait_timeout` - (Optional) Type: `duration`.
-* `tcp_last_ack_timeout` - (Optional) Type: `duration`.
-* `tcp_max_retrans_timeout` - (Optional) Type: `duration`.
-* `tcp_syn_received_timeout` - (Optional) Type: `duration`.
-* `tcp_syn_sent_timeout` - (Optional) Type: `duration`.
-* `tcp_time_wait_timeout` - (Optional) Type: `duration`.
-* `tcp_unacked_timeout` - (Optional) Type: `duration`.
-* `udp_stream_timeout` - (Optional) Type: `duration`.
-* `udp_timeout` - (Optional) Type: `duration`.
+* `max_entries` - (Optional) Type: `int`.
+* `tcp_close_timeout` - (Optional) Type: `string`.
+* `tcp_close_wait_timeout` - (Optional) Type: `string`.
+* `tcp_established_timeout` - (Optional) Type: `string`.
+* `tcp_fin_wait_timeout` - (Optional) Type: `string`.
+* `tcp_last_ack_timeout` - (Optional) Type: `string`.
+* `tcp_max_retrans_timeout` - (Optional) Type: `string`.
+* `tcp_syn_received_timeout` - (Optional) Type: `string`.
+* `tcp_syn_sent_timeout` - (Optional) Type: `string`.
+* `tcp_time_wait_timeout` - (Optional) Type: `string`.
+* `tcp_unacked_timeout` - (Optional) Type: `string`.
+* `total_entries` - (Optional) Type: `int`.
+* `total_ip4_entries` - (Optional) Type: `int`.
+* `total_ip6_entries` - (Optional) Type: `int`.
+* `udp_stream_timeout` - (Optional) Type: `string`.
+* `udp_timeout` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - Stable identifier (the singleton's menu path, optionally namespaced by router).
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `active_ipv4` - Type: `bool`.
-* `active_ipv6` - Type: `bool`.
-* `max_entries` - Type: `int`.
-* `total_entries` - Type: `int`.
-* `total_ip4_entries` - Type: `int`.
-* `total_ip6_entries` - Type: `int`.
 
 ## Import
 

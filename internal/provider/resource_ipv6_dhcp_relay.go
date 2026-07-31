@@ -29,10 +29,17 @@ type IPV6DHCPRelayResource struct {
 }
 
 type IPV6DHCPRelayModel struct {
-	ID       types.String `tfsdk:"id"`
-	Comment  types.String `tfsdk:"comment"`
-	Disabled types.Bool   `tfsdk:"disabled"`
-	Router   types.String `tfsdk:"router"`
+	ID                   types.String `tfsdk:"id"`
+	StoreRelayedBindings types.String `tfsdk:"store_relayed_bindings"`
+	Name                 types.String `tfsdk:"name"`
+	LinkAddress          types.String `tfsdk:"link_address"`
+	Interface            types.String `tfsdk:"interface"`
+	DhcpServer           types.String `tfsdk:"dhcp_server"`
+	DhcpOptions          types.String `tfsdk:"dhcp_options"`
+	DelayThreshold       types.String `tfsdk:"delay_threshold"`
+	Comment              types.String `tfsdk:"comment"`
+	Disabled             types.Bool   `tfsdk:"disabled"`
+	Router               types.String `tfsdk:"router"`
 }
 
 func NewIPV6DHCPRelayResource() resource.Resource { return &IPV6DHCPRelayResource{} }
@@ -47,7 +54,6 @@ func (r *IPV6DHCPRelayResource) Configure(_ context.Context, req resource.Config
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPV6DHCPRelayResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -58,6 +64,41 @@ func (r *IPV6DHCPRelayResource) Schema(_ context.Context, _ resource.SchemaReque
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"store_relayed_bindings": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `store-relayed-bindings`.",
+			},
+			"name": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `name`.",
+			},
+			"link_address": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `link-address`.",
+			},
+			"interface": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `interface`.",
+			},
+			"dhcp_server": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `dhcp-server`.",
+			},
+			"dhcp_options": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `dhcp-options`.",
+			},
+			"delay_threshold": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `delay-threshold`.",
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -93,6 +134,27 @@ func (r *IPV6DHCPRelayResource) Create(ctx context.Context, req resource.CreateR
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !(plan.DelayThreshold.IsNull() || plan.DelayThreshold.IsUnknown()) {
+		body["delay-threshold"] = plan.DelayThreshold.ValueString()
+	}
+	if !(plan.DhcpOptions.IsNull() || plan.DhcpOptions.IsUnknown()) {
+		body["dhcp-options"] = plan.DhcpOptions.ValueString()
+	}
+	if !(plan.DhcpServer.IsNull() || plan.DhcpServer.IsUnknown()) {
+		body["dhcp-server"] = plan.DhcpServer.ValueString()
+	}
+	if !(plan.Interface.IsNull() || plan.Interface.IsUnknown()) {
+		body["interface"] = plan.Interface.ValueString()
+	}
+	if !(plan.LinkAddress.IsNull() || plan.LinkAddress.IsUnknown()) {
+		body["link-address"] = plan.LinkAddress.ValueString()
+	}
+	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
+		body["name"] = plan.Name.ValueString()
+	}
+	if !(plan.StoreRelayedBindings.IsNull() || plan.StoreRelayedBindings.IsUnknown()) {
+		body["store-relayed-bindings"] = plan.StoreRelayedBindings.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ipv6/dhcp-relay", body)
 	if err != nil {
@@ -146,6 +208,27 @@ func (r *IPV6DHCPRelayResource) Update(ctx context.Context, req resource.UpdateR
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !plan.DelayThreshold.Equal(state.DelayThreshold) && !plan.DelayThreshold.IsUnknown() {
+		body["delay-threshold"] = plan.DelayThreshold.ValueString()
+	}
+	if !plan.DhcpOptions.Equal(state.DhcpOptions) && !plan.DhcpOptions.IsUnknown() {
+		body["dhcp-options"] = plan.DhcpOptions.ValueString()
+	}
+	if !plan.DhcpServer.Equal(state.DhcpServer) && !plan.DhcpServer.IsUnknown() {
+		body["dhcp-server"] = plan.DhcpServer.ValueString()
+	}
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
+		body["interface"] = plan.Interface.ValueString()
+	}
+	if !plan.LinkAddress.Equal(state.LinkAddress) && !plan.LinkAddress.IsUnknown() {
+		body["link-address"] = plan.LinkAddress.ValueString()
+	}
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
+		body["name"] = plan.Name.ValueString()
+	}
+	if !plan.StoreRelayedBindings.Equal(state.StoreRelayedBindings) && !plan.StoreRelayedBindings.IsUnknown() {
+		body["store-relayed-bindings"] = plan.StoreRelayedBindings.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ipv6/dhcp-relay", state.ID.ValueString(), body)
@@ -213,6 +296,41 @@ func iPV6DHCPRelayLookupByNaturalKey(ctx context.Context, c *client.Client, id s
 func iPV6DHCPRelayApply(ctx context.Context, obj client.Object, m *IPV6DHCPRelayModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["store-relayed-bindings"]; ok && v != "" {
+		m.StoreRelayedBindings = types.StringValue(v)
+	} else {
+		m.StoreRelayedBindings = types.StringNull()
+	}
+	if v, ok := obj["name"]; ok && v != "" {
+		m.Name = types.StringValue(v)
+	} else {
+		m.Name = types.StringNull()
+	}
+	if v, ok := obj["link-address"]; ok && v != "" {
+		m.LinkAddress = types.StringValue(v)
+	} else {
+		m.LinkAddress = types.StringNull()
+	}
+	if v, ok := obj["interface"]; ok && v != "" {
+		m.Interface = types.StringValue(v)
+	} else {
+		m.Interface = types.StringNull()
+	}
+	if v, ok := obj["dhcp-server"]; ok && v != "" {
+		m.DhcpServer = types.StringValue(v)
+	} else {
+		m.DhcpServer = types.StringNull()
+	}
+	if v, ok := obj["dhcp-options"]; ok && v != "" {
+		m.DhcpOptions = types.StringValue(v)
+	} else {
+		m.DhcpOptions = types.StringNull()
+	}
+	if v, ok := obj["delay-threshold"]; ok && v != "" {
+		m.DelayThreshold = types.StringValue(v)
+	} else {
+		m.DelayThreshold = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {

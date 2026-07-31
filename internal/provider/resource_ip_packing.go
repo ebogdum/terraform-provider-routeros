@@ -29,10 +29,13 @@ type IPPackingResource struct {
 }
 
 type IPPackingModel struct {
-	ID        types.String `tfsdk:"id"`
-	Disabled  types.Bool   `tfsdk:"disabled"`
-	Interface types.String `tfsdk:"interface"`
-	Router    types.String `tfsdk:"router"`
+	ID             types.String `tfsdk:"id"`
+	Unpacking      types.String `tfsdk:"unpacking"`
+	Packing        types.String `tfsdk:"packing"`
+	AggregatedSize types.String `tfsdk:"aggregated_size"`
+	Disabled       types.Bool   `tfsdk:"disabled"`
+	Interface      types.String `tfsdk:"interface"`
+	Router         types.String `tfsdk:"router"`
 }
 
 func NewIPPackingResource() resource.Resource { return &IPPackingResource{} }
@@ -47,7 +50,6 @@ func (r *IPPackingResource) Configure(_ context.Context, req resource.ConfigureR
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPPackingResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -58,6 +60,21 @@ func (r *IPPackingResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"unpacking": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `unpacking`.",
+			},
+			"packing": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `packing`.",
+			},
+			"aggregated_size": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `aggregated-size`.",
 			},
 			"disabled": schema.BoolAttribute{
 				Optional:    true,
@@ -92,6 +109,15 @@ func (r *IPPackingResource) Create(ctx context.Context, req resource.CreateReque
 	}
 	if !(plan.Interface.IsNull() || plan.Interface.IsUnknown()) {
 		body["interface"] = plan.Interface.ValueString()
+	}
+	if !(plan.AggregatedSize.IsNull() || plan.AggregatedSize.IsUnknown()) {
+		body["aggregated-size"] = plan.AggregatedSize.ValueString()
+	}
+	if !(plan.Packing.IsNull() || plan.Packing.IsUnknown()) {
+		body["packing"] = plan.Packing.ValueString()
+	}
+	if !(plan.Unpacking.IsNull() || plan.Unpacking.IsUnknown()) {
+		body["unpacking"] = plan.Unpacking.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ip/packing", body)
 	if err != nil {
@@ -145,6 +171,15 @@ func (r *IPPackingResource) Update(ctx context.Context, req resource.UpdateReque
 	}
 	if !plan.Interface.Equal(state.Interface) {
 		body["interface"] = plan.Interface.ValueString()
+	}
+	if !plan.AggregatedSize.Equal(state.AggregatedSize) && !plan.AggregatedSize.IsUnknown() {
+		body["aggregated-size"] = plan.AggregatedSize.ValueString()
+	}
+	if !plan.Packing.Equal(state.Packing) && !plan.Packing.IsUnknown() {
+		body["packing"] = plan.Packing.ValueString()
+	}
+	if !plan.Unpacking.Equal(state.Unpacking) && !plan.Unpacking.IsUnknown() {
+		body["unpacking"] = plan.Unpacking.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/packing", state.ID.ValueString(), body)
@@ -212,6 +247,21 @@ func iPPackingLookupByNaturalKey(ctx context.Context, c *client.Client, id strin
 func iPPackingApply(ctx context.Context, obj client.Object, m *IPPackingModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["unpacking"]; ok && v != "" {
+		m.Unpacking = types.StringValue(v)
+	} else {
+		m.Unpacking = types.StringNull()
+	}
+	if v, ok := obj["packing"]; ok && v != "" {
+		m.Packing = types.StringValue(v)
+	} else {
+		m.Packing = types.StringNull()
+	}
+	if v, ok := obj["aggregated-size"]; ok && v != "" {
+		m.AggregatedSize = types.StringValue(v)
+	} else {
+		m.AggregatedSize = types.StringNull()
+	}
 	if v, ok := obj["disabled"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {

@@ -41,32 +41,43 @@ resource "routeros_interface_mesh" "mesh_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `admin_mac_address` - (Optional) Type: `string`.
-* `arp` - (Optional) Type: `enum(disabled|enabled|proxy-arp|reply-only|local-proxy-arp)`. Default: `1`.
-* `arp_timeout` - (Optional) Type: `duration`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `admin_mac` - (Optional) Type: `string`. RouterOS `admin-mac`.
+* `admin_mac_address` - (Read-only) Type: `string`.
+* `arp` - (Optional) Type: `string`.
+* `arp_timeout` - (Optional) Type: `string`.
+* `auto_mac` - (Optional) Type: `string`. RouterOS `auto-mac`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
-* `default_hoplimit` - (Optional) Type: `int`. Default: `32`.
+* `default_hoplimit` - (Read-only) Type: `int`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `hwmp_default_hoplimit` - (Optional) Type: `string`. RouterOS `hwmp-default-hoplimit`.
+* `hwmp_prep_lifetime` - (Optional) Type: `string`. RouterOS `hwmp-prep-lifetime`.
+* `hwmp_preq_destination_only` - (Optional) Type: `string`. RouterOS `hwmp-preq-destination-only`.
+* `hwmp_preq_reply_and_forward` - (Optional) Type: `string`. RouterOS `hwmp-preq-reply-and-forward`.
+* `hwmp_preq_retries` - (Optional) Type: `string`. RouterOS `hwmp-preq-retries`.
+* `hwmp_preq_waiting_time` - (Optional) Type: `string`. RouterOS `hwmp-preq-waiting-time`.
+* `hwmp_rann_interval` - (Optional) Type: `string`. RouterOS `hwmp-rann-interval`.
+* `hwmp_rann_lifetime` - (Optional) Type: `string`. RouterOS `hwmp-rann-lifetime`.
+* `hwmp_rann_propagation_delay` - (Optional) Type: `string`. RouterOS `hwmp-rann-propagation-delay`.
+* `mac_address` - (Read-only) Type: `string`.
 * `mesh_portal` - (Optional) Type: `bool`.
-* `mesh_traceroute` - (Optional) Type: `string`.
-* `mtu` - (Optional) Type: `int`. Default: `1500`.
-* `prep_lifetime` - (Optional) Type: `duration`. Default: `300`.
-* `preq_destination_only` - (Optional) Type: `bool`. Default: `1`.
-* `preq_reply_and_forward` - (Optional) Type: `bool`. Default: `1`.
-* `preq_retries` - (Optional) Type: `int`. Default: `2`.
-* `preq_waiting_time` - (Optional) Type: `int`. Default: `4`.
-* `rann_interval` - (Optional) Type: `duration`. Default: `10`.
-* `rann_lifetime` - (Optional) Type: `duration`. Default: `22`.
-* `rann_propagation_delay` - (Optional) Type: `int`. Default: `500`.
+* `mesh_traceroute` - (Read-only) Type: `string`.
+* `mtu` - (Optional) Type: `int`.
+* `name` - (Optional) Type: `string`. RouterOS `name`.
+* `prep_lifetime` - (Read-only) Type: `string`.
+* `preq_destination_only` - (Read-only) Type: `bool`.
+* `preq_reply_and_forward` - (Read-only) Type: `bool`.
+* `preq_retries` - (Read-only) Type: `int`.
+* `preq_waiting_time` - (Read-only) Type: `int`.
+* `rann_interval` - (Read-only) Type: `string`.
+* `rann_lifetime` - (Read-only) Type: `string`.
+* `rann_propagation_delay` - (Read-only) Type: `int`.
 * `reoptimize_paths` - (Optional) Type: `bool`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `mac_address` - Type: `string`.
 
 ## Import
 

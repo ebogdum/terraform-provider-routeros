@@ -24,9 +24,17 @@ resource "routeros_ip_packing" "packing_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `aggregated_size` - (Optional) Type: `string`. RouterOS `aggregated-size`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `interface` - (Required) Type: `string`.
+* `packing` - (Optional) Type: `string`. RouterOS `packing`.
+* `unpacking` - (Optional) Type: `string`. RouterOS `unpacking`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

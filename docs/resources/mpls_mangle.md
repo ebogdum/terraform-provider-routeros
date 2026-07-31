@@ -32,23 +32,22 @@ resource "routeros_mpls_mangle" "mangle_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `builtin` - (Optional) Type: `bool`.
-* `chain` - (Optional) Type: `enum(|forward|output)`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `builtin` - (Read-only) Type: `bool`.
+* `chain` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `exp` - (Optional) Type: `enum(0|1|2|3|4|5, ...)`.
-* `reset_counters` - (Optional) Type: `string`.
-* `reset_counters_all` - (Optional) Type: `string`.
-* `set_exp` - (Optional) Type: `enum(0|1|2|3|4|5, ...)`.
+* `exp` - (Optional) Type: `string`.
+* `packets` - (Read-only) Type: `string`.
+* `reset_counters` - (Read-only) Type: `string`.
+* `reset_counters_all` - (Read-only) Type: `string`.
+* `set_exp` - (Optional) Type: `string`.
 * `set_mark` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `packets` - Type: `string`.
 
 ## Import
 

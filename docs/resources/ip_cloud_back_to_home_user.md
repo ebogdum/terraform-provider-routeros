@@ -37,31 +37,32 @@ resource "routeros_ip_cloud_back_to_home_user" "back_to_home_user_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `active` - (Optional) Type: `bool`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `active` - (Read-only) Type: `bool`.
 * `allow_lan` - (Optional) Type: `bool`.
+* `client_address` - (Read-only) Type: `string`.
+* `client_config` - (Read-only) Type: `string`.
+* `client_qr` - (Read-only) Type: `string`.
 * `comment` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`.
 * `expires` - (Optional) Type: `string`.
-* `file_access_mode` - (Optional) Type: `enum(|disabled|read-only|full)`.
-* `files` - (Optional) Type: `string`.
+* `file_access` - (Optional) Type: `string`. RouterOS `file-access`.
+* `file_access_mode` - (Read-only) Type: `string`.
+* `file_access_path` - (Optional) Type: `string`. RouterOS `file-access-path`.
+* `file_access_token` - (Read-only) Type: `string`.
+* `files` - (Read-only) Type: `string`.
 * `name` - (Optional) Type: `string`.
-* `newe` - (Optional) Type: `string`.
-* `newfileman` - (Optional) Type: `string`.
-* `notnew` - (Optional) Type: `string`.
-* `oldfileman` - (Optional) Type: `string`.
-* `private_key` - (Optional) Type: `string`.
+* `newe` - (Read-only) Type: `string`.
+* `newfileman` - (Read-only) Type: `string`.
+* `notnew` - (Read-only) Type: `string`.
+* `oldfileman` - (Read-only) Type: `string`.
+* `private_key` - (Optional) Type: `string`. **Sensitive.**
 * `public_key` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `client_address` - Type: `string`.
-* `client_config` - Type: `string`.
-* `client_qr` - Type: `string`.
-* `file_access_token` - Type: `string`.
 
 ## Import
 

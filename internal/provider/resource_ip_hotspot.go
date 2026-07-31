@@ -30,6 +30,10 @@ type IPHotspotResource struct {
 
 type IPHotspotModel struct {
 	ID               types.String `tfsdk:"id"`
+	LoginTimeout     types.String `tfsdk:"login_timeout"`
+	IdleTimeout      types.String `tfsdk:"idle_timeout"`
+	AddressesPerMac  types.String `tfsdk:"addresses_per_mac"`
+	AddressPool      types.String `tfsdk:"address_pool"`
 	Disabled         types.Bool   `tfsdk:"disabled"`
 	Interface        types.String `tfsdk:"interface"`
 	KeepaliveTimeout types.String `tfsdk:"keepalive_timeout"`
@@ -50,7 +54,6 @@ func (r *IPHotspotResource) Configure(_ context.Context, req resource.ConfigureR
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPHotspotResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -61,6 +64,26 @@ func (r *IPHotspotResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"login_timeout": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `login-timeout`.",
+			},
+			"idle_timeout": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `idle-timeout`.",
+			},
+			"addresses_per_mac": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `addresses-per-mac`.",
+			},
+			"address_pool": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `address-pool`.",
 			},
 			"disabled": schema.BoolAttribute{
 				Optional:    true,
@@ -118,6 +141,18 @@ func (r *IPHotspotResource) Create(ctx context.Context, req resource.CreateReque
 	}
 	if !(plan.Profile.IsNull() || plan.Profile.IsUnknown()) {
 		body["profile"] = plan.Profile.ValueString()
+	}
+	if !(plan.AddressPool.IsNull() || plan.AddressPool.IsUnknown()) {
+		body["address-pool"] = plan.AddressPool.ValueString()
+	}
+	if !(plan.AddressesPerMac.IsNull() || plan.AddressesPerMac.IsUnknown()) {
+		body["addresses-per-mac"] = plan.AddressesPerMac.ValueString()
+	}
+	if !(plan.IdleTimeout.IsNull() || plan.IdleTimeout.IsUnknown()) {
+		body["idle-timeout"] = plan.IdleTimeout.ValueString()
+	}
+	if !(plan.LoginTimeout.IsNull() || plan.LoginTimeout.IsUnknown()) {
+		body["login-timeout"] = plan.LoginTimeout.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ip/hotspot", body)
 	if err != nil {
@@ -180,6 +215,18 @@ func (r *IPHotspotResource) Update(ctx context.Context, req resource.UpdateReque
 	}
 	if !plan.Profile.Equal(state.Profile) {
 		body["profile"] = plan.Profile.ValueString()
+	}
+	if !plan.AddressPool.Equal(state.AddressPool) && !plan.AddressPool.IsUnknown() {
+		body["address-pool"] = plan.AddressPool.ValueString()
+	}
+	if !plan.AddressesPerMac.Equal(state.AddressesPerMac) && !plan.AddressesPerMac.IsUnknown() {
+		body["addresses-per-mac"] = plan.AddressesPerMac.ValueString()
+	}
+	if !plan.IdleTimeout.Equal(state.IdleTimeout) && !plan.IdleTimeout.IsUnknown() {
+		body["idle-timeout"] = plan.IdleTimeout.ValueString()
+	}
+	if !plan.LoginTimeout.Equal(state.LoginTimeout) && !plan.LoginTimeout.IsUnknown() {
+		body["login-timeout"] = plan.LoginTimeout.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/hotspot", state.ID.ValueString(), body)
@@ -247,6 +294,26 @@ func iPHotspotLookupByNaturalKey(ctx context.Context, c *client.Client, id strin
 func iPHotspotApply(ctx context.Context, obj client.Object, m *IPHotspotModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["login-timeout"]; ok && v != "" {
+		m.LoginTimeout = types.StringValue(v)
+	} else {
+		m.LoginTimeout = types.StringNull()
+	}
+	if v, ok := obj["idle-timeout"]; ok && v != "" {
+		m.IdleTimeout = types.StringValue(v)
+	} else {
+		m.IdleTimeout = types.StringNull()
+	}
+	if v, ok := obj["addresses-per-mac"]; ok && v != "" {
+		m.AddressesPerMac = types.StringValue(v)
+	} else {
+		m.AddressesPerMac = types.StringNull()
+	}
+	if v, ok := obj["address-pool"]; ok && v != "" {
+		m.AddressPool = types.StringValue(v)
+	} else {
+		m.AddressPool = types.StringNull()
+	}
 	if v, ok := obj["disabled"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {

@@ -21,7 +21,18 @@ resource "routeros_user_manager_profile" "profile_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `name` - (Optional) Type: `string`. RouterOS `name`.
+* `name_for_users` - (Optional) Type: `string`. RouterOS `name-for-users`.
+* `override_shared_users` - (Optional) Type: `string`. RouterOS `override-shared-users`.
+* `price` - (Optional) Type: `string`. RouterOS `price`.
+* `starts_when` - (Optional) Type: `string`. RouterOS `starts-when`.
+* `validity` - (Optional) Type: `string`. RouterOS `validity`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

@@ -51,7 +51,6 @@ func (r *MPLSInterfaceResource) Configure(_ context.Context, req resource.Config
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *MPLSInterfaceResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -64,7 +63,6 @@ func (r *MPLSInterfaceResource) Schema(_ context.Context, _ resource.SchemaReque
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"builtin": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -111,9 +109,6 @@ func (r *MPLSInterfaceResource) Create(ctx context.Context, req resource.CreateR
 		return
 	}
 	body := client.Object{}
-	if !(plan.Builtin.IsNull() || plan.Builtin.IsUnknown()) {
-		body["builtin"] = client.FormatBool(plan.Builtin.ValueBool())
-	}
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
 	}
@@ -176,9 +171,6 @@ func (r *MPLSInterfaceResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 	body := client.Object{}
-	if !plan.Builtin.Equal(state.Builtin) {
-		body["builtin"] = client.FormatBool(plan.Builtin.ValueBool())
-	}
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
 	}

@@ -142,14 +142,25 @@ resource "routeros_interface_wifi_configuration" "configuration_example" {
 }
 ```
 
+## Sub-object properties
+
+RouterOS exposes this menu's sub-objects under **dotted** REST names --
+`configuration.ssid`, `security.passphrase`, `channel.band` and so on. The
+provider keeps them as flat Terraform attributes (`ssid`, `passphrase`, `band`)
+and maps each one to its dotted wire name for you, so configuration written
+against these attributes now reaches the device.
+
+In this menu `ssid`, `mode`, `country` and `manager` are genuine top-level
+properties, not sub-object members -- only `security.*`, `datapath.*`,
+`channel.*`, `aaa.*` and `steering.*` are dotted. The section names
+(`security`, `datapath`, `channel`, ...) remain top-level references to a named
+profile.
+
 ## Argument Reference
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `x2g_probe_delay` - (Optional) Type: `string`.
-* `x3gpp_info` - (Optional) Type: `string`.
-* `x3gpp_info_raw` - (Optional) Type: `string`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `aaa` - (Optional) Type: `string`.
 * `antenna_gain` - (Optional) Type: `string`.
 * `authentication_types` - (Optional) Type: `string`.
@@ -184,7 +195,7 @@ This resource supports the following arguments:
 * `eap_anonymous_identity` - (Optional) Type: `string`.
 * `eap_certificate_mode` - (Optional) Type: `string`.
 * `eap_methods` - (Optional) Type: `string`.
-* `eap_password` - (Optional) Type: `string`.
+* `eap_password` - (Optional) Type: `string`. **Sensitive.**
 * `eap_tls_certificate` - (Optional) Type: `string`.
 * `eap_username` - (Optional) Type: `string`.
 * `esr` - (Optional) Type: `string`.
@@ -218,7 +229,7 @@ This resource supports the following arguments:
 * `mode` - (Optional) Type: `string`.
 * `multi_passphrase_group` - (Optional) Type: `string`.
 * `multicast_enhance` - (Optional) Type: `string`.
-* `name` - (Required) Type: `string`. Default: `tf_acc_wcfg`.
+* `name` - (Required) Type: `string`.
 * `nas_identifier` - (Optional) Type: `string`.
 * `neighbor_group` - (Optional) Type: `string`.
 * `network_type` - (Optional) Type: `string`.
@@ -227,9 +238,10 @@ This resource supports the following arguments:
 * `operational_classes` - (Optional) Type: `string`.
 * `operator_names` - (Optional) Type: `string`.
 * `owe_transition_interface` - (Optional) Type: `string`.
-* `passphrase` - (Optional) Type: `string`.
+* `passphrase` - (Optional) Type: `string`. **Sensitive.**
 * `password_format` - (Optional) Type: `string`.
 * `qo_s_classifier` - (Optional) Type: `string`.
+* `qos_classifier` - (Optional) Type: `string`. RouterOS `qos-classifier`.
 * `realms` - (Optional) Type: `string`.
 * `realms_raw` - (Optional) Type: `string`.
 * `reselect_interval` - (Optional) Type: `string`.
@@ -269,6 +281,14 @@ This resource supports the following arguments:
 * `wan_uplink_load` - (Optional) Type: `string`.
 * `wnm` - (Optional) Type: `string`.
 * `wps` - (Optional) Type: `string`.
+* `x2g_probe_delay` - (Optional) Type: `string`.
+* `x3gpp_info` - (Optional) Type: `string`.
+* `x3gpp_info_raw` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

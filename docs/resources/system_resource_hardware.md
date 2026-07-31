@@ -43,27 +43,37 @@ resource "routeros_system_resource_hardware" "hardware_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `allow` - (Optional) Type: `string`. RouterOS `allow`.
+* `authorization` - (Optional) Type: `string`. RouterOS `authorization`.
+* `bus` - (Optional) Type: `string`. RouterOS `bus`.
 * `category` - (Optional) Type: `string`.
 * `device_id` - (Optional) Type: `string`.
 * `devices` - (Optional) Type: `string`.
+* `duration` - (Optional) Type: `string`. RouterOS `duration`.
 * `io` - (Optional) Type: `string`.
 * `irq` - (Optional) Type: `int`.
 * `location` - (Optional) Type: `string`.
 * `memory` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
 * `owner` - (Optional) Type: `string`.
-* `parent` - (Optional) Type: `int`. Default: `4.294967295e+09`.
+* `parent` - (Optional) Type: `int`.
 * `pci` - (Optional) Type: `string`.
 * `ports` - (Optional) Type: `int`.
 * `serial_number` - (Optional) Type: `string`.
+* `slot` - (Optional) Type: `string`. RouterOS `slot`.
 * `speed` - (Optional) Type: `string`.
 * `std_descr` - (Optional) Type: `string`.
-* `type` - (Optional) Type: `enum(usb|pci|scsi|serial)`.
+* `type` - (Optional) Type: `string`.
 * `usb` - (Optional) Type: `string`.
 * `usb_version` - (Optional) Type: `string`.
 * `vendor` - (Optional) Type: `string`.
 * `vendor_id` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

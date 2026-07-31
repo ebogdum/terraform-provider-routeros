@@ -43,8 +43,8 @@ resource "routeros_ip_dns_static" "static_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `address` - (Required) Type: `string`. Address to return. Default: `127.0.0.1`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `address` - (Required) Type: `string`. Address to return.
 * `address_list` - (Optional) Type: `string`.
 * `cname` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
@@ -53,7 +53,7 @@ This resource supports the following arguments:
 * `match_subdomain` - (Optional) Type: `string`.
 * `mx_exchange` - (Optional) Type: `string`.
 * `mx_preference` - (Optional) Type: `string`.
-* `name` - (Required) Type: `string`. FQDN matched against incoming queries. Default: `tf-acc-test.invalid`.
+* `name` - (Required) Type: `string`. FQDN matched against incoming queries.
 * `ns` - (Optional) Type: `string`.
 * `regexp` - (Optional) Type: `string`.
 * `srv_port` - (Optional) Type: `string`.
@@ -63,6 +63,11 @@ This resource supports the following arguments:
 * `text` - (Optional) Type: `string`.
 * `ttl` - (Optional) Type: `string`.
 * `type` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

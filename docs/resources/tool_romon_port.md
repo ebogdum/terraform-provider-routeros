@@ -29,21 +29,20 @@ resource "routeros_tool_romon_port" "port_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `comment` - (Optional) Type: `string`. Free-form comment.
-* `cost` - (Optional) Type: `int`. Default: `100`.
+* `cost` - (Optional) Type: `int`.
+* `default` - (Read-only) Type: `bool`.
 * `disabled` - (Optional) Type: `bool`.
+* `dynamic` - (Read-only) Type: `bool`.
 * `forbid` - (Optional) Type: `bool`.
 * `interface` - (Optional) Type: `string`.
 * `secrets` - (Optional) Type: `string`. **Sensitive.**
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `default` - Type: `bool`.
-* `dynamic` - Type: `bool`.
 
 ## Import
 

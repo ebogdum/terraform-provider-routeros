@@ -35,26 +35,25 @@ resource "routeros_interface_gre" "gre_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `allow_fast_path` - (Optional) Type: `bool`. Whether to allow FastPath processing. Must be disabled if IPsec tunneling is used. Default: `1`.
-* `clamp_tcp_mss` - (Optional) Type: `bool`. Controls whether to change MSS size for received TCP SYN packets. When enabled, a router will change the MSS size for received TCP SYN packets if the current MSS size exceeds the tunnel interface MTU (taking into account the TCP/IP overhead). The received encapsulated packet will still contain the original MSS, and only after decapsulation the MSS is changed. Default: `1`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `actual_mtu` - (Read-only) Type: `int`.
+* `allow_fast_path` - (Optional) Type: `bool`. Whether to allow FastPath processing. Must be disabled if IPsec tunneling is used.
+* `clamp_tcp_mss` - (Optional) Type: `bool`. Controls whether to change MSS size for received TCP SYN packets. When enabled, a router will change the MSS size for received TCP SYN packets if the current MSS size exceeds the tunnel interface MTU (taking into account the TCP/IP overhead). The received encapsulated packet will still contain the original MSS, and only after decapsulation the MSS is changed.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `dont_fragment` - (Optional) Type: `enum(no|inherit)`. Whether to include DF bit in related packets: no   - fragment if needed,   inherit   - use Dont Fragment flag of original packet. (Without Dont Fragment: inherit - packet may be fragmented).
-* `dscp` - (Optional) Type: `enum(inherit)`. Set dscp value in Gre header to a fixed value or inherit from dscp value taken from tunnelled traffic. Default: `256`.
+* `dont_fragment` - (Optional) Type: `string`. Whether to include DF bit in related packets: no - fragment if needed, inherit - use Dont Fragment flag of original packet. (Without Dont Fragment: inherit - packet may be fragmented).
+* `dscp` - (Optional) Type: `string`. Set dscp value in Gre header to a fixed value or inherit from dscp value taken from tunnelled traffic
 * `ipsec_secret` - (Optional) Type: `string`. When secret is specified, router adds dynamic IPsec peer to remote-address with pre-shared key and policy (by default phase2 uses sha1/aes128cbc). **Sensitive.**
-* `keepalive` - (Optional) Type: `string`. Tunnel keepalive parameter sets the time interval in which the tunnel running flag will remain even if the remote end of tunnel goes down. If configured time,retries fail, interface running flag is removed. Parameters are written in following format: KeepaliveInterval,KeepaliveRetries where KeepaliveInterval is time interval and KeepaliveRetries - number of retry attempts. By default keepalive is set to 10 seconds and 10 retries. Default: `1`.
-* `local_address` - (Optional) Type: `ip`. IP address that will be used for local tunnel end. If set to 0.0.0.0 then IP address of outgoing interface will be used.
-* `mtu` - (Optional) Type: `int`. Layer3 Maximum transmission unit. Default: `0`.
+* `keepalive` - (Optional) Type: `string`. Tunnel keepalive parameter sets the time interval in which the tunnel running flag will remain even if the remote end of tunnel goes down. If configured time,retries fail, interface running flag is removed. Parameters are written in following format: KeepaliveInterval,KeepaliveRetries where KeepaliveInterval is time interval and KeepaliveRetries - number of retry attempts. By default keepalive is set to 10 seconds and 10 retries.
+* `local_address` - (Optional) Type: `string`. IP address that will be used for local tunnel end. If set to 0.0.0.0 then IP address of outgoing interface will be used.
+* `mtu` - (Optional) Type: `string`. Layer3 Maximum transmission unit. A number, or `auto`.
 * `name` - (Optional) Type: `string`. Name of the tunnel.
 * `remote_address` - (Optional) Type: `string`. IP address of remote tunnel end.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `actual_mtu` - Type: `int`.
 
 ## Import
 

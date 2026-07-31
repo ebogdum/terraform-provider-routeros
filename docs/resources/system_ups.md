@@ -32,45 +32,44 @@ resource "routeros_system_ups" "ups_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `alarm_setting` - (Optional) Type: `enum(immediate|delayed|low-battery|none)`. UPS sound alarm setting: delayed - alarm is delayed to the on-battery event immediate - alarm immediately after the on-battery event low-battery - alarm only when the battery is low none - do not alarm.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `alarm_setting` - (Optional) Type: `string`. UPS sound alarm setting: delayed - alarm is delayed to the on-battery event immediate - alarm immediately after the on-battery event low-battery - alarm only when the battery is low none - do not alarm
+* `battery_charge` - (Read-only) Type: `int`.
+* `battery_voltage` - (Read-only) Type: `string`.
 * `beep` - (Optional) Type: `string`.
-* `check_capabilities` - (Optional) Type: `string`. Whether to check UPS capabilities before reading information. Disabling it can fix compatibility issues with some UPS models. (Applies to RouterOS version 6, implemented since v6.17).
+* `check_capabilities` - (Optional) Type: `string`. Whether to check UPS capabilities before reading information. Disabling it can fix compatibility issues with some UPS models. (Applies to RouterOS version 6, implemented since v6.17)
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `min_runtime` - (Optional) Type: `string`. Minimal run time remaining. After a 'utility' failure, the router will monitor the runtime-left value. When the value reaches the min-runtime value, the router will go to hibernate mode. never - the router will go to hibernate mode when the "battery low" signal is sent indicating that the battery power is below 10% 0s - the router will continue to work as long as the battery is supplying sufficient voltage.
+* `frequency` - (Read-only) Type: `int`.
+* `invalid` - (Read-only) Type: `bool`.
+* `line_voltage` - (Read-only) Type: `string`.
+* `load` - (Read-only) Type: `int`.
+* `low_battery` - (Read-only) Type: `bool`.
+* `manufacture_date` - (Read-only) Type: `string`.
+* `min_runtime` - (Optional) Type: `string`. Minimal run time remaining. After a 'utility' failure, the router will monitor the runtime-left value. When the value reaches the min-runtime value, the router will go to hibernate mode. never - the router will go to hibernate mode when the "battery low" signal is sent indicating that the battery power is below 10% 0s - the router will continue to work as long as the battery is supplying sufficient voltage
+* `model` - (Read-only) Type: `string`.
 * `name` - (Optional) Type: `string`.
-* `offline_time` - (Optional) Type: `string`. How long to work on batteries. The router waits that amount of time and then goes into hibernate mode until the UPS reports that the 'utility' power is back 0s - the router will go into hibernate mode according to the min-runtime setting. In this case, the router will wait until the UPS reports that the battery power is below 10%.
+* `nominal_battery_voltage` - (Read-only) Type: `int`.
+* `offline_after` - (Read-only) Type: `string`.
+* `offline_time` - (Optional) Type: `string`. How long to work on batteries. The router waits that amount of time and then goes into hibernate mode until the UPS reports that the 'utility' power is back 0s - the router will go into hibernate mode according to the min-runtime setting. In this case, the router will wait until the UPS reports that the battery power is below 10%
+* `on_battery` - (Read-only) Type: `bool`.
+* `on_line` - (Read-only) Type: `bool`.
+* `ouput_voltage` - (Read-only) Type: `string`.
+* `overload` - (Read-only) Type: `bool`.
 * `port` - (Optional) Type: `string`. Communication port of the router.
+* `replace_battery` - (Read-only) Type: `bool`.
+* `run_time_left` - (Read-only) Type: `string`.
+* `serial_number` - (Read-only) Type: `string`.
+* `smart_boost` - (Read-only) Type: `bool`.
+* `smart_trim` - (Read-only) Type: `bool`.
+* `temperature` - (Read-only) Type: `string`.
+* `transfer_cause` - (Read-only) Type: `string`.
+* `version` - (Read-only) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `battery_charge` - Type: `int`.
-* `battery_voltage` - Type: `string`.
-* `frequency` - Type: `int`.
-* `invalid` - Type: `bool`.
-* `line_voltage` - Type: `string`.
-* `load` - Type: `int`.
-* `low_battery` - Type: `bool`.
-* `manufacture_date` - Type: `string`.
-* `model` - Type: `string`.
-* `nominal_battery_voltage` - Type: `int`.
-* `offline_after` - Type: `duration`.
-* `on_battery` - Type: `bool`.
-* `on_line` - Type: `bool`.
-* `ouput_voltage` - Type: `string`.
-* `overload` - Type: `bool`.
-* `replace_battery` - Type: `bool`.
-* `run_time_left` - Type: `duration`.
-* `serial_number` - Type: `string`.
-* `smart_boost` - Type: `bool`.
-* `smart_trim` - Type: `bool`.
-* `temperature` - Type: `string`.
-* `transfer_cause` - Type: `string`.
-* `version` - Type: `string`.
 
 ## Import
 

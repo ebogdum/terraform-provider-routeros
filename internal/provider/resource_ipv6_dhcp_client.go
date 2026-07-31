@@ -29,13 +29,31 @@ type IPV6DHCPClientResource struct {
 }
 
 type IPV6DHCPClientModel struct {
-	ID                   types.String `tfsdk:"id"`
-	Comment              types.String `tfsdk:"comment"`
-	DefaultRouteDistance types.String `tfsdk:"default_route_distance"`
-	Disabled             types.Bool   `tfsdk:"disabled"`
-	Interface            types.String `tfsdk:"interface"`
-	Request              types.String `tfsdk:"request"`
-	Router               types.String `tfsdk:"router"`
+	ID                         types.String `tfsdk:"id"`
+	ValidateServerDuid         types.String `tfsdk:"validate_server_duid"`
+	UsePeerDns                 types.String `tfsdk:"use_peer_dns"`
+	UseInterfaceDuid           types.String `tfsdk:"use_interface_duid"`
+	Script                     types.String `tfsdk:"script"`
+	RapidCommit                types.String `tfsdk:"rapid_commit"`
+	PrefixHint                 types.String `tfsdk:"prefix_hint"`
+	PrefixAddressLists         types.String `tfsdk:"prefix_address_lists"`
+	PoolPrefixLength           types.String `tfsdk:"pool_prefix_length"`
+	PoolName                   types.String `tfsdk:"pool_name"`
+	DhcpOptions                types.String `tfsdk:"dhcp_options"`
+	DefaultRouteTables         types.String `tfsdk:"default_route_tables"`
+	CustomIapdId               types.String `tfsdk:"custom_iapd_id"`
+	CustomIanaId               types.String `tfsdk:"custom_iana_id"`
+	CustomDuid                 types.String `tfsdk:"custom_duid"`
+	CheckGateway               types.String `tfsdk:"check_gateway"`
+	AllowReconfigure           types.String `tfsdk:"allow_reconfigure"`
+	AddDefaultRoute            types.String `tfsdk:"add_default_route"`
+	AcceptPrefixWithoutAddress types.String `tfsdk:"accept_prefix_without_address"`
+	Comment                    types.String `tfsdk:"comment"`
+	DefaultRouteDistance       types.String `tfsdk:"default_route_distance"`
+	Disabled                   types.Bool   `tfsdk:"disabled"`
+	Interface                  types.String `tfsdk:"interface"`
+	Request                    types.String `tfsdk:"request"`
+	Router                     types.String `tfsdk:"router"`
 }
 
 func NewIPV6DHCPClientResource() resource.Resource { return &IPV6DHCPClientResource{} }
@@ -50,7 +68,6 @@ func (r *IPV6DHCPClientResource) Configure(_ context.Context, req resource.Confi
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPV6DHCPClientResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -61,6 +78,96 @@ func (r *IPV6DHCPClientResource) Schema(_ context.Context, _ resource.SchemaRequ
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"validate_server_duid": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `validate-server-duid`.",
+			},
+			"use_peer_dns": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `use-peer-dns`.",
+			},
+			"use_interface_duid": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `use-interface-duid`.",
+			},
+			"script": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `script`.",
+			},
+			"rapid_commit": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `rapid-commit`.",
+			},
+			"prefix_hint": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `prefix-hint`.",
+			},
+			"prefix_address_lists": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `prefix-address-lists`.",
+			},
+			"pool_prefix_length": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `pool-prefix-length`.",
+			},
+			"pool_name": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `pool-name`.",
+			},
+			"dhcp_options": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `dhcp-options`.",
+			},
+			"default_route_tables": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `default-route-tables`.",
+			},
+			"custom_iapd_id": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `custom-iapd-id`.",
+			},
+			"custom_iana_id": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `custom-iana-id`.",
+			},
+			"custom_duid": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `custom-duid`.",
+			},
+			"check_gateway": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `check-gateway`.",
+			},
+			"allow_reconfigure": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `allow-reconfigure`.",
+			},
+			"add_default_route": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `add-default-route`.",
+			},
+			"accept_prefix_without_address": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `accept-prefix-without-address`.",
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -118,6 +225,60 @@ func (r *IPV6DHCPClientResource) Create(ctx context.Context, req resource.Create
 	}
 	if !(plan.Request.IsNull() || plan.Request.IsUnknown()) {
 		body["request"] = plan.Request.ValueString()
+	}
+	if !(plan.AcceptPrefixWithoutAddress.IsNull() || plan.AcceptPrefixWithoutAddress.IsUnknown()) {
+		body["accept-prefix-without-address"] = plan.AcceptPrefixWithoutAddress.ValueString()
+	}
+	if !(plan.AddDefaultRoute.IsNull() || plan.AddDefaultRoute.IsUnknown()) {
+		body["add-default-route"] = plan.AddDefaultRoute.ValueString()
+	}
+	if !(plan.AllowReconfigure.IsNull() || plan.AllowReconfigure.IsUnknown()) {
+		body["allow-reconfigure"] = plan.AllowReconfigure.ValueString()
+	}
+	if !(plan.CheckGateway.IsNull() || plan.CheckGateway.IsUnknown()) {
+		body["check-gateway"] = plan.CheckGateway.ValueString()
+	}
+	if !(plan.CustomDuid.IsNull() || plan.CustomDuid.IsUnknown()) {
+		body["custom-duid"] = plan.CustomDuid.ValueString()
+	}
+	if !(plan.CustomIanaId.IsNull() || plan.CustomIanaId.IsUnknown()) {
+		body["custom-iana-id"] = plan.CustomIanaId.ValueString()
+	}
+	if !(plan.CustomIapdId.IsNull() || plan.CustomIapdId.IsUnknown()) {
+		body["custom-iapd-id"] = plan.CustomIapdId.ValueString()
+	}
+	if !(plan.DefaultRouteTables.IsNull() || plan.DefaultRouteTables.IsUnknown()) {
+		body["default-route-tables"] = plan.DefaultRouteTables.ValueString()
+	}
+	if !(plan.DhcpOptions.IsNull() || plan.DhcpOptions.IsUnknown()) {
+		body["dhcp-options"] = plan.DhcpOptions.ValueString()
+	}
+	if !(plan.PoolName.IsNull() || plan.PoolName.IsUnknown()) {
+		body["pool-name"] = plan.PoolName.ValueString()
+	}
+	if !(plan.PoolPrefixLength.IsNull() || plan.PoolPrefixLength.IsUnknown()) {
+		body["pool-prefix-length"] = plan.PoolPrefixLength.ValueString()
+	}
+	if !(plan.PrefixAddressLists.IsNull() || plan.PrefixAddressLists.IsUnknown()) {
+		body["prefix-address-lists"] = plan.PrefixAddressLists.ValueString()
+	}
+	if !(plan.PrefixHint.IsNull() || plan.PrefixHint.IsUnknown()) {
+		body["prefix-hint"] = plan.PrefixHint.ValueString()
+	}
+	if !(plan.RapidCommit.IsNull() || plan.RapidCommit.IsUnknown()) {
+		body["rapid-commit"] = plan.RapidCommit.ValueString()
+	}
+	if !(plan.Script.IsNull() || plan.Script.IsUnknown()) {
+		body["script"] = plan.Script.ValueString()
+	}
+	if !(plan.UseInterfaceDuid.IsNull() || plan.UseInterfaceDuid.IsUnknown()) {
+		body["use-interface-duid"] = plan.UseInterfaceDuid.ValueString()
+	}
+	if !(plan.UsePeerDns.IsNull() || plan.UsePeerDns.IsUnknown()) {
+		body["use-peer-dns"] = plan.UsePeerDns.ValueString()
+	}
+	if !(plan.ValidateServerDuid.IsNull() || plan.ValidateServerDuid.IsUnknown()) {
+		body["validate-server-duid"] = plan.ValidateServerDuid.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ipv6/dhcp-client", body)
 	if err != nil {
@@ -180,6 +341,60 @@ func (r *IPV6DHCPClientResource) Update(ctx context.Context, req resource.Update
 	}
 	if !plan.Request.Equal(state.Request) {
 		body["request"] = plan.Request.ValueString()
+	}
+	if !plan.AcceptPrefixWithoutAddress.Equal(state.AcceptPrefixWithoutAddress) && !plan.AcceptPrefixWithoutAddress.IsUnknown() {
+		body["accept-prefix-without-address"] = plan.AcceptPrefixWithoutAddress.ValueString()
+	}
+	if !plan.AddDefaultRoute.Equal(state.AddDefaultRoute) && !plan.AddDefaultRoute.IsUnknown() {
+		body["add-default-route"] = plan.AddDefaultRoute.ValueString()
+	}
+	if !plan.AllowReconfigure.Equal(state.AllowReconfigure) && !plan.AllowReconfigure.IsUnknown() {
+		body["allow-reconfigure"] = plan.AllowReconfigure.ValueString()
+	}
+	if !plan.CheckGateway.Equal(state.CheckGateway) && !plan.CheckGateway.IsUnknown() {
+		body["check-gateway"] = plan.CheckGateway.ValueString()
+	}
+	if !plan.CustomDuid.Equal(state.CustomDuid) && !plan.CustomDuid.IsUnknown() {
+		body["custom-duid"] = plan.CustomDuid.ValueString()
+	}
+	if !plan.CustomIanaId.Equal(state.CustomIanaId) && !plan.CustomIanaId.IsUnknown() {
+		body["custom-iana-id"] = plan.CustomIanaId.ValueString()
+	}
+	if !plan.CustomIapdId.Equal(state.CustomIapdId) && !plan.CustomIapdId.IsUnknown() {
+		body["custom-iapd-id"] = plan.CustomIapdId.ValueString()
+	}
+	if !plan.DefaultRouteTables.Equal(state.DefaultRouteTables) && !plan.DefaultRouteTables.IsUnknown() {
+		body["default-route-tables"] = plan.DefaultRouteTables.ValueString()
+	}
+	if !plan.DhcpOptions.Equal(state.DhcpOptions) && !plan.DhcpOptions.IsUnknown() {
+		body["dhcp-options"] = plan.DhcpOptions.ValueString()
+	}
+	if !plan.PoolName.Equal(state.PoolName) && !plan.PoolName.IsUnknown() {
+		body["pool-name"] = plan.PoolName.ValueString()
+	}
+	if !plan.PoolPrefixLength.Equal(state.PoolPrefixLength) && !plan.PoolPrefixLength.IsUnknown() {
+		body["pool-prefix-length"] = plan.PoolPrefixLength.ValueString()
+	}
+	if !plan.PrefixAddressLists.Equal(state.PrefixAddressLists) && !plan.PrefixAddressLists.IsUnknown() {
+		body["prefix-address-lists"] = plan.PrefixAddressLists.ValueString()
+	}
+	if !plan.PrefixHint.Equal(state.PrefixHint) && !plan.PrefixHint.IsUnknown() {
+		body["prefix-hint"] = plan.PrefixHint.ValueString()
+	}
+	if !plan.RapidCommit.Equal(state.RapidCommit) && !plan.RapidCommit.IsUnknown() {
+		body["rapid-commit"] = plan.RapidCommit.ValueString()
+	}
+	if !plan.Script.Equal(state.Script) && !plan.Script.IsUnknown() {
+		body["script"] = plan.Script.ValueString()
+	}
+	if !plan.UseInterfaceDuid.Equal(state.UseInterfaceDuid) && !plan.UseInterfaceDuid.IsUnknown() {
+		body["use-interface-duid"] = plan.UseInterfaceDuid.ValueString()
+	}
+	if !plan.UsePeerDns.Equal(state.UsePeerDns) && !plan.UsePeerDns.IsUnknown() {
+		body["use-peer-dns"] = plan.UsePeerDns.ValueString()
+	}
+	if !plan.ValidateServerDuid.Equal(state.ValidateServerDuid) && !plan.ValidateServerDuid.IsUnknown() {
+		body["validate-server-duid"] = plan.ValidateServerDuid.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ipv6/dhcp-client", state.ID.ValueString(), body)
@@ -247,6 +462,96 @@ func iPV6DHCPClientLookupByNaturalKey(ctx context.Context, c *client.Client, id 
 func iPV6DHCPClientApply(ctx context.Context, obj client.Object, m *IPV6DHCPClientModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["validate-server-duid"]; ok && v != "" {
+		m.ValidateServerDuid = types.StringValue(v)
+	} else {
+		m.ValidateServerDuid = types.StringNull()
+	}
+	if v, ok := obj["use-peer-dns"]; ok && v != "" {
+		m.UsePeerDns = types.StringValue(v)
+	} else {
+		m.UsePeerDns = types.StringNull()
+	}
+	if v, ok := obj["use-interface-duid"]; ok && v != "" {
+		m.UseInterfaceDuid = types.StringValue(v)
+	} else {
+		m.UseInterfaceDuid = types.StringNull()
+	}
+	if v, ok := obj["script"]; ok && v != "" {
+		m.Script = types.StringValue(v)
+	} else {
+		m.Script = types.StringNull()
+	}
+	if v, ok := obj["rapid-commit"]; ok && v != "" {
+		m.RapidCommit = types.StringValue(v)
+	} else {
+		m.RapidCommit = types.StringNull()
+	}
+	if v, ok := obj["prefix-hint"]; ok && v != "" {
+		m.PrefixHint = types.StringValue(v)
+	} else {
+		m.PrefixHint = types.StringNull()
+	}
+	if v, ok := obj["prefix-address-lists"]; ok && v != "" {
+		m.PrefixAddressLists = types.StringValue(v)
+	} else {
+		m.PrefixAddressLists = types.StringNull()
+	}
+	if v, ok := obj["pool-prefix-length"]; ok && v != "" {
+		m.PoolPrefixLength = types.StringValue(v)
+	} else {
+		m.PoolPrefixLength = types.StringNull()
+	}
+	if v, ok := obj["pool-name"]; ok && v != "" {
+		m.PoolName = types.StringValue(v)
+	} else {
+		m.PoolName = types.StringNull()
+	}
+	if v, ok := obj["dhcp-options"]; ok && v != "" {
+		m.DhcpOptions = types.StringValue(v)
+	} else {
+		m.DhcpOptions = types.StringNull()
+	}
+	if v, ok := obj["default-route-tables"]; ok && v != "" {
+		m.DefaultRouteTables = types.StringValue(v)
+	} else {
+		m.DefaultRouteTables = types.StringNull()
+	}
+	if v, ok := obj["custom-iapd-id"]; ok && v != "" {
+		m.CustomIapdId = types.StringValue(v)
+	} else {
+		m.CustomIapdId = types.StringNull()
+	}
+	if v, ok := obj["custom-iana-id"]; ok && v != "" {
+		m.CustomIanaId = types.StringValue(v)
+	} else {
+		m.CustomIanaId = types.StringNull()
+	}
+	if v, ok := obj["custom-duid"]; ok && v != "" {
+		m.CustomDuid = types.StringValue(v)
+	} else {
+		m.CustomDuid = types.StringNull()
+	}
+	if v, ok := obj["check-gateway"]; ok && v != "" {
+		m.CheckGateway = types.StringValue(v)
+	} else {
+		m.CheckGateway = types.StringNull()
+	}
+	if v, ok := obj["allow-reconfigure"]; ok && v != "" {
+		m.AllowReconfigure = types.StringValue(v)
+	} else {
+		m.AllowReconfigure = types.StringNull()
+	}
+	if v, ok := obj["add-default-route"]; ok && v != "" {
+		m.AddDefaultRoute = types.StringValue(v)
+	} else {
+		m.AddDefaultRoute = types.StringNull()
+	}
+	if v, ok := obj["accept-prefix-without-address"]; ok && v != "" {
+		m.AcceptPrefixWithoutAddress = types.StringValue(v)
+	} else {
+		m.AcceptPrefixWithoutAddress = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {

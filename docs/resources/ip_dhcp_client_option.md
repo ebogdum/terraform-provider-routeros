@@ -27,19 +27,18 @@ resource "routeros_ip_dhcp_client_option" "option_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `code` - (Optional) Type: `int`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `code` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `default` - (Read-only) Type: `bool`.
 * `name` - (Optional) Type: `string`.
+* `raw_value` - (Read-only) Type: `string`.
 * `value` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `default` - Type: `bool`.
-* `raw_value` - Type: `string`.
 
 ## Import
 

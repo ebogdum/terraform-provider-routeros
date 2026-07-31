@@ -23,9 +23,26 @@ resource "routeros_interface_lte" "lte_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `allow_roaming` - (Optional) Type: `string`. RouterOS `allow-roaming`.
+* `apn_profiles` - (Optional) Type: `string`. RouterOS `apn-profiles`.
+* `band` - (Optional) Type: `string`. RouterOS `band`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `modem_init` - (Optional) Type: `string`. RouterOS `modem-init`.
+* `mtu` - (Optional) Type: `string`. RouterOS `mtu`.
+* `name` - (Optional) Type: `string`. RouterOS `name`.
+* `network_mode` - (Optional) Type: `string`. RouterOS `network-mode`.
+* `nr_band` - (Optional) Type: `string`. RouterOS `nr-band`.
+* `operator` - (Optional) Type: `string`. RouterOS `operator`.
+* `pin` - (Optional) Type: `string`. RouterOS `pin`.
+* `sms_protocol` - (Optional) Type: `string`. RouterOS `sms-protocol`.
+* `sms_read` - (Optional) Type: `string`. RouterOS `sms-read`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

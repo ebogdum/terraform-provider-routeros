@@ -29,19 +29,26 @@ type InterfaceEoipv6Resource struct {
 }
 
 type InterfaceEoipv6Model struct {
-	ID            types.String `tfsdk:"id"`
-	ARP           types.String `tfsdk:"arp"`
-	ARPTimeout    types.String `tfsdk:"arp_timeout"`
-	Comment       types.String `tfsdk:"comment"`
-	Disabled      types.Bool   `tfsdk:"disabled"`
-	IpsecSecret   types.String `tfsdk:"ipsec_secret"`
-	LocalAddress  types.String `tfsdk:"local_address"`
-	MACAddress    types.String `tfsdk:"mac_address"`
-	MTU           types.String `tfsdk:"mtu"`
-	Name          types.String `tfsdk:"name"`
-	RemoteAddress types.String `tfsdk:"remote_address"`
-	TunnelID      types.String `tfsdk:"tunnel_id"`
-	Router        types.String `tfsdk:"router"`
+	ID                      types.String `tfsdk:"id"`
+	LoopProtectSendInterval types.String `tfsdk:"loop_protect_send_interval"`
+	LoopProtectDisableTime  types.String `tfsdk:"loop_protect_disable_time"`
+	LoopProtect             types.String `tfsdk:"loop_protect"`
+	Keepalive               types.String `tfsdk:"keepalive"`
+	Dscp                    types.String `tfsdk:"dscp"`
+	DontFragment            types.String `tfsdk:"dont_fragment"`
+	ClampTcpMss             types.String `tfsdk:"clamp_tcp_mss"`
+	ARP                     types.String `tfsdk:"arp"`
+	ARPTimeout              types.String `tfsdk:"arp_timeout"`
+	Comment                 types.String `tfsdk:"comment"`
+	Disabled                types.Bool   `tfsdk:"disabled"`
+	IpsecSecret             types.String `tfsdk:"ipsec_secret"`
+	LocalAddress            types.String `tfsdk:"local_address"`
+	MACAddress              types.String `tfsdk:"mac_address"`
+	MTU                     types.String `tfsdk:"mtu"`
+	Name                    types.String `tfsdk:"name"`
+	RemoteAddress           types.String `tfsdk:"remote_address"`
+	TunnelID                types.String `tfsdk:"tunnel_id"`
+	Router                  types.String `tfsdk:"router"`
 }
 
 func NewInterfaceEoipv6Resource() resource.Resource { return &InterfaceEoipv6Resource{} }
@@ -56,7 +63,6 @@ func (r *InterfaceEoipv6Resource) Configure(_ context.Context, req resource.Conf
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceEoipv6Resource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -67,6 +73,41 @@ func (r *InterfaceEoipv6Resource) Schema(_ context.Context, _ resource.SchemaReq
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"loop_protect_send_interval": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `loop-protect-send-interval`.",
+			},
+			"loop_protect_disable_time": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `loop-protect-disable-time`.",
+			},
+			"loop_protect": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `loop-protect`.",
+			},
+			"keepalive": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `keepalive`.",
+			},
+			"dscp": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `dscp`.",
+			},
+			"dont_fragment": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `dont-fragment`.",
+			},
+			"clamp_tcp_mss": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `clamp-tcp-mss`.",
 			},
 			"arp": schema.StringAttribute{
 				Optional:    true,
@@ -90,6 +131,7 @@ func (r *InterfaceEoipv6Resource) Schema(_ context.Context, _ resource.SchemaReq
 			},
 			"ipsec_secret": schema.StringAttribute{
 				Optional:    true,
+				Sensitive:   true,
 				Computed:    true,
 				Description: "",
 			},
@@ -172,6 +214,27 @@ func (r *InterfaceEoipv6Resource) Create(ctx context.Context, req resource.Creat
 	if !(plan.TunnelID.IsNull() || plan.TunnelID.IsUnknown()) {
 		body["tunnel-id"] = plan.TunnelID.ValueString()
 	}
+	if !(plan.ClampTcpMss.IsNull() || plan.ClampTcpMss.IsUnknown()) {
+		body["clamp-tcp-mss"] = plan.ClampTcpMss.ValueString()
+	}
+	if !(plan.DontFragment.IsNull() || plan.DontFragment.IsUnknown()) {
+		body["dont-fragment"] = plan.DontFragment.ValueString()
+	}
+	if !(plan.Dscp.IsNull() || plan.Dscp.IsUnknown()) {
+		body["dscp"] = plan.Dscp.ValueString()
+	}
+	if !(plan.Keepalive.IsNull() || plan.Keepalive.IsUnknown()) {
+		body["keepalive"] = plan.Keepalive.ValueString()
+	}
+	if !(plan.LoopProtect.IsNull() || plan.LoopProtect.IsUnknown()) {
+		body["loop-protect"] = plan.LoopProtect.ValueString()
+	}
+	if !(plan.LoopProtectDisableTime.IsNull() || plan.LoopProtectDisableTime.IsUnknown()) {
+		body["loop-protect-disable-time"] = plan.LoopProtectDisableTime.ValueString()
+	}
+	if !(plan.LoopProtectSendInterval.IsNull() || plan.LoopProtectSendInterval.IsUnknown()) {
+		body["loop-protect-send-interval"] = plan.LoopProtectSendInterval.ValueString()
+	}
 	obj, err := c.Add(ctx, "/interface/eoipv6", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /interface/eoipv6 failed", err.Error())
@@ -252,6 +315,27 @@ func (r *InterfaceEoipv6Resource) Update(ctx context.Context, req resource.Updat
 	if !plan.TunnelID.Equal(state.TunnelID) {
 		body["tunnel-id"] = plan.TunnelID.ValueString()
 	}
+	if !plan.ClampTcpMss.Equal(state.ClampTcpMss) && !plan.ClampTcpMss.IsUnknown() {
+		body["clamp-tcp-mss"] = plan.ClampTcpMss.ValueString()
+	}
+	if !plan.DontFragment.Equal(state.DontFragment) && !plan.DontFragment.IsUnknown() {
+		body["dont-fragment"] = plan.DontFragment.ValueString()
+	}
+	if !plan.Dscp.Equal(state.Dscp) && !plan.Dscp.IsUnknown() {
+		body["dscp"] = plan.Dscp.ValueString()
+	}
+	if !plan.Keepalive.Equal(state.Keepalive) && !plan.Keepalive.IsUnknown() {
+		body["keepalive"] = plan.Keepalive.ValueString()
+	}
+	if !plan.LoopProtect.Equal(state.LoopProtect) && !plan.LoopProtect.IsUnknown() {
+		body["loop-protect"] = plan.LoopProtect.ValueString()
+	}
+	if !plan.LoopProtectDisableTime.Equal(state.LoopProtectDisableTime) && !plan.LoopProtectDisableTime.IsUnknown() {
+		body["loop-protect-disable-time"] = plan.LoopProtectDisableTime.ValueString()
+	}
+	if !plan.LoopProtectSendInterval.Equal(state.LoopProtectSendInterval) && !plan.LoopProtectSendInterval.IsUnknown() {
+		body["loop-protect-send-interval"] = plan.LoopProtectSendInterval.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/eoipv6", state.ID.ValueString(), body)
 		if err != nil {
@@ -318,6 +402,41 @@ func interfaceEoipv6LookupByNaturalKey(ctx context.Context, c *client.Client, id
 func interfaceEoipv6Apply(ctx context.Context, obj client.Object, m *InterfaceEoipv6Model) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["loop-protect-send-interval"]; ok && v != "" {
+		m.LoopProtectSendInterval = types.StringValue(v)
+	} else {
+		m.LoopProtectSendInterval = types.StringNull()
+	}
+	if v, ok := obj["loop-protect-disable-time"]; ok && v != "" {
+		m.LoopProtectDisableTime = types.StringValue(v)
+	} else {
+		m.LoopProtectDisableTime = types.StringNull()
+	}
+	if v, ok := obj["loop-protect"]; ok && v != "" {
+		m.LoopProtect = types.StringValue(v)
+	} else {
+		m.LoopProtect = types.StringNull()
+	}
+	if v, ok := obj["keepalive"]; ok && v != "" {
+		m.Keepalive = types.StringValue(v)
+	} else {
+		m.Keepalive = types.StringNull()
+	}
+	if v, ok := obj["dscp"]; ok && v != "" {
+		m.Dscp = types.StringValue(v)
+	} else {
+		m.Dscp = types.StringNull()
+	}
+	if v, ok := obj["dont-fragment"]; ok && v != "" {
+		m.DontFragment = types.StringValue(v)
+	} else {
+		m.DontFragment = types.StringNull()
+	}
+	if v, ok := obj["clamp-tcp-mss"]; ok && v != "" {
+		m.ClampTcpMss = types.StringValue(v)
+	} else {
+		m.ClampTcpMss = types.StringNull()
+	}
 	if v, ok := obj["arp"]; ok {
 		_ = v
 		if v != "" {

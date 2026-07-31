@@ -35,14 +35,36 @@ resource "routeros_interface_bonding" "bonding_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `arp` - (Optional) Type: `string`.
+* `arp_interval` - (Optional) Type: `string`. RouterOS `arp-interval`.
+* `arp_ip_targets` - (Optional) Type: `string`. RouterOS `arp-ip-targets`.
 * `arp_timeout` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `down_delay` - (Optional) Type: `string`. RouterOS `down-delay`.
+* `forced_mac_address` - (Optional) Type: `string`. RouterOS `forced-mac-address`.
+* `lacp_mode` - (Optional) Type: `string`. RouterOS `lacp-mode`.
+* `lacp_rate` - (Optional) Type: `string`. RouterOS `lacp-rate`.
+* `lacp_system_id` - (Optional) Type: `string`. RouterOS `lacp-system-id`.
+* `lacp_system_priority` - (Optional) Type: `string`. RouterOS `lacp-system-priority`.
+* `lacp_user_key` - (Optional) Type: `string`. RouterOS `lacp-user-key`.
+* `link_monitoring` - (Optional) Type: `string`. RouterOS `link-monitoring`.
+* `mii_interval` - (Optional) Type: `string`. RouterOS `mii-interval`.
+* `min_links` - (Optional) Type: `string`. RouterOS `min-links`.
+* `mlag_id` - (Optional) Type: `string`. RouterOS `mlag-id`.
 * `mode` - (Optional) Type: `string`.
 * `mtu` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
+* `primary` - (Optional) Type: `string`. RouterOS `primary`.
+* `slaves` - (Optional) Type: `string`. RouterOS `slaves`.
+* `transmit_hash_policy` - (Optional) Type: `string`. RouterOS `transmit-hash-policy`.
+* `up_delay` - (Optional) Type: `string`. RouterOS `up-delay`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

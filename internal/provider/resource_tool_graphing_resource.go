@@ -29,10 +29,12 @@ type ToolGraphingResourceResource struct {
 }
 
 type ToolGraphingResourceModel struct {
-	ID       types.String `tfsdk:"id"`
-	Comment  types.String `tfsdk:"comment"`
-	Disabled types.Bool   `tfsdk:"disabled"`
-	Router   types.String `tfsdk:"router"`
+	ID           types.String `tfsdk:"id"`
+	StoreOnDisk  types.String `tfsdk:"store_on_disk"`
+	AllowAddress types.String `tfsdk:"allow_address"`
+	Comment      types.String `tfsdk:"comment"`
+	Disabled     types.Bool   `tfsdk:"disabled"`
+	Router       types.String `tfsdk:"router"`
 }
 
 func NewToolGraphingResourceResource() resource.Resource { return &ToolGraphingResourceResource{} }
@@ -47,7 +49,6 @@ func (r *ToolGraphingResourceResource) Configure(_ context.Context, req resource
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *ToolGraphingResourceResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -58,6 +59,16 @@ func (r *ToolGraphingResourceResource) Schema(_ context.Context, _ resource.Sche
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"store_on_disk": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `store-on-disk`.",
+			},
+			"allow_address": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `allow-address`.",
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -93,6 +104,12 @@ func (r *ToolGraphingResourceResource) Create(ctx context.Context, req resource.
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !(plan.AllowAddress.IsNull() || plan.AllowAddress.IsUnknown()) {
+		body["allow-address"] = plan.AllowAddress.ValueString()
+	}
+	if !(plan.StoreOnDisk.IsNull() || plan.StoreOnDisk.IsUnknown()) {
+		body["store-on-disk"] = plan.StoreOnDisk.ValueString()
 	}
 	obj, err := c.Add(ctx, "/tool/graphing/resource", body)
 	if err != nil {
@@ -146,6 +163,12 @@ func (r *ToolGraphingResourceResource) Update(ctx context.Context, req resource.
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !plan.AllowAddress.Equal(state.AllowAddress) && !plan.AllowAddress.IsUnknown() {
+		body["allow-address"] = plan.AllowAddress.ValueString()
+	}
+	if !plan.StoreOnDisk.Equal(state.StoreOnDisk) && !plan.StoreOnDisk.IsUnknown() {
+		body["store-on-disk"] = plan.StoreOnDisk.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/tool/graphing/resource", state.ID.ValueString(), body)
@@ -213,6 +236,16 @@ func toolGraphingResourceLookupByNaturalKey(ctx context.Context, c *client.Clien
 func toolGraphingResourceApply(ctx context.Context, obj client.Object, m *ToolGraphingResourceModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["store-on-disk"]; ok && v != "" {
+		m.StoreOnDisk = types.StringValue(v)
+	} else {
+		m.StoreOnDisk = types.StringNull()
+	}
+	if v, ok := obj["allow-address"]; ok && v != "" {
+		m.AllowAddress = types.StringValue(v)
+	} else {
+		m.AllowAddress = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {

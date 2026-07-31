@@ -31,33 +31,36 @@ type InterfaceVplsResource struct {
 }
 
 type InterfaceVplsModel struct {
-	ID               types.String `tfsdk:"id"`
-	ARP              types.String `tfsdk:"arp"`
-	ARPTimeout       types.String `tfsdk:"arp_timeout"`
-	BGPSignaled      types.Bool   `tfsdk:"bgp_signaled"`
-	BGPVpls          types.String `tfsdk:"bgp_vpls"`
-	BGPVplsPrefix    types.String `tfsdk:"bgp_vpls_prefix"`
-	Bridge           types.String `tfsdk:"bridge"`
-	BridgeCost       types.String `tfsdk:"bridge_cost"`
-	BridgeHorizon    types.String `tfsdk:"bridge_horizon"`
-	BridgePvid       types.String `tfsdk:"bridge_pvid"`
-	CiscoBGPSignaled types.Bool   `tfsdk:"cisco_bgp_signaled"`
-	CiscoStaticID    types.String `tfsdk:"cisco_static_id"`
-	Comment          types.String `tfsdk:"comment"`
-	Disabled         types.Bool   `tfsdk:"disabled"`
-	LocalLabel       types.Int64  `tfsdk:"local_label"`
-	MACAddress       types.String `tfsdk:"mac_address"`
-	MTU              types.Int64  `tfsdk:"mtu"`
-	PwControlWord    types.String `tfsdk:"pw_control_word"`
-	PwL2mtu          types.String `tfsdk:"pw_l2mtu"`
-	PwType           types.String `tfsdk:"pw_type"`
-	RemoteGroup      types.Int64  `tfsdk:"remote_group"`
-	RemoteLabel      types.Int64  `tfsdk:"remote_label"`
-	RemotePeer       types.String `tfsdk:"remote_peer"`
-	RemoteStatus     types.String `tfsdk:"remote_status"`
-	TeTunnel         types.Int64  `tfsdk:"te_tunnel"`
-	VplsID           types.String `tfsdk:"vpls_id"`
-	Router           types.String `tfsdk:"router"`
+	ID                  types.String `tfsdk:"id"`
+	Peer                types.String `tfsdk:"peer"`
+	Name                types.String `tfsdk:"name"`
+	DisableRunningCheck types.String `tfsdk:"disable_running_check"`
+	ARP                 types.String `tfsdk:"arp"`
+	ARPTimeout          types.String `tfsdk:"arp_timeout"`
+	BGPSignaled         types.Bool   `tfsdk:"bgp_signaled"`
+	BGPVpls             types.String `tfsdk:"bgp_vpls"`
+	BGPVplsPrefix       types.String `tfsdk:"bgp_vpls_prefix"`
+	Bridge              types.String `tfsdk:"bridge"`
+	BridgeCost          types.String `tfsdk:"bridge_cost"`
+	BridgeHorizon       types.String `tfsdk:"bridge_horizon"`
+	BridgePvid          types.String `tfsdk:"bridge_pvid"`
+	CiscoBGPSignaled    types.Bool   `tfsdk:"cisco_bgp_signaled"`
+	CiscoStaticID       types.String `tfsdk:"cisco_static_id"`
+	Comment             types.String `tfsdk:"comment"`
+	Disabled            types.Bool   `tfsdk:"disabled"`
+	LocalLabel          types.Int64  `tfsdk:"local_label"`
+	MACAddress          types.String `tfsdk:"mac_address"`
+	MTU                 types.Int64  `tfsdk:"mtu"`
+	PwControlWord       types.String `tfsdk:"pw_control_word"`
+	PwL2mtu             types.String `tfsdk:"pw_l2mtu"`
+	PwType              types.String `tfsdk:"pw_type"`
+	RemoteGroup         types.Int64  `tfsdk:"remote_group"`
+	RemoteLabel         types.Int64  `tfsdk:"remote_label"`
+	RemotePeer          types.String `tfsdk:"remote_peer"`
+	RemoteStatus        types.String `tfsdk:"remote_status"`
+	TeTunnel            types.Int64  `tfsdk:"te_tunnel"`
+	VplsID              types.String `tfsdk:"vpls_id"`
+	Router              types.String `tfsdk:"router"`
 }
 
 func NewInterfaceVplsResource() resource.Resource { return &InterfaceVplsResource{} }
@@ -72,7 +75,6 @@ func (r *InterfaceVplsResource) Configure(_ context.Context, req resource.Config
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceVplsResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -84,6 +86,21 @@ func (r *InterfaceVplsResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
+			"peer": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `peer`.",
+			},
+			"name": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `name`.",
+			},
+			"disable_running_check": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `disable-running-check`.",
+			},
 			"arp": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -94,21 +111,18 @@ func (r *InterfaceVplsResource) Schema(_ context.Context, _ resource.SchemaReque
 				Optional:      true,
 				Computed:      true,
 				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
+				Validators:    []validator.String{schemautil.IsDurationOrKeyword("auto")},
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
 			},
 			"bgp_signaled": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"bgp_vpls": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"bgp_vpls_prefix": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -133,7 +147,6 @@ func (r *InterfaceVplsResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"cisco_bgp_signaled": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -153,7 +166,6 @@ func (r *InterfaceVplsResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "Whether the entry is disabled.",
 			},
 			"local_label": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -183,27 +195,22 @@ func (r *InterfaceVplsResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"remote_group": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"remote_label": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"remote_peer": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"remote_status": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"te_tunnel": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -237,9 +244,6 @@ func (r *InterfaceVplsResource) Create(ctx context.Context, req resource.CreateR
 	if !(plan.ARPTimeout.IsNull() || plan.ARPTimeout.IsUnknown()) {
 		body["arp-timeout"] = plan.ARPTimeout.ValueString()
 	}
-	if !(plan.BGPSignaled.IsNull() || plan.BGPSignaled.IsUnknown()) {
-		body["bgp-signaled"] = client.FormatBool(plan.BGPSignaled.ValueBool())
-	}
 	if !(plan.Bridge.IsNull() || plan.Bridge.IsUnknown()) {
 		body["bridge"] = plan.Bridge.ValueString()
 	}
@@ -251,9 +255,6 @@ func (r *InterfaceVplsResource) Create(ctx context.Context, req resource.CreateR
 	}
 	if !(plan.BridgePvid.IsNull() || plan.BridgePvid.IsUnknown()) {
 		body["bridge-pvid"] = plan.BridgePvid.ValueString()
-	}
-	if !(plan.CiscoBGPSignaled.IsNull() || plan.CiscoBGPSignaled.IsUnknown()) {
-		body["cisco-bgp-signaled"] = client.FormatBool(plan.CiscoBGPSignaled.ValueBool())
 	}
 	if !(plan.CiscoStaticID.IsNull() || plan.CiscoStaticID.IsUnknown()) {
 		body["cisco-static-id"] = plan.CiscoStaticID.ValueString()
@@ -279,11 +280,17 @@ func (r *InterfaceVplsResource) Create(ctx context.Context, req resource.CreateR
 	if !(plan.PwType.IsNull() || plan.PwType.IsUnknown()) {
 		body["pw-type"] = plan.PwType.ValueString()
 	}
-	if !(plan.RemotePeer.IsNull() || plan.RemotePeer.IsUnknown()) {
-		body["remote-peer"] = plan.RemotePeer.ValueString()
-	}
 	if !(plan.VplsID.IsNull() || plan.VplsID.IsUnknown()) {
 		body["vpls-id"] = plan.VplsID.ValueString()
+	}
+	if !(plan.DisableRunningCheck.IsNull() || plan.DisableRunningCheck.IsUnknown()) {
+		body["disable-running-check"] = plan.DisableRunningCheck.ValueString()
+	}
+	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
+		body["name"] = plan.Name.ValueString()
+	}
+	if !(plan.Peer.IsNull() || plan.Peer.IsUnknown()) {
+		body["peer"] = plan.Peer.ValueString()
 	}
 	obj, err := c.Add(ctx, "/interface/vpls", body)
 	if err != nil {
@@ -338,9 +345,6 @@ func (r *InterfaceVplsResource) Update(ctx context.Context, req resource.UpdateR
 	if !plan.ARPTimeout.Equal(state.ARPTimeout) {
 		body["arp-timeout"] = plan.ARPTimeout.ValueString()
 	}
-	if !plan.BGPSignaled.Equal(state.BGPSignaled) {
-		body["bgp-signaled"] = client.FormatBool(plan.BGPSignaled.ValueBool())
-	}
 	if !plan.Bridge.Equal(state.Bridge) {
 		body["bridge"] = plan.Bridge.ValueString()
 	}
@@ -352,9 +356,6 @@ func (r *InterfaceVplsResource) Update(ctx context.Context, req resource.UpdateR
 	}
 	if !plan.BridgePvid.Equal(state.BridgePvid) {
 		body["bridge-pvid"] = plan.BridgePvid.ValueString()
-	}
-	if !plan.CiscoBGPSignaled.Equal(state.CiscoBGPSignaled) {
-		body["cisco-bgp-signaled"] = client.FormatBool(plan.CiscoBGPSignaled.ValueBool())
 	}
 	if !plan.CiscoStaticID.Equal(state.CiscoStaticID) {
 		body["cisco-static-id"] = plan.CiscoStaticID.ValueString()
@@ -380,11 +381,17 @@ func (r *InterfaceVplsResource) Update(ctx context.Context, req resource.UpdateR
 	if !plan.PwType.Equal(state.PwType) {
 		body["pw-type"] = plan.PwType.ValueString()
 	}
-	if !plan.RemotePeer.Equal(state.RemotePeer) {
-		body["remote-peer"] = plan.RemotePeer.ValueString()
-	}
 	if !plan.VplsID.Equal(state.VplsID) {
 		body["vpls-id"] = plan.VplsID.ValueString()
+	}
+	if !plan.DisableRunningCheck.Equal(state.DisableRunningCheck) && !plan.DisableRunningCheck.IsUnknown() {
+		body["disable-running-check"] = plan.DisableRunningCheck.ValueString()
+	}
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
+		body["name"] = plan.Name.ValueString()
+	}
+	if !plan.Peer.Equal(state.Peer) && !plan.Peer.IsUnknown() {
+		body["peer"] = plan.Peer.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/vpls", state.ID.ValueString(), body)
@@ -452,6 +459,21 @@ func interfaceVplsLookupByNaturalKey(ctx context.Context, c *client.Client, id s
 func interfaceVplsApply(ctx context.Context, obj client.Object, m *InterfaceVplsModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["peer"]; ok && v != "" {
+		m.Peer = types.StringValue(v)
+	} else {
+		m.Peer = types.StringNull()
+	}
+	if v, ok := obj["name"]; ok && v != "" {
+		m.Name = types.StringValue(v)
+	} else {
+		m.Name = types.StringNull()
+	}
+	if v, ok := obj["disable-running-check"]; ok && v != "" {
+		m.DisableRunningCheck = types.StringValue(v)
+	} else {
+		m.DisableRunningCheck = types.StringNull()
+	}
 	if v, ok := obj["arp"]; ok {
 		_ = v
 		if v != "" {

@@ -64,35 +64,82 @@ resource "routeros_tool_traffic_generator_packet_template" "packet_template_exam
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `assumed_dscp_ecn` - (Read-only) Type: `string`.
+* `assumed_dst` - (Read-only) Type: `string`.
+* `assumed_dst_port` - (Read-only) Type: `string`.
+* `assumed_flow_label` - (Read-only) Type: `string`.
+* `assumed_frag_offset` - (Read-only) Type: `string`.
+* `assumed_header` - (Read-only) Type: `string`.
+* `assumed_interface` - (Read-only) Type: `string`.
+* `assumed_ip_id` - (Read-only) Type: `string`.
+* `assumed_next_header` - (Read-only) Type: `string`.
+* `assumed_port` - (Read-only) Type: `string`.
+* `assumed_priority` - (Read-only) Type: `string`.
+* `assumed_protocol` - (Read-only) Type: `string`.
+* `assumed_src` - (Read-only) Type: `string`.
+* `assumed_src_port` - (Read-only) Type: `string`.
+* `assumed_tcp_ack` - (Read-only) Type: `string`.
+* `assumed_tcp_data_offset` - (Read-only) Type: `string`.
+* `assumed_tcp_dst_port` - (Read-only) Type: `string`.
+* `assumed_tcp_flags` - (Read-only) Type: `string`.
+* `assumed_tcp_src_port` - (Read-only) Type: `string`.
+* `assumed_tcp_syn` - (Read-only) Type: `string`.
+* `assumed_tcp_urgent_pointer` - (Read-only) Type: `string`.
+* `assumed_tcp_window_size` - (Read-only) Type: `string`.
+* `assumed_traffic_class` - (Read-only) Type: `string`.
+* `assumed_ttl` - (Read-only) Type: `string`.
+* `assumed_vlan_id` - (Read-only) Type: `string`.
 * `comment` - (Optional) Type: `string`.
-* `data` - (Optional) Type: `enum(uninitialized|random|specific-byte|incrementing)`.
+* `compute_checksum_from_offset` - (Optional) Type: `string`. RouterOS `compute-checksum-from-offset`.
+* `data` - (Optional) Type: `string`.
 * `data_byte` - (Optional) Type: `int`.
-* `dscp_ecn` - (Optional) Type: `string`.
-* `dst` - (Optional) Type: `string`.
-* `dst_port` - (Optional) Type: `string`.
-* `flow_label` - (Optional) Type: `string`.
-* `frag_offset` - (Optional) Type: `string`.
-* `gateway` - (Optional) Type: `string`.
-* `header` - (Optional) Type: `string`.
+* `dscp_ecn` - (Read-only) Type: `string`.
+* `dst` - (Read-only) Type: `string`.
+* `dst_port` - (Read-only) Type: `string`.
+* `flow_label` - (Read-only) Type: `string`.
+* `frag_offset` - (Read-only) Type: `string`.
+* `gateway` - (Read-only) Type: `string`.
+* `header` - (Read-only) Type: `string`.
 * `header_stack` - (Optional) Type: `string`.
-* `hop_limit` - (Optional) Type: `string`.
+* `hop_limit` - (Read-only) Type: `string`.
 * `interface` - (Optional) Type: `string`.
-* `ip` - (Optional) Type: `string`.
+* `ip` - (Read-only) Type: `string`.
+* `ip_dscp` - (Optional) Type: `string`. RouterOS `ip-dscp`.
+* `ip_dst` - (Optional) Type: `string`. RouterOS `ip-dst`.
+* `ip_frag_off` - (Optional) Type: `string`. RouterOS `ip-frag-off`.
+* `ip_gateway` - (Optional) Type: `string`. RouterOS `ip-gateway`.
 * `ip_id` - (Optional) Type: `string`.
-* `ipv6` - (Optional) Type: `string`.
-* `mac` - (Optional) Type: `string`.
+* `ip_protocol` - (Optional) Type: `string`. RouterOS `ip-protocol`.
+* `ip_src` - (Optional) Type: `string`. RouterOS `ip-src`.
+* `ip_ttl` - (Optional) Type: `string`. RouterOS `ip-ttl`.
+* `ipv6` - (Read-only) Type: `string`.
+* `ipv6_dst` - (Optional) Type: `string`. RouterOS `ipv6-dst`.
+* `ipv6_flow_label` - (Optional) Type: `string`. RouterOS `ipv6-flow-label`.
+* `ipv6_gateway` - (Optional) Type: `string`. RouterOS `ipv6-gateway`.
+* `ipv6_hop_limit` - (Optional) Type: `string`. RouterOS `ipv6-hop-limit`.
+* `ipv6_next_header` - (Optional) Type: `string`. RouterOS `ipv6-next-header`.
+* `ipv6_src` - (Optional) Type: `string`. RouterOS `ipv6-src`.
+* `ipv6_traffic_class` - (Optional) Type: `string`. RouterOS `ipv6-traffic-class`.
+* `mac` - (Read-only) Type: `string`.
+* `mac_dst` - (Optional) Type: `string`. RouterOS `mac-dst`.
+* `mac_protocol` - (Optional) Type: `string`. RouterOS `mac-protocol`.
+* `mac_src` - (Optional) Type: `string`. RouterOS `mac-src`.
 * `name` - (Optional) Type: `string`.
-* `next_header` - (Optional) Type: `string`.
+* `next_header` - (Read-only) Type: `string`.
 * `port` - (Optional) Type: `string`.
-* `priority` - (Optional) Type: `string`.
-* `protocol` - (Optional) Type: `string`.
-* `raw` - (Optional) Type: `string`.
-* `raw_packet_templates` - (Optional) Type: `string`.
-* `specbyte` - (Optional) Type: `string`.
-* `src` - (Optional) Type: `string`.
-* `src_port` - (Optional) Type: `string`.
-* `tcp` - (Optional) Type: `string`.
+* `priority` - (Read-only) Type: `string`.
+* `protocol` - (Read-only) Type: `string`.
+* `random_byte_offsets_and_masks` - (Optional) Type: `string`. RouterOS `random-byte-offsets-and-masks`.
+* `random_ranges` - (Optional) Type: `string`. RouterOS `random-ranges`.
+* `raw` - (Read-only) Type: `string`.
+* `raw_header` - (Optional) Type: `string`. RouterOS `raw-header`.
+* `raw_packet_templates` - (Read-only) Type: `string`.
+* `specbyte` - (Read-only) Type: `string`.
+* `special_footer` - (Optional) Type: `string`. RouterOS `special-footer`.
+* `src` - (Read-only) Type: `string`.
+* `src_port` - (Read-only) Type: `string`.
+* `tcp` - (Read-only) Type: `string`.
 * `tcp_ack` - (Optional) Type: `string`.
 * `tcp_data_offset` - (Optional) Type: `string`.
 * `tcp_dst_port` - (Optional) Type: `string`.
@@ -101,42 +148,21 @@ This resource supports the following arguments:
 * `tcp_syn` - (Optional) Type: `string`.
 * `tcp_urgent_pointer` - (Optional) Type: `string`.
 * `tcp_window_size` - (Optional) Type: `string`.
-* `traffic_class` - (Optional) Type: `string`.
-* `ttl` - (Optional) Type: `string`.
-* `udp` - (Optional) Type: `string`.
-* `vlan` - (Optional) Type: `string`.
+* `traffic_class` - (Read-only) Type: `string`.
+* `ttl` - (Read-only) Type: `string`.
+* `udp` - (Read-only) Type: `string`.
+* `udp_checksum` - (Optional) Type: `string`. RouterOS `udp-checksum`.
+* `udp_dst_port` - (Optional) Type: `string`. RouterOS `udp-dst-port`.
+* `udp_src_port` - (Optional) Type: `string`. RouterOS `udp-src-port`.
+* `vlan` - (Read-only) Type: `string`.
 * `vlan_id` - (Optional) Type: `string`.
+* `vlan_priority` - (Optional) Type: `string`. RouterOS `vlan-priority`.
+* `vlan_protocol` - (Optional) Type: `string`. RouterOS `vlan-protocol`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `assumed_dscp_ecn` - Type: `string`.
-* `assumed_dst` - Type: `string`.
-* `assumed_dst_port` - Type: `string`.
-* `assumed_flow_label` - Type: `string`.
-* `assumed_frag_offset` - Type: `string`.
-* `assumed_header` - Type: `string`.
-* `assumed_interface` - Type: `string`.
-* `assumed_ip_id` - Type: `string`.
-* `assumed_next_header` - Type: `string`.
-* `assumed_port` - Type: `string`.
-* `assumed_priority` - Type: `string`.
-* `assumed_protocol` - Type: `string`.
-* `assumed_src` - Type: `string`.
-* `assumed_src_port` - Type: `string`.
-* `assumed_tcp_ack` - Type: `string`.
-* `assumed_tcp_data_offset` - Type: `string`.
-* `assumed_tcp_dst_port` - Type: `string`.
-* `assumed_tcp_flags` - Type: `string`.
-* `assumed_tcp_src_port` - Type: `string`.
-* `assumed_tcp_syn` - Type: `string`.
-* `assumed_tcp_urgent_pointer` - Type: `string`.
-* `assumed_tcp_window_size` - Type: `string`.
-* `assumed_traffic_class` - Type: `string`.
-* `assumed_ttl` - Type: `string`.
-* `assumed_vlan_id` - Type: `string`.
 
 ## Import
 

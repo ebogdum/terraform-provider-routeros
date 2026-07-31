@@ -28,22 +28,21 @@ resource "routeros_routing_id" "id_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `dynamic` - (Read-only) Type: `bool`.
+* `dynamic_id` - (Read-only) Type: `string`.
+* `inactive` - (Read-only) Type: `bool`.
+* `invalid` - (Read-only) Type: `bool`.
 * `name` - (Optional) Type: `string`.
-* `select_dynamic_id` - (Optional) Type: `enum(only-static|only-loopback|only-vrf|only-active|any|lowest)`.
+* `select_dynamic_id` - (Optional) Type: `string`.
 * `select_from_vrf` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `dynamic` - Type: `bool`.
-* `dynamic_id` - Type: `ip`.
-* `inactive` - Type: `bool`.
-* `invalid` - Type: `bool`.
 
 ## Import
 

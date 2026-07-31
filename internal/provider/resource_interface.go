@@ -53,7 +53,7 @@ type InterfaceModel struct {
 	Link                 types.Int64  `tfsdk:"link"`
 	LinkDowns            types.Int64  `tfsdk:"link_downs"`
 	MACAddress           types.String `tfsdk:"mac_address"`
-	MTU                  types.Int64  `tfsdk:"mtu"`
+	MTU                  types.String `tfsdk:"mtu"`
 	Name                 types.String `tfsdk:"name"`
 	Nodefname            types.String `tfsdk:"nodefname"`
 	Notrunning           types.String `tfsdk:"notrunning"`
@@ -95,7 +95,6 @@ func (r *InterfaceResource) Configure(_ context.Context, req resource.ConfigureR
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -108,17 +107,14 @@ func (r *InterfaceResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"actual_mtu": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"answer_time": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"caps": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -128,7 +124,6 @@ func (r *InterfaceResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Description: "Free-form comment.",
 			},
 			"default_name": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -138,86 +133,71 @@ func (r *InterfaceResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Description: "",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"fp_rps_drop": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"fp_rx_byte": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"fp_rx_packet": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"fp_tx_byte": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"fp_tx_packet": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"fp_tx_rx_packet_rate": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"fp_tx_rx_rate": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"inactive": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"l2_mtu": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"last_link_down_time": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"last_link_up_time": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"link": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"link_downs": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"mac_address": schema.StringAttribute{
-				Optional:      true,
 				Computed:      true,
 				Description:   "",
 				Validators:    []validator.String{schemautil.IsMAC()},
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
 			},
-			"mtu": schema.Int64Attribute{
+			"mtu": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "",
+				Description: "A number, or `auto`.",
 			},
 			"name": schema.StringAttribute{
 				Optional:    true,
@@ -225,127 +205,102 @@ func (r *InterfaceResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Description: "",
 			},
 			"nodefname": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"notrunning": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"passthrough": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"reset_traffic_counters": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"running": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rx_byte": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rx_drop": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rx_error": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rx_packet": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"slave": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"torch": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_byte": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_drop": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_error": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_packet": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_queue_drop": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_queue_drops": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_rx_bytes": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_rx_drops": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_rx_errors": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_rx_packet_rate": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_rx_packets": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_rx_rate": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"type": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"vrf": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -374,56 +329,11 @@ func (r *InterfaceResource) Create(ctx context.Context, req resource.CreateReque
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !(plan.FpTxRxPacketRate.IsNull() || plan.FpTxRxPacketRate.IsUnknown()) {
-		body["fp-tx-rx-packet-rate"] = plan.FpTxRxPacketRate.ValueString()
-	}
-	if !(plan.FpTxRxRate.IsNull() || plan.FpTxRxRate.IsUnknown()) {
-		body["fp-tx-rx-rate"] = plan.FpTxRxRate.ValueString()
-	}
-	if !(plan.Inactive.IsNull() || plan.Inactive.IsUnknown()) {
-		body["inactive"] = client.FormatBool(plan.Inactive.ValueBool())
-	}
 	if !(plan.MTU.IsNull() || plan.MTU.IsUnknown()) {
-		body["mtu"] = client.FormatInt64(plan.MTU.ValueInt64())
+		body["mtu"] = plan.MTU.ValueString()
 	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
-	}
-	if !(plan.Nodefname.IsNull() || plan.Nodefname.IsUnknown()) {
-		body["nodefname"] = plan.Nodefname.ValueString()
-	}
-	if !(plan.Notrunning.IsNull() || plan.Notrunning.IsUnknown()) {
-		body["notrunning"] = plan.Notrunning.ValueString()
-	}
-	if !(plan.Passthrough.IsNull() || plan.Passthrough.IsUnknown()) {
-		body["passthrough"] = client.FormatBool(plan.Passthrough.ValueBool())
-	}
-	if !(plan.ResetTrafficCounters.IsNull() || plan.ResetTrafficCounters.IsUnknown()) {
-		body["reset-traffic-counters"] = plan.ResetTrafficCounters.ValueString()
-	}
-	if !(plan.Slave.IsNull() || plan.Slave.IsUnknown()) {
-		body["slave"] = client.FormatBool(plan.Slave.ValueBool())
-	}
-	if !(plan.Torch.IsNull() || plan.Torch.IsUnknown()) {
-		body["torch"] = plan.Torch.ValueString()
-	}
-	if !(plan.TxRxBytes.IsNull() || plan.TxRxBytes.IsUnknown()) {
-		body["tx-rx-bytes"] = plan.TxRxBytes.ValueString()
-	}
-	if !(plan.TxRxDrops.IsNull() || plan.TxRxDrops.IsUnknown()) {
-		body["tx-rx-drops"] = plan.TxRxDrops.ValueString()
-	}
-	if !(plan.TxRxErrors.IsNull() || plan.TxRxErrors.IsUnknown()) {
-		body["tx-rx-errors"] = plan.TxRxErrors.ValueString()
-	}
-	if !(plan.TxRxPacketRate.IsNull() || plan.TxRxPacketRate.IsUnknown()) {
-		body["tx-rx-packet-rate"] = plan.TxRxPacketRate.ValueString()
-	}
-	if !(plan.TxRxPackets.IsNull() || plan.TxRxPackets.IsUnknown()) {
-		body["tx-rx-packets"] = plan.TxRxPackets.ValueString()
-	}
-	if !(plan.TxRxRate.IsNull() || plan.TxRxRate.IsUnknown()) {
-		body["tx-rx-rate"] = plan.TxRxRate.ValueString()
 	}
 	obj, err := c.Add(ctx, "/interface", body)
 	if err != nil {
@@ -478,56 +388,11 @@ func (r *InterfaceResource) Update(ctx context.Context, req resource.UpdateReque
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.FpTxRxPacketRate.Equal(state.FpTxRxPacketRate) {
-		body["fp-tx-rx-packet-rate"] = plan.FpTxRxPacketRate.ValueString()
-	}
-	if !plan.FpTxRxRate.Equal(state.FpTxRxRate) {
-		body["fp-tx-rx-rate"] = plan.FpTxRxRate.ValueString()
-	}
-	if !plan.Inactive.Equal(state.Inactive) {
-		body["inactive"] = client.FormatBool(plan.Inactive.ValueBool())
-	}
 	if !plan.MTU.Equal(state.MTU) {
-		body["mtu"] = client.FormatInt64(plan.MTU.ValueInt64())
+		body["mtu"] = plan.MTU.ValueString()
 	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
-	}
-	if !plan.Nodefname.Equal(state.Nodefname) {
-		body["nodefname"] = plan.Nodefname.ValueString()
-	}
-	if !plan.Notrunning.Equal(state.Notrunning) {
-		body["notrunning"] = plan.Notrunning.ValueString()
-	}
-	if !plan.Passthrough.Equal(state.Passthrough) {
-		body["passthrough"] = client.FormatBool(plan.Passthrough.ValueBool())
-	}
-	if !plan.ResetTrafficCounters.Equal(state.ResetTrafficCounters) {
-		body["reset-traffic-counters"] = plan.ResetTrafficCounters.ValueString()
-	}
-	if !plan.Slave.Equal(state.Slave) {
-		body["slave"] = client.FormatBool(plan.Slave.ValueBool())
-	}
-	if !plan.Torch.Equal(state.Torch) {
-		body["torch"] = plan.Torch.ValueString()
-	}
-	if !plan.TxRxBytes.Equal(state.TxRxBytes) {
-		body["tx-rx-bytes"] = plan.TxRxBytes.ValueString()
-	}
-	if !plan.TxRxDrops.Equal(state.TxRxDrops) {
-		body["tx-rx-drops"] = plan.TxRxDrops.ValueString()
-	}
-	if !plan.TxRxErrors.Equal(state.TxRxErrors) {
-		body["tx-rx-errors"] = plan.TxRxErrors.ValueString()
-	}
-	if !plan.TxRxPacketRate.Equal(state.TxRxPacketRate) {
-		body["tx-rx-packet-rate"] = plan.TxRxPacketRate.ValueString()
-	}
-	if !plan.TxRxPackets.Equal(state.TxRxPackets) {
-		body["tx-rx-packets"] = plan.TxRxPackets.ValueString()
-	}
-	if !plan.TxRxRate.Equal(state.TxRxRate) {
-		body["tx-rx-rate"] = plan.TxRxRate.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface", state.ID.ValueString(), body)
@@ -807,13 +672,13 @@ func interfaceApply(ctx context.Context, obj client.Object, m *InterfaceModel) {
 	}
 	if v, ok := obj["mtu"]; ok {
 		_ = v
-		if n, err := client.ParseInt64(v); err == nil {
-			m.MTU = types.Int64Value(n)
+		if v != "" {
+			m.MTU = types.StringValue(v)
 		} else {
-			m.MTU = types.Int64Null()
+			m.MTU = types.StringNull()
 		}
 	} else {
-		m.MTU = types.Int64Null()
+		m.MTU = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
 		_ = v

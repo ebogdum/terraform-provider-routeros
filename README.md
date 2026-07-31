@@ -32,6 +32,7 @@ through the plugin framework's sensitive-value handling.
 - [Authentication and TLS](#authentication-and-tls)
 - [Development](#development)
 - [Release process](#release-process)
+- [Upgrading](#upgrading)
 - [Release history](#release-history)
 - [License](#license)
 
@@ -60,7 +61,7 @@ terraform {
   required_providers {
     routeros = {
       source  = "ebogdum/routeros"
-      version = "~> 1.0"
+      version = "~> 2.0"
     }
   }
 }
@@ -166,10 +167,14 @@ first router in sorted order if there is no `default`.
 Every menu the REST API surfaces is mapped. Categories include:
 
 - **IP**: address, route, pool, ARP, DHCP server/client/relay, DNS, firewall
-  (filter, NAT, mangle, raw, address-list, layer7-protocol), IPsec, hotspot,
-  proxy, service, neighbor, kid-control, traffic-flow, settings.
-- **IPv6**: address, route, pool, DHCP client/server/relay, firewall family,
-  neighbor discovery, settings.
+  (filter, NAT, mangle, raw, address-list, layer7-protocol, service-port),
+  IPsec (incl. policy-group, QKD keys), hotspot (incl. service-port), proxy,
+  service, neighbor (incl. discovery-settings), kid-control, traffic-flow
+  (incl. IPFIX), media, cloud (incl. advanced), DNS (static, forwarders,
+  adlist), settings.
+- **IPv6**: address, route, pool, DHCP client/server/relay (incl. relay
+  options), firewall family, neighbor discovery (incl. default prefix),
+  settings.
 - **Interface**: bridge (port, vlan, msti, mst-config, settings, filter, nat,
   calea, host), bonding, vlan, vrrp, wireguard (peers), wifi (wave2 +
   legacy), 6to4, eoip, eoipv6, gre, gre6, ipip, ipipv6, l2tp client/server,
@@ -180,13 +185,15 @@ Every menu the REST API surfaces is mapped. Categories include:
   ISIS (instance, interface-template), filter (rule, select-rule, chain),
   BFD, RPKI (session), IGMP-Proxy, PIM-SM, table, rule.
 - **System**: identity, clock, NTP client/server, scheduler, script,
-  package, resource (read-only), backup, logging (action), users (user,
-  group, ssh-keys, aaa), notes, history, watchdog, leds.
+  package (incl. local-update mirror), resource (incl. IRQ affinity, USB
+  settings), health settings, routerboard (settings and the mode/WPS/reset
+  button bindings), backup, logging (action), users (user, group, ssh-keys,
+  aaa), notes, history, watchdog, leds.
 - **Tools**: bandwidth-test, netwatch, fetch, sniffer, traffic-generator
   (with packet templates), email, sms, romon, mac-server, snmp-get,
   snmp-walk.
 - **Certificate**: full lifecycle (sign, export, import, SCEP, ACME, CRL).
-- **Queue**: simple, tree, type.
+- **Queue**: simple, tree, type, interface.
 - **SNMP**: community, send-trap.
 - **Container**, **LCD**, **IoT/LoRa**, **disk**, **environment**, **RADIUS**.
 
@@ -284,7 +291,7 @@ Environment variables provide a shorthand for single-router setups:
 
 ## Development
 
-Requires Go 1.25+ (see [go.mod](go.mod)) and Terraform 1.4+.
+Requires Go 1.26+ (see [go.mod](go.mod)) and Terraform 1.4+.
 
 ```sh
 make build              # local provider binary
@@ -335,6 +342,11 @@ CI on every PR runs: `vet`, unit tests, build, golangci-lint, gen-diff
 (ensures generated files match what the schema produces), and
 `tfplugindocs validate`. Acceptance tests run on `main` against a self-hosted
 runner with a real CHR matrix (ROS 7.20, 7.22, latest).
+
+## Upgrading
+
+v2.0.0 renames and retypes attributes that could not have worked on v1. See
+the [v2 upgrade guide](docs/guides/upgrading-to-v2.md) for the edits needed.
 
 ## Release history
 

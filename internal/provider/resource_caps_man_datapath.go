@@ -52,7 +52,6 @@ func (r *CapsManDatapathResource) Configure(_ context.Context, req resource.Conf
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *CapsManDatapathResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {

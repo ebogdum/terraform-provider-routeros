@@ -28,11 +28,16 @@ resource "routeros_caps_man_security" "security_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `encryption` - (Optional) Type: `string`.
-* `name` - (Required) Type: `string`. Default: `ros_audit_20260523213235_12`.
-* `passphrase` - (Optional) Type: `string`.
+* `name` - (Required) Type: `string`.
+* `passphrase` - (Optional) Type: `string`. **Sensitive.**
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

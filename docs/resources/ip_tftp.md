@@ -30,21 +30,23 @@ resource "routeros_ip_tftp" "tftp_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `allow` - (Optional) Type: `bool`. Default: `1`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `allow` - (Optional) Type: `bool`.
+* `allow_overwrite` - (Optional) Type: `string`. RouterOS `allow-overwrite`.
+* `allow_rollover` - (Optional) Type: `string`. RouterOS `allow-rollover`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `hits` - (Read-only) Type: `int`.
 * `ip_addresses` - (Optional) Type: `string`.
-* `read_only` - (Optional) Type: `bool`. Default: `1`.
+* `read_only` - (Optional) Type: `bool`.
+* `reading_window_size` - (Optional) Type: `string`. RouterOS `reading-window-size`.
 * `real_filename` - (Optional) Type: `string`.
 * `req_filename` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `hits` - Type: `int`.
 
 ## Import
 

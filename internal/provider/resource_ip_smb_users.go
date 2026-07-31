@@ -52,7 +52,6 @@ func (r *IPSmbUsersResource) Configure(_ context.Context, req resource.Configure
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPSmbUsersResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -70,7 +69,6 @@ func (r *IPSmbUsersResource) Schema(_ context.Context, _ resource.SchemaRequest,
 				Description: "Free-form comment.",
 			},
 			"default": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -80,7 +78,6 @@ func (r *IPSmbUsersResource) Schema(_ context.Context, _ resource.SchemaRequest,
 				Description: "",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},

@@ -31,11 +31,14 @@ resource "routeros_routing_bgp_instance" "instance_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `as` - (Optional) Type: `string`.
 * `cluster_id` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`.
-* `ignore_as_path` - (Optional) Type: `string`.
+* `ignore_as_path` - (Read-only) Type: `string`.
+* `ignore_as_path_len` - (Optional) Type: `string`. RouterOS `ignore-as-path-len`.
+* `invalid` - (Read-only) Type: `bool`.
+* `multipath` - (Optional) Type: `string`. RouterOS `multipath`.
 * `name` - (Optional) Type: `string`.
 * `router_id` - (Optional) Type: `string`.
 * `routing_table` - (Optional) Type: `string`.
@@ -43,10 +46,8 @@ This resource supports the following arguments:
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `invalid` - Type: `bool`.
 
 ## Import
 

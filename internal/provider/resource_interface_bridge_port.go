@@ -32,6 +32,7 @@ type InterfaceBridgePortResource struct {
 
 type InterfaceBridgePortModel struct {
 	ID                    types.String `tfsdk:"id"`
+	TrustedDhcpv6         types.String `tfsdk:"trusted_dhcpv6"`
 	AutoIsolate           types.Bool   `tfsdk:"auto_isolate"`
 	BpduGuard             types.Bool   `tfsdk:"bpdu_guard"`
 	Bridge                types.String `tfsdk:"bridge"`
@@ -43,7 +44,7 @@ type InterfaceBridgePortModel struct {
 	FastLeave             types.Bool   `tfsdk:"fast_leave"`
 	FrameTypes            types.String `tfsdk:"frame_types"`
 	HardwareOffload       types.Bool   `tfsdk:"hardware_offload"`
-	Horizon               types.Int64  `tfsdk:"horizon"`
+	Horizon               types.String `tfsdk:"horizon"`
 	Hw                    types.String `tfsdk:"hw"`
 	HwOffload             types.Bool   `tfsdk:"hw_offload"`
 	HwOffloadGroup        types.String `tfsdk:"hw_offload_group"`
@@ -85,7 +86,6 @@ func (r *InterfaceBridgePortResource) Configure(_ context.Context, req resource.
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceBridgePortResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -96,6 +96,11 @@ func (r *InterfaceBridgePortResource) Schema(_ context.Context, _ resource.Schem
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"trusted_dhcpv6": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `trusted-dhcpv6`.",
 			},
 			"auto_isolate": schema.BoolAttribute{
 				Optional:    true,
@@ -128,7 +133,6 @@ func (r *InterfaceBridgePortResource) Schema(_ context.Context, _ resource.Schem
 				Description: "Whether the entry is disabled.",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -150,14 +154,13 @@ func (r *InterfaceBridgePortResource) Schema(_ context.Context, _ resource.Schem
 				Validators:  []validator.String{schemautil.OneOf([]string{"admit-all", "admit-only-vlan-tagged", "admit-only-untagged-and-priority-tagged"}...)},
 			},
 			"hardware_offload": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
-			"horizon": schema.Int64Attribute{
+			"horizon": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "",
+				Description: "Split-horizon group used to isolate ports. A number, or `none` (the default).",
 			},
 			"hw": schema.StringAttribute{
 				Optional:    true,
@@ -165,17 +168,14 @@ func (r *InterfaceBridgePortResource) Schema(_ context.Context, _ resource.Schem
 				Description: "",
 			},
 			"hw_offload": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"hw_offload_group": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"inactive": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -219,7 +219,6 @@ func (r *InterfaceBridgePortResource) Schema(_ context.Context, _ resource.Schem
 				Validators:  []validator.String{schemautil.OneOf([]string{"normal", "fixed"}...)},
 			},
 			"parent": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -235,7 +234,6 @@ func (r *InterfaceBridgePortResource) Schema(_ context.Context, _ resource.Schem
 				Validators:  []validator.String{schemautil.OneOf([]string{"auto", "yes", "no"}...)},
 			},
 			"port_status": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.OneOf([]string{"", "inactive", "active", "disabled"}...)},
@@ -261,12 +259,10 @@ func (r *InterfaceBridgePortResource) Schema(_ context.Context, _ resource.Schem
 				Description: "",
 			},
 			"role": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"status": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -341,17 +337,11 @@ func (r *InterfaceBridgePortResource) Create(ctx context.Context, req resource.C
 	if !(plan.FrameTypes.IsNull() || plan.FrameTypes.IsUnknown()) {
 		body["frame-types"] = plan.FrameTypes.ValueString()
 	}
-	if !(plan.HardwareOffload.IsNull() || plan.HardwareOffload.IsUnknown()) {
-		body["hardware-offload"] = client.FormatBool(plan.HardwareOffload.ValueBool())
-	}
 	if !(plan.Horizon.IsNull() || plan.Horizon.IsUnknown()) {
-		body["horizon"] = client.FormatInt64(plan.Horizon.ValueInt64())
+		body["horizon"] = plan.Horizon.ValueString()
 	}
 	if !(plan.Hw.IsNull() || plan.Hw.IsUnknown()) {
 		body["hw"] = plan.Hw.ValueString()
-	}
-	if !(plan.Inactive.IsNull() || plan.Inactive.IsUnknown()) {
-		body["inactive"] = client.FormatBool(plan.Inactive.ValueBool())
 	}
 	if !(plan.IngressFiltering.IsNull() || plan.IngressFiltering.IsUnknown()) {
 		body["ingress-filtering"] = client.FormatBool(plan.IngressFiltering.ValueBool())
@@ -374,9 +364,6 @@ func (r *InterfaceBridgePortResource) Create(ctx context.Context, req resource.C
 	if !(plan.MvrpRegistrarState.IsNull() || plan.MvrpRegistrarState.IsUnknown()) {
 		body["mvrp-registrar-state"] = plan.MvrpRegistrarState.ValueString()
 	}
-	if !(plan.Parent.IsNull() || plan.Parent.IsUnknown()) {
-		body["parent"] = client.FormatInt64(plan.Parent.ValueInt64())
-	}
 	if !(plan.PathCost.IsNull() || plan.PathCost.IsUnknown()) {
 		body["path-cost"] = plan.PathCost.ValueString()
 	}
@@ -395,12 +382,6 @@ func (r *InterfaceBridgePortResource) Create(ctx context.Context, req resource.C
 	if !(plan.RestrictedTcn.IsNull() || plan.RestrictedTcn.IsUnknown()) {
 		body["restricted-tcn"] = client.FormatBool(plan.RestrictedTcn.ValueBool())
 	}
-	if !(plan.Role.IsNull() || plan.Role.IsUnknown()) {
-		body["role"] = client.FormatInt64(plan.Role.ValueInt64())
-	}
-	if !(plan.Status.IsNull() || plan.Status.IsUnknown()) {
-		body["status"] = client.FormatInt64(plan.Status.ValueInt64())
-	}
 	if !(plan.TagStacking.IsNull() || plan.TagStacking.IsUnknown()) {
 		body["tag-stacking"] = client.FormatBool(plan.TagStacking.ValueBool())
 	}
@@ -415,6 +396,9 @@ func (r *InterfaceBridgePortResource) Create(ctx context.Context, req resource.C
 	}
 	if !(plan.UnknownUnicastFlood.IsNull() || plan.UnknownUnicastFlood.IsUnknown()) {
 		body["unknown-unicast-flood"] = client.FormatBool(plan.UnknownUnicastFlood.ValueBool())
+	}
+	if !(plan.TrustedDhcpv6.IsNull() || plan.TrustedDhcpv6.IsUnknown()) {
+		body["trusted-dhcpv6"] = plan.TrustedDhcpv6.ValueString()
 	}
 	obj, err := c.Add(ctx, "/interface/bridge/port", body)
 	if err != nil {
@@ -490,17 +474,11 @@ func (r *InterfaceBridgePortResource) Update(ctx context.Context, req resource.U
 	if !plan.FrameTypes.Equal(state.FrameTypes) {
 		body["frame-types"] = plan.FrameTypes.ValueString()
 	}
-	if !plan.HardwareOffload.Equal(state.HardwareOffload) {
-		body["hardware-offload"] = client.FormatBool(plan.HardwareOffload.ValueBool())
-	}
 	if !plan.Horizon.Equal(state.Horizon) {
-		body["horizon"] = client.FormatInt64(plan.Horizon.ValueInt64())
+		body["horizon"] = plan.Horizon.ValueString()
 	}
 	if !plan.Hw.Equal(state.Hw) {
 		body["hw"] = plan.Hw.ValueString()
-	}
-	if !plan.Inactive.Equal(state.Inactive) {
-		body["inactive"] = client.FormatBool(plan.Inactive.ValueBool())
 	}
 	if !plan.IngressFiltering.Equal(state.IngressFiltering) {
 		body["ingress-filtering"] = client.FormatBool(plan.IngressFiltering.ValueBool())
@@ -523,9 +501,6 @@ func (r *InterfaceBridgePortResource) Update(ctx context.Context, req resource.U
 	if !plan.MvrpRegistrarState.Equal(state.MvrpRegistrarState) {
 		body["mvrp-registrar-state"] = plan.MvrpRegistrarState.ValueString()
 	}
-	if !plan.Parent.Equal(state.Parent) {
-		body["parent"] = client.FormatInt64(plan.Parent.ValueInt64())
-	}
 	if !plan.PathCost.Equal(state.PathCost) {
 		body["path-cost"] = plan.PathCost.ValueString()
 	}
@@ -544,12 +519,6 @@ func (r *InterfaceBridgePortResource) Update(ctx context.Context, req resource.U
 	if !plan.RestrictedTcn.Equal(state.RestrictedTcn) {
 		body["restricted-tcn"] = client.FormatBool(plan.RestrictedTcn.ValueBool())
 	}
-	if !plan.Role.Equal(state.Role) {
-		body["role"] = client.FormatInt64(plan.Role.ValueInt64())
-	}
-	if !plan.Status.Equal(state.Status) {
-		body["status"] = client.FormatInt64(plan.Status.ValueInt64())
-	}
 	if !plan.TagStacking.Equal(state.TagStacking) {
 		body["tag-stacking"] = client.FormatBool(plan.TagStacking.ValueBool())
 	}
@@ -564,6 +533,9 @@ func (r *InterfaceBridgePortResource) Update(ctx context.Context, req resource.U
 	}
 	if !plan.UnknownUnicastFlood.Equal(state.UnknownUnicastFlood) {
 		body["unknown-unicast-flood"] = client.FormatBool(plan.UnknownUnicastFlood.ValueBool())
+	}
+	if !plan.TrustedDhcpv6.Equal(state.TrustedDhcpv6) && !plan.TrustedDhcpv6.IsUnknown() {
+		body["trusted-dhcpv6"] = plan.TrustedDhcpv6.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/bridge/port", state.ID.ValueString(), body)
@@ -631,6 +603,11 @@ func interfaceBridgePortLookupByNaturalKey(ctx context.Context, c *client.Client
 func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *InterfaceBridgePortModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["trusted-dhcpv6"]; ok && v != "" {
+		m.TrustedDhcpv6 = types.StringValue(v)
+	} else {
+		m.TrustedDhcpv6 = types.StringNull()
+	}
 	if v, ok := obj["auto-isolate"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
@@ -743,13 +720,13 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 	}
 	if v, ok := obj["horizon"]; ok {
 		_ = v
-		if n, err := client.ParseInt64(v); err == nil {
-			m.Horizon = types.Int64Value(n)
+		if v != "" {
+			m.Horizon = types.StringValue(v)
 		} else {
-			m.Horizon = types.Int64Null()
+			m.Horizon = types.StringNull()
 		}
 	} else {
-		m.Horizon = types.Int64Null()
+		m.Horizon = types.StringNull()
 	}
 	if v, ok := obj["hw"]; ok {
 		_ = v

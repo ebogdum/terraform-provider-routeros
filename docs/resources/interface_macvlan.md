@@ -31,15 +31,24 @@ resource "routeros_interface_macvlan" "macvlan_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `arp` - (Optional) Type: `string`.
 * `arp_timeout` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `interface` - (Optional) Type: `string`. RouterOS `interface`.
+* `loop_protect` - (Optional) Type: `string`. RouterOS `loop-protect`.
+* `loop_protect_disable_time` - (Optional) Type: `string`. RouterOS `loop-protect-disable-time`.
+* `loop_protect_send_interval` - (Optional) Type: `string`. RouterOS `loop-protect-send-interval`.
 * `mac_address` - (Optional) Type: `string`.
 * `mode` - (Optional) Type: `string`.
 * `mtu` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

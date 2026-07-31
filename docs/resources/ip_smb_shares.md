@@ -35,26 +35,25 @@ resource "routeros_ip_smb_shares" "shares_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `default` - (Read-only) Type: `bool`.
 * `directory` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`.
+* `dynamic` - (Read-only) Type: `bool`.
 * `invalid_users` - (Optional) Type: `string`.
-* `name` - (Required) Type: `string`. Default: `tf_acc_smbshare`.
-* `newfileman` - (Optional) Type: `string`.
-* `old_directory` - (Optional) Type: `string`.
-* `oldfileman` - (Optional) Type: `string`.
+* `name` - (Required) Type: `string`.
+* `newfileman` - (Read-only) Type: `string`.
+* `old_directory` - (Read-only) Type: `string`.
+* `oldfileman` - (Read-only) Type: `string`.
 * `read_only` - (Optional) Type: `bool`.
 * `require_encryption` - (Optional) Type: `bool`.
 * `valid_users` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `default` - Type: `bool`.
-* `dynamic` - Type: `bool`.
 
 ## Import
 

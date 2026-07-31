@@ -29,8 +29,16 @@ type UserManagerUserResource struct {
 }
 
 type UserManagerUserModel struct {
-	ID     types.String `tfsdk:"id"`
-	Router types.String `tfsdk:"router"`
+	ID          types.String `tfsdk:"id"`
+	CallerId    types.String `tfsdk:"caller_id"`
+	Name        types.String `tfsdk:"name"`
+	Password    types.String `tfsdk:"password"`
+	Group       types.String `tfsdk:"group"`
+	SharedUsers types.String `tfsdk:"shared_users"`
+	OtpSecret   types.String `tfsdk:"otp_secret"`
+	Attributes  types.String `tfsdk:"attributes"`
+	Comment     types.String `tfsdk:"comment"`
+	Router      types.String `tfsdk:"router"`
 }
 
 func NewUserManagerUserResource() resource.Resource { return &UserManagerUserResource{} }
@@ -45,7 +53,6 @@ func (r *UserManagerUserResource) Configure(_ context.Context, req resource.Conf
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *UserManagerUserResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -56,6 +63,48 @@ func (r *UserManagerUserResource) Schema(_ context.Context, _ resource.SchemaReq
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"caller_id": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `caller-id`.",
+			},
+			"name": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "Username.",
+			},
+			"password": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Sensitive:   true,
+				Description: "User password.",
+			},
+			"group": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "User Manager group, e.g. `default`.",
+			},
+			"shared_users": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "Number of simultaneous sessions permitted for this user.",
+			},
+			"otp_secret": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Sensitive:   true,
+				Description: "Base32 TOTP secret used for one-time-password authentication.",
+			},
+			"attributes": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RADIUS attributes returned on authentication, e.g. `Framed-IP-Address:10.0.0.5`.",
+			},
+			"comment": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "Free-form comment.",
 			},
 			"router": schema.StringAttribute{
 				Optional:    true,
@@ -76,6 +125,30 @@ func (r *UserManagerUserResource) Create(ctx context.Context, req resource.Creat
 		return
 	}
 	body := client.Object{}
+	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
+		body["name"] = plan.Name.ValueString()
+	}
+	if !(plan.Password.IsNull() || plan.Password.IsUnknown()) {
+		body["password"] = plan.Password.ValueString()
+	}
+	if !(plan.Group.IsNull() || plan.Group.IsUnknown()) {
+		body["group"] = plan.Group.ValueString()
+	}
+	if !(plan.SharedUsers.IsNull() || plan.SharedUsers.IsUnknown()) {
+		body["shared-users"] = plan.SharedUsers.ValueString()
+	}
+	if !(plan.OtpSecret.IsNull() || plan.OtpSecret.IsUnknown()) {
+		body["otp-secret"] = plan.OtpSecret.ValueString()
+	}
+	if !(plan.Attributes.IsNull() || plan.Attributes.IsUnknown()) {
+		body["attributes"] = plan.Attributes.ValueString()
+	}
+	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
+		body["comment"] = plan.Comment.ValueString()
+	}
+	if !(plan.CallerId.IsNull() || plan.CallerId.IsUnknown()) {
+		body["caller-id"] = plan.CallerId.ValueString()
+	}
 	obj, err := c.Add(ctx, "/user-manager/user", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /user-manager/user failed", err.Error())
@@ -123,6 +196,30 @@ func (r *UserManagerUserResource) Update(ctx context.Context, req resource.Updat
 		return
 	}
 	body := client.Object{}
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
+		body["name"] = plan.Name.ValueString()
+	}
+	if !plan.Password.Equal(state.Password) && !plan.Password.IsUnknown() {
+		body["password"] = plan.Password.ValueString()
+	}
+	if !plan.Group.Equal(state.Group) && !plan.Group.IsUnknown() {
+		body["group"] = plan.Group.ValueString()
+	}
+	if !plan.SharedUsers.Equal(state.SharedUsers) && !plan.SharedUsers.IsUnknown() {
+		body["shared-users"] = plan.SharedUsers.ValueString()
+	}
+	if !plan.OtpSecret.Equal(state.OtpSecret) && !plan.OtpSecret.IsUnknown() {
+		body["otp-secret"] = plan.OtpSecret.ValueString()
+	}
+	if !plan.Attributes.Equal(state.Attributes) && !plan.Attributes.IsUnknown() {
+		body["attributes"] = plan.Attributes.ValueString()
+	}
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
+		body["comment"] = plan.Comment.ValueString()
+	}
+	if !plan.CallerId.Equal(state.CallerId) && !plan.CallerId.IsUnknown() {
+		body["caller-id"] = plan.CallerId.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/user-manager/user", state.ID.ValueString(), body)
 		if err != nil {
@@ -189,4 +286,44 @@ func userManagerUserLookupByNaturalKey(ctx context.Context, c *client.Client, id
 func userManagerUserApply(ctx context.Context, obj client.Object, m *UserManagerUserModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["caller-id"]; ok && v != "" {
+		m.CallerId = types.StringValue(v)
+	} else {
+		m.CallerId = types.StringNull()
+	}
+	if v, ok := obj["name"]; ok && v != "" {
+		m.Name = types.StringValue(v)
+	} else {
+		m.Name = types.StringNull()
+	}
+	if v, ok := obj["password"]; ok && v != "" {
+		m.Password = types.StringValue(v)
+	} else {
+		m.Password = types.StringNull()
+	}
+	if v, ok := obj["group"]; ok && v != "" {
+		m.Group = types.StringValue(v)
+	} else {
+		m.Group = types.StringNull()
+	}
+	if v, ok := obj["shared-users"]; ok && v != "" {
+		m.SharedUsers = types.StringValue(v)
+	} else {
+		m.SharedUsers = types.StringNull()
+	}
+	if v, ok := obj["otp-secret"]; ok && v != "" {
+		m.OtpSecret = types.StringValue(v)
+	} else {
+		m.OtpSecret = types.StringNull()
+	}
+	if v, ok := obj["attributes"]; ok && v != "" {
+		m.Attributes = types.StringValue(v)
+	} else {
+		m.Attributes = types.StringNull()
+	}
+	if v, ok := obj["comment"]; ok && v != "" {
+		m.Comment = types.StringValue(v)
+	} else {
+		m.Comment = types.StringNull()
+	}
 }

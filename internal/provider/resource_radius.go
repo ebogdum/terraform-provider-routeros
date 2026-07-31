@@ -67,7 +67,6 @@ func (r *RADIUSResource) Configure(_ context.Context, req resource.ConfigureRequ
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *RADIUSResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -131,7 +130,6 @@ func (r *RADIUSResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 				Validators:  []validator.String{schemautil.OneOf([]string{"udp", "radsec"}...)},
 			},
 			"radsec": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -152,7 +150,6 @@ func (r *RADIUSResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 				Validators:  []validator.String{schemautil.OneOf([]string{"", "no", "yes-for-request-resp"}...)},
 			},
 			"reset_status": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -179,7 +176,6 @@ func (r *RADIUSResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 				Description: "Timeout after which the request should be resent.",
 			},
 			"udp": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -232,9 +228,6 @@ func (r *RADIUSResource) Create(ctx context.Context, req resource.CreateRequest,
 	if !(plan.Protocol.IsNull() || plan.Protocol.IsUnknown()) {
 		body["protocol"] = plan.Protocol.ValueString()
 	}
-	if !(plan.Radsec.IsNull() || plan.Radsec.IsUnknown()) {
-		body["radsec"] = plan.Radsec.ValueString()
-	}
 	if !(plan.RadsecTimeout.IsNull() || plan.RadsecTimeout.IsUnknown()) {
 		body["radsec-timeout"] = plan.RadsecTimeout.ValueString()
 	}
@@ -243,9 +236,6 @@ func (r *RADIUSResource) Create(ctx context.Context, req resource.CreateRequest,
 	}
 	if !(plan.RequireMessageAuth.IsNull() || plan.RequireMessageAuth.IsUnknown()) {
 		body["require-message-auth"] = plan.RequireMessageAuth.ValueString()
-	}
-	if !(plan.ResetStatus.IsNull() || plan.ResetStatus.IsUnknown()) {
-		body["reset-status"] = plan.ResetStatus.ValueString()
 	}
 	if !(plan.Secret.IsNull() || plan.Secret.IsUnknown()) {
 		body["secret"] = plan.Secret.ValueString()
@@ -258,9 +248,6 @@ func (r *RADIUSResource) Create(ctx context.Context, req resource.CreateRequest,
 	}
 	if !(plan.Timeout.IsNull() || plan.Timeout.IsUnknown()) {
 		body["timeout"] = client.FormatInt64(plan.Timeout.ValueInt64())
-	}
-	if !(plan.UDP.IsNull() || plan.UDP.IsUnknown()) {
-		body["udp"] = plan.UDP.ValueString()
 	}
 	obj, err := c.Add(ctx, "/radius", body)
 	if err != nil {
@@ -339,9 +326,6 @@ func (r *RADIUSResource) Update(ctx context.Context, req resource.UpdateRequest,
 	if !plan.Protocol.Equal(state.Protocol) {
 		body["protocol"] = plan.Protocol.ValueString()
 	}
-	if !plan.Radsec.Equal(state.Radsec) {
-		body["radsec"] = plan.Radsec.ValueString()
-	}
 	if !plan.RadsecTimeout.Equal(state.RadsecTimeout) {
 		body["radsec-timeout"] = plan.RadsecTimeout.ValueString()
 	}
@@ -350,9 +334,6 @@ func (r *RADIUSResource) Update(ctx context.Context, req resource.UpdateRequest,
 	}
 	if !plan.RequireMessageAuth.Equal(state.RequireMessageAuth) {
 		body["require-message-auth"] = plan.RequireMessageAuth.ValueString()
-	}
-	if !plan.ResetStatus.Equal(state.ResetStatus) {
-		body["reset-status"] = plan.ResetStatus.ValueString()
 	}
 	if !plan.Secret.Equal(state.Secret) {
 		body["secret"] = plan.Secret.ValueString()
@@ -365,9 +346,6 @@ func (r *RADIUSResource) Update(ctx context.Context, req resource.UpdateRequest,
 	}
 	if !plan.Timeout.Equal(state.Timeout) {
 		body["timeout"] = client.FormatInt64(plan.Timeout.ValueInt64())
-	}
-	if !plan.UDP.Equal(state.UDP) {
-		body["udp"] = plan.UDP.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/radius", state.ID.ValueString(), body)

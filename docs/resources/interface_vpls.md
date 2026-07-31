@@ -41,38 +41,40 @@ resource "routeros_interface_vpls" "vpls_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `arp` - (Optional) Type: `enum(disabled|enabled|proxy-arp|reply-only|local-proxy-arp)`. Default: `1`.
-* `arp_timeout` - (Optional) Type: `duration`.
-* `bgp_signaled` - (Optional) Type: `bool`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `arp` - (Optional) Type: `string`.
+* `arp_timeout` - (Optional) Type: `string`.
+* `bgp_signaled` - (Read-only) Type: `bool`.
+* `bgp_vpls` - (Read-only) Type: `string`.
+* `bgp_vpls_prefix` - (Read-only) Type: `string`.
 * `bridge` - (Optional) Type: `string`.
 * `bridge_cost` - (Optional) Type: `string`.
 * `bridge_horizon` - (Optional) Type: `string`.
 * `bridge_pvid` - (Optional) Type: `string`.
-* `cisco_bgp_signaled` - (Optional) Type: `bool`.
+* `cisco_bgp_signaled` - (Read-only) Type: `bool`.
 * `cisco_static_id` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `disable_running_check` - (Optional) Type: `string`. RouterOS `disable-running-check`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `local_label` - (Read-only) Type: `int`.
 * `mac_address` - (Optional) Type: `string`.
-* `mtu` - (Optional) Type: `int`. Default: `1500`.
+* `mtu` - (Optional) Type: `int`.
+* `name` - (Optional) Type: `string`. RouterOS `name`.
+* `peer` - (Optional) Type: `string`. RouterOS `peer`.
 * `pw_control_word` - (Optional) Type: `string`.
 * `pw_l2mtu` - (Optional) Type: `string`.
 * `pw_type` - (Optional) Type: `string`.
-* `remote_peer` - (Optional) Type: `string`.
+* `remote_group` - (Read-only) Type: `int`.
+* `remote_label` - (Read-only) Type: `int`.
+* `remote_peer` - (Read-only) Type: `string`.
+* `remote_status` - (Read-only) Type: `string`.
+* `te_tunnel` - (Read-only) Type: `int`.
 * `vpls_id` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `bgp_vpls` - Type: `string`.
-* `bgp_vpls_prefix` - Type: `string`.
-* `local_label` - Type: `int`.
-* `remote_group` - Type: `int`.
-* `remote_label` - Type: `int`.
-* `remote_status` - Type: `string`.
-* `te_tunnel` - Type: `int`.
 
 ## Import
 

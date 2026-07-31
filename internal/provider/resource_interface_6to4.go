@@ -32,6 +32,8 @@ type Interface6to4Resource struct {
 
 type Interface6to4Model struct {
 	ID            types.String `tfsdk:"id"`
+	Keepalive     types.String `tfsdk:"keepalive"`
+	IpsecSecret   types.String `tfsdk:"ipsec_secret"`
 	ClampTCPMss   types.Bool   `tfsdk:"clamp_tcp_mss"`
 	Comment       types.String `tfsdk:"comment"`
 	Disabled      types.Bool   `tfsdk:"disabled"`
@@ -56,7 +58,6 @@ func (r *Interface6to4Resource) Configure(_ context.Context, req resource.Config
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *Interface6to4Resource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -67,6 +68,17 @@ func (r *Interface6to4Resource) Schema(_ context.Context, _ resource.SchemaReque
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"keepalive": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `keepalive`.",
+			},
+			"ipsec_secret": schema.StringAttribute{
+				Optional:    true,
+				Sensitive:   true,
+				Computed:    true,
+				Description: "RouterOS `ipsec-secret`.",
 			},
 			"clamp_tcp_mss": schema.BoolAttribute{
 				Optional:    true,
@@ -160,6 +172,12 @@ func (r *Interface6to4Resource) Create(ctx context.Context, req resource.CreateR
 	if !(plan.RemoteAddress.IsNull() || plan.RemoteAddress.IsUnknown()) {
 		body["remote-address"] = plan.RemoteAddress.ValueString()
 	}
+	if !(plan.IpsecSecret.IsNull() || plan.IpsecSecret.IsUnknown()) {
+		body["ipsec-secret"] = plan.IpsecSecret.ValueString()
+	}
+	if !(plan.Keepalive.IsNull() || plan.Keepalive.IsUnknown()) {
+		body["keepalive"] = plan.Keepalive.ValueString()
+	}
 	obj, err := c.Add(ctx, "/interface/6to4", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /interface/6to4 failed", err.Error())
@@ -234,6 +252,12 @@ func (r *Interface6to4Resource) Update(ctx context.Context, req resource.UpdateR
 	if !plan.RemoteAddress.Equal(state.RemoteAddress) {
 		body["remote-address"] = plan.RemoteAddress.ValueString()
 	}
+	if !plan.IpsecSecret.Equal(state.IpsecSecret) && !plan.IpsecSecret.IsUnknown() {
+		body["ipsec-secret"] = plan.IpsecSecret.ValueString()
+	}
+	if !plan.Keepalive.Equal(state.Keepalive) && !plan.Keepalive.IsUnknown() {
+		body["keepalive"] = plan.Keepalive.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/6to4", state.ID.ValueString(), body)
 		if err != nil {
@@ -300,6 +324,16 @@ func interface6to4LookupByNaturalKey(ctx context.Context, c *client.Client, id s
 func interface6to4Apply(ctx context.Context, obj client.Object, m *Interface6to4Model) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["keepalive"]; ok && v != "" {
+		m.Keepalive = types.StringValue(v)
+	} else {
+		m.Keepalive = types.StringNull()
+	}
+	if v, ok := obj["ipsec-secret"]; ok && v != "" {
+		m.IpsecSecret = types.StringValue(v)
+	} else {
+		m.IpsecSecret = types.StringNull()
+	}
 	if v, ok := obj["clamp-tcp-mss"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {

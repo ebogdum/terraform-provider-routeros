@@ -50,7 +50,6 @@ func (r *InterfaceListMemberResource) Configure(_ context.Context, req resource.
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceListMemberResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -73,7 +72,6 @@ func (r *InterfaceListMemberResource) Schema(_ context.Context, _ resource.Schem
 				Description: "Whether the entry is disabled.",
 			},
 			"dynamic": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -111,9 +109,6 @@ func (r *InterfaceListMemberResource) Create(ctx context.Context, req resource.C
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
-	}
-	if !(plan.Dynamic.IsNull() || plan.Dynamic.IsUnknown()) {
-		body["dynamic"] = plan.Dynamic.ValueString()
 	}
 	if !(plan.Interface.IsNull() || plan.Interface.IsUnknown()) {
 		body["interface"] = plan.Interface.ValueString()
@@ -173,9 +168,6 @@ func (r *InterfaceListMemberResource) Update(ctx context.Context, req resource.U
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
-	}
-	if !plan.Dynamic.Equal(state.Dynamic) {
-		body["dynamic"] = plan.Dynamic.ValueString()
 	}
 	if !plan.Interface.Equal(state.Interface) {
 		body["interface"] = plan.Interface.ValueString()

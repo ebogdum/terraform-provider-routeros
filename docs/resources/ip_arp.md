@@ -37,34 +37,33 @@ resource "routeros_ip_arp" "arp_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `address` - (Required) Type: `ip`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `address` - (Required) Type: `string`.
+* `bridge_port` - (Read-only) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `complete` - (Read-only) Type: `bool`.
+* `dhcp` - (Read-only) Type: `bool`.
 * `disabled` - (Optional) Type: `bool`.
+* `dynamic` - (Read-only) Type: `bool`.
+* `host_name` - (Read-only) Type: `string`.
 * `interface` - (Required) Type: `string`.
-* `ip_address` - (Optional) Type: `ip`.
-* `mac_address` - (Optional) Type: `mac`.
-* `mac_ping` - (Optional) Type: `string`.
-* `mac_telnet` - (Optional) Type: `string`.
-* `make_static` - (Optional) Type: `string`.
-* `ping` - (Optional) Type: `string`.
+* `invalid` - (Read-only) Type: `bool`.
+* `ip_address` - (Read-only) Type: `string`.
+* `mac_address` - (Optional) Type: `string`.
+* `mac_ping` - (Read-only) Type: `string`.
+* `mac_telnet` - (Read-only) Type: `string`.
+* `make_static` - (Read-only) Type: `string`.
+* `ping` - (Read-only) Type: `string`.
 * `published` - (Optional) Type: `bool`.
-* `telnet` - (Optional) Type: `string`.
-* `torch` - (Optional) Type: `string`.
+* `status` - (Read-only) Type: `string`.
+* `telnet` - (Read-only) Type: `string`.
+* `torch` - (Read-only) Type: `string`.
+* `vrf` - (Read-only) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `bridge_port` - Type: `string`.
-* `complete` - Type: `bool`.
-* `dhcp` - Type: `bool`.
-* `dynamic` - Type: `bool`.
-* `host_name` - Type: `string`.
-* `invalid` - Type: `bool`.
-* `status` - Type: `string`.
-* `vrf` - Type: `string`.
 
 ## Import
 

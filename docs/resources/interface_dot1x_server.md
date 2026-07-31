@@ -38,29 +38,28 @@ resource "routeros_interface_dot1x_server" "server_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `accounting` - (Optional) Type: `bool`. Default: `1`.
-* `auth_timeout` - (Optional) Type: `string`. Default: `6000`.
-* `auth_types` - (Optional) Type: `string`. Default: `1`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `accounting` - (Optional) Type: `bool`.
+* `auth_timeout` - (Optional) Type: `string`.
+* `auth_types` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `guest_vlan_id` - (Optional) Type: `string`.
 * `interface` - (Optional) Type: `string`.
-* `interim_update` - (Optional) Type: `duration`.
-* `mac` - (Optional) Type: `string`.
-* `mac_auth_mode` - (Optional) Type: `enum(mac-as-username|mac-as-username-and-password)`.
-* `radius_mac_format` - (Optional) Type: `enum(xx:xx:xx:xx:xx:xx|xx-xx-xx-xx-xx-xx|xxxxxxxxxxxx)`.
+* `interim_update` - (Optional) Type: `string`.
+* `invalid` - (Read-only) Type: `bool`.
+* `mac` - (Read-only) Type: `string`.
+* `mac_auth_mode` - (Optional) Type: `string`.
+* `radius_mac_format` - (Optional) Type: `string`.
 * `reauth_timeout` - (Optional) Type: `string`.
 * `reject_vlan_id` - (Optional) Type: `string`.
-* `retrans_timeout` - (Optional) Type: `string`. Default: `3000`.
+* `retrans_timeout` - (Optional) Type: `string`.
 * `server_fail_vlan_id` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `invalid` - Type: `bool`.
 
 ## Import
 

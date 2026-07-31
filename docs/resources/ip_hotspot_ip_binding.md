@@ -30,14 +30,19 @@ resource "routeros_ip_hotspot_ip_binding" "ip_binding_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `address` - (Optional) Type: `cidr`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `address` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `mac_address` - (Optional) Type: `string`.
 * `server` - (Optional) Type: `string`.
-* `to_address` - (Optional) Type: `ip`.
-* `type` - (Optional) Type: `enum(regular|bypassed|blocked)`.
+* `to_address` - (Optional) Type: `string`.
+* `type` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

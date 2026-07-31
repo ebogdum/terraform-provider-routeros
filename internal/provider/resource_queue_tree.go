@@ -30,6 +30,7 @@ type QueueTreeResource struct {
 
 type QueueTreeModel struct {
 	ID             types.String `tfsdk:"id"`
+	BucketSize     types.String `tfsdk:"bucket_size"`
 	BurstLimit     types.String `tfsdk:"burst_limit"`
 	BurstThreshold types.String `tfsdk:"burst_threshold"`
 	BurstTime      types.String `tfsdk:"burst_time"`
@@ -59,7 +60,6 @@ func (r *QueueTreeResource) Configure(_ context.Context, req resource.ConfigureR
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *QueueTreeResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -70,6 +70,11 @@ func (r *QueueTreeResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"bucket_size": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `bucket-size`.",
 			},
 			"burst_limit": schema.StringAttribute{
 				Optional:    true,
@@ -139,7 +144,7 @@ func (r *QueueTreeResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
 			},
 			"place_before": schema.StringAttribute{
-				Optional:    true,
+				Computed:    true,
 				Description: "RouterOS .id (e.g. *3) of the entry this one should be moved before. Use to enforce explicit ordering on ordered menus.",
 			},
 		},
@@ -187,14 +192,14 @@ func (r *QueueTreeResource) Create(ctx context.Context, req resource.CreateReque
 	if !(plan.Parent.IsNull() || plan.Parent.IsUnknown()) {
 		body["parent"] = plan.Parent.ValueString()
 	}
-	if !(plan.PlaceBeforeRos.IsNull() || plan.PlaceBeforeRos.IsUnknown()) {
-		body["place_before"] = plan.PlaceBeforeRos.ValueString()
-	}
 	if !(plan.Priority.IsNull() || plan.Priority.IsUnknown()) {
 		body["priority"] = plan.Priority.ValueString()
 	}
 	if !(plan.Queue.IsNull() || plan.Queue.IsUnknown()) {
 		body["queue"] = plan.Queue.ValueString()
+	}
+	if !(plan.BucketSize.IsNull() || plan.BucketSize.IsUnknown()) {
+		body["bucket-size"] = plan.BucketSize.ValueString()
 	}
 	obj, err := c.Add(ctx, "/queue/tree", body)
 	if err != nil {
@@ -284,14 +289,14 @@ func (r *QueueTreeResource) Update(ctx context.Context, req resource.UpdateReque
 	if !plan.Parent.Equal(state.Parent) {
 		body["parent"] = plan.Parent.ValueString()
 	}
-	if !plan.PlaceBeforeRos.Equal(state.PlaceBeforeRos) {
-		body["place_before"] = plan.PlaceBeforeRos.ValueString()
-	}
 	if !plan.Priority.Equal(state.Priority) {
 		body["priority"] = plan.Priority.ValueString()
 	}
 	if !plan.Queue.Equal(state.Queue) {
 		body["queue"] = plan.Queue.ValueString()
+	}
+	if !plan.BucketSize.Equal(state.BucketSize) && !plan.BucketSize.IsUnknown() {
+		body["bucket-size"] = plan.BucketSize.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/queue/tree", state.ID.ValueString(), body)
@@ -365,6 +370,11 @@ func queueTreeLookupByNaturalKey(ctx context.Context, c *client.Client, id strin
 func queueTreeApply(ctx context.Context, obj client.Object, m *QueueTreeModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["bucket-size"]; ok && v != "" {
+		m.BucketSize = types.StringValue(v)
+	} else {
+		m.BucketSize = types.StringNull()
+	}
 	if v, ok := obj["burst-limit"]; ok {
 		_ = v
 		if v != "" {

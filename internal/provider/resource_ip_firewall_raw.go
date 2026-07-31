@@ -30,6 +30,7 @@ type IPFirewallRawResource struct {
 
 type IPFirewallRawModel struct {
 	ID                      types.String `tfsdk:"id"`
+	Tos                     types.String `tfsdk:"tos"`
 	Action                  types.String `tfsdk:"action"`
 	AddressList             types.String `tfsdk:"address_list"`
 	AddressListTimeout      types.String `tfsdk:"address_list_timeout"`
@@ -98,7 +99,6 @@ func (r *IPFirewallRawResource) Configure(_ context.Context, req resource.Config
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPFirewallRawResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -109,6 +109,11 @@ func (r *IPFirewallRawResource) Schema(_ context.Context, _ resource.SchemaReque
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"tos": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `tos`.",
 			},
 			"action": schema.StringAttribute{
 				Required:    true,
@@ -542,6 +547,9 @@ func (r *IPFirewallRawResource) Create(ctx context.Context, req resource.CreateR
 	if !(plan.Ttl.IsNull() || plan.Ttl.IsUnknown()) {
 		body["ttl"] = plan.Ttl.ValueString()
 	}
+	if !(plan.Tos.IsNull() || plan.Tos.IsUnknown()) {
+		body["tos"] = plan.Tos.ValueString()
+	}
 	obj, err := c.Add(ctx, "/ip/firewall/raw", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /ip/firewall/raw failed", err.Error())
@@ -762,6 +770,9 @@ func (r *IPFirewallRawResource) Update(ctx context.Context, req resource.UpdateR
 	if !plan.Ttl.Equal(state.Ttl) {
 		body["ttl"] = plan.Ttl.ValueString()
 	}
+	if !plan.Tos.Equal(state.Tos) && !plan.Tos.IsUnknown() {
+		body["tos"] = plan.Tos.ValueString()
+	}
 	// If position OR comment changed, re-encode the marker into the comment
 	// so the device-side prefix stays in sync.
 	if !plan.Comment.Equal(state.Comment) {
@@ -851,6 +862,11 @@ func iPFirewallRawLookupByNaturalKey(ctx context.Context, c *client.Client, id s
 func iPFirewallRawApply(ctx context.Context, obj client.Object, m *IPFirewallRawModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["tos"]; ok && v != "" {
+		m.Tos = types.StringValue(v)
+	} else {
+		m.Tos = types.StringNull()
+	}
 	// Strip the [tf:pos=N] marker from the comment before exposing to state.
 	// Position is TF-state-only metadata; never written to the device. Keep
 	// whatever the user planned. Comment is left untouched.

@@ -28,11 +28,21 @@ resource "routeros_ip_socksify" "socksify_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `connection_timeout` - (Optional) Type: `string`. RouterOS `connection-timeout`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `name` - (Required) Type: `string`. Default: `tf-acc-socksify`.
-* `port` - (Optional) Type: `int`. Default: `1080`.
+* `name` - (Required) Type: `string`.
+* `port` - (Optional) Type: `int`.
+* `socks5_password` - (Optional) Type: `string`. RouterOS `socks5-password`. **Sensitive.**
+* `socks5_port` - (Optional) Type: `string`. RouterOS `socks5-port`.
+* `socks5_server` - (Optional) Type: `string`. RouterOS `socks5-server`.
+* `socks5_user` - (Optional) Type: `string`. RouterOS `socks5-user`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

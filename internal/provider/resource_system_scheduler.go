@@ -58,7 +58,6 @@ func (r *SystemSchedulerResource) Configure(_ context.Context, req resource.Conf
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *SystemSchedulerResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -92,7 +91,6 @@ func (r *SystemSchedulerResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "",
 			},
 			"next_run": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -101,7 +99,6 @@ func (r *SystemSchedulerResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "",
 			},
 			"owner": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -111,7 +108,6 @@ func (r *SystemSchedulerResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "",
 			},
 			"run_count": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},

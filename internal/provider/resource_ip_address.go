@@ -32,6 +32,8 @@ type IPAddressResource struct {
 
 type IPAddressModel struct {
 	ID              types.String `tfsdk:"id"`
+	Netmask         types.String `tfsdk:"netmask"`
+	Broadcast       types.String `tfsdk:"broadcast"`
 	ActualInterface types.String `tfsdk:"actual_interface"`
 	Address         types.String `tfsdk:"address"`
 	Comment         types.String `tfsdk:"comment"`
@@ -57,7 +59,6 @@ func (r *IPAddressResource) Configure(_ context.Context, req resource.ConfigureR
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPAddressResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -69,8 +70,17 @@ func (r *IPAddressResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
-			"actual_interface": schema.StringAttribute{
+			"netmask": schema.StringAttribute{
 				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `netmask`.",
+			},
+			"broadcast": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `broadcast`.",
+			},
+			"actual_interface": schema.StringAttribute{
 				Computed:    true,
 				Description: "",
 			},
@@ -91,7 +101,6 @@ func (r *IPAddressResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Description: "",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -100,7 +109,6 @@ func (r *IPAddressResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Description: "",
 			},
 			"invalid": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -111,12 +119,10 @@ func (r *IPAddressResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Validators:  []validator.String{schemautil.IsIP()},
 			},
 			"slave": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"vrf": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -150,6 +156,12 @@ func (r *IPAddressResource) Create(ctx context.Context, req resource.CreateReque
 	}
 	if !(plan.Interface.IsNull() || plan.Interface.IsUnknown()) {
 		body["interface"] = plan.Interface.ValueString()
+	}
+	if !(plan.Broadcast.IsNull() || plan.Broadcast.IsUnknown()) {
+		body["broadcast"] = plan.Broadcast.ValueString()
+	}
+	if !(plan.Netmask.IsNull() || plan.Netmask.IsUnknown()) {
+		body["netmask"] = plan.Netmask.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ip/address", body)
 	if err != nil {
@@ -209,6 +221,12 @@ func (r *IPAddressResource) Update(ctx context.Context, req resource.UpdateReque
 	}
 	if !plan.Interface.Equal(state.Interface) {
 		body["interface"] = plan.Interface.ValueString()
+	}
+	if !plan.Broadcast.Equal(state.Broadcast) && !plan.Broadcast.IsUnknown() {
+		body["broadcast"] = plan.Broadcast.ValueString()
+	}
+	if !plan.Netmask.Equal(state.Netmask) && !plan.Netmask.IsUnknown() {
+		body["netmask"] = plan.Netmask.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/address", state.ID.ValueString(), body)
@@ -276,6 +294,16 @@ func iPAddressLookupByNaturalKey(ctx context.Context, c *client.Client, id strin
 func iPAddressApply(ctx context.Context, obj client.Object, m *IPAddressModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["netmask"]; ok && v != "" {
+		m.Netmask = types.StringValue(v)
+	} else {
+		m.Netmask = types.StringNull()
+	}
+	if v, ok := obj["broadcast"]; ok && v != "" {
+		m.Broadcast = types.StringValue(v)
+	} else {
+		m.Broadcast = types.StringNull()
+	}
 	if v, ok := obj["actual-interface"]; ok {
 		_ = v
 		if v != "" {

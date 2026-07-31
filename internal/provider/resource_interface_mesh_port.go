@@ -57,7 +57,6 @@ func (r *InterfaceMeshPortResource) Configure(_ context.Context, req resource.Co
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceMeshPortResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -80,12 +79,10 @@ func (r *InterfaceMeshPortResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"dr_address": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -95,7 +92,6 @@ func (r *InterfaceMeshPortResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"inactive": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -147,9 +143,6 @@ func (r *InterfaceMeshPortResource) Create(ctx context.Context, req resource.Cre
 	}
 	if !(plan.HelloInterval.IsNull() || plan.HelloInterval.IsUnknown()) {
 		body["hello-interval"] = client.FormatInt64(plan.HelloInterval.ValueInt64())
-	}
-	if !(plan.Inactive.IsNull() || plan.Inactive.IsUnknown()) {
-		body["inactive"] = client.FormatBool(plan.Inactive.ValueBool())
 	}
 	if !(plan.Interface.IsNull() || plan.Interface.IsUnknown()) {
 		body["interface"] = plan.Interface.ValueString()
@@ -218,9 +211,6 @@ func (r *InterfaceMeshPortResource) Update(ctx context.Context, req resource.Upd
 	}
 	if !plan.HelloInterval.Equal(state.HelloInterval) {
 		body["hello-interval"] = client.FormatInt64(plan.HelloInterval.ValueInt64())
-	}
-	if !plan.Inactive.Equal(state.Inactive) {
-		body["inactive"] = client.FormatBool(plan.Inactive.ValueBool())
 	}
 	if !plan.Interface.Equal(state.Interface) {
 		body["interface"] = plan.Interface.ValueString()

@@ -109,7 +109,8 @@ func (r *IPCloudResource) Schema(_ context.Context, _ resource.SchemaRequest, re
 			"vpn_interface": schema.StringAttribute{Optional: true, Computed: true,
 				Description: "Name of the created interface for Back to Home WireGuard ® tunnel.",
 			},
-			"vpn_peer_private_key": schema.StringAttribute{Optional: true, Computed: true,
+			"vpn_peer_private_key": schema.StringAttribute{Optional: true,
+				Sensitive: true, Computed: true,
 				Description: "Peer private key",
 			},
 			"vpn_peer_public_key": schema.StringAttribute{Optional: true, Computed: true,
@@ -121,7 +122,8 @@ func (r *IPCloudResource) Schema(_ context.Context, _ resource.SchemaRequest, re
 			"vpn_prefer_relay_code": schema.StringAttribute{Optional: true, Computed: true,
 				Description: "You can enter relay code that will be preferred for BTH connection, if not set, relay with smallest RTT will be chosen.",
 			},
-			"vpn_private_key": schema.StringAttribute{Optional: true, Computed: true,
+			"vpn_private_key": schema.StringAttribute{Optional: true,
+				Sensitive: true, Computed: true,
 				Description: "Private key for BTH",
 			},
 			"vpn_public_key": schema.StringAttribute{Optional: true, Computed: true,
@@ -239,74 +241,11 @@ func iPCloudUpsert(ctx context.Context, reg *client.Registry, plan *IPCloudModel
 	if !(plan.DdnsUpdateInterval.IsNull() || plan.DdnsUpdateInterval.IsUnknown()) {
 		body["ddns-update-interval"] = plan.DdnsUpdateInterval.ValueString()
 	}
-	if !(plan.DNSName.IsNull() || plan.DNSName.IsUnknown()) {
-		body["dns-name"] = plan.DNSName.ValueString()
-	}
-	if !(plan.PublicAddress.IsNull() || plan.PublicAddress.IsUnknown()) {
-		body["public-address"] = plan.PublicAddress.ValueString()
-	}
-	if !(plan.PublicAddressIvp6.IsNull() || plan.PublicAddressIvp6.IsUnknown()) {
-		body["public-address-ivp6"] = plan.PublicAddressIvp6.ValueString()
-	}
-	if !(plan.Status.IsNull() || plan.Status.IsUnknown()) {
-		body["status"] = plan.Status.ValueString()
-	}
 	if !(plan.UpdateTime.IsNull() || plan.UpdateTime.IsUnknown()) {
 		body["update-time"] = client.FormatBool(plan.UpdateTime.ValueBool())
 	}
-	if !(plan.VPNDNSName.IsNull() || plan.VPNDNSName.IsUnknown()) {
-		body["vpn-dns-name"] = plan.VPNDNSName.ValueString()
-	}
-	if !(plan.VPNInterface.IsNull() || plan.VPNInterface.IsUnknown()) {
-		body["vpn-interface"] = plan.VPNInterface.ValueString()
-	}
-	if !(plan.VPNPeerPrivateKey.IsNull() || plan.VPNPeerPrivateKey.IsUnknown()) {
-		body["vpn-peer-private-key"] = plan.VPNPeerPrivateKey.ValueString()
-	}
-	if !(plan.VPNPeerPublicKey.IsNull() || plan.VPNPeerPublicKey.IsUnknown()) {
-		body["vpn-peer-public-key"] = plan.VPNPeerPublicKey.ValueString()
-	}
-	if !(plan.VPNPort.IsNull() || plan.VPNPort.IsUnknown()) {
-		body["vpn-port"] = plan.VPNPort.ValueString()
-	}
 	if !(plan.VPNPreferRelayCode.IsNull() || plan.VPNPreferRelayCode.IsUnknown()) {
 		body["vpn-prefer-relay-code"] = plan.VPNPreferRelayCode.ValueString()
-	}
-	if !(plan.VPNPrivateKey.IsNull() || plan.VPNPrivateKey.IsUnknown()) {
-		body["vpn-private-key"] = plan.VPNPrivateKey.ValueString()
-	}
-	if !(plan.VPNPublicKey.IsNull() || plan.VPNPublicKey.IsUnknown()) {
-		body["vpn-public-key"] = plan.VPNPublicKey.ValueString()
-	}
-	if !(plan.VPNRelayAddressess.IsNull() || plan.VPNRelayAddressess.IsUnknown()) {
-		body["vpn-relay-addressess"] = plan.VPNRelayAddressess.ValueString()
-	}
-	if !(plan.VPNRelayAddressessIPV6.IsNull() || plan.VPNRelayAddressessIPV6.IsUnknown()) {
-		body["vpn-relay-addressess-ipv6"] = plan.VPNRelayAddressessIPV6.ValueString()
-	}
-	if !(plan.VPNRelayCodes.IsNull() || plan.VPNRelayCodes.IsUnknown()) {
-		body["vpn-relay-codes"] = plan.VPNRelayCodes.ValueString()
-	}
-	if !(plan.VPNRelayIpv4Status.IsNull() || plan.VPNRelayIpv4Status.IsUnknown()) {
-		body["vpn-relay-ipv4-status"] = plan.VPNRelayIpv4Status.ValueString()
-	}
-	if !(plan.VPNRelayIPV6Status.IsNull() || plan.VPNRelayIPV6Status.IsUnknown()) {
-		body["vpn-relay-ipv6-status"] = plan.VPNRelayIPV6Status.ValueString()
-	}
-	if !(plan.VPNRelayRtts.IsNull() || plan.VPNRelayRtts.IsUnknown()) {
-		body["vpn-relay-rtts"] = plan.VPNRelayRtts.ValueString()
-	}
-	if !(plan.VPNStatus.IsNull() || plan.VPNStatus.IsUnknown()) {
-		body["vpn-status"] = plan.VPNStatus.ValueString()
-	}
-	if !(plan.VPNWireguardClientConfig.IsNull() || plan.VPNWireguardClientConfig.IsUnknown()) {
-		body["vpn-wireguard-client-config"] = plan.VPNWireguardClientConfig.ValueString()
-	}
-	if !(plan.VPNWireguardClientConfigQrcode.IsNull() || plan.VPNWireguardClientConfigQrcode.IsUnknown()) {
-		body["vpn-wireguard-client-config-qrcode"] = plan.VPNWireguardClientConfigQrcode.ValueString()
-	}
-	if !(plan.Warning.IsNull() || plan.Warning.IsUnknown()) {
-		body["warning"] = plan.Warning.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/ip/cloud", body)
 	if err != nil {

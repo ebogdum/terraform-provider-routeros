@@ -81,68 +81,90 @@ resource "routeros_routing_bgp_connection" "connection_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `afi` - (Optional) Type: `string`.
-* `allow_as_in` - (Optional) Type: `string`.
+* `allow_as_in` - (Read-only) Type: `string`.
 * `as` - (Optional) Type: `string`.
-* `as_override` - (Optional) Type: `string`.
-* `cisco_vpls_nlri_length_format` - (Optional) Type: `string`.
+* `as_override` - (Read-only) Type: `string`.
+* `cisco_vpls_nlri_len_fmt` - (Optional) Type: `string`. RouterOS `cisco-vpls-nlri-len-fmt`.
+* `cisco_vpls_nlri_length_format` - (Read-only) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `connect` - (Optional) Type: `string`.
-* `default_originate` - (Optional) Type: `string`.
-* `default_prepend` - (Optional) Type: `string`.
+* `default_originate` - (Read-only) Type: `string`.
+* `default_prepend` - (Read-only) Type: `string`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `dynamic` - (Read-only) Type: `bool`.
 * `hold_time` - (Optional) Type: `string`.
-* `ignore_as_path_length` - (Optional) Type: `string`.
+* `ignore_as_path_length` - (Read-only) Type: `string`.
 * `input_accept_communities` - (Optional) Type: `string`.
 * `input_accept_ext_communities` - (Optional) Type: `string`.
 * `input_accept_large_communities` - (Optional) Type: `string`.
 * `input_accept_nlri` - (Optional) Type: `string`.
+* `input_add_path` - (Optional) Type: `string`. RouterOS `input.add-path`.
 * `input_affinity` - (Optional) Type: `string`.
+* `input_allow_as` - (Optional) Type: `string`. RouterOS `input.allow-as`.
+* `input_attr_error_handling` - (Optional) Type: `string`. RouterOS `input.attr-error-handling`.
 * `input_filter` - (Optional) Type: `string`.
 * `input_filter_communities` - (Optional) Type: `string`.
 * `input_filter_ext_communities` - (Optional) Type: `string`.
 * `input_filter_large_communities` - (Optional) Type: `string`.
+* `input_filter_nlri` - (Optional) Type: `string`. RouterOS `input.filter-nlri`.
 * `input_filter_unknown` - (Optional) Type: `string`.
+* `input_limit_process_routes_ipv4` - (Optional) Type: `string`. RouterOS `input.limit-process-routes-ipv4`.
+* `input_limit_process_routes_ipv6` - (Optional) Type: `string`. RouterOS `input.limit-process-routes-ipv6`.
 * `instance` - (Optional) Type: `string`.
-* `keep_sent_attributes` - (Optional) Type: `string`.
+* `invalid` - (Read-only) Type: `bool`.
+* `keep_sent_attributes` - (Read-only) Type: `string`.
 * `keepalive_time` - (Optional) Type: `string`.
 * `listen` - (Optional) Type: `string`.
 * `local_address` - (Optional) Type: `string`.
 * `local_port` - (Optional) Type: `string`.
-* `local_role` - (Optional) Type: `enum(ibgp|ibgp-rr|ebgp|ebgp-provider|ebgp-rs|ebgp-rs-client, ...)`.
+* `local_role` - (Optional) Type: `string`.
+* `local_ttl` - (Optional) Type: `string`. RouterOS `local.ttl`.
 * `multihop` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
-* `network_blackhole` - (Optional) Type: `string`.
+* `network_blackhole` - (Read-only) Type: `string`.
 * `nexthop_choice` - (Optional) Type: `string`.
-* `no_client_to_client_reflection` - (Optional) Type: `string`.
-* `no_early_cut` - (Optional) Type: `string`.
+* `no_client_to_client_reflection` - (Read-only) Type: `string`.
+* `no_early_cut` - (Read-only) Type: `string`.
+* `output_add_path` - (Optional) Type: `string`. RouterOS `output.add-path`.
 * `output_affinity` - (Optional) Type: `string`.
-* `output_filter` - (Optional) Type: `string`.
+* `output_as_override` - (Optional) Type: `string`. RouterOS `output.as-override`.
+* `output_default_originate` - (Optional) Type: `string`. RouterOS `output.default-originate`.
+* `output_default_prepend` - (Optional) Type: `string`. RouterOS `output.default-prepend`.
+* `output_filter` - (Read-only) Type: `string`.
+* `output_filter_chain` - (Optional) Type: `string`. RouterOS `output.filter-chain`.
+* `output_filter_select` - (Optional) Type: `string`. RouterOS `output.filter-select`.
+* `output_keep_sent_attributes` - (Optional) Type: `string`. RouterOS `output.keep-sent-attributes`.
 * `output_network` - (Optional) Type: `string`.
+* `output_network_blackhole` - (Optional) Type: `string`. RouterOS `output.network-blackhole`.
+* `output_no_client_to_client_reflection` - (Optional) Type: `string`. RouterOS `output.no-client-to-client-reflection`.
+* `output_no_early_cut` - (Optional) Type: `string`. RouterOS `output.no-early-cut`.
 * `output_redistribute` - (Optional) Type: `string`.
-* `output_selection_policy` - (Optional) Type: `string`.
+* `output_remove_private_as` - (Optional) Type: `string`. RouterOS `output.remove-private-as`.
+* `output_selection_policy` - (Read-only) Type: `string`.
 * `remote_address` - (Optional) Type: `string`.
-* `remote_allow_as` - (Optional) Type: `string`.
+* `remote_allow_as` - (Read-only) Type: `string`.
+* `remote_allowed_as` - (Optional) Type: `string`. RouterOS `remote.allowed-as`.
 * `remote_as` - (Optional) Type: `string`.
 * `remote_port` - (Optional) Type: `string`.
-* `remove_private_as` - (Optional) Type: `string`.
-* `router_id` - (Optional) Type: `string`.
+* `remote_ttl` - (Optional) Type: `string`. RouterOS `remote.ttl`.
+* `remove_private_as` - (Read-only) Type: `string`.
+* `router_id` - (Read-only) Type: `string`.
 * `routing_table` - (Optional) Type: `string`.
-* `rx_min_ttl` - (Optional) Type: `string`.
+* `rx_min_ttl` - (Read-only) Type: `string`.
+* `save_to` - (Optional) Type: `string`. RouterOS `save-to`.
 * `tcp_md5_key` - (Optional) Type: `string`. **Sensitive.**
-* `template` - (Optional) Type: `string`.
-* `tx_ttl` - (Optional) Type: `string`.
+* `template` - (Read-only) Type: `string`.
+* `templates` - (Optional) Type: `string`. RouterOS `templates`.
+* `tx_ttl` - (Read-only) Type: `string`.
 * `use_bfd` - (Optional) Type: `string`.
 * `vrf` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `dynamic` - Type: `bool`.
-* `invalid` - Type: `bool`.
 
 ## Import
 

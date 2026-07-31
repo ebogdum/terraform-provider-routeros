@@ -55,7 +55,6 @@ func (r *RoutingRpkiResource) Configure(_ context.Context, req resource.Configur
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *RoutingRpkiResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {

@@ -34,18 +34,33 @@ resource "routeros_system_routerboard_settings" "settings_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `auto_upgrade` - (Optional) Type: `string`.
+* `baud_rate` - (Optional) Type: `string`. RouterOS `baud-rate`.
+* `boot_delay` - (Optional) Type: `string`. RouterOS `boot-delay`.
 * `boot_device` - (Optional) Type: `string`.
+* `boot_os` - (Optional) Type: `string`. RouterOS `boot-os`.
 * `boot_protocol` - (Optional) Type: `string`.
 * `cpu_frequency` - (Optional) Type: `string`.
+* `disable_pci` - (Optional) Type: `string`. RouterOS `disable-pci`.
+* `enable_jumper_reset` - (Optional) Type: `string`. RouterOS `enable-jumper-reset`.
+* `enter_setup_on` - (Optional) Type: `string`. RouterOS `enter-setup-on`.
+* `etherboot_port` - (Optional) Type: `string`. RouterOS `etherboot-port`.
 * `force_backup_booter` - (Optional) Type: `string`.
+* `gpio_function` - (Optional) Type: `string`. RouterOS `gpio-function`.
+* `init_delay` - (Optional) Type: `string`. RouterOS `init-delay`.
 * `preboot_etherboot` - (Optional) Type: `string`.
 * `preboot_etherboot_server` - (Optional) Type: `string`.
+* `preferred_architecture` - (Optional) Type: `string`. RouterOS `preferred-architecture`.
 * `protected_routerboot` - (Optional) Type: `string`.
 * `reformat_hold_button` - (Optional) Type: `string`.
 * `reformat_hold_button_max` - (Optional) Type: `string`.
 * `silent_boot` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - Stable identifier (the singleton's menu path, optionally namespaced by router).
+
 
 ## Import
 

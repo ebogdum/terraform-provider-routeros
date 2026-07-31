@@ -50,7 +50,6 @@ func (r *RoutingFilterRuleResource) Configure(_ context.Context, req resource.Co
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *RoutingFilterRuleResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -77,7 +76,6 @@ func (r *RoutingFilterRuleResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "Whether the entry is disabled.",
 			},
 			"invalid": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},

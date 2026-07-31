@@ -32,23 +32,22 @@ resource "routeros_ip_hotspot_user_profile" "profile_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `add_mac_cookie` - (Optional) Type: `bool`.
 * `address_list` - (Optional) Type: `string`.
+* `default` - (Read-only) Type: `bool`.
 * `idle_timeout` - (Optional) Type: `string`.
-* `keepalive_timeout` - (Optional) Type: `duration`.
-* `mac_cookie_timeout` - (Optional) Type: `duration`.
+* `keepalive_timeout` - (Optional) Type: `string`.
+* `mac_cookie_timeout` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
-* `shared_users` - (Optional) Type: `int`.
-* `status_autorefresh` - (Optional) Type: `duration`.
+* `shared_users` - (Optional) Type: `string`. A number, or `unlimited`.
+* `status_autorefresh` - (Optional) Type: `string`.
 * `transparent_proxy` - (Optional) Type: `bool`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `default` - Type: `bool`.
 
 ## Import
 

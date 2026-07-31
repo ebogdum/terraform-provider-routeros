@@ -37,21 +37,38 @@ resource "routeros_interface_ppp_client" "ppp_client_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `add_default_route` - (Optional) Type: `string`. RouterOS `add-default-route`.
 * `allow` - (Optional) Type: `string`.
+* `apn` - (Optional) Type: `string`. RouterOS `apn`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `data_channel` - (Optional) Type: `string`. RouterOS `data-channel`.
 * `default_route_distance` - (Optional) Type: `string`.
+* `dial_command` - (Optional) Type: `string`. RouterOS `dial-command`.
 * `dial_on_demand` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `info_channel` - (Optional) Type: `string`. RouterOS `info-channel`.
 * `keepalive_timeout` - (Optional) Type: `string`.
 * `max_mru` - (Optional) Type: `string`.
 * `max_mtu` - (Optional) Type: `string`.
+* `modem_init` - (Optional) Type: `string`. RouterOS `modem-init`.
 * `mrru` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
-* `password` - (Optional) Type: `string`.
+* `network_mode` - (Optional) Type: `string`. RouterOS `network-mode`.
+* `null_modem` - (Optional) Type: `string`. RouterOS `null-modem`.
+* `password` - (Optional) Type: `string`. **Sensitive.**
+* `phone` - (Optional) Type: `string`. RouterOS `phone`.
+* `pin` - (Optional) Type: `string`. RouterOS `pin`.
+* `port` - (Optional) Type: `string`. RouterOS `port`.
 * `profile` - (Optional) Type: `string`.
 * `remote_address` - (Optional) Type: `string`.
+* `use_peer_dns` - (Optional) Type: `string`. RouterOS `use-peer-dns`.
 * `user` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

@@ -30,6 +30,10 @@ type InterfaceWifiSecurityResource struct {
 
 type InterfaceWifiSecurityModel struct {
 	ID                       types.String `tfsdk:"id"`
+	FtReassociationDeadline  types.String `tfsdk:"ft_reassociation_deadline"`
+	FtPreserveVlanid         types.String `tfsdk:"ft_preserve_vlanid"`
+	Ft                       types.String `tfsdk:"ft"`
+	AuthenticationTypes      types.String `tfsdk:"authentication_types"`
 	BeaconProtection         types.String `tfsdk:"beacon_protection"`
 	Ciphers                  types.String `tfsdk:"ciphers"`
 	Comment                  types.String `tfsdk:"comment"`
@@ -81,7 +85,6 @@ func (r *InterfaceWifiSecurityResource) Configure(_ context.Context, req resourc
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceWifiSecurityResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -92,6 +95,26 @@ func (r *InterfaceWifiSecurityResource) Schema(_ context.Context, _ resource.Sch
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"ft_reassociation_deadline": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `ft-reassociation-deadline`.",
+			},
+			"ft_preserve_vlanid": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `ft-preserve-vlanid`.",
+			},
+			"ft": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `ft`.",
+			},
+			"authentication_types": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `authentication-types`.",
 			},
 			"beacon_protection": schema.StringAttribute{
 				Optional:    true,
@@ -155,6 +178,7 @@ func (r *InterfaceWifiSecurityResource) Schema(_ context.Context, _ resource.Sch
 			},
 			"eap_password": schema.StringAttribute{
 				Optional:    true,
+				Sensitive:   true,
 				Computed:    true,
 				Description: "",
 			},
@@ -400,6 +424,18 @@ func (r *InterfaceWifiSecurityResource) Create(ctx context.Context, req resource
 	if !(plan.Wps.IsNull() || plan.Wps.IsUnknown()) {
 		body["wps"] = plan.Wps.ValueString()
 	}
+	if !(plan.AuthenticationTypes.IsNull() || plan.AuthenticationTypes.IsUnknown()) {
+		body["authentication-types"] = plan.AuthenticationTypes.ValueString()
+	}
+	if !(plan.Ft.IsNull() || plan.Ft.IsUnknown()) {
+		body["ft"] = plan.Ft.ValueString()
+	}
+	if !(plan.FtPreserveVlanid.IsNull() || plan.FtPreserveVlanid.IsUnknown()) {
+		body["ft-preserve-vlanid"] = plan.FtPreserveVlanid.ValueString()
+	}
+	if !(plan.FtReassociationDeadline.IsNull() || plan.FtReassociationDeadline.IsUnknown()) {
+		body["ft-reassociation-deadline"] = plan.FtReassociationDeadline.ValueString()
+	}
 	obj, err := c.Add(ctx, "/interface/wifi/security", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /interface/wifi/security failed", err.Error())
@@ -555,6 +591,18 @@ func (r *InterfaceWifiSecurityResource) Update(ctx context.Context, req resource
 	if !plan.Wps.Equal(state.Wps) {
 		body["wps"] = plan.Wps.ValueString()
 	}
+	if !plan.AuthenticationTypes.Equal(state.AuthenticationTypes) && !plan.AuthenticationTypes.IsUnknown() {
+		body["authentication-types"] = plan.AuthenticationTypes.ValueString()
+	}
+	if !plan.Ft.Equal(state.Ft) && !plan.Ft.IsUnknown() {
+		body["ft"] = plan.Ft.ValueString()
+	}
+	if !plan.FtPreserveVlanid.Equal(state.FtPreserveVlanid) && !plan.FtPreserveVlanid.IsUnknown() {
+		body["ft-preserve-vlanid"] = plan.FtPreserveVlanid.ValueString()
+	}
+	if !plan.FtReassociationDeadline.Equal(state.FtReassociationDeadline) && !plan.FtReassociationDeadline.IsUnknown() {
+		body["ft-reassociation-deadline"] = plan.FtReassociationDeadline.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/wifi/security", state.ID.ValueString(), body)
 		if err != nil {
@@ -621,6 +669,26 @@ func interfaceWifiSecurityLookupByNaturalKey(ctx context.Context, c *client.Clie
 func interfaceWifiSecurityApply(ctx context.Context, obj client.Object, m *InterfaceWifiSecurityModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["ft-reassociation-deadline"]; ok && v != "" {
+		m.FtReassociationDeadline = types.StringValue(v)
+	} else {
+		m.FtReassociationDeadline = types.StringNull()
+	}
+	if v, ok := obj["ft-preserve-vlanid"]; ok && v != "" {
+		m.FtPreserveVlanid = types.StringValue(v)
+	} else {
+		m.FtPreserveVlanid = types.StringNull()
+	}
+	if v, ok := obj["ft"]; ok && v != "" {
+		m.Ft = types.StringValue(v)
+	} else {
+		m.Ft = types.StringNull()
+	}
+	if v, ok := obj["authentication-types"]; ok && v != "" {
+		m.AuthenticationTypes = types.StringValue(v)
+	} else {
+		m.AuthenticationTypes = types.StringNull()
+	}
 	if v, ok := obj["beacon-protection"]; ok {
 		_ = v
 		if v != "" {

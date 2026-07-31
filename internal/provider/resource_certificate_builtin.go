@@ -30,6 +30,7 @@ type CertificateBuiltinResource struct {
 
 type CertificateBuiltinModel struct {
 	ID             types.String `tfsdk:"id"`
+	KeySize        types.String `tfsdk:"key_size"`
 	Akid           types.String `tfsdk:"akid"`
 	Comment        types.String `tfsdk:"comment"`
 	CommonName     types.String `tfsdk:"common_name"`
@@ -63,7 +64,6 @@ func (r *CertificateBuiltinResource) Configure(_ context.Context, req resource.C
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *CertificateBuiltinResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -74,6 +74,11 @@ func (r *CertificateBuiltinResource) Schema(_ context.Context, _ resource.Schema
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"key_size": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `key-size`.",
 			},
 			"akid": schema.StringAttribute{
 				Optional:    true,
@@ -239,6 +244,9 @@ func (r *CertificateBuiltinResource) Create(ctx context.Context, req resource.Cr
 	if !(plan.Unit.IsNull() || plan.Unit.IsUnknown()) {
 		body["unit"] = plan.Unit.ValueString()
 	}
+	if !(plan.KeySize.IsNull() || plan.KeySize.IsUnknown()) {
+		body["key-size"] = plan.KeySize.ValueString()
+	}
 	obj, err := c.Add(ctx, "/certificate/builtin", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /certificate/builtin failed", err.Error())
@@ -340,6 +348,9 @@ func (r *CertificateBuiltinResource) Update(ctx context.Context, req resource.Up
 	if !plan.Unit.Equal(state.Unit) {
 		body["unit"] = plan.Unit.ValueString()
 	}
+	if !plan.KeySize.Equal(state.KeySize) && !plan.KeySize.IsUnknown() {
+		body["key-size"] = plan.KeySize.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/certificate/builtin", state.ID.ValueString(), body)
 		if err != nil {
@@ -406,6 +417,11 @@ func certificateBuiltinLookupByNaturalKey(ctx context.Context, c *client.Client,
 func certificateBuiltinApply(ctx context.Context, obj client.Object, m *CertificateBuiltinModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["key-size"]; ok && v != "" {
+		m.KeySize = types.StringValue(v)
+	} else {
+		m.KeySize = types.StringNull()
+	}
 	if v, ok := obj["akid"]; ok {
 		_ = v
 		if v != "" {

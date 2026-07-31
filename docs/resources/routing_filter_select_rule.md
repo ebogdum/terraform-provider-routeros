@@ -27,19 +27,25 @@ resource "routeros_routing_filter_select_rule" "select_rule_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `chain` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `type` - (Optional) Type: `enum(where|group-num|group-prfx|select-num|select-prfx|take, ...)`.
+* `do` - (Read-only) Type: `string`.
+* `do_group_num` - (Optional) Type: `string`. RouterOS `do-group-num`.
+* `do_group_prfx` - (Optional) Type: `string`. RouterOS `do-group-prfx`.
+* `do_jump` - (Optional) Type: `string`. RouterOS `do-jump`.
+* `do_select_num` - (Optional) Type: `string`. RouterOS `do-select-num`.
+* `do_select_prfx` - (Optional) Type: `string`. RouterOS `do-select-prfx`.
+* `do_take` - (Optional) Type: `string`. RouterOS `do-take`.
+* `do_where` - (Optional) Type: `string`. RouterOS `do-where`.
+* `invalid` - (Read-only) Type: `bool`.
+* `type` - (Read-only) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `do` - Type: `string`.
-* `invalid` - Type: `bool`.
 
 ## Import
 

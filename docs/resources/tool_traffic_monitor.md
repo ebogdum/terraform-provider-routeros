@@ -32,15 +32,20 @@ resource "routeros_tool_traffic_monitor" "traffic_monitor_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `interface` - (Required) Type: `string`.
-* `name` - (Required) Type: `string`. Default: `tf_acc_trmon`.
+* `name` - (Required) Type: `string`.
 * `on_event` - (Optional) Type: `string`.
 * `threshold` - (Optional) Type: `string`.
-* `traffic` - (Optional) Type: `enum(|transmitted|received)`. Default: `1`.
-* `trigger` - (Optional) Type: `enum(|above|below|always)`. Default: `1`.
+* `traffic` - (Optional) Type: `string`.
+* `trigger` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

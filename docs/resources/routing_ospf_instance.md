@@ -39,30 +39,32 @@ resource "routeros_routing_ospf_instance" "instance_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `domain_id` - (Optional) Type: `string`.
 * `domain_tag` - (Optional) Type: `string`.
-* `in_filter` - (Optional) Type: `string`.
+* `in_filter` - (Read-only) Type: `string`.
+* `in_filter_chain` - (Optional) Type: `string`. RouterOS `in-filter-chain`.
+* `invalid` - (Read-only) Type: `bool`.
 * `mpls_te_address` - (Optional) Type: `string`.
 * `mpls_te_area` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
 * `originate_default` - (Optional) Type: `string`.
-* `out_filter` - (Optional) Type: `string`.
+* `out_filter` - (Read-only) Type: `string`.
+* `out_filter_chain` - (Optional) Type: `string`. RouterOS `out-filter-chain`.
 * `out_filter_select` - (Optional) Type: `string`.
 * `redistribute` - (Optional) Type: `string`.
 * `router_id` - (Optional) Type: `string`.
 * `routing_table` - (Optional) Type: `string`.
-* `version` - (Optional) Type: `enum(2|3)`.
+* `use_dn` - (Optional) Type: `string`. RouterOS `use-dn`.
+* `version` - (Optional) Type: `string`.
 * `vrf` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `invalid` - Type: `bool`.
 
 ## Import
 

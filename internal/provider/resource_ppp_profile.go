@@ -32,6 +32,8 @@ type PPPProfileResource struct {
 
 type PPPProfileModel struct {
 	ID                    types.String `tfsdk:"id"`
+	RateLimit             types.String `tfsdk:"rate_limit"`
+	QueueType             types.String `tfsdk:"queue_type"`
 	AddressList           types.String `tfsdk:"address_list"`
 	Bridge                types.String `tfsdk:"bridge"`
 	BridgeHorizon         types.String `tfsdk:"bridge_horizon"`
@@ -87,7 +89,6 @@ func (r *PPPProfileResource) Configure(_ context.Context, req resource.Configure
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *PPPProfileResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -98,6 +99,16 @@ func (r *PPPProfileResource) Schema(_ context.Context, _ resource.SchemaRequest,
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"rate_limit": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `rate-limit`.",
+			},
+			"queue_type": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `queue-type`.",
 			},
 			"address_list": schema.StringAttribute{
 				Optional:    true,
@@ -152,12 +163,12 @@ func (r *PPPProfileResource) Schema(_ context.Context, _ resource.SchemaRequest,
 				Description: "Free-form comment.",
 			},
 			"def": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "",
+				Optional:           true,
+				Computed:           true,
+				Description:        "",
+				DeprecationMessage: "Not a RouterOS REST property (WebFig-only spelling of `default`); RouterOS rejects it. Read-only and ignored on write - use `default`.",
 			},
 			"default": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -202,7 +213,6 @@ func (r *PPPProfileResource) Schema(_ context.Context, _ resource.SchemaRequest,
 				Description: "",
 			},
 			"ipv6": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -242,12 +252,10 @@ func (r *PPPProfileResource) Schema(_ context.Context, _ resource.SchemaRequest,
 				Description: "",
 			},
 			"queue_type_rx_tx": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rate_limit_rx_tx": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -354,9 +362,6 @@ func (r *PPPProfileResource) Create(ctx context.Context, req resource.CreateRequ
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !(plan.Def.IsNull() || plan.Def.IsUnknown()) {
-		body["def"] = plan.Def.ValueString()
-	}
 	if !(plan.Dhcpv6LeaseTime.IsNull() || plan.Dhcpv6LeaseTime.IsUnknown()) {
 		body["dhcpv6-lease-time"] = plan.Dhcpv6LeaseTime.ValueString()
 	}
@@ -381,9 +386,6 @@ func (r *PPPProfileResource) Create(ctx context.Context, req resource.CreateRequ
 	if !(plan.InterfaceList.IsNull() || plan.InterfaceList.IsUnknown()) {
 		body["interface-list"] = plan.InterfaceList.ValueString()
 	}
-	if !(plan.IPV6.IsNull() || plan.IPV6.IsUnknown()) {
-		body["ipv6"] = plan.IPV6.ValueString()
-	}
 	if !(plan.LocalAddress.IsNull() || plan.LocalAddress.IsUnknown()) {
 		body["local-address"] = plan.LocalAddress.ValueString()
 	}
@@ -404,12 +406,6 @@ func (r *PPPProfileResource) Create(ctx context.Context, req resource.CreateRequ
 	}
 	if !(plan.ParentQueue.IsNull() || plan.ParentQueue.IsUnknown()) {
 		body["parent-queue"] = plan.ParentQueue.ValueString()
-	}
-	if !(plan.QueueTypeRxTx.IsNull() || plan.QueueTypeRxTx.IsUnknown()) {
-		body["queue-type-rx-tx"] = plan.QueueTypeRxTx.ValueString()
-	}
-	if !(plan.RateLimitRxTx.IsNull() || plan.RateLimitRxTx.IsUnknown()) {
-		body["rate-limit-rx-tx"] = plan.RateLimitRxTx.ValueString()
 	}
 	if !(plan.RemoteAddress.IsNull() || plan.RemoteAddress.IsUnknown()) {
 		body["remote-address"] = plan.RemoteAddress.ValueString()
@@ -440,6 +436,12 @@ func (r *PPPProfileResource) Create(ctx context.Context, req resource.CreateRequ
 	}
 	if !(plan.WinsServer.IsNull() || plan.WinsServer.IsUnknown()) {
 		body["wins-server"] = plan.WinsServer.ValueString()
+	}
+	if !(plan.QueueType.IsNull() || plan.QueueType.IsUnknown()) {
+		body["queue-type"] = plan.QueueType.ValueString()
+	}
+	if !(plan.RateLimit.IsNull() || plan.RateLimit.IsUnknown()) {
+		body["rate-limit"] = plan.RateLimit.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ppp/profile", body)
 	if err != nil {
@@ -518,9 +520,6 @@ func (r *PPPProfileResource) Update(ctx context.Context, req resource.UpdateRequ
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Def.Equal(state.Def) {
-		body["def"] = plan.Def.ValueString()
-	}
 	if !plan.Dhcpv6LeaseTime.Equal(state.Dhcpv6LeaseTime) {
 		body["dhcpv6-lease-time"] = plan.Dhcpv6LeaseTime.ValueString()
 	}
@@ -545,9 +544,6 @@ func (r *PPPProfileResource) Update(ctx context.Context, req resource.UpdateRequ
 	if !plan.InterfaceList.Equal(state.InterfaceList) {
 		body["interface-list"] = plan.InterfaceList.ValueString()
 	}
-	if !plan.IPV6.Equal(state.IPV6) {
-		body["ipv6"] = plan.IPV6.ValueString()
-	}
 	if !plan.LocalAddress.Equal(state.LocalAddress) {
 		body["local-address"] = plan.LocalAddress.ValueString()
 	}
@@ -568,12 +564,6 @@ func (r *PPPProfileResource) Update(ctx context.Context, req resource.UpdateRequ
 	}
 	if !plan.ParentQueue.Equal(state.ParentQueue) {
 		body["parent-queue"] = plan.ParentQueue.ValueString()
-	}
-	if !plan.QueueTypeRxTx.Equal(state.QueueTypeRxTx) {
-		body["queue-type-rx-tx"] = plan.QueueTypeRxTx.ValueString()
-	}
-	if !plan.RateLimitRxTx.Equal(state.RateLimitRxTx) {
-		body["rate-limit-rx-tx"] = plan.RateLimitRxTx.ValueString()
 	}
 	if !plan.RemoteAddress.Equal(state.RemoteAddress) {
 		body["remote-address"] = plan.RemoteAddress.ValueString()
@@ -604,6 +594,12 @@ func (r *PPPProfileResource) Update(ctx context.Context, req resource.UpdateRequ
 	}
 	if !plan.WinsServer.Equal(state.WinsServer) {
 		body["wins-server"] = plan.WinsServer.ValueString()
+	}
+	if !plan.QueueType.Equal(state.QueueType) && !plan.QueueType.IsUnknown() {
+		body["queue-type"] = plan.QueueType.ValueString()
+	}
+	if !plan.RateLimit.Equal(state.RateLimit) && !plan.RateLimit.IsUnknown() {
+		body["rate-limit"] = plan.RateLimit.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ppp/profile", state.ID.ValueString(), body)
@@ -671,6 +667,16 @@ func pPPProfileLookupByNaturalKey(ctx context.Context, c *client.Client, id stri
 func pPPProfileApply(ctx context.Context, obj client.Object, m *PPPProfileModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["rate-limit"]; ok && v != "" {
+		m.RateLimit = types.StringValue(v)
+	} else {
+		m.RateLimit = types.StringNull()
+	}
+	if v, ok := obj["queue-type"]; ok && v != "" {
+		m.QueueType = types.StringValue(v)
+	} else {
+		m.QueueType = types.StringNull()
+	}
 	if v, ok := obj["address-list"]; ok {
 		_ = v
 		if v != "" {

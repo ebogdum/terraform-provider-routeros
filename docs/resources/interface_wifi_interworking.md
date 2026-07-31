@@ -56,9 +56,7 @@ resource "routeros_interface_wifi_interworking" "interworking_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `x3gpp_info` - (Optional) Type: `string`.
-* `x3gpp_info_raw` - (Optional) Type: `string`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `authentication_types` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `connection_capabilities` - (Optional) Type: `string`.
@@ -67,11 +65,12 @@ This resource supports the following arguments:
 * `domain_names` - (Optional) Type: `string`.
 * `esr` - (Optional) Type: `string`.
 * `hessid` - (Optional) Type: `string`.
-* `hotspot_2_0` - (Optional) Type: `string`.
+* `hotspot20` - (Optional) Type: `string`.
+* `hotspot20_dgaf` - (Optional) Type: `string`. RouterOS `hotspot20-dgaf`.
 * `internet` - (Optional) Type: `string`.
 * `ipv4_availability` - (Optional) Type: `string`.
 * `ipv6_availability` - (Optional) Type: `string`.
-* `name` - (Required) Type: `string`. Default: `tf_acc_wiw`.
+* `name` - (Required) Type: `string`.
 * `network_type` - (Optional) Type: `string`.
 * `operational_classes` - (Optional) Type: `string`.
 * `operator_names` - (Optional) Type: `string`.
@@ -89,6 +88,13 @@ This resource supports the following arguments:
 * `wan_symmetric` - (Optional) Type: `string`.
 * `wan_uplink` - (Optional) Type: `string`.
 * `wan_uplink_load` - (Optional) Type: `string`.
+* `x3gpp_info` - (Optional) Type: `string`.
+* `x3gpp_info_raw` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

@@ -24,8 +24,13 @@ resource "routeros_interface_ethernet_switch_rule" "rule_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `qos_hw_offloading` - (Optional) Type: `string`. Allows enabling QoS for the given switch chip (if the latter supports QoS). New generation devices force qos-hw-offloading=yes at all times.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `qos_hw_offloading` - (Optional) Type: `string`. Allows enabling QoS for the given switch chip (if the latter supports QoS). New generation devices force qos-hw-offloading=yes at all times.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

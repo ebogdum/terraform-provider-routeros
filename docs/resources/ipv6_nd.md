@@ -40,32 +40,33 @@ resource "routeros_ipv6_nd" "nd_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `advertise_dns` - (Optional) Type: `enum(no|yes|self)`.
-* `advertise_mac_address` - (Optional) Type: `bool`. Default: `1`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `advertise_dns` - (Optional) Type: `string`.
+* `advertise_mac_address` - (Optional) Type: `bool`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `default` - (Read-only) Type: `bool`.
 * `disabled` - (Optional) Type: `bool`.
-* `dns_servers` - (Optional) Type: `string`.
-* `hop_limit` - (Optional) Type: `int`. Default: `64`.
+* `dns` - (Optional) Type: `string`. RouterOS `dns`.
+* `dns_servers` - (Read-only) Type: `string`.
+* `hop_limit` - (Optional) Type: `string`. Hop limit advertised in router advertisements. A number, or `unspecified` (the default).
 * `interface` - (Optional) Type: `string`.
+* `invalid` - (Read-only) Type: `bool`.
 * `managed_address_configuration` - (Optional) Type: `bool`.
-* `mtu` - (Optional) Type: `int`.
+* `mtu` - (Optional) Type: `string`. MTU advertised in router advertisements. A number, or `unspecified` (the default).
 * `other_configuration` - (Optional) Type: `bool`.
-* `pref64_prefixes` - (Optional) Type: `string`.
-* `ra_delay` - (Optional) Type: `duration`. Default: `3`.
+* `pref64` - (Optional) Type: `string`. RouterOS `pref64`.
+* `pref64_prefixes` - (Read-only) Type: `string`.
+* `ra_delay` - (Optional) Type: `string`.
 * `ra_interval` - (Optional) Type: `string`.
-* `ra_lifetime` - (Optional) Type: `duration`. Default: `1800`.
-* `ra_preference` - (Optional) Type: `enum(medium|high|low)`.
-* `reachable_time` - (Optional) Type: `int`.
-* `retransmit_interval` - (Optional) Type: `int`.
+* `ra_lifetime` - (Optional) Type: `string`.
+* `ra_preference` - (Optional) Type: `string`.
+* `reachable_time` - (Optional) Type: `string`. Reachable time advertised in router advertisements. A number, or `unspecified` (the default).
+* `retransmit_interval` - (Optional) Type: `string`. Retransmit interval advertised in router advertisements. A number, or `unspecified` (the default).
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `default` - Type: `bool`.
-* `invalid` - Type: `bool`.
 
 ## Import
 

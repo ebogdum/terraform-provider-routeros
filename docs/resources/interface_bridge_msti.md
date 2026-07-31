@@ -35,21 +35,20 @@ resource "routeros_interface_bridge_msti" "msti_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `bridge` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `dynamic` - (Read-only) Type: `bool`.
 * `identifier` - (Optional) Type: `int`.
-* `priority` - (Optional) Type: `int`. Default: `32768`.
-* `status` - (Optional) Type: `int`.
+* `priority` - (Optional) Type: `int`.
+* `status` - (Read-only) Type: `int`.
 * `vlan_mapping` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `dynamic` - Type: `bool`.
 
 ## Import
 

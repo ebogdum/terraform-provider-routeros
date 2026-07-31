@@ -29,6 +29,8 @@ type IPSettingsResource struct {
 
 type IPSettingsModel struct {
 	ID                                   types.String `tfsdk:"id"`
+	Ipv4HighFragmentThresh               types.String `tfsdk:"ipv4_high_fragment_thresh"`
+	Ipv4FragmentTime                     types.String `tfsdk:"ipv4_fragment_time"`
 	AcceptRedirects                      types.Bool   `tfsdk:"accept_redirects"`
 	AcceptSourceRoute                    types.Bool   `tfsdk:"accept_source_route"`
 	AllowFastPath                        types.Bool   `tfsdk:"allow_fast_path"`
@@ -75,6 +77,16 @@ func (r *IPSettingsResource) Schema(_ context.Context, _ resource.SchemaRequest,
 				Computed:      true,
 				Description:   "Stable identifier (the singleton's menu path, optionally namespaced by router).",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"ipv4_high_fragment_thresh": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `ipv4-high-fragment-thresh`.",
+			},
+			"ipv4_fragment_time": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `ipv4-fragment-time`.",
 			},
 			"accept_redirects": schema.BoolAttribute{Optional: true, Computed: true,
 				Description: "",
@@ -259,6 +271,12 @@ func iPSettingsUpsert(ctx context.Context, reg *client.Registry, plan *IPSetting
 	if !(plan.TCPTimestamps.IsNull() || plan.TCPTimestamps.IsUnknown()) {
 		body["tcp-timestamps"] = plan.TCPTimestamps.ValueString()
 	}
+	if !(plan.Ipv4FragmentTime.IsNull() || plan.Ipv4FragmentTime.IsUnknown()) {
+		body["ipv4-fragment-time"] = plan.Ipv4FragmentTime.ValueString()
+	}
+	if !(plan.Ipv4HighFragmentThresh.IsNull() || plan.Ipv4HighFragmentThresh.IsUnknown()) {
+		body["ipv4-high-fragment-thresh"] = plan.Ipv4HighFragmentThresh.ValueString()
+	}
 	obj, err := c.SetSingleton(ctx, "/ip/settings", body)
 	if err != nil {
 		diags.AddError("Upsert /ip/settings failed", err.Error())
@@ -270,6 +288,16 @@ func iPSettingsUpsert(ctx context.Context, reg *client.Registry, plan *IPSetting
 
 func iPSettingsApply(ctx context.Context, obj client.Object, m *IPSettingsModel) {
 	_ = ctx
+	if v, ok := obj["ipv4-high-fragment-thresh"]; ok && v != "" {
+		m.Ipv4HighFragmentThresh = types.StringValue(v)
+	} else {
+		m.Ipv4HighFragmentThresh = types.StringNull()
+	}
+	if v, ok := obj["ipv4-fragment-time"]; ok && v != "" {
+		m.Ipv4FragmentTime = types.StringValue(v)
+	} else {
+		m.Ipv4FragmentTime = types.StringNull()
+	}
 	if v, ok := obj["accept-redirects"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {

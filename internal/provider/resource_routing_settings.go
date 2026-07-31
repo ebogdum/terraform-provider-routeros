@@ -29,6 +29,8 @@ type RoutingSettingsResource struct {
 
 type RoutingSettingsModel struct {
 	ID                       types.String `tfsdk:"id"`
+	DynamicInChain           types.String `tfsdk:"dynamic_in_chain"`
+	ConnectedInChain         types.String `tfsdk:"connected_in_chain"`
 	CheckGatewayPingCount    types.Int64  `tfsdk:"check_gateway_ping_count"`
 	CheckGatewayPingInterval types.String `tfsdk:"check_gateway_ping_interval"`
 	CheckGatewayPingTimeout  types.String `tfsdk:"check_gateway_ping_timeout"`
@@ -59,6 +61,16 @@ func (r *RoutingSettingsResource) Schema(_ context.Context, _ resource.SchemaReq
 				Computed:      true,
 				Description:   "Stable identifier (the singleton's menu path, optionally namespaced by router).",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"dynamic_in_chain": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `dynamic-in-chain`.",
+			},
+			"connected_in_chain": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `connected-in-chain`.",
 			},
 			"check_gateway_ping_count": schema.Int64Attribute{Optional: true, Computed: true,
 				Description: "",
@@ -168,6 +180,12 @@ func routingSettingsUpsert(ctx context.Context, reg *client.Registry, plan *Rout
 	if !(plan.SingleProcess.IsNull() || plan.SingleProcess.IsUnknown()) {
 		body["single-process"] = client.FormatBool(plan.SingleProcess.ValueBool())
 	}
+	if !(plan.ConnectedInChain.IsNull() || plan.ConnectedInChain.IsUnknown()) {
+		body["connected-in-chain"] = plan.ConnectedInChain.ValueString()
+	}
+	if !(plan.DynamicInChain.IsNull() || plan.DynamicInChain.IsUnknown()) {
+		body["dynamic-in-chain"] = plan.DynamicInChain.ValueString()
+	}
 	obj, err := c.SetSingleton(ctx, "/routing/settings", body)
 	if err != nil {
 		diags.AddError("Upsert /routing/settings failed", err.Error())
@@ -179,6 +197,16 @@ func routingSettingsUpsert(ctx context.Context, reg *client.Registry, plan *Rout
 
 func routingSettingsApply(ctx context.Context, obj client.Object, m *RoutingSettingsModel) {
 	_ = ctx
+	if v, ok := obj["dynamic-in-chain"]; ok && v != "" {
+		m.DynamicInChain = types.StringValue(v)
+	} else {
+		m.DynamicInChain = types.StringNull()
+	}
+	if v, ok := obj["connected-in-chain"]; ok && v != "" {
+		m.ConnectedInChain = types.StringValue(v)
+	} else {
+		m.ConnectedInChain = types.StringNull()
+	}
 	if v, ok := obj["check-gateway-ping-count"]; ok {
 		_ = v
 		if n, err := client.ParseInt64(v); err == nil {

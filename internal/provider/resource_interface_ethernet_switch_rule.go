@@ -48,7 +48,6 @@ func (r *InterfaceEthernetSwitchRuleResource) Configure(_ context.Context, req r
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceEthernetSwitchRuleResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {

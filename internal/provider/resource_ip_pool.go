@@ -53,7 +53,6 @@ func (r *IPPoolResource) Configure(_ context.Context, req resource.ConfigureRequ
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPPoolResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -66,12 +65,10 @@ func (r *IPPoolResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"addresses": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"available": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -94,12 +91,10 @@ func (r *IPPoolResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 				Description: "IP address list of non-overlapping IP address ranges in the form of: from1-to1,from2-to2,...,fromN-toN. For example, 10.0.0.1-10.0.0.27,10.0.0.32-10.0.0.47",
 			},
 			"total": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"used": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -122,9 +117,6 @@ func (r *IPPoolResource) Create(ctx context.Context, req resource.CreateRequest,
 		return
 	}
 	body := client.Object{}
-	if !(plan.Addresses.IsNull() || plan.Addresses.IsUnknown()) {
-		body["addresses"] = plan.Addresses.ValueString()
-	}
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
 	}
@@ -184,9 +176,6 @@ func (r *IPPoolResource) Update(ctx context.Context, req resource.UpdateRequest,
 		return
 	}
 	body := client.Object{}
-	if !plan.Addresses.Equal(state.Addresses) {
-		body["addresses"] = plan.Addresses.ValueString()
-	}
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
 	}

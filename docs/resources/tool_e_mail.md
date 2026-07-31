@@ -31,7 +31,7 @@ resource "routeros_tool_e_mail" "e_mail_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `certificate_verification` - (Optional) Type: `bool`.
 * `from` - (Optional) Type: `string`.
 * `password` - (Optional) Type: `string`. **Sensitive.**
@@ -40,6 +40,11 @@ This resource supports the following arguments:
 * `tls` - (Optional) Type: `bool`.
 * `user` - (Optional) Type: `string`.
 * `vrf` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - Stable identifier (the singleton's menu path, optionally namespaced by router).
+
 
 ## Import
 

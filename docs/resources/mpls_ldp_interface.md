@@ -25,10 +25,20 @@ resource "routeros_mpls_ldp_interface" "interface_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `accept_dynamic_neighbors` - (Optional) Type: `string`. RouterOS `accept-dynamic-neighbors`.
+* `afi` - (Optional) Type: `string`. RouterOS `afi`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `hello_interval` - (Optional) Type: `string`. RouterOS `hello-interval`.
+* `hold_time` - (Optional) Type: `string`. RouterOS `hold-time`.
 * `interface` - (Required) Type: `string`.
+* `transport_addresses` - (Optional) Type: `string`. RouterOS `transport-addresses`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

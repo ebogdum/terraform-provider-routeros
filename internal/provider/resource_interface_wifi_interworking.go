@@ -30,6 +30,7 @@ type InterfaceWifiInterworkingResource struct {
 
 type InterfaceWifiInterworkingModel struct {
 	ID                     types.String `tfsdk:"id"`
+	Hotspot20Dgaf          types.String `tfsdk:"hotspot20_dgaf"`
 	X3gppInfo              types.String `tfsdk:"x3gpp_info"`
 	X3gppInfoRaw           types.String `tfsdk:"x3gpp_info_raw"`
 	AuthenticationTypes    types.String `tfsdk:"authentication_types"`
@@ -40,7 +41,7 @@ type InterfaceWifiInterworkingModel struct {
 	DomainNames            types.String `tfsdk:"domain_names"`
 	Esr                    types.String `tfsdk:"esr"`
 	Hessid                 types.String `tfsdk:"hessid"`
-	Hotspot20              types.String `tfsdk:"hotspot_2_0"`
+	Hotspot20              types.String `tfsdk:"hotspot20"`
 	Internet               types.String `tfsdk:"internet"`
 	Ipv4Availability       types.String `tfsdk:"ipv4_availability"`
 	IPV6Availability       types.String `tfsdk:"ipv6_availability"`
@@ -79,7 +80,6 @@ func (r *InterfaceWifiInterworkingResource) Configure(_ context.Context, req res
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceWifiInterworkingResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -90,6 +90,11 @@ func (r *InterfaceWifiInterworkingResource) Schema(_ context.Context, _ resource
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"hotspot20_dgaf": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `hotspot20-dgaf`.",
 			},
 			"x3gpp_info": schema.StringAttribute{
 				Optional:    true,
@@ -141,7 +146,7 @@ func (r *InterfaceWifiInterworkingResource) Schema(_ context.Context, _ resource
 				Computed:    true,
 				Description: "",
 			},
-			"hotspot_2_0": schema.StringAttribute{
+			"hotspot20": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -300,7 +305,7 @@ func (r *InterfaceWifiInterworkingResource) Create(ctx context.Context, req reso
 		body["hessid"] = plan.Hessid.ValueString()
 	}
 	if !(plan.Hotspot20.IsNull() || plan.Hotspot20.IsUnknown()) {
-		body["hotspot-2-0"] = plan.Hotspot20.ValueString()
+		body["hotspot20"] = plan.Hotspot20.ValueString()
 	}
 	if !(plan.Internet.IsNull() || plan.Internet.IsUnknown()) {
 		body["internet"] = plan.Internet.ValueString()
@@ -364,6 +369,9 @@ func (r *InterfaceWifiInterworkingResource) Create(ctx context.Context, req reso
 	}
 	if !(plan.WanUplinkLoad.IsNull() || plan.WanUplinkLoad.IsUnknown()) {
 		body["wan-uplink-load"] = plan.WanUplinkLoad.ValueString()
+	}
+	if !(plan.Hotspot20Dgaf.IsNull() || plan.Hotspot20Dgaf.IsUnknown()) {
+		body["hotspot20-dgaf"] = plan.Hotspot20Dgaf.ValueString()
 	}
 	obj, err := c.Add(ctx, "/interface/wifi/interworking", body)
 	if err != nil {
@@ -443,7 +451,7 @@ func (r *InterfaceWifiInterworkingResource) Update(ctx context.Context, req reso
 		body["hessid"] = plan.Hessid.ValueString()
 	}
 	if !plan.Hotspot20.Equal(state.Hotspot20) {
-		body["hotspot-2-0"] = plan.Hotspot20.ValueString()
+		body["hotspot20"] = plan.Hotspot20.ValueString()
 	}
 	if !plan.Internet.Equal(state.Internet) {
 		body["internet"] = plan.Internet.ValueString()
@@ -507,6 +515,9 @@ func (r *InterfaceWifiInterworkingResource) Update(ctx context.Context, req reso
 	}
 	if !plan.WanUplinkLoad.Equal(state.WanUplinkLoad) {
 		body["wan-uplink-load"] = plan.WanUplinkLoad.ValueString()
+	}
+	if !plan.Hotspot20Dgaf.Equal(state.Hotspot20Dgaf) && !plan.Hotspot20Dgaf.IsUnknown() {
+		body["hotspot20-dgaf"] = plan.Hotspot20Dgaf.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/wifi/interworking", state.ID.ValueString(), body)
@@ -574,6 +585,11 @@ func interfaceWifiInterworkingLookupByNaturalKey(ctx context.Context, c *client.
 func interfaceWifiInterworkingApply(ctx context.Context, obj client.Object, m *InterfaceWifiInterworkingModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["hotspot20-dgaf"]; ok && v != "" {
+		m.Hotspot20Dgaf = types.StringValue(v)
+	} else {
+		m.Hotspot20Dgaf = types.StringNull()
+	}
 	if v, ok := obj["3gpp-info"]; ok {
 		_ = v
 		if v != "" {
@@ -674,7 +690,7 @@ func interfaceWifiInterworkingApply(ctx context.Context, obj client.Object, m *I
 	} else {
 		m.Hessid = types.StringNull()
 	}
-	if v, ok := obj["hotspot-2-0"]; ok {
+	if v, ok := obj["hotspot20"]; ok {
 		_ = v
 		if v != "" {
 			m.Hotspot20 = types.StringValue(v)

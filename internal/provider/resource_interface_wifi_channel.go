@@ -32,6 +32,8 @@ type InterfaceWifiChannelResource struct {
 
 type InterfaceWifiChannelModel struct {
 	ID                 types.String `tfsdk:"id"`
+	Width              types.String `tfsdk:"width"`
+	PreamblePuncturing types.String `tfsdk:"preamble_puncturing"`
 	Band               types.String `tfsdk:"band"`
 	ChannelWidth       types.String `tfsdk:"channel_width"`
 	Comment            types.String `tfsdk:"comment"`
@@ -58,7 +60,6 @@ func (r *InterfaceWifiChannelResource) Configure(_ context.Context, req resource
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceWifiChannelResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -69,6 +70,16 @@ func (r *InterfaceWifiChannelResource) Schema(_ context.Context, _ resource.Sche
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"width": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `width`.",
+			},
+			"preamble_puncturing": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `preamble-puncturing`.",
 			},
 			"band": schema.StringAttribute{
 				Optional:    true,
@@ -177,6 +188,12 @@ func (r *InterfaceWifiChannelResource) Create(ctx context.Context, req resource.
 	if !(plan.SkipDfsChannels.IsNull() || plan.SkipDfsChannels.IsUnknown()) {
 		body["skip-dfs-channels"] = plan.SkipDfsChannels.ValueString()
 	}
+	if !(plan.PreamblePuncturing.IsNull() || plan.PreamblePuncturing.IsUnknown()) {
+		body["preamble-puncturing"] = plan.PreamblePuncturing.ValueString()
+	}
+	if !(plan.Width.IsNull() || plan.Width.IsUnknown()) {
+		body["width"] = plan.Width.ValueString()
+	}
 	obj, err := c.Add(ctx, "/interface/wifi/channel", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /interface/wifi/channel failed", err.Error())
@@ -257,6 +274,12 @@ func (r *InterfaceWifiChannelResource) Update(ctx context.Context, req resource.
 	if !plan.SkipDfsChannels.Equal(state.SkipDfsChannels) {
 		body["skip-dfs-channels"] = plan.SkipDfsChannels.ValueString()
 	}
+	if !plan.PreamblePuncturing.Equal(state.PreamblePuncturing) && !plan.PreamblePuncturing.IsUnknown() {
+		body["preamble-puncturing"] = plan.PreamblePuncturing.ValueString()
+	}
+	if !plan.Width.Equal(state.Width) && !plan.Width.IsUnknown() {
+		body["width"] = plan.Width.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/wifi/channel", state.ID.ValueString(), body)
 		if err != nil {
@@ -323,6 +346,16 @@ func interfaceWifiChannelLookupByNaturalKey(ctx context.Context, c *client.Clien
 func interfaceWifiChannelApply(ctx context.Context, obj client.Object, m *InterfaceWifiChannelModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["width"]; ok && v != "" {
+		m.Width = types.StringValue(v)
+	} else {
+		m.Width = types.StringNull()
+	}
+	if v, ok := obj["preamble-puncturing"]; ok && v != "" {
+		m.PreamblePuncturing = types.StringValue(v)
+	} else {
+		m.PreamblePuncturing = types.StringNull()
+	}
 	if v, ok := obj["band"]; ok {
 		_ = v
 		if v != "" {

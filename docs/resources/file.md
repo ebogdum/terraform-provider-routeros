@@ -40,34 +40,33 @@ resource "routeros_file" "file_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `backup` - (Optional) Type: `string`.
-* `basename` - (Optional) Type: `string`.
-* `container` - (Optional) Type: `int`. Default: `4.294967295e+09`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `backup` - (Read-only) Type: `string`.
+* `basename` - (Read-only) Type: `string`.
+* `container` - (Read-only) Type: `int`.
 * `contents` - (Optional) Type: `string`.
-* `directory` - (Optional) Type: `string`.
-* `file_name` - (Optional) Type: `string`.
-* `hasvpn` - (Optional) Type: `string`.
-* `invalid` - (Optional) Type: `string`.
-* `invalidfile` - (Optional) Type: `string`.
+* `directory` - (Read-only) Type: `string`.
+* `family` - (Read-only) Type: `int`.
+* `file_name` - (Read-only) Type: `string`.
+* `file_share_url` - (Read-only) Type: `string`.
+* `hasvpn` - (Read-only) Type: `string`.
+* `invalid` - (Read-only) Type: `string`.
+* `invalidfile` - (Read-only) Type: `string`.
+* `last_modified` - (Read-only) Type: `string`.
 * `name` - (Optional) Type: `string`.
-* `nondir` - (Optional) Type: `string`.
-* `restore` - (Optional) Type: `string`.
-* `share` - (Optional) Type: `string`.
-* `shared` - (Optional) Type: `bool`.
-* `type` - (Optional) Type: `int`.
-* `unshare` - (Optional) Type: `string`.
-* `valid` - (Optional) Type: `string`.
+* `nondir` - (Read-only) Type: `string`.
+* `restore` - (Read-only) Type: `string`.
+* `share` - (Read-only) Type: `string`.
+* `shared` - (Read-only) Type: `bool`.
+* `size` - (Read-only) Type: `string`.
+* `type` - (Read-only) Type: `string`.
+* `unshare` - (Read-only) Type: `string`.
+* `valid` - (Read-only) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `family` - Type: `int`.
-* `file_share_url` - Type: `string`.
-* `last_modified` - Type: `string`.
-* `size` - Type: `string`.
 
 ## Import
 

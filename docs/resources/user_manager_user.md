@@ -21,7 +21,20 @@ resource "routeros_user_manager_user" "user_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `attributes` - (Optional) Type: `string`. RADIUS attributes returned on authentication, e.g. `Framed-IP-Address:10.0.0.5`.
+* `caller_id` - (Optional) Type: `string`. RouterOS `caller-id`.
+* `comment` - (Optional) Type: `string`. Free-form comment.
+* `group` - (Optional) Type: `string`. User Manager group, e.g. `default`.
+* `name` - (Optional) Type: `string`. Username.
+* `otp_secret` - (Optional) Type: `string`. Base32 TOTP secret used for one-time-password authentication. **Sensitive.**
+* `password` - (Optional) Type: `string`. User password. **Sensitive.**
+* `shared_users` - (Optional) Type: `string`. Number of simultaneous sessions permitted for this user.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

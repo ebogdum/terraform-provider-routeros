@@ -36,7 +36,7 @@ resource "routeros_interface_wifi_datapath" "datapath_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `bridge` - (Optional) Type: `string`.
 * `bridge_cost` - (Optional) Type: `string`.
 * `bridge_horizon` - (Optional) Type: `string`.
@@ -44,11 +44,16 @@ This resource supports the following arguments:
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `interface_list` - (Optional) Type: `string`.
-* `name` - (Required) Type: `string`. Default: `tf_acc_wdp`.
+* `name` - (Required) Type: `string`.
 * `open_flow_switch` - (Optional) Type: `string`.
 * `openflow` - (Optional) Type: `string`.
 * `traffic_processing` - (Optional) Type: `string`.
 * `vlan_id` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

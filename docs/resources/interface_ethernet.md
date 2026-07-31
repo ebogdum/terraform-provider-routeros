@@ -43,9 +43,9 @@ resource "routeros_interface_ethernet" "ethernet_example" {
   # non_mgmt = "replace-me"
   # orig_mac_address = "10.99.0.0/24"
   # passthrough_interface = "replace-me"
-  # po_e_out = "off"
-  # po_e_priority = 0
-  # po_e_voltage = "auto"
+  # poe_out = "off"
+  # poe_priority = 0
+  # poe_voltage = "auto"
   # poe = "replace-me"
   # poeping = "replace-me"
   # power_cycle = "replace-me"
@@ -70,169 +70,173 @@ resource "routeros_interface_ethernet" "ethernet_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `advertise` - (Optional) Type: `list`.
-* `arp` - (Optional) Type: `enum(disabled|enabled|proxy-arp|reply-only|local-proxy-arp)`.
-* `arp_timeout` - (Optional) Type: `duration`.
+* `advertising` - (Read-only) Type: `string`.
+* `arp` - (Optional) Type: `string`.
+* `arp_timeout` - (Optional) Type: `string`.
+* `auto_negotiation` - (Optional) Type: `bool`. Whether the port negotiates link speed and duplex with its peer. Disable it only when forcing `speed`/`full_duplex` on both ends.
 * `autoneg` - (Optional) Type: `bool`.
+* `bandwidth` - (Optional) Type: `string`. Rx/tx rate limit in `<rx>/<tx>` form, e.g. `unlimited/unlimited` (the default) or `100M/100M`.
 * `blink` - (Optional) Type: `string`.
+* `cable_assembly_link_length` - (Read-only) Type: `string`.
 * `cable_settings` - (Optional) Type: `string`.
 * `cable_test` - (Optional) Type: `string`.
-* `combo_mode` - (Optional) Type: `enum(auto|copper|sfp)`.
+* `cmis_module_state` - (Read-only) Type: `string`.
+* `cmis_revision` - (Read-only) Type: `string`.
+* `combo` - (Read-only) Type: `int`.
+* `combo_mode` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `connector_type` - (Read-only) Type: `string`.
+* `copper_active_om4_link_length` - (Read-only) Type: `int`.
+* `default_name` - (Read-only) Type: `string`.
 * `disable_running_check` - (Optional) Type: `bool`.
-* `disable_time` - (Optional) Type: `duration`. Default: `300`.
+* `disable_time` - (Read-only) Type: `string`.
 * `disabled` - (Optional) Type: `bool`.
+* `encoding` - (Read-only) Type: `string`.
 * `extrastats` - (Optional) Type: `string`.
-* `fec_mode` - (Optional) Type: `enum(off|auto|fec74|fec91)`.
+* `fec` - (Read-only) Type: `int`.
+* `fec_mode` - (Optional) Type: `string`.
 * `flowcntrl` - (Optional) Type: `string`.
+* `flowcontrol` - (Read-only) Type: `int`.
+* `full_duplex` - (Read-only) Type: `string`.
+* `hastxqueuestats` - (Read-only) Type: `bool`.
 * `ignore_rx_los` - (Optional) Type: `bool`.
-* `l2_mtu` - (Optional) Type: `int`.
-* `loop_protect` - (Optional) Type: `enum(default|off|on)`.
-* `loop_protect_disable_time` - (Optional) Type: `duration`.
-* `loop_protect_send_interval` - (Optional) Type: `duration`.
-* `mac_address` - (Optional) Type: `mac`. MAC address to be mapped to.
-* `mtu` - (Optional) Type: `int`. Default: `1500`.
+* `l2_mtu` - (Read-only) Type: `int`.
+* `l2mtu` - (Optional) Type: `string`. RouterOS `l2mtu`.
+* `link_partner_advertising` - (Read-only) Type: `string`.
+* `loop_protect` - (Optional) Type: `string`.
+* `loop_protect_disable_time` - (Optional) Type: `string`.
+* `loop_protect_send_interval` - (Optional) Type: `string`.
+* `loop_protect_status` - (Read-only) Type: `string`.
+* `mac_address` - (Optional) Type: `string`. MAC address to be mapped to
+* `manufacturing_date` - (Read-only) Type: `string`.
+* `max_l2_mtu` - (Read-only) Type: `int`.
+* `max_power` - (Read-only) Type: `string`.
+* `mdix_enable` - (Optional) Type: `string`. RouterOS `mdix-enable`.
+* `module_present` - (Read-only) Type: `bool`.
+* `mtu` - (Optional) Type: `int`.
 * `name` - (Optional) Type: `string`.
 * `noautoneg` - (Optional) Type: `string`.
-* `non_mgmt` - (Optional) Type: `string`.
-* `orig_mac_address` - (Optional) Type: `mac`.
-* `passthrough_interface` - (Optional) Type: `string`.
-* `po_e_out` - (Optional) Type: `enum(off|auto-on|forced-on)`.
-* `po_e_priority` - (Optional) Type: `int`.
-* `po_e_voltage` - (Optional) Type: `enum(auto|low|high)`.
+* `non_mgmt` - (Read-only) Type: `string`.
+* `om1_link_length` - (Read-only) Type: `int`.
+* `om2_link_length` - (Read-only) Type: `int`.
+* `om3_link_length` - (Read-only) Type: `int`.
+* `om4_link_length` - (Read-only) Type: `int`.
+* `om5_link_length` - (Read-only) Type: `int`.
+* `orig_mac_address` - (Optional) Type: `string`.
+* `passthrough_interface` - (Read-only) Type: `string`.
+* `pcie_passthrough` - (Read-only) Type: `int`.
 * `poe` - (Optional) Type: `string`.
+* `poe_out` - (Optional) Type: `string`.
+* `poe_out_current` - (Optional) Type: `int`.
+* `poe_out_power` - (Optional) Type: `string`.
+* `poe_out_status` - (Optional) Type: `string`.
+* `poe_out_voltage` - (Optional) Type: `string`.
+* `poe_priority` - (Optional) Type: `int`.
+* `poe_v` - (Read-only) Type: `bool`.
+* `poe_voltage` - (Optional) Type: `string`.
+* `poecurr` - (Read-only) Type: `int`.
 * `poeping` - (Optional) Type: `string`.
-* `power_cycle` - (Optional) Type: `string`.
-* `power_cycle_interval` - (Optional) Type: `duration`.
-* `power_cycle_ping_address` - (Optional) Type: `string`.
+* `poepower` - (Read-only) Type: `int`.
+* `poevolt` - (Read-only) Type: `int`.
+* `power_class` - (Read-only) Type: `int`.
+* `power_cycle` - (Read-only) Type: `string`.
+* `power_cycle_after` - (Read-only) Type: `string`.
+* `power_cycle_host_alive` - (Read-only) Type: `bool`.
+* `power_cycle_interval` - (Optional) Type: `string`.
+* `power_cycle_ping_address` - (Read-only) Type: `string`.
 * `power_cycle_ping_enabled` - (Optional) Type: `bool`.
-* `power_cycle_ping_timeout` - (Optional) Type: `duration`.
+* `power_cycle_ping_timeout` - (Read-only) Type: `string`.
 * `qstats` - (Optional) Type: `string`.
-* `rate_select` - (Optional) Type: `enum(low|high)`.
-* `reset_counters` - (Optional) Type: `string`.
-* `reset_mac_address` - (Optional) Type: `string`.
-* `rx_flow_control` - (Optional) Type: `enum(off|on|auto)`.
-* `send_interval` - (Optional) Type: `duration`. Default: `5`.
+* `rate` - (Read-only) Type: `string`.
+* `rate_select` - (Optional) Type: `string`.
+* `reset_counters` - (Read-only) Type: `string`.
+* `reset_mac_address` - (Read-only) Type: `string`.
+* `running` - (Read-only) Type: `bool`.
+* `rx_align_error` - (Read-only) Type: `string`.
+* `rx_broadcast` - (Read-only) Type: `int`.
+* `rx_bytes` - (Read-only) Type: `int`.
+* `rx_carrier_error` - (Read-only) Type: `string`.
+* `rx_code_error` - (Read-only) Type: `string`.
+* `rx_control` - (Read-only) Type: `string`.
+* `rx_drop` - (Read-only) Type: `string`.
+* `rx_error_events` - (Read-only) Type: `string`.
+* `rx_fcs_error` - (Read-only) Type: `string`.
+* `rx_flow_control` - (Optional) Type: `string`.
+* `rx_fragment` - (Read-only) Type: `string`.
+* `rx_jabber` - (Read-only) Type: `string`.
+* `rx_length_error` - (Read-only) Type: `string`.
+* `rx_loss` - (Read-only) Type: `bool`.
+* `rx_multicast` - (Read-only) Type: `int`.
+* `rx_overflow` - (Read-only) Type: `string`.
+* `rx_packet` - (Read-only) Type: `int`.
+* `rx_pause` - (Read-only) Type: `string`.
+* `rx_power` - (Read-only) Type: `string`.
+* `rx_too_long` - (Read-only) Type: `string`.
+* `rx_too_short` - (Read-only) Type: `string`.
+* `rx_unicast` - (Read-only) Type: `string`.
+* `rx_unknown_op` - (Read-only) Type: `string`.
+* `send_interval` - (Read-only) Type: `string`.
 * `sfp` - (Optional) Type: `bool`.
+* `sfp_ignore_rx_los` - (Optional) Type: `string`. RouterOS `sfp-ignore-rx-los`.
+* `sfp_rate_select` - (Optional) Type: `string`. RouterOS `sfp-rate-select`.
 * `sfp_shutdown_temperature` - (Optional) Type: `int`.
-* `speed` - (Optional) Type: `enum(10m-baset-half|10m-baset-full|100m-baset-half|100m-baset-full|1g-baset-half|1g-baset-full, ...)`.
-* `tx_flow_control` - (Optional) Type: `enum(off|on|auto)`.
+* `sfp_supported` - (Read-only) Type: `string`.
+* `sfprate` - (Read-only) Type: `int`.
+* `sfpshutdown` - (Read-only) Type: `bool`.
+* `sm_link_length` - (Read-only) Type: `string`.
+* `speed` - (Optional) Type: `string`.
+* `status` - (Read-only) Type: `string`.
+* `supply_voltage` - (Read-only) Type: `string`.
+* `supported` - (Read-only) Type: `string`.
+* `temperature` - (Read-only) Type: `string`.
+* `tx_bias_current` - (Read-only) Type: `int`.
+* `tx_broadcast` - (Read-only) Type: `int`.
+* `tx_bytes` - (Read-only) Type: `int`.
+* `tx_collision` - (Read-only) Type: `string`.
+* `tx_control` - (Read-only) Type: `string`.
+* `tx_deferred` - (Read-only) Type: `string`.
+* `tx_drop` - (Read-only) Type: `string`.
+* `tx_excessive_collision` - (Read-only) Type: `string`.
+* `tx_excessive_deferred` - (Read-only) Type: `string`.
+* `tx_fault` - (Read-only) Type: `bool`.
+* `tx_fcs_error` - (Read-only) Type: `string`.
+* `tx_flow_control` - (Optional) Type: `string`.
+* `tx_fragment` - (Read-only) Type: `string`.
+* `tx_jabber` - (Read-only) Type: `string`.
+* `tx_late_collision` - (Read-only) Type: `string`.
+* `tx_multicast` - (Read-only) Type: `int`.
+* `tx_multiple_collision` - (Read-only) Type: `string`.
+* `tx_packet` - (Read-only) Type: `int`.
+* `tx_pause` - (Read-only) Type: `string`.
+* `tx_pause_honorred` - (Read-only) Type: `string`.
+* `tx_power` - (Read-only) Type: `string`.
+* `tx_rx_1024_1518` - (Read-only) Type: `string`.
+* `tx_rx_1024_max` - (Read-only) Type: `string`.
+* `tx_rx_128_255` - (Read-only) Type: `string`.
+* `tx_rx_1519_max` - (Read-only) Type: `string`.
+* `tx_rx_256_511` - (Read-only) Type: `string`.
+* `tx_rx_512_1023` - (Read-only) Type: `string`.
+* `tx_rx_64` - (Read-only) Type: `string`.
+* `tx_rx_65_127` - (Read-only) Type: `string`.
+* `tx_rx_bytes` - (Read-only) Type: `string`.
+* `tx_rx_packets` - (Read-only) Type: `string`.
+* `tx_single_collision` - (Read-only) Type: `string`.
+* `tx_too_short` - (Read-only) Type: `string`.
+* `tx_total_collision` - (Read-only) Type: `string`.
+* `tx_underrun` - (Read-only) Type: `string`.
+* `tx_unicast` - (Read-only) Type: `string`.
+* `vendor_name` - (Read-only) Type: `string`.
+* `vendor_part_number` - (Read-only) Type: `string`.
+* `vendor_revision` - (Read-only) Type: `string`.
+* `vendor_serial` - (Read-only) Type: `string`.
+* `wavelength` - (Read-only) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `advertising` - Type: `string`.
-* `auto_negotiation` - Type: `enum(incomplete|done|no-negotiation|failed|restarted|disabled, ...)`.
-* `cable_assembly_link_length` - Type: `string`.
-* `cmis_module_state` - Type: `enum(low-power|power-up|ready|power-down|fault)`.
-* `cmis_revision` - Type: `string`.
-* `combo` - Type: `int`.
-* `connector_type` - Type: `enum(unknown|sc|lc|optical-pigtail|multifiber-parallel-optic-1x12|copper-pigtail, ...)`.
-* `copper_active_om4_link_length` - Type: `int`.
-* `default_name` - Type: `string`.
-* `encoding` - Type: `enum(unspecified|8b/10b|4b/5b|nrz|manchester|sonet, ...)`.
-* `fec` - Type: `int`.
-* `flowcontrol` - Type: `int`.
-* `full_duplex` - Type: `string`.
-* `hastxqueuestats` - Type: `bool`.
-* `link_partner_advertising` - Type: `string`.
-* `loop_protect_status` - Type: `string`.
-* `manufacturing_date` - Type: `string`.
-* `max_l2_mtu` - Type: `int`.
-* `max_power` - Type: `string`.
-* `module_present` - Type: `bool`.
-* `om1_link_length` - Type: `int`.
-* `om2_link_length` - Type: `int`.
-* `om3_link_length` - Type: `int`.
-* `om4_link_length` - Type: `int`.
-* `om5_link_length` - Type: `int`.
-* `pcie_passthrough` - Type: `int`.
-* `po_e_out_current` - Type: `int`.
-* `po_e_out_power` - Type: `string`.
-* `po_e_out_status` - Type: `enum(|disabled|waiting-for-load|powered-on|overload|short-circuit, ...)`.
-* `po_e_out_voltage` - Type: `string`.
-* `poe_v` - Type: `bool`.
-* `poecurr` - Type: `int`.
-* `poepower` - Type: `int`.
-* `poevolt` - Type: `int`.
-* `power_class` - Type: `int`.
-* `power_cycle_after` - Type: `string`.
-* `power_cycle_host_alive` - Type: `bool`.
-* `rate` - Type: `string`.
-* `running` - Type: `bool`.
-* `rx_align_error` - Type: `string`.
-* `rx_broadcast` - Type: `int`.
-* `rx_bytes` - Type: `int`.
-* `rx_carrier_error` - Type: `string`.
-* `rx_code_error` - Type: `string`.
-* `rx_control` - Type: `string`.
-* `rx_drop` - Type: `string`.
-* `rx_error_events` - Type: `string`.
-* `rx_fcs_error` - Type: `string`.
-* `rx_fragment` - Type: `string`.
-* `rx_jabber` - Type: `string`.
-* `rx_length_error` - Type: `string`.
-* `rx_loss` - Type: `bool`.
-* `rx_multicast` - Type: `int`.
-* `rx_overflow` - Type: `string`.
-* `rx_packet` - Type: `int`.
-* `rx_pause` - Type: `string`.
-* `rx_power` - Type: `string`.
-* `rx_too_long` - Type: `string`.
-* `rx_too_short` - Type: `string`.
-* `rx_unicast` - Type: `string`.
-* `rx_unknown_op` - Type: `string`.
-* `sfp_supported` - Type: `string`.
-* `sfprate` - Type: `int`.
-* `sfpshutdown` - Type: `bool`.
-* `sm_link_length` - Type: `string`.
-* `status` - Type: `enum(|off|on|disabled)`.
-* `supply_voltage` - Type: `string`.
-* `supported` - Type: `string`.
-* `temperature` - Type: `string`.
-* `tx_bias_current` - Type: `int`.
-* `tx_broadcast` - Type: `int`.
-* `tx_bytes` - Type: `int`.
-* `tx_collision` - Type: `string`.
-* `tx_control` - Type: `string`.
-* `tx_deferred` - Type: `string`.
-* `tx_drop` - Type: `string`.
-* `tx_excessive_collision` - Type: `string`.
-* `tx_excessive_deferred` - Type: `string`.
-* `tx_fault` - Type: `bool`.
-* `tx_fcs_error` - Type: `string`.
-* `tx_fragment` - Type: `string`.
-* `tx_jabber` - Type: `string`.
-* `tx_late_collision` - Type: `string`.
-* `tx_multicast` - Type: `int`.
-* `tx_multiple_collision` - Type: `string`.
-* `tx_packet` - Type: `int`.
-* `tx_pause` - Type: `string`.
-* `tx_pause_honorred` - Type: `string`.
-* `tx_power` - Type: `string`.
-* `tx_rx_1024_1518` - Type: `string`.
-* `tx_rx_1024_max` - Type: `string`.
-* `tx_rx_128_255` - Type: `string`.
-* `tx_rx_1519_max` - Type: `string`.
-* `tx_rx_256_511` - Type: `string`.
-* `tx_rx_512_1023` - Type: `string`.
-* `tx_rx_64` - Type: `string`.
-* `tx_rx_65_127` - Type: `string`.
-* `tx_rx_bytes` - Type: `string`.
-* `tx_rx_packets` - Type: `string`.
-* `tx_single_collision` - Type: `string`.
-* `tx_too_short` - Type: `string`.
-* `tx_total_collision` - Type: `string`.
-* `tx_underrun` - Type: `string`.
-* `tx_unicast` - Type: `string`.
-* `vendor_name` - Type: `string`.
-* `vendor_part_number` - Type: `string`.
-* `vendor_revision` - Type: `string`.
-* `vendor_serial` - Type: `string`.
-* `wavelength` - Type: `string`.
 
 ## Import
 

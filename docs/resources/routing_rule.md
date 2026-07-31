@@ -34,25 +34,25 @@ resource "routeros_routing_rule" "rule_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `action` - (Optional) Type: `enum(lookup|unreachable|drop|lookup-only-in-table|mangle)`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `action` - (Optional) Type: `string`.
 * `chain` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `dst_address` - (Optional) Type: `string`.
 * `interface` - (Optional) Type: `string`.
+* `invalid` - (Read-only) Type: `bool`.
 * `min_prefix` - (Optional) Type: `string`.
 * `realm` - (Optional) Type: `string`.
 * `routing_mark` - (Optional) Type: `string`.
 * `src_address` - (Optional) Type: `string`.
+* `table` - (Optional) Type: `string`. RouterOS `table`.
 * `vrf` - (Optional) Type: `bool`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `invalid` - Type: `bool`.
 
 ## Import
 

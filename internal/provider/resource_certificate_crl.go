@@ -58,7 +58,6 @@ func (r *CertificateCrlResource) Configure(_ context.Context, req resource.Confi
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *CertificateCrlResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -71,62 +70,50 @@ func (r *CertificateCrlResource) Schema(_ context.Context, _ resource.SchemaRequ
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"akid": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"certificate": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"download": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"expired": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"flush": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"invalid": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"last_update": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"next_update": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"num": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"revoked": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"signature": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -153,15 +140,6 @@ func (r *CertificateCrlResource) Create(ctx context.Context, req resource.Create
 		return
 	}
 	body := client.Object{}
-	if !(plan.Download.IsNull() || plan.Download.IsUnknown()) {
-		body["download"] = plan.Download.ValueString()
-	}
-	if !(plan.Expired.IsNull() || plan.Expired.IsUnknown()) {
-		body["expired"] = client.FormatBool(plan.Expired.ValueBool())
-	}
-	if !(plan.Flush.IsNull() || plan.Flush.IsUnknown()) {
-		body["flush"] = plan.Flush.ValueString()
-	}
 	if !(plan.URL.IsNull() || plan.URL.IsUnknown()) {
 		body["url"] = plan.URL.ValueString()
 	}
@@ -212,15 +190,6 @@ func (r *CertificateCrlResource) Update(ctx context.Context, req resource.Update
 		return
 	}
 	body := client.Object{}
-	if !plan.Download.Equal(state.Download) {
-		body["download"] = plan.Download.ValueString()
-	}
-	if !plan.Expired.Equal(state.Expired) {
-		body["expired"] = client.FormatBool(plan.Expired.ValueBool())
-	}
-	if !plan.Flush.Equal(state.Flush) {
-		body["flush"] = plan.Flush.ValueString()
-	}
 	if !plan.URL.Equal(state.URL) {
 		body["url"] = plan.URL.ValueString()
 	}

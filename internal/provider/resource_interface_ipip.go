@@ -32,6 +32,7 @@ type InterfaceIpipResource struct {
 
 type InterfaceIpipModel struct {
 	ID            types.String `tfsdk:"id"`
+	AllowFastPath types.String `tfsdk:"allow_fast_path"`
 	ClampTCPMss   types.Bool   `tfsdk:"clamp_tcp_mss"`
 	Comment       types.String `tfsdk:"comment"`
 	Disabled      types.Bool   `tfsdk:"disabled"`
@@ -40,7 +41,7 @@ type InterfaceIpipModel struct {
 	IpsecSecret   types.String `tfsdk:"ipsec_secret"`
 	Keepalive     types.String `tfsdk:"keepalive"`
 	LocalAddress  types.String `tfsdk:"local_address"`
-	MTU           types.Int64  `tfsdk:"mtu"`
+	MTU           types.String `tfsdk:"mtu"`
 	Name          types.String `tfsdk:"name"`
 	RemoteAddress types.String `tfsdk:"remote_address"`
 	Router        types.String `tfsdk:"router"`
@@ -58,7 +59,6 @@ func (r *InterfaceIpipResource) Configure(_ context.Context, req resource.Config
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceIpipResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -69,6 +69,11 @@ func (r *InterfaceIpipResource) Schema(_ context.Context, _ resource.SchemaReque
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"allow_fast_path": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `allow-fast-path`.",
 			},
 			"clamp_tcp_mss": schema.BoolAttribute{
 				Optional:    true,
@@ -114,10 +119,10 @@ func (r *InterfaceIpipResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "IP address on a router that will be used by IPIP tunnel.",
 				Validators:  []validator.String{schemautil.IsIP()},
 			},
-			"mtu": schema.Int64Attribute{
+			"mtu": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "Layer3 Maximum transmission unit.",
+				Description: "Layer3 Maximum transmission unit. A number, or `auto`.",
 			},
 			"name": schema.StringAttribute{
 				Optional:    true,
@@ -173,13 +178,16 @@ func (r *InterfaceIpipResource) Create(ctx context.Context, req resource.CreateR
 		body["local-address"] = plan.LocalAddress.ValueString()
 	}
 	if !(plan.MTU.IsNull() || plan.MTU.IsUnknown()) {
-		body["mtu"] = client.FormatInt64(plan.MTU.ValueInt64())
+		body["mtu"] = plan.MTU.ValueString()
 	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
 	}
 	if !(plan.RemoteAddress.IsNull() || plan.RemoteAddress.IsUnknown()) {
 		body["remote-address"] = plan.RemoteAddress.ValueString()
+	}
+	if !(plan.AllowFastPath.IsNull() || plan.AllowFastPath.IsUnknown()) {
+		body["allow-fast-path"] = plan.AllowFastPath.ValueString()
 	}
 	obj, err := c.Add(ctx, "/interface/ipip", body)
 	if err != nil {
@@ -253,13 +261,16 @@ func (r *InterfaceIpipResource) Update(ctx context.Context, req resource.UpdateR
 		body["local-address"] = plan.LocalAddress.ValueString()
 	}
 	if !plan.MTU.Equal(state.MTU) {
-		body["mtu"] = client.FormatInt64(plan.MTU.ValueInt64())
+		body["mtu"] = plan.MTU.ValueString()
 	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
 	}
 	if !plan.RemoteAddress.Equal(state.RemoteAddress) {
 		body["remote-address"] = plan.RemoteAddress.ValueString()
+	}
+	if !plan.AllowFastPath.Equal(state.AllowFastPath) && !plan.AllowFastPath.IsUnknown() {
+		body["allow-fast-path"] = plan.AllowFastPath.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/ipip", state.ID.ValueString(), body)
@@ -327,6 +338,11 @@ func interfaceIpipLookupByNaturalKey(ctx context.Context, c *client.Client, id s
 func interfaceIpipApply(ctx context.Context, obj client.Object, m *InterfaceIpipModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["allow-fast-path"]; ok && v != "" {
+		m.AllowFastPath = types.StringValue(v)
+	} else {
+		m.AllowFastPath = types.StringNull()
+	}
 	if v, ok := obj["clamp-tcp-mss"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
@@ -413,13 +429,13 @@ func interfaceIpipApply(ctx context.Context, obj client.Object, m *InterfaceIpip
 	}
 	if v, ok := obj["mtu"]; ok {
 		_ = v
-		if n, err := client.ParseInt64(v); err == nil {
-			m.MTU = types.Int64Value(n)
+		if v != "" {
+			m.MTU = types.StringValue(v)
 		} else {
-			m.MTU = types.Int64Null()
+			m.MTU = types.StringNull()
 		}
 	} else {
-		m.MTU = types.Int64Null()
+		m.MTU = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
 		_ = v

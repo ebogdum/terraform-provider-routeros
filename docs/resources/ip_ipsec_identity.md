@@ -39,25 +39,35 @@ resource "routeros_ip_ipsec_identity" "identity_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `auth_method` - (Optional) Type: `enum(pre-shared-key|rsa-key|digital-signature|pre-shared-key-xauth|rsa-signature-hybrid|eap-radius, ...)`. Default: `1`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `auth_method` - (Optional) Type: `string`.
+* `certificate` - (Optional) Type: `string`. RouterOS `certificate`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `generate_policy` - (Optional) Type: `enum(no|port-override|port-strict)`.
-* `match_by` - (Optional) Type: `enum(certificate|remote-id)`. Default: `100`.
-* `mode_configuration` - (Optional) Type: `string`. Default: `4.294967295e+09`.
-* `my_id_type` - (Optional) Type: `enum(fqdn|user-fqdn|key-id|address|dn|auto)`. Default: `100`.
+* `dynamic` - (Read-only) Type: `bool`.
+* `eap_methods` - (Optional) Type: `string`. RouterOS `eap-methods`.
+* `generate_policy` - (Optional) Type: `string`.
+* `key` - (Optional) Type: `string`. RouterOS `key`.
+* `match_by` - (Optional) Type: `string`.
+* `mode_config` - (Optional) Type: `string`. RouterOS `mode-config`.
+* `mode_configuration` - (Read-only) Type: `string`.
+* `my_id` - (Optional) Type: `string`. RouterOS `my-id`.
+* `my_id_type` - (Read-only) Type: `string`.
 * `notrack_chain` - (Optional) Type: `string`.
+* `password` - (Optional) Type: `string`. RouterOS `password`. **Sensitive.**
 * `peer` - (Optional) Type: `string`.
 * `policy_template_group` - (Optional) Type: `string`.
-* `remote_id_type` - (Optional) Type: `enum(fqdn|user-fqdn|key-id|address|dn|auto, ...)`. Default: `100`.
+* `remote_certificate` - (Optional) Type: `string`. RouterOS `remote-certificate`.
+* `remote_id` - (Optional) Type: `string`. RouterOS `remote-id`.
+* `remote_id_type` - (Read-only) Type: `string`.
+* `remote_key` - (Optional) Type: `string`. RouterOS `remote-key`.
+* `secret` - (Optional) Type: `string`. RouterOS `secret`. **Sensitive.**
+* `username` - (Optional) Type: `string`. RouterOS `username`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `dynamic` - Type: `bool`.
 
 ## Import
 

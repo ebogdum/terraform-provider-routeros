@@ -29,16 +29,19 @@ type IPTftpResource struct {
 }
 
 type IPTftpModel struct {
-	ID           types.String `tfsdk:"id"`
-	Allow        types.Bool   `tfsdk:"allow"`
-	Comment      types.String `tfsdk:"comment"`
-	Disabled     types.Bool   `tfsdk:"disabled"`
-	Hits         types.Int64  `tfsdk:"hits"`
-	IPAddresses  types.String `tfsdk:"ip_addresses"`
-	ReadOnly     types.Bool   `tfsdk:"read_only"`
-	RealFilename types.String `tfsdk:"real_filename"`
-	ReqFilename  types.String `tfsdk:"req_filename"`
-	Router       types.String `tfsdk:"router"`
+	ID                types.String `tfsdk:"id"`
+	ReadingWindowSize types.String `tfsdk:"reading_window_size"`
+	AllowRollover     types.String `tfsdk:"allow_rollover"`
+	AllowOverwrite    types.String `tfsdk:"allow_overwrite"`
+	Allow             types.Bool   `tfsdk:"allow"`
+	Comment           types.String `tfsdk:"comment"`
+	Disabled          types.Bool   `tfsdk:"disabled"`
+	Hits              types.Int64  `tfsdk:"hits"`
+	IPAddresses       types.String `tfsdk:"ip_addresses"`
+	ReadOnly          types.Bool   `tfsdk:"read_only"`
+	RealFilename      types.String `tfsdk:"real_filename"`
+	ReqFilename       types.String `tfsdk:"req_filename"`
+	Router            types.String `tfsdk:"router"`
 }
 
 func NewIPTftpResource() resource.Resource { return &IPTftpResource{} }
@@ -53,7 +56,6 @@ func (r *IPTftpResource) Configure(_ context.Context, req resource.ConfigureRequ
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPTftpResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -64,6 +66,21 @@ func (r *IPTftpResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"reading_window_size": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `reading-window-size`.",
+			},
+			"allow_rollover": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `allow-rollover`.",
+			},
+			"allow_overwrite": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `allow-overwrite`.",
 			},
 			"allow": schema.BoolAttribute{
 				Optional:    true,
@@ -81,7 +98,6 @@ func (r *IPTftpResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 				Description: "Whether the entry is disabled.",
 			},
 			"hits": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -144,6 +160,15 @@ func (r *IPTftpResource) Create(ctx context.Context, req resource.CreateRequest,
 	}
 	if !(plan.ReqFilename.IsNull() || plan.ReqFilename.IsUnknown()) {
 		body["req-filename"] = plan.ReqFilename.ValueString()
+	}
+	if !(plan.AllowOverwrite.IsNull() || plan.AllowOverwrite.IsUnknown()) {
+		body["allow-overwrite"] = plan.AllowOverwrite.ValueString()
+	}
+	if !(plan.AllowRollover.IsNull() || plan.AllowRollover.IsUnknown()) {
+		body["allow-rollover"] = plan.AllowRollover.ValueString()
+	}
+	if !(plan.ReadingWindowSize.IsNull() || plan.ReadingWindowSize.IsUnknown()) {
+		body["reading-window-size"] = plan.ReadingWindowSize.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ip/tftp", body)
 	if err != nil {
@@ -213,6 +238,15 @@ func (r *IPTftpResource) Update(ctx context.Context, req resource.UpdateRequest,
 	if !plan.ReqFilename.Equal(state.ReqFilename) {
 		body["req-filename"] = plan.ReqFilename.ValueString()
 	}
+	if !plan.AllowOverwrite.Equal(state.AllowOverwrite) && !plan.AllowOverwrite.IsUnknown() {
+		body["allow-overwrite"] = plan.AllowOverwrite.ValueString()
+	}
+	if !plan.AllowRollover.Equal(state.AllowRollover) && !plan.AllowRollover.IsUnknown() {
+		body["allow-rollover"] = plan.AllowRollover.ValueString()
+	}
+	if !plan.ReadingWindowSize.Equal(state.ReadingWindowSize) && !plan.ReadingWindowSize.IsUnknown() {
+		body["reading-window-size"] = plan.ReadingWindowSize.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/tftp", state.ID.ValueString(), body)
 		if err != nil {
@@ -279,6 +313,21 @@ func iPTftpLookupByNaturalKey(ctx context.Context, c *client.Client, id string) 
 func iPTftpApply(ctx context.Context, obj client.Object, m *IPTftpModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["reading-window-size"]; ok && v != "" {
+		m.ReadingWindowSize = types.StringValue(v)
+	} else {
+		m.ReadingWindowSize = types.StringNull()
+	}
+	if v, ok := obj["allow-rollover"]; ok && v != "" {
+		m.AllowRollover = types.StringValue(v)
+	} else {
+		m.AllowRollover = types.StringNull()
+	}
+	if v, ok := obj["allow-overwrite"]; ok && v != "" {
+		m.AllowOverwrite = types.StringValue(v)
+	} else {
+		m.AllowOverwrite = types.StringNull()
+	}
 	if v, ok := obj["allow"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {

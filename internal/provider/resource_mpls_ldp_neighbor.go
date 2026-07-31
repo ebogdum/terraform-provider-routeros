@@ -29,10 +29,12 @@ type MPLSLdpNeighborResource struct {
 }
 
 type MPLSLdpNeighborModel struct {
-	ID       types.String `tfsdk:"id"`
-	Comment  types.String `tfsdk:"comment"`
-	Disabled types.Bool   `tfsdk:"disabled"`
-	Router   types.String `tfsdk:"router"`
+	ID           types.String `tfsdk:"id"`
+	Transport    types.String `tfsdk:"transport"`
+	SendTargeted types.String `tfsdk:"send_targeted"`
+	Comment      types.String `tfsdk:"comment"`
+	Disabled     types.Bool   `tfsdk:"disabled"`
+	Router       types.String `tfsdk:"router"`
 }
 
 func NewMPLSLdpNeighborResource() resource.Resource { return &MPLSLdpNeighborResource{} }
@@ -47,7 +49,6 @@ func (r *MPLSLdpNeighborResource) Configure(_ context.Context, req resource.Conf
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *MPLSLdpNeighborResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -58,6 +59,16 @@ func (r *MPLSLdpNeighborResource) Schema(_ context.Context, _ resource.SchemaReq
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"transport": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `transport`.",
+			},
+			"send_targeted": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `send-targeted`.",
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -93,6 +104,12 @@ func (r *MPLSLdpNeighborResource) Create(ctx context.Context, req resource.Creat
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !(plan.SendTargeted.IsNull() || plan.SendTargeted.IsUnknown()) {
+		body["send-targeted"] = plan.SendTargeted.ValueString()
+	}
+	if !(plan.Transport.IsNull() || plan.Transport.IsUnknown()) {
+		body["transport"] = plan.Transport.ValueString()
 	}
 	obj, err := c.Add(ctx, "/mpls/ldp/neighbor", body)
 	if err != nil {
@@ -146,6 +163,12 @@ func (r *MPLSLdpNeighborResource) Update(ctx context.Context, req resource.Updat
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !plan.SendTargeted.Equal(state.SendTargeted) && !plan.SendTargeted.IsUnknown() {
+		body["send-targeted"] = plan.SendTargeted.ValueString()
+	}
+	if !plan.Transport.Equal(state.Transport) && !plan.Transport.IsUnknown() {
+		body["transport"] = plan.Transport.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/mpls/ldp/neighbor", state.ID.ValueString(), body)
@@ -213,6 +236,16 @@ func mPLSLdpNeighborLookupByNaturalKey(ctx context.Context, c *client.Client, id
 func mPLSLdpNeighborApply(ctx context.Context, obj client.Object, m *MPLSLdpNeighborModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["transport"]; ok && v != "" {
+		m.Transport = types.StringValue(v)
+	} else {
+		m.Transport = types.StringNull()
+	}
+	if v, ok := obj["send-targeted"]; ok && v != "" {
+		m.SendTargeted = types.StringValue(v)
+	} else {
+		m.SendTargeted = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {

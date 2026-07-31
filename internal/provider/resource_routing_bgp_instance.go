@@ -29,17 +29,19 @@ type RoutingBGPInstanceResource struct {
 }
 
 type RoutingBGPInstanceModel struct {
-	ID           types.String `tfsdk:"id"`
-	As           types.String `tfsdk:"as"`
-	ClusterID    types.String `tfsdk:"cluster_id"`
-	Disabled     types.Bool   `tfsdk:"disabled"`
-	IgnoreAsPath types.String `tfsdk:"ignore_as_path"`
-	Invalid      types.Bool   `tfsdk:"invalid"`
-	Name         types.String `tfsdk:"name"`
-	RouterID     types.String `tfsdk:"router_id"`
-	RoutingTable types.String `tfsdk:"routing_table"`
-	Vrf          types.String `tfsdk:"vrf"`
-	Router       types.String `tfsdk:"router"`
+	ID              types.String `tfsdk:"id"`
+	Multipath       types.String `tfsdk:"multipath"`
+	IgnoreAsPathLen types.String `tfsdk:"ignore_as_path_len"`
+	As              types.String `tfsdk:"as"`
+	ClusterID       types.String `tfsdk:"cluster_id"`
+	Disabled        types.Bool   `tfsdk:"disabled"`
+	IgnoreAsPath    types.String `tfsdk:"ignore_as_path"`
+	Invalid         types.Bool   `tfsdk:"invalid"`
+	Name            types.String `tfsdk:"name"`
+	RouterID        types.String `tfsdk:"router_id"`
+	RoutingTable    types.String `tfsdk:"routing_table"`
+	Vrf             types.String `tfsdk:"vrf"`
+	Router          types.String `tfsdk:"router"`
 }
 
 func NewRoutingBGPInstanceResource() resource.Resource { return &RoutingBGPInstanceResource{} }
@@ -54,7 +56,6 @@ func (r *RoutingBGPInstanceResource) Configure(_ context.Context, req resource.C
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *RoutingBGPInstanceResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -65,6 +66,16 @@ func (r *RoutingBGPInstanceResource) Schema(_ context.Context, _ resource.Schema
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"multipath": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `multipath`.",
+			},
+			"ignore_as_path_len": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `ignore-as-path-len`.",
 			},
 			"as": schema.StringAttribute{
 				Optional:    true,
@@ -82,12 +93,10 @@ func (r *RoutingBGPInstanceResource) Schema(_ context.Context, _ resource.Schema
 				Description: "",
 			},
 			"ignore_as_path": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"invalid": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -139,9 +148,6 @@ func (r *RoutingBGPInstanceResource) Create(ctx context.Context, req resource.Cr
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !(plan.IgnoreAsPath.IsNull() || plan.IgnoreAsPath.IsUnknown()) {
-		body["ignore-as-path"] = plan.IgnoreAsPath.ValueString()
-	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
 	}
@@ -153,6 +159,12 @@ func (r *RoutingBGPInstanceResource) Create(ctx context.Context, req resource.Cr
 	}
 	if !(plan.Vrf.IsNull() || plan.Vrf.IsUnknown()) {
 		body["vrf"] = plan.Vrf.ValueString()
+	}
+	if !(plan.IgnoreAsPathLen.IsNull() || plan.IgnoreAsPathLen.IsUnknown()) {
+		body["ignore-as-path-len"] = plan.IgnoreAsPathLen.ValueString()
+	}
+	if !(plan.Multipath.IsNull() || plan.Multipath.IsUnknown()) {
+		body["multipath"] = plan.Multipath.ValueString()
 	}
 	obj, err := c.Add(ctx, "/routing/bgp/instance", body)
 	if err != nil {
@@ -210,9 +222,6 @@ func (r *RoutingBGPInstanceResource) Update(ctx context.Context, req resource.Up
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.IgnoreAsPath.Equal(state.IgnoreAsPath) {
-		body["ignore-as-path"] = plan.IgnoreAsPath.ValueString()
-	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
 	}
@@ -224,6 +233,12 @@ func (r *RoutingBGPInstanceResource) Update(ctx context.Context, req resource.Up
 	}
 	if !plan.Vrf.Equal(state.Vrf) {
 		body["vrf"] = plan.Vrf.ValueString()
+	}
+	if !plan.IgnoreAsPathLen.Equal(state.IgnoreAsPathLen) && !plan.IgnoreAsPathLen.IsUnknown() {
+		body["ignore-as-path-len"] = plan.IgnoreAsPathLen.ValueString()
+	}
+	if !plan.Multipath.Equal(state.Multipath) && !plan.Multipath.IsUnknown() {
+		body["multipath"] = plan.Multipath.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/routing/bgp/instance", state.ID.ValueString(), body)
@@ -291,6 +306,16 @@ func routingBGPInstanceLookupByNaturalKey(ctx context.Context, c *client.Client,
 func routingBGPInstanceApply(ctx context.Context, obj client.Object, m *RoutingBGPInstanceModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["multipath"]; ok && v != "" {
+		m.Multipath = types.StringValue(v)
+	} else {
+		m.Multipath = types.StringNull()
+	}
+	if v, ok := obj["ignore-as-path-len"]; ok && v != "" {
+		m.IgnoreAsPathLen = types.StringValue(v)
+	} else {
+		m.IgnoreAsPathLen = types.StringNull()
+	}
 	if v, ok := obj["as"]; ok {
 		_ = v
 		if v != "" {

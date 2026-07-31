@@ -32,6 +32,7 @@ type RoutingRuleResource struct {
 
 type RoutingRuleModel struct {
 	ID          types.String `tfsdk:"id"`
+	Table       types.String `tfsdk:"table"`
 	Action      types.String `tfsdk:"action"`
 	Chain       types.String `tfsdk:"chain"`
 	Comment     types.String `tfsdk:"comment"`
@@ -59,7 +60,6 @@ func (r *RoutingRuleResource) Configure(_ context.Context, req resource.Configur
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *RoutingRuleResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -70,6 +70,11 @@ func (r *RoutingRuleResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"table": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `table`.",
 			},
 			"action": schema.StringAttribute{
 				Optional:    true,
@@ -103,7 +108,6 @@ func (r *RoutingRuleResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Description: "",
 			},
 			"invalid": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -183,6 +187,9 @@ func (r *RoutingRuleResource) Create(ctx context.Context, req resource.CreateReq
 	}
 	if !(plan.Vrf.IsNull() || plan.Vrf.IsUnknown()) {
 		body["vrf"] = client.FormatBool(plan.Vrf.ValueBool())
+	}
+	if !(plan.Table.IsNull() || plan.Table.IsUnknown()) {
+		body["table"] = plan.Table.ValueString()
 	}
 	obj, err := c.Add(ctx, "/routing/rule", body)
 	if err != nil {
@@ -264,6 +271,9 @@ func (r *RoutingRuleResource) Update(ctx context.Context, req resource.UpdateReq
 	if !plan.Vrf.Equal(state.Vrf) {
 		body["vrf"] = client.FormatBool(plan.Vrf.ValueBool())
 	}
+	if !plan.Table.Equal(state.Table) && !plan.Table.IsUnknown() {
+		body["table"] = plan.Table.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/routing/rule", state.ID.ValueString(), body)
 		if err != nil {
@@ -330,6 +340,11 @@ func routingRuleLookupByNaturalKey(ctx context.Context, c *client.Client, id str
 func routingRuleApply(ctx context.Context, obj client.Object, m *RoutingRuleModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["table"]; ok && v != "" {
+		m.Table = types.StringValue(v)
+	} else {
+		m.Table = types.StringNull()
+	}
 	if v, ok := obj["action"]; ok {
 		_ = v
 		if v != "" {

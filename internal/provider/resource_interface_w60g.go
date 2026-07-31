@@ -63,7 +63,6 @@ func (r *InterfaceW60gResource) Configure(_ context.Context, req resource.Config
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceW60gResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {

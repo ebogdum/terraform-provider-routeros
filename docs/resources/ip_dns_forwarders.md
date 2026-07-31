@@ -29,13 +29,20 @@ resource "routeros_ip_dns_forwarders" "forwarders_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `comment` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`.
 * `dns_servers` - (Optional) Type: `string`.
-* `do_h_servers` - (Optional) Type: `string`.
+* `do_h_servers` - (Read-only) Type: `string`.
+* `doh_servers` - (Optional) Type: `string`. RouterOS `doh-servers`.
 * `name` - (Optional) Type: `string`.
-* `verify_do_h_certificate` - (Optional) Type: `bool`.
+* `verify_do_h_certificate` - (Read-only) Type: `bool`.
+* `verify_doh_cert` - (Optional) Type: `string`. RouterOS `verify-doh-cert`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

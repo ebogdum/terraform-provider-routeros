@@ -30,14 +30,28 @@ resource "routeros_routing_fantasy" "fantasy_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `dealer_id` - (Optional) Type: `string`. RouterOS `dealer-id`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `dst_address` - (Optional) Type: `string`.
 * `gateway` - (Optional) Type: `string`.
+* `instance_id` - (Optional) Type: `string`. RouterOS `instance-id`.
 * `name` - (Optional) Type: `string`.
+* `offset` - (Optional) Type: `string`. RouterOS `offset`.
+* `prefix_length` - (Optional) Type: `string`. RouterOS `prefix-length`.
+* `priv_offs` - (Optional) Type: `string`. RouterOS `priv-offs`.
+* `priv_size` - (Optional) Type: `string`. RouterOS `priv-size`.
+* `route_count` - (Optional) Type: `string`. RouterOS `count`.
 * `scope` - (Optional) Type: `string`.
+* `seed` - (Optional) Type: `string`. RouterOS `seed`.
 * `target_scope` - (Optional) Type: `string`.
+* `use_hold` - (Optional) Type: `string`. RouterOS `use-hold`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

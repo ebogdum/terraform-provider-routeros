@@ -35,25 +35,24 @@ resource "routeros_snmp_community" "community_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `addresses` - (Optional) Type: `cidr`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `addresses` - (Optional) Type: `string`.
 * `authentication_password` - (Optional) Type: `string`. **Sensitive.**
-* `authentication_protocol` - (Optional) Type: `enum(md5|sha1)`.
+* `authentication_protocol` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `default` - (Read-only) Type: `bool`.
 * `disabled` - (Optional) Type: `bool`.
 * `encryption_password` - (Optional) Type: `string`. **Sensitive.**
-* `encryption_protocol` - (Optional) Type: `enum(des|aes)`.
-* `name` - (Required) Type: `string`. Default: `tf-acc-snmp-community`.
-* `read_access` - (Optional) Type: `bool`. Default: `1`.
-* `security` - (Optional) Type: `enum(none|authorized|private)`.
+* `encryption_protocol` - (Optional) Type: `string`.
+* `name` - (Required) Type: `string`.
+* `read_access` - (Optional) Type: `bool`.
+* `security` - (Optional) Type: `string`.
 * `write_access` - (Optional) Type: `bool`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `default` - Type: `bool`.
 
 ## Import
 

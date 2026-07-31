@@ -32,6 +32,8 @@ type IPTrafficFlowTargetResource struct {
 
 type IPTrafficFlowTargetModel struct {
 	ID                     types.String `tfsdk:"id"`
+	V9TemplateTimeout      types.String `tfsdk:"v9_template_timeout"`
+	V9TemplateRefresh      types.String `tfsdk:"v9_template_refresh"`
 	Disabled               types.Bool   `tfsdk:"disabled"`
 	DstAddress             types.String `tfsdk:"dst_address"`
 	Port                   types.Int64  `tfsdk:"port"`
@@ -55,7 +57,6 @@ func (r *IPTrafficFlowTargetResource) Configure(_ context.Context, req resource.
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPTrafficFlowTargetResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -66,6 +67,16 @@ func (r *IPTrafficFlowTargetResource) Schema(_ context.Context, _ resource.Schem
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"v9_template_timeout": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `v9-template-timeout`.",
+			},
+			"v9_template_refresh": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `v9-template-refresh`.",
 			},
 			"disabled": schema.BoolAttribute{
 				Optional:    true,
@@ -88,17 +99,14 @@ func (r *IPTrafficFlowTargetResource) Schema(_ context.Context, _ resource.Schem
 				Description: "",
 			},
 			"v9": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"v9_ipfix_template_refresh": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"v9_ipfix_template_timeout": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -139,17 +147,14 @@ func (r *IPTrafficFlowTargetResource) Create(ctx context.Context, req resource.C
 	if !(plan.SrcAddress.IsNull() || plan.SrcAddress.IsUnknown()) {
 		body["src-address"] = plan.SrcAddress.ValueString()
 	}
-	if !(plan.V9.IsNull() || plan.V9.IsUnknown()) {
-		body["v9"] = plan.V9.ValueString()
-	}
-	if !(plan.V9IpfixTemplateRefresh.IsNull() || plan.V9IpfixTemplateRefresh.IsUnknown()) {
-		body["v9-ipfix-template-refresh"] = client.FormatInt64(plan.V9IpfixTemplateRefresh.ValueInt64())
-	}
-	if !(plan.V9IpfixTemplateTimeout.IsNull() || plan.V9IpfixTemplateTimeout.IsUnknown()) {
-		body["v9-ipfix-template-timeout"] = client.FormatInt64(plan.V9IpfixTemplateTimeout.ValueInt64())
-	}
 	if !(plan.Version.IsNull() || plan.Version.IsUnknown()) {
 		body["version"] = plan.Version.ValueString()
+	}
+	if !(plan.V9TemplateRefresh.IsNull() || plan.V9TemplateRefresh.IsUnknown()) {
+		body["v9-template-refresh"] = plan.V9TemplateRefresh.ValueString()
+	}
+	if !(plan.V9TemplateTimeout.IsNull() || plan.V9TemplateTimeout.IsUnknown()) {
+		body["v9-template-timeout"] = plan.V9TemplateTimeout.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ip/traffic-flow/target", body)
 	if err != nil {
@@ -210,17 +215,14 @@ func (r *IPTrafficFlowTargetResource) Update(ctx context.Context, req resource.U
 	if !plan.SrcAddress.Equal(state.SrcAddress) {
 		body["src-address"] = plan.SrcAddress.ValueString()
 	}
-	if !plan.V9.Equal(state.V9) {
-		body["v9"] = plan.V9.ValueString()
-	}
-	if !plan.V9IpfixTemplateRefresh.Equal(state.V9IpfixTemplateRefresh) {
-		body["v9-ipfix-template-refresh"] = client.FormatInt64(plan.V9IpfixTemplateRefresh.ValueInt64())
-	}
-	if !plan.V9IpfixTemplateTimeout.Equal(state.V9IpfixTemplateTimeout) {
-		body["v9-ipfix-template-timeout"] = client.FormatInt64(plan.V9IpfixTemplateTimeout.ValueInt64())
-	}
 	if !plan.Version.Equal(state.Version) {
 		body["version"] = plan.Version.ValueString()
+	}
+	if !plan.V9TemplateRefresh.Equal(state.V9TemplateRefresh) && !plan.V9TemplateRefresh.IsUnknown() {
+		body["v9-template-refresh"] = plan.V9TemplateRefresh.ValueString()
+	}
+	if !plan.V9TemplateTimeout.Equal(state.V9TemplateTimeout) && !plan.V9TemplateTimeout.IsUnknown() {
+		body["v9-template-timeout"] = plan.V9TemplateTimeout.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/traffic-flow/target", state.ID.ValueString(), body)
@@ -288,6 +290,16 @@ func iPTrafficFlowTargetLookupByNaturalKey(ctx context.Context, c *client.Client
 func iPTrafficFlowTargetApply(ctx context.Context, obj client.Object, m *IPTrafficFlowTargetModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["v9-template-timeout"]; ok && v != "" {
+		m.V9TemplateTimeout = types.StringValue(v)
+	} else {
+		m.V9TemplateTimeout = types.StringNull()
+	}
+	if v, ok := obj["v9-template-refresh"]; ok && v != "" {
+		m.V9TemplateRefresh = types.StringValue(v)
+	} else {
+		m.V9TemplateRefresh = types.StringNull()
+	}
 	if v, ok := obj["disabled"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {

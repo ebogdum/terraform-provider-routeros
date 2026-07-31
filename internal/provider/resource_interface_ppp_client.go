@@ -30,6 +30,18 @@ type InterfacePPPClientResource struct {
 
 type InterfacePPPClientModel struct {
 	ID                   types.String `tfsdk:"id"`
+	UsePeerDns           types.String `tfsdk:"use_peer_dns"`
+	Port                 types.String `tfsdk:"port"`
+	Pin                  types.String `tfsdk:"pin"`
+	Phone                types.String `tfsdk:"phone"`
+	NullModem            types.String `tfsdk:"null_modem"`
+	NetworkMode          types.String `tfsdk:"network_mode"`
+	ModemInit            types.String `tfsdk:"modem_init"`
+	InfoChannel          types.String `tfsdk:"info_channel"`
+	DialCommand          types.String `tfsdk:"dial_command"`
+	DataChannel          types.String `tfsdk:"data_channel"`
+	Apn                  types.String `tfsdk:"apn"`
+	AddDefaultRoute      types.String `tfsdk:"add_default_route"`
 	Allow                types.String `tfsdk:"allow"`
 	Comment              types.String `tfsdk:"comment"`
 	DefaultRouteDistance types.String `tfsdk:"default_route_distance"`
@@ -59,7 +71,6 @@ func (r *InterfacePPPClientResource) Configure(_ context.Context, req resource.C
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfacePPPClientResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -70,6 +81,66 @@ func (r *InterfacePPPClientResource) Schema(_ context.Context, _ resource.Schema
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"use_peer_dns": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `use-peer-dns`.",
+			},
+			"port": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `port`.",
+			},
+			"pin": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `pin`.",
+			},
+			"phone": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `phone`.",
+			},
+			"null_modem": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `null-modem`.",
+			},
+			"network_mode": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `network-mode`.",
+			},
+			"modem_init": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `modem-init`.",
+			},
+			"info_channel": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `info-channel`.",
+			},
+			"dial_command": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `dial-command`.",
+			},
+			"data_channel": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `data-channel`.",
+			},
+			"apn": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `apn`.",
+			},
+			"add_default_route": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `add-default-route`.",
 			},
 			"allow": schema.StringAttribute{
 				Optional:    true,
@@ -123,6 +194,7 @@ func (r *InterfacePPPClientResource) Schema(_ context.Context, _ resource.Schema
 			},
 			"password": schema.StringAttribute{
 				Optional:    true,
+				Sensitive:   true,
 				Computed:    true,
 				Description: "",
 			},
@@ -201,6 +273,42 @@ func (r *InterfacePPPClientResource) Create(ctx context.Context, req resource.Cr
 	}
 	if !(plan.User.IsNull() || plan.User.IsUnknown()) {
 		body["user"] = plan.User.ValueString()
+	}
+	if !(plan.AddDefaultRoute.IsNull() || plan.AddDefaultRoute.IsUnknown()) {
+		body["add-default-route"] = plan.AddDefaultRoute.ValueString()
+	}
+	if !(plan.Apn.IsNull() || plan.Apn.IsUnknown()) {
+		body["apn"] = plan.Apn.ValueString()
+	}
+	if !(plan.DataChannel.IsNull() || plan.DataChannel.IsUnknown()) {
+		body["data-channel"] = plan.DataChannel.ValueString()
+	}
+	if !(plan.DialCommand.IsNull() || plan.DialCommand.IsUnknown()) {
+		body["dial-command"] = plan.DialCommand.ValueString()
+	}
+	if !(plan.InfoChannel.IsNull() || plan.InfoChannel.IsUnknown()) {
+		body["info-channel"] = plan.InfoChannel.ValueString()
+	}
+	if !(plan.ModemInit.IsNull() || plan.ModemInit.IsUnknown()) {
+		body["modem-init"] = plan.ModemInit.ValueString()
+	}
+	if !(plan.NetworkMode.IsNull() || plan.NetworkMode.IsUnknown()) {
+		body["network-mode"] = plan.NetworkMode.ValueString()
+	}
+	if !(plan.NullModem.IsNull() || plan.NullModem.IsUnknown()) {
+		body["null-modem"] = plan.NullModem.ValueString()
+	}
+	if !(plan.Phone.IsNull() || plan.Phone.IsUnknown()) {
+		body["phone"] = plan.Phone.ValueString()
+	}
+	if !(plan.Pin.IsNull() || plan.Pin.IsUnknown()) {
+		body["pin"] = plan.Pin.ValueString()
+	}
+	if !(plan.Port.IsNull() || plan.Port.IsUnknown()) {
+		body["port"] = plan.Port.ValueString()
+	}
+	if !(plan.UsePeerDns.IsNull() || plan.UsePeerDns.IsUnknown()) {
+		body["use-peer-dns"] = plan.UsePeerDns.ValueString()
 	}
 	obj, err := c.Add(ctx, "/interface/ppp-client", body)
 	if err != nil {
@@ -291,6 +399,42 @@ func (r *InterfacePPPClientResource) Update(ctx context.Context, req resource.Up
 	if !plan.User.Equal(state.User) {
 		body["user"] = plan.User.ValueString()
 	}
+	if !plan.AddDefaultRoute.Equal(state.AddDefaultRoute) && !plan.AddDefaultRoute.IsUnknown() {
+		body["add-default-route"] = plan.AddDefaultRoute.ValueString()
+	}
+	if !plan.Apn.Equal(state.Apn) && !plan.Apn.IsUnknown() {
+		body["apn"] = plan.Apn.ValueString()
+	}
+	if !plan.DataChannel.Equal(state.DataChannel) && !plan.DataChannel.IsUnknown() {
+		body["data-channel"] = plan.DataChannel.ValueString()
+	}
+	if !plan.DialCommand.Equal(state.DialCommand) && !plan.DialCommand.IsUnknown() {
+		body["dial-command"] = plan.DialCommand.ValueString()
+	}
+	if !plan.InfoChannel.Equal(state.InfoChannel) && !plan.InfoChannel.IsUnknown() {
+		body["info-channel"] = plan.InfoChannel.ValueString()
+	}
+	if !plan.ModemInit.Equal(state.ModemInit) && !plan.ModemInit.IsUnknown() {
+		body["modem-init"] = plan.ModemInit.ValueString()
+	}
+	if !plan.NetworkMode.Equal(state.NetworkMode) && !plan.NetworkMode.IsUnknown() {
+		body["network-mode"] = plan.NetworkMode.ValueString()
+	}
+	if !plan.NullModem.Equal(state.NullModem) && !plan.NullModem.IsUnknown() {
+		body["null-modem"] = plan.NullModem.ValueString()
+	}
+	if !plan.Phone.Equal(state.Phone) && !plan.Phone.IsUnknown() {
+		body["phone"] = plan.Phone.ValueString()
+	}
+	if !plan.Pin.Equal(state.Pin) && !plan.Pin.IsUnknown() {
+		body["pin"] = plan.Pin.ValueString()
+	}
+	if !plan.Port.Equal(state.Port) && !plan.Port.IsUnknown() {
+		body["port"] = plan.Port.ValueString()
+	}
+	if !plan.UsePeerDns.Equal(state.UsePeerDns) && !plan.UsePeerDns.IsUnknown() {
+		body["use-peer-dns"] = plan.UsePeerDns.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/ppp-client", state.ID.ValueString(), body)
 		if err != nil {
@@ -357,6 +501,66 @@ func interfacePPPClientLookupByNaturalKey(ctx context.Context, c *client.Client,
 func interfacePPPClientApply(ctx context.Context, obj client.Object, m *InterfacePPPClientModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["use-peer-dns"]; ok && v != "" {
+		m.UsePeerDns = types.StringValue(v)
+	} else {
+		m.UsePeerDns = types.StringNull()
+	}
+	if v, ok := obj["port"]; ok && v != "" {
+		m.Port = types.StringValue(v)
+	} else {
+		m.Port = types.StringNull()
+	}
+	if v, ok := obj["pin"]; ok && v != "" {
+		m.Pin = types.StringValue(v)
+	} else {
+		m.Pin = types.StringNull()
+	}
+	if v, ok := obj["phone"]; ok && v != "" {
+		m.Phone = types.StringValue(v)
+	} else {
+		m.Phone = types.StringNull()
+	}
+	if v, ok := obj["null-modem"]; ok && v != "" {
+		m.NullModem = types.StringValue(v)
+	} else {
+		m.NullModem = types.StringNull()
+	}
+	if v, ok := obj["network-mode"]; ok && v != "" {
+		m.NetworkMode = types.StringValue(v)
+	} else {
+		m.NetworkMode = types.StringNull()
+	}
+	if v, ok := obj["modem-init"]; ok && v != "" {
+		m.ModemInit = types.StringValue(v)
+	} else {
+		m.ModemInit = types.StringNull()
+	}
+	if v, ok := obj["info-channel"]; ok && v != "" {
+		m.InfoChannel = types.StringValue(v)
+	} else {
+		m.InfoChannel = types.StringNull()
+	}
+	if v, ok := obj["dial-command"]; ok && v != "" {
+		m.DialCommand = types.StringValue(v)
+	} else {
+		m.DialCommand = types.StringNull()
+	}
+	if v, ok := obj["data-channel"]; ok && v != "" {
+		m.DataChannel = types.StringValue(v)
+	} else {
+		m.DataChannel = types.StringNull()
+	}
+	if v, ok := obj["apn"]; ok && v != "" {
+		m.Apn = types.StringValue(v)
+	} else {
+		m.Apn = types.StringNull()
+	}
+	if v, ok := obj["add-default-route"]; ok && v != "" {
+		m.AddDefaultRoute = types.StringValue(v)
+	} else {
+		m.AddDefaultRoute = types.StringNull()
+	}
 	if v, ok := obj["allow"]; ok {
 		_ = v
 		if v != "" {

@@ -72,7 +72,6 @@ func (r *IPIpsecPolicyResource) Configure(_ context.Context, req resource.Config
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPIpsecPolicyResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -91,7 +90,6 @@ func (r *IPIpsecPolicyResource) Schema(_ context.Context, _ resource.SchemaReque
 				Validators:  []validator.String{schemautil.OneOf([]string{"discard", "none", "encrypt"}...)},
 			},
 			"active": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -101,7 +99,6 @@ func (r *IPIpsecPolicyResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "Free-form comment.",
 			},
 			"default": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -123,7 +120,6 @@ func (r *IPIpsecPolicyResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -133,7 +129,6 @@ func (r *IPIpsecPolicyResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"invalid": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -150,14 +145,14 @@ func (r *IPIpsecPolicyResource) Schema(_ context.Context, _ resource.SchemaReque
 				Validators:  []validator.String{schemautil.OneOf([]string{"use", "require", "unique"}...)},
 			},
 			"nopeer": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"notemplate": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "",
+				Optional:           true,
+				Computed:           true,
+				Description:        "",
+				DeprecationMessage: "Not a RouterOS REST property (WebFig-only spelling of `template`); RouterOS rejects it. Read-only and ignored on write - use `template`.",
 			},
 			"peer": schema.StringAttribute{
 				Optional:    true,
@@ -165,12 +160,10 @@ func (r *IPIpsecPolicyResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"ph2_count": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"ph2_state": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.OneOf([]string{"spawning", "starting", "message-1-received", "message-1-sent", "message-2-received", "message-2-sent", "message-3-received", "message-3-sent", "message-4-received", "established", "expired", "no-phase1", "eap", "crypto", "qkd"}...)},
@@ -187,12 +180,10 @@ func (r *IPIpsecPolicyResource) Schema(_ context.Context, _ resource.SchemaReque
 				Validators:  []validator.String{schemautil.OneOf([]string{"icmp", "igmp", "ggp", "ip-encap", "tcp", "egp", "udp", "ipsec", "all"}...)},
 			},
 			"sa_dst_address": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"sa_src_address": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -240,9 +231,6 @@ func (r *IPIpsecPolicyResource) Create(ctx context.Context, req resource.CreateR
 	if !(plan.Action.IsNull() || plan.Action.IsUnknown()) {
 		body["action"] = plan.Action.ValueString()
 	}
-	if !(plan.Active.IsNull() || plan.Active.IsUnknown()) {
-		body["active"] = client.FormatBool(plan.Active.ValueBool())
-	}
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
 	}
@@ -263,12 +251,6 @@ func (r *IPIpsecPolicyResource) Create(ctx context.Context, req resource.CreateR
 	}
 	if !(plan.Level.IsNull() || plan.Level.IsUnknown()) {
 		body["level"] = plan.Level.ValueString()
-	}
-	if !(plan.Nopeer.IsNull() || plan.Nopeer.IsUnknown()) {
-		body["nopeer"] = plan.Nopeer.ValueString()
-	}
-	if !(plan.Notemplate.IsNull() || plan.Notemplate.IsUnknown()) {
-		body["notemplate"] = plan.Notemplate.ValueString()
 	}
 	if !(plan.Peer.IsNull() || plan.Peer.IsUnknown()) {
 		body["peer"] = plan.Peer.ValueString()
@@ -341,9 +323,6 @@ func (r *IPIpsecPolicyResource) Update(ctx context.Context, req resource.UpdateR
 	if !plan.Action.Equal(state.Action) {
 		body["action"] = plan.Action.ValueString()
 	}
-	if !plan.Active.Equal(state.Active) {
-		body["active"] = client.FormatBool(plan.Active.ValueBool())
-	}
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
 	}
@@ -364,12 +343,6 @@ func (r *IPIpsecPolicyResource) Update(ctx context.Context, req resource.UpdateR
 	}
 	if !plan.Level.Equal(state.Level) {
 		body["level"] = plan.Level.ValueString()
-	}
-	if !plan.Nopeer.Equal(state.Nopeer) {
-		body["nopeer"] = plan.Nopeer.ValueString()
-	}
-	if !plan.Notemplate.Equal(state.Notemplate) {
-		body["notemplate"] = plan.Notemplate.ValueString()
 	}
 	if !plan.Peer.Equal(state.Peer) {
 		body["peer"] = plan.Peer.ValueString()

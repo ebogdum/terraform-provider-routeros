@@ -27,11 +27,21 @@ resource "routeros_interface_ethernet_switch" "switch_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `autorestart` - (Optional) Type: `string`. Automatically restarts the l3hw driver in case of an error. Otherwise, if an error occurs,   l3-hw-offloading   gets disabled, and the error code is displayed in the switch settings and   #monitor . Autorestart does not work for system failures, such as OOM (Out Of Memory).
-* `fasttrack_hw` - (Optional) Type: `string`. Enables or disables FastTrack HW Offloading. Keep it enabled unless HW TCAM memory reservation is required, e.g., for dynamic switch ACL rules creation. Not all switch chips support FastTrack HW Offloading (see   hw-supports-fasttrack ).
-* `icmp_reply_on_error` - (Optional) Type: `string`. Since the hardware cannot send ICMP messages, the packet must be redirected to the CPU to send an ICMP reply in case of an error (e.g., "Time Exceeded", "Fragmentation required", etc.). Enabling icmp-reply-on-error   helps with network diagnostics but may open potential vulnerabilities for DDoS attacks. Disabling icmp-reply-on-error silently drops the packets on the hardware level in case of an error.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `autorestart` - (Optional) Type: `string`. Automatically restarts the l3hw driver in case of an error. Otherwise, if an error occurs, l3-hw-offloading gets disabled, and the error code is displayed in the switch settings and #monitor . Autorestart does not work for system failures, such as OOM (Out Of Memory).
+* `cpu_flow_control` - (Optional) Type: `string`. Whether the switch sends pause frames to the CPU port.
+* `fasttrack_hw` - (Optional) Type: `string`. Enables or disables FastTrack HW Offloading. Keep it enabled unless HW TCAM memory reservation is required, e.g., for dynamic switch ACL rules creation. Not all switch chips support FastTrack HW Offloading (see hw-supports-fasttrack ).
+* `icmp_reply_on_error` - (Optional) Type: `string`. Since the hardware cannot send ICMP messages, the packet must be redirected to the CPU to send an ICMP reply in case of an error (e.g., "Time Exceeded", "Fragmentation required", etc.). Enabling icmp-reply-on-error helps with network diagnostics but may open potential vulnerabilities for DDoS attacks. Disabling icmp-reply-on-error silently drops the packets on the hardware level in case of an error.
 * `ipv6_hw` - (Optional) Type: `string`. Enables or disables IPv6 Hardware Offloading. Since IPv6 routes occupy a lot of HW memory, enable it only if IPv6 traffic speed is significant enough to benefit from hardware routing.
+* `mirror_source` - (Optional) Type: `string`. Port whose traffic is mirrored, or `none` (the default).
+* `mirror_target` - (Optional) Type: `string`. Port that receives mirrored traffic, or `none` (the default).
+* `name` - (Optional) Type: `string`. Switch name as reported by RouterOS, e.g. `switch1`.
+* `switch_all_ports` - (Optional) Type: `string`. RouterOS `switch-all-ports`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

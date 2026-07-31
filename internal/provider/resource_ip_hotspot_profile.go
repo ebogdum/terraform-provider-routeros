@@ -32,6 +32,20 @@ type IPHotspotProfileResource struct {
 
 type IPHotspotProfileModel struct {
 	ID                    types.String `tfsdk:"id"`
+	TrialUserProfile      types.String `tfsdk:"trial_user_profile"`
+	TrialUptimeReset      types.String `tfsdk:"trial_uptime_reset"`
+	TrialUptimeLimit      types.String `tfsdk:"trial_uptime_limit"`
+	SslCertificate        types.String `tfsdk:"ssl_certificate"`
+	RateLimit             types.String `tfsdk:"rate_limit"`
+	RadiusMacFormat       types.String `tfsdk:"radius_mac_format"`
+	RadiusLocationName    types.String `tfsdk:"radius_location_name"`
+	RadiusLocationId      types.String `tfsdk:"radius_location_id"`
+	RadiusInterimUpdate   types.String `tfsdk:"radius_interim_update"`
+	RadiusDefaultDomain   types.String `tfsdk:"radius_default_domain"`
+	RadiusAccounting      types.String `tfsdk:"radius_accounting"`
+	NasPortType           types.String `tfsdk:"nas_port_type"`
+	MacAuthPassword       types.String `tfsdk:"mac_auth_password"`
+	MacAuthMode           types.String `tfsdk:"mac_auth_mode"`
 	Default               types.Bool   `tfsdk:"default"`
 	DNSName               types.String `tfsdk:"dns_name"`
 	HotspotAddress        types.String `tfsdk:"hotspot_address"`
@@ -60,7 +74,6 @@ func (r *IPHotspotProfileResource) Configure(_ context.Context, req resource.Con
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPHotspotProfileResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -72,8 +85,78 @@ func (r *IPHotspotProfileResource) Schema(_ context.Context, _ resource.SchemaRe
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
-			"default": schema.BoolAttribute{
+			"trial_user_profile": schema.StringAttribute{
 				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `trial-user-profile`.",
+			},
+			"trial_uptime_reset": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `trial-uptime-reset`.",
+			},
+			"trial_uptime_limit": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `trial-uptime-limit`.",
+			},
+			"ssl_certificate": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `ssl-certificate`.",
+			},
+			"rate_limit": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `rate-limit`.",
+			},
+			"radius_mac_format": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `radius-mac-format`.",
+			},
+			"radius_location_name": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `radius-location-name`.",
+			},
+			"radius_location_id": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `radius-location-id`.",
+			},
+			"radius_interim_update": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `radius-interim-update`.",
+			},
+			"radius_default_domain": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `radius-default-domain`.",
+			},
+			"radius_accounting": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `radius-accounting`.",
+			},
+			"nas_port_type": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `nas-port-type`.",
+			},
+			"mac_auth_password": schema.StringAttribute{
+				Optional:    true,
+				Sensitive:   true,
+				Computed:    true,
+				Description: "RouterOS `mac-auth-password`.",
+			},
+			"mac_auth_mode": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `mac-auth-mode`.",
+			},
+			"default": schema.BoolAttribute{
 				Computed:    true,
 				Description: "",
 			},
@@ -197,6 +280,48 @@ func (r *IPHotspotProfileResource) Create(ctx context.Context, req resource.Crea
 	if !(plan.UseRADIUS.IsNull() || plan.UseRADIUS.IsUnknown()) {
 		body["use-radius"] = client.FormatBool(plan.UseRADIUS.ValueBool())
 	}
+	if !(plan.MacAuthMode.IsNull() || plan.MacAuthMode.IsUnknown()) {
+		body["mac-auth-mode"] = plan.MacAuthMode.ValueString()
+	}
+	if !(plan.MacAuthPassword.IsNull() || plan.MacAuthPassword.IsUnknown()) {
+		body["mac-auth-password"] = plan.MacAuthPassword.ValueString()
+	}
+	if !(plan.NasPortType.IsNull() || plan.NasPortType.IsUnknown()) {
+		body["nas-port-type"] = plan.NasPortType.ValueString()
+	}
+	if !(plan.RadiusAccounting.IsNull() || plan.RadiusAccounting.IsUnknown()) {
+		body["radius-accounting"] = plan.RadiusAccounting.ValueString()
+	}
+	if !(plan.RadiusDefaultDomain.IsNull() || plan.RadiusDefaultDomain.IsUnknown()) {
+		body["radius-default-domain"] = plan.RadiusDefaultDomain.ValueString()
+	}
+	if !(plan.RadiusInterimUpdate.IsNull() || plan.RadiusInterimUpdate.IsUnknown()) {
+		body["radius-interim-update"] = plan.RadiusInterimUpdate.ValueString()
+	}
+	if !(plan.RadiusLocationId.IsNull() || plan.RadiusLocationId.IsUnknown()) {
+		body["radius-location-id"] = plan.RadiusLocationId.ValueString()
+	}
+	if !(plan.RadiusLocationName.IsNull() || plan.RadiusLocationName.IsUnknown()) {
+		body["radius-location-name"] = plan.RadiusLocationName.ValueString()
+	}
+	if !(plan.RadiusMacFormat.IsNull() || plan.RadiusMacFormat.IsUnknown()) {
+		body["radius-mac-format"] = plan.RadiusMacFormat.ValueString()
+	}
+	if !(plan.RateLimit.IsNull() || plan.RateLimit.IsUnknown()) {
+		body["rate-limit"] = plan.RateLimit.ValueString()
+	}
+	if !(plan.SslCertificate.IsNull() || plan.SslCertificate.IsUnknown()) {
+		body["ssl-certificate"] = plan.SslCertificate.ValueString()
+	}
+	if !(plan.TrialUptimeLimit.IsNull() || plan.TrialUptimeLimit.IsUnknown()) {
+		body["trial-uptime-limit"] = plan.TrialUptimeLimit.ValueString()
+	}
+	if !(plan.TrialUptimeReset.IsNull() || plan.TrialUptimeReset.IsUnknown()) {
+		body["trial-uptime-reset"] = plan.TrialUptimeReset.ValueString()
+	}
+	if !(plan.TrialUserProfile.IsNull() || plan.TrialUserProfile.IsUnknown()) {
+		body["trial-user-profile"] = plan.TrialUserProfile.ValueString()
+	}
 	obj, err := c.Add(ctx, "/ip/hotspot/profile", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /ip/hotspot/profile failed", err.Error())
@@ -280,6 +405,48 @@ func (r *IPHotspotProfileResource) Update(ctx context.Context, req resource.Upda
 	if !plan.UseRADIUS.Equal(state.UseRADIUS) {
 		body["use-radius"] = client.FormatBool(plan.UseRADIUS.ValueBool())
 	}
+	if !plan.MacAuthMode.Equal(state.MacAuthMode) && !plan.MacAuthMode.IsUnknown() {
+		body["mac-auth-mode"] = plan.MacAuthMode.ValueString()
+	}
+	if !plan.MacAuthPassword.Equal(state.MacAuthPassword) && !plan.MacAuthPassword.IsUnknown() {
+		body["mac-auth-password"] = plan.MacAuthPassword.ValueString()
+	}
+	if !plan.NasPortType.Equal(state.NasPortType) && !plan.NasPortType.IsUnknown() {
+		body["nas-port-type"] = plan.NasPortType.ValueString()
+	}
+	if !plan.RadiusAccounting.Equal(state.RadiusAccounting) && !plan.RadiusAccounting.IsUnknown() {
+		body["radius-accounting"] = plan.RadiusAccounting.ValueString()
+	}
+	if !plan.RadiusDefaultDomain.Equal(state.RadiusDefaultDomain) && !plan.RadiusDefaultDomain.IsUnknown() {
+		body["radius-default-domain"] = plan.RadiusDefaultDomain.ValueString()
+	}
+	if !plan.RadiusInterimUpdate.Equal(state.RadiusInterimUpdate) && !plan.RadiusInterimUpdate.IsUnknown() {
+		body["radius-interim-update"] = plan.RadiusInterimUpdate.ValueString()
+	}
+	if !plan.RadiusLocationId.Equal(state.RadiusLocationId) && !plan.RadiusLocationId.IsUnknown() {
+		body["radius-location-id"] = plan.RadiusLocationId.ValueString()
+	}
+	if !plan.RadiusLocationName.Equal(state.RadiusLocationName) && !plan.RadiusLocationName.IsUnknown() {
+		body["radius-location-name"] = plan.RadiusLocationName.ValueString()
+	}
+	if !plan.RadiusMacFormat.Equal(state.RadiusMacFormat) && !plan.RadiusMacFormat.IsUnknown() {
+		body["radius-mac-format"] = plan.RadiusMacFormat.ValueString()
+	}
+	if !plan.RateLimit.Equal(state.RateLimit) && !plan.RateLimit.IsUnknown() {
+		body["rate-limit"] = plan.RateLimit.ValueString()
+	}
+	if !plan.SslCertificate.Equal(state.SslCertificate) && !plan.SslCertificate.IsUnknown() {
+		body["ssl-certificate"] = plan.SslCertificate.ValueString()
+	}
+	if !plan.TrialUptimeLimit.Equal(state.TrialUptimeLimit) && !plan.TrialUptimeLimit.IsUnknown() {
+		body["trial-uptime-limit"] = plan.TrialUptimeLimit.ValueString()
+	}
+	if !plan.TrialUptimeReset.Equal(state.TrialUptimeReset) && !plan.TrialUptimeReset.IsUnknown() {
+		body["trial-uptime-reset"] = plan.TrialUptimeReset.ValueString()
+	}
+	if !plan.TrialUserProfile.Equal(state.TrialUserProfile) && !plan.TrialUserProfile.IsUnknown() {
+		body["trial-user-profile"] = plan.TrialUserProfile.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/hotspot/profile", state.ID.ValueString(), body)
 		if err != nil {
@@ -346,6 +513,76 @@ func iPHotspotProfileLookupByNaturalKey(ctx context.Context, c *client.Client, i
 func iPHotspotProfileApply(ctx context.Context, obj client.Object, m *IPHotspotProfileModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["trial-user-profile"]; ok && v != "" {
+		m.TrialUserProfile = types.StringValue(v)
+	} else {
+		m.TrialUserProfile = types.StringNull()
+	}
+	if v, ok := obj["trial-uptime-reset"]; ok && v != "" {
+		m.TrialUptimeReset = types.StringValue(v)
+	} else {
+		m.TrialUptimeReset = types.StringNull()
+	}
+	if v, ok := obj["trial-uptime-limit"]; ok && v != "" {
+		m.TrialUptimeLimit = types.StringValue(v)
+	} else {
+		m.TrialUptimeLimit = types.StringNull()
+	}
+	if v, ok := obj["ssl-certificate"]; ok && v != "" {
+		m.SslCertificate = types.StringValue(v)
+	} else {
+		m.SslCertificate = types.StringNull()
+	}
+	if v, ok := obj["rate-limit"]; ok && v != "" {
+		m.RateLimit = types.StringValue(v)
+	} else {
+		m.RateLimit = types.StringNull()
+	}
+	if v, ok := obj["radius-mac-format"]; ok && v != "" {
+		m.RadiusMacFormat = types.StringValue(v)
+	} else {
+		m.RadiusMacFormat = types.StringNull()
+	}
+	if v, ok := obj["radius-location-name"]; ok && v != "" {
+		m.RadiusLocationName = types.StringValue(v)
+	} else {
+		m.RadiusLocationName = types.StringNull()
+	}
+	if v, ok := obj["radius-location-id"]; ok && v != "" {
+		m.RadiusLocationId = types.StringValue(v)
+	} else {
+		m.RadiusLocationId = types.StringNull()
+	}
+	if v, ok := obj["radius-interim-update"]; ok && v != "" {
+		m.RadiusInterimUpdate = types.StringValue(v)
+	} else {
+		m.RadiusInterimUpdate = types.StringNull()
+	}
+	if v, ok := obj["radius-default-domain"]; ok && v != "" {
+		m.RadiusDefaultDomain = types.StringValue(v)
+	} else {
+		m.RadiusDefaultDomain = types.StringNull()
+	}
+	if v, ok := obj["radius-accounting"]; ok && v != "" {
+		m.RadiusAccounting = types.StringValue(v)
+	} else {
+		m.RadiusAccounting = types.StringNull()
+	}
+	if v, ok := obj["nas-port-type"]; ok && v != "" {
+		m.NasPortType = types.StringValue(v)
+	} else {
+		m.NasPortType = types.StringNull()
+	}
+	if v, ok := obj["mac-auth-password"]; ok && v != "" {
+		m.MacAuthPassword = types.StringValue(v)
+	} else {
+		m.MacAuthPassword = types.StringNull()
+	}
+	if v, ok := obj["mac-auth-mode"]; ok && v != "" {
+		m.MacAuthMode = types.StringValue(v)
+	} else {
+		m.MacAuthMode = types.StringNull()
+	}
 	if v, ok := obj["default"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {

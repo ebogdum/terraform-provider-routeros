@@ -55,7 +55,6 @@ func (r *SystemNTPClientServersResource) Configure(_ context.Context, req resour
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *SystemNTPClientServersResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -89,7 +88,6 @@ func (r *SystemNTPClientServersResource) Schema(_ context.Context, _ resource.Sc
 				Description: "",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -99,7 +97,6 @@ func (r *SystemNTPClientServersResource) Schema(_ context.Context, _ resource.Sc
 				Description: "",
 			},
 			"keys": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -114,7 +111,6 @@ func (r *SystemNTPClientServersResource) Schema(_ context.Context, _ resource.Sc
 				Description: "",
 			},
 			"resolved_address": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -151,9 +147,6 @@ func (r *SystemNTPClientServersResource) Create(ctx context.Context, req resourc
 	}
 	if !(plan.Iburst.IsNull() || plan.Iburst.IsUnknown()) {
 		body["iburst"] = client.FormatBool(plan.Iburst.ValueBool())
-	}
-	if !(plan.Keys.IsNull() || plan.Keys.IsUnknown()) {
-		body["keys"] = plan.Keys.ValueString()
 	}
 	if !(plan.MaxPoll.IsNull() || plan.MaxPoll.IsUnknown()) {
 		body["max-poll"] = client.FormatInt64(plan.MaxPoll.ValueInt64())
@@ -222,9 +215,6 @@ func (r *SystemNTPClientServersResource) Update(ctx context.Context, req resourc
 	}
 	if !plan.Iburst.Equal(state.Iburst) {
 		body["iburst"] = client.FormatBool(plan.Iburst.ValueBool())
-	}
-	if !plan.Keys.Equal(state.Keys) {
-		body["keys"] = plan.Keys.ValueString()
 	}
 	if !plan.MaxPoll.Equal(state.MaxPoll) {
 		body["max-poll"] = client.FormatInt64(plan.MaxPoll.ValueInt64())

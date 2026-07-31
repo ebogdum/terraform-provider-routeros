@@ -31,22 +31,22 @@ resource "routeros_interface_wireguard" "wireguard_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `l2_mtu` - (Optional) Type: `int`. Default: `1500`.
+* `l2_mtu` - (Read-only) Type: `int`.
 * `listen_port` - (Optional) Type: `int`.
-* `mtu` - (Optional) Type: `int`. Default: `1420`.
+* `mtu` - (Optional) Type: `string`. A number, or `auto`.
 * `name` - (Optional) Type: `string`.
 * `private_key` - (Optional) Type: `string`. 32-byte WireGuard private key (base64). Leave unset to have RouterOS generate one. **Sensitive.**
-* `wg_export` - (Optional) Type: `string`.
+* `public_key` - (Read-only) Type: `string`. Derived public key, exposed by RouterOS.
+* `vrf` - (Optional) Type: `string`. RouterOS `vrf`.
+* `wg_export` - (Read-only) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `public_key` - Type: `string`. Derived public key, exposed by RouterOS.
 
 ## Import
 

@@ -75,7 +75,6 @@ func (r *ToolSnifferStopResource) Configure(_ context.Context, req resource.Conf
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *ToolSnifferStopResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {

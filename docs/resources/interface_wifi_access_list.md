@@ -39,13 +39,16 @@ resource "routeros_interface_wifi_access_list" "access_list_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `action` - (Optional) Type: `string`.
 * `allow_signal_out_of_range` - (Optional) Type: `string`.
 * `client_isolation` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `days` - (Optional) Type: `string`. RouterOS `days`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `interface` - (Optional) Type: `string`.
+* `last_logged_in` - (Read-only) Type: `string`.
+* `last_logged_out` - (Read-only) Type: `string`.
 * `mac_address` - (Optional) Type: `string`.
 * `mac_address_mask` - (Optional) Type: `string`.
 * `multi_passphrase_group` - (Optional) Type: `string`.
@@ -54,17 +57,14 @@ This resource supports the following arguments:
 * `signal_range` - (Optional) Type: `string`.
 * `ssid_regexp` - (Optional) Type: `string`.
 * `time` - (Optional) Type: `string`.
+* `times_matched` - (Read-only) Type: `string`.
 * `vlan_id` - (Optional) Type: `string`.
 * `weekdays` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `last_logged_in` - Type: `string`.
-* `last_logged_out` - Type: `string`.
-* `times_matched` - Type: `string`.
 
 ## Import
 

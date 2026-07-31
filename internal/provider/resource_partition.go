@@ -53,7 +53,6 @@ func (r *PartitionResource) Configure(_ context.Context, req resource.ConfigureR
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *PartitionResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -66,12 +65,10 @@ func (r *PartitionResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"activate": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"active": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -91,17 +88,14 @@ func (r *PartitionResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Description: "",
 			},
 			"running": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"size": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"version": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -124,12 +118,6 @@ func (r *PartitionResource) Create(ctx context.Context, req resource.CreateReque
 		return
 	}
 	body := client.Object{}
-	if !(plan.Activate.IsNull() || plan.Activate.IsUnknown()) {
-		body["activate"] = plan.Activate.ValueString()
-	}
-	if !(plan.Active.IsNull() || plan.Active.IsUnknown()) {
-		body["active"] = client.FormatBool(plan.Active.ValueBool())
-	}
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
 	}
@@ -138,9 +126,6 @@ func (r *PartitionResource) Create(ctx context.Context, req resource.CreateReque
 	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
-	}
-	if !(plan.Running.IsNull() || plan.Running.IsUnknown()) {
-		body["running"] = client.FormatBool(plan.Running.ValueBool())
 	}
 	obj, err := c.Add(ctx, "/partition", body)
 	if err != nil {
@@ -189,12 +174,6 @@ func (r *PartitionResource) Update(ctx context.Context, req resource.UpdateReque
 		return
 	}
 	body := client.Object{}
-	if !plan.Activate.Equal(state.Activate) {
-		body["activate"] = plan.Activate.ValueString()
-	}
-	if !plan.Active.Equal(state.Active) {
-		body["active"] = client.FormatBool(plan.Active.ValueBool())
-	}
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
 	}
@@ -203,9 +182,6 @@ func (r *PartitionResource) Update(ctx context.Context, req resource.UpdateReque
 	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
-	}
-	if !plan.Running.Equal(state.Running) {
-		body["running"] = client.FormatBool(plan.Running.ValueBool())
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/partition", state.ID.ValueString(), body)

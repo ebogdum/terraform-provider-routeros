@@ -51,7 +51,6 @@ func (r *CapsManAccessListResource) Configure(_ context.Context, req resource.Co
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *CapsManAccessListResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {

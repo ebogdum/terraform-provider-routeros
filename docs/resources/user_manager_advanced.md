@@ -31,15 +31,20 @@ resource "routeros_user_manager_advanced" "advanced_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `paypal_allow` - (Optional) Type: `string`.
 * `paypal_currency` - (Optional) Type: `string`.
-* `paypal_password` - (Optional) Type: `string`.
+* `paypal_password` - (Optional) Type: `string`. **Sensitive.**
 * `paypal_signature` - (Optional) Type: `string`.
 * `paypal_use_sandbox` - (Optional) Type: `string`.
 * `paypal_user` - (Optional) Type: `string`.
-* `web_private_password` - (Optional) Type: `string`.
+* `web_private_password` - (Optional) Type: `string`. **Sensitive.**
 * `web_private_username` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - Stable identifier (the singleton's menu path, optionally namespaced by router).
+
 
 ## Import
 

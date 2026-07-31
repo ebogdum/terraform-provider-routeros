@@ -55,7 +55,6 @@ func (r *InterfaceWifiAaaResource) Configure(_ context.Context, req resource.Con
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceWifiAaaResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {

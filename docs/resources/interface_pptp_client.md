@@ -38,10 +38,11 @@ resource "routeros_interface_pptp_client" "pptp_client_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `add_default_route` - (Optional) Type: `string`. RouterOS `add-default-route`.
 * `allow` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
-* `connect_to` - (Required) Type: `string`. Default: `127.0.0.1`.
+* `connect_to` - (Required) Type: `string`.
 * `default_route_distance` - (Optional) Type: `string`.
 * `dial_on_demand` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
@@ -49,10 +50,16 @@ This resource supports the following arguments:
 * `max_mru` - (Optional) Type: `string`.
 * `max_mtu` - (Optional) Type: `string`.
 * `mrru` - (Optional) Type: `string`.
-* `name` - (Required) Type: `string`. Default: `tf_acc_pptpc`.
-* `password` - (Optional) Type: `string`.
+* `name` - (Required) Type: `string`.
+* `password` - (Optional) Type: `string`. **Sensitive.**
 * `profile` - (Optional) Type: `string`.
-* `user` - (Required) Type: `string`. Default: `tf_acc_user`.
+* `use_peer_dns` - (Optional) Type: `string`. RouterOS `use-peer-dns`.
+* `user` - (Required) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

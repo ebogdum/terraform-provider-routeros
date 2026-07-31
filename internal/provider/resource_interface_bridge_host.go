@@ -58,7 +58,6 @@ func (r *InterfaceBridgeHostResource) Configure(_ context.Context, req resource.
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceBridgeHostResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -71,12 +70,10 @@ func (r *InterfaceBridgeHostResource) Schema(_ context.Context, _ resource.Schem
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"aged": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"aged_on_peer": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -96,12 +93,10 @@ func (r *InterfaceBridgeHostResource) Schema(_ context.Context, _ resource.Schem
 				Description: "Whether the entry is disabled.",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"external_fdb": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -111,7 +106,6 @@ func (r *InterfaceBridgeHostResource) Schema(_ context.Context, _ resource.Schem
 				Description: "",
 			},
 			"local": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -121,12 +115,10 @@ func (r *InterfaceBridgeHostResource) Schema(_ context.Context, _ resource.Schem
 				Description: "",
 			},
 			"on_interface": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"remote_ip": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -154,12 +146,6 @@ func (r *InterfaceBridgeHostResource) Create(ctx context.Context, req resource.C
 		return
 	}
 	body := client.Object{}
-	if !(plan.Aged.IsNull() || plan.Aged.IsUnknown()) {
-		body["aged"] = client.FormatBool(plan.Aged.ValueBool())
-	}
-	if !(plan.AgedOnPeer.IsNull() || plan.AgedOnPeer.IsUnknown()) {
-		body["aged-on-peer"] = client.FormatBool(plan.AgedOnPeer.ValueBool())
-	}
 	if !(plan.Bridge.IsNull() || plan.Bridge.IsUnknown()) {
 		body["bridge"] = plan.Bridge.ValueString()
 	}
@@ -169,14 +155,8 @@ func (r *InterfaceBridgeHostResource) Create(ctx context.Context, req resource.C
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !(plan.ExternalFdb.IsNull() || plan.ExternalFdb.IsUnknown()) {
-		body["external-fdb"] = client.FormatBool(plan.ExternalFdb.ValueBool())
-	}
 	if !(plan.Interface.IsNull() || plan.Interface.IsUnknown()) {
 		body["interface"] = plan.Interface.ValueString()
-	}
-	if !(plan.Local.IsNull() || plan.Local.IsUnknown()) {
-		body["local"] = client.FormatBool(plan.Local.ValueBool())
 	}
 	if !(plan.MACAddress.IsNull() || plan.MACAddress.IsUnknown()) {
 		body["mac-address"] = plan.MACAddress.ValueString()
@@ -231,12 +211,6 @@ func (r *InterfaceBridgeHostResource) Update(ctx context.Context, req resource.U
 		return
 	}
 	body := client.Object{}
-	if !plan.Aged.Equal(state.Aged) {
-		body["aged"] = client.FormatBool(plan.Aged.ValueBool())
-	}
-	if !plan.AgedOnPeer.Equal(state.AgedOnPeer) {
-		body["aged-on-peer"] = client.FormatBool(plan.AgedOnPeer.ValueBool())
-	}
 	if !plan.Bridge.Equal(state.Bridge) {
 		body["bridge"] = plan.Bridge.ValueString()
 	}
@@ -246,14 +220,8 @@ func (r *InterfaceBridgeHostResource) Update(ctx context.Context, req resource.U
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.ExternalFdb.Equal(state.ExternalFdb) {
-		body["external-fdb"] = client.FormatBool(plan.ExternalFdb.ValueBool())
-	}
 	if !plan.Interface.Equal(state.Interface) {
 		body["interface"] = plan.Interface.ValueString()
-	}
-	if !plan.Local.Equal(state.Local) {
-		body["local"] = client.FormatBool(plan.Local.ValueBool())
 	}
 	if !plan.MACAddress.Equal(state.MACAddress) {
 		body["mac-address"] = plan.MACAddress.ValueString()

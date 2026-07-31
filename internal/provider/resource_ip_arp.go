@@ -68,7 +68,6 @@ func (r *IPARPResource) Configure(_ context.Context, req resource.ConfigureReque
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPARPResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -86,7 +85,6 @@ func (r *IPARPResource) Schema(_ context.Context, _ resource.SchemaRequest, resp
 				Validators:  []validator.String{schemautil.IsIP()},
 			},
 			"bridge_port": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -96,12 +94,10 @@ func (r *IPARPResource) Schema(_ context.Context, _ resource.SchemaRequest, resp
 				Description: "Free-form comment.",
 			},
 			"complete": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"dhcp": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -111,12 +107,10 @@ func (r *IPARPResource) Schema(_ context.Context, _ resource.SchemaRequest, resp
 				Description: "",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"host_name": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -125,12 +119,10 @@ func (r *IPARPResource) Schema(_ context.Context, _ resource.SchemaRequest, resp
 				Description: "",
 			},
 			"invalid": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"ip_address": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.IsIP()},
@@ -143,22 +135,18 @@ func (r *IPARPResource) Schema(_ context.Context, _ resource.SchemaRequest, resp
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
 			},
 			"mac_ping": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"mac_telnet": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"make_static": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"ping": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -168,22 +156,18 @@ func (r *IPARPResource) Schema(_ context.Context, _ resource.SchemaRequest, resp
 				Description: "",
 			},
 			"status": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"telnet": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"torch": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"vrf": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -218,32 +202,11 @@ func (r *IPARPResource) Create(ctx context.Context, req resource.CreateRequest, 
 	if !(plan.Interface.IsNull() || plan.Interface.IsUnknown()) {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !(plan.IPAddress.IsNull() || plan.IPAddress.IsUnknown()) {
-		body["ip-address"] = plan.IPAddress.ValueString()
-	}
 	if !(plan.MACAddress.IsNull() || plan.MACAddress.IsUnknown()) {
 		body["mac-address"] = plan.MACAddress.ValueString()
 	}
-	if !(plan.MACPing.IsNull() || plan.MACPing.IsUnknown()) {
-		body["mac-ping"] = plan.MACPing.ValueString()
-	}
-	if !(plan.MACTelnet.IsNull() || plan.MACTelnet.IsUnknown()) {
-		body["mac-telnet"] = plan.MACTelnet.ValueString()
-	}
-	if !(plan.MakeStatic.IsNull() || plan.MakeStatic.IsUnknown()) {
-		body["make-static"] = plan.MakeStatic.ValueString()
-	}
-	if !(plan.Ping.IsNull() || plan.Ping.IsUnknown()) {
-		body["ping"] = plan.Ping.ValueString()
-	}
 	if !(plan.Published.IsNull() || plan.Published.IsUnknown()) {
 		body["published"] = client.FormatBool(plan.Published.ValueBool())
-	}
-	if !(plan.Telnet.IsNull() || plan.Telnet.IsUnknown()) {
-		body["telnet"] = plan.Telnet.ValueString()
-	}
-	if !(plan.Torch.IsNull() || plan.Torch.IsUnknown()) {
-		body["torch"] = plan.Torch.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ip/arp", body)
 	if err != nil {
@@ -304,32 +267,11 @@ func (r *IPARPResource) Update(ctx context.Context, req resource.UpdateRequest, 
 	if !plan.Interface.Equal(state.Interface) {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.IPAddress.Equal(state.IPAddress) {
-		body["ip-address"] = plan.IPAddress.ValueString()
-	}
 	if !plan.MACAddress.Equal(state.MACAddress) {
 		body["mac-address"] = plan.MACAddress.ValueString()
 	}
-	if !plan.MACPing.Equal(state.MACPing) {
-		body["mac-ping"] = plan.MACPing.ValueString()
-	}
-	if !plan.MACTelnet.Equal(state.MACTelnet) {
-		body["mac-telnet"] = plan.MACTelnet.ValueString()
-	}
-	if !plan.MakeStatic.Equal(state.MakeStatic) {
-		body["make-static"] = plan.MakeStatic.ValueString()
-	}
-	if !plan.Ping.Equal(state.Ping) {
-		body["ping"] = plan.Ping.ValueString()
-	}
 	if !plan.Published.Equal(state.Published) {
 		body["published"] = client.FormatBool(plan.Published.ValueBool())
-	}
-	if !plan.Telnet.Equal(state.Telnet) {
-		body["telnet"] = plan.Telnet.ValueString()
-	}
-	if !plan.Torch.Equal(state.Torch) {
-		body["torch"] = plan.Torch.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/arp", state.ID.ValueString(), body)

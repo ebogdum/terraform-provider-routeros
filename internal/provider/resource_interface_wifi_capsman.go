@@ -26,9 +26,15 @@ type InterfaceWifiCapsmanResource struct {
 }
 
 type InterfaceWifiCapsmanModel struct {
-	ID      types.String `tfsdk:"id"`
-	Enabled types.Bool   `tfsdk:"enabled"`
-	Router  types.String `tfsdk:"router"`
+	ID                     types.String `tfsdk:"id"`
+	UpgradePolicy          types.String `tfsdk:"upgrade_policy"`
+	RequirePeerCertificate types.String `tfsdk:"require_peer_certificate"`
+	PackagePath            types.String `tfsdk:"package_path"`
+	Interfaces             types.String `tfsdk:"interfaces"`
+	Certificate            types.String `tfsdk:"certificate"`
+	CaCertificate          types.String `tfsdk:"ca_certificate"`
+	Enabled                types.Bool   `tfsdk:"enabled"`
+	Router                 types.String `tfsdk:"router"`
 }
 
 func NewInterfaceWifiCapsmanResource() resource.Resource { return &InterfaceWifiCapsmanResource{} }
@@ -53,6 +59,36 @@ func (r *InterfaceWifiCapsmanResource) Schema(_ context.Context, _ resource.Sche
 				Computed:      true,
 				Description:   "Stable identifier (the singleton's menu path, optionally namespaced by router).",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"upgrade_policy": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `upgrade-policy`.",
+			},
+			"require_peer_certificate": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `require-peer-certificate`.",
+			},
+			"package_path": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `package-path`.",
+			},
+			"interfaces": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `interfaces`.",
+			},
+			"certificate": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `certificate`.",
+			},
+			"ca_certificate": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `ca-certificate`.",
 			},
 			"enabled": schema.BoolAttribute{Optional: true, Computed: true,
 				Description: "",
@@ -133,6 +169,24 @@ func interfaceWifiCapsmanUpsert(ctx context.Context, reg *client.Registry, plan 
 	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) {
 		body["enabled"] = client.FormatBool(plan.Enabled.ValueBool())
 	}
+	if !(plan.CaCertificate.IsNull() || plan.CaCertificate.IsUnknown()) {
+		body["ca-certificate"] = plan.CaCertificate.ValueString()
+	}
+	if !(plan.Certificate.IsNull() || plan.Certificate.IsUnknown()) {
+		body["certificate"] = plan.Certificate.ValueString()
+	}
+	if !(plan.Interfaces.IsNull() || plan.Interfaces.IsUnknown()) {
+		body["interfaces"] = plan.Interfaces.ValueString()
+	}
+	if !(plan.PackagePath.IsNull() || plan.PackagePath.IsUnknown()) {
+		body["package-path"] = plan.PackagePath.ValueString()
+	}
+	if !(plan.RequirePeerCertificate.IsNull() || plan.RequirePeerCertificate.IsUnknown()) {
+		body["require-peer-certificate"] = plan.RequirePeerCertificate.ValueString()
+	}
+	if !(plan.UpgradePolicy.IsNull() || plan.UpgradePolicy.IsUnknown()) {
+		body["upgrade-policy"] = plan.UpgradePolicy.ValueString()
+	}
 	obj, err := c.SetSingleton(ctx, "/interface/wifi/capsman", body)
 	if err != nil {
 		diags.AddError("Upsert /interface/wifi/capsman failed", err.Error())
@@ -144,6 +198,36 @@ func interfaceWifiCapsmanUpsert(ctx context.Context, reg *client.Registry, plan 
 
 func interfaceWifiCapsmanApply(ctx context.Context, obj client.Object, m *InterfaceWifiCapsmanModel) {
 	_ = ctx
+	if v, ok := obj["upgrade-policy"]; ok && v != "" {
+		m.UpgradePolicy = types.StringValue(v)
+	} else {
+		m.UpgradePolicy = types.StringNull()
+	}
+	if v, ok := obj["require-peer-certificate"]; ok && v != "" {
+		m.RequirePeerCertificate = types.StringValue(v)
+	} else {
+		m.RequirePeerCertificate = types.StringNull()
+	}
+	if v, ok := obj["package-path"]; ok && v != "" {
+		m.PackagePath = types.StringValue(v)
+	} else {
+		m.PackagePath = types.StringNull()
+	}
+	if v, ok := obj["interfaces"]; ok && v != "" {
+		m.Interfaces = types.StringValue(v)
+	} else {
+		m.Interfaces = types.StringNull()
+	}
+	if v, ok := obj["certificate"]; ok && v != "" {
+		m.Certificate = types.StringValue(v)
+	} else {
+		m.Certificate = types.StringNull()
+	}
+	if v, ok := obj["ca-certificate"]; ok && v != "" {
+		m.CaCertificate = types.StringValue(v)
+	} else {
+		m.CaCertificate = types.StringNull()
+	}
 	if v, ok := obj["enabled"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {

@@ -44,40 +44,39 @@ resource "routeros_interface_wireguard_peers" "peers_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `allowed_address` - (Optional) Type: `string`.
 * `client_address` - (Optional) Type: `string`.
 * `client_allowed_address` - (Optional) Type: `string`.
+* `client_config` - (Read-only) Type: `string`.
 * `client_dns` - (Optional) Type: `string`.
 * `client_endpoint` - (Optional) Type: `string`.
-* `client_keepalive` - (Optional) Type: `duration`.
+* `client_keepalive` - (Optional) Type: `string`.
 * `client_listen_port` - (Optional) Type: `int`.
+* `client_qr` - (Read-only) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `current_endpoint_address` - (Read-only) Type: `string`.
+* `current_endpoint_port` - (Read-only) Type: `int`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `endpoint` - (Optional) Type: `string`.
+* `dynamic` - (Read-only) Type: `bool`.
+* `endpoint` - (Read-only) Type: `string`.
 * `endpoint_address` - (Optional) Type: `string`.
-* `endpoint_port` - (Optional) Type: `int`. Default: `0`.
+* `endpoint_port` - (Optional) Type: `int`.
 * `interface` - (Optional) Type: `string`.
+* `last_handshake` - (Read-only) Type: `string`.
 * `name` - (Optional) Type: `string`.
-* `persistent_keepalive` - (Optional) Type: `duration`.
+* `persistent_keepalive` - (Optional) Type: `string`.
 * `preshared_key` - (Optional) Type: `string`. **Sensitive.**
 * `private_key` - (Optional) Type: `string`. **Sensitive.**
 * `public_key` - (Optional) Type: `string`.
 * `responder` - (Optional) Type: `bool`.
+* `rx` - (Read-only) Type: `string`.
+* `tx` - (Read-only) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `client_config` - Type: `string`.
-* `client_qr` - Type: `string`.
-* `current_endpoint_address` - Type: `string`.
-* `current_endpoint_port` - Type: `int`.
-* `dynamic` - Type: `bool`.
-* `last_handshake` - Type: `duration`.
-* `rx` - Type: `string`.
-* `tx` - Type: `string`.
 
 ## Import
 

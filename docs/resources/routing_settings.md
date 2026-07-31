@@ -28,12 +28,19 @@ resource "routeros_routing_settings" "settings_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `check_gateway_ping_count` - (Optional) Type: `int`.
-* `check_gateway_ping_interval` - (Optional) Type: `duration`.
-* `check_gateway_ping_timeout` - (Optional) Type: `duration`.
+* `check_gateway_ping_interval` - (Optional) Type: `string`.
+* `check_gateway_ping_timeout` - (Optional) Type: `string`.
+* `connected_in_chain` - (Optional) Type: `string`. RouterOS `connected-in-chain`.
+* `dynamic_in_chain` - (Optional) Type: `string`. RouterOS `dynamic-in-chain`.
 * `policy_rules` - (Optional) Type: `list`.
 * `single_process` - (Optional) Type: `bool`.
+
+## Attribute Reference
+
+* `id` - Stable identifier (the singleton's menu path, optionally namespaced by router).
+
 
 ## Import
 

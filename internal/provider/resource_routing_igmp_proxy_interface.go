@@ -63,7 +63,6 @@ func (r *RoutingIgmpProxyInterfaceResource) Configure(_ context.Context, req res
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *RoutingIgmpProxyInterfaceResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -91,12 +90,10 @@ func (r *RoutingIgmpProxyInterfaceResource) Schema(_ context.Context, _ resource
 				Description: "",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"inactive": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -106,22 +103,18 @@ func (r *RoutingIgmpProxyInterfaceResource) Schema(_ context.Context, _ resource
 				Description: "",
 			},
 			"querier": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rx_bytes": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rx_packets": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"source_ip_address": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.IsIP()},
@@ -132,12 +125,10 @@ func (r *RoutingIgmpProxyInterfaceResource) Schema(_ context.Context, _ resource
 				Description: "",
 			},
 			"tx_bytes": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_packets": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -173,9 +164,6 @@ func (r *RoutingIgmpProxyInterfaceResource) Create(ctx context.Context, req reso
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
-	}
-	if !(plan.Inactive.IsNull() || plan.Inactive.IsUnknown()) {
-		body["inactive"] = client.FormatBool(plan.Inactive.ValueBool())
 	}
 	if !(plan.Interface.IsNull() || plan.Interface.IsUnknown()) {
 		body["interface"] = plan.Interface.ValueString()
@@ -241,9 +229,6 @@ func (r *RoutingIgmpProxyInterfaceResource) Update(ctx context.Context, req reso
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
-	}
-	if !plan.Inactive.Equal(state.Inactive) {
-		body["inactive"] = client.FormatBool(plan.Inactive.ValueBool())
 	}
 	if !plan.Interface.Equal(state.Interface) {
 		body["interface"] = plan.Interface.ValueString()

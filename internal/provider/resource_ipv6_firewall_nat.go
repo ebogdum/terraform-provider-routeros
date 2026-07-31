@@ -30,6 +30,11 @@ type IPV6FirewallNATResource struct {
 
 type IPV6FirewallNATModel struct {
 	ID                      types.String `tfsdk:"id"`
+	Tos                     types.String `tfsdk:"tos"`
+	ToAddress               types.String `tfsdk:"to_address"`
+	HopLimit                types.String `tfsdk:"hop_limit"`
+	Headers                 types.String `tfsdk:"headers"`
+	ConnectionState         types.String `tfsdk:"connection_state"`
 	Action                  types.String `tfsdk:"action"`
 	AddressList             types.String `tfsdk:"address_list"`
 	AddressListTimeout      types.String `tfsdk:"address_list_timeout"`
@@ -99,7 +104,6 @@ func (r *IPV6FirewallNATResource) Configure(_ context.Context, req resource.Conf
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPV6FirewallNATResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -110,6 +114,31 @@ func (r *IPV6FirewallNATResource) Schema(_ context.Context, _ resource.SchemaReq
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"tos": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `tos`.",
+			},
+			"to_address": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `to-address`.",
+			},
+			"hop_limit": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `hop-limit`.",
+			},
+			"headers": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `headers`.",
+			},
+			"connection_state": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `connection-state`.",
 			},
 			"action": schema.StringAttribute{
 				Required:    true,
@@ -551,6 +580,21 @@ func (r *IPV6FirewallNATResource) Create(ctx context.Context, req resource.Creat
 	if !(plan.ToPorts.IsNull() || plan.ToPorts.IsUnknown()) {
 		body["to-ports"] = plan.ToPorts.ValueString()
 	}
+	if !(plan.ConnectionState.IsNull() || plan.ConnectionState.IsUnknown()) {
+		body["connection-state"] = plan.ConnectionState.ValueString()
+	}
+	if !(plan.Headers.IsNull() || plan.Headers.IsUnknown()) {
+		body["headers"] = plan.Headers.ValueString()
+	}
+	if !(plan.HopLimit.IsNull() || plan.HopLimit.IsUnknown()) {
+		body["hop-limit"] = plan.HopLimit.ValueString()
+	}
+	if !(plan.ToAddress.IsNull() || plan.ToAddress.IsUnknown()) {
+		body["to-address"] = plan.ToAddress.ValueString()
+	}
+	if !(plan.Tos.IsNull() || plan.Tos.IsUnknown()) {
+		body["tos"] = plan.Tos.ValueString()
+	}
 	obj, err := c.Add(ctx, "/ipv6/firewall/nat", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /ipv6/firewall/nat failed", err.Error())
@@ -774,6 +818,21 @@ func (r *IPV6FirewallNATResource) Update(ctx context.Context, req resource.Updat
 	if !plan.ToPorts.Equal(state.ToPorts) {
 		body["to-ports"] = plan.ToPorts.ValueString()
 	}
+	if !plan.ConnectionState.Equal(state.ConnectionState) && !plan.ConnectionState.IsUnknown() {
+		body["connection-state"] = plan.ConnectionState.ValueString()
+	}
+	if !plan.Headers.Equal(state.Headers) && !plan.Headers.IsUnknown() {
+		body["headers"] = plan.Headers.ValueString()
+	}
+	if !plan.HopLimit.Equal(state.HopLimit) && !plan.HopLimit.IsUnknown() {
+		body["hop-limit"] = plan.HopLimit.ValueString()
+	}
+	if !plan.ToAddress.Equal(state.ToAddress) && !plan.ToAddress.IsUnknown() {
+		body["to-address"] = plan.ToAddress.ValueString()
+	}
+	if !plan.Tos.Equal(state.Tos) && !plan.Tos.IsUnknown() {
+		body["tos"] = plan.Tos.ValueString()
+	}
 	// If position OR comment changed, re-encode the marker into the comment
 	// so the device-side prefix stays in sync.
 	if !plan.Comment.Equal(state.Comment) {
@@ -863,6 +922,31 @@ func iPV6FirewallNATLookupByNaturalKey(ctx context.Context, c *client.Client, id
 func iPV6FirewallNATApply(ctx context.Context, obj client.Object, m *IPV6FirewallNATModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["tos"]; ok && v != "" {
+		m.Tos = types.StringValue(v)
+	} else {
+		m.Tos = types.StringNull()
+	}
+	if v, ok := obj["to-address"]; ok && v != "" {
+		m.ToAddress = types.StringValue(v)
+	} else {
+		m.ToAddress = types.StringNull()
+	}
+	if v, ok := obj["hop-limit"]; ok && v != "" {
+		m.HopLimit = types.StringValue(v)
+	} else {
+		m.HopLimit = types.StringNull()
+	}
+	if v, ok := obj["headers"]; ok && v != "" {
+		m.Headers = types.StringValue(v)
+	} else {
+		m.Headers = types.StringNull()
+	}
+	if v, ok := obj["connection-state"]; ok && v != "" {
+		m.ConnectionState = types.StringValue(v)
+	} else {
+		m.ConnectionState = types.StringNull()
+	}
 	// Strip the [tf:pos=N] marker from the comment before exposing to state.
 	// Position is TF-state-only metadata; never written to the device. Keep
 	// whatever the user planned. Comment is left untouched.

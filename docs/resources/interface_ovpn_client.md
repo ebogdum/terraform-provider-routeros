@@ -37,20 +37,33 @@ resource "routeros_interface_ovpn_client" "ovpn_client_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `add_default_route` - (Optional) Type: `string`. RouterOS `add-default-route`.
+* `auth` - (Optional) Type: `string`. RouterOS `auth`.
 * `certificate` - (Optional) Type: `string`.
 * `cipher` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
-* `connect_to` - (Required) Type: `string`. Default: `127.0.0.1`.
+* `connect_to` - (Required) Type: `string`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `disconnect_notify` - (Optional) Type: `string`. RouterOS `disconnect-notify`.
 * `mac_address` - (Optional) Type: `string`.
 * `max_mtu` - (Optional) Type: `string`.
 * `mode` - (Optional) Type: `string`.
-* `name` - (Required) Type: `string`. Default: `tf_acc_ovpn_c`.
-* `password` - (Optional) Type: `string`.
+* `name` - (Required) Type: `string`.
+* `password` - (Optional) Type: `string`. **Sensitive.**
+* `port` - (Optional) Type: `string`. RouterOS `port`.
 * `profile` - (Optional) Type: `string`.
-* `user` - (Required) Type: `string`. Default: `tf_acc_user`.
+* `protocol` - (Optional) Type: `string`. RouterOS `protocol`.
+* `route_nopull` - (Optional) Type: `string`. RouterOS `route-nopull`.
+* `tls_version` - (Optional) Type: `string`. RouterOS `tls-version`.
+* `use_peer_dns` - (Optional) Type: `string`. RouterOS `use-peer-dns`.
+* `user` - (Required) Type: `string`.
 * `verify_server_certificate` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

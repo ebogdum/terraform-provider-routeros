@@ -27,20 +27,19 @@ resource "routeros_tool_traffic_generator" "traffic_generator_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `latency_distribution_max` - (Optional) Type: `duration`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `latency_distribution_max` - (Optional) Type: `string`.
+* `latency_distribution_measure_interval` - (Optional) Type: `string`.
+* `latency_distribution_samples` - (Optional) Type: `int`.
 * `measure_out_of_order` - (Optional) Type: `bool`.
+* `running` - (Optional) Type: `bool`.
 * `stats_samples_to_keep` - (Optional) Type: `int`.
 * `test_id` - (Optional) Type: `int`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - Stable identifier (the singleton's menu path, optionally namespaced by router).
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `latency_distribution_measure_interval` - Type: `string`.
-* `latency_distribution_samples` - Type: `int`.
-* `running` - Type: `bool`.
 
 ## Import
 

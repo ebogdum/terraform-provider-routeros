@@ -38,26 +38,25 @@ resource "routeros_interface_bridge_host" "host_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `aged` - (Optional) Type: `bool`.
-* `aged_on_peer` - (Optional) Type: `bool`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `aged` - (Read-only) Type: `bool`.
+* `aged_on_peer` - (Read-only) Type: `bool`.
 * `bridge` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `external_fdb` - (Optional) Type: `bool`.
+* `dynamic` - (Read-only) Type: `bool`.
+* `external_fdb` - (Read-only) Type: `bool`.
 * `interface` - (Optional) Type: `string`.
-* `local` - (Optional) Type: `bool`.
+* `local` - (Read-only) Type: `bool`.
 * `mac_address` - (Optional) Type: `string`.
+* `on_interface` - (Read-only) Type: `string`.
+* `remote_ip` - (Read-only) Type: `string`.
 * `vid` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `dynamic` - Type: `bool`.
-* `on_interface` - Type: `string`.
-* `remote_ip` - Type: `string`.
 
 ## Import
 

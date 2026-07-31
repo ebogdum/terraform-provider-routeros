@@ -33,25 +33,25 @@ resource "routeros_ipv6_nd_prefix" "prefix_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `x6to4_interface` - (Optional) Type: `string`. Default: `4.294967295e+09`.
-* `autonomous` - (Optional) Type: `bool`. Default: `1`.
-* `dhcpv6_pd_preferred` - (Optional) Type: `bool`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `autonomous` - (Optional) Type: `bool`.
+* `dhcp6_pd_preferred` - (Optional) Type: `string`. RouterOS `dhcp6-pd-preferred`.
+* `dhcpv6_pd_preferred` - (Read-only) Type: `bool`.
 * `disabled` - (Optional) Type: `bool`.
+* `dynamic` - (Read-only) Type: `bool`.
 * `interface` - (Optional) Type: `string`.
-* `no6to4` - (Optional) Type: `string`.
-* `on_link` - (Optional) Type: `bool`. Default: `1`.
-* `preferred_lifetime` - (Optional) Type: `duration`. Default: `604800`.
+* `invalid` - (Read-only) Type: `bool`.
+* `no6to4` - (Read-only) Type: `string`.
+* `on_link` - (Optional) Type: `bool`.
+* `preferred_lifetime` - (Optional) Type: `string`.
 * `prefix` - (Optional) Type: `string`.
-* `valid_lifetime` - (Optional) Type: `duration`. Default: `2.592e+06`.
+* `valid_lifetime` - (Optional) Type: `string`.
+* `x6to4_interface` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `dynamic` - Type: `bool`.
-* `invalid` - Type: `bool`.
 
 ## Import
 

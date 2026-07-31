@@ -29,21 +29,26 @@ type IotLoraResource struct {
 }
 
 type IotLoraModel struct {
-	ID            types.String `tfsdk:"id"`
-	AntennaGain   types.String `tfsdk:"antenna_gain"`
-	ChannelPlan   types.String `tfsdk:"channel_plan"`
-	Disabled      types.String `tfsdk:"disabled"`
-	Forward       types.String `tfsdk:"forward"`
-	GatewayID     types.String `tfsdk:"gateway_id"`
-	LbtEnabled    types.String `tfsdk:"lbt_enabled"`
-	ListenTime    types.String `tfsdk:"listen_time"`
-	Name          types.String `tfsdk:"name"`
-	Network       types.String `tfsdk:"network"`
-	RssiThreshold types.String `tfsdk:"rssi_threshold"`
-	Servers       types.String `tfsdk:"servers"`
-	SpoofGps      types.String `tfsdk:"spoof_gps"`
-	SrcAddress    types.String `tfsdk:"src_address"`
-	Router        types.String `tfsdk:"router"`
+	ID                 types.String `tfsdk:"id"`
+	TxImmediateDelayUs types.String `tfsdk:"tx_immediate_delay_us"`
+	Long               types.String `tfsdk:"long"`
+	Lat                types.String `tfsdk:"lat"`
+	Antenna            types.String `tfsdk:"antenna"`
+	Alt                types.String `tfsdk:"alt"`
+	AntennaGain        types.String `tfsdk:"antenna_gain"`
+	ChannelPlan        types.String `tfsdk:"channel_plan"`
+	Disabled           types.String `tfsdk:"disabled"`
+	Forward            types.String `tfsdk:"forward"`
+	GatewayID          types.String `tfsdk:"gateway_id"`
+	LbtEnabled         types.String `tfsdk:"lbt_enabled"`
+	ListenTime         types.String `tfsdk:"listen_time"`
+	Name               types.String `tfsdk:"name"`
+	Network            types.String `tfsdk:"network"`
+	RssiThreshold      types.String `tfsdk:"rssi_threshold"`
+	Servers            types.String `tfsdk:"servers"`
+	SpoofGps           types.String `tfsdk:"spoof_gps"`
+	SrcAddress         types.String `tfsdk:"src_address"`
+	Router             types.String `tfsdk:"router"`
 }
 
 func NewIotLoraResource() resource.Resource { return &IotLoraResource{} }
@@ -58,7 +63,6 @@ func (r *IotLoraResource) Configure(_ context.Context, req resource.ConfigureReq
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IotLoraResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -69,6 +73,31 @@ func (r *IotLoraResource) Schema(_ context.Context, _ resource.SchemaRequest, re
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"tx_immediate_delay_us": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `tx-immediate-delay-us`.",
+			},
+			"long": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `long`.",
+			},
+			"lat": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `lat`.",
+			},
+			"antenna": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `antenna`.",
+			},
+			"alt": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `alt`.",
 			},
 			"antenna_gain": schema.StringAttribute{
 				Optional:    true,
@@ -193,6 +222,21 @@ func (r *IotLoraResource) Create(ctx context.Context, req resource.CreateRequest
 	if !(plan.SrcAddress.IsNull() || plan.SrcAddress.IsUnknown()) {
 		body["src-address"] = plan.SrcAddress.ValueString()
 	}
+	if !(plan.Alt.IsNull() || plan.Alt.IsUnknown()) {
+		body["alt"] = plan.Alt.ValueString()
+	}
+	if !(plan.Antenna.IsNull() || plan.Antenna.IsUnknown()) {
+		body["antenna"] = plan.Antenna.ValueString()
+	}
+	if !(plan.Lat.IsNull() || plan.Lat.IsUnknown()) {
+		body["lat"] = plan.Lat.ValueString()
+	}
+	if !(plan.Long.IsNull() || plan.Long.IsUnknown()) {
+		body["long"] = plan.Long.ValueString()
+	}
+	if !(plan.TxImmediateDelayUs.IsNull() || plan.TxImmediateDelayUs.IsUnknown()) {
+		body["tx-immediate-delay-us"] = plan.TxImmediateDelayUs.ValueString()
+	}
 	obj, err := c.Add(ctx, "/iot/lora", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /iot/lora failed", err.Error())
@@ -279,6 +323,21 @@ func (r *IotLoraResource) Update(ctx context.Context, req resource.UpdateRequest
 	if !plan.SrcAddress.Equal(state.SrcAddress) {
 		body["src-address"] = plan.SrcAddress.ValueString()
 	}
+	if !plan.Alt.Equal(state.Alt) && !plan.Alt.IsUnknown() {
+		body["alt"] = plan.Alt.ValueString()
+	}
+	if !plan.Antenna.Equal(state.Antenna) && !plan.Antenna.IsUnknown() {
+		body["antenna"] = plan.Antenna.ValueString()
+	}
+	if !plan.Lat.Equal(state.Lat) && !plan.Lat.IsUnknown() {
+		body["lat"] = plan.Lat.ValueString()
+	}
+	if !plan.Long.Equal(state.Long) && !plan.Long.IsUnknown() {
+		body["long"] = plan.Long.ValueString()
+	}
+	if !plan.TxImmediateDelayUs.Equal(state.TxImmediateDelayUs) && !plan.TxImmediateDelayUs.IsUnknown() {
+		body["tx-immediate-delay-us"] = plan.TxImmediateDelayUs.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/iot/lora", state.ID.ValueString(), body)
 		if err != nil {
@@ -345,6 +404,31 @@ func iotLoraLookupByNaturalKey(ctx context.Context, c *client.Client, id string)
 func iotLoraApply(ctx context.Context, obj client.Object, m *IotLoraModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["tx-immediate-delay-us"]; ok && v != "" {
+		m.TxImmediateDelayUs = types.StringValue(v)
+	} else {
+		m.TxImmediateDelayUs = types.StringNull()
+	}
+	if v, ok := obj["long"]; ok && v != "" {
+		m.Long = types.StringValue(v)
+	} else {
+		m.Long = types.StringNull()
+	}
+	if v, ok := obj["lat"]; ok && v != "" {
+		m.Lat = types.StringValue(v)
+	} else {
+		m.Lat = types.StringNull()
+	}
+	if v, ok := obj["antenna"]; ok && v != "" {
+		m.Antenna = types.StringValue(v)
+	} else {
+		m.Antenna = types.StringNull()
+	}
+	if v, ok := obj["alt"]; ok && v != "" {
+		m.Alt = types.StringValue(v)
+	} else {
+		m.Alt = types.StringNull()
+	}
 	if v, ok := obj["antenna-gain"]; ok {
 		_ = v
 		if v != "" {

@@ -39,12 +39,19 @@ resource "routeros_system_logging_action" "action_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `add_topics_string` - (Optional) Type: `string`. RouterOS `add-topics-string`.
+* `cef_event_delimiter` - (Optional) Type: `string`. RouterOS `cef-event-delimiter`.
+* `check_certificate` - (Optional) Type: `string`. RouterOS `check-certificate`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `default` - (Read-only) Type: `bool`.
 * `disk_file_count` - (Optional) Type: `int`.
 * `disk_file_name` - (Optional) Type: `string`.
 * `disk_lines_per_file` - (Optional) Type: `int`.
 * `disk_stop_on_full` - (Optional) Type: `bool`.
+* `email_cc` - (Optional) Type: `string`. RouterOS `email-cc`.
+* `email_start_tls` - (Optional) Type: `string`. RouterOS `email-start-tls`.
+* `email_to` - (Optional) Type: `string`. RouterOS `email-to`.
 * `memory_lines` - (Optional) Type: `int`.
 * `memory_stop_on_full` - (Optional) Type: `bool`.
 * `name` - (Optional) Type: `string`.
@@ -53,16 +60,18 @@ This resource supports the following arguments:
 * `remote_log_format` - (Optional) Type: `string`.
 * `remote_port` - (Optional) Type: `int`.
 * `remote_protocol` - (Optional) Type: `string`.
-* `src_address` - (Optional) Type: `ip`.
+* `script` - (Optional) Type: `string`. RouterOS `script`.
+* `src_address` - (Optional) Type: `string`.
+* `syslog_facility` - (Optional) Type: `string`. RouterOS `syslog-facility`.
+* `syslog_severity` - (Optional) Type: `string`. RouterOS `syslog-severity`.
+* `syslog_time_format` - (Optional) Type: `string`. RouterOS `syslog-time-format`.
 * `target` - (Optional) Type: `string`.
 * `vrf` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `default` - Type: `bool`.
 
 ## Import
 

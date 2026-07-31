@@ -30,6 +30,8 @@ type InterfacePPTPClientResource struct {
 
 type InterfacePPTPClientModel struct {
 	ID                   types.String `tfsdk:"id"`
+	UsePeerDns           types.String `tfsdk:"use_peer_dns"`
+	AddDefaultRoute      types.String `tfsdk:"add_default_route"`
 	Allow                types.String `tfsdk:"allow"`
 	Comment              types.String `tfsdk:"comment"`
 	ConnectTo            types.String `tfsdk:"connect_to"`
@@ -59,7 +61,6 @@ func (r *InterfacePPTPClientResource) Configure(_ context.Context, req resource.
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfacePPTPClientResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -70,6 +71,16 @@ func (r *InterfacePPTPClientResource) Schema(_ context.Context, _ resource.Schem
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"use_peer_dns": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `use-peer-dns`.",
+			},
+			"add_default_route": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `add-default-route`.",
 			},
 			"allow": schema.StringAttribute{
 				Optional:    true,
@@ -200,6 +211,12 @@ func (r *InterfacePPTPClientResource) Create(ctx context.Context, req resource.C
 	if !(plan.User.IsNull() || plan.User.IsUnknown()) {
 		body["user"] = plan.User.ValueString()
 	}
+	if !(plan.AddDefaultRoute.IsNull() || plan.AddDefaultRoute.IsUnknown()) {
+		body["add-default-route"] = plan.AddDefaultRoute.ValueString()
+	}
+	if !(plan.UsePeerDns.IsNull() || plan.UsePeerDns.IsUnknown()) {
+		body["use-peer-dns"] = plan.UsePeerDns.ValueString()
+	}
 	obj, err := c.Add(ctx, "/interface/pptp-client", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /interface/pptp-client failed", err.Error())
@@ -289,6 +306,12 @@ func (r *InterfacePPTPClientResource) Update(ctx context.Context, req resource.U
 	if !plan.User.Equal(state.User) {
 		body["user"] = plan.User.ValueString()
 	}
+	if !plan.AddDefaultRoute.Equal(state.AddDefaultRoute) && !plan.AddDefaultRoute.IsUnknown() {
+		body["add-default-route"] = plan.AddDefaultRoute.ValueString()
+	}
+	if !plan.UsePeerDns.Equal(state.UsePeerDns) && !plan.UsePeerDns.IsUnknown() {
+		body["use-peer-dns"] = plan.UsePeerDns.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/pptp-client", state.ID.ValueString(), body)
 		if err != nil {
@@ -355,6 +378,16 @@ func interfacePPTPClientLookupByNaturalKey(ctx context.Context, c *client.Client
 func interfacePPTPClientApply(ctx context.Context, obj client.Object, m *InterfacePPTPClientModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["use-peer-dns"]; ok && v != "" {
+		m.UsePeerDns = types.StringValue(v)
+	} else {
+		m.UsePeerDns = types.StringNull()
+	}
+	if v, ok := obj["add-default-route"]; ok && v != "" {
+		m.AddDefaultRoute = types.StringValue(v)
+	} else {
+		m.AddDefaultRoute = types.StringNull()
+	}
 	if v, ok := obj["allow"]; ok {
 		_ = v
 		if v != "" {

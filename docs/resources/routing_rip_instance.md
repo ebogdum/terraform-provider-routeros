@@ -36,20 +36,28 @@ resource "routeros_routing_rip_instance" "instance_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `afi` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`.
-* `input_filter` - (Optional) Type: `string`.
+* `in_filter_chain` - (Optional) Type: `string`. RouterOS `in-filter-chain`.
+* `input_filter` - (Read-only) Type: `string`.
 * `name` - (Optional) Type: `string`.
 * `originate_default` - (Optional) Type: `string`.
-* `output_filter` - (Optional) Type: `string`.
+* `out_filter_chain` - (Optional) Type: `string`. RouterOS `out-filter-chain`.
+* `out_filter_select` - (Optional) Type: `string`. RouterOS `out-filter-select`.
+* `output_filter` - (Read-only) Type: `string`.
 * `redistribute` - (Optional) Type: `string`.
 * `route_gc_timeout` - (Optional) Type: `string`.
 * `route_timeout` - (Optional) Type: `string`.
 * `routing_table` - (Optional) Type: `string`.
-* `select_output_filter` - (Optional) Type: `string`.
+* `select_output_filter` - (Read-only) Type: `string`.
 * `update_interval` - (Optional) Type: `string`.
 * `vrf` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

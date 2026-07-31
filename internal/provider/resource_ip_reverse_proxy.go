@@ -29,10 +29,15 @@ type IPReverseProxyResource struct {
 }
 
 type IPReverseProxyModel struct {
-	ID       types.String `tfsdk:"id"`
-	Comment  types.String `tfsdk:"comment"`
-	Disabled types.Bool   `tfsdk:"disabled"`
-	Router   types.String `tfsdk:"router"`
+	ID          types.String `tfsdk:"id"`
+	Vrf         types.String `tfsdk:"vrf"`
+	Sni         types.String `tfsdk:"sni"`
+	Port        types.String `tfsdk:"port"`
+	IpAddress   types.String `tfsdk:"ip_address"`
+	Certificate types.String `tfsdk:"certificate"`
+	Comment     types.String `tfsdk:"comment"`
+	Disabled    types.Bool   `tfsdk:"disabled"`
+	Router      types.String `tfsdk:"router"`
 }
 
 func NewIPReverseProxyResource() resource.Resource { return &IPReverseProxyResource{} }
@@ -47,7 +52,6 @@ func (r *IPReverseProxyResource) Configure(_ context.Context, req resource.Confi
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPReverseProxyResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -58,6 +62,31 @@ func (r *IPReverseProxyResource) Schema(_ context.Context, _ resource.SchemaRequ
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"vrf": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `vrf`.",
+			},
+			"sni": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `sni`.",
+			},
+			"port": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `port`.",
+			},
+			"ip_address": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `ip-address`.",
+			},
+			"certificate": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `certificate`.",
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -93,6 +122,21 @@ func (r *IPReverseProxyResource) Create(ctx context.Context, req resource.Create
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !(plan.Certificate.IsNull() || plan.Certificate.IsUnknown()) {
+		body["certificate"] = plan.Certificate.ValueString()
+	}
+	if !(plan.IpAddress.IsNull() || plan.IpAddress.IsUnknown()) {
+		body["ip-address"] = plan.IpAddress.ValueString()
+	}
+	if !(plan.Port.IsNull() || plan.Port.IsUnknown()) {
+		body["port"] = plan.Port.ValueString()
+	}
+	if !(plan.Sni.IsNull() || plan.Sni.IsUnknown()) {
+		body["sni"] = plan.Sni.ValueString()
+	}
+	if !(plan.Vrf.IsNull() || plan.Vrf.IsUnknown()) {
+		body["vrf"] = plan.Vrf.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ip/reverse-proxy", body)
 	if err != nil {
@@ -146,6 +190,21 @@ func (r *IPReverseProxyResource) Update(ctx context.Context, req resource.Update
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !plan.Certificate.Equal(state.Certificate) && !plan.Certificate.IsUnknown() {
+		body["certificate"] = plan.Certificate.ValueString()
+	}
+	if !plan.IpAddress.Equal(state.IpAddress) && !plan.IpAddress.IsUnknown() {
+		body["ip-address"] = plan.IpAddress.ValueString()
+	}
+	if !plan.Port.Equal(state.Port) && !plan.Port.IsUnknown() {
+		body["port"] = plan.Port.ValueString()
+	}
+	if !plan.Sni.Equal(state.Sni) && !plan.Sni.IsUnknown() {
+		body["sni"] = plan.Sni.ValueString()
+	}
+	if !plan.Vrf.Equal(state.Vrf) && !plan.Vrf.IsUnknown() {
+		body["vrf"] = plan.Vrf.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/reverse-proxy", state.ID.ValueString(), body)
@@ -213,6 +272,31 @@ func iPReverseProxyLookupByNaturalKey(ctx context.Context, c *client.Client, id 
 func iPReverseProxyApply(ctx context.Context, obj client.Object, m *IPReverseProxyModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["vrf"]; ok && v != "" {
+		m.Vrf = types.StringValue(v)
+	} else {
+		m.Vrf = types.StringNull()
+	}
+	if v, ok := obj["sni"]; ok && v != "" {
+		m.Sni = types.StringValue(v)
+	} else {
+		m.Sni = types.StringNull()
+	}
+	if v, ok := obj["port"]; ok && v != "" {
+		m.Port = types.StringValue(v)
+	} else {
+		m.Port = types.StringNull()
+	}
+	if v, ok := obj["ip-address"]; ok && v != "" {
+		m.IpAddress = types.StringValue(v)
+	} else {
+		m.IpAddress = types.StringNull()
+	}
+	if v, ok := obj["certificate"]; ok && v != "" {
+		m.Certificate = types.StringValue(v)
+	} else {
+		m.Certificate = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {

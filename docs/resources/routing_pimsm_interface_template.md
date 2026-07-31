@@ -34,12 +34,13 @@ resource "routeros_routing_pimsm_interface_template" "interface_template_example
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `disabled` - (Optional) Type: `bool`.
 * `hello_delay` - (Optional) Type: `string`.
 * `hello_period` - (Optional) Type: `string`.
 * `instance` - (Optional) Type: `string`.
 * `interfaces` - (Optional) Type: `string`.
+* `invalid` - (Read-only) Type: `bool`.
 * `join_prune_period` - (Optional) Type: `string`.
 * `join_tracking_support` - (Optional) Type: `string`.
 * `override_interval` - (Optional) Type: `string`.
@@ -49,10 +50,8 @@ This resource supports the following arguments:
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `invalid` - Type: `bool`.
 
 ## Import
 

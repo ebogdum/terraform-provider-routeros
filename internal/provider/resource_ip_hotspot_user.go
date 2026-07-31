@@ -74,7 +74,6 @@ func (r *IPHotspotUserResource) Configure(_ context.Context, req resource.Config
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPHotspotUserResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -93,12 +92,10 @@ func (r *IPHotspotUserResource) Schema(_ context.Context, _ resource.SchemaReque
 				Validators:  []validator.String{schemautil.IsIP()},
 			},
 			"bytes_in": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"bytes_out": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -108,12 +105,12 @@ func (r *IPHotspotUserResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"def": schema.BoolAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "",
+				Optional:           true,
+				Computed:           true,
+				Description:        "",
+				DeprecationMessage: "Not a RouterOS REST property (WebFig-only spelling of `default`); RouterOS rejects it. Read-only and ignored on write - use `default`.",
 			},
 			"default": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -123,7 +120,6 @@ func (r *IPHotspotUserResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -164,12 +160,12 @@ func (r *IPHotspotUserResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"nondef": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "",
+				Optional:           true,
+				Computed:           true,
+				Description:        "",
+				DeprecationMessage: "Not a RouterOS REST property (WebFig-only spelling of `default`); RouterOS rejects it. Read-only and ignored on write - use `default`.",
 			},
 			"nondefro": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -180,12 +176,10 @@ func (r *IPHotspotUserResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"packets_in": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"packets_out": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -201,12 +195,10 @@ func (r *IPHotspotUserResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"reset_all_counters": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"reset_counters": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -221,7 +213,6 @@ func (r *IPHotspotUserResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"uptime": schema.StringAttribute{
-				Optional:      true,
 				Computed:      true,
 				Description:   "",
 				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
@@ -252,9 +243,6 @@ func (r *IPHotspotUserResource) Create(ctx context.Context, req resource.CreateR
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !(plan.Def.IsNull() || plan.Def.IsUnknown()) {
-		body["def"] = client.FormatBool(plan.Def.ValueBool())
-	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
@@ -279,12 +267,6 @@ func (r *IPHotspotUserResource) Create(ctx context.Context, req resource.CreateR
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !(plan.Nondef.IsNull() || plan.Nondef.IsUnknown()) {
-		body["nondef"] = plan.Nondef.ValueString()
-	}
-	if !(plan.Nondefro.IsNull() || plan.Nondefro.IsUnknown()) {
-		body["nondefro"] = plan.Nondefro.ValueString()
-	}
 	if !(plan.OtpSecret.IsNull() || plan.OtpSecret.IsUnknown()) {
 		body["otp-secret"] = plan.OtpSecret.ValueString()
 	}
@@ -293,12 +275,6 @@ func (r *IPHotspotUserResource) Create(ctx context.Context, req resource.CreateR
 	}
 	if !(plan.Profile.IsNull() || plan.Profile.IsUnknown()) {
 		body["profile"] = plan.Profile.ValueString()
-	}
-	if !(plan.ResetAllCounters.IsNull() || plan.ResetAllCounters.IsUnknown()) {
-		body["reset-all-counters"] = plan.ResetAllCounters.ValueString()
-	}
-	if !(plan.ResetCounters.IsNull() || plan.ResetCounters.IsUnknown()) {
-		body["reset-counters"] = plan.ResetCounters.ValueString()
 	}
 	if !(plan.Routes.IsNull() || plan.Routes.IsUnknown()) {
 		body["routes"] = plan.Routes.ValueString()
@@ -359,9 +335,6 @@ func (r *IPHotspotUserResource) Update(ctx context.Context, req resource.UpdateR
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Def.Equal(state.Def) {
-		body["def"] = client.FormatBool(plan.Def.ValueBool())
-	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
@@ -386,12 +359,6 @@ func (r *IPHotspotUserResource) Update(ctx context.Context, req resource.UpdateR
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Nondef.Equal(state.Nondef) {
-		body["nondef"] = plan.Nondef.ValueString()
-	}
-	if !plan.Nondefro.Equal(state.Nondefro) {
-		body["nondefro"] = plan.Nondefro.ValueString()
-	}
 	if !plan.OtpSecret.Equal(state.OtpSecret) {
 		body["otp-secret"] = plan.OtpSecret.ValueString()
 	}
@@ -400,12 +367,6 @@ func (r *IPHotspotUserResource) Update(ctx context.Context, req resource.UpdateR
 	}
 	if !plan.Profile.Equal(state.Profile) {
 		body["profile"] = plan.Profile.ValueString()
-	}
-	if !plan.ResetAllCounters.Equal(state.ResetAllCounters) {
-		body["reset-all-counters"] = plan.ResetAllCounters.ValueString()
-	}
-	if !plan.ResetCounters.Equal(state.ResetCounters) {
-		body["reset-counters"] = plan.ResetCounters.ValueString()
 	}
 	if !plan.Routes.Equal(state.Routes) {
 		body["routes"] = plan.Routes.ValueString()

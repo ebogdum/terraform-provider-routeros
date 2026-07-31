@@ -64,7 +64,6 @@ func (r *IPIpsecModeConfigResource) Configure(_ context.Context, req resource.Co
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPIpsecModeConfigResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -98,7 +97,6 @@ func (r *IPIpsecModeConfigResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"default": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -107,19 +105,20 @@ func (r *IPIpsecModeConfigResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"nonresp": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "",
+				Optional:           true,
+				Computed:           true,
+				Description:        "",
+				DeprecationMessage: "Not a RouterOS REST property (WebFig-only spelling of `responder`); RouterOS rejects it. Read-only and ignored on write - use `responder`.",
 			},
 			"pool": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"resp": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "",
+				Optional:           true,
+				Computed:           true,
+				Description:        "",
+				DeprecationMessage: "Not a RouterOS REST property (WebFig-only spelling of `responder`); RouterOS rejects it. Read-only and ignored on write - use `responder`.",
 			},
 			"responder": schema.BoolAttribute{
 				Optional:    true,
@@ -127,7 +126,6 @@ func (r *IPIpsecModeConfigResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"sdns": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -196,20 +194,8 @@ func (r *IPIpsecModeConfigResource) Create(ctx context.Context, req resource.Cre
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !(plan.Nonresp.IsNull() || plan.Nonresp.IsUnknown()) {
-		body["nonresp"] = plan.Nonresp.ValueString()
-	}
-	if !(plan.Pool.IsNull() || plan.Pool.IsUnknown()) {
-		body["pool"] = plan.Pool.ValueString()
-	}
-	if !(plan.Resp.IsNull() || plan.Resp.IsUnknown()) {
-		body["resp"] = plan.Resp.ValueString()
-	}
 	if !(plan.Responder.IsNull() || plan.Responder.IsUnknown()) {
 		body["responder"] = client.FormatBool(plan.Responder.ValueBool())
-	}
-	if !(plan.Sdns.IsNull() || plan.Sdns.IsUnknown()) {
-		body["sdns"] = plan.Sdns.ValueString()
 	}
 	if !(plan.SplitDNS.IsNull() || plan.SplitDNS.IsUnknown()) {
 		body["split-dns"] = plan.SplitDNS.ValueString()
@@ -291,20 +277,8 @@ func (r *IPIpsecModeConfigResource) Update(ctx context.Context, req resource.Upd
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Nonresp.Equal(state.Nonresp) {
-		body["nonresp"] = plan.Nonresp.ValueString()
-	}
-	if !plan.Pool.Equal(state.Pool) {
-		body["pool"] = plan.Pool.ValueString()
-	}
-	if !plan.Resp.Equal(state.Resp) {
-		body["resp"] = plan.Resp.ValueString()
-	}
 	if !plan.Responder.Equal(state.Responder) {
 		body["responder"] = client.FormatBool(plan.Responder.ValueBool())
-	}
-	if !plan.Sdns.Equal(state.Sdns) {
-		body["sdns"] = plan.Sdns.ValueString()
 	}
 	if !plan.SplitDNS.Equal(state.SplitDNS) {
 		body["split-dns"] = plan.SplitDNS.ValueString()

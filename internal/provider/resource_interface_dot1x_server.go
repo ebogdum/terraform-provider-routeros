@@ -63,7 +63,6 @@ func (r *InterfaceDot1xServerResource) Configure(_ context.Context, req resource
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceDot1xServerResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -118,12 +117,10 @@ func (r *InterfaceDot1xServerResource) Schema(_ context.Context, _ resource.Sche
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
 			},
 			"invalid": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"mac": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -201,9 +198,6 @@ func (r *InterfaceDot1xServerResource) Create(ctx context.Context, req resource.
 	}
 	if !(plan.InterimUpdate.IsNull() || plan.InterimUpdate.IsUnknown()) {
 		body["interim-update"] = plan.InterimUpdate.ValueString()
-	}
-	if !(plan.MAC.IsNull() || plan.MAC.IsUnknown()) {
-		body["mac"] = plan.MAC.ValueString()
 	}
 	if !(plan.MACAuthMode.IsNull() || plan.MACAuthMode.IsUnknown()) {
 		body["mac-auth-mode"] = plan.MACAuthMode.ValueString()
@@ -293,9 +287,6 @@ func (r *InterfaceDot1xServerResource) Update(ctx context.Context, req resource.
 	}
 	if !plan.InterimUpdate.Equal(state.InterimUpdate) {
 		body["interim-update"] = plan.InterimUpdate.ValueString()
-	}
-	if !plan.MAC.Equal(state.MAC) {
-		body["mac"] = plan.MAC.ValueString()
 	}
 	if !plan.MACAuthMode.Equal(state.MACAuthMode) {
 		body["mac-auth-mode"] = plan.MACAuthMode.ValueString()

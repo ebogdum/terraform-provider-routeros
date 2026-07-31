@@ -27,6 +27,16 @@ type SystemRouterboardSettingsResource struct {
 
 type SystemRouterboardSettingsModel struct {
 	ID                     types.String `tfsdk:"id"`
+	PreferredArchitecture  types.String `tfsdk:"preferred_architecture"`
+	InitDelay              types.String `tfsdk:"init_delay"`
+	GpioFunction           types.String `tfsdk:"gpio_function"`
+	EtherbootPort          types.String `tfsdk:"etherboot_port"`
+	EnterSetupOn           types.String `tfsdk:"enter_setup_on"`
+	EnableJumperReset      types.String `tfsdk:"enable_jumper_reset"`
+	DisablePci             types.String `tfsdk:"disable_pci"`
+	BootOs                 types.String `tfsdk:"boot_os"`
+	BootDelay              types.String `tfsdk:"boot_delay"`
+	BaudRate               types.String `tfsdk:"baud_rate"`
 	AutoUpgrade            types.String `tfsdk:"auto_upgrade"`
 	BootDevice             types.String `tfsdk:"boot_device"`
 	BootProtocol           types.String `tfsdk:"boot_protocol"`
@@ -65,6 +75,56 @@ func (r *SystemRouterboardSettingsResource) Schema(_ context.Context, _ resource
 				Computed:      true,
 				Description:   "Stable identifier (the singleton's menu path, optionally namespaced by router).",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"preferred_architecture": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `preferred-architecture`.",
+			},
+			"init_delay": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `init-delay`.",
+			},
+			"gpio_function": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `gpio-function`.",
+			},
+			"etherboot_port": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `etherboot-port`.",
+			},
+			"enter_setup_on": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `enter-setup-on`.",
+			},
+			"enable_jumper_reset": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `enable-jumper-reset`.",
+			},
+			"disable_pci": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `disable-pci`.",
+			},
+			"boot_os": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `boot-os`.",
+			},
+			"boot_delay": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `boot-delay`.",
+			},
+			"baud_rate": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `baud-rate`.",
 			},
 			"auto_upgrade": schema.StringAttribute{Optional: true, Computed: true,
 				Description: "",
@@ -205,6 +265,36 @@ func systemRouterboardSettingsUpsert(ctx context.Context, reg *client.Registry, 
 	if !(plan.SilentBoot.IsNull() || plan.SilentBoot.IsUnknown()) {
 		body["silent-boot"] = plan.SilentBoot.ValueString()
 	}
+	if !(plan.BaudRate.IsNull() || plan.BaudRate.IsUnknown()) {
+		body["baud-rate"] = plan.BaudRate.ValueString()
+	}
+	if !(plan.BootDelay.IsNull() || plan.BootDelay.IsUnknown()) {
+		body["boot-delay"] = plan.BootDelay.ValueString()
+	}
+	if !(plan.BootOs.IsNull() || plan.BootOs.IsUnknown()) {
+		body["boot-os"] = plan.BootOs.ValueString()
+	}
+	if !(plan.DisablePci.IsNull() || plan.DisablePci.IsUnknown()) {
+		body["disable-pci"] = plan.DisablePci.ValueString()
+	}
+	if !(plan.EnableJumperReset.IsNull() || plan.EnableJumperReset.IsUnknown()) {
+		body["enable-jumper-reset"] = plan.EnableJumperReset.ValueString()
+	}
+	if !(plan.EnterSetupOn.IsNull() || plan.EnterSetupOn.IsUnknown()) {
+		body["enter-setup-on"] = plan.EnterSetupOn.ValueString()
+	}
+	if !(plan.EtherbootPort.IsNull() || plan.EtherbootPort.IsUnknown()) {
+		body["etherboot-port"] = plan.EtherbootPort.ValueString()
+	}
+	if !(plan.GpioFunction.IsNull() || plan.GpioFunction.IsUnknown()) {
+		body["gpio-function"] = plan.GpioFunction.ValueString()
+	}
+	if !(plan.InitDelay.IsNull() || plan.InitDelay.IsUnknown()) {
+		body["init-delay"] = plan.InitDelay.ValueString()
+	}
+	if !(plan.PreferredArchitecture.IsNull() || plan.PreferredArchitecture.IsUnknown()) {
+		body["preferred-architecture"] = plan.PreferredArchitecture.ValueString()
+	}
 	obj, err := c.SetSingleton(ctx, "/system/routerboard/settings", body)
 	if err != nil {
 		diags.AddError("Upsert /system/routerboard/settings failed", err.Error())
@@ -216,6 +306,56 @@ func systemRouterboardSettingsUpsert(ctx context.Context, reg *client.Registry, 
 
 func systemRouterboardSettingsApply(ctx context.Context, obj client.Object, m *SystemRouterboardSettingsModel) {
 	_ = ctx
+	if v, ok := obj["preferred-architecture"]; ok && v != "" {
+		m.PreferredArchitecture = types.StringValue(v)
+	} else {
+		m.PreferredArchitecture = types.StringNull()
+	}
+	if v, ok := obj["init-delay"]; ok && v != "" {
+		m.InitDelay = types.StringValue(v)
+	} else {
+		m.InitDelay = types.StringNull()
+	}
+	if v, ok := obj["gpio-function"]; ok && v != "" {
+		m.GpioFunction = types.StringValue(v)
+	} else {
+		m.GpioFunction = types.StringNull()
+	}
+	if v, ok := obj["etherboot-port"]; ok && v != "" {
+		m.EtherbootPort = types.StringValue(v)
+	} else {
+		m.EtherbootPort = types.StringNull()
+	}
+	if v, ok := obj["enter-setup-on"]; ok && v != "" {
+		m.EnterSetupOn = types.StringValue(v)
+	} else {
+		m.EnterSetupOn = types.StringNull()
+	}
+	if v, ok := obj["enable-jumper-reset"]; ok && v != "" {
+		m.EnableJumperReset = types.StringValue(v)
+	} else {
+		m.EnableJumperReset = types.StringNull()
+	}
+	if v, ok := obj["disable-pci"]; ok && v != "" {
+		m.DisablePci = types.StringValue(v)
+	} else {
+		m.DisablePci = types.StringNull()
+	}
+	if v, ok := obj["boot-os"]; ok && v != "" {
+		m.BootOs = types.StringValue(v)
+	} else {
+		m.BootOs = types.StringNull()
+	}
+	if v, ok := obj["boot-delay"]; ok && v != "" {
+		m.BootDelay = types.StringValue(v)
+	} else {
+		m.BootDelay = types.StringNull()
+	}
+	if v, ok := obj["baud-rate"]; ok && v != "" {
+		m.BaudRate = types.StringValue(v)
+	} else {
+		m.BaudRate = types.StringNull()
+	}
 	if v, ok := obj["auto-upgrade"]; ok {
 		_ = v
 		if v != "" {

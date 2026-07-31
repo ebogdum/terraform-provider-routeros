@@ -44,49 +44,48 @@ resource "routeros_ip_dhcp_client" "dhcp_client_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `add_default_route` - (Optional) Type: `enum(no|yes|special-classless)`. Default: `1`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `add_default_route` - (Optional) Type: `string`.
+* `address` - (Read-only) Type: `string`.
 * `allow_reconfigure` - (Optional) Type: `bool`.
-* `allow_reconfigure_messages` - (Optional) Type: `bool`.
-* `check_gateway` - (Optional) Type: `enum(none|arp|ping|bfd)`.
+* `allow_reconfigure_messages` - (Read-only) Type: `bool`.
+* `caps_managers` - (Read-only) Type: `string`.
+* `check_gateway` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `default_route_distance` - (Optional) Type: `int`.
 * `default_route_tables` - (Optional) Type: `string`.
 * `dhcp_options` - (Optional) Type: `list`.
+* `dhcp_server` - (Read-only) Type: `string`.
 * `disabled` - (Optional) Type: `bool`.
 * `dscp` - (Optional) Type: `int`.
+* `dynamic` - (Read-only) Type: `bool`.
+* `expires_after` - (Read-only) Type: `string`.
+* `gateway` - (Read-only) Type: `string`.
 * `interface` - (Optional) Type: `string`.
+* `invalid` - (Read-only) Type: `bool`.
+* `ip_address` - (Read-only) Type: `string`.
+* `last_received_counter` - (Read-only) Type: `string`.
 * `name` - (Optional) Type: `string`.
-* `release` - (Optional) Type: `string`.
-* `renew` - (Optional) Type: `string`.
-* `route` - (Optional) Type: `string`.
-* `routing_tables` - (Optional) Type: `string`.
+* `primary_dns` - (Read-only) Type: `string`.
+* `primary_ntp` - (Read-only) Type: `string`.
+* `reconfigure_key` - (Read-only) Type: `string`.
+* `release` - (Read-only) Type: `string`.
+* `renew` - (Read-only) Type: `string`.
+* `route` - (Read-only) Type: `string`.
+* `routing_tables` - (Read-only) Type: `string`.
 * `script` - (Optional) Type: `string`.
-* `use_broadcast` - (Optional) Type: `enum(both|always|never)`.
-* `use_peer_dns` - (Optional) Type: `bool`. Default: `1`.
-* `use_peer_ntp` - (Optional) Type: `bool`. Default: `1`.
+* `secondary_dns` - (Read-only) Type: `string`.
+* `secondary_ntp` - (Read-only) Type: `string`.
+* `status` - (Read-only) Type: `string`.
+* `use_broadcast` - (Optional) Type: `string`.
+* `use_peer_dns` - (Optional) Type: `bool`.
+* `use_peer_ntp` - (Optional) Type: `bool`.
 * `vlan_priority` - (Optional) Type: `int`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `address` - Type: `cidr`.
-* `caps_managers` - Type: `string`.
-* `dhcp_server` - Type: `ip`.
-* `dynamic` - Type: `bool`.
-* `expires_after` - Type: `duration`.
-* `gateway` - Type: `ip`.
-* `invalid` - Type: `bool`.
-* `ip_address` - Type: `cidr`.
-* `last_received_counter` - Type: `string`.
-* `primary_dns` - Type: `ip`.
-* `primary_ntp` - Type: `ip`.
-* `reconfigure_key` - Type: `string`.
-* `secondary_dns` - Type: `ip`.
-* `secondary_ntp` - Type: `ip`.
-* `status` - Type: `string`.
 
 ## Import
 

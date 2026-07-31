@@ -26,19 +26,18 @@ resource "routeros_interface_ethernet_switch_port_isolation" "port_isolation_exa
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `forward_to` - (Optional) Type: `string`.
 * `forwarding_override` - (Optional) Type: `bool`.
+* `invalid` - (Read-only) Type: `bool`.
+* `name` - (Read-only) Type: `string`.
 * `override` - (Optional) Type: `string`.
+* `switch` - (Read-only) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `invalid` - Type: `bool`.
-* `name` - Type: `string`.
-* `switch` - Type: `string`.
 
 ## Import
 

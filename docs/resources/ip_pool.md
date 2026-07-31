@@ -29,21 +29,20 @@ resource "routeros_ip_pool" "pool_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `addresses` - (Optional) Type: `string`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `addresses` - (Read-only) Type: `string`.
+* `available` - (Read-only) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
-* `name` - (Required) Type: `string`. Unique identifier of the pool. Default: `tf_acc_pool`.
-* `next_pool` - (Optional) Type: `string`. When IP address acquisition is performed a pool that has no free addresses, and the next-pool property is set, then IP address will be acquired from next-pool.
-* `ranges` - (Required) Type: `string`. IP address list of non-overlapping IP address ranges in the form of: from1-to1,from2-to2,...,fromN-toN. For example, 10.0.0.1-10.0.0.27,10.0.0.32-10.0.0.47. Default: `10.255.255.0-10.255.255.4`.
+* `name` - (Required) Type: `string`. Unique identifier of the pool
+* `next_pool` - (Optional) Type: `string`. When IP address acquisition is performed a pool that has no free addresses, and the next-pool property is set, then IP address will be acquired from next-pool
+* `ranges` - (Required) Type: `string`. IP address list of non-overlapping IP address ranges in the form of: from1-to1,from2-to2,...,fromN-toN. For example, 10.0.0.1-10.0.0.27,10.0.0.32-10.0.0.47
+* `total` - (Read-only) Type: `string`.
+* `used` - (Read-only) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `available` - Type: `string`.
-* `total` - Type: `string`.
-* `used` - Type: `string`.
 
 ## Import
 

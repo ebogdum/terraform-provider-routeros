@@ -32,25 +32,24 @@ resource "routeros_ip_kid_control_device" "device_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `blocked` - (Optional) Type: `bool`.
-* `bytes` - (Optional) Type: `string`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `activity` - (Read-only) Type: `string`.
+* `blocked` - (Read-only) Type: `bool`.
+* `bytes` - (Read-only) Type: `string`.
 * `disabled` - (Optional) Type: `bool`.
+* `dynamic` - (Read-only) Type: `bool`.
+* `ip_address` - (Read-only) Type: `string`.
 * `mac_address` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
-* `rate_limited` - (Optional) Type: `bool`.
-* `rate_up_down` - (Optional) Type: `string`.
-* `reset_counters` - (Optional) Type: `string`.
+* `rate_limited` - (Read-only) Type: `bool`.
+* `rate_up_down` - (Read-only) Type: `string`.
+* `reset_counters` - (Read-only) Type: `string`.
 * `user` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `activity` - Type: `string`.
-* `dynamic` - Type: `bool`.
-* `ip_address` - Type: `string`.
 
 ## Import
 

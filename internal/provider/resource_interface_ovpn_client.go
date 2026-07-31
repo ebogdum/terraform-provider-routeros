@@ -30,6 +30,14 @@ type InterfaceOVPNClientResource struct {
 
 type InterfaceOVPNClientModel struct {
 	ID                      types.String `tfsdk:"id"`
+	UsePeerDns              types.String `tfsdk:"use_peer_dns"`
+	TlsVersion              types.String `tfsdk:"tls_version"`
+	RouteNopull             types.String `tfsdk:"route_nopull"`
+	Protocol                types.String `tfsdk:"protocol"`
+	Port                    types.String `tfsdk:"port"`
+	DisconnectNotify        types.String `tfsdk:"disconnect_notify"`
+	Auth                    types.String `tfsdk:"auth"`
+	AddDefaultRoute         types.String `tfsdk:"add_default_route"`
 	Certificate             types.String `tfsdk:"certificate"`
 	Cipher                  types.String `tfsdk:"cipher"`
 	Comment                 types.String `tfsdk:"comment"`
@@ -58,7 +66,6 @@ func (r *InterfaceOVPNClientResource) Configure(_ context.Context, req resource.
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceOVPNClientResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -69,6 +76,46 @@ func (r *InterfaceOVPNClientResource) Schema(_ context.Context, _ resource.Schem
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"use_peer_dns": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `use-peer-dns`.",
+			},
+			"tls_version": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `tls-version`.",
+			},
+			"route_nopull": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `route-nopull`.",
+			},
+			"protocol": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `protocol`.",
+			},
+			"port": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `port`.",
+			},
+			"disconnect_notify": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `disconnect-notify`.",
+			},
+			"auth": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `auth`.",
+			},
+			"add_default_route": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `add-default-route`.",
 			},
 			"certificate": schema.StringAttribute{
 				Optional:    true,
@@ -191,6 +238,30 @@ func (r *InterfaceOVPNClientResource) Create(ctx context.Context, req resource.C
 	if !(plan.VerifyServerCertificate.IsNull() || plan.VerifyServerCertificate.IsUnknown()) {
 		body["verify-server-certificate"] = plan.VerifyServerCertificate.ValueString()
 	}
+	if !(plan.AddDefaultRoute.IsNull() || plan.AddDefaultRoute.IsUnknown()) {
+		body["add-default-route"] = plan.AddDefaultRoute.ValueString()
+	}
+	if !(plan.Auth.IsNull() || plan.Auth.IsUnknown()) {
+		body["auth"] = plan.Auth.ValueString()
+	}
+	if !(plan.DisconnectNotify.IsNull() || plan.DisconnectNotify.IsUnknown()) {
+		body["disconnect-notify"] = plan.DisconnectNotify.ValueString()
+	}
+	if !(plan.Port.IsNull() || plan.Port.IsUnknown()) {
+		body["port"] = plan.Port.ValueString()
+	}
+	if !(plan.Protocol.IsNull() || plan.Protocol.IsUnknown()) {
+		body["protocol"] = plan.Protocol.ValueString()
+	}
+	if !(plan.RouteNopull.IsNull() || plan.RouteNopull.IsUnknown()) {
+		body["route-nopull"] = plan.RouteNopull.ValueString()
+	}
+	if !(plan.TlsVersion.IsNull() || plan.TlsVersion.IsUnknown()) {
+		body["tls-version"] = plan.TlsVersion.ValueString()
+	}
+	if !(plan.UsePeerDns.IsNull() || plan.UsePeerDns.IsUnknown()) {
+		body["use-peer-dns"] = plan.UsePeerDns.ValueString()
+	}
 	obj, err := c.Add(ctx, "/interface/ovpn-client", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /interface/ovpn-client failed", err.Error())
@@ -277,6 +348,30 @@ func (r *InterfaceOVPNClientResource) Update(ctx context.Context, req resource.U
 	if !plan.VerifyServerCertificate.Equal(state.VerifyServerCertificate) {
 		body["verify-server-certificate"] = plan.VerifyServerCertificate.ValueString()
 	}
+	if !plan.AddDefaultRoute.Equal(state.AddDefaultRoute) && !plan.AddDefaultRoute.IsUnknown() {
+		body["add-default-route"] = plan.AddDefaultRoute.ValueString()
+	}
+	if !plan.Auth.Equal(state.Auth) && !plan.Auth.IsUnknown() {
+		body["auth"] = plan.Auth.ValueString()
+	}
+	if !plan.DisconnectNotify.Equal(state.DisconnectNotify) && !plan.DisconnectNotify.IsUnknown() {
+		body["disconnect-notify"] = plan.DisconnectNotify.ValueString()
+	}
+	if !plan.Port.Equal(state.Port) && !plan.Port.IsUnknown() {
+		body["port"] = plan.Port.ValueString()
+	}
+	if !plan.Protocol.Equal(state.Protocol) && !plan.Protocol.IsUnknown() {
+		body["protocol"] = plan.Protocol.ValueString()
+	}
+	if !plan.RouteNopull.Equal(state.RouteNopull) && !plan.RouteNopull.IsUnknown() {
+		body["route-nopull"] = plan.RouteNopull.ValueString()
+	}
+	if !plan.TlsVersion.Equal(state.TlsVersion) && !plan.TlsVersion.IsUnknown() {
+		body["tls-version"] = plan.TlsVersion.ValueString()
+	}
+	if !plan.UsePeerDns.Equal(state.UsePeerDns) && !plan.UsePeerDns.IsUnknown() {
+		body["use-peer-dns"] = plan.UsePeerDns.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/ovpn-client", state.ID.ValueString(), body)
 		if err != nil {
@@ -343,6 +438,46 @@ func interfaceOVPNClientLookupByNaturalKey(ctx context.Context, c *client.Client
 func interfaceOVPNClientApply(ctx context.Context, obj client.Object, m *InterfaceOVPNClientModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["use-peer-dns"]; ok && v != "" {
+		m.UsePeerDns = types.StringValue(v)
+	} else {
+		m.UsePeerDns = types.StringNull()
+	}
+	if v, ok := obj["tls-version"]; ok && v != "" {
+		m.TlsVersion = types.StringValue(v)
+	} else {
+		m.TlsVersion = types.StringNull()
+	}
+	if v, ok := obj["route-nopull"]; ok && v != "" {
+		m.RouteNopull = types.StringValue(v)
+	} else {
+		m.RouteNopull = types.StringNull()
+	}
+	if v, ok := obj["protocol"]; ok && v != "" {
+		m.Protocol = types.StringValue(v)
+	} else {
+		m.Protocol = types.StringNull()
+	}
+	if v, ok := obj["port"]; ok && v != "" {
+		m.Port = types.StringValue(v)
+	} else {
+		m.Port = types.StringNull()
+	}
+	if v, ok := obj["disconnect-notify"]; ok && v != "" {
+		m.DisconnectNotify = types.StringValue(v)
+	} else {
+		m.DisconnectNotify = types.StringNull()
+	}
+	if v, ok := obj["auth"]; ok && v != "" {
+		m.Auth = types.StringValue(v)
+	} else {
+		m.Auth = types.StringNull()
+	}
+	if v, ok := obj["add-default-route"]; ok && v != "" {
+		m.AddDefaultRoute = types.StringValue(v)
+	} else {
+		m.AddDefaultRoute = types.StringNull()
+	}
 	if v, ok := obj["certificate"]; ok {
 		_ = v
 		if v != "" {

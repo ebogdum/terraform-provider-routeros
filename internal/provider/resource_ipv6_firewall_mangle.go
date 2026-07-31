@@ -30,6 +30,11 @@ type IPV6FirewallMangleResource struct {
 
 type IPV6FirewallMangleModel struct {
 	ID                      types.String `tfsdk:"id"`
+	Tos                     types.String `tfsdk:"tos"`
+	NewHopLimit             types.String `tfsdk:"new_hop_limit"`
+	HopLimit                types.String `tfsdk:"hop_limit"`
+	Headers                 types.String `tfsdk:"headers"`
+	DstPrefix               types.String `tfsdk:"dst_prefix"`
 	Action                  types.String `tfsdk:"action"`
 	AddressList             types.String `tfsdk:"address_list"`
 	AddressListTimeout      types.String `tfsdk:"address_list_timeout"`
@@ -112,7 +117,6 @@ func (r *IPV6FirewallMangleResource) Configure(_ context.Context, req resource.C
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPV6FirewallMangleResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -123,6 +127,31 @@ func (r *IPV6FirewallMangleResource) Schema(_ context.Context, _ resource.Schema
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"tos": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `tos`.",
+			},
+			"new_hop_limit": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `new-hop-limit`.",
+			},
+			"hop_limit": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `hop-limit`.",
+			},
+			"headers": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `headers`.",
+			},
+			"dst_prefix": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `dst-prefix`.",
 			},
 			"action": schema.StringAttribute{
 				Required:    true,
@@ -668,6 +697,21 @@ func (r *IPV6FirewallMangleResource) Create(ctx context.Context, req resource.Cr
 	if !(plan.TLSHost.IsNull() || plan.TLSHost.IsUnknown()) {
 		body["tls-host"] = plan.TLSHost.ValueString()
 	}
+	if !(plan.DstPrefix.IsNull() || plan.DstPrefix.IsUnknown()) {
+		body["dst-prefix"] = plan.DstPrefix.ValueString()
+	}
+	if !(plan.Headers.IsNull() || plan.Headers.IsUnknown()) {
+		body["headers"] = plan.Headers.ValueString()
+	}
+	if !(plan.HopLimit.IsNull() || plan.HopLimit.IsUnknown()) {
+		body["hop-limit"] = plan.HopLimit.ValueString()
+	}
+	if !(plan.NewHopLimit.IsNull() || plan.NewHopLimit.IsUnknown()) {
+		body["new-hop-limit"] = plan.NewHopLimit.ValueString()
+	}
+	if !(plan.Tos.IsNull() || plan.Tos.IsUnknown()) {
+		body["tos"] = plan.Tos.ValueString()
+	}
 	obj, err := c.Add(ctx, "/ipv6/firewall/mangle", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /ipv6/firewall/mangle failed", err.Error())
@@ -930,6 +974,21 @@ func (r *IPV6FirewallMangleResource) Update(ctx context.Context, req resource.Up
 	if !plan.TLSHost.Equal(state.TLSHost) {
 		body["tls-host"] = plan.TLSHost.ValueString()
 	}
+	if !plan.DstPrefix.Equal(state.DstPrefix) && !plan.DstPrefix.IsUnknown() {
+		body["dst-prefix"] = plan.DstPrefix.ValueString()
+	}
+	if !plan.Headers.Equal(state.Headers) && !plan.Headers.IsUnknown() {
+		body["headers"] = plan.Headers.ValueString()
+	}
+	if !plan.HopLimit.Equal(state.HopLimit) && !plan.HopLimit.IsUnknown() {
+		body["hop-limit"] = plan.HopLimit.ValueString()
+	}
+	if !plan.NewHopLimit.Equal(state.NewHopLimit) && !plan.NewHopLimit.IsUnknown() {
+		body["new-hop-limit"] = plan.NewHopLimit.ValueString()
+	}
+	if !plan.Tos.Equal(state.Tos) && !plan.Tos.IsUnknown() {
+		body["tos"] = plan.Tos.ValueString()
+	}
 	// If position OR comment changed, re-encode the marker into the comment
 	// so the device-side prefix stays in sync.
 	if !plan.Comment.Equal(state.Comment) {
@@ -1019,6 +1078,31 @@ func iPV6FirewallMangleLookupByNaturalKey(ctx context.Context, c *client.Client,
 func iPV6FirewallMangleApply(ctx context.Context, obj client.Object, m *IPV6FirewallMangleModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["tos"]; ok && v != "" {
+		m.Tos = types.StringValue(v)
+	} else {
+		m.Tos = types.StringNull()
+	}
+	if v, ok := obj["new-hop-limit"]; ok && v != "" {
+		m.NewHopLimit = types.StringValue(v)
+	} else {
+		m.NewHopLimit = types.StringNull()
+	}
+	if v, ok := obj["hop-limit"]; ok && v != "" {
+		m.HopLimit = types.StringValue(v)
+	} else {
+		m.HopLimit = types.StringNull()
+	}
+	if v, ok := obj["headers"]; ok && v != "" {
+		m.Headers = types.StringValue(v)
+	} else {
+		m.Headers = types.StringNull()
+	}
+	if v, ok := obj["dst-prefix"]; ok && v != "" {
+		m.DstPrefix = types.StringValue(v)
+	} else {
+		m.DstPrefix = types.StringNull()
+	}
 	// Strip the [tf:pos=N] marker from the comment before exposing to state.
 	// Position is TF-state-only metadata; never written to the device. Keep
 	// whatever the user planned. Comment is left untouched.

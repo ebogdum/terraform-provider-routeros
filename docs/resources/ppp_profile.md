@@ -63,18 +63,19 @@ resource "routeros_ppp_profile" "profile_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `address_list` - (Optional) Type: `string`.
 * `bridge` - (Optional) Type: `string`.
 * `bridge_horizon` - (Optional) Type: `string`.
-* `bridge_learning` - (Optional) Type: `enum(no|yes|default)`. Default: `4.294967295e+09`.
+* `bridge_learning` - (Optional) Type: `string`.
 * `bridge_path_cost` - (Optional) Type: `string`.
 * `bridge_port_priority` - (Optional) Type: `string`.
 * `bridge_port_trusted` - (Optional) Type: `string`.
 * `bridge_port_vid` - (Optional) Type: `string`.
-* `change_tcp_mss` - (Optional) Type: `enum(no|yes|default)`. Default: `4.294967295e+09`.
+* `change_tcp_mss` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `def` - (Optional) Type: `string`.
+* `default` - (Read-only) Type: `bool`.
 * `dhcpv6_lease_time` - (Optional) Type: `string`.
 * `dhcpv6_pd_pool` - (Optional) Type: `string`.
 * `dhcpv6_use_radius` - (Optional) Type: `string`.
@@ -83,33 +84,33 @@ This resource supports the following arguments:
 * `incoming_filter` - (Optional) Type: `string`.
 * `insert_queue_before` - (Optional) Type: `string`.
 * `interface_list` - (Optional) Type: `string`.
-* `ipv6` - (Optional) Type: `string`.
+* `ipv6` - (Read-only) Type: `string`.
 * `local_address` - (Optional) Type: `string`.
-* `name` - (Required) Type: `string`. Default: `tf_acc_pppprof`.
+* `name` - (Required) Type: `string`.
 * `on_down` - (Optional) Type: `string`.
 * `on_up` - (Optional) Type: `string`.
-* `only_one` - (Optional) Type: `enum(no|yes|default)`. Default: `4.294967295e+09`.
+* `only_one` - (Optional) Type: `string`.
 * `outgoing_filter` - (Optional) Type: `string`.
 * `parent_queue` - (Optional) Type: `string`.
-* `queue_type_rx_tx` - (Optional) Type: `string`.
-* `rate_limit_rx_tx` - (Optional) Type: `string`.
+* `queue_type` - (Optional) Type: `string`. RouterOS `queue-type`.
+* `queue_type_rx_tx` - (Read-only) Type: `string`.
+* `rate_limit` - (Optional) Type: `string`. RouterOS `rate-limit`.
+* `rate_limit_rx_tx` - (Read-only) Type: `string`.
 * `remote_address` - (Optional) Type: `string`.
 * `remote_ipv6_prefix_pool` - (Optional) Type: `string`.
 * `remote_ipv6_prefix_reuse` - (Optional) Type: `string`.
 * `session_timeout` - (Optional) Type: `string`.
-* `use_compression` - (Optional) Type: `enum(no|yes|default)`. Default: `4.294967295e+09`.
-* `use_encryption` - (Optional) Type: `enum(no|yes|required|default)`. Default: `4.294967295e+09`.
-* `use_ipv6` - (Optional) Type: `enum(no|yes|required|default)`. Default: `1`.
-* `use_mpls` - (Optional) Type: `enum(no|yes|required|default)`. Default: `4.294967295e+09`.
+* `use_compression` - (Optional) Type: `string`.
+* `use_encryption` - (Optional) Type: `string`.
+* `use_ipv6` - (Optional) Type: `string`.
+* `use_mpls` - (Optional) Type: `string`.
 * `use_upnp` - (Optional) Type: `string`.
 * `wins_server` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `default` - Type: `bool`.
 
 ## Import
 

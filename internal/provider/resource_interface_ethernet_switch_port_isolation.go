@@ -53,7 +53,6 @@ func (r *InterfaceEthernetSwitchPortIsolationResource) Configure(_ context.Conte
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceEthernetSwitchPortIsolationResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -76,12 +75,10 @@ func (r *InterfaceEthernetSwitchPortIsolationResource) Schema(_ context.Context,
 				Description: "",
 			},
 			"invalid": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"name": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -91,7 +88,6 @@ func (r *InterfaceEthernetSwitchPortIsolationResource) Schema(_ context.Context,
 				Description: "",
 			},
 			"switch": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},

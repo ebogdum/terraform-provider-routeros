@@ -55,7 +55,6 @@ func (r *ToolTrafficGeneratorPortResource) Configure(_ context.Context, req reso
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *ToolTrafficGeneratorPortResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -73,12 +72,10 @@ func (r *ToolTrafficGeneratorPortResource) Schema(_ context.Context, _ resource.
 				Description: "",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"first_header": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.OneOf([]string{"", "mac", "vlan", "ip", "udp", "raw", "ipv6", "tcp"}...)},
@@ -89,7 +86,6 @@ func (r *ToolTrafficGeneratorPortResource) Schema(_ context.Context, _ resource.
 				Description: "",
 			},
 			"invalid": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},

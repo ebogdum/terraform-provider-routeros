@@ -49,7 +49,6 @@ func (r *InterfaceWifiRegistrationTableResource) Configure(_ context.Context, re
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceWifiRegistrationTableResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {

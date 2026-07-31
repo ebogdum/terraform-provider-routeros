@@ -55,7 +55,6 @@ func (r *IPV6PoolResource) Configure(_ context.Context, req resource.ConfigureRe
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPV6PoolResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -68,7 +67,6 @@ func (r *IPV6PoolResource) Schema(_ context.Context, _ resource.SchemaRequest, r
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"actual_prefix": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -78,7 +76,6 @@ func (r *IPV6PoolResource) Schema(_ context.Context, _ resource.SchemaRequest, r
 				Description: "Free-form comment.",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -88,7 +85,6 @@ func (r *IPV6PoolResource) Schema(_ context.Context, _ resource.SchemaRequest, r
 				Description: "",
 			},
 			"invalid": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -97,7 +93,6 @@ func (r *IPV6PoolResource) Schema(_ context.Context, _ resource.SchemaRequest, r
 				Description: "",
 			},
 			"preferred_lifetime": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -110,7 +105,6 @@ func (r *IPV6PoolResource) Schema(_ context.Context, _ resource.SchemaRequest, r
 				Description: "",
 			},
 			"valid_lifetime": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},

@@ -37,20 +37,26 @@ resource "routeros_interface_wifi_steering" "steering_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `x2g_probe_delay` - (Optional) Type: `string`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `name` - (Required) Type: `string`. Default: `tf_acc_wstr`.
+* `name` - (Required) Type: `string`.
 * `neighbor_group` - (Optional) Type: `string`.
 * `neighbor_groups` - (Optional) Type: `string`.
 * `rrm` - (Optional) Type: `string`.
 * `transition_request_count` - (Optional) Type: `string`.
+* `transition_request_period` - (Optional) Type: `string`. RouterOS `transition-request-period`.
 * `transition_threshold` - (Optional) Type: `string`.
 * `transition_threshold_period` - (Optional) Type: `string`.
 * `transition_threshold_time` - (Optional) Type: `string`.
 * `transition_time` - (Optional) Type: `string`.
 * `wnm` - (Optional) Type: `string`.
+* `x2g_probe_delay` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

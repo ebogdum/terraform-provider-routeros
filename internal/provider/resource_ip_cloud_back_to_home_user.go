@@ -32,6 +32,8 @@ type IPCloudBackToHomeUserResource struct {
 
 type IPCloudBackToHomeUserModel struct {
 	ID              types.String `tfsdk:"id"`
+	FileAccessPath  types.String `tfsdk:"file_access_path"`
+	FileAccess      types.String `tfsdk:"file_access"`
 	Active          types.Bool   `tfsdk:"active"`
 	AllowLan        types.Bool   `tfsdk:"allow_lan"`
 	ClientAddress   types.String `tfsdk:"client_address"`
@@ -65,7 +67,6 @@ func (r *IPCloudBackToHomeUserResource) Configure(_ context.Context, req resourc
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPCloudBackToHomeUserResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -77,8 +78,17 @@ func (r *IPCloudBackToHomeUserResource) Schema(_ context.Context, _ resource.Sch
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
-			"active": schema.BoolAttribute{
+			"file_access_path": schema.StringAttribute{
 				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `file-access-path`.",
+			},
+			"file_access": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `file-access`.",
+			},
+			"active": schema.BoolAttribute{
 				Computed:    true,
 				Description: "",
 			},
@@ -88,17 +98,14 @@ func (r *IPCloudBackToHomeUserResource) Schema(_ context.Context, _ resource.Sch
 				Description: "",
 			},
 			"client_address": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"client_config": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"client_qr": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -118,18 +125,15 @@ func (r *IPCloudBackToHomeUserResource) Schema(_ context.Context, _ resource.Sch
 				Description: "",
 			},
 			"file_access_mode": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.OneOf([]string{"", "disabled", "read-only", "full"}...)},
 			},
 			"file_access_token": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"files": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -139,22 +143,18 @@ func (r *IPCloudBackToHomeUserResource) Schema(_ context.Context, _ resource.Sch
 				Description: "",
 			},
 			"newe": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"newfileman": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"notnew": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"oldfileman": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -188,9 +188,6 @@ func (r *IPCloudBackToHomeUserResource) Create(ctx context.Context, req resource
 		return
 	}
 	body := client.Object{}
-	if !(plan.Active.IsNull() || plan.Active.IsUnknown()) {
-		body["active"] = client.FormatBool(plan.Active.ValueBool())
-	}
 	if !(plan.AllowLan.IsNull() || plan.AllowLan.IsUnknown()) {
 		body["allow-lan"] = client.FormatBool(plan.AllowLan.ValueBool())
 	}
@@ -203,32 +200,20 @@ func (r *IPCloudBackToHomeUserResource) Create(ctx context.Context, req resource
 	if !(plan.Expires.IsNull() || plan.Expires.IsUnknown()) {
 		body["expires"] = plan.Expires.ValueString()
 	}
-	if !(plan.FileAccessMode.IsNull() || plan.FileAccessMode.IsUnknown()) {
-		body["file-access-mode"] = plan.FileAccessMode.ValueString()
-	}
-	if !(plan.Files.IsNull() || plan.Files.IsUnknown()) {
-		body["files"] = plan.Files.ValueString()
-	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
-	}
-	if !(plan.Newe.IsNull() || plan.Newe.IsUnknown()) {
-		body["newe"] = plan.Newe.ValueString()
-	}
-	if !(plan.Newfileman.IsNull() || plan.Newfileman.IsUnknown()) {
-		body["newfileman"] = plan.Newfileman.ValueString()
-	}
-	if !(plan.Notnew.IsNull() || plan.Notnew.IsUnknown()) {
-		body["notnew"] = plan.Notnew.ValueString()
-	}
-	if !(plan.Oldfileman.IsNull() || plan.Oldfileman.IsUnknown()) {
-		body["oldfileman"] = plan.Oldfileman.ValueString()
 	}
 	if !(plan.PrivateKey.IsNull() || plan.PrivateKey.IsUnknown()) {
 		body["private-key"] = plan.PrivateKey.ValueString()
 	}
 	if !(plan.PublicKey.IsNull() || plan.PublicKey.IsUnknown()) {
 		body["public-key"] = plan.PublicKey.ValueString()
+	}
+	if !(plan.FileAccess.IsNull() || plan.FileAccess.IsUnknown()) {
+		body["file-access"] = plan.FileAccess.ValueString()
+	}
+	if !(plan.FileAccessPath.IsNull() || plan.FileAccessPath.IsUnknown()) {
+		body["file-access-path"] = plan.FileAccessPath.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ip/cloud/back-to-home-user", body)
 	if err != nil {
@@ -277,9 +262,6 @@ func (r *IPCloudBackToHomeUserResource) Update(ctx context.Context, req resource
 		return
 	}
 	body := client.Object{}
-	if !plan.Active.Equal(state.Active) {
-		body["active"] = client.FormatBool(plan.Active.ValueBool())
-	}
 	if !plan.AllowLan.Equal(state.AllowLan) {
 		body["allow-lan"] = client.FormatBool(plan.AllowLan.ValueBool())
 	}
@@ -292,32 +274,20 @@ func (r *IPCloudBackToHomeUserResource) Update(ctx context.Context, req resource
 	if !plan.Expires.Equal(state.Expires) {
 		body["expires"] = plan.Expires.ValueString()
 	}
-	if !plan.FileAccessMode.Equal(state.FileAccessMode) {
-		body["file-access-mode"] = plan.FileAccessMode.ValueString()
-	}
-	if !plan.Files.Equal(state.Files) {
-		body["files"] = plan.Files.ValueString()
-	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
-	}
-	if !plan.Newe.Equal(state.Newe) {
-		body["newe"] = plan.Newe.ValueString()
-	}
-	if !plan.Newfileman.Equal(state.Newfileman) {
-		body["newfileman"] = plan.Newfileman.ValueString()
-	}
-	if !plan.Notnew.Equal(state.Notnew) {
-		body["notnew"] = plan.Notnew.ValueString()
-	}
-	if !plan.Oldfileman.Equal(state.Oldfileman) {
-		body["oldfileman"] = plan.Oldfileman.ValueString()
 	}
 	if !plan.PrivateKey.Equal(state.PrivateKey) {
 		body["private-key"] = plan.PrivateKey.ValueString()
 	}
 	if !plan.PublicKey.Equal(state.PublicKey) {
 		body["public-key"] = plan.PublicKey.ValueString()
+	}
+	if !plan.FileAccess.Equal(state.FileAccess) && !plan.FileAccess.IsUnknown() {
+		body["file-access"] = plan.FileAccess.ValueString()
+	}
+	if !plan.FileAccessPath.Equal(state.FileAccessPath) && !plan.FileAccessPath.IsUnknown() {
+		body["file-access-path"] = plan.FileAccessPath.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/cloud/back-to-home-user", state.ID.ValueString(), body)
@@ -385,6 +355,16 @@ func iPCloudBackToHomeUserLookupByNaturalKey(ctx context.Context, c *client.Clie
 func iPCloudBackToHomeUserApply(ctx context.Context, obj client.Object, m *IPCloudBackToHomeUserModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["file-access-path"]; ok && v != "" {
+		m.FileAccessPath = types.StringValue(v)
+	} else {
+		m.FileAccessPath = types.StringNull()
+	}
+	if v, ok := obj["file-access"]; ok && v != "" {
+		m.FileAccess = types.StringValue(v)
+	} else {
+		m.FileAccess = types.StringNull()
+	}
 	if v, ok := obj["active"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {

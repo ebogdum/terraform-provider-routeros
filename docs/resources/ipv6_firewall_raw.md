@@ -69,11 +69,12 @@ resource "routeros_ipv6_firewall_raw" "raw_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `action` - (Required) Type: `string`. Default: `accept`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `action` - (Required) Type: `string`.
 * `address_list` - (Optional) Type: `string`.
 * `address_list_timeout` - (Optional) Type: `string`.
-* `chain` - (Required) Type: `string`. Default: `prerouting`.
+* `bytes` - (Optional) Type: `string`.
+* `chain` - (Required) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `content` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
@@ -83,6 +84,8 @@ This resource supports the following arguments:
 * `dst_address_type` - (Optional) Type: `string`.
 * `dst_limit` - (Optional) Type: `string`.
 * `dst_port` - (Optional) Type: `string`.
+* `headers` - (Optional) Type: `string`. RouterOS `headers`.
+* `hop_limit` - (Optional) Type: `string`. RouterOS `hop-limit`.
 * `icmp_options` - (Optional) Type: `string`.
 * `in_bridge_port` - (Optional) Type: `string`.
 * `in_bridge_port_list` - (Optional) Type: `string`.
@@ -101,8 +104,10 @@ This resource supports the following arguments:
 * `out_interface_list` - (Optional) Type: `string`.
 * `packet_mark` - (Optional) Type: `string`.
 * `packet_size` - (Optional) Type: `string`.
+* `packets` - (Optional) Type: `string`.
 * `per_connection_classifier` - (Optional) Type: `string`.
 * `port` - (Optional) Type: `string`.
+* `position` - (Optional) Type: `int`. Sort key for placement in the ordered chain. Lower = higher in the chain. Persisted on the device via a [tf:pos=N] prefix in the comment so destroy+apply rebuilds the same order.
 * `priority` - (Optional) Type: `string`.
 * `protocol` - (Optional) Type: `string`.
 * `random` - (Optional) Type: `string`.
@@ -115,14 +120,12 @@ This resource supports the following arguments:
 * `tcp_mss` - (Optional) Type: `string`.
 * `time` - (Optional) Type: `string`.
 * `tls_host` - (Optional) Type: `string`.
+* `tos` - (Optional) Type: `string`. RouterOS `tos`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `bytes` - Type: `string`.
-* `packets` - Type: `string`.
 
 ## Import
 

@@ -40,23 +40,37 @@ resource "routeros_interface_sstp_client" "sstp_client_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `add_default_route` - (Optional) Type: `string`. RouterOS `add-default-route`.
+* `add_sni` - (Optional) Type: `string`. RouterOS `add-sni`.
 * `authentication` - (Optional) Type: `string`.
 * `certificate` - (Optional) Type: `string`.
+* `ciphers` - (Optional) Type: `string`. RouterOS `ciphers`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
-* `connect_to` - (Required) Type: `string`. Default: `127.0.0.1`.
+* `connect_to` - (Required) Type: `string`.
 * `default_route_distance` - (Optional) Type: `string`.
 * `dial_on_demand` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `http_proxy` - (Optional) Type: `string`. RouterOS `http-proxy`.
 * `keepalive_timeout` - (Optional) Type: `string`.
 * `max_mru` - (Optional) Type: `string`.
 * `max_mtu` - (Optional) Type: `string`.
 * `mrru` - (Optional) Type: `string`.
-* `name` - (Required) Type: `string`. Default: `tf_acc_sstpc`.
-* `password` - (Optional) Type: `string`.
+* `name` - (Required) Type: `string`.
+* `password` - (Optional) Type: `string`. **Sensitive.**
+* `pfs` - (Optional) Type: `string`. RouterOS `pfs`.
+* `port` - (Optional) Type: `string`. RouterOS `port`.
 * `profile` - (Optional) Type: `string`.
-* `user` - (Required) Type: `string`. Default: `tf_acc_user`.
+* `proxy_port` - (Optional) Type: `string`. RouterOS `proxy-port`.
+* `tls_version` - (Optional) Type: `string`. RouterOS `tls-version`.
+* `user` - (Required) Type: `string`.
+* `verify_server_address_from_certificate` - (Optional) Type: `string`. RouterOS `verify-server-address-from-certificate`.
 * `verify_server_certificate` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

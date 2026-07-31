@@ -29,16 +29,20 @@ type InterfaceMacvlanResource struct {
 }
 
 type InterfaceMacvlanModel struct {
-	ID         types.String `tfsdk:"id"`
-	ARP        types.String `tfsdk:"arp"`
-	ARPTimeout types.String `tfsdk:"arp_timeout"`
-	Comment    types.String `tfsdk:"comment"`
-	Disabled   types.Bool   `tfsdk:"disabled"`
-	MACAddress types.String `tfsdk:"mac_address"`
-	Mode       types.String `tfsdk:"mode"`
-	MTU        types.String `tfsdk:"mtu"`
-	Name       types.String `tfsdk:"name"`
-	Router     types.String `tfsdk:"router"`
+	ID                      types.String `tfsdk:"id"`
+	LoopProtectSendInterval types.String `tfsdk:"loop_protect_send_interval"`
+	LoopProtectDisableTime  types.String `tfsdk:"loop_protect_disable_time"`
+	LoopProtect             types.String `tfsdk:"loop_protect"`
+	Interface               types.String `tfsdk:"interface"`
+	ARP                     types.String `tfsdk:"arp"`
+	ARPTimeout              types.String `tfsdk:"arp_timeout"`
+	Comment                 types.String `tfsdk:"comment"`
+	Disabled                types.Bool   `tfsdk:"disabled"`
+	MACAddress              types.String `tfsdk:"mac_address"`
+	Mode                    types.String `tfsdk:"mode"`
+	MTU                     types.String `tfsdk:"mtu"`
+	Name                    types.String `tfsdk:"name"`
+	Router                  types.String `tfsdk:"router"`
 }
 
 func NewInterfaceMacvlanResource() resource.Resource { return &InterfaceMacvlanResource{} }
@@ -53,7 +57,6 @@ func (r *InterfaceMacvlanResource) Configure(_ context.Context, req resource.Con
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceMacvlanResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -64,6 +67,26 @@ func (r *InterfaceMacvlanResource) Schema(_ context.Context, _ resource.SchemaRe
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"loop_protect_send_interval": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `loop-protect-send-interval`.",
+			},
+			"loop_protect_disable_time": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `loop-protect-disable-time`.",
+			},
+			"loop_protect": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `loop-protect`.",
+			},
+			"interface": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `interface`.",
 			},
 			"arp": schema.StringAttribute{
 				Optional:    true,
@@ -148,6 +171,18 @@ func (r *InterfaceMacvlanResource) Create(ctx context.Context, req resource.Crea
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
 	}
+	if !(plan.Interface.IsNull() || plan.Interface.IsUnknown()) {
+		body["interface"] = plan.Interface.ValueString()
+	}
+	if !(plan.LoopProtect.IsNull() || plan.LoopProtect.IsUnknown()) {
+		body["loop-protect"] = plan.LoopProtect.ValueString()
+	}
+	if !(plan.LoopProtectDisableTime.IsNull() || plan.LoopProtectDisableTime.IsUnknown()) {
+		body["loop-protect-disable-time"] = plan.LoopProtectDisableTime.ValueString()
+	}
+	if !(plan.LoopProtectSendInterval.IsNull() || plan.LoopProtectSendInterval.IsUnknown()) {
+		body["loop-protect-send-interval"] = plan.LoopProtectSendInterval.ValueString()
+	}
 	obj, err := c.Add(ctx, "/interface/macvlan", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /interface/macvlan failed", err.Error())
@@ -219,6 +254,18 @@ func (r *InterfaceMacvlanResource) Update(ctx context.Context, req resource.Upda
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
 	}
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
+		body["interface"] = plan.Interface.ValueString()
+	}
+	if !plan.LoopProtect.Equal(state.LoopProtect) && !plan.LoopProtect.IsUnknown() {
+		body["loop-protect"] = plan.LoopProtect.ValueString()
+	}
+	if !plan.LoopProtectDisableTime.Equal(state.LoopProtectDisableTime) && !plan.LoopProtectDisableTime.IsUnknown() {
+		body["loop-protect-disable-time"] = plan.LoopProtectDisableTime.ValueString()
+	}
+	if !plan.LoopProtectSendInterval.Equal(state.LoopProtectSendInterval) && !plan.LoopProtectSendInterval.IsUnknown() {
+		body["loop-protect-send-interval"] = plan.LoopProtectSendInterval.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/macvlan", state.ID.ValueString(), body)
 		if err != nil {
@@ -285,6 +332,26 @@ func interfaceMacvlanLookupByNaturalKey(ctx context.Context, c *client.Client, i
 func interfaceMacvlanApply(ctx context.Context, obj client.Object, m *InterfaceMacvlanModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["loop-protect-send-interval"]; ok && v != "" {
+		m.LoopProtectSendInterval = types.StringValue(v)
+	} else {
+		m.LoopProtectSendInterval = types.StringNull()
+	}
+	if v, ok := obj["loop-protect-disable-time"]; ok && v != "" {
+		m.LoopProtectDisableTime = types.StringValue(v)
+	} else {
+		m.LoopProtectDisableTime = types.StringNull()
+	}
+	if v, ok := obj["loop-protect"]; ok && v != "" {
+		m.LoopProtect = types.StringValue(v)
+	} else {
+		m.LoopProtect = types.StringNull()
+	}
+	if v, ok := obj["interface"]; ok && v != "" {
+		m.Interface = types.StringValue(v)
+	} else {
+		m.Interface = types.StringNull()
+	}
 	if v, ok := obj["arp"]; ok {
 		_ = v
 		if v != "" {

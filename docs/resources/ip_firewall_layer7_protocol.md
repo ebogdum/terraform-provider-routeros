@@ -22,8 +22,15 @@ resource "routeros_ip_firewall_layer7_protocol" "layer7_protocol_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `name` - (Optional) Type: `string`. RouterOS `name`.
+* `regexp` - (Optional) Type: `string`. RouterOS `regexp`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

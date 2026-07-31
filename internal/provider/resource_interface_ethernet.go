@@ -32,14 +32,19 @@ type InterfaceEthernetResource struct {
 
 type InterfaceEthernetModel struct {
 	ID                        types.String `tfsdk:"id"`
+	SfpRateSelect             types.String `tfsdk:"sfp_rate_select"`
+	SfpIgnoreRxLos            types.String `tfsdk:"sfp_ignore_rx_los"`
+	MdixEnable                types.String `tfsdk:"mdix_enable"`
+	L2mtu                     types.String `tfsdk:"l2mtu"`
 	Advertise                 types.List   `tfsdk:"advertise"`
 	Advertising               types.String `tfsdk:"advertising"`
 	ARP                       types.String `tfsdk:"arp"`
 	ARPTimeout                types.String `tfsdk:"arp_timeout"`
-	AutoNegotiation           types.String `tfsdk:"auto_negotiation"`
+	AutoNegotiation           types.Bool   `tfsdk:"auto_negotiation"`
 	Autoneg                   types.Bool   `tfsdk:"autoneg"`
 	Blink                     types.String `tfsdk:"blink"`
 	CableAssemblyLinkLength   types.String `tfsdk:"cable_assembly_link_length"`
+	Bandwidth                 types.String `tfsdk:"bandwidth"`
 	CableSettings             types.String `tfsdk:"cable_settings"`
 	CableTest                 types.String `tfsdk:"cable_test"`
 	CmisModuleState           types.String `tfsdk:"cmis_module_state"`
@@ -85,13 +90,13 @@ type InterfaceEthernetModel struct {
 	OrigMACAddress            types.String `tfsdk:"orig_mac_address"`
 	PassthroughInterface      types.String `tfsdk:"passthrough_interface"`
 	PciePassthrough           types.Int64  `tfsdk:"pcie_passthrough"`
-	PoEOut                    types.String `tfsdk:"po_e_out"`
-	PoEOutCurrent             types.Int64  `tfsdk:"po_e_out_current"`
-	PoEOutPower               types.String `tfsdk:"po_e_out_power"`
-	PoEOutStatus              types.String `tfsdk:"po_e_out_status"`
-	PoEOutVoltage             types.String `tfsdk:"po_e_out_voltage"`
-	PoEPriority               types.Int64  `tfsdk:"po_e_priority"`
-	PoEVoltage                types.String `tfsdk:"po_e_voltage"`
+	PoEOut                    types.String `tfsdk:"poe_out"`
+	PoEOutCurrent             types.Int64  `tfsdk:"poe_out_current"`
+	PoEOutPower               types.String `tfsdk:"poe_out_power"`
+	PoEOutStatus              types.String `tfsdk:"poe_out_status"`
+	PoEOutVoltage             types.String `tfsdk:"poe_out_voltage"`
+	PoEPriority               types.Int64  `tfsdk:"poe_priority"`
+	PoEVoltage                types.String `tfsdk:"poe_voltage"`
 	Poe                       types.String `tfsdk:"poe"`
 	PoeV                      types.Bool   `tfsdk:"poe_v"`
 	Poecurr                   types.Int64  `tfsdk:"poecurr"`
@@ -203,7 +208,6 @@ func (r *InterfaceEthernetResource) Configure(_ context.Context, req resource.Co
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -215,6 +219,26 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
+			"sfp_rate_select": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `sfp-rate-select`.",
+			},
+			"sfp_ignore_rx_los": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `sfp-ignore-rx-los`.",
+			},
+			"mdix_enable": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `mdix-enable`.",
+			},
+			"l2mtu": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `l2mtu`.",
+			},
 			"advertise": schema.ListAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -222,7 +246,6 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"advertising": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -236,19 +259,20 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Optional:      true,
 				Computed:      true,
 				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
+				Validators:    []validator.String{schemautil.IsDurationOrKeyword("auto")},
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
 			},
-			"auto_negotiation": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"incomplete", "done", "no-negotiation", "failed", "restarted", "disabled", "not-available"}...)},
+			"auto_negotiation": schema.BoolAttribute{
+				Optional: true,
+				Computed: true,
+				Description: "Whether the port negotiates link speed and duplex with its peer. " +
+					"Disable it only when forcing `speed`/`full_duplex` on both ends.",
 			},
 			"autoneg": schema.BoolAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "",
+				Optional:           true,
+				Computed:           true,
+				Description:        "",
+				DeprecationMessage: "Not a RouterOS REST property (WebFig-only spelling); use auto_negotiation instead. This attribute is read-only and ignored on write.",
 			},
 			"blink": schema.StringAttribute{
 				Optional:    true,
@@ -256,9 +280,13 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"cable_assembly_link_length": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
+			},
+			"bandwidth": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "Rx/tx rate limit in `<rx>/<tx>` form, e.g. `unlimited/unlimited` (the default) or `100M/100M`.",
 			},
 			"cable_settings": schema.StringAttribute{
 				Optional:    true,
@@ -271,18 +299,15 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"cmis_module_state": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.OneOf([]string{"low-power", "power-up", "ready", "power-down", "fault"}...)},
 			},
 			"cmis_revision": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"combo": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -298,18 +323,15 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "Free-form comment.",
 			},
 			"connector_type": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.OneOf([]string{"unknown", "sc", "lc", "optical-pigtail", "multifiber-parallel-optic-1x12", "copper-pigtail", "rj45", "no-separable-connector", "multifiber-parallel-optic-1x16"}...)},
 			},
 			"copper_active_om4_link_length": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"default_name": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -319,7 +341,6 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"disable_time": schema.StringAttribute{
-				Optional:      true,
 				Computed:      true,
 				Description:   "",
 				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
@@ -331,7 +352,6 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"encoding": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.OneOf([]string{"unspecified", "8b/10b", "4b/5b", "nrz", "manchester", "sonet", "64b/66b", "256b/257b", "pam4"}...)},
@@ -342,7 +362,6 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"fec": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -358,17 +377,14 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"flowcontrol": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"full_duplex": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"hastxqueuestats": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -378,12 +394,10 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"l2_mtu": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"link_partner_advertising": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -408,7 +422,6 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
 			},
 			"loop_protect_status": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -420,22 +433,18 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
 			},
 			"manufacturing_date": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"max_l2_mtu": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"max_power": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"module_present": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -450,37 +459,32 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"noautoneg": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "",
+				Optional:           true,
+				Computed:           true,
+				Description:        "",
+				DeprecationMessage: "Not a RouterOS REST property (WebFig-only spelling); use auto_negotiation instead. This attribute is read-only and ignored on write.",
 			},
 			"non_mgmt": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"om1_link_length": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"om2_link_length": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"om3_link_length": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"om4_link_length": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"om5_link_length": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -492,48 +496,46 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
 			},
 			"passthrough_interface": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"pcie_passthrough": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
-			"po_e_out": schema.StringAttribute{
+			"poe_out": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.OneOf([]string{"off", "auto-on", "forced-on"}...)},
 			},
-			"po_e_out_current": schema.Int64Attribute{
+			"poe_out_current": schema.Int64Attribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
-			"po_e_out_power": schema.StringAttribute{
+			"poe_out_power": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
-			"po_e_out_status": schema.StringAttribute{
+			"poe_out_status": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.OneOf([]string{"", "disabled", "waiting-for-load", "powered-on", "overload", "short-circuit", "voltage-too-low", "current-too-low", "power-cycle", "voltage-too-high", "controller-error", "controller-upgrade", "voltage-on-poe-in", "no-valid-psu"}...)},
 			},
-			"po_e_out_voltage": schema.StringAttribute{
+			"poe_out_voltage": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
-			"po_e_priority": schema.Int64Attribute{
+			"poe_priority": schema.Int64Attribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
-			"po_e_voltage": schema.StringAttribute{
+			"poe_voltage": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -545,12 +547,10 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"poe_v": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"poecurr": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -560,32 +560,26 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"poepower": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"poevolt": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"power_class": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"power_cycle": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"power_cycle_after": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"power_cycle_host_alive": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -597,7 +591,6 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
 			},
 			"power_cycle_ping_address": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -607,7 +600,6 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"power_cycle_ping_timeout": schema.StringAttribute{
-				Optional:      true,
 				Computed:      true,
 				Description:   "",
 				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
@@ -619,7 +611,6 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"rate": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -630,62 +621,50 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Validators:  []validator.String{schemautil.OneOf([]string{"low", "high"}...)},
 			},
 			"reset_counters": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"reset_mac_address": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"running": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rx_align_error": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rx_broadcast": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rx_bytes": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rx_carrier_error": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rx_code_error": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rx_control": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rx_drop": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rx_error_events": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rx_fcs_error": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -696,72 +675,58 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Validators:  []validator.String{schemautil.OneOf([]string{"off", "on", "auto"}...)},
 			},
 			"rx_fragment": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rx_jabber": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rx_length_error": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rx_loss": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rx_multicast": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rx_overflow": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rx_packet": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rx_pause": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rx_power": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rx_too_long": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rx_too_short": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rx_unicast": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rx_unknown_op": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"send_interval": schema.StringAttribute{
-				Optional:      true,
 				Computed:      true,
 				Description:   "",
 				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
@@ -778,22 +743,18 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"sfp_supported": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"sfprate": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"sfpshutdown": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"sm_link_length": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -804,78 +765,63 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Validators:  []validator.String{schemautil.OneOf([]string{"10m-baset-half", "10m-baset-full", "100m-baset-half", "100m-baset-full", "1g-baset-half", "1g-baset-full", "10g-baset", "2.5g-basex", "40g-basecr4", "40g-basesr4-lr4", "25g-basecr", "25g-basesr-lr", "50g-basecr2", "100g-basesr4-lr4", "100g-basecr4", "50g-basesr2-lr2", "1g-basex", "10g-basecr", "10g-basesr-lr", "2.5g-baset", "5g-baset", "50g-basesr-lr", "50g-basecr", "100g-basesr2-lr2", "100g-basecr2", "200g-basesr4-lr4", "200g-basecr4", "400g-basesr8-lr8", "400g-basecr8", "100m-basefx-half", "100m-basefx-full"}...)},
 			},
 			"status": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 				Validators:  []validator.String{schemautil.OneOf([]string{"", "off", "on", "disabled"}...)},
 			},
 			"supply_voltage": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"supported": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"temperature": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_bias_current": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_broadcast": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_bytes": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_collision": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_control": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_deferred": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_drop": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_excessive_collision": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_excessive_deferred": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_fault": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_fcs_error": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -886,147 +832,118 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Validators:  []validator.String{schemautil.OneOf([]string{"off", "on", "auto"}...)},
 			},
 			"tx_fragment": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_jabber": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_late_collision": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_multicast": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_multiple_collision": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_packet": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_pause": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_pause_honorred": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_power": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_rx_1024_1518": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_rx_1024_max": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_rx_128_255": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_rx_1519_max": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_rx_256_511": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_rx_512_1023": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_rx_64": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_rx_65_127": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_rx_bytes": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_rx_packets": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_single_collision": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_too_short": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_total_collision": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_underrun": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"tx_unicast": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"vendor_name": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"vendor_part_number": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"vendor_revision": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"vendor_serial": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"wavelength": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -1058,11 +975,14 @@ func (r *InterfaceEthernetResource) Create(ctx context.Context, req resource.Cre
 	if !(plan.ARPTimeout.IsNull() || plan.ARPTimeout.IsUnknown()) {
 		body["arp-timeout"] = plan.ARPTimeout.ValueString()
 	}
-	if !(plan.Autoneg.IsNull() || plan.Autoneg.IsUnknown()) {
-		body["autoneg"] = client.FormatBool(plan.Autoneg.ValueBool())
+	if !(plan.AutoNegotiation.IsNull() || plan.AutoNegotiation.IsUnknown()) {
+		body["auto-negotiation"] = client.FormatBool(plan.AutoNegotiation.ValueBool())
 	}
 	if !(plan.Blink.IsNull() || plan.Blink.IsUnknown()) {
 		body["blink"] = plan.Blink.ValueString()
+	}
+	if !(plan.Bandwidth.IsNull() || plan.Bandwidth.IsUnknown()) {
+		body["bandwidth"] = plan.Bandwidth.ValueString()
 	}
 	if !(plan.CableSettings.IsNull() || plan.CableSettings.IsUnknown()) {
 		body["cable-settings"] = plan.CableSettings.ValueString()
@@ -1079,9 +999,6 @@ func (r *InterfaceEthernetResource) Create(ctx context.Context, req resource.Cre
 	if !(plan.DisableRunningCheck.IsNull() || plan.DisableRunningCheck.IsUnknown()) {
 		body["disable-running-check"] = client.FormatBool(plan.DisableRunningCheck.ValueBool())
 	}
-	if !(plan.DisableTime.IsNull() || plan.DisableTime.IsUnknown()) {
-		body["disable-time"] = plan.DisableTime.ValueString()
-	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
@@ -1096,9 +1013,6 @@ func (r *InterfaceEthernetResource) Create(ctx context.Context, req resource.Cre
 	}
 	if !(plan.IgnoreRxLos.IsNull() || plan.IgnoreRxLos.IsUnknown()) {
 		body["ignore-rx-los"] = client.FormatBool(plan.IgnoreRxLos.ValueBool())
-	}
-	if !(plan.L2MTU.IsNull() || plan.L2MTU.IsUnknown()) {
-		body["l2-mtu"] = client.FormatInt64(plan.L2MTU.ValueInt64())
 	}
 	if !(plan.LoopProtect.IsNull() || plan.LoopProtect.IsUnknown()) {
 		body["loop-protect"] = plan.LoopProtect.ValueString()
@@ -1118,26 +1032,18 @@ func (r *InterfaceEthernetResource) Create(ctx context.Context, req resource.Cre
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !(plan.Noautoneg.IsNull() || plan.Noautoneg.IsUnknown()) {
-		body["noautoneg"] = plan.Noautoneg.ValueString()
-	}
-	if !(plan.NonMgmt.IsNull() || plan.NonMgmt.IsUnknown()) {
-		body["non-mgmt"] = plan.NonMgmt.ValueString()
-	}
+
 	if !(plan.OrigMACAddress.IsNull() || plan.OrigMACAddress.IsUnknown()) {
 		body["orig-mac-address"] = plan.OrigMACAddress.ValueString()
 	}
-	if !(plan.PassthroughInterface.IsNull() || plan.PassthroughInterface.IsUnknown()) {
-		body["passthrough-interface"] = plan.PassthroughInterface.ValueString()
-	}
 	if !(plan.PoEOut.IsNull() || plan.PoEOut.IsUnknown()) {
-		body["po-e-out"] = plan.PoEOut.ValueString()
+		body["poe-out"] = plan.PoEOut.ValueString()
 	}
 	if !(plan.PoEPriority.IsNull() || plan.PoEPriority.IsUnknown()) {
-		body["po-e-priority"] = client.FormatInt64(plan.PoEPriority.ValueInt64())
+		body["poe-priority"] = client.FormatInt64(plan.PoEPriority.ValueInt64())
 	}
 	if !(plan.PoEVoltage.IsNull() || plan.PoEVoltage.IsUnknown()) {
-		body["po-e-voltage"] = plan.PoEVoltage.ValueString()
+		body["poe-voltage"] = plan.PoEVoltage.ValueString()
 	}
 	if !(plan.Poe.IsNull() || plan.Poe.IsUnknown()) {
 		body["poe"] = plan.Poe.ValueString()
@@ -1145,20 +1051,11 @@ func (r *InterfaceEthernetResource) Create(ctx context.Context, req resource.Cre
 	if !(plan.Poeping.IsNull() || plan.Poeping.IsUnknown()) {
 		body["poeping"] = plan.Poeping.ValueString()
 	}
-	if !(plan.PowerCycle.IsNull() || plan.PowerCycle.IsUnknown()) {
-		body["power-cycle"] = plan.PowerCycle.ValueString()
-	}
 	if !(plan.PowerCycleInterval.IsNull() || plan.PowerCycleInterval.IsUnknown()) {
 		body["power-cycle-interval"] = plan.PowerCycleInterval.ValueString()
 	}
-	if !(plan.PowerCyclePingAddress.IsNull() || plan.PowerCyclePingAddress.IsUnknown()) {
-		body["power-cycle-ping-address"] = plan.PowerCyclePingAddress.ValueString()
-	}
 	if !(plan.PowerCyclePingEnabled.IsNull() || plan.PowerCyclePingEnabled.IsUnknown()) {
 		body["power-cycle-ping-enabled"] = client.FormatBool(plan.PowerCyclePingEnabled.ValueBool())
-	}
-	if !(plan.PowerCyclePingTimeout.IsNull() || plan.PowerCyclePingTimeout.IsUnknown()) {
-		body["power-cycle-ping-timeout"] = plan.PowerCyclePingTimeout.ValueString()
 	}
 	if !(plan.Qstats.IsNull() || plan.Qstats.IsUnknown()) {
 		body["qstats"] = plan.Qstats.ValueString()
@@ -1166,17 +1063,8 @@ func (r *InterfaceEthernetResource) Create(ctx context.Context, req resource.Cre
 	if !(plan.RateSelect.IsNull() || plan.RateSelect.IsUnknown()) {
 		body["rate-select"] = plan.RateSelect.ValueString()
 	}
-	if !(plan.ResetCounters.IsNull() || plan.ResetCounters.IsUnknown()) {
-		body["reset-counters"] = plan.ResetCounters.ValueString()
-	}
-	if !(plan.ResetMACAddress.IsNull() || plan.ResetMACAddress.IsUnknown()) {
-		body["reset-mac-address"] = plan.ResetMACAddress.ValueString()
-	}
 	if !(plan.RxFlowControl.IsNull() || plan.RxFlowControl.IsUnknown()) {
 		body["rx-flow-control"] = plan.RxFlowControl.ValueString()
-	}
-	if !(plan.SendInterval.IsNull() || plan.SendInterval.IsUnknown()) {
-		body["send-interval"] = plan.SendInterval.ValueString()
 	}
 	if !(plan.Sfp.IsNull() || plan.Sfp.IsUnknown()) {
 		body["sfp"] = client.FormatBool(plan.Sfp.ValueBool())
@@ -1189,6 +1077,18 @@ func (r *InterfaceEthernetResource) Create(ctx context.Context, req resource.Cre
 	}
 	if !(plan.TxFlowControl.IsNull() || plan.TxFlowControl.IsUnknown()) {
 		body["tx-flow-control"] = plan.TxFlowControl.ValueString()
+	}
+	if !(plan.L2mtu.IsNull() || plan.L2mtu.IsUnknown()) {
+		body["l2mtu"] = plan.L2mtu.ValueString()
+	}
+	if !(plan.MdixEnable.IsNull() || plan.MdixEnable.IsUnknown()) {
+		body["mdix-enable"] = plan.MdixEnable.ValueString()
+	}
+	if !(plan.SfpIgnoreRxLos.IsNull() || plan.SfpIgnoreRxLos.IsUnknown()) {
+		body["sfp-ignore-rx-los"] = plan.SfpIgnoreRxLos.ValueString()
+	}
+	if !(plan.SfpRateSelect.IsNull() || plan.SfpRateSelect.IsUnknown()) {
+		body["sfp-rate-select"] = plan.SfpRateSelect.ValueString()
 	}
 	obj, err := c.Add(ctx, "/interface/ethernet", body)
 	if err != nil {
@@ -1246,11 +1146,14 @@ func (r *InterfaceEthernetResource) Update(ctx context.Context, req resource.Upd
 	if !plan.ARPTimeout.Equal(state.ARPTimeout) {
 		body["arp-timeout"] = plan.ARPTimeout.ValueString()
 	}
-	if !plan.Autoneg.Equal(state.Autoneg) {
-		body["autoneg"] = client.FormatBool(plan.Autoneg.ValueBool())
+	if !plan.AutoNegotiation.Equal(state.AutoNegotiation) {
+		body["auto-negotiation"] = client.FormatBool(plan.AutoNegotiation.ValueBool())
 	}
 	if !plan.Blink.Equal(state.Blink) {
 		body["blink"] = plan.Blink.ValueString()
+	}
+	if !plan.Bandwidth.Equal(state.Bandwidth) {
+		body["bandwidth"] = plan.Bandwidth.ValueString()
 	}
 	if !plan.CableSettings.Equal(state.CableSettings) {
 		body["cable-settings"] = plan.CableSettings.ValueString()
@@ -1267,9 +1170,6 @@ func (r *InterfaceEthernetResource) Update(ctx context.Context, req resource.Upd
 	if !plan.DisableRunningCheck.Equal(state.DisableRunningCheck) {
 		body["disable-running-check"] = client.FormatBool(plan.DisableRunningCheck.ValueBool())
 	}
-	if !plan.DisableTime.Equal(state.DisableTime) {
-		body["disable-time"] = plan.DisableTime.ValueString()
-	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
@@ -1284,9 +1184,6 @@ func (r *InterfaceEthernetResource) Update(ctx context.Context, req resource.Upd
 	}
 	if !plan.IgnoreRxLos.Equal(state.IgnoreRxLos) {
 		body["ignore-rx-los"] = client.FormatBool(plan.IgnoreRxLos.ValueBool())
-	}
-	if !plan.L2MTU.Equal(state.L2MTU) {
-		body["l2-mtu"] = client.FormatInt64(plan.L2MTU.ValueInt64())
 	}
 	if !plan.LoopProtect.Equal(state.LoopProtect) {
 		body["loop-protect"] = plan.LoopProtect.ValueString()
@@ -1306,26 +1203,18 @@ func (r *InterfaceEthernetResource) Update(ctx context.Context, req resource.Upd
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Noautoneg.Equal(state.Noautoneg) {
-		body["noautoneg"] = plan.Noautoneg.ValueString()
-	}
-	if !plan.NonMgmt.Equal(state.NonMgmt) {
-		body["non-mgmt"] = plan.NonMgmt.ValueString()
-	}
+
 	if !plan.OrigMACAddress.Equal(state.OrigMACAddress) {
 		body["orig-mac-address"] = plan.OrigMACAddress.ValueString()
 	}
-	if !plan.PassthroughInterface.Equal(state.PassthroughInterface) {
-		body["passthrough-interface"] = plan.PassthroughInterface.ValueString()
-	}
 	if !plan.PoEOut.Equal(state.PoEOut) {
-		body["po-e-out"] = plan.PoEOut.ValueString()
+		body["poe-out"] = plan.PoEOut.ValueString()
 	}
 	if !plan.PoEPriority.Equal(state.PoEPriority) {
-		body["po-e-priority"] = client.FormatInt64(plan.PoEPriority.ValueInt64())
+		body["poe-priority"] = client.FormatInt64(plan.PoEPriority.ValueInt64())
 	}
 	if !plan.PoEVoltage.Equal(state.PoEVoltage) {
-		body["po-e-voltage"] = plan.PoEVoltage.ValueString()
+		body["poe-voltage"] = plan.PoEVoltage.ValueString()
 	}
 	if !plan.Poe.Equal(state.Poe) {
 		body["poe"] = plan.Poe.ValueString()
@@ -1333,20 +1222,11 @@ func (r *InterfaceEthernetResource) Update(ctx context.Context, req resource.Upd
 	if !plan.Poeping.Equal(state.Poeping) {
 		body["poeping"] = plan.Poeping.ValueString()
 	}
-	if !plan.PowerCycle.Equal(state.PowerCycle) {
-		body["power-cycle"] = plan.PowerCycle.ValueString()
-	}
 	if !plan.PowerCycleInterval.Equal(state.PowerCycleInterval) {
 		body["power-cycle-interval"] = plan.PowerCycleInterval.ValueString()
 	}
-	if !plan.PowerCyclePingAddress.Equal(state.PowerCyclePingAddress) {
-		body["power-cycle-ping-address"] = plan.PowerCyclePingAddress.ValueString()
-	}
 	if !plan.PowerCyclePingEnabled.Equal(state.PowerCyclePingEnabled) {
 		body["power-cycle-ping-enabled"] = client.FormatBool(plan.PowerCyclePingEnabled.ValueBool())
-	}
-	if !plan.PowerCyclePingTimeout.Equal(state.PowerCyclePingTimeout) {
-		body["power-cycle-ping-timeout"] = plan.PowerCyclePingTimeout.ValueString()
 	}
 	if !plan.Qstats.Equal(state.Qstats) {
 		body["qstats"] = plan.Qstats.ValueString()
@@ -1354,17 +1234,8 @@ func (r *InterfaceEthernetResource) Update(ctx context.Context, req resource.Upd
 	if !plan.RateSelect.Equal(state.RateSelect) {
 		body["rate-select"] = plan.RateSelect.ValueString()
 	}
-	if !plan.ResetCounters.Equal(state.ResetCounters) {
-		body["reset-counters"] = plan.ResetCounters.ValueString()
-	}
-	if !plan.ResetMACAddress.Equal(state.ResetMACAddress) {
-		body["reset-mac-address"] = plan.ResetMACAddress.ValueString()
-	}
 	if !plan.RxFlowControl.Equal(state.RxFlowControl) {
 		body["rx-flow-control"] = plan.RxFlowControl.ValueString()
-	}
-	if !plan.SendInterval.Equal(state.SendInterval) {
-		body["send-interval"] = plan.SendInterval.ValueString()
 	}
 	if !plan.Sfp.Equal(state.Sfp) {
 		body["sfp"] = client.FormatBool(plan.Sfp.ValueBool())
@@ -1377,6 +1248,18 @@ func (r *InterfaceEthernetResource) Update(ctx context.Context, req resource.Upd
 	}
 	if !plan.TxFlowControl.Equal(state.TxFlowControl) {
 		body["tx-flow-control"] = plan.TxFlowControl.ValueString()
+	}
+	if !plan.L2mtu.Equal(state.L2mtu) && !plan.L2mtu.IsUnknown() {
+		body["l2mtu"] = plan.L2mtu.ValueString()
+	}
+	if !plan.MdixEnable.Equal(state.MdixEnable) && !plan.MdixEnable.IsUnknown() {
+		body["mdix-enable"] = plan.MdixEnable.ValueString()
+	}
+	if !plan.SfpIgnoreRxLos.Equal(state.SfpIgnoreRxLos) && !plan.SfpIgnoreRxLos.IsUnknown() {
+		body["sfp-ignore-rx-los"] = plan.SfpIgnoreRxLos.ValueString()
+	}
+	if !plan.SfpRateSelect.Equal(state.SfpRateSelect) && !plan.SfpRateSelect.IsUnknown() {
+		body["sfp-rate-select"] = plan.SfpRateSelect.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/ethernet", state.ID.ValueString(), body)
@@ -1444,6 +1327,26 @@ func interfaceEthernetLookupByNaturalKey(ctx context.Context, c *client.Client, 
 func interfaceEthernetApply(ctx context.Context, obj client.Object, m *InterfaceEthernetModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["sfp-rate-select"]; ok && v != "" {
+		m.SfpRateSelect = types.StringValue(v)
+	} else {
+		m.SfpRateSelect = types.StringNull()
+	}
+	if v, ok := obj["sfp-ignore-rx-los"]; ok && v != "" {
+		m.SfpIgnoreRxLos = types.StringValue(v)
+	} else {
+		m.SfpIgnoreRxLos = types.StringNull()
+	}
+	if v, ok := obj["mdix-enable"]; ok && v != "" {
+		m.MdixEnable = types.StringValue(v)
+	} else {
+		m.MdixEnable = types.StringNull()
+	}
+	if v, ok := obj["l2mtu"]; ok && v != "" {
+		m.L2mtu = types.StringValue(v)
+	} else {
+		m.L2mtu = types.StringNull()
+	}
 	if v, ok := obj["advertise"]; ok {
 		_ = v
 		m.Advertise = decodeStringList(ctx, v)
@@ -1482,13 +1385,15 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	}
 	if v, ok := obj["auto-negotiation"]; ok {
 		_ = v
-		if v != "" {
-			m.AutoNegotiation = types.StringValue(v)
+		// Tolerate a device that answers with a link state rather than the
+		// toggle; an unparseable value becomes null instead of a bogus false.
+		if b, err := client.ParseBool(v); err == nil {
+			m.AutoNegotiation = types.BoolValue(b)
 		} else {
-			m.AutoNegotiation = types.StringNull()
+			m.AutoNegotiation = types.BoolNull()
 		}
 	} else {
-		m.AutoNegotiation = types.StringNull()
+		m.AutoNegotiation = types.BoolNull()
 	}
 	if v, ok := obj["autoneg"]; ok {
 		_ = v
@@ -1519,6 +1424,16 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		}
 	} else {
 		m.CableAssemblyLinkLength = types.StringNull()
+	}
+	if v, ok := obj["bandwidth"]; ok {
+		_ = v
+		if v != "" {
+			m.Bandwidth = types.StringValue(v)
+		} else {
+			m.Bandwidth = types.StringNull()
+		}
+	} else {
+		m.Bandwidth = types.StringNull()
 	}
 	if v, ok := obj["cable-settings"]; ok {
 		_ = v
@@ -1970,7 +1885,7 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	} else {
 		m.PciePassthrough = types.Int64Null()
 	}
-	if v, ok := obj["po-e-out"]; ok {
+	if v, ok := obj["poe-out"]; ok {
 		_ = v
 		if v != "" {
 			m.PoEOut = types.StringValue(v)
@@ -1980,7 +1895,7 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	} else {
 		m.PoEOut = types.StringNull()
 	}
-	if v, ok := obj["po-e-out-current"]; ok {
+	if v, ok := obj["poe-out-current"]; ok {
 		_ = v
 		if n, err := client.ParseInt64(v); err == nil {
 			m.PoEOutCurrent = types.Int64Value(n)
@@ -1990,7 +1905,7 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	} else {
 		m.PoEOutCurrent = types.Int64Null()
 	}
-	if v, ok := obj["po-e-out-power"]; ok {
+	if v, ok := obj["poe-out-power"]; ok {
 		_ = v
 		if v != "" {
 			m.PoEOutPower = types.StringValue(v)
@@ -2000,7 +1915,7 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	} else {
 		m.PoEOutPower = types.StringNull()
 	}
-	if v, ok := obj["po-e-out-status"]; ok {
+	if v, ok := obj["poe-out-status"]; ok {
 		_ = v
 		if v != "" {
 			m.PoEOutStatus = types.StringValue(v)
@@ -2010,7 +1925,7 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	} else {
 		m.PoEOutStatus = types.StringNull()
 	}
-	if v, ok := obj["po-e-out-voltage"]; ok {
+	if v, ok := obj["poe-out-voltage"]; ok {
 		_ = v
 		if v != "" {
 			m.PoEOutVoltage = types.StringValue(v)
@@ -2020,7 +1935,7 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	} else {
 		m.PoEOutVoltage = types.StringNull()
 	}
-	if v, ok := obj["po-e-priority"]; ok {
+	if v, ok := obj["poe-priority"]; ok {
 		_ = v
 		if n, err := client.ParseInt64(v); err == nil {
 			m.PoEPriority = types.Int64Value(n)
@@ -2030,7 +1945,7 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	} else {
 		m.PoEPriority = types.Int64Null()
 	}
-	if v, ok := obj["po-e-voltage"]; ok {
+	if v, ok := obj["poe-voltage"]; ok {
 		_ = v
 		if v != "" {
 			m.PoEVoltage = types.StringValue(v)

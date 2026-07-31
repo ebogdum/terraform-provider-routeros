@@ -30,6 +30,13 @@ type InterfaceWirelessResource struct {
 
 type InterfaceWirelessModel struct {
 	ID                       types.String `tfsdk:"id"`
+	VlanMode                 types.String `tfsdk:"vlan_mode"`
+	VlanId                   types.String `tfsdk:"vlan_id"`
+	SecondaryFrequency       types.String `tfsdk:"secondary_frequency"`
+	Nv2SyncSecret            types.String `tfsdk:"nv2_sync_secret"`
+	Nv2Mode                  types.String `tfsdk:"nv2_mode"`
+	Nv2DownlinkRatio         types.String `tfsdk:"nv2_downlink_ratio"`
+	DfsTestMode              types.String `tfsdk:"dfs_test_mode"`
 	AdaptiveNoiseImmunity    types.String `tfsdk:"adaptive_noise_immunity"`
 	AllowSharedkey           types.String `tfsdk:"allow_sharedkey"`
 	AmpduPriorities          types.String `tfsdk:"ampdu_priorities"`
@@ -135,7 +142,6 @@ func (r *InterfaceWirelessResource) Configure(_ context.Context, req resource.Co
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceWirelessResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -146,6 +152,42 @@ func (r *InterfaceWirelessResource) Schema(_ context.Context, _ resource.SchemaR
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"vlan_mode": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `vlan-mode`.",
+			},
+			"vlan_id": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `vlan-id`.",
+			},
+			"secondary_frequency": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `secondary-frequency`.",
+			},
+			"nv2_sync_secret": schema.StringAttribute{
+				Optional:    true,
+				Sensitive:   true,
+				Computed:    true,
+				Description: "RouterOS `nv2-sync-secret`.",
+			},
+			"nv2_mode": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `nv2-mode`.",
+			},
+			"nv2_downlink_ratio": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `nv2-downlink-ratio`.",
+			},
+			"dfs_test_mode": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `dfs-test-mode`.",
 			},
 			"adaptive_noise_immunity": schema.StringAttribute{
 				Optional:    true,
@@ -887,6 +929,27 @@ func (r *InterfaceWirelessResource) Create(ctx context.Context, req resource.Cre
 	if !(plan.WpsMode.IsNull() || plan.WpsMode.IsUnknown()) {
 		body["wps-mode"] = plan.WpsMode.ValueString()
 	}
+	if !(plan.DfsTestMode.IsNull() || plan.DfsTestMode.IsUnknown()) {
+		body["dfs-test-mode"] = plan.DfsTestMode.ValueString()
+	}
+	if !(plan.Nv2DownlinkRatio.IsNull() || plan.Nv2DownlinkRatio.IsUnknown()) {
+		body["nv2-downlink-ratio"] = plan.Nv2DownlinkRatio.ValueString()
+	}
+	if !(plan.Nv2Mode.IsNull() || plan.Nv2Mode.IsUnknown()) {
+		body["nv2-mode"] = plan.Nv2Mode.ValueString()
+	}
+	if !(plan.Nv2SyncSecret.IsNull() || plan.Nv2SyncSecret.IsUnknown()) {
+		body["nv2-sync-secret"] = plan.Nv2SyncSecret.ValueString()
+	}
+	if !(plan.SecondaryFrequency.IsNull() || plan.SecondaryFrequency.IsUnknown()) {
+		body["secondary-frequency"] = plan.SecondaryFrequency.ValueString()
+	}
+	if !(plan.VlanId.IsNull() || plan.VlanId.IsUnknown()) {
+		body["vlan-id"] = plan.VlanId.ValueString()
+	}
+	if !(plan.VlanMode.IsNull() || plan.VlanMode.IsUnknown()) {
+		body["vlan-mode"] = plan.VlanMode.ValueString()
+	}
 	obj, err := c.Add(ctx, "/interface/wireless", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /interface/wireless failed", err.Error())
@@ -1204,6 +1267,27 @@ func (r *InterfaceWirelessResource) Update(ctx context.Context, req resource.Upd
 	if !plan.WpsMode.Equal(state.WpsMode) {
 		body["wps-mode"] = plan.WpsMode.ValueString()
 	}
+	if !plan.DfsTestMode.Equal(state.DfsTestMode) && !plan.DfsTestMode.IsUnknown() {
+		body["dfs-test-mode"] = plan.DfsTestMode.ValueString()
+	}
+	if !plan.Nv2DownlinkRatio.Equal(state.Nv2DownlinkRatio) && !plan.Nv2DownlinkRatio.IsUnknown() {
+		body["nv2-downlink-ratio"] = plan.Nv2DownlinkRatio.ValueString()
+	}
+	if !plan.Nv2Mode.Equal(state.Nv2Mode) && !plan.Nv2Mode.IsUnknown() {
+		body["nv2-mode"] = plan.Nv2Mode.ValueString()
+	}
+	if !plan.Nv2SyncSecret.Equal(state.Nv2SyncSecret) && !plan.Nv2SyncSecret.IsUnknown() {
+		body["nv2-sync-secret"] = plan.Nv2SyncSecret.ValueString()
+	}
+	if !plan.SecondaryFrequency.Equal(state.SecondaryFrequency) && !plan.SecondaryFrequency.IsUnknown() {
+		body["secondary-frequency"] = plan.SecondaryFrequency.ValueString()
+	}
+	if !plan.VlanId.Equal(state.VlanId) && !plan.VlanId.IsUnknown() {
+		body["vlan-id"] = plan.VlanId.ValueString()
+	}
+	if !plan.VlanMode.Equal(state.VlanMode) && !plan.VlanMode.IsUnknown() {
+		body["vlan-mode"] = plan.VlanMode.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/wireless", state.ID.ValueString(), body)
 		if err != nil {
@@ -1270,6 +1354,41 @@ func interfaceWirelessLookupByNaturalKey(ctx context.Context, c *client.Client, 
 func interfaceWirelessApply(ctx context.Context, obj client.Object, m *InterfaceWirelessModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["vlan-mode"]; ok && v != "" {
+		m.VlanMode = types.StringValue(v)
+	} else {
+		m.VlanMode = types.StringNull()
+	}
+	if v, ok := obj["vlan-id"]; ok && v != "" {
+		m.VlanId = types.StringValue(v)
+	} else {
+		m.VlanId = types.StringNull()
+	}
+	if v, ok := obj["secondary-frequency"]; ok && v != "" {
+		m.SecondaryFrequency = types.StringValue(v)
+	} else {
+		m.SecondaryFrequency = types.StringNull()
+	}
+	if v, ok := obj["nv2-sync-secret"]; ok && v != "" {
+		m.Nv2SyncSecret = types.StringValue(v)
+	} else {
+		m.Nv2SyncSecret = types.StringNull()
+	}
+	if v, ok := obj["nv2-mode"]; ok && v != "" {
+		m.Nv2Mode = types.StringValue(v)
+	} else {
+		m.Nv2Mode = types.StringNull()
+	}
+	if v, ok := obj["nv2-downlink-ratio"]; ok && v != "" {
+		m.Nv2DownlinkRatio = types.StringValue(v)
+	} else {
+		m.Nv2DownlinkRatio = types.StringNull()
+	}
+	if v, ok := obj["dfs-test-mode"]; ok && v != "" {
+		m.DfsTestMode = types.StringValue(v)
+	} else {
+		m.DfsTestMode = types.StringNull()
+	}
 	if v, ok := obj["adaptive-noise-immunity"]; ok {
 		_ = v
 		if v != "" {

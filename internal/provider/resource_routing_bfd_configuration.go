@@ -58,7 +58,6 @@ func (r *RoutingBfdConfigurationResource) Configure(_ context.Context, req resou
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *RoutingBfdConfigurationResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -96,7 +95,6 @@ func (r *RoutingBfdConfigurationResource) Schema(_ context.Context, _ resource.S
 				Description: "",
 			},
 			"inactive": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -158,9 +156,6 @@ func (r *RoutingBfdConfigurationResource) Create(ctx context.Context, req resour
 	}
 	if !(plan.ForbidBfd.IsNull() || plan.ForbidBfd.IsUnknown()) {
 		body["forbid-bfd"] = plan.ForbidBfd.ValueString()
-	}
-	if !(plan.Inactive.IsNull() || plan.Inactive.IsUnknown()) {
-		body["inactive"] = client.FormatBool(plan.Inactive.ValueBool())
 	}
 	if !(plan.Interfaces.IsNull() || plan.Interfaces.IsUnknown()) {
 		body["interfaces"] = plan.Interfaces.ValueString()
@@ -238,9 +233,6 @@ func (r *RoutingBfdConfigurationResource) Update(ctx context.Context, req resour
 	}
 	if !plan.ForbidBfd.Equal(state.ForbidBfd) {
 		body["forbid-bfd"] = plan.ForbidBfd.ValueString()
-	}
-	if !plan.Inactive.Equal(state.Inactive) {
-		body["inactive"] = client.FormatBool(plan.Inactive.ValueBool())
 	}
 	if !plan.Interfaces.Equal(state.Interfaces) {
 		body["interfaces"] = plan.Interfaces.ValueString()

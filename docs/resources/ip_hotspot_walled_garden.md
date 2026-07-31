@@ -30,14 +30,21 @@ resource "routeros_ip_hotspot_walled_garden" "walled_garden_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `action` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `dst_host` - (Optional) Type: `string`. RouterOS `dst-host`.
 * `dst_port` - (Optional) Type: `string`.
+* `method` - (Optional) Type: `string`. RouterOS `method`.
 * `path` - (Optional) Type: `string`.
 * `server` - (Optional) Type: `string`.
 * `src_address` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

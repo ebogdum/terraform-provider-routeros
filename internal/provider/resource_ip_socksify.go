@@ -29,12 +29,17 @@ type IPSocksifyResource struct {
 }
 
 type IPSocksifyModel struct {
-	ID       types.String `tfsdk:"id"`
-	Comment  types.String `tfsdk:"comment"`
-	Disabled types.Bool   `tfsdk:"disabled"`
-	Name     types.String `tfsdk:"name"`
-	Port     types.Int64  `tfsdk:"port"`
-	Router   types.String `tfsdk:"router"`
+	ID                types.String `tfsdk:"id"`
+	Socks5User        types.String `tfsdk:"socks5_user"`
+	Socks5Server      types.String `tfsdk:"socks5_server"`
+	Socks5Port        types.String `tfsdk:"socks5_port"`
+	Socks5Password    types.String `tfsdk:"socks5_password"`
+	ConnectionTimeout types.String `tfsdk:"connection_timeout"`
+	Comment           types.String `tfsdk:"comment"`
+	Disabled          types.Bool   `tfsdk:"disabled"`
+	Name              types.String `tfsdk:"name"`
+	Port              types.Int64  `tfsdk:"port"`
+	Router            types.String `tfsdk:"router"`
 }
 
 func NewIPSocksifyResource() resource.Resource { return &IPSocksifyResource{} }
@@ -49,7 +54,6 @@ func (r *IPSocksifyResource) Configure(_ context.Context, req resource.Configure
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPSocksifyResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -60,6 +64,32 @@ func (r *IPSocksifyResource) Schema(_ context.Context, _ resource.SchemaRequest,
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"socks5_user": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `socks5-user`.",
+			},
+			"socks5_server": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `socks5-server`.",
+			},
+			"socks5_port": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `socks5-port`.",
+			},
+			"socks5_password": schema.StringAttribute{
+				Optional:    true,
+				Sensitive:   true,
+				Computed:    true,
+				Description: "RouterOS `socks5-password`.",
+			},
+			"connection_timeout": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `connection-timeout`.",
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -110,6 +140,21 @@ func (r *IPSocksifyResource) Create(ctx context.Context, req resource.CreateRequ
 	}
 	if !(plan.Port.IsNull() || plan.Port.IsUnknown()) {
 		body["port"] = client.FormatInt64(plan.Port.ValueInt64())
+	}
+	if !(plan.ConnectionTimeout.IsNull() || plan.ConnectionTimeout.IsUnknown()) {
+		body["connection-timeout"] = plan.ConnectionTimeout.ValueString()
+	}
+	if !(plan.Socks5Password.IsNull() || plan.Socks5Password.IsUnknown()) {
+		body["socks5-password"] = plan.Socks5Password.ValueString()
+	}
+	if !(plan.Socks5Port.IsNull() || plan.Socks5Port.IsUnknown()) {
+		body["socks5-port"] = plan.Socks5Port.ValueString()
+	}
+	if !(plan.Socks5Server.IsNull() || plan.Socks5Server.IsUnknown()) {
+		body["socks5-server"] = plan.Socks5Server.ValueString()
+	}
+	if !(plan.Socks5User.IsNull() || plan.Socks5User.IsUnknown()) {
+		body["socks5-user"] = plan.Socks5User.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ip/socksify", body)
 	if err != nil {
@@ -169,6 +214,21 @@ func (r *IPSocksifyResource) Update(ctx context.Context, req resource.UpdateRequ
 	}
 	if !plan.Port.Equal(state.Port) {
 		body["port"] = client.FormatInt64(plan.Port.ValueInt64())
+	}
+	if !plan.ConnectionTimeout.Equal(state.ConnectionTimeout) && !plan.ConnectionTimeout.IsUnknown() {
+		body["connection-timeout"] = plan.ConnectionTimeout.ValueString()
+	}
+	if !plan.Socks5Password.Equal(state.Socks5Password) && !plan.Socks5Password.IsUnknown() {
+		body["socks5-password"] = plan.Socks5Password.ValueString()
+	}
+	if !plan.Socks5Port.Equal(state.Socks5Port) && !plan.Socks5Port.IsUnknown() {
+		body["socks5-port"] = plan.Socks5Port.ValueString()
+	}
+	if !plan.Socks5Server.Equal(state.Socks5Server) && !plan.Socks5Server.IsUnknown() {
+		body["socks5-server"] = plan.Socks5Server.ValueString()
+	}
+	if !plan.Socks5User.Equal(state.Socks5User) && !plan.Socks5User.IsUnknown() {
+		body["socks5-user"] = plan.Socks5User.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/socksify", state.ID.ValueString(), body)
@@ -236,6 +296,31 @@ func iPSocksifyLookupByNaturalKey(ctx context.Context, c *client.Client, id stri
 func iPSocksifyApply(ctx context.Context, obj client.Object, m *IPSocksifyModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["socks5-user"]; ok && v != "" {
+		m.Socks5User = types.StringValue(v)
+	} else {
+		m.Socks5User = types.StringNull()
+	}
+	if v, ok := obj["socks5-server"]; ok && v != "" {
+		m.Socks5Server = types.StringValue(v)
+	} else {
+		m.Socks5Server = types.StringNull()
+	}
+	if v, ok := obj["socks5-port"]; ok && v != "" {
+		m.Socks5Port = types.StringValue(v)
+	} else {
+		m.Socks5Port = types.StringNull()
+	}
+	if v, ok := obj["socks5-password"]; ok && v != "" {
+		m.Socks5Password = types.StringValue(v)
+	} else {
+		m.Socks5Password = types.StringNull()
+	}
+	if v, ok := obj["connection-timeout"]; ok && v != "" {
+		m.ConnectionTimeout = types.StringValue(v)
+	} else {
+		m.ConnectionTimeout = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {

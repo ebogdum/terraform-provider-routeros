@@ -30,6 +30,11 @@ type InterfaceEthernetSwitchResource struct {
 
 type InterfaceEthernetSwitchModel struct {
 	ID               types.String `tfsdk:"id"`
+	SwitchAllPorts   types.String `tfsdk:"switch_all_ports"`
+	Name             types.String `tfsdk:"name"`
+	MirrorSource     types.String `tfsdk:"mirror_source"`
+	MirrorTarget     types.String `tfsdk:"mirror_target"`
+	CPUFlowControl   types.String `tfsdk:"cpu_flow_control"`
 	Autorestart      types.String `tfsdk:"autorestart"`
 	FasttrackHw      types.String `tfsdk:"fasttrack_hw"`
 	IcmpReplyOnError types.String `tfsdk:"icmp_reply_on_error"`
@@ -51,7 +56,6 @@ func (r *InterfaceEthernetSwitchResource) Configure(_ context.Context, req resou
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceEthernetSwitchResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -62,6 +66,31 @@ func (r *InterfaceEthernetSwitchResource) Schema(_ context.Context, _ resource.S
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"switch_all_ports": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `switch-all-ports`.",
+			},
+			"name": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "Switch name as reported by RouterOS, e.g. `switch1`.",
+			},
+			"mirror_source": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "Port whose traffic is mirrored, or `none` (the default).",
+			},
+			"mirror_target": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "Port that receives mirrored traffic, or `none` (the default).",
+			},
+			"cpu_flow_control": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether the switch sends pause frames to the CPU port.",
 			},
 			"autorestart": schema.StringAttribute{
 				Optional:    true,
@@ -102,6 +131,18 @@ func (r *InterfaceEthernetSwitchResource) Create(ctx context.Context, req resour
 		return
 	}
 	body := client.Object{}
+	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
+		body["name"] = plan.Name.ValueString()
+	}
+	if !(plan.MirrorSource.IsNull() || plan.MirrorSource.IsUnknown()) {
+		body["mirror-source"] = plan.MirrorSource.ValueString()
+	}
+	if !(plan.MirrorTarget.IsNull() || plan.MirrorTarget.IsUnknown()) {
+		body["mirror-target"] = plan.MirrorTarget.ValueString()
+	}
+	if !(plan.CPUFlowControl.IsNull() || plan.CPUFlowControl.IsUnknown()) {
+		body["cpu-flow-control"] = plan.CPUFlowControl.ValueString()
+	}
 	if !(plan.Autorestart.IsNull() || plan.Autorestart.IsUnknown()) {
 		body["autorestart"] = plan.Autorestart.ValueString()
 	}
@@ -113,6 +154,9 @@ func (r *InterfaceEthernetSwitchResource) Create(ctx context.Context, req resour
 	}
 	if !(plan.IPV6Hw.IsNull() || plan.IPV6Hw.IsUnknown()) {
 		body["ipv6-hw"] = plan.IPV6Hw.ValueString()
+	}
+	if !(plan.SwitchAllPorts.IsNull() || plan.SwitchAllPorts.IsUnknown()) {
+		body["switch-all-ports"] = plan.SwitchAllPorts.ValueString()
 	}
 	obj, err := c.Add(ctx, "/interface/ethernet/switch", body)
 	if err != nil {
@@ -161,6 +205,18 @@ func (r *InterfaceEthernetSwitchResource) Update(ctx context.Context, req resour
 		return
 	}
 	body := client.Object{}
+	if !plan.Name.Equal(state.Name) {
+		body["name"] = plan.Name.ValueString()
+	}
+	if !plan.MirrorSource.Equal(state.MirrorSource) {
+		body["mirror-source"] = plan.MirrorSource.ValueString()
+	}
+	if !plan.MirrorTarget.Equal(state.MirrorTarget) {
+		body["mirror-target"] = plan.MirrorTarget.ValueString()
+	}
+	if !plan.CPUFlowControl.Equal(state.CPUFlowControl) {
+		body["cpu-flow-control"] = plan.CPUFlowControl.ValueString()
+	}
 	if !plan.Autorestart.Equal(state.Autorestart) {
 		body["autorestart"] = plan.Autorestart.ValueString()
 	}
@@ -172,6 +228,9 @@ func (r *InterfaceEthernetSwitchResource) Update(ctx context.Context, req resour
 	}
 	if !plan.IPV6Hw.Equal(state.IPV6Hw) {
 		body["ipv6-hw"] = plan.IPV6Hw.ValueString()
+	}
+	if !plan.SwitchAllPorts.Equal(state.SwitchAllPorts) && !plan.SwitchAllPorts.IsUnknown() {
+		body["switch-all-ports"] = plan.SwitchAllPorts.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/ethernet/switch", state.ID.ValueString(), body)
@@ -239,6 +298,51 @@ func interfaceEthernetSwitchLookupByNaturalKey(ctx context.Context, c *client.Cl
 func interfaceEthernetSwitchApply(ctx context.Context, obj client.Object, m *InterfaceEthernetSwitchModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["switch-all-ports"]; ok && v != "" {
+		m.SwitchAllPorts = types.StringValue(v)
+	} else {
+		m.SwitchAllPorts = types.StringNull()
+	}
+	if v, ok := obj["name"]; ok {
+		_ = v
+		if v != "" {
+			m.Name = types.StringValue(v)
+		} else {
+			m.Name = types.StringNull()
+		}
+	} else {
+		m.Name = types.StringNull()
+	}
+	if v, ok := obj["mirror-source"]; ok {
+		_ = v
+		if v != "" {
+			m.MirrorSource = types.StringValue(v)
+		} else {
+			m.MirrorSource = types.StringNull()
+		}
+	} else {
+		m.MirrorSource = types.StringNull()
+	}
+	if v, ok := obj["mirror-target"]; ok {
+		_ = v
+		if v != "" {
+			m.MirrorTarget = types.StringValue(v)
+		} else {
+			m.MirrorTarget = types.StringNull()
+		}
+	} else {
+		m.MirrorTarget = types.StringNull()
+	}
+	if v, ok := obj["cpu-flow-control"]; ok {
+		_ = v
+		if v != "" {
+			m.CPUFlowControl = types.StringValue(v)
+		} else {
+			m.CPUFlowControl = types.StringNull()
+		}
+	} else {
+		m.CPUFlowControl = types.StringNull()
+	}
 	if v, ok := obj["autorestart"]; ok {
 		_ = v
 		if v != "" {

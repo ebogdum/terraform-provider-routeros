@@ -26,18 +26,17 @@ resource "routeros_mpls_settings" "settings_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `allow_fast_path` - (Optional) Type: `bool`.
 * `dynamic_label_range` - (Optional) Type: `string`.
+* `mpls_fast_path_bytes` - (Optional) Type: `int`.
+* `mpls_fast_path_packets` - (Optional) Type: `int`.
 * `propagate_ttl` - (Optional) Type: `bool`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - Stable identifier (the singleton's menu path, optionally namespaced by router).
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `mpls_fast_path_bytes` - Type: `int`.
-* `mpls_fast_path_packets` - Type: `int`.
 
 ## Import
 

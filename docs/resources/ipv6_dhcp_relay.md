@@ -23,9 +23,21 @@ resource "routeros_ipv6_dhcp_relay" "dhcp_relay_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `delay_threshold` - (Optional) Type: `string`. RouterOS `delay-threshold`.
+* `dhcp_options` - (Optional) Type: `string`. RouterOS `dhcp-options`.
+* `dhcp_server` - (Optional) Type: `string`. RouterOS `dhcp-server`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `interface` - (Optional) Type: `string`. RouterOS `interface`.
+* `link_address` - (Optional) Type: `string`. RouterOS `link-address`.
+* `name` - (Optional) Type: `string`. RouterOS `name`.
+* `store_relayed_bindings` - (Optional) Type: `string`. RouterOS `store-relayed-bindings`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

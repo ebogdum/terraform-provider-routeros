@@ -29,13 +29,21 @@ resource "routeros_port_remote_access" "remote_access_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `channel` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `ip_port` - (Optional) Type: `string`. RouterOS `ip-port`.
 * `local_address` - (Optional) Type: `string`.
+* `log_file` - (Optional) Type: `string`. RouterOS `log-file`.
 * `port` - (Optional) Type: `string`.
 * `protocol` - (Optional) Type: `string`.
+* `remote_addresses` - (Optional) Type: `string`. RouterOS `remote-addresses`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

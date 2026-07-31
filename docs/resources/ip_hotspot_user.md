@@ -44,40 +44,39 @@ resource "routeros_ip_hotspot_user" "user_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `address` - (Optional) Type: `ip`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `address` - (Optional) Type: `string`.
+* `bytes_in` - (Read-only) Type: `int`.
+* `bytes_out` - (Read-only) Type: `int`.
 * `comment` - (Optional) Type: `string`.
 * `def` - (Optional) Type: `bool`.
+* `default` - (Read-only) Type: `bool`.
 * `disabled` - (Optional) Type: `bool`.
+* `dynamic` - (Read-only) Type: `bool`.
 * `email` - (Optional) Type: `string`.
 * `limit_bytes_in` - (Optional) Type: `string`.
 * `limit_bytes_out` - (Optional) Type: `string`.
 * `limit_bytes_total` - (Optional) Type: `string`.
-* `limit_uptime` - (Optional) Type: `duration`.
+* `limit_uptime` - (Optional) Type: `string`.
 * `mac_address` - (Optional) Type: `string`.
-* `name` - (Required) Type: `string`. Default: `tf_acc_user`.
+* `name` - (Required) Type: `string`.
 * `nondef` - (Optional) Type: `string`.
-* `nondefro` - (Optional) Type: `string`.
+* `nondefro` - (Read-only) Type: `string`.
 * `otp_secret` - (Optional) Type: `string`. **Sensitive.**
+* `packets_in` - (Read-only) Type: `int`.
+* `packets_out` - (Read-only) Type: `int`.
 * `password` - (Optional) Type: `string`. **Sensitive.**
 * `profile` - (Optional) Type: `string`.
-* `reset_all_counters` - (Optional) Type: `string`.
-* `reset_counters` - (Optional) Type: `string`.
+* `reset_all_counters` - (Read-only) Type: `string`.
+* `reset_counters` - (Read-only) Type: `string`.
 * `routes` - (Optional) Type: `string`.
 * `server` - (Optional) Type: `string`.
+* `uptime` - (Read-only) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `bytes_in` - Type: `int`.
-* `bytes_out` - Type: `int`.
-* `default` - Type: `bool`.
-* `dynamic` - Type: `bool`.
-* `packets_in` - Type: `int`.
-* `packets_out` - Type: `int`.
-* `uptime` - Type: `duration`.
 
 ## Import
 

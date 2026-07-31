@@ -32,24 +32,23 @@ resource "routeros_system_scheduler" "scheduler_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `interval` - (Optional) Type: `duration`. Default: `1h`.
-* `name` - (Required) Type: `string`. Default: `tf-acc-sched`.
-* `on_event` - (Required) Type: `string`. Default: `:put "tick"`.
+* `interval` - (Optional) Type: `string`.
+* `name` - (Required) Type: `string`.
+* `next_run` - (Read-only) Type: `string`.
+* `on_event` - (Required) Type: `string`.
+* `owner` - (Read-only) Type: `string`.
 * `policy` - (Optional) Type: `string`.
+* `run_count` - (Read-only) Type: `int`.
 * `start_date` - (Optional) Type: `string`.
-* `start_time` - (Optional) Type: `enum(startup)`.
+* `start_time` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `next_run` - Type: `string`.
-* `owner` - Type: `string`.
-* `run_count` - Type: `int`.
 
 ## Import
 

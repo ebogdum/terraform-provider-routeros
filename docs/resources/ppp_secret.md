@@ -39,31 +39,30 @@ resource "routeros_ppp_secret" "secret_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `caller_id` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `ipv6` - (Optional) Type: `string`.
+* `ipv6` - (Read-only) Type: `string`.
 * `ipv6_routes` - (Optional) Type: `string`.
+* `last_caller_id` - (Read-only) Type: `string`.
+* `last_disconnect_reason` - (Read-only) Type: `string`.
+* `last_logged_out` - (Read-only) Type: `string`.
 * `limit_bytes_in` - (Optional) Type: `string`.
 * `limit_bytes_out` - (Optional) Type: `string`.
 * `local_address` - (Optional) Type: `string`.
-* `name` - (Required) Type: `string`. Default: `tf_acc_pppsec`.
+* `name` - (Required) Type: `string`.
 * `password` - (Optional) Type: `string`. **Sensitive.**
 * `profile` - (Optional) Type: `string`.
 * `remote_address` - (Optional) Type: `string`.
 * `remote_ipv6_prefix` - (Optional) Type: `string`.
 * `routes` - (Optional) Type: `string`.
-* `service` - (Optional) Type: `enum(any|async|pptp|pppoe|l2tp|ovpn, ...)`.
+* `service` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `last_caller_id` - Type: `string`.
-* `last_disconnect_reason` - Type: `enum(|peer-request|hung-up|idle-timeout|session-timeout|reset, ...)`.
-* `last_logged_out` - Type: `string`.
 
 ## Import
 

@@ -32,6 +32,10 @@ type IPV6RouteResource struct {
 
 type IPV6RouteModel struct {
 	ID           types.String `tfsdk:"id"`
+	VrfInterface types.String `tfsdk:"vrf_interface"`
+	PrefSrc      types.String `tfsdk:"pref_src"`
+	CheckGateway types.String `tfsdk:"check_gateway"`
+	Blackhole    types.String `tfsdk:"blackhole"`
 	Active       types.Bool   `tfsdk:"active"`
 	Comment      types.String `tfsdk:"comment"`
 	Connect      types.Bool   `tfsdk:"connect"`
@@ -60,7 +64,6 @@ func (r *IPV6RouteResource) Configure(_ context.Context, req resource.ConfigureR
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPV6RouteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -72,8 +75,27 @@ func (r *IPV6RouteResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
-			"active": schema.BoolAttribute{
+			"vrf_interface": schema.StringAttribute{
 				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `vrf-interface`.",
+			},
+			"pref_src": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `pref-src`.",
+			},
+			"check_gateway": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `check-gateway`.",
+			},
+			"blackhole": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `blackhole`.",
+			},
+			"active": schema.BoolAttribute{
 				Computed:    true,
 				Description: "",
 			},
@@ -83,7 +105,6 @@ func (r *IPV6RouteResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Description: "Free-form comment.",
 			},
 			"connect": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -105,7 +126,6 @@ func (r *IPV6RouteResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeCIDR()},
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -115,12 +135,10 @@ func (r *IPV6RouteResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Description: "",
 			},
 			"immediate_gw": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"inactive": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -181,6 +199,18 @@ func (r *IPV6RouteResource) Create(ctx context.Context, req resource.CreateReque
 	}
 	if !(plan.TargetScope.IsNull() || plan.TargetScope.IsUnknown()) {
 		body["target-scope"] = client.FormatInt64(plan.TargetScope.ValueInt64())
+	}
+	if !(plan.Blackhole.IsNull() || plan.Blackhole.IsUnknown()) {
+		body["blackhole"] = plan.Blackhole.ValueString()
+	}
+	if !(plan.CheckGateway.IsNull() || plan.CheckGateway.IsUnknown()) {
+		body["check-gateway"] = plan.CheckGateway.ValueString()
+	}
+	if !(plan.PrefSrc.IsNull() || plan.PrefSrc.IsUnknown()) {
+		body["pref-src"] = plan.PrefSrc.ValueString()
+	}
+	if !(plan.VrfInterface.IsNull() || plan.VrfInterface.IsUnknown()) {
+		body["vrf-interface"] = plan.VrfInterface.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ipv6/route", body)
 	if err != nil {
@@ -253,6 +283,18 @@ func (r *IPV6RouteResource) Update(ctx context.Context, req resource.UpdateReque
 	if !plan.TargetScope.Equal(state.TargetScope) {
 		body["target-scope"] = client.FormatInt64(plan.TargetScope.ValueInt64())
 	}
+	if !plan.Blackhole.Equal(state.Blackhole) && !plan.Blackhole.IsUnknown() {
+		body["blackhole"] = plan.Blackhole.ValueString()
+	}
+	if !plan.CheckGateway.Equal(state.CheckGateway) && !plan.CheckGateway.IsUnknown() {
+		body["check-gateway"] = plan.CheckGateway.ValueString()
+	}
+	if !plan.PrefSrc.Equal(state.PrefSrc) && !plan.PrefSrc.IsUnknown() {
+		body["pref-src"] = plan.PrefSrc.ValueString()
+	}
+	if !plan.VrfInterface.Equal(state.VrfInterface) && !plan.VrfInterface.IsUnknown() {
+		body["vrf-interface"] = plan.VrfInterface.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ipv6/route", state.ID.ValueString(), body)
 		if err != nil {
@@ -319,6 +361,26 @@ func iPV6RouteLookupByNaturalKey(ctx context.Context, c *client.Client, id strin
 func iPV6RouteApply(ctx context.Context, obj client.Object, m *IPV6RouteModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["vrf-interface"]; ok && v != "" {
+		m.VrfInterface = types.StringValue(v)
+	} else {
+		m.VrfInterface = types.StringNull()
+	}
+	if v, ok := obj["pref-src"]; ok && v != "" {
+		m.PrefSrc = types.StringValue(v)
+	} else {
+		m.PrefSrc = types.StringNull()
+	}
+	if v, ok := obj["check-gateway"]; ok && v != "" {
+		m.CheckGateway = types.StringValue(v)
+	} else {
+		m.CheckGateway = types.StringNull()
+	}
+	if v, ok := obj["blackhole"]; ok && v != "" {
+		m.Blackhole = types.StringValue(v)
+	} else {
+		m.Blackhole = types.StringNull()
+	}
 	if v, ok := obj["active"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {

@@ -31,15 +31,25 @@ resource "routeros_interface_ppp_server" "ppp_server_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `authentication` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
+* `data_channel` - (Optional) Type: `string`. RouterOS `data-channel`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `max_mru` - (Optional) Type: `string`.
 * `max_mtu` - (Optional) Type: `string`.
+* `modem_init` - (Optional) Type: `string`. RouterOS `modem-init`.
 * `mrru` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
+* `null_modem` - (Optional) Type: `string`. RouterOS `null-modem`.
+* `port` - (Optional) Type: `string`. RouterOS `port`.
 * `profile` - (Optional) Type: `string`.
+* `ring_count` - (Optional) Type: `string`. RouterOS `ring-count`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

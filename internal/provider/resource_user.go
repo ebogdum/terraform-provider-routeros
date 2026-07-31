@@ -60,7 +60,6 @@ func (r *UserResource) Configure(_ context.Context, req resource.ConfigureReques
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *UserResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -78,7 +77,6 @@ func (r *UserResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"alias": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -93,7 +91,6 @@ func (r *UserResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"expired": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -114,7 +111,6 @@ func (r *UserResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
 			},
 			"last_logged_in": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -128,7 +124,6 @@ func (r *UserResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"type": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -159,9 +154,6 @@ func (r *UserResource) Create(ctx context.Context, req resource.CreateRequest, r
 	if !(plan.Address.IsNull() || plan.Address.IsUnknown()) {
 		body["address"] = plan.Address.ValueString()
 	}
-	if !(plan.Alias.IsNull() || plan.Alias.IsUnknown()) {
-		body["alias"] = plan.Alias.ValueString()
-	}
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
 	}
@@ -182,9 +174,6 @@ func (r *UserResource) Create(ctx context.Context, req resource.CreateRequest, r
 	}
 	if !(plan.Password.IsNull() || plan.Password.IsUnknown()) {
 		body["password"] = plan.Password.ValueString()
-	}
-	if !(plan.Type.IsNull() || plan.Type.IsUnknown()) {
-		body["type"] = client.FormatInt64(plan.Type.ValueInt64())
 	}
 	obj, err := c.Add(ctx, "/user", body)
 	if err != nil {
@@ -236,9 +225,6 @@ func (r *UserResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	if !plan.Address.Equal(state.Address) {
 		body["address"] = plan.Address.ValueString()
 	}
-	if !plan.Alias.Equal(state.Alias) {
-		body["alias"] = plan.Alias.ValueString()
-	}
 	if !plan.Comment.Equal(state.Comment) {
 		body["comment"] = plan.Comment.ValueString()
 	}
@@ -259,9 +245,6 @@ func (r *UserResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	}
 	if !plan.Password.Equal(state.Password) {
 		body["password"] = plan.Password.ValueString()
-	}
-	if !plan.Type.Equal(state.Type) {
-		body["type"] = client.FormatInt64(plan.Type.ValueInt64())
 	}
 	// Block disabling the last admin via Update.
 	if v, ok := body["disabled"]; ok && strings.EqualFold(v, "true") {

@@ -29,10 +29,22 @@ type InterfaceLteResource struct {
 }
 
 type InterfaceLteModel struct {
-	ID       types.String `tfsdk:"id"`
-	Comment  types.String `tfsdk:"comment"`
-	Disabled types.Bool   `tfsdk:"disabled"`
-	Router   types.String `tfsdk:"router"`
+	ID           types.String `tfsdk:"id"`
+	SmsRead      types.String `tfsdk:"sms_read"`
+	SmsProtocol  types.String `tfsdk:"sms_protocol"`
+	Pin          types.String `tfsdk:"pin"`
+	Operator     types.String `tfsdk:"operator"`
+	NrBand       types.String `tfsdk:"nr_band"`
+	NetworkMode  types.String `tfsdk:"network_mode"`
+	Name         types.String `tfsdk:"name"`
+	Mtu          types.String `tfsdk:"mtu"`
+	ModemInit    types.String `tfsdk:"modem_init"`
+	Band         types.String `tfsdk:"band"`
+	ApnProfiles  types.String `tfsdk:"apn_profiles"`
+	AllowRoaming types.String `tfsdk:"allow_roaming"`
+	Comment      types.String `tfsdk:"comment"`
+	Disabled     types.Bool   `tfsdk:"disabled"`
+	Router       types.String `tfsdk:"router"`
 }
 
 func NewInterfaceLteResource() resource.Resource { return &InterfaceLteResource{} }
@@ -47,7 +59,6 @@ func (r *InterfaceLteResource) Configure(_ context.Context, req resource.Configu
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceLteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -58,6 +69,66 @@ func (r *InterfaceLteResource) Schema(_ context.Context, _ resource.SchemaReques
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"sms_read": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `sms-read`.",
+			},
+			"sms_protocol": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `sms-protocol`.",
+			},
+			"pin": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `pin`.",
+			},
+			"operator": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `operator`.",
+			},
+			"nr_band": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `nr-band`.",
+			},
+			"network_mode": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `network-mode`.",
+			},
+			"name": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `name`.",
+			},
+			"mtu": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `mtu`.",
+			},
+			"modem_init": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `modem-init`.",
+			},
+			"band": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `band`.",
+			},
+			"apn_profiles": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `apn-profiles`.",
+			},
+			"allow_roaming": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `allow-roaming`.",
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -93,6 +164,42 @@ func (r *InterfaceLteResource) Create(ctx context.Context, req resource.CreateRe
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !(plan.AllowRoaming.IsNull() || plan.AllowRoaming.IsUnknown()) {
+		body["allow-roaming"] = plan.AllowRoaming.ValueString()
+	}
+	if !(plan.ApnProfiles.IsNull() || plan.ApnProfiles.IsUnknown()) {
+		body["apn-profiles"] = plan.ApnProfiles.ValueString()
+	}
+	if !(plan.Band.IsNull() || plan.Band.IsUnknown()) {
+		body["band"] = plan.Band.ValueString()
+	}
+	if !(plan.ModemInit.IsNull() || plan.ModemInit.IsUnknown()) {
+		body["modem-init"] = plan.ModemInit.ValueString()
+	}
+	if !(plan.Mtu.IsNull() || plan.Mtu.IsUnknown()) {
+		body["mtu"] = plan.Mtu.ValueString()
+	}
+	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
+		body["name"] = plan.Name.ValueString()
+	}
+	if !(plan.NetworkMode.IsNull() || plan.NetworkMode.IsUnknown()) {
+		body["network-mode"] = plan.NetworkMode.ValueString()
+	}
+	if !(plan.NrBand.IsNull() || plan.NrBand.IsUnknown()) {
+		body["nr-band"] = plan.NrBand.ValueString()
+	}
+	if !(plan.Operator.IsNull() || plan.Operator.IsUnknown()) {
+		body["operator"] = plan.Operator.ValueString()
+	}
+	if !(plan.Pin.IsNull() || plan.Pin.IsUnknown()) {
+		body["pin"] = plan.Pin.ValueString()
+	}
+	if !(plan.SmsProtocol.IsNull() || plan.SmsProtocol.IsUnknown()) {
+		body["sms-protocol"] = plan.SmsProtocol.ValueString()
+	}
+	if !(plan.SmsRead.IsNull() || plan.SmsRead.IsUnknown()) {
+		body["sms-read"] = plan.SmsRead.ValueString()
 	}
 	obj, err := c.Add(ctx, "/interface/lte", body)
 	if err != nil {
@@ -146,6 +253,42 @@ func (r *InterfaceLteResource) Update(ctx context.Context, req resource.UpdateRe
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !plan.AllowRoaming.Equal(state.AllowRoaming) && !plan.AllowRoaming.IsUnknown() {
+		body["allow-roaming"] = plan.AllowRoaming.ValueString()
+	}
+	if !plan.ApnProfiles.Equal(state.ApnProfiles) && !plan.ApnProfiles.IsUnknown() {
+		body["apn-profiles"] = plan.ApnProfiles.ValueString()
+	}
+	if !plan.Band.Equal(state.Band) && !plan.Band.IsUnknown() {
+		body["band"] = plan.Band.ValueString()
+	}
+	if !plan.ModemInit.Equal(state.ModemInit) && !plan.ModemInit.IsUnknown() {
+		body["modem-init"] = plan.ModemInit.ValueString()
+	}
+	if !plan.Mtu.Equal(state.Mtu) && !plan.Mtu.IsUnknown() {
+		body["mtu"] = plan.Mtu.ValueString()
+	}
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
+		body["name"] = plan.Name.ValueString()
+	}
+	if !plan.NetworkMode.Equal(state.NetworkMode) && !plan.NetworkMode.IsUnknown() {
+		body["network-mode"] = plan.NetworkMode.ValueString()
+	}
+	if !plan.NrBand.Equal(state.NrBand) && !plan.NrBand.IsUnknown() {
+		body["nr-band"] = plan.NrBand.ValueString()
+	}
+	if !plan.Operator.Equal(state.Operator) && !plan.Operator.IsUnknown() {
+		body["operator"] = plan.Operator.ValueString()
+	}
+	if !plan.Pin.Equal(state.Pin) && !plan.Pin.IsUnknown() {
+		body["pin"] = plan.Pin.ValueString()
+	}
+	if !plan.SmsProtocol.Equal(state.SmsProtocol) && !plan.SmsProtocol.IsUnknown() {
+		body["sms-protocol"] = plan.SmsProtocol.ValueString()
+	}
+	if !plan.SmsRead.Equal(state.SmsRead) && !plan.SmsRead.IsUnknown() {
+		body["sms-read"] = plan.SmsRead.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/lte", state.ID.ValueString(), body)
@@ -213,6 +356,66 @@ func interfaceLteLookupByNaturalKey(ctx context.Context, c *client.Client, id st
 func interfaceLteApply(ctx context.Context, obj client.Object, m *InterfaceLteModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["sms-read"]; ok && v != "" {
+		m.SmsRead = types.StringValue(v)
+	} else {
+		m.SmsRead = types.StringNull()
+	}
+	if v, ok := obj["sms-protocol"]; ok && v != "" {
+		m.SmsProtocol = types.StringValue(v)
+	} else {
+		m.SmsProtocol = types.StringNull()
+	}
+	if v, ok := obj["pin"]; ok && v != "" {
+		m.Pin = types.StringValue(v)
+	} else {
+		m.Pin = types.StringNull()
+	}
+	if v, ok := obj["operator"]; ok && v != "" {
+		m.Operator = types.StringValue(v)
+	} else {
+		m.Operator = types.StringNull()
+	}
+	if v, ok := obj["nr-band"]; ok && v != "" {
+		m.NrBand = types.StringValue(v)
+	} else {
+		m.NrBand = types.StringNull()
+	}
+	if v, ok := obj["network-mode"]; ok && v != "" {
+		m.NetworkMode = types.StringValue(v)
+	} else {
+		m.NetworkMode = types.StringNull()
+	}
+	if v, ok := obj["name"]; ok && v != "" {
+		m.Name = types.StringValue(v)
+	} else {
+		m.Name = types.StringNull()
+	}
+	if v, ok := obj["mtu"]; ok && v != "" {
+		m.Mtu = types.StringValue(v)
+	} else {
+		m.Mtu = types.StringNull()
+	}
+	if v, ok := obj["modem-init"]; ok && v != "" {
+		m.ModemInit = types.StringValue(v)
+	} else {
+		m.ModemInit = types.StringNull()
+	}
+	if v, ok := obj["band"]; ok && v != "" {
+		m.Band = types.StringValue(v)
+	} else {
+		m.Band = types.StringNull()
+	}
+	if v, ok := obj["apn-profiles"]; ok && v != "" {
+		m.ApnProfiles = types.StringValue(v)
+	} else {
+		m.ApnProfiles = types.StringNull()
+	}
+	if v, ok := obj["allow-roaming"]; ok && v != "" {
+		m.AllowRoaming = types.StringValue(v)
+	} else {
+		m.AllowRoaming = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {

@@ -40,26 +40,30 @@ resource "routeros_routing_bgp_vpn" "vpn_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `export_filter` - (Optional) Type: `string`.
+* `export_filter` - (Read-only) Type: `string`.
+* `export_filter_chain` - (Optional) Type: `string`. RouterOS `export.filter-chain`.
+* `export_filter_select` - (Optional) Type: `string`. RouterOS `export.filter-select`.
+* `export_redistribute` - (Optional) Type: `string`. RouterOS `export.redistribute`.
 * `export_route_targets` - (Optional) Type: `string`.
-* `export_select` - (Optional) Type: `string`.
-* `import_filter` - (Optional) Type: `string`.
+* `export_select` - (Read-only) Type: `string`.
+* `import_filter` - (Read-only) Type: `string`.
+* `import_filter_chain` - (Optional) Type: `string`. RouterOS `import.filter-chain`.
 * `import_route_targets` - (Optional) Type: `string`.
 * `instance` - (Optional) Type: `string`.
-* `label_allocation_policy` - (Optional) Type: `enum(|per-vrf|per-prefix)`.
-* `redistribute` - (Optional) Type: `string`.
+* `invalid` - (Read-only) Type: `bool`.
+* `label_allocation_policy` - (Optional) Type: `string`.
+* `name` - (Optional) Type: `string`. RouterOS `name`.
+* `redistribute` - (Read-only) Type: `string`.
 * `route_distinguisher` - (Optional) Type: `string`.
 * `vrf` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `invalid` - Type: `bool`.
 
 ## Import
 

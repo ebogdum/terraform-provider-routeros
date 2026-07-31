@@ -83,11 +83,12 @@ resource "routeros_ip_firewall_nat" "nat_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `action` - (Required) Type: `string`. Default: `accept`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `action` - (Required) Type: `string`.
 * `address_list` - (Optional) Type: `string`.
 * `address_list_timeout` - (Optional) Type: `string`.
-* `chain` - (Required) Type: `string`. Default: `srcnat`.
+* `bytes` - (Optional) Type: `string`.
+* `chain` - (Required) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `connection_bytes` - (Optional) Type: `string`.
 * `connection_limit` - (Optional) Type: `string`.
@@ -124,15 +125,21 @@ This resource supports the following arguments:
 * `out_interface_list` - (Optional) Type: `string`.
 * `packet_mark` - (Optional) Type: `string`.
 * `packet_size` - (Optional) Type: `string`.
+* `packets` - (Optional) Type: `string`.
 * `per_connection_classifier` - (Optional) Type: `string`.
 * `port` - (Optional) Type: `string`.
+* `position` - (Optional) Type: `int`. Sort key for placement in the ordered chain. Lower = higher in the chain. Persisted on the device via a [tf:pos=N] prefix in the comment so destroy+apply rebuilds the same order.
 * `priority` - (Optional) Type: `string`.
 * `protocol` - (Optional) Type: `string`.
 * `psd` - (Optional) Type: `string`.
 * `random` - (Optional) Type: `string`.
+* `randomise_ports` - (Optional) Type: `string`. RouterOS `randomise-ports`.
 * `realm` - (Optional) Type: `string`.
 * `routing_mark` - (Optional) Type: `string`.
 * `same_not_by_dst` - (Optional) Type: `string`.
+* `socks5_port` - (Optional) Type: `string`. RouterOS `socks5-port`.
+* `socks5_server` - (Optional) Type: `string`. RouterOS `socks5-server`.
+* `socksify_service` - (Optional) Type: `string`. RouterOS `socksify-service`.
 * `src_address` - (Optional) Type: `string`.
 * `src_address_list` - (Optional) Type: `string`.
 * `src_address_type` - (Optional) Type: `string`.
@@ -142,15 +149,13 @@ This resource supports the following arguments:
 * `time` - (Optional) Type: `string`.
 * `to_addresses` - (Optional) Type: `string`.
 * `to_ports` - (Optional) Type: `string`.
+* `tos` - (Optional) Type: `string`. RouterOS `tos`.
 * `ttl` - (Optional) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `bytes` - Type: `string`.
-* `packets` - Type: `string`.
 
 ## Import
 

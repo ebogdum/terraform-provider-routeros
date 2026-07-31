@@ -52,7 +52,6 @@ func (r *LcdResource) Configure(_ context.Context, req resource.ConfigureRequest
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *LcdResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {

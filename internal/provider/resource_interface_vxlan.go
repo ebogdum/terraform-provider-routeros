@@ -29,21 +29,35 @@ type InterfaceVxlanResource struct {
 }
 
 type InterfaceVxlanModel struct {
-	ID           types.String `tfsdk:"id"`
-	ARP          types.String `tfsdk:"arp"`
-	ARPTimeout   types.String `tfsdk:"arp_timeout"`
-	Bridge       types.String `tfsdk:"bridge"`
-	Comment      types.String `tfsdk:"comment"`
-	Disabled     types.Bool   `tfsdk:"disabled"`
-	Interface    types.String `tfsdk:"interface"`
-	LocalAddress types.String `tfsdk:"local_address"`
-	MACAddress   types.String `tfsdk:"mac_address"`
-	MTU          types.String `tfsdk:"mtu"`
-	Name         types.String `tfsdk:"name"`
-	Port         types.String `tfsdk:"port"`
-	Ttl          types.String `tfsdk:"ttl"`
-	Vni          types.String `tfsdk:"vni"`
-	Router       types.String `tfsdk:"router"`
+	ID                      types.String `tfsdk:"id"`
+	VtepsIpVersion          types.String `tfsdk:"vteps_ip_version"`
+	VtepVrf                 types.String `tfsdk:"vtep_vrf"`
+	RemCsum                 types.String `tfsdk:"rem_csum"`
+	MaxFdbSize              types.String `tfsdk:"max_fdb_size"`
+	LoopProtectSendInterval types.String `tfsdk:"loop_protect_send_interval"`
+	LoopProtectDisableTime  types.String `tfsdk:"loop_protect_disable_time"`
+	LoopProtect             types.String `tfsdk:"loop_protect"`
+	Learning                types.String `tfsdk:"learning"`
+	Hw                      types.String `tfsdk:"hw"`
+	Group                   types.String `tfsdk:"group"`
+	DontFragment            types.String `tfsdk:"dont_fragment"`
+	Checksum                types.String `tfsdk:"checksum"`
+	BridgePvid              types.String `tfsdk:"bridge_pvid"`
+	AllowFastPath           types.String `tfsdk:"allow_fast_path"`
+	ARP                     types.String `tfsdk:"arp"`
+	ARPTimeout              types.String `tfsdk:"arp_timeout"`
+	Bridge                  types.String `tfsdk:"bridge"`
+	Comment                 types.String `tfsdk:"comment"`
+	Disabled                types.Bool   `tfsdk:"disabled"`
+	Interface               types.String `tfsdk:"interface"`
+	LocalAddress            types.String `tfsdk:"local_address"`
+	MACAddress              types.String `tfsdk:"mac_address"`
+	MTU                     types.String `tfsdk:"mtu"`
+	Name                    types.String `tfsdk:"name"`
+	Port                    types.String `tfsdk:"port"`
+	Ttl                     types.String `tfsdk:"ttl"`
+	Vni                     types.String `tfsdk:"vni"`
+	Router                  types.String `tfsdk:"router"`
 }
 
 func NewInterfaceVxlanResource() resource.Resource { return &InterfaceVxlanResource{} }
@@ -58,7 +72,6 @@ func (r *InterfaceVxlanResource) Configure(_ context.Context, req resource.Confi
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceVxlanResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -69,6 +82,76 @@ func (r *InterfaceVxlanResource) Schema(_ context.Context, _ resource.SchemaRequ
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"vteps_ip_version": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `vteps-ip-version`.",
+			},
+			"vtep_vrf": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `vtep-vrf`.",
+			},
+			"rem_csum": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `rem-csum`.",
+			},
+			"max_fdb_size": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `max-fdb-size`.",
+			},
+			"loop_protect_send_interval": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `loop-protect-send-interval`.",
+			},
+			"loop_protect_disable_time": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `loop-protect-disable-time`.",
+			},
+			"loop_protect": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `loop-protect`.",
+			},
+			"learning": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `learning`.",
+			},
+			"hw": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `hw`.",
+			},
+			"group": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `group`.",
+			},
+			"dont_fragment": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `dont-fragment`.",
+			},
+			"checksum": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `checksum`.",
+			},
+			"bridge_pvid": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `bridge-pvid`.",
+			},
+			"allow_fast_path": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `allow-fast-path`.",
 			},
 			"arp": schema.StringAttribute{
 				Optional:    true,
@@ -191,6 +274,48 @@ func (r *InterfaceVxlanResource) Create(ctx context.Context, req resource.Create
 	if !(plan.Vni.IsNull() || plan.Vni.IsUnknown()) {
 		body["vni"] = plan.Vni.ValueString()
 	}
+	if !(plan.AllowFastPath.IsNull() || plan.AllowFastPath.IsUnknown()) {
+		body["allow-fast-path"] = plan.AllowFastPath.ValueString()
+	}
+	if !(plan.BridgePvid.IsNull() || plan.BridgePvid.IsUnknown()) {
+		body["bridge-pvid"] = plan.BridgePvid.ValueString()
+	}
+	if !(plan.Checksum.IsNull() || plan.Checksum.IsUnknown()) {
+		body["checksum"] = plan.Checksum.ValueString()
+	}
+	if !(plan.DontFragment.IsNull() || plan.DontFragment.IsUnknown()) {
+		body["dont-fragment"] = plan.DontFragment.ValueString()
+	}
+	if !(plan.Group.IsNull() || plan.Group.IsUnknown()) {
+		body["group"] = plan.Group.ValueString()
+	}
+	if !(plan.Hw.IsNull() || plan.Hw.IsUnknown()) {
+		body["hw"] = plan.Hw.ValueString()
+	}
+	if !(plan.Learning.IsNull() || plan.Learning.IsUnknown()) {
+		body["learning"] = plan.Learning.ValueString()
+	}
+	if !(plan.LoopProtect.IsNull() || plan.LoopProtect.IsUnknown()) {
+		body["loop-protect"] = plan.LoopProtect.ValueString()
+	}
+	if !(plan.LoopProtectDisableTime.IsNull() || plan.LoopProtectDisableTime.IsUnknown()) {
+		body["loop-protect-disable-time"] = plan.LoopProtectDisableTime.ValueString()
+	}
+	if !(plan.LoopProtectSendInterval.IsNull() || plan.LoopProtectSendInterval.IsUnknown()) {
+		body["loop-protect-send-interval"] = plan.LoopProtectSendInterval.ValueString()
+	}
+	if !(plan.MaxFdbSize.IsNull() || plan.MaxFdbSize.IsUnknown()) {
+		body["max-fdb-size"] = plan.MaxFdbSize.ValueString()
+	}
+	if !(plan.RemCsum.IsNull() || plan.RemCsum.IsUnknown()) {
+		body["rem-csum"] = plan.RemCsum.ValueString()
+	}
+	if !(plan.VtepVrf.IsNull() || plan.VtepVrf.IsUnknown()) {
+		body["vtep-vrf"] = plan.VtepVrf.ValueString()
+	}
+	if !(plan.VtepsIpVersion.IsNull() || plan.VtepsIpVersion.IsUnknown()) {
+		body["vteps-ip-version"] = plan.VtepsIpVersion.ValueString()
+	}
 	obj, err := c.Add(ctx, "/interface/vxlan", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /interface/vxlan failed", err.Error())
@@ -277,6 +402,48 @@ func (r *InterfaceVxlanResource) Update(ctx context.Context, req resource.Update
 	if !plan.Vni.Equal(state.Vni) {
 		body["vni"] = plan.Vni.ValueString()
 	}
+	if !plan.AllowFastPath.Equal(state.AllowFastPath) && !plan.AllowFastPath.IsUnknown() {
+		body["allow-fast-path"] = plan.AllowFastPath.ValueString()
+	}
+	if !plan.BridgePvid.Equal(state.BridgePvid) && !plan.BridgePvid.IsUnknown() {
+		body["bridge-pvid"] = plan.BridgePvid.ValueString()
+	}
+	if !plan.Checksum.Equal(state.Checksum) && !plan.Checksum.IsUnknown() {
+		body["checksum"] = plan.Checksum.ValueString()
+	}
+	if !plan.DontFragment.Equal(state.DontFragment) && !plan.DontFragment.IsUnknown() {
+		body["dont-fragment"] = plan.DontFragment.ValueString()
+	}
+	if !plan.Group.Equal(state.Group) && !plan.Group.IsUnknown() {
+		body["group"] = plan.Group.ValueString()
+	}
+	if !plan.Hw.Equal(state.Hw) && !plan.Hw.IsUnknown() {
+		body["hw"] = plan.Hw.ValueString()
+	}
+	if !plan.Learning.Equal(state.Learning) && !plan.Learning.IsUnknown() {
+		body["learning"] = plan.Learning.ValueString()
+	}
+	if !plan.LoopProtect.Equal(state.LoopProtect) && !plan.LoopProtect.IsUnknown() {
+		body["loop-protect"] = plan.LoopProtect.ValueString()
+	}
+	if !plan.LoopProtectDisableTime.Equal(state.LoopProtectDisableTime) && !plan.LoopProtectDisableTime.IsUnknown() {
+		body["loop-protect-disable-time"] = plan.LoopProtectDisableTime.ValueString()
+	}
+	if !plan.LoopProtectSendInterval.Equal(state.LoopProtectSendInterval) && !plan.LoopProtectSendInterval.IsUnknown() {
+		body["loop-protect-send-interval"] = plan.LoopProtectSendInterval.ValueString()
+	}
+	if !plan.MaxFdbSize.Equal(state.MaxFdbSize) && !plan.MaxFdbSize.IsUnknown() {
+		body["max-fdb-size"] = plan.MaxFdbSize.ValueString()
+	}
+	if !plan.RemCsum.Equal(state.RemCsum) && !plan.RemCsum.IsUnknown() {
+		body["rem-csum"] = plan.RemCsum.ValueString()
+	}
+	if !plan.VtepVrf.Equal(state.VtepVrf) && !plan.VtepVrf.IsUnknown() {
+		body["vtep-vrf"] = plan.VtepVrf.ValueString()
+	}
+	if !plan.VtepsIpVersion.Equal(state.VtepsIpVersion) && !plan.VtepsIpVersion.IsUnknown() {
+		body["vteps-ip-version"] = plan.VtepsIpVersion.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/vxlan", state.ID.ValueString(), body)
 		if err != nil {
@@ -343,6 +510,76 @@ func interfaceVxlanLookupByNaturalKey(ctx context.Context, c *client.Client, id 
 func interfaceVxlanApply(ctx context.Context, obj client.Object, m *InterfaceVxlanModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["vteps-ip-version"]; ok && v != "" {
+		m.VtepsIpVersion = types.StringValue(v)
+	} else {
+		m.VtepsIpVersion = types.StringNull()
+	}
+	if v, ok := obj["vtep-vrf"]; ok && v != "" {
+		m.VtepVrf = types.StringValue(v)
+	} else {
+		m.VtepVrf = types.StringNull()
+	}
+	if v, ok := obj["rem-csum"]; ok && v != "" {
+		m.RemCsum = types.StringValue(v)
+	} else {
+		m.RemCsum = types.StringNull()
+	}
+	if v, ok := obj["max-fdb-size"]; ok && v != "" {
+		m.MaxFdbSize = types.StringValue(v)
+	} else {
+		m.MaxFdbSize = types.StringNull()
+	}
+	if v, ok := obj["loop-protect-send-interval"]; ok && v != "" {
+		m.LoopProtectSendInterval = types.StringValue(v)
+	} else {
+		m.LoopProtectSendInterval = types.StringNull()
+	}
+	if v, ok := obj["loop-protect-disable-time"]; ok && v != "" {
+		m.LoopProtectDisableTime = types.StringValue(v)
+	} else {
+		m.LoopProtectDisableTime = types.StringNull()
+	}
+	if v, ok := obj["loop-protect"]; ok && v != "" {
+		m.LoopProtect = types.StringValue(v)
+	} else {
+		m.LoopProtect = types.StringNull()
+	}
+	if v, ok := obj["learning"]; ok && v != "" {
+		m.Learning = types.StringValue(v)
+	} else {
+		m.Learning = types.StringNull()
+	}
+	if v, ok := obj["hw"]; ok && v != "" {
+		m.Hw = types.StringValue(v)
+	} else {
+		m.Hw = types.StringNull()
+	}
+	if v, ok := obj["group"]; ok && v != "" {
+		m.Group = types.StringValue(v)
+	} else {
+		m.Group = types.StringNull()
+	}
+	if v, ok := obj["dont-fragment"]; ok && v != "" {
+		m.DontFragment = types.StringValue(v)
+	} else {
+		m.DontFragment = types.StringNull()
+	}
+	if v, ok := obj["checksum"]; ok && v != "" {
+		m.Checksum = types.StringValue(v)
+	} else {
+		m.Checksum = types.StringNull()
+	}
+	if v, ok := obj["bridge-pvid"]; ok && v != "" {
+		m.BridgePvid = types.StringValue(v)
+	} else {
+		m.BridgePvid = types.StringNull()
+	}
+	if v, ok := obj["allow-fast-path"]; ok && v != "" {
+		m.AllowFastPath = types.StringValue(v)
+	} else {
+		m.AllowFastPath = types.StringNull()
+	}
 	if v, ok := obj["arp"]; ok {
 		_ = v
 		if v != "" {

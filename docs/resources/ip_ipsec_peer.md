@@ -34,25 +34,25 @@ resource "routeros_ip_ipsec_peer" "peer_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `address` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `exchange_mode` - (Optional) Type: `enum(base|main|aggressive|ike2)`. Default: `2`.
+* `dynamic` - (Read-only) Type: `bool`.
+* `exchange_mode` - (Optional) Type: `string`.
 * `local_address` - (Optional) Type: `string`.
 * `name` - (Optional) Type: `string`.
 * `passive` - (Optional) Type: `bool`.
 * `port` - (Optional) Type: `int`.
+* `ppk_secret` - (Optional) Type: `string`. RouterOS `ppk-secret`. **Sensitive.**
 * `profile` - (Optional) Type: `string`.
-* `responder` - (Optional) Type: `bool`.
-* `send_initial_contact` - (Optional) Type: `bool`. Default: `1`.
+* `responder` - (Read-only) Type: `bool`.
+* `send_initial_contact` - (Optional) Type: `bool`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `dynamic` - Type: `bool`.
 
 ## Import
 

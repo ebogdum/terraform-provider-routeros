@@ -26,10 +26,29 @@ resource "routeros_ip_kid_control" "kid_control_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `name` - (Optional) Type: `string`. Name of the Kid's profile.
-* `rate_limit` - (Optional) Type: `string`. The maximum available data rate for flow.
+* `fri` - (Optional) Type: `string`. RouterOS `fri`.
+* `mon` - (Optional) Type: `string`. RouterOS `mon`.
+* `name` - (Optional) Type: `string`. Name of the Kid's profile
+* `rate_limit` - (Optional) Type: `string`. The maximum available data rate for flow
+* `sat` - (Optional) Type: `string`. RouterOS `sat`.
+* `sun` - (Optional) Type: `string`. RouterOS `sun`.
+* `thu` - (Optional) Type: `string`. RouterOS `thu`.
+* `tue` - (Optional) Type: `string`. RouterOS `tue`.
+* `tur_fri` - (Optional) Type: `string`. RouterOS `tur-fri`.
+* `tur_mon` - (Optional) Type: `string`. RouterOS `tur-mon`.
+* `tur_sat` - (Optional) Type: `string`. RouterOS `tur-sat`.
+* `tur_sun` - (Optional) Type: `string`. RouterOS `tur-sun`.
+* `tur_thu` - (Optional) Type: `string`. RouterOS `tur-thu`.
+* `tur_tue` - (Optional) Type: `string`. RouterOS `tur-tue`.
+* `tur_wed` - (Optional) Type: `string`. RouterOS `tur-wed`.
+* `wed` - (Optional) Type: `string`. RouterOS `wed`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

@@ -159,9 +159,6 @@ func iPSmbUpsert(ctx context.Context, reg *client.Registry, plan *IPSmbModel, di
 	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) {
 		body["enabled"] = plan.Enabled.ValueString()
 	}
-	if !(plan.Interface.IsNull() || plan.Interface.IsUnknown()) {
-		body["interface"] = plan.Interface.ValueString()
-	}
 	if !(plan.Interfaces.IsNull() || plan.Interfaces.IsUnknown()) {
 		body["interfaces"] = plan.Interfaces.ValueString()
 	}

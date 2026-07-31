@@ -30,6 +30,7 @@ type InterfaceWifiAccessListResource struct {
 
 type InterfaceWifiAccessListModel struct {
 	ID                    types.String `tfsdk:"id"`
+	Days                  types.String `tfsdk:"days"`
 	Action                types.String `tfsdk:"action"`
 	AllowSignalOutOfRange types.String `tfsdk:"allow_signal_out_of_range"`
 	ClientIsolation       types.String `tfsdk:"client_isolation"`
@@ -66,7 +67,6 @@ func (r *InterfaceWifiAccessListResource) Configure(_ context.Context, req resou
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceWifiAccessListResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -77,6 +77,11 @@ func (r *InterfaceWifiAccessListResource) Schema(_ context.Context, _ resource.S
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"days": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `days`.",
 			},
 			"action": schema.StringAttribute{
 				Optional:    true,
@@ -109,12 +114,10 @@ func (r *InterfaceWifiAccessListResource) Schema(_ context.Context, _ resource.S
 				Description: "",
 			},
 			"last_logged_in": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"last_logged_out": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -160,7 +163,6 @@ func (r *InterfaceWifiAccessListResource) Schema(_ context.Context, _ resource.S
 				Description: "",
 			},
 			"times_matched": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -240,6 +242,9 @@ func (r *InterfaceWifiAccessListResource) Create(ctx context.Context, req resour
 	}
 	if !(plan.Weekdays.IsNull() || plan.Weekdays.IsUnknown()) {
 		body["weekdays"] = plan.Weekdays.ValueString()
+	}
+	if !(plan.Days.IsNull() || plan.Days.IsUnknown()) {
+		body["days"] = plan.Days.ValueString()
 	}
 	obj, err := c.Add(ctx, "/interface/wifi/access-list", body)
 	if err != nil {
@@ -336,6 +341,9 @@ func (r *InterfaceWifiAccessListResource) Update(ctx context.Context, req resour
 	if !plan.Weekdays.Equal(state.Weekdays) {
 		body["weekdays"] = plan.Weekdays.ValueString()
 	}
+	if !plan.Days.Equal(state.Days) && !plan.Days.IsUnknown() {
+		body["days"] = plan.Days.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/wifi/access-list", state.ID.ValueString(), body)
 		if err != nil {
@@ -402,6 +410,11 @@ func interfaceWifiAccessListLookupByNaturalKey(ctx context.Context, c *client.Cl
 func interfaceWifiAccessListApply(ctx context.Context, obj client.Object, m *InterfaceWifiAccessListModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["days"]; ok && v != "" {
+		m.Days = types.StringValue(v)
+	} else {
+		m.Days = types.StringNull()
+	}
 	if v, ok := obj["action"]; ok {
 		_ = v
 		if v != "" {

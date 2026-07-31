@@ -29,24 +29,23 @@ resource "routeros_user_ssh_keys" "ssh_keys_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `bits` - (Read-only) Type: `int`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
+* `fingerprint` - (Read-only) Type: `string`.
 * `import_ssh_key` - (Optional) Type: `string`.
-* `key` - (Optional) Type: `string`.
+* `info` - (Read-only) Type: `string`.
+* `key` - (Optional) Type: `string`. **Sensitive.**
+* `key_type` - (Read-only) Type: `string`.
 * `newk` - (Optional) Type: `string`.
 * `oldk` - (Optional) Type: `string`.
+* `user` - (Read-only) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `bits` - Type: `int`.
-* `fingerprint` - Type: `string`.
-* `info` - Type: `string`.
-* `key_type` - Type: `enum(rsa|ed25519|ed25519-sk)`.
-* `user` - Type: `string`.
 
 ## Import
 

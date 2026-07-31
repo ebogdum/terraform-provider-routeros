@@ -57,7 +57,6 @@ func (r *InterfaceWifiDatapathResource) Configure(_ context.Context, req resourc
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceWifiDatapathResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {

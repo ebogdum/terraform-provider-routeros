@@ -26,10 +26,15 @@ resource "routeros_radius_incoming" "incoming_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `accept` - (Optional) Type: `bool`.
 * `port` - (Optional) Type: `int`.
 * `vrf` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - Stable identifier (the singleton's menu path, optionally namespaced by router).
+
 
 ## Import
 

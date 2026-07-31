@@ -29,13 +29,18 @@ resource "routeros_tool_bandwidth_server" "bandwidth_server_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `allocate_udp_ports_from` - (Optional) Type: `int`. Beginning of UDP port range.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `allocate_udp_ports_from` - (Optional) Type: `int`. Beginning of UDP port range
 * `allowed_addresses4` - (Optional) Type: `string`.
 * `allowed_addresses6` - (Optional) Type: `string`.
-* `authenticate` - (Optional) Type: `bool`. Communicate only with authenticated clients.
-* `enabled` - (Optional) Type: `bool`. Defines whether bandwidth server is enabled or not.
-* `max_sessions` - (Optional) Type: `int`. Maximal simultaneous test count.
+* `authenticate` - (Optional) Type: `bool`. Communicate only with authenticated clients
+* `enabled` - (Optional) Type: `bool`. Defines whether bandwidth server is enabled or not
+* `max_sessions` - (Optional) Type: `int`. Maximal simultaneous test count
+
+## Attribute Reference
+
+* `id` - Stable identifier (the singleton's menu path, optionally namespaced by router).
+
 
 ## Import
 

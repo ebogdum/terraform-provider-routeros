@@ -36,8 +36,8 @@ resource "routeros_caps_man_provisioning" "provisioning_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `action` - (Optional) Type: `enum(none|create-enabled|create-disabled|create-dynamic-enabled)`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `action` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `common_name_regexp` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
@@ -45,11 +45,16 @@ This resource supports the following arguments:
 * `identity_regexp` - (Optional) Type: `string`.
 * `ip_address_ranges` - (Optional) Type: `string`.
 * `master_configuration` - (Optional) Type: `string`.
-* `name_format` - (Optional) Type: `enum(cap|prefix|identity|prefix-identity)`.
+* `name_format` - (Optional) Type: `string`.
 * `name_prefix` - (Optional) Type: `string`.
-* `radio_mac` - (Optional) Type: `mac`.
+* `radio_mac` - (Optional) Type: `string`.
 * `slave_configuration` - (Optional) Type: `string`.
 * `slave_configurations` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 

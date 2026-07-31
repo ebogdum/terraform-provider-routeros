@@ -32,6 +32,7 @@ type IPIpsecPeerResource struct {
 
 type IPIpsecPeerModel struct {
 	ID                 types.String `tfsdk:"id"`
+	PpkSecret          types.String `tfsdk:"ppk_secret"`
 	Address            types.String `tfsdk:"address"`
 	Comment            types.String `tfsdk:"comment"`
 	Disabled           types.Bool   `tfsdk:"disabled"`
@@ -59,7 +60,6 @@ func (r *IPIpsecPeerResource) Configure(_ context.Context, req resource.Configur
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPIpsecPeerResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -70,6 +70,12 @@ func (r *IPIpsecPeerResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"ppk_secret": schema.StringAttribute{
+				Optional:    true,
+				Sensitive:   true,
+				Computed:    true,
+				Description: "RouterOS `ppk-secret`.",
 			},
 			"address": schema.StringAttribute{
 				Optional:    true,
@@ -87,7 +93,6 @@ func (r *IPIpsecPeerResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Description: "Whether the entry is disabled.",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -123,7 +128,6 @@ func (r *IPIpsecPeerResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Description: "",
 			},
 			"responder": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -178,11 +182,11 @@ func (r *IPIpsecPeerResource) Create(ctx context.Context, req resource.CreateReq
 	if !(plan.Profile.IsNull() || plan.Profile.IsUnknown()) {
 		body["profile"] = plan.Profile.ValueString()
 	}
-	if !(plan.Responder.IsNull() || plan.Responder.IsUnknown()) {
-		body["responder"] = client.FormatBool(plan.Responder.ValueBool())
-	}
 	if !(plan.SendInitialContact.IsNull() || plan.SendInitialContact.IsUnknown()) {
 		body["send-initial-contact"] = client.FormatBool(plan.SendInitialContact.ValueBool())
+	}
+	if !(plan.PpkSecret.IsNull() || plan.PpkSecret.IsUnknown()) {
+		body["ppk-secret"] = plan.PpkSecret.ValueString()
 	}
 	obj, err := c.Add(ctx, "/ip/ipsec/peer", body)
 	if err != nil {
@@ -258,11 +262,11 @@ func (r *IPIpsecPeerResource) Update(ctx context.Context, req resource.UpdateReq
 	if !plan.Profile.Equal(state.Profile) {
 		body["profile"] = plan.Profile.ValueString()
 	}
-	if !plan.Responder.Equal(state.Responder) {
-		body["responder"] = client.FormatBool(plan.Responder.ValueBool())
-	}
 	if !plan.SendInitialContact.Equal(state.SendInitialContact) {
 		body["send-initial-contact"] = client.FormatBool(plan.SendInitialContact.ValueBool())
+	}
+	if !plan.PpkSecret.Equal(state.PpkSecret) && !plan.PpkSecret.IsUnknown() {
+		body["ppk-secret"] = plan.PpkSecret.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/ipsec/peer", state.ID.ValueString(), body)
@@ -330,6 +334,11 @@ func iPIpsecPeerLookupByNaturalKey(ctx context.Context, c *client.Client, id str
 func iPIpsecPeerApply(ctx context.Context, obj client.Object, m *IPIpsecPeerModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["ppk-secret"]; ok && v != "" {
+		m.PpkSecret = types.StringValue(v)
+	} else {
+		m.PpkSecret = types.StringNull()
+	}
 	if v, ok := obj["address"]; ok {
 		_ = v
 		if v != "" {

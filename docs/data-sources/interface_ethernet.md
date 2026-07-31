@@ -53,9 +53,9 @@ This data source supports the following arguments:
 * `non_mgmt` - (Optional) Type: `string`.
 * `orig_mac_address` - (Optional) Type: `mac`.
 * `passthrough_interface` - (Optional) Type: `string`.
-* `po_e_out` - (Optional) Type: `enum(off|auto-on|forced-on)`.
-* `po_e_priority` - (Optional) Type: `int`.
-* `po_e_voltage` - (Optional) Type: `enum(auto|low|high)`.
+* `poe_out` - (Optional) Type: `enum(off|auto-on|forced-on)`.
+* `poe_priority` - (Optional) Type: `int`.
+* `poe_voltage` - (Optional) Type: `enum(auto|low|high)`.
 * `poe` - (Optional) Type: `string`.
 * `poeping` - (Optional) Type: `string`.
 * `power_cycle` - (Optional) Type: `string`.
@@ -105,10 +105,10 @@ This data source exports the following attributes in addition to the arguments a
 * `om4_link_length` - Type: `int`.
 * `om5_link_length` - Type: `int`.
 * `pcie_passthrough` - Type: `int`.
-* `po_e_out_current` - Type: `int`.
-* `po_e_out_power` - Type: `string`.
-* `po_e_out_status` - Type: `enum(|disabled|waiting-for-load|powered-on|overload|short-circuit, ...)`.
-* `po_e_out_voltage` - Type: `string`.
+* `poe_out_current` - Type: `int`.
+* `poe_out_power` - Type: `string`.
+* `poe_out_status` - Type: `enum(|disabled|waiting-for-load|powered-on|overload|short-circuit, ...)`.
+* `poe_out_voltage` - Type: `string`.
 * `poe_v` - Type: `bool`.
 * `poecurr` - Type: `int`.
 * `poepower` - Type: `int`.

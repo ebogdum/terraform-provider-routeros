@@ -31,6 +31,8 @@ type IPFirewallFilterResource struct {
 
 type IPFirewallFilterModel struct {
 	ID                      types.String `tfsdk:"id"`
+	Tos                     types.String `tfsdk:"tos"`
+	P2p                     types.String `tfsdk:"p2p"`
 	Action                  types.String `tfsdk:"action"`
 	AddressList             types.String `tfsdk:"address_list"`
 	AddressListTimeout      types.String `tfsdk:"address_list_timeout"`
@@ -111,7 +113,6 @@ func (r *IPFirewallFilterResource) Configure(_ context.Context, req resource.Con
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPFirewallFilterResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -122,6 +123,16 @@ func (r *IPFirewallFilterResource) Schema(_ context.Context, _ resource.SchemaRe
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"tos": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `tos`.",
+			},
+			"p2p": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `p2p`.",
 			},
 			"action": schema.StringAttribute{
 				Required:    true,
@@ -652,6 +663,12 @@ func (r *IPFirewallFilterResource) Create(ctx context.Context, req resource.Crea
 		resp.Diagnostics.AddError("Refusing dangerous firewall rule", err.Error())
 		return
 	}
+	if !(plan.P2p.IsNull() || plan.P2p.IsUnknown()) {
+		body["p2p"] = plan.P2p.ValueString()
+	}
+	if !(plan.Tos.IsNull() || plan.Tos.IsUnknown()) {
+		body["tos"] = plan.Tos.ValueString()
+	}
 	obj, err := c.Add(ctx, "/ip/firewall/filter", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /ip/firewall/filter failed", err.Error())
@@ -904,6 +921,12 @@ func (r *IPFirewallFilterResource) Update(ctx context.Context, req resource.Upda
 	}
 	if !plan.Ttl.Equal(state.Ttl) {
 		body["ttl"] = plan.Ttl.ValueString()
+	}
+	if !plan.P2p.Equal(state.P2p) && !plan.P2p.IsUnknown() {
+		body["p2p"] = plan.P2p.ValueString()
+	}
+	if !plan.Tos.Equal(state.Tos) && !plan.Tos.IsUnknown() {
+		body["tos"] = plan.Tos.ValueString()
 	}
 	// If position OR comment changed, re-encode the marker into the comment
 	// so the device-side prefix stays in sync.
@@ -1430,6 +1453,16 @@ func iPFirewallFilterLookupByNaturalKey(ctx context.Context, c *client.Client, i
 func iPFirewallFilterApply(ctx context.Context, obj client.Object, m *IPFirewallFilterModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["tos"]; ok && v != "" {
+		m.Tos = types.StringValue(v)
+	} else {
+		m.Tos = types.StringNull()
+	}
+	if v, ok := obj["p2p"]; ok && v != "" {
+		m.P2p = types.StringValue(v)
+	} else {
+		m.P2p = types.StringNull()
+	}
 	// Strip the [tf:pos=N] marker from the comment before exposing to state.
 	// Position is TF-state-only metadata; never written to the device. Keep
 	// whatever the user planned. Comment is left untouched.

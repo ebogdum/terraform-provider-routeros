@@ -7,7 +7,10 @@ description: |-
 
 # Data Source: routeros_ip_service
 
-Manages the RouterOS `/ip/service` menu.
+Lists the RouterOS `/ip/service` menu.
+
+To change a service (enable, disable, move its port, restrict its source
+addresses) use the [`routeros_ip_service`](../resources/ip_service.md) resource.
 
 ## Example Usage
 

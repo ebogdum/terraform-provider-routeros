@@ -29,19 +29,31 @@ type InterfaceVRRPResource struct {
 }
 
 type InterfaceVRRPModel struct {
-	ID             types.String `tfsdk:"id"`
-	ARP            types.String `tfsdk:"arp"`
-	ARPTimeout     types.String `tfsdk:"arp_timeout"`
-	Authentication types.String `tfsdk:"authentication"`
-	Comment        types.String `tfsdk:"comment"`
-	Disabled       types.Bool   `tfsdk:"disabled"`
-	Interface      types.String `tfsdk:"interface"`
-	Interval       types.String `tfsdk:"interval"`
-	Name           types.String `tfsdk:"name"`
-	Password       types.String `tfsdk:"password"`
-	Priority       types.String `tfsdk:"priority"`
-	RemoteAddress  types.String `tfsdk:"remote_address"`
-	Router         types.String `tfsdk:"router"`
+	ID                     types.String `tfsdk:"id"`
+	Vrid                   types.String `tfsdk:"vrid"`
+	Version                types.String `tfsdk:"version"`
+	V3Protocol             types.String `tfsdk:"v3_protocol"`
+	SyncConnectionTracking types.String `tfsdk:"sync_connection_tracking"`
+	PreemptionMode         types.String `tfsdk:"preemption_mode"`
+	OnMaster               types.String `tfsdk:"on_master"`
+	OnFail                 types.String `tfsdk:"on_fail"`
+	OnBackup               types.String `tfsdk:"on_backup"`
+	GroupMaster            types.String `tfsdk:"group_master"`
+	GroupAuthority         types.String `tfsdk:"group_authority"`
+	ConnectionTrackingPort types.String `tfsdk:"connection_tracking_port"`
+	ConnectionTrackingMode types.String `tfsdk:"connection_tracking_mode"`
+	ARP                    types.String `tfsdk:"arp"`
+	ARPTimeout             types.String `tfsdk:"arp_timeout"`
+	Authentication         types.String `tfsdk:"authentication"`
+	Comment                types.String `tfsdk:"comment"`
+	Disabled               types.Bool   `tfsdk:"disabled"`
+	Interface              types.String `tfsdk:"interface"`
+	Interval               types.String `tfsdk:"interval"`
+	Name                   types.String `tfsdk:"name"`
+	Password               types.String `tfsdk:"password"`
+	Priority               types.String `tfsdk:"priority"`
+	RemoteAddress          types.String `tfsdk:"remote_address"`
+	Router                 types.String `tfsdk:"router"`
 }
 
 func NewInterfaceVRRPResource() resource.Resource { return &InterfaceVRRPResource{} }
@@ -56,7 +68,6 @@ func (r *InterfaceVRRPResource) Configure(_ context.Context, req resource.Config
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *InterfaceVRRPResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -67,6 +78,66 @@ func (r *InterfaceVRRPResource) Schema(_ context.Context, _ resource.SchemaReque
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"vrid": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `vrid`.",
+			},
+			"version": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `version`.",
+			},
+			"v3_protocol": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `v3-protocol`.",
+			},
+			"sync_connection_tracking": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `sync-connection-tracking`.",
+			},
+			"preemption_mode": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `preemption-mode`.",
+			},
+			"on_master": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `on-master`.",
+			},
+			"on_fail": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `on-fail`.",
+			},
+			"on_backup": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `on-backup`.",
+			},
+			"group_master": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `group-master`.",
+			},
+			"group_authority": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `group-authority`.",
+			},
+			"connection_tracking_port": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `connection-tracking-port`.",
+			},
+			"connection_tracking_mode": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `connection-tracking-mode`.",
 			},
 			"arp": schema.StringAttribute{
 				Optional:    true,
@@ -108,6 +179,7 @@ func (r *InterfaceVRRPResource) Schema(_ context.Context, _ resource.SchemaReque
 			},
 			"password": schema.StringAttribute{
 				Optional:    true,
+				Sensitive:   true,
 				Computed:    true,
 				Description: "",
 			},
@@ -172,6 +244,42 @@ func (r *InterfaceVRRPResource) Create(ctx context.Context, req resource.CreateR
 	}
 	if !(plan.RemoteAddress.IsNull() || plan.RemoteAddress.IsUnknown()) {
 		body["remote-address"] = plan.RemoteAddress.ValueString()
+	}
+	if !(plan.ConnectionTrackingMode.IsNull() || plan.ConnectionTrackingMode.IsUnknown()) {
+		body["connection-tracking-mode"] = plan.ConnectionTrackingMode.ValueString()
+	}
+	if !(plan.ConnectionTrackingPort.IsNull() || plan.ConnectionTrackingPort.IsUnknown()) {
+		body["connection-tracking-port"] = plan.ConnectionTrackingPort.ValueString()
+	}
+	if !(plan.GroupAuthority.IsNull() || plan.GroupAuthority.IsUnknown()) {
+		body["group-authority"] = plan.GroupAuthority.ValueString()
+	}
+	if !(plan.GroupMaster.IsNull() || plan.GroupMaster.IsUnknown()) {
+		body["group-master"] = plan.GroupMaster.ValueString()
+	}
+	if !(plan.OnBackup.IsNull() || plan.OnBackup.IsUnknown()) {
+		body["on-backup"] = plan.OnBackup.ValueString()
+	}
+	if !(plan.OnFail.IsNull() || plan.OnFail.IsUnknown()) {
+		body["on-fail"] = plan.OnFail.ValueString()
+	}
+	if !(plan.OnMaster.IsNull() || plan.OnMaster.IsUnknown()) {
+		body["on-master"] = plan.OnMaster.ValueString()
+	}
+	if !(plan.PreemptionMode.IsNull() || plan.PreemptionMode.IsUnknown()) {
+		body["preemption-mode"] = plan.PreemptionMode.ValueString()
+	}
+	if !(plan.SyncConnectionTracking.IsNull() || plan.SyncConnectionTracking.IsUnknown()) {
+		body["sync-connection-tracking"] = plan.SyncConnectionTracking.ValueString()
+	}
+	if !(plan.V3Protocol.IsNull() || plan.V3Protocol.IsUnknown()) {
+		body["v3-protocol"] = plan.V3Protocol.ValueString()
+	}
+	if !(plan.Version.IsNull() || plan.Version.IsUnknown()) {
+		body["version"] = plan.Version.ValueString()
+	}
+	if !(plan.Vrid.IsNull() || plan.Vrid.IsUnknown()) {
+		body["vrid"] = plan.Vrid.ValueString()
 	}
 	obj, err := c.Add(ctx, "/interface/vrrp", body)
 	if err != nil {
@@ -253,6 +361,42 @@ func (r *InterfaceVRRPResource) Update(ctx context.Context, req resource.UpdateR
 	if !plan.RemoteAddress.Equal(state.RemoteAddress) {
 		body["remote-address"] = plan.RemoteAddress.ValueString()
 	}
+	if !plan.ConnectionTrackingMode.Equal(state.ConnectionTrackingMode) && !plan.ConnectionTrackingMode.IsUnknown() {
+		body["connection-tracking-mode"] = plan.ConnectionTrackingMode.ValueString()
+	}
+	if !plan.ConnectionTrackingPort.Equal(state.ConnectionTrackingPort) && !plan.ConnectionTrackingPort.IsUnknown() {
+		body["connection-tracking-port"] = plan.ConnectionTrackingPort.ValueString()
+	}
+	if !plan.GroupAuthority.Equal(state.GroupAuthority) && !plan.GroupAuthority.IsUnknown() {
+		body["group-authority"] = plan.GroupAuthority.ValueString()
+	}
+	if !plan.GroupMaster.Equal(state.GroupMaster) && !plan.GroupMaster.IsUnknown() {
+		body["group-master"] = plan.GroupMaster.ValueString()
+	}
+	if !plan.OnBackup.Equal(state.OnBackup) && !plan.OnBackup.IsUnknown() {
+		body["on-backup"] = plan.OnBackup.ValueString()
+	}
+	if !plan.OnFail.Equal(state.OnFail) && !plan.OnFail.IsUnknown() {
+		body["on-fail"] = plan.OnFail.ValueString()
+	}
+	if !plan.OnMaster.Equal(state.OnMaster) && !plan.OnMaster.IsUnknown() {
+		body["on-master"] = plan.OnMaster.ValueString()
+	}
+	if !plan.PreemptionMode.Equal(state.PreemptionMode) && !plan.PreemptionMode.IsUnknown() {
+		body["preemption-mode"] = plan.PreemptionMode.ValueString()
+	}
+	if !plan.SyncConnectionTracking.Equal(state.SyncConnectionTracking) && !plan.SyncConnectionTracking.IsUnknown() {
+		body["sync-connection-tracking"] = plan.SyncConnectionTracking.ValueString()
+	}
+	if !plan.V3Protocol.Equal(state.V3Protocol) && !plan.V3Protocol.IsUnknown() {
+		body["v3-protocol"] = plan.V3Protocol.ValueString()
+	}
+	if !plan.Version.Equal(state.Version) && !plan.Version.IsUnknown() {
+		body["version"] = plan.Version.ValueString()
+	}
+	if !plan.Vrid.Equal(state.Vrid) && !plan.Vrid.IsUnknown() {
+		body["vrid"] = plan.Vrid.ValueString()
+	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/vrrp", state.ID.ValueString(), body)
 		if err != nil {
@@ -319,6 +463,66 @@ func interfaceVRRPLookupByNaturalKey(ctx context.Context, c *client.Client, id s
 func interfaceVRRPApply(ctx context.Context, obj client.Object, m *InterfaceVRRPModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["vrid"]; ok && v != "" {
+		m.Vrid = types.StringValue(v)
+	} else {
+		m.Vrid = types.StringNull()
+	}
+	if v, ok := obj["version"]; ok && v != "" {
+		m.Version = types.StringValue(v)
+	} else {
+		m.Version = types.StringNull()
+	}
+	if v, ok := obj["v3-protocol"]; ok && v != "" {
+		m.V3Protocol = types.StringValue(v)
+	} else {
+		m.V3Protocol = types.StringNull()
+	}
+	if v, ok := obj["sync-connection-tracking"]; ok && v != "" {
+		m.SyncConnectionTracking = types.StringValue(v)
+	} else {
+		m.SyncConnectionTracking = types.StringNull()
+	}
+	if v, ok := obj["preemption-mode"]; ok && v != "" {
+		m.PreemptionMode = types.StringValue(v)
+	} else {
+		m.PreemptionMode = types.StringNull()
+	}
+	if v, ok := obj["on-master"]; ok && v != "" {
+		m.OnMaster = types.StringValue(v)
+	} else {
+		m.OnMaster = types.StringNull()
+	}
+	if v, ok := obj["on-fail"]; ok && v != "" {
+		m.OnFail = types.StringValue(v)
+	} else {
+		m.OnFail = types.StringNull()
+	}
+	if v, ok := obj["on-backup"]; ok && v != "" {
+		m.OnBackup = types.StringValue(v)
+	} else {
+		m.OnBackup = types.StringNull()
+	}
+	if v, ok := obj["group-master"]; ok && v != "" {
+		m.GroupMaster = types.StringValue(v)
+	} else {
+		m.GroupMaster = types.StringNull()
+	}
+	if v, ok := obj["group-authority"]; ok && v != "" {
+		m.GroupAuthority = types.StringValue(v)
+	} else {
+		m.GroupAuthority = types.StringNull()
+	}
+	if v, ok := obj["connection-tracking-port"]; ok && v != "" {
+		m.ConnectionTrackingPort = types.StringValue(v)
+	} else {
+		m.ConnectionTrackingPort = types.StringNull()
+	}
+	if v, ok := obj["connection-tracking-mode"]; ok && v != "" {
+		m.ConnectionTrackingMode = types.StringValue(v)
+	} else {
+		m.ConnectionTrackingMode = types.StringNull()
+	}
 	if v, ok := obj["arp"]; ok {
 		_ = v
 		if v != "" {

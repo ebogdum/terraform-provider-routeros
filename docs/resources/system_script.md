@@ -20,7 +20,7 @@ resource "routeros_system_script" "script_example" {
   comment = "managed by terraform"
 
   # Optional attributes (uncomment as needed):
-  # don_t_require_permissions = false
+  # dont_require_permissions = false
   # policy = []
   # run_script = "replace-me"
 }
@@ -30,23 +30,22 @@ resource "routeros_system_script" "script_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `comment` - (Optional) Type: `string`. Free-form comment.
-* `don_t_require_permissions` - (Optional) Type: `bool`.
-* `name` - (Required) Type: `string`. Default: `tf-acc-script`.
+* `dont_require_permissions` - (Optional) Type: `bool`.
+* `invalid` - (Read-only) Type: `bool`.
+* `last_time_started` - (Read-only) Type: `string`.
+* `name` - (Required) Type: `string`.
+* `owner` - (Read-only) Type: `string`.
 * `policy` - (Optional) Type: `list`.
-* `run_script` - (Optional) Type: `string`.
-* `source` - (Required) Type: `string`. Default: `:put "hello"`.
+* `run_count` - (Read-only) Type: `int`.
+* `run_script` - (Read-only) Type: `string`.
+* `source` - (Required) Type: `string`.
 
 ## Attribute Reference
 
-In addition to the arguments above, the following attributes are exported:
+* `id` - RouterOS internal .id.
 
-* `id` - Provider-managed identifier (`<router>:<menu-path>` for singletons, RouterOS `.id` for collection rows).
-* `invalid` - Type: `bool`.
-* `last_time_started` - Type: `string`.
-* `owner` - Type: `string`.
-* `run_count` - Type: `int`.
 
 ## Import
 

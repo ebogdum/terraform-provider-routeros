@@ -30,6 +30,8 @@ type RoutingFilterNumListResource struct {
 
 type RoutingFilterNumListModel struct {
 	ID       types.String `tfsdk:"id"`
+	Range    types.String `tfsdk:"range"`
+	List     types.String `tfsdk:"list"`
 	Comment  types.String `tfsdk:"comment"`
 	Disabled types.Bool   `tfsdk:"disabled"`
 	Router   types.String `tfsdk:"router"`
@@ -47,7 +49,6 @@ func (r *RoutingFilterNumListResource) Configure(_ context.Context, req resource
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *RoutingFilterNumListResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -58,6 +59,16 @@ func (r *RoutingFilterNumListResource) Schema(_ context.Context, _ resource.Sche
 				Computed:      true,
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"range": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `range`.",
+			},
+			"list": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "RouterOS `list`.",
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -93,6 +104,12 @@ func (r *RoutingFilterNumListResource) Create(ctx context.Context, req resource.
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !(plan.List.IsNull() || plan.List.IsUnknown()) {
+		body["list"] = plan.List.ValueString()
+	}
+	if !(plan.Range.IsNull() || plan.Range.IsUnknown()) {
+		body["range"] = plan.Range.ValueString()
 	}
 	obj, err := c.Add(ctx, "/routing/filter/num-list", body)
 	if err != nil {
@@ -146,6 +163,12 @@ func (r *RoutingFilterNumListResource) Update(ctx context.Context, req resource.
 	}
 	if !plan.Disabled.Equal(state.Disabled) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
+	}
+	if !plan.List.Equal(state.List) && !plan.List.IsUnknown() {
+		body["list"] = plan.List.ValueString()
+	}
+	if !plan.Range.Equal(state.Range) && !plan.Range.IsUnknown() {
+		body["range"] = plan.Range.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/routing/filter/num-list", state.ID.ValueString(), body)
@@ -213,6 +236,16 @@ func routingFilterNumListLookupByNaturalKey(ctx context.Context, c *client.Clien
 func routingFilterNumListApply(ctx context.Context, obj client.Object, m *RoutingFilterNumListModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
+	if v, ok := obj["range"]; ok && v != "" {
+		m.Range = types.StringValue(v)
+	} else {
+		m.Range = types.StringNull()
+	}
+	if v, ok := obj["list"]; ok && v != "" {
+		m.List = types.StringValue(v)
+	} else {
+		m.List = types.StringNull()
+	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
 		if v != "" {

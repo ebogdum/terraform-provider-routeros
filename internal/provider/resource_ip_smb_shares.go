@@ -58,7 +58,6 @@ func (r *IPSmbSharesResource) Configure(_ context.Context, req resource.Configur
 	if reg != nil {
 		r.reg = reg
 	}
-	_ = fmt.Sprintf
 }
 
 func (r *IPSmbSharesResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -76,7 +75,6 @@ func (r *IPSmbSharesResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Description: "Free-form comment.",
 			},
 			"default": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -91,7 +89,6 @@ func (r *IPSmbSharesResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Description: "",
 			},
 			"dynamic": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -105,17 +102,14 @@ func (r *IPSmbSharesResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Description: "",
 			},
 			"newfileman": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"old_directory": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"oldfileman": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -167,15 +161,6 @@ func (r *IPSmbSharesResource) Create(ctx context.Context, req resource.CreateReq
 	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
-	}
-	if !(plan.Newfileman.IsNull() || plan.Newfileman.IsUnknown()) {
-		body["newfileman"] = plan.Newfileman.ValueString()
-	}
-	if !(plan.OldDirectory.IsNull() || plan.OldDirectory.IsUnknown()) {
-		body["old-directory"] = plan.OldDirectory.ValueString()
-	}
-	if !(plan.Oldfileman.IsNull() || plan.Oldfileman.IsUnknown()) {
-		body["oldfileman"] = plan.Oldfileman.ValueString()
 	}
 	if !(plan.ReadOnly.IsNull() || plan.ReadOnly.IsUnknown()) {
 		body["read-only"] = client.FormatBool(plan.ReadOnly.ValueBool())
@@ -247,15 +232,6 @@ func (r *IPSmbSharesResource) Update(ctx context.Context, req resource.UpdateReq
 	}
 	if !plan.Name.Equal(state.Name) {
 		body["name"] = plan.Name.ValueString()
-	}
-	if !plan.Newfileman.Equal(state.Newfileman) {
-		body["newfileman"] = plan.Newfileman.ValueString()
-	}
-	if !plan.OldDirectory.Equal(state.OldDirectory) {
-		body["old-directory"] = plan.OldDirectory.ValueString()
-	}
-	if !plan.Oldfileman.Equal(state.Oldfileman) {
-		body["oldfileman"] = plan.Oldfileman.ValueString()
 	}
 	if !plan.ReadOnly.Equal(state.ReadOnly) {
 		body["read-only"] = client.FormatBool(plan.ReadOnly.ValueBool())

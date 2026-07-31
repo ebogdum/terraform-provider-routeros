@@ -27,11 +27,16 @@ resource "routeros_ipv6_nd_proxy" "proxy_example" {
 
 This resource supports the following arguments:
 
-* `router` - (Optional) Name of the router in the provider's `routers` map to target. Omit to use the default router.
-* `address` - (Optional) Type: `ipv6`.
+* `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
+* `address` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`.
 * `disabled` - (Optional) Type: `bool`.
 * `interface` - (Optional) Type: `string`.
+
+## Attribute Reference
+
+* `id` - RouterOS internal .id.
+
 
 ## Import
 
