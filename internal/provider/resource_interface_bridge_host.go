@@ -298,24 +298,18 @@ func interfaceBridgeHostApply(ctx context.Context, obj client.Object, m *Interfa
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["aged"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Aged = types.BoolValue(b)
 		} else {
 			m.Aged = types.BoolNull()
 		}
-	} else {
-		m.Aged = types.BoolNull()
 	}
 	if v, ok := obj["aged-on-peer"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AgedOnPeer = types.BoolValue(b)
 		} else {
 			m.AgedOnPeer = types.BoolNull()
 		}
-	} else {
-		m.AgedOnPeer = types.BoolNull()
 	}
 	if v, ok := obj["bridge"]; ok {
 		_ = v
@@ -338,34 +332,25 @@ func interfaceBridgeHostApply(ctx context.Context, obj client.Object, m *Interfa
 		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["external-fdb"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.ExternalFdb = types.BoolValue(b)
 		} else {
 			m.ExternalFdb = types.BoolNull()
 		}
-	} else {
-		m.ExternalFdb = types.BoolNull()
 	}
 	if v, ok := obj["interface"]; ok {
 		_ = v
@@ -378,14 +363,11 @@ func interfaceBridgeHostApply(ctx context.Context, obj client.Object, m *Interfa
 		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["local"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Local = types.BoolValue(b)
 		} else {
 			m.Local = types.BoolNull()
 		}
-	} else {
-		m.Local = types.BoolNull()
 	}
 	if v, ok := obj["mac-address"]; ok {
 		_ = v

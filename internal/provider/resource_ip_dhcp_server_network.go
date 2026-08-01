@@ -604,24 +604,18 @@ func iPDHCPServerNetworkApply(ctx context.Context, obj client.Object, m *IPDHCPS
 		m.Nnntp = types.StringNull()
 	}
 	if v, ok := obj["no-dns"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.NoDNS = types.BoolValue(b)
 		} else {
 			m.NoDNS = types.BoolNull()
 		}
-	} else {
-		m.NoDNS = types.BoolNull()
 	}
 	if v, ok := obj["no-ntp"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.NoNTP = types.BoolValue(b)
 		} else {
 			m.NoNTP = types.BoolNull()
 		}
-	} else {
-		m.NoNTP = types.BoolNull()
 	}
 	if v, ok := obj["ntp-server"]; ok {
 		_ = v

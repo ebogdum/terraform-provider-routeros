@@ -444,14 +444,11 @@ func iPIpsecPolicyApply(ctx context.Context, obj client.Object, m *IPIpsecPolicy
 		m.Action = types.StringNull()
 	}
 	if v, ok := obj["active"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Active = types.BoolValue(b)
 		} else {
 			m.Active = types.BoolNull()
 		}
-	} else {
-		m.Active = types.BoolNull()
 	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
@@ -464,24 +461,18 @@ func iPIpsecPolicyApply(ctx context.Context, obj client.Object, m *IPIpsecPolicy
 		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["default"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
 		} else {
 			m.Default = types.BoolNull()
 		}
-	} else {
-		m.Default = types.BoolNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dst-address"]; ok {
 		_ = v
@@ -504,14 +495,11 @@ func iPIpsecPolicyApply(ctx context.Context, obj client.Object, m *IPIpsecPolicy
 		m.DstPort = types.Int64Null()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["group"]; ok {
 		_ = v
@@ -524,14 +512,11 @@ func iPIpsecPolicyApply(ctx context.Context, obj client.Object, m *IPIpsecPolicy
 		m.Group = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["ipsec-protocols"]; ok {
 		_ = v
@@ -664,23 +649,17 @@ func iPIpsecPolicyApply(ctx context.Context, obj client.Object, m *IPIpsecPolicy
 		m.SrcPort = types.Int64Null()
 	}
 	if v, ok := obj["template"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Template = types.BoolValue(b)
 		} else {
 			m.Template = types.BoolNull()
 		}
-	} else {
-		m.Template = types.BoolNull()
 	}
 	if v, ok := obj["tunnel"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Tunnel = types.BoolValue(b)
 		} else {
 			m.Tunnel = types.BoolNull()
 		}
-	} else {
-		m.Tunnel = types.BoolNull()
 	}
 }

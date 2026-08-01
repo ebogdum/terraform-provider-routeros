@@ -441,14 +441,11 @@ func toolTrafficGeneratorRawPacketTemplateApply(ctx context.Context, obj client.
 		m.DataByte = types.Int64Null()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["header"]; ok {
 		_ = v
@@ -551,14 +548,11 @@ func toolTrafficGeneratorRawPacketTemplateApply(ctx context.Context, obj client.
 		m.Specbyte = types.StringNull()
 	}
 	if v, ok := obj["special-footer"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.SpecialFooter = types.BoolValue(b)
 		} else {
 			m.SpecialFooter = types.BoolNull()
 		}
-	} else {
-		m.SpecialFooter = types.BoolNull()
 	}
 	if v, ok := obj["udp-header-offset"]; ok {
 		_ = v

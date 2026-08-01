@@ -1225,14 +1225,11 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["acquired"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Acquired = types.BoolValue(b)
 		} else {
 			m.Acquired = types.BoolNull()
 		}
-	} else {
-		m.Acquired = types.BoolNull()
 	}
 	if v, ok := obj["active-time"]; ok {
 		_ = v
@@ -1265,14 +1262,11 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 		m.AvailableSpareThreshold = types.Int64Null()
 	}
 	if v, ok := obj["block-device"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.BlockDevice = types.BoolValue(b)
 		} else {
 			m.BlockDevice = types.BoolNull()
 		}
-	} else {
-		m.BlockDevice = types.BoolNull()
 	}
 	if v, ok := obj["btrfs"]; ok {
 		_ = v
@@ -1345,14 +1339,11 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 		m.DefaultSlot = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["discard-bytes"]; ok {
 		_ = v
@@ -1405,24 +1396,18 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 		m.EjectDrive = types.StringNull()
 	}
 	if v, ok := obj["empty"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Empty = types.BoolValue(b)
 		} else {
 			m.Empty = types.BoolNull()
 		}
-	} else {
-		m.Empty = types.BoolNull()
 	}
 	if v, ok := obj["encrypted"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Encrypted = types.BoolValue(b)
 		} else {
 			m.Encrypted = types.BoolNull()
 		}
-	} else {
-		m.Encrypted = types.BoolNull()
 	}
 	if v, ok := obj["flush-ops"]; ok {
 		_ = v
@@ -1445,14 +1430,11 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 		m.FlushTime = types.StringNull()
 	}
 	if v, ok := obj["formatting"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Formatting = types.BoolValue(b)
 		} else {
 			m.Formatting = types.BoolNull()
 		}
-	} else {
-		m.Formatting = types.BoolNull()
 	}
 	if v, ok := obj["free"]; ok {
 		_ = v
@@ -1485,14 +1467,11 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 		m.FwVersion = types.StringNull()
 	}
 	if v, ok := obj["guid-partition-table"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.GuidPartitionTable = types.BoolValue(b)
 		} else {
 			m.GuidPartitionTable = types.BoolNull()
 		}
-	} else {
-		m.GuidPartitionTable = types.BoolNull()
 	}
 	if v, ok := obj["host-read-bytes"]; ok {
 		_ = v
@@ -1535,14 +1514,11 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 		m.HostWriteCommands = types.StringNull()
 	}
 	if v, ok := obj["i-scsi-export"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.IScsiExport = types.BoolValue(b)
 		} else {
 			m.IScsiExport = types.BoolNull()
 		}
-	} else {
-		m.IScsiExport = types.BoolNull()
 	}
 	if v, ok := obj["i-scsi-server-iqn"]; ok {
 		_ = v
@@ -1625,14 +1601,11 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 		m.MediaInterface = types.StringNull()
 	}
 	if v, ok := obj["media-sharing"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.MediaSharing = types.BoolValue(b)
 		} else {
 			m.MediaSharing = types.BoolNull()
 		}
-	} else {
-		m.MediaSharing = types.BoolNull()
 	}
 	if v, ok := obj["model"]; ok {
 		_ = v
@@ -1645,24 +1618,18 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 		m.Model = types.StringNull()
 	}
 	if v, ok := obj["mount-compress"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.MountCompress = types.BoolValue(b)
 		} else {
 			m.MountCompress = types.BoolNull()
 		}
-	} else {
-		m.MountCompress = types.BoolNull()
 	}
 	if v, ok := obj["mount-filesystem"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.MountFilesystem = types.BoolValue(b)
 		} else {
 			m.MountFilesystem = types.BoolNull()
 		}
-	} else {
-		m.MountFilesystem = types.BoolNull()
 	}
 	if v, ok := obj["mount-point"]; ok {
 		_ = v
@@ -1685,24 +1652,18 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 		m.MountPointTemplate = types.StringNull()
 	}
 	if v, ok := obj["mount-read-only"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.MountReadOnly = types.BoolValue(b)
 		} else {
 			m.MountReadOnly = types.BoolNull()
 		}
-	} else {
-		m.MountReadOnly = types.BoolNull()
 	}
 	if v, ok := obj["mounted"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Mounted = types.BoolValue(b)
 		} else {
 			m.Mounted = types.BoolNull()
 		}
-	} else {
-		m.Mounted = types.BoolNull()
 	}
 	if v, ok := obj["newfileman"]; ok {
 		_ = v
@@ -1715,14 +1676,11 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 		m.Newfileman = types.StringNull()
 	}
 	if v, ok := obj["nfs-sharing"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.NfsSharing = types.BoolValue(b)
 		} else {
 			m.NfsSharing = types.BoolNull()
 		}
-	} else {
-		m.NfsSharing = types.BoolNull()
 	}
 	if v, ok := obj["nvme"]; ok {
 		_ = v
@@ -1735,14 +1693,11 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 		m.Nvme = types.StringNull()
 	}
 	if v, ok := obj["nvme-tcp-export"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.NvmeTCPExport = types.BoolValue(b)
 		} else {
 			m.NvmeTCPExport = types.BoolNull()
 		}
-	} else {
-		m.NvmeTCPExport = types.BoolNull()
 	}
 	if v, ok := obj["nvme-tcp-server-allow-host-name"]; ok {
 		_ = v
@@ -1825,14 +1780,11 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 		m.Part = types.StringNull()
 	}
 	if v, ok := obj["partition"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Partition = types.BoolValue(b)
 		} else {
 			m.Partition = types.BoolNull()
 		}
-	} else {
-		m.Partition = types.BoolNull()
 	}
 	if v, ok := obj["partition-number"]; ok {
 		_ = v
@@ -1935,24 +1887,18 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 		m.RaidMaster = types.StringNull()
 	}
 	if v, ok := obj["raid-member"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.RaidMember = types.BoolValue(b)
 		} else {
 			m.RaidMember = types.BoolNull()
 		}
-	} else {
-		m.RaidMember = types.BoolNull()
 	}
 	if v, ok := obj["raid-member-failed"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.RaidMemberFailed = types.BoolValue(b)
 		} else {
 			m.RaidMemberFailed = types.BoolNull()
 		}
-	} else {
-		m.RaidMemberFailed = types.BoolNull()
 	}
 	if v, ok := obj["raid-role"]; ok {
 		_ = v
@@ -1995,14 +1941,11 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 		m.ReadMerges = types.StringNull()
 	}
 	if v, ok := obj["read-only"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.ReadOnly = types.BoolValue(b)
 		} else {
 			m.ReadOnly = types.BoolNull()
 		}
-	} else {
-		m.ReadOnly = types.BoolNull()
 	}
 	if v, ok := obj["read-ops"]; ok {
 		_ = v
@@ -2075,24 +2018,18 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 		m.Scan = types.StringNull()
 	}
 	if v, ok := obj["self-encrypted-and-locked"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.SelfEncryptedAndLocked = types.BoolValue(b)
 		} else {
 			m.SelfEncryptedAndLocked = types.BoolNull()
 		}
-	} else {
-		m.SelfEncryptedAndLocked = types.BoolNull()
 	}
 	if v, ok := obj["self-encryption-enabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.SelfEncryptionEnabled = types.BoolValue(b)
 		} else {
 			m.SelfEncryptionEnabled = types.BoolNull()
 		}
-	} else {
-		m.SelfEncryptionEnabled = types.BoolNull()
 	}
 	if v, ok := obj["self-encryption-password"]; ok {
 		_ = v
@@ -2105,14 +2042,11 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 		m.SelfEncryptionPassword = types.StringNull()
 	}
 	if v, ok := obj["self-encryption-supported"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.SelfEncryptionSupported = types.BoolValue(b)
 		} else {
 			m.SelfEncryptionSupported = types.BoolNull()
 		}
-	} else {
-		m.SelfEncryptionSupported = types.BoolNull()
 	}
 	if v, ok := obj["serial"]; ok {
 		_ = v
@@ -2145,14 +2079,11 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 		m.Slot = types.StringNull()
 	}
 	if v, ok := obj["smb-server-encryption"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.SmbServerEncryption = types.BoolValue(b)
 		} else {
 			m.SmbServerEncryption = types.BoolNull()
 		}
-	} else {
-		m.SmbServerEncryption = types.BoolNull()
 	}
 	// Sensitive: RouterOS scrubs the value on read. If the server returned
 	// a value, decode it. Otherwise the plan value (user input) is what's
@@ -2179,14 +2110,11 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 		m.SmbServerUser = types.StringNull()
 	}
 	if v, ok := obj["smb-sharing"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.SmbSharing = types.BoolValue(b)
 		} else {
 			m.SmbSharing = types.BoolNull()
 		}
-	} else {
-		m.SmbSharing = types.BoolNull()
 	}
 	if v, ok := obj["state"]; ok {
 		_ = v
@@ -2199,24 +2127,18 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 		m.State = types.StringNull()
 	}
 	if v, ok := obj["swap"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Swap = types.BoolValue(b)
 		} else {
 			m.Swap = types.BoolNull()
 		}
-	} else {
-		m.Swap = types.BoolNull()
 	}
 	if v, ok := obj["swap-enabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.SwapEnabled = types.BoolValue(b)
 		} else {
 			m.SwapEnabled = types.BoolNull()
 		}
-	} else {
-		m.SwapEnabled = types.BoolNull()
 	}
 	if v, ok := obj["temperature"]; ok {
 		_ = v

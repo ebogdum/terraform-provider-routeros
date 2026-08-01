@@ -307,14 +307,11 @@ func certificateScepServerApply(ctx context.Context, obj client.Object, m *Certi
 		m.DaysValid = types.Int64Null()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["next-ca-certificate"]; ok {
 		_ = v

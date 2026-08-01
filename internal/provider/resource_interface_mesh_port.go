@@ -303,14 +303,11 @@ func interfaceMeshPortApply(ctx context.Context, obj client.Object, m *Interface
 		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dr-address"]; ok {
 		_ = v
@@ -323,14 +320,11 @@ func interfaceMeshPortApply(ctx context.Context, obj client.Object, m *Interface
 		m.DrAddress = types.StringNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["hello-interval"]; ok {
 		_ = v
@@ -343,14 +337,11 @@ func interfaceMeshPortApply(ctx context.Context, obj client.Object, m *Interface
 		m.HelloInterval = types.Int64Null()
 	}
 	if v, ok := obj["inactive"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Inactive = types.BoolValue(b)
 		} else {
 			m.Inactive = types.BoolNull()
 		}
-	} else {
-		m.Inactive = types.BoolNull()
 	}
 	if v, ok := obj["interface"]; ok {
 		_ = v

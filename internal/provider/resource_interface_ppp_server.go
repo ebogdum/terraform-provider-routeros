@@ -35,7 +35,7 @@ type InterfacePPPServerModel struct {
 	NullModem      types.String `tfsdk:"null_modem"`
 	ModemInit      types.String `tfsdk:"modem_init"`
 	DataChannel    types.String `tfsdk:"data_channel"`
-	Authentication types.String `tfsdk:"authentication"`
+	Authentication csvSetValue  `tfsdk:"authentication"`
 	Comment        types.String `tfsdk:"comment"`
 	Disabled       types.Bool   `tfsdk:"disabled"`
 	MaxMru         types.String `tfsdk:"max_mru"`
@@ -95,6 +95,7 @@ func (r *InterfacePPPServerResource) Schema(_ context.Context, _ resource.Schema
 				Description: "RouterOS `data-channel`.",
 			},
 			"authentication": schema.StringAttribute{
+				CustomType:  csvSetType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -374,12 +375,12 @@ func interfacePPPServerApply(ctx context.Context, obj client.Object, m *Interfac
 	if v, ok := obj["authentication"]; ok {
 		_ = v
 		if v != "" {
-			m.Authentication = types.StringValue(v)
+			m.Authentication = newCSVSetValue(v)
 		} else {
-			m.Authentication = types.StringNull()
+			m.Authentication = newCSVSetNull()
 		}
 	} else {
-		m.Authentication = types.StringNull()
+		m.Authentication = newCSVSetNull()
 	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
@@ -392,14 +393,11 @@ func interfacePPPServerApply(ctx context.Context, obj client.Object, m *Interfac
 		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["max-mru"]; ok {
 		_ = v

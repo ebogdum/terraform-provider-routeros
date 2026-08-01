@@ -273,14 +273,11 @@ func iPDHCPServerOptionApply(ctx context.Context, obj client.Object, m *IPDHCPSe
 		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["force"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Force = types.BoolValue(b)
 		} else {
 			m.Force = types.BoolNull()
 		}
-	} else {
-		m.Force = types.BoolNull()
 	}
 	if v, ok := obj["name"]; ok {
 		_ = v

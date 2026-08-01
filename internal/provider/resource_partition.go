@@ -262,14 +262,11 @@ func partitionApply(ctx context.Context, obj client.Object, m *PartitionModel) {
 		m.Activate = types.StringNull()
 	}
 	if v, ok := obj["active"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Active = types.BoolValue(b)
 		} else {
 			m.Active = types.BoolNull()
 		}
-	} else {
-		m.Active = types.BoolNull()
 	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
@@ -302,14 +299,11 @@ func partitionApply(ctx context.Context, obj client.Object, m *PartitionModel) {
 		m.Name = types.StringNull()
 	}
 	if v, ok := obj["running"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Running = types.BoolValue(b)
 		} else {
 			m.Running = types.BoolNull()
 		}
-	} else {
-		m.Running = types.BoolNull()
 	}
 	if v, ok := obj["size"]; ok {
 		_ = v

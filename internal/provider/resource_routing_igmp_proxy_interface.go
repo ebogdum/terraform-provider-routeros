@@ -328,34 +328,25 @@ func routingIgmpProxyInterfaceApply(ctx context.Context, obj client.Object, m *R
 		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["inactive"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Inactive = types.BoolValue(b)
 		} else {
 			m.Inactive = types.BoolNull()
 		}
-	} else {
-		m.Inactive = types.BoolNull()
 	}
 	if v, ok := obj["interface"]; ok {
 		_ = v
@@ -368,14 +359,11 @@ func routingIgmpProxyInterfaceApply(ctx context.Context, obj client.Object, m *R
 		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["querier"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Querier = types.BoolValue(b)
 		} else {
 			m.Querier = types.BoolNull()
 		}
-	} else {
-		m.Querier = types.BoolNull()
 	}
 	if v, ok := obj["rx-bytes"]; ok {
 		_ = v
@@ -438,13 +426,10 @@ func routingIgmpProxyInterfaceApply(ctx context.Context, obj client.Object, m *R
 		m.TxPackets = types.StringNull()
 	}
 	if v, ok := obj["upstream"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Upstream = types.BoolValue(b)
 		} else {
 			m.Upstream = types.BoolNull()
 		}
-	} else {
-		m.Upstream = types.BoolNull()
 	}
 }

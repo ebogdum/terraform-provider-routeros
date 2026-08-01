@@ -611,24 +611,18 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 		m.TrustedDhcpv6 = newBoolStringValue(v)
 	}
 	if v, ok := obj["auto-isolate"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AutoIsolate = types.BoolValue(b)
 		} else {
 			m.AutoIsolate = types.BoolNull()
 		}
-	} else {
-		m.AutoIsolate = types.BoolNull()
 	}
 	if v, ok := obj["bpdu-guard"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.BpduGuard = types.BoolValue(b)
 		} else {
 			m.BpduGuard = types.BoolNull()
 		}
-	} else {
-		m.BpduGuard = types.BoolNull()
 	}
 	if v, ok := obj["bridge"]; ok {
 		_ = v
@@ -641,14 +635,11 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 		m.Bridge = types.StringNull()
 	}
 	if v, ok := obj["broadcast-flood"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.BroadcastFlood = types.BoolValue(b)
 		} else {
 			m.BroadcastFlood = types.BoolNull()
 		}
-	} else {
-		m.BroadcastFlood = types.BoolNull()
 	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
@@ -661,24 +652,18 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["edge"]; ok {
 		_ = v
@@ -691,14 +676,11 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 		m.Edge = types.StringNull()
 	}
 	if v, ok := obj["fast-leave"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.FastLeave = types.BoolValue(b)
 		} else {
 			m.FastLeave = types.BoolNull()
 		}
-	} else {
-		m.FastLeave = types.BoolNull()
 	}
 	if v, ok := obj["frame-types"]; ok {
 		_ = v
@@ -711,14 +693,11 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 		m.FrameTypes = types.StringNull()
 	}
 	if v, ok := obj["hardware-offload"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.HardwareOffload = types.BoolValue(b)
 		} else {
 			m.HardwareOffload = types.BoolNull()
 		}
-	} else {
-		m.HardwareOffload = types.BoolNull()
 	}
 	if v, ok := obj["horizon"]; ok {
 		_ = v
@@ -737,14 +716,11 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 		}
 	}
 	if v, ok := obj["hw-offload"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.HwOffload = types.BoolValue(b)
 		} else {
 			m.HwOffload = types.BoolNull()
 		}
-	} else {
-		m.HwOffload = types.BoolNull()
 	}
 	if v, ok := obj["hw-offload-group"]; ok {
 		_ = v
@@ -757,24 +733,18 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 		m.HwOffloadGroup = types.StringNull()
 	}
 	if v, ok := obj["inactive"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Inactive = types.BoolValue(b)
 		} else {
 			m.Inactive = types.BoolNull()
 		}
-	} else {
-		m.Inactive = types.BoolNull()
 	}
 	if v, ok := obj["ingress-filtering"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.IngressFiltering = types.BoolValue(b)
 		} else {
 			m.IngressFiltering = types.BoolNull()
 		}
-	} else {
-		m.IngressFiltering = types.BoolNull()
 	}
 	if v, ok := obj["interface"]; ok {
 		_ = v
@@ -897,24 +867,18 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 		m.Pvid = types.Int64Null()
 	}
 	if v, ok := obj["restricted-role"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.RestrictedRole = types.BoolValue(b)
 		} else {
 			m.RestrictedRole = types.BoolNull()
 		}
-	} else {
-		m.RestrictedRole = types.BoolNull()
 	}
 	if v, ok := obj["restricted-tcn"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.RestrictedTcn = types.BoolValue(b)
 		} else {
 			m.RestrictedTcn = types.BoolNull()
 		}
-	} else {
-		m.RestrictedTcn = types.BoolNull()
 	}
 	if v, ok := obj["role"]; ok && v != "" {
 		m.Role = types.StringValue(v)
@@ -927,53 +891,38 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 		m.Status = types.StringNull()
 	}
 	if v, ok := obj["tag-stacking"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.TagStacking = types.BoolValue(b)
 		} else {
 			m.TagStacking = types.BoolNull()
 		}
-	} else {
-		m.TagStacking = types.BoolNull()
 	}
 	if v, ok := obj["trusted"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Trusted = types.BoolValue(b)
 		} else {
 			m.Trusted = types.BoolNull()
 		}
-	} else {
-		m.Trusted = types.BoolNull()
 	}
 	if v, ok := obj["trusted-ra"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.TrustedRa = types.BoolValue(b)
 		} else {
 			m.TrustedRa = types.BoolNull()
 		}
-	} else {
-		m.TrustedRa = types.BoolNull()
 	}
 	if v, ok := obj["unknown-multicast-flood"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.UnknownMulticastFlood = types.BoolValue(b)
 		} else {
 			m.UnknownMulticastFlood = types.BoolNull()
 		}
-	} else {
-		m.UnknownMulticastFlood = types.BoolNull()
 	}
 	if v, ok := obj["unknown-unicast-flood"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.UnknownUnicastFlood = types.BoolValue(b)
 		} else {
 			m.UnknownUnicastFlood = types.BoolNull()
 		}
-	} else {
-		m.UnknownUnicastFlood = types.BoolNull()
 	}
 }

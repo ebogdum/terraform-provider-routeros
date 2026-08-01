@@ -347,14 +347,11 @@ func interfaceIpipApply(ctx context.Context, obj client.Object, m *InterfaceIpip
 		m.AllowFastPath = newBoolStringNull()
 	}
 	if v, ok := obj["clamp-tcp-mss"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.ClampTCPMss = types.BoolValue(b)
 		} else {
 			m.ClampTCPMss = types.BoolNull()
 		}
-	} else {
-		m.ClampTCPMss = types.BoolNull()
 	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
@@ -367,14 +364,11 @@ func interfaceIpipApply(ctx context.Context, obj client.Object, m *InterfaceIpip
 		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dont-fragment"]; ok {
 		_ = v

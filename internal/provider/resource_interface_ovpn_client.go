@@ -521,14 +521,11 @@ func interfaceOVPNClientApply(ctx context.Context, obj client.Object, m *Interfa
 		m.ConnectTo = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["mac-address"]; ok {
 		_ = v

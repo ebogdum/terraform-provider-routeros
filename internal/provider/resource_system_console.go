@@ -279,34 +279,25 @@ func systemConsoleApply(ctx context.Context, obj client.Object, m *SystemConsole
 		m.Channel = types.Int64Null()
 	}
 	if v, ok := obj["default"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
 		} else {
 			m.Default = types.BoolNull()
 		}
-	} else {
-		m.Default = types.BoolNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["free"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Free = types.BoolValue(b)
 		} else {
 			m.Free = types.BoolNull()
 		}
-	} else {
-		m.Free = types.BoolNull()
 	}
 	if v, ok := obj["port"]; ok {
 		_ = v
@@ -329,14 +320,11 @@ func systemConsoleApply(ctx context.Context, obj client.Object, m *SystemConsole
 		m.Term = types.StringNull()
 	}
 	if v, ok := obj["used"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Used = types.BoolValue(b)
 		} else {
 			m.Used = types.BoolNull()
 		}
-	} else {
-		m.Used = types.BoolNull()
 	}
 	if v, ok := obj["vc"]; ok {
 		_ = v
@@ -359,13 +347,10 @@ func systemConsoleApply(ctx context.Context, obj client.Object, m *SystemConsole
 		m.Vcno = types.Int64Null()
 	}
 	if v, ok := obj["wedged"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Wedged = types.BoolValue(b)
 		} else {
 			m.Wedged = types.BoolNull()
 		}
-	} else {
-		m.Wedged = types.BoolNull()
 	}
 }

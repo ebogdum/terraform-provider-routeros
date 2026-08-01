@@ -41,7 +41,7 @@ type CertificateBuiltinModel struct {
 	InvalidBefore  types.String `tfsdk:"invalid_before"`
 	Issuer         types.String `tfsdk:"issuer"`
 	KeyType        types.String `tfsdk:"key_type"`
-	KeyUsage       types.List   `tfsdk:"key_usage"`
+	KeyUsage       types.Set    `tfsdk:"key_usage"`
 	Locality       types.String `tfsdk:"locality"`
 	Organization   types.String `tfsdk:"organization"`
 	SerialNumber   types.String `tfsdk:"serial_number"`
@@ -130,7 +130,7 @@ func (r *CertificateBuiltinResource) Schema(_ context.Context, _ resource.Schema
 				Computed:    true,
 				Description: "",
 			},
-			"key_usage": schema.ListAttribute{
+			"key_usage": schema.SetAttribute{
 				Optional:    true,
 				Computed:    true,
 				ElementType: types.StringType,
@@ -221,7 +221,7 @@ func (r *CertificateBuiltinResource) Create(ctx context.Context, req resource.Cr
 		body["key-type"] = plan.KeyType.ValueString()
 	}
 	if !(plan.KeyUsage.IsNull() || plan.KeyUsage.IsUnknown()) {
-		body["key-usage"] = encodeStringList(ctx, plan.KeyUsage, &resp.Diagnostics)
+		body["key-usage"] = encodeStringSet(ctx, plan.KeyUsage, &resp.Diagnostics)
 	}
 	if !(plan.Locality.IsNull() || plan.Locality.IsUnknown()) {
 		body["locality"] = plan.Locality.ValueString()
@@ -326,7 +326,7 @@ func (r *CertificateBuiltinResource) Update(ctx context.Context, req resource.Up
 		body["key-type"] = plan.KeyType.ValueString()
 	}
 	if !plan.KeyUsage.Equal(state.KeyUsage) && !plan.KeyUsage.IsUnknown() {
-		body["key-usage"] = encodeStringList(ctx, plan.KeyUsage, &resp.Diagnostics)
+		body["key-usage"] = encodeStringSet(ctx, plan.KeyUsage, &resp.Diagnostics)
 	}
 	if !plan.Locality.Equal(state.Locality) && !plan.Locality.IsUnknown() {
 		body["locality"] = plan.Locality.ValueString()
@@ -475,14 +475,11 @@ func certificateBuiltinApply(ctx context.Context, obj client.Object, m *Certific
 		m.DaysValid = types.Int64Null()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["invalid-after"]; ok {
 		_ = v
@@ -526,9 +523,9 @@ func certificateBuiltinApply(ctx context.Context, obj client.Object, m *Certific
 	}
 	if v, ok := obj["key-usage"]; ok {
 		_ = v
-		m.KeyUsage = decodeStringList(ctx, v)
+		m.KeyUsage = decodeStringSet(ctx, v)
 	} else {
-		m.KeyUsage = types.ListNull(types.StringType)
+		m.KeyUsage = types.SetNull(types.StringType)
 	}
 	if v, ok := obj["locality"]; ok {
 		_ = v

@@ -540,14 +540,11 @@ func routingOSPFInterfaceTemplateApply(ctx context.Context, obj client.Object, m
 		m.DeadInterval = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["hello-interval"]; ok {
 		_ = v
@@ -580,14 +577,11 @@ func routingOSPFInterfaceTemplateApply(ctx context.Context, obj client.Object, m
 		m.Interfaces = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["network-type"]; ok {
 		_ = v
@@ -613,11 +607,7 @@ func routingOSPFInterfaceTemplateApply(ctx context.Context, obj client.Object, m
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Passive = types.BoolValue(b)
-		} else {
-			m.Passive = types.BoolNull()
 		}
-	} else {
-		m.Passive = types.BoolNull()
 	}
 	if v, ok := obj["prefix-list"]; ok {
 		_ = v

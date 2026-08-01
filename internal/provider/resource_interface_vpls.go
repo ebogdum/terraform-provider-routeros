@@ -497,14 +497,11 @@ func interfaceVplsApply(ctx context.Context, obj client.Object, m *InterfaceVpls
 		m.ARPTimeout = types.StringNull()
 	}
 	if v, ok := obj["bgp-signaled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.BGPSignaled = types.BoolValue(b)
 		} else {
 			m.BGPSignaled = types.BoolNull()
 		}
-	} else {
-		m.BGPSignaled = types.BoolNull()
 	}
 	if v, ok := obj["bgp-vpls"]; ok {
 		_ = v
@@ -567,14 +564,11 @@ func interfaceVplsApply(ctx context.Context, obj client.Object, m *InterfaceVpls
 		m.BridgePvid = types.StringNull()
 	}
 	if v, ok := obj["cisco-bgp-signaled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.CiscoBGPSignaled = types.BoolValue(b)
 		} else {
 			m.CiscoBGPSignaled = types.BoolNull()
 		}
-	} else {
-		m.CiscoBGPSignaled = types.BoolNull()
 	}
 	if v, ok := obj["cisco-static-id"]; ok {
 		_ = v
@@ -597,14 +591,11 @@ func interfaceVplsApply(ctx context.Context, obj client.Object, m *InterfaceVpls
 		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["local-label"]; ok {
 		_ = v

@@ -470,14 +470,11 @@ func fileApply(ctx context.Context, obj client.Object, m *FileModel) {
 		m.Share = types.StringNull()
 	}
 	if v, ok := obj["shared"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Shared = types.BoolValue(b)
 		} else {
 			m.Shared = types.BoolNull()
 		}
-	} else {
-		m.Shared = types.BoolNull()
 	}
 	if v, ok := obj["size"]; ok {
 		_ = v

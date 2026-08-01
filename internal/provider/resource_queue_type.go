@@ -944,14 +944,11 @@ func queueTypeApply(ctx context.Context, obj client.Object, m *QueueTypeModel) {
 		m.BfifoLimit = types.StringNull()
 	}
 	if v, ok := obj["default"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
 		} else {
 			m.Default = types.BoolNull()
 		}
-	} else {
-		m.Default = types.BoolNull()
 	}
 	if v, ok := obj["kind"]; ok {
 		_ = v

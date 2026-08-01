@@ -375,14 +375,11 @@ func interfaceDot1xServerApply(ctx context.Context, obj client.Object, m *Interf
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["accounting"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Accounting = types.BoolValue(b)
 		} else {
 			m.Accounting = types.BoolNull()
 		}
-	} else {
-		m.Accounting = types.BoolNull()
 	}
 	if v, ok := obj["auth-timeout"]; ok {
 		_ = v
@@ -415,14 +412,11 @@ func interfaceDot1xServerApply(ctx context.Context, obj client.Object, m *Interf
 		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["guest-vlan-id"]; ok {
 		_ = v
@@ -455,14 +449,11 @@ func interfaceDot1xServerApply(ctx context.Context, obj client.Object, m *Interf
 		m.InterimUpdate = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["mac"]; ok {
 		_ = v

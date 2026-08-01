@@ -362,24 +362,18 @@ func iPIpsecPeerApply(ctx context.Context, obj client.Object, m *IPIpsecPeerMode
 		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["exchange-mode"]; ok {
 		_ = v
@@ -412,14 +406,11 @@ func iPIpsecPeerApply(ctx context.Context, obj client.Object, m *IPIpsecPeerMode
 		m.Name = types.StringNull()
 	}
 	if v, ok := obj["passive"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Passive = types.BoolValue(b)
 		} else {
 			m.Passive = types.BoolNull()
 		}
-	} else {
-		m.Passive = types.BoolNull()
 	}
 	if v, ok := obj["port"]; ok {
 		_ = v
@@ -442,23 +433,17 @@ func iPIpsecPeerApply(ctx context.Context, obj client.Object, m *IPIpsecPeerMode
 		m.Profile = types.StringNull()
 	}
 	if v, ok := obj["responder"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Responder = types.BoolValue(b)
 		} else {
 			m.Responder = types.BoolNull()
 		}
-	} else {
-		m.Responder = types.BoolNull()
 	}
 	if v, ok := obj["send-initial-contact"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.SendInitialContact = types.BoolValue(b)
 		} else {
 			m.SendInitialContact = types.BoolNull()
 		}
-	} else {
-		m.SendInitialContact = types.BoolNull()
 	}
 }

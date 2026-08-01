@@ -29,7 +29,7 @@ type InterfaceSSTPServerServerResource struct {
 
 type InterfaceSSTPServerServerModel struct {
 	ID                      types.String `tfsdk:"id"`
-	Authentication          types.String `tfsdk:"authentication"`
+	Authentication          csvSetValue  `tfsdk:"authentication"`
 	Certificate             types.String `tfsdk:"certificate"`
 	Ciphers                 types.String `tfsdk:"ciphers"`
 	DefaultProfile          types.String `tfsdk:"default_profile"`
@@ -71,6 +71,7 @@ func (r *InterfaceSSTPServerServerResource) Schema(_ context.Context, _ resource
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"authentication": schema.StringAttribute{
+				CustomType:  csvSetType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "RouterOS `authentication`.",
@@ -267,9 +268,9 @@ func interfaceSSTPServerServerUpsert(ctx context.Context, reg *client.Registry, 
 func interfaceSSTPServerServerApply(ctx context.Context, obj client.Object, m *InterfaceSSTPServerServerModel) {
 	_ = ctx
 	if v, ok := obj["authentication"]; ok && v != "" {
-		m.Authentication = types.StringValue(v)
+		m.Authentication = newCSVSetValue(v)
 	} else {
-		m.Authentication = types.StringNull()
+		m.Authentication = newCSVSetNull()
 	}
 	if v, ok := obj["certificate"]; ok && v != "" {
 		m.Certificate = types.StringValue(v)

@@ -333,14 +333,11 @@ func iPDHCPRelayApply(ctx context.Context, obj client.Object, m *IPDHCPRelayMode
 		m.LocalAddressAsSrcIp = types.StringNull()
 	}
 	if v, ok := obj["add-relay-info"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AddRelayInfo = types.BoolValue(b)
 		} else {
 			m.AddRelayInfo = types.BoolNull()
 		}
-	} else {
-		m.AddRelayInfo = types.BoolNull()
 	}
 	if v, ok := obj["delay-threshold"]; ok {
 		_ = v
@@ -373,14 +370,11 @@ func iPDHCPRelayApply(ctx context.Context, obj client.Object, m *IPDHCPRelayMode
 		m.DHCPServerVrf = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["interface"]; ok {
 		_ = v
@@ -393,14 +387,11 @@ func iPDHCPRelayApply(ctx context.Context, obj client.Object, m *IPDHCPRelayMode
 		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["local-address"]; ok {
 		_ = v
@@ -413,14 +404,11 @@ func iPDHCPRelayApply(ctx context.Context, obj client.Object, m *IPDHCPRelayMode
 		m.LocalAddress = types.StringNull()
 	}
 	if v, ok := obj["local-address-as-source-ip"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.LocalAddressAsSourceIP = types.BoolValue(b)
 		} else {
 			m.LocalAddressAsSourceIP = types.BoolNull()
 		}
-	} else {
-		m.LocalAddressAsSourceIP = types.BoolNull()
 	}
 	if v, ok := obj["name"]; ok {
 		_ = v

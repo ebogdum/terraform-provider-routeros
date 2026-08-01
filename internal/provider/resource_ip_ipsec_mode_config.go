@@ -407,14 +407,11 @@ func iPIpsecModeConfigApply(ctx context.Context, obj client.Object, m *IPIpsecMo
 		m.ConnectionMark = types.StringNull()
 	}
 	if v, ok := obj["default"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
 		} else {
 			m.Default = types.BoolNull()
 		}
-	} else {
-		m.Default = types.BoolNull()
 	}
 	if v, ok := obj["name"]; ok {
 		_ = v
@@ -457,14 +454,11 @@ func iPIpsecModeConfigApply(ctx context.Context, obj client.Object, m *IPIpsecMo
 		m.Resp = types.StringNull()
 	}
 	if v, ok := obj["responder"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Responder = types.BoolValue(b)
 		} else {
 			m.Responder = types.BoolNull()
 		}
-	} else {
-		m.Responder = types.BoolNull()
 	}
 	if v, ok := obj["sdns"]; ok {
 		_ = v
@@ -517,14 +511,11 @@ func iPIpsecModeConfigApply(ctx context.Context, obj client.Object, m *IPIpsecMo
 		m.StaticDNS = types.StringNull()
 	}
 	if v, ok := obj["system-dns"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.SystemDNS = types.BoolValue(b)
 		} else {
 			m.SystemDNS = types.BoolNull()
 		}
-	} else {
-		m.SystemDNS = types.BoolNull()
 	}
 	if v, ok := obj["use-responder-dns"]; ok {
 		_ = v

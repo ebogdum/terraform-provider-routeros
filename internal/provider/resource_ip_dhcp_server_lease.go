@@ -748,34 +748,25 @@ func iPDHCPServerLeaseApply(ctx context.Context, obj client.Object, m *IPDHCPSer
 		m.AllowDualStackQueue = types.StringNull()
 	}
 	if v, ok := obj["always-broadcast"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AlwaysBroadcast = types.BoolValue(b)
 		} else {
 			m.AlwaysBroadcast = types.BoolNull()
 		}
-	} else {
-		m.AlwaysBroadcast = types.BoolNull()
 	}
 	if v, ok := obj["block-access"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.BlockAccess = types.BoolValue(b)
 		} else {
 			m.BlockAccess = types.BoolNull()
 		}
-	} else {
-		m.BlockAccess = types.BoolNull()
 	}
 	if v, ok := obj["blocked"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Blocked = types.BoolValue(b)
 		} else {
 			m.Blocked = types.BoolNull()
 		}
-	} else {
-		m.Blocked = types.BoolNull()
 	}
 	if v, ok := obj["bridge-port"]; ok {
 		_ = v
@@ -838,14 +829,11 @@ func iPDHCPServerLeaseApply(ctx context.Context, obj client.Object, m *IPDHCPSer
 		m.DHCPOptions = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dyn"]; ok {
 		_ = v
@@ -858,14 +846,11 @@ func iPDHCPServerLeaseApply(ctx context.Context, obj client.Object, m *IPDHCPSer
 		m.Dyn = types.StringNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["expires-after"]; ok {
 		_ = v
@@ -968,14 +953,11 @@ func iPDHCPServerLeaseApply(ctx context.Context, obj client.Object, m *IPDHCPSer
 		m.QueueType = types.StringNull()
 	}
 	if v, ok := obj["radius"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.RADIUS = types.BoolValue(b)
 		} else {
 			m.RADIUS = types.BoolNull()
 		}
-	} else {
-		m.RADIUS = types.BoolNull()
 	}
 	if v, ok := obj["rate-limit"]; ok {
 		_ = v
@@ -1068,13 +1050,10 @@ func iPDHCPServerLeaseApply(ctx context.Context, obj client.Object, m *IPDHCPSer
 		m.Stat = types.StringNull()
 	}
 	if v, ok := obj["use-src-mac-address"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.UseSrcMACAddress = types.BoolValue(b)
 		} else {
 			m.UseSrcMACAddress = types.BoolNull()
 		}
-	} else {
-		m.UseSrcMACAddress = types.BoolNull()
 	}
 }

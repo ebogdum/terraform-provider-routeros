@@ -944,14 +944,11 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 		m.ActiveRole = types.StringNull()
 	}
 	if v, ok := obj["add-dhcp-option-82"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AddDHCPOption82 = types.BoolValue(b)
 		} else {
 			m.AddDHCPOption82 = types.BoolNull()
 		}
-	} else {
-		m.AddDHCPOption82 = types.BoolNull()
 	}
 	if v, ok := obj["admin-mac"]; ok {
 		_ = v
@@ -1004,14 +1001,11 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 		m.ARPTimeout = types.StringNull()
 	}
 	if v, ok := obj["auto-mac"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AutoMAC = types.BoolValue(b)
 		} else {
 			m.AutoMAC = types.BoolNull()
 		}
-	} else {
-		m.AutoMAC = types.BoolNull()
 	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
@@ -1024,24 +1018,18 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["dhcp-snooping"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.DHCPSnooping = types.BoolValue(b)
 		} else {
 			m.DHCPSnooping = types.BoolNull()
 		}
-	} else {
-		m.DHCPSnooping = types.BoolNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dumb"]; ok {
 		_ = v
@@ -1064,14 +1052,11 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 		m.EtherType = types.StringNull()
 	}
 	if v, ok := obj["fast-forward"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.FastForward = types.BoolValue(b)
 		} else {
 			m.FastForward = types.BoolNull()
 		}
-	} else {
-		m.FastForward = types.BoolNull()
 	}
 	if v, ok := obj["forward-delay"]; ok {
 		_ = v
@@ -1084,14 +1069,11 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 		m.ForwardDelay = types.StringNull()
 	}
 	if v, ok := obj["forward-reserved"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.ForwardReserved = types.BoolValue(b)
 		} else {
 			m.ForwardReserved = types.BoolNull()
 		}
-	} else {
-		m.ForwardReserved = types.BoolNull()
 	}
 	if v, ok := obj["fp-tx-rx-packet-rate"]; ok {
 		_ = v
@@ -1144,14 +1126,11 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 		m.Igmp = types.StringNull()
 	}
 	if v, ok := obj["igmp-snooping"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.IgmpSnooping = types.BoolValue(b)
 		} else {
 			m.IgmpSnooping = types.BoolNull()
 		}
-	} else {
-		m.IgmpSnooping = types.BoolNull()
 	}
 	if v, ok := obj["igmp-version"]; ok {
 		_ = v
@@ -1164,14 +1143,11 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 		m.IgmpVersion = types.StringNull()
 	}
 	if v, ok := obj["ingress-filtering"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.IngressFiltering = types.BoolValue(b)
 		} else {
 			m.IngressFiltering = types.BoolNull()
 		}
-	} else {
-		m.IngressFiltering = types.BoolNull()
 	}
 	if v, ok := obj["last-member-interval"]; ok {
 		_ = v
@@ -1304,14 +1280,11 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 		m.MTU = types.StringNull()
 	}
 	if v, ok := obj["multicast-querier"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.MulticastQuerier = types.BoolValue(b)
 		} else {
 			m.MulticastQuerier = types.BoolNull()
 		}
-	} else {
-		m.MulticastQuerier = types.BoolNull()
 	}
 	if v, ok := obj["multicast-router"]; ok {
 		_ = v
@@ -1324,14 +1297,11 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 		m.MulticastRouter = types.StringNull()
 	}
 	if v, ok := obj["mvrp"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Mvrp = types.BoolValue(b)
 		} else {
 			m.Mvrp = types.BoolNull()
 		}
-	} else {
-		m.Mvrp = types.BoolNull()
 	}
 	if v, ok := obj["name"]; ok {
 		_ = v
@@ -1424,14 +1394,11 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 		m.QueryResponseInterval = types.StringNull()
 	}
 	if v, ok := obj["ra-guard"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.RaGuard = types.BoolValue(b)
 		} else {
 			m.RaGuard = types.BoolNull()
 		}
-	} else {
-		m.RaGuard = types.BoolNull()
 	}
 	if v, ok := obj["region-name"]; ok {
 		_ = v
@@ -1544,13 +1511,10 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 		m.VLAN = types.StringNull()
 	}
 	if v, ok := obj["vlan-filtering"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.VLANFiltering = types.BoolValue(b)
 		} else {
 			m.VLANFiltering = types.BoolNull()
 		}
-	} else {
-		m.VLANFiltering = types.BoolNull()
 	}
 }

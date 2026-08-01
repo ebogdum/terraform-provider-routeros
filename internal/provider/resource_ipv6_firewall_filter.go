@@ -88,7 +88,7 @@ type IPV6FirewallFilterModel struct {
 	SrcPort                 types.String `tfsdk:"src_port"`
 	TCPFlags                types.String `tfsdk:"tcp_flags"`
 	TCPMss                  types.String `tfsdk:"tcp_mss"`
-	Time                    types.String `tfsdk:"time"`
+	Time                    csvSetValue  `tfsdk:"time"`
 	TLSHost                 types.String `tfsdk:"tls_host"`
 	Router                  types.String `tfsdk:"router"`
 	Position                types.Int64  `tfsdk:"position"`
@@ -402,6 +402,7 @@ func (r *IPV6FirewallFilterResource) Schema(_ context.Context, _ resource.Schema
 				Description: "",
 			},
 			"time": schema.StringAttribute{
+				CustomType:  csvSetType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -1499,14 +1500,11 @@ func iPV6FirewallFilterApply(ctx context.Context, obj client.Object, m *IPV6Fire
 		m.Content = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dscp"]; ok {
 		_ = v
@@ -1911,12 +1909,12 @@ func iPV6FirewallFilterApply(ctx context.Context, obj client.Object, m *IPV6Fire
 	if v, ok := obj["time"]; ok {
 		_ = v
 		if v != "" {
-			m.Time = types.StringValue(v)
+			m.Time = newCSVSetValue(v)
 		} else {
-			m.Time = types.StringNull()
+			m.Time = newCSVSetNull()
 		}
 	} else {
-		m.Time = types.StringNull()
+		m.Time = newCSVSetNull()
 	}
 	if v, ok := obj["tls-host"]; ok {
 		_ = v

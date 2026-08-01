@@ -346,24 +346,18 @@ func iPV6NeighborApply(ctx context.Context, obj client.Object, m *IPV6NeighborMo
 		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["host-name"]; ok {
 		_ = v
@@ -436,14 +430,11 @@ func iPV6NeighborApply(ctx context.Context, obj client.Object, m *IPV6NeighborMo
 		m.Ping = types.StringNull()
 	}
 	if v, ok := obj["router"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.RouterRos = types.BoolValue(b)
 		} else {
 			m.RouterRos = types.BoolNull()
 		}
-	} else {
-		m.RouterRos = types.BoolNull()
 	}
 	if v, ok := obj["status"]; ok {
 		_ = v

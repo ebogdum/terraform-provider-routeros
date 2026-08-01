@@ -41,7 +41,7 @@ type IPDHCPClientModel struct {
 	Comment                  types.String `tfsdk:"comment"`
 	DefaultRouteDistance     types.Int64  `tfsdk:"default_route_distance"`
 	DefaultRouteTables       types.String `tfsdk:"default_route_tables"`
-	DHCPOptions              types.List   `tfsdk:"dhcp_options"`
+	DHCPOptions              types.Set    `tfsdk:"dhcp_options"`
 	DHCPServer               types.String `tfsdk:"dhcp_server"`
 	Disabled                 types.Bool   `tfsdk:"disabled"`
 	Dscp                     types.Int64  `tfsdk:"dscp"`
@@ -140,7 +140,7 @@ func (r *IPDHCPClientResource) Schema(_ context.Context, _ resource.SchemaReques
 				Computed:    true,
 				Description: "",
 			},
-			"dhcp_options": schema.ListAttribute{
+			"dhcp_options": schema.SetAttribute{
 				Optional:    true,
 				Computed:    true,
 				ElementType: types.StringType,
@@ -308,7 +308,7 @@ func (r *IPDHCPClientResource) Create(ctx context.Context, req resource.CreateRe
 		body["default-route-tables"] = plan.DefaultRouteTables.ValueString()
 	}
 	if !(plan.DHCPOptions.IsNull() || plan.DHCPOptions.IsUnknown()) {
-		body["dhcp-options"] = encodeStringList(ctx, plan.DHCPOptions, &resp.Diagnostics)
+		body["dhcp-options"] = encodeStringSet(ctx, plan.DHCPOptions, &resp.Diagnostics)
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
@@ -404,7 +404,7 @@ func (r *IPDHCPClientResource) Update(ctx context.Context, req resource.UpdateRe
 		body["default-route-tables"] = plan.DefaultRouteTables.ValueString()
 	}
 	if !plan.DHCPOptions.Equal(state.DHCPOptions) && !plan.DHCPOptions.IsUnknown() {
-		body["dhcp-options"] = encodeStringList(ctx, plan.DHCPOptions, &resp.Diagnostics)
+		body["dhcp-options"] = encodeStringSet(ctx, plan.DHCPOptions, &resp.Diagnostics)
 	}
 	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
@@ -521,24 +521,18 @@ func iPDHCPClientApply(ctx context.Context, obj client.Object, m *IPDHCPClientMo
 		m.Address = types.StringNull()
 	}
 	if v, ok := obj["allow-reconfigure"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AllowReconfigure = types.BoolValue(b)
 		} else {
 			m.AllowReconfigure = types.BoolNull()
 		}
-	} else {
-		m.AllowReconfigure = types.BoolNull()
 	}
 	if v, ok := obj["allow-reconfigure-messages"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AllowReconfigureMessages = types.BoolValue(b)
 		} else {
 			m.AllowReconfigureMessages = types.BoolNull()
 		}
-	} else {
-		m.AllowReconfigureMessages = types.BoolNull()
 	}
 	if v, ok := obj["caps-managers"]; ok {
 		_ = v
@@ -592,9 +586,9 @@ func iPDHCPClientApply(ctx context.Context, obj client.Object, m *IPDHCPClientMo
 	}
 	if v, ok := obj["dhcp-options"]; ok {
 		_ = v
-		m.DHCPOptions = decodeStringList(ctx, v)
+		m.DHCPOptions = decodeStringSet(ctx, v)
 	} else {
-		m.DHCPOptions = types.ListNull(types.StringType)
+		m.DHCPOptions = types.SetNull(types.StringType)
 	}
 	if v, ok := obj["dhcp-server"]; ok {
 		_ = v
@@ -607,14 +601,11 @@ func iPDHCPClientApply(ctx context.Context, obj client.Object, m *IPDHCPClientMo
 		m.DHCPServer = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dscp"]; ok {
 		_ = v
@@ -627,14 +618,11 @@ func iPDHCPClientApply(ctx context.Context, obj client.Object, m *IPDHCPClientMo
 		m.Dscp = types.Int64Null()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["expires-after"]; ok {
 		_ = v
@@ -667,14 +655,11 @@ func iPDHCPClientApply(ctx context.Context, obj client.Object, m *IPDHCPClientMo
 		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["ip-address"]; ok {
 		_ = v
@@ -827,24 +812,18 @@ func iPDHCPClientApply(ctx context.Context, obj client.Object, m *IPDHCPClientMo
 		m.UseBroadcast = types.StringNull()
 	}
 	if v, ok := obj["use-peer-dns"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.UsePeerDNS = types.BoolValue(b)
 		} else {
 			m.UsePeerDNS = types.BoolNull()
 		}
-	} else {
-		m.UsePeerDNS = types.BoolNull()
 	}
 	if v, ok := obj["use-peer-ntp"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.UsePeerNTP = types.BoolValue(b)
 		} else {
 			m.UsePeerNTP = types.BoolNull()
 		}
-	} else {
-		m.UsePeerNTP = types.BoolNull()
 	}
 	if v, ok := obj["vlan-priority"]; ok {
 		_ = v

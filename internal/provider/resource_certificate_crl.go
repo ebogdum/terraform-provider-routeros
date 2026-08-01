@@ -292,24 +292,18 @@ func certificateCrlApply(ctx context.Context, obj client.Object, m *CertificateC
 		m.Download = types.StringNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["expired"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Expired = types.BoolValue(b)
 		} else {
 			m.Expired = types.BoolNull()
 		}
-	} else {
-		m.Expired = types.BoolNull()
 	}
 	if v, ok := obj["flush"]; ok {
 		_ = v
@@ -322,14 +316,11 @@ func certificateCrlApply(ctx context.Context, obj client.Object, m *CertificateC
 		m.Flush = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["last-update"]; ok {
 		_ = v

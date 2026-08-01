@@ -443,14 +443,11 @@ func iPV6NdApply(ctx context.Context, obj client.Object, m *IPV6NdModel) {
 		m.AdvertiseDNS = types.StringNull()
 	}
 	if v, ok := obj["advertise-mac-address"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AdvertiseMACAddress = types.BoolValue(b)
 		} else {
 			m.AdvertiseMACAddress = types.BoolNull()
 		}
-	} else {
-		m.AdvertiseMACAddress = types.BoolNull()
 	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
@@ -463,24 +460,18 @@ func iPV6NdApply(ctx context.Context, obj client.Object, m *IPV6NdModel) {
 		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["default"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
 		} else {
 			m.Default = types.BoolNull()
 		}
-	} else {
-		m.Default = types.BoolNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dns-servers"]; ok {
 		_ = v
@@ -513,24 +504,18 @@ func iPV6NdApply(ctx context.Context, obj client.Object, m *IPV6NdModel) {
 		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["managed-address-configuration"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.ManagedAddressConfiguration = types.BoolValue(b)
 		} else {
 			m.ManagedAddressConfiguration = types.BoolNull()
 		}
-	} else {
-		m.ManagedAddressConfiguration = types.BoolNull()
 	}
 	if v, ok := obj["mtu"]; ok {
 		_ = v
@@ -543,14 +528,11 @@ func iPV6NdApply(ctx context.Context, obj client.Object, m *IPV6NdModel) {
 		m.MTU = types.StringNull()
 	}
 	if v, ok := obj["other-configuration"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.OtherConfiguration = types.BoolValue(b)
 		} else {
 			m.OtherConfiguration = types.BoolNull()
 		}
-	} else {
-		m.OtherConfiguration = types.BoolNull()
 	}
 	if v, ok := obj["pref64-prefixes"]; ok {
 		_ = v

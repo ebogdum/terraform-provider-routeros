@@ -560,14 +560,11 @@ func certificateApply(ctx context.Context, obj client.Object, m *CertificateMode
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["acme"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Acme = types.BoolValue(b)
 		} else {
 			m.Acme = types.BoolNull()
 		}
-	} else {
-		m.Acme = types.BoolNull()
 	}
 	if v, ok := obj["acme-status"]; ok {
 		_ = v
@@ -600,14 +597,11 @@ func certificateApply(ctx context.Context, obj client.Object, m *CertificateMode
 		m.Akid = types.StringNull()
 	}
 	if v, ok := obj["authority"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Authority = types.BoolValue(b)
 		} else {
 			m.Authority = types.BoolNull()
 		}
-	} else {
-		m.Authority = types.BoolNull()
 	}
 	if v, ok := obj["ca"]; ok {
 		_ = v
@@ -690,14 +684,11 @@ func certificateApply(ctx context.Context, obj client.Object, m *CertificateMode
 		m.CreateCertRequest = types.StringNull()
 	}
 	if v, ok := obj["crl"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Crl = types.BoolValue(b)
 		} else {
 			m.Crl = types.BoolNull()
 		}
-	} else {
-		m.Crl = types.BoolNull()
 	}
 	if v, ok := obj["days-valid"]; ok {
 		_ = v
@@ -720,24 +711,18 @@ func certificateApply(ctx context.Context, obj client.Object, m *CertificateMode
 		m.DigestAlgorithm = types.StringNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["expired"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Expired = types.BoolValue(b)
 		} else {
 			m.Expired = types.BoolNull()
 		}
-	} else {
-		m.Expired = types.BoolNull()
 	}
 	if v, ok := obj["expires-after"]; ok {
 		_ = v
@@ -810,14 +795,11 @@ func certificateApply(ctx context.Context, obj client.Object, m *CertificateMode
 		m.InvalidBefore = types.StringNull()
 	}
 	if v, ok := obj["issued"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Issued = types.BoolValue(b)
 		} else {
 			m.Issued = types.BoolNull()
 		}
-	} else {
-		m.Issued = types.BoolNull()
 	}
 	if v, ok := obj["issuer"]; ok {
 		_ = v
@@ -900,14 +882,11 @@ func certificateApply(ctx context.Context, obj client.Object, m *CertificateMode
 		m.Organization = types.StringNull()
 	}
 	if v, ok := obj["private-key"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.PrivateKey = types.BoolValue(b)
 		} else {
 			m.PrivateKey = types.BoolNull()
 		}
-	} else {
-		m.PrivateKey = types.BoolNull()
 	}
 	if v, ok := obj["req-fingerprint"]; ok {
 		_ = v
@@ -930,14 +909,11 @@ func certificateApply(ctx context.Context, obj client.Object, m *CertificateMode
 		m.Revoke = types.StringNull()
 	}
 	if v, ok := obj["revoked"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Revoked = types.BoolValue(b)
 		} else {
 			m.Revoked = types.BoolNull()
 		}
-	} else {
-		m.Revoked = types.BoolNull()
 	}
 	if v, ok := obj["revoked-time"]; ok {
 		_ = v
@@ -1020,14 +996,11 @@ func certificateApply(ctx context.Context, obj client.Object, m *CertificateMode
 		m.Skid = types.StringNull()
 	}
 	if v, ok := obj["smart-card-key"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.SmartCardKey = types.BoolValue(b)
 		} else {
 			m.SmartCardKey = types.BoolNull()
 		}
-	} else {
-		m.SmartCardKey = types.BoolNull()
 	}
 	if v, ok := obj["state"]; ok {
 		_ = v
@@ -1060,15 +1033,12 @@ func certificateApply(ctx context.Context, obj client.Object, m *CertificateMode
 		m.TrustStore = types.StringNull()
 	}
 	if v, ok := obj["trusted"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Trusted = types.BoolValue(b)
-		} else {
-			m.Trusted = types.BoolNull()
 		}
-	} else {
-		m.Trusted = types.BoolNull()
 	}
+	// keep-on-absent: RouterOS does not echo trusted back, so keep the configured
+	// value rather than nulling it.
 	if v, ok := obj["type"]; ok {
 		_ = v
 		if n, err := client.ParseInt64(v); err == nil {

@@ -312,14 +312,11 @@ func iPHotspotUserProfileApply(ctx context.Context, obj client.Object, m *IPHots
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["add-mac-cookie"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AddMACCookie = types.BoolValue(b)
 		} else {
 			m.AddMACCookie = types.BoolNull()
 		}
-	} else {
-		m.AddMACCookie = types.BoolNull()
 	}
 	if v, ok := obj["address-list"]; ok {
 		_ = v
@@ -332,14 +329,11 @@ func iPHotspotUserProfileApply(ctx context.Context, obj client.Object, m *IPHots
 		m.AddressList = types.StringNull()
 	}
 	if v, ok := obj["default"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
 		} else {
 			m.Default = types.BoolNull()
 		}
-	} else {
-		m.Default = types.BoolNull()
 	}
 	if v, ok := obj["idle-timeout"]; ok {
 		_ = v
@@ -402,13 +396,10 @@ func iPHotspotUserProfileApply(ctx context.Context, obj client.Object, m *IPHots
 		m.StatusAutorefresh = types.StringNull()
 	}
 	if v, ok := obj["transparent-proxy"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.TransparentProxy = types.BoolValue(b)
 		} else {
 			m.TransparentProxy = types.BoolNull()
 		}
-	} else {
-		m.TransparentProxy = types.BoolNull()
 	}
 }

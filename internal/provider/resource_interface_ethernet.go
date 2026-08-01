@@ -36,7 +36,7 @@ type InterfaceEthernetModel struct {
 	SfpIgnoreRxLos            types.String `tfsdk:"sfp_ignore_rx_los"`
 	MdixEnable                types.String `tfsdk:"mdix_enable"`
 	L2mtu                     types.String `tfsdk:"l2mtu"`
-	Advertise                 types.List   `tfsdk:"advertise"`
+	Advertise                 types.Set    `tfsdk:"advertise"`
 	Advertising               types.String `tfsdk:"advertising"`
 	ARP                       types.String `tfsdk:"arp"`
 	ARPTimeout                types.String `tfsdk:"arp_timeout"`
@@ -238,7 +238,7 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Computed:    true,
 				Description: "RouterOS `l2mtu`.",
 			},
-			"advertise": schema.ListAttribute{
+			"advertise": schema.SetAttribute{
 				Optional:    true,
 				Computed:    true,
 				ElementType: types.StringType,
@@ -962,7 +962,7 @@ func (r *InterfaceEthernetResource) Create(ctx context.Context, req resource.Cre
 	}
 	body := client.Object{}
 	if !(plan.Advertise.IsNull() || plan.Advertise.IsUnknown()) {
-		body["advertise"] = encodeStringList(ctx, plan.Advertise, &resp.Diagnostics)
+		body["advertise"] = encodeStringSet(ctx, plan.Advertise, &resp.Diagnostics)
 	}
 	if !(plan.ARP.IsNull() || plan.ARP.IsUnknown()) {
 		body["arp"] = plan.ARP.ValueString()
@@ -1152,7 +1152,7 @@ func (r *InterfaceEthernetResource) Update(ctx context.Context, req resource.Upd
 	}
 	body := client.Object{}
 	if !plan.Advertise.Equal(state.Advertise) && !plan.Advertise.IsUnknown() {
-		body["advertise"] = encodeStringList(ctx, plan.Advertise, &resp.Diagnostics)
+		body["advertise"] = encodeStringSet(ctx, plan.Advertise, &resp.Diagnostics)
 	}
 	if !plan.ARP.Equal(state.ARP) && !plan.ARP.IsUnknown() {
 		body["arp"] = plan.ARP.ValueString()
@@ -1357,9 +1357,9 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	}
 	if v, ok := obj["advertise"]; ok {
 		_ = v
-		m.Advertise = decodeStringList(ctx, v)
+		m.Advertise = decodeStringSet(ctx, v)
 	} else {
-		m.Advertise = types.ListNull(types.StringType)
+		m.Advertise = types.SetNull(types.StringType)
 	}
 	if v, ok := obj["advertising"]; ok {
 		_ = v
@@ -1404,14 +1404,11 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.AutoNegotiation = types.BoolNull()
 	}
 	if v, ok := obj["autoneg"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Autoneg = types.BoolValue(b)
 		} else {
 			m.Autoneg = types.BoolNull()
 		}
-	} else {
-		m.Autoneg = types.BoolNull()
 	}
 	if v, ok := obj["blink"]; ok {
 		_ = v
@@ -1544,14 +1541,11 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.DefaultName = types.StringNull()
 	}
 	if v, ok := obj["disable-running-check"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.DisableRunningCheck = types.BoolValue(b)
 		} else {
 			m.DisableRunningCheck = types.BoolNull()
 		}
-	} else {
-		m.DisableRunningCheck = types.BoolNull()
 	}
 	if v, ok := obj["disable-time"]; ok {
 		_ = v
@@ -1564,14 +1558,11 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.DisableTime = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["encoding"]; ok {
 		_ = v
@@ -1644,24 +1635,18 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.FullDuplex = types.StringNull()
 	}
 	if v, ok := obj["hastxqueuestats"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Hastxqueuestats = types.BoolValue(b)
 		} else {
 			m.Hastxqueuestats = types.BoolNull()
 		}
-	} else {
-		m.Hastxqueuestats = types.BoolNull()
 	}
 	if v, ok := obj["ignore-rx-los"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.IgnoreRxLos = types.BoolValue(b)
 		} else {
 			m.IgnoreRxLos = types.BoolNull()
 		}
-	} else {
-		m.IgnoreRxLos = types.BoolNull()
 	}
 	if v, ok := obj["link-partner-advertising"]; ok {
 		_ = v
@@ -1754,14 +1739,11 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.MaxPower = types.StringNull()
 	}
 	if v, ok := obj["module-present"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.ModulePresent = types.BoolValue(b)
 		} else {
 			m.ModulePresent = types.BoolNull()
 		}
-	} else {
-		m.ModulePresent = types.BoolNull()
 	}
 	if v, ok := obj["mtu"]; ok {
 		_ = v
@@ -1964,14 +1946,11 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.Poe = types.StringNull()
 	}
 	if v, ok := obj["poe-v"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.PoeV = types.BoolValue(b)
 		} else {
 			m.PoeV = types.BoolNull()
 		}
-	} else {
-		m.PoeV = types.BoolNull()
 	}
 	if v, ok := obj["poecurr"]; ok {
 		_ = v
@@ -2044,14 +2023,11 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.PowerCycleAfter = types.StringNull()
 	}
 	if v, ok := obj["power-cycle-host-alive"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.PowerCycleHostAlive = types.BoolValue(b)
 		} else {
 			m.PowerCycleHostAlive = types.BoolNull()
 		}
-	} else {
-		m.PowerCycleHostAlive = types.BoolNull()
 	}
 	if v, ok := obj["power-cycle-interval"]; ok {
 		_ = v
@@ -2074,14 +2050,11 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.PowerCyclePingAddress = types.StringNull()
 	}
 	if v, ok := obj["power-cycle-ping-enabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.PowerCyclePingEnabled = types.BoolValue(b)
 		} else {
 			m.PowerCyclePingEnabled = types.BoolNull()
 		}
-	} else {
-		m.PowerCyclePingEnabled = types.BoolNull()
 	}
 	if v, ok := obj["power-cycle-ping-timeout"]; ok {
 		_ = v
@@ -2144,14 +2117,11 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.ResetMACAddress = types.StringNull()
 	}
 	if v, ok := obj["running"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Running = types.BoolValue(b)
 		} else {
 			m.Running = types.BoolNull()
 		}
-	} else {
-		m.Running = types.BoolNull()
 	}
 	if v, ok := obj["rx-align-error"]; ok {
 		_ = v
@@ -2284,14 +2254,11 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.RxLengthError = types.StringNull()
 	}
 	if v, ok := obj["rx-loss"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.RxLoss = types.BoolValue(b)
 		} else {
 			m.RxLoss = types.BoolNull()
 		}
-	} else {
-		m.RxLoss = types.BoolNull()
 	}
 	if v, ok := obj["rx-multicast"]; ok {
 		_ = v
@@ -2394,14 +2361,11 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.SendInterval = types.StringNull()
 	}
 	if v, ok := obj["sfp"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Sfp = types.BoolValue(b)
 		} else {
 			m.Sfp = types.BoolNull()
 		}
-	} else {
-		m.Sfp = types.BoolNull()
 	}
 	if v, ok := obj["sfp-shutdown-temperature"]; ok {
 		_ = v
@@ -2434,14 +2398,11 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.Sfprate = types.Int64Null()
 	}
 	if v, ok := obj["sfpshutdown"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Sfpshutdown = types.BoolValue(b)
 		} else {
 			m.Sfpshutdown = types.BoolNull()
 		}
-	} else {
-		m.Sfpshutdown = types.BoolNull()
 	}
 	if v, ok := obj["sm-link-length"]; ok {
 		_ = v
@@ -2594,14 +2555,11 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.TxExcessiveDeferred = types.StringNull()
 	}
 	if v, ok := obj["tx-fault"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.TxFault = types.BoolValue(b)
 		} else {
 			m.TxFault = types.BoolNull()
 		}
-	} else {
-		m.TxFault = types.BoolNull()
 	}
 	if v, ok := obj["tx-fcs-error"]; ok {
 		_ = v

@@ -2097,14 +2097,11 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 		m.BeaconProtection = types.StringNull()
 	}
 	if v, ok := obj["bound"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Bound = types.BoolValue(b)
 		} else {
 			m.Bound = types.BoolNull()
 		}
-	} else {
-		m.Bound = types.BoolNull()
 	}
 	if v, ok := obj["datapath.bridge"]; ok {
 		_ = v
@@ -2357,14 +2354,11 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 		m.DisablePmkid = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["distance"]; ok {
 		_ = v
@@ -2677,14 +2671,11 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 		m.Interworking = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["ipv4-availability"]; ok {
 		_ = v
@@ -2767,14 +2758,11 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 		m.Manager = types.StringNull()
 	}
 	if v, ok := obj["master"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Master = types.BoolValue(b)
 		} else {
 			m.Master = types.BoolNull()
 		}
-	} else {
-		m.Master = types.BoolNull()
 	}
 	if v, ok := obj["max-clients"]; ok {
 		_ = v

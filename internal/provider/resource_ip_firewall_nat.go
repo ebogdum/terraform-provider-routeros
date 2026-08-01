@@ -92,7 +92,7 @@ type IPFirewallNATModel struct {
 	SrcMACAddress           types.String `tfsdk:"src_mac_address"`
 	SrcPort                 types.String `tfsdk:"src_port"`
 	TCPMss                  types.String `tfsdk:"tcp_mss"`
-	Time                    types.String `tfsdk:"time"`
+	Time                    csvSetValue  `tfsdk:"time"`
 	ToAddresses             types.String `tfsdk:"to_addresses"`
 	ToPorts                 types.String `tfsdk:"to_ports"`
 	Ttl                     types.String `tfsdk:"ttl"`
@@ -432,6 +432,7 @@ func (r *IPFirewallNATResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"time": schema.StringAttribute{
+				CustomType:  csvSetType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -1175,14 +1176,11 @@ func iPFirewallNATApply(ctx context.Context, obj client.Object, m *IPFirewallNAT
 		m.Content = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dscp"]; ok {
 		_ = v
@@ -1627,12 +1625,12 @@ func iPFirewallNATApply(ctx context.Context, obj client.Object, m *IPFirewallNAT
 	if v, ok := obj["time"]; ok {
 		_ = v
 		if v != "" {
-			m.Time = types.StringValue(v)
+			m.Time = newCSVSetValue(v)
 		} else {
-			m.Time = types.StringNull()
+			m.Time = newCSVSetNull()
 		}
 	} else {
-		m.Time = types.StringNull()
+		m.Time = newCSVSetNull()
 	}
 	if v, ok := obj["to-addresses"]; ok {
 		_ = v

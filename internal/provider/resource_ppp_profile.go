@@ -790,14 +790,11 @@ func pPPProfileApply(ctx context.Context, obj client.Object, m *PPPProfileModel)
 		m.Def = types.StringNull()
 	}
 	if v, ok := obj["default"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
 		} else {
 			m.Default = types.BoolNull()
 		}
-	} else {
-		m.Default = types.BoolNull()
 	}
 	if v, ok := obj["dhcpv6-lease-time"]; ok {
 		_ = v

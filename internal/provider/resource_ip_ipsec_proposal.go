@@ -36,7 +36,7 @@ type IPIpsecProposalModel struct {
 	Comment        types.String `tfsdk:"comment"`
 	Default        types.Bool   `tfsdk:"default"`
 	Disabled       types.Bool   `tfsdk:"disabled"`
-	EncAlgorithms  types.List   `tfsdk:"enc_algorithms"`
+	EncAlgorithms  types.Set    `tfsdk:"enc_algorithms"`
 	EncrAlgorithms types.String `tfsdk:"encr_algorithms"`
 	Lifetime       types.String `tfsdk:"lifetime"`
 	Name           types.String `tfsdk:"name"`
@@ -87,7 +87,7 @@ func (r *IPIpsecProposalResource) Schema(_ context.Context, _ resource.SchemaReq
 				Computed:    true,
 				Description: "",
 			},
-			"enc_algorithms": schema.ListAttribute{
+			"enc_algorithms": schema.SetAttribute{
 				Optional:    true,
 				Computed:    true,
 				ElementType: types.StringType,
@@ -143,7 +143,7 @@ func (r *IPIpsecProposalResource) Create(ctx context.Context, req resource.Creat
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
 	if !(plan.EncAlgorithms.IsNull() || plan.EncAlgorithms.IsUnknown()) {
-		body["enc-algorithms"] = encodeStringList(ctx, plan.EncAlgorithms, &resp.Diagnostics)
+		body["enc-algorithms"] = encodeStringSet(ctx, plan.EncAlgorithms, &resp.Diagnostics)
 	}
 	if !(plan.Lifetime.IsNull() || plan.Lifetime.IsUnknown()) {
 		body["lifetime"] = plan.Lifetime.ValueString()
@@ -212,7 +212,7 @@ func (r *IPIpsecProposalResource) Update(ctx context.Context, req resource.Updat
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
 	if !plan.EncAlgorithms.Equal(state.EncAlgorithms) && !plan.EncAlgorithms.IsUnknown() {
-		body["enc-algorithms"] = encodeStringList(ctx, plan.EncAlgorithms, &resp.Diagnostics)
+		body["enc-algorithms"] = encodeStringSet(ctx, plan.EncAlgorithms, &resp.Diagnostics)
 	}
 	if !plan.Lifetime.Equal(state.Lifetime) && !plan.Lifetime.IsUnknown() {
 		body["lifetime"] = plan.Lifetime.ValueString()
@@ -311,30 +311,24 @@ func iPIpsecProposalApply(ctx context.Context, obj client.Object, m *IPIpsecProp
 		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["default"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
 		} else {
 			m.Default = types.BoolNull()
 		}
-	} else {
-		m.Default = types.BoolNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["enc-algorithms"]; ok {
 		_ = v
-		m.EncAlgorithms = decodeStringList(ctx, v)
+		m.EncAlgorithms = decodeStringSet(ctx, v)
 	} else {
-		m.EncAlgorithms = types.ListNull(types.StringType)
+		m.EncAlgorithms = types.SetNull(types.StringType)
 	}
 	if v, ok := obj["encr-algorithms"]; ok {
 		_ = v

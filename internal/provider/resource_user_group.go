@@ -315,13 +315,10 @@ func userGroupApply(ctx context.Context, obj client.Object, m *UserGroupModel) {
 		m.Skin = types.StringNull()
 	}
 	if v, ok := obj["system"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.System = types.BoolValue(b)
 		} else {
 			m.System = types.BoolNull()
 		}
-	} else {
-		m.System = types.BoolNull()
 	}
 }

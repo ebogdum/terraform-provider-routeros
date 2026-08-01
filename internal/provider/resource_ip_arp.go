@@ -372,44 +372,32 @@ func iPARPApply(ctx context.Context, obj client.Object, m *IPARPModel) {
 		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["complete"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Complete = types.BoolValue(b)
 		} else {
 			m.Complete = types.BoolNull()
 		}
-	} else {
-		m.Complete = types.BoolNull()
 	}
 	if v, ok := obj["dhcp"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.DHCP = types.BoolValue(b)
 		} else {
 			m.DHCP = types.BoolNull()
 		}
-	} else {
-		m.DHCP = types.BoolNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["host-name"]; ok {
 		_ = v
@@ -432,14 +420,11 @@ func iPARPApply(ctx context.Context, obj client.Object, m *IPARPModel) {
 		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["ip-address"]; ok {
 		_ = v
@@ -502,14 +487,11 @@ func iPARPApply(ctx context.Context, obj client.Object, m *IPARPModel) {
 		m.Ping = types.StringNull()
 	}
 	if v, ok := obj["published"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Published = types.BoolValue(b)
 		} else {
 			m.Published = types.BoolNull()
 		}
-	} else {
-		m.Published = types.BoolNull()
 	}
 	if v, ok := obj["status"]; ok {
 		_ = v

@@ -481,14 +481,11 @@ func systemUpsApply(ctx context.Context, obj client.Object, m *SystemUpsModel) {
 		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["frequency"]; ok {
 		_ = v
@@ -501,14 +498,11 @@ func systemUpsApply(ctx context.Context, obj client.Object, m *SystemUpsModel) {
 		m.Frequency = types.Int64Null()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["line-voltage"]; ok {
 		_ = v
@@ -531,14 +525,11 @@ func systemUpsApply(ctx context.Context, obj client.Object, m *SystemUpsModel) {
 		m.Load = types.Int64Null()
 	}
 	if v, ok := obj["low-battery"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.LowBattery = types.BoolValue(b)
 		} else {
 			m.LowBattery = types.BoolNull()
 		}
-	} else {
-		m.LowBattery = types.BoolNull()
 	}
 	if v, ok := obj["manufacture-date"]; ok {
 		_ = v
@@ -611,24 +602,18 @@ func systemUpsApply(ctx context.Context, obj client.Object, m *SystemUpsModel) {
 		m.OfflineTime = types.StringNull()
 	}
 	if v, ok := obj["on-battery"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.OnBattery = types.BoolValue(b)
 		} else {
 			m.OnBattery = types.BoolNull()
 		}
-	} else {
-		m.OnBattery = types.BoolNull()
 	}
 	if v, ok := obj["on-line"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.OnLine = types.BoolValue(b)
 		} else {
 			m.OnLine = types.BoolNull()
 		}
-	} else {
-		m.OnLine = types.BoolNull()
 	}
 	if v, ok := obj["ouput-voltage"]; ok {
 		_ = v
@@ -641,14 +626,11 @@ func systemUpsApply(ctx context.Context, obj client.Object, m *SystemUpsModel) {
 		m.OuputVoltage = types.StringNull()
 	}
 	if v, ok := obj["overload"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Overload = types.BoolValue(b)
 		} else {
 			m.Overload = types.BoolNull()
 		}
-	} else {
-		m.Overload = types.BoolNull()
 	}
 	if v, ok := obj["port"]; ok {
 		_ = v
@@ -661,14 +643,11 @@ func systemUpsApply(ctx context.Context, obj client.Object, m *SystemUpsModel) {
 		m.Port = types.StringNull()
 	}
 	if v, ok := obj["replace-battery"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.ReplaceBattery = types.BoolValue(b)
 		} else {
 			m.ReplaceBattery = types.BoolNull()
 		}
-	} else {
-		m.ReplaceBattery = types.BoolNull()
 	}
 	if v, ok := obj["run-time-left"]; ok {
 		_ = v
@@ -691,24 +670,18 @@ func systemUpsApply(ctx context.Context, obj client.Object, m *SystemUpsModel) {
 		m.SerialNumber = types.StringNull()
 	}
 	if v, ok := obj["smart-boost"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.SmartBoost = types.BoolValue(b)
 		} else {
 			m.SmartBoost = types.BoolNull()
 		}
-	} else {
-		m.SmartBoost = types.BoolNull()
 	}
 	if v, ok := obj["smart-trim"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.SmartTrim = types.BoolValue(b)
 		} else {
 			m.SmartTrim = types.BoolNull()
 		}
-	} else {
-		m.SmartTrim = types.BoolNull()
 	}
 	if v, ok := obj["temperature"]; ok {
 		_ = v

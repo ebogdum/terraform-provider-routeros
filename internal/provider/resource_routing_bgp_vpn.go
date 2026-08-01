@@ -410,14 +410,11 @@ func routingBGPVPNApply(ctx context.Context, obj client.Object, m *RoutingBGPVPN
 		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["export-filter"]; ok {
 		_ = v
@@ -480,14 +477,11 @@ func routingBGPVPNApply(ctx context.Context, obj client.Object, m *RoutingBGPVPN
 		m.Instance = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["label-allocation-policy"]; ok {
 		_ = v

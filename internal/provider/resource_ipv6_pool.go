@@ -293,14 +293,11 @@ func iPV6PoolApply(ctx context.Context, obj client.Object, m *IPV6PoolModel) {
 		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["from-pool"]; ok {
 		_ = v
@@ -313,14 +310,11 @@ func iPV6PoolApply(ctx context.Context, obj client.Object, m *IPV6PoolModel) {
 		m.FromPool = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["name"]; ok {
 		_ = v

@@ -571,14 +571,11 @@ func systemLoggingActionApply(ctx context.Context, obj client.Object, m *SystemL
 		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["default"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
 		} else {
 			m.Default = types.BoolNull()
 		}
-	} else {
-		m.Default = types.BoolNull()
 	}
 	if v, ok := obj["disk-file-count"]; ok {
 		_ = v
@@ -611,14 +608,11 @@ func systemLoggingActionApply(ctx context.Context, obj client.Object, m *SystemL
 		m.DiskLinesPerFile = types.Int64Null()
 	}
 	if v, ok := obj["disk-stop-on-full"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.DiskStopOnFull = types.BoolValue(b)
 		} else {
 			m.DiskStopOnFull = types.BoolNull()
 		}
-	} else {
-		m.DiskStopOnFull = types.BoolNull()
 	}
 	if v, ok := obj["memory-lines"]; ok {
 		_ = v
@@ -631,14 +625,11 @@ func systemLoggingActionApply(ctx context.Context, obj client.Object, m *SystemL
 		m.MemoryLines = types.Int64Null()
 	}
 	if v, ok := obj["memory-stop-on-full"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.MemoryStopOnFull = types.BoolValue(b)
 		} else {
 			m.MemoryStopOnFull = types.BoolNull()
 		}
-	} else {
-		m.MemoryStopOnFull = types.BoolNull()
 	}
 	if v, ok := obj["name"]; ok {
 		_ = v
@@ -651,14 +642,11 @@ func systemLoggingActionApply(ctx context.Context, obj client.Object, m *SystemL
 		m.Name = types.StringNull()
 	}
 	if v, ok := obj["remember"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Remember = types.BoolValue(b)
 		} else {
 			m.Remember = types.BoolNull()
 		}
-	} else {
-		m.Remember = types.BoolNull()
 	}
 	if v, ok := obj["remote"]; ok {
 		_ = v

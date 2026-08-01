@@ -272,34 +272,25 @@ func iPSmbUsersApply(ctx context.Context, obj client.Object, m *IPSmbUsersModel)
 		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["default"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
 		} else {
 			m.Default = types.BoolNull()
 		}
-	} else {
-		m.Default = types.BoolNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["name"]; ok {
 		_ = v
@@ -326,13 +317,10 @@ func iPSmbUsersApply(ctx context.Context, obj client.Object, m *IPSmbUsersModel)
 		m.Password = types.StringNull()
 	}
 	if v, ok := obj["read-only"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.ReadOnly = types.BoolValue(b)
 		} else {
 			m.ReadOnly = types.BoolNull()
 		}
-	} else {
-		m.ReadOnly = types.BoolNull()
 	}
 }

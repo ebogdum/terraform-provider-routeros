@@ -269,24 +269,18 @@ func routingTableApply(ctx context.Context, obj client.Object, m *RoutingTableMo
 		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["fib"]; ok {
 		if strings.TrimSpace(v) == "" {
@@ -303,14 +297,11 @@ func routingTableApply(ctx context.Context, obj client.Object, m *RoutingTableMo
 		m.Fib = types.BoolValue(false)
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["name"]; ok {
 		_ = v
@@ -333,13 +324,10 @@ func routingTableApply(ctx context.Context, obj client.Object, m *RoutingTableMo
 		m.Usage = types.Int64Null()
 	}
 	if v, ok := obj["used"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Used = types.BoolValue(b)
 		} else {
 			m.Used = types.BoolNull()
 		}
-	} else {
-		m.Used = types.BoolNull()
 	}
 }

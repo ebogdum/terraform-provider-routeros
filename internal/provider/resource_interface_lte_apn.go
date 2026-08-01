@@ -405,14 +405,11 @@ func interfaceLteApnApply(ctx context.Context, obj client.Object, m *InterfaceLt
 		m.Ipv6Interface = types.StringNull()
 	}
 	if v, ok := obj["add-default-route"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AddDefaultRoute = types.BoolValue(b)
 		} else {
 			m.AddDefaultRoute = types.BoolNull()
 		}
-	} else {
-		m.AddDefaultRoute = types.BoolNull()
 	}
 	if v, ok := obj["apn"]; ok {
 		_ = v
@@ -445,14 +442,11 @@ func interfaceLteApnApply(ctx context.Context, obj client.Object, m *InterfaceLt
 		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["default"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
 		} else {
 			m.Default = types.BoolNull()
 		}
-	} else {
-		m.Default = types.BoolNull()
 	}
 	if v, ok := obj["default-route-distance"]; ok {
 		_ = v
@@ -485,23 +479,17 @@ func interfaceLteApnApply(ctx context.Context, obj client.Object, m *InterfaceLt
 		m.Name = types.StringNull()
 	}
 	if v, ok := obj["use-network-apn"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.UseNetworkApn = types.BoolValue(b)
 		} else {
 			m.UseNetworkApn = types.BoolNull()
 		}
-	} else {
-		m.UseNetworkApn = types.BoolNull()
 	}
 	if v, ok := obj["use-peer-dns"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.UsePeerDNS = types.BoolValue(b)
 		} else {
 			m.UsePeerDNS = types.BoolNull()
 		}
-	} else {
-		m.UsePeerDNS = types.BoolNull()
 	}
 }

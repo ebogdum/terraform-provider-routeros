@@ -86,7 +86,7 @@ type IPV6FirewallNATModel struct {
 	SrcPort                 types.String `tfsdk:"src_port"`
 	TCPFlags                types.String `tfsdk:"tcp_flags"`
 	TCPMss                  types.String `tfsdk:"tcp_mss"`
-	Time                    types.String `tfsdk:"time"`
+	Time                    csvSetValue  `tfsdk:"time"`
 	ToPorts                 types.String `tfsdk:"to_ports"`
 	Router                  types.String `tfsdk:"router"`
 	Position                types.Int64  `tfsdk:"position"`
@@ -394,6 +394,7 @@ func (r *IPV6FirewallNATResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "",
 			},
 			"time": schema.StringAttribute{
+				CustomType:  csvSetType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -1079,14 +1080,11 @@ func iPV6FirewallNATApply(ctx context.Context, obj client.Object, m *IPV6Firewal
 		m.Content = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dscp"]; ok {
 		_ = v
@@ -1471,12 +1469,12 @@ func iPV6FirewallNATApply(ctx context.Context, obj client.Object, m *IPV6Firewal
 	if v, ok := obj["time"]; ok {
 		_ = v
 		if v != "" {
-			m.Time = types.StringValue(v)
+			m.Time = newCSVSetValue(v)
 		} else {
-			m.Time = types.StringNull()
+			m.Time = newCSVSetNull()
 		}
 	} else {
-		m.Time = types.StringNull()
+		m.Time = newCSVSetNull()
 	}
 	if v, ok := obj["to-ports"]; ok {
 		_ = v

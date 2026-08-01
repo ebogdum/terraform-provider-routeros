@@ -382,24 +382,18 @@ func sNMPCommunityApply(ctx context.Context, obj client.Object, m *SNMPCommunity
 		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["default"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
 		} else {
 			m.Default = types.BoolNull()
 		}
-	} else {
-		m.Default = types.BoolNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	// Sensitive: RouterOS scrubs the value on read. If the server returned
 	// a value, decode it. Otherwise the plan value (user input) is what's
@@ -436,14 +430,11 @@ func sNMPCommunityApply(ctx context.Context, obj client.Object, m *SNMPCommunity
 		m.Name = types.StringNull()
 	}
 	if v, ok := obj["read-access"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.ReadAccess = types.BoolValue(b)
 		} else {
 			m.ReadAccess = types.BoolNull()
 		}
-	} else {
-		m.ReadAccess = types.BoolNull()
 	}
 	if v, ok := obj["security"]; ok {
 		_ = v
@@ -456,13 +447,10 @@ func sNMPCommunityApply(ctx context.Context, obj client.Object, m *SNMPCommunity
 		m.Security = types.StringNull()
 	}
 	if v, ok := obj["write-access"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.WriteAccess = types.BoolValue(b)
 		} else {
 			m.WriteAccess = types.BoolNull()
 		}
-	} else {
-		m.WriteAccess = types.BoolNull()
 	}
 }

@@ -461,14 +461,11 @@ func interfaceEoipApply(ctx context.Context, obj client.Object, m *InterfaceEoip
 		m.ActualMTU = types.Int64Null()
 	}
 	if v, ok := obj["allow-fast-path"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AllowFastPath = types.BoolValue(b)
 		} else {
 			m.AllowFastPath = types.BoolNull()
 		}
-	} else {
-		m.AllowFastPath = types.BoolNull()
 	}
 	if v, ok := obj["arp"]; ok {
 		_ = v
@@ -491,14 +488,11 @@ func interfaceEoipApply(ctx context.Context, obj client.Object, m *InterfaceEoip
 		m.ARPTimeout = types.StringNull()
 	}
 	if v, ok := obj["clamp-tcp-mss"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.ClampTCPMss = types.BoolValue(b)
 		} else {
 			m.ClampTCPMss = types.BoolNull()
 		}
-	} else {
-		m.ClampTCPMss = types.BoolNull()
 	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
@@ -521,14 +515,11 @@ func interfaceEoipApply(ctx context.Context, obj client.Object, m *InterfaceEoip
 		m.DisableTime = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dont-fragment"]; ok {
 		_ = v

@@ -393,24 +393,18 @@ func iPV6AddressApply(ctx context.Context, obj client.Object, m *IPV6AddressMode
 		m.Address = types.StringNull()
 	}
 	if v, ok := obj["advertise"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Advertise = types.BoolValue(b)
 		} else {
 			m.Advertise = types.BoolNull()
 		}
-	} else {
-		m.Advertise = types.BoolNull()
 	}
 	if v, ok := obj["auto-link-local"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AutoLinkLocal = types.BoolValue(b)
 		} else {
 			m.AutoLinkLocal = types.BoolNull()
 		}
-	} else {
-		m.AutoLinkLocal = types.BoolNull()
 	}
 	if v, ok := obj["comment"]; ok {
 		_ = v
@@ -423,34 +417,25 @@ func iPV6AddressApply(ctx context.Context, obj client.Object, m *IPV6AddressMode
 		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["deprecated"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Deprecated = types.BoolValue(b)
 		} else {
 			m.Deprecated = types.BoolNull()
 		}
-	} else {
-		m.Deprecated = types.BoolNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["dynglob"]; ok {
 		_ = v
@@ -463,14 +448,11 @@ func iPV6AddressApply(ctx context.Context, obj client.Object, m *IPV6AddressMode
 		m.Dynglob = types.StringNull()
 	}
 	if v, ok := obj["eui-64"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Eui64 = types.BoolValue(b)
 		} else {
 			m.Eui64 = types.BoolNull()
 		}
-	} else {
-		m.Eui64 = types.BoolNull()
 	}
 	if v, ok := obj["from-pool"]; ok {
 		_ = v
@@ -493,34 +475,25 @@ func iPV6AddressApply(ctx context.Context, obj client.Object, m *IPV6AddressMode
 		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["link-local"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.LinkLocal = types.BoolValue(b)
 		} else {
 			m.LinkLocal = types.BoolNull()
 		}
-	} else {
-		m.LinkLocal = types.BoolNull()
 	}
 	if v, ok := obj["no-dad"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.NoDad = types.BoolValue(b)
 		} else {
 			m.NoDad = types.BoolNull()
 		}
-	} else {
-		m.NoDad = types.BoolNull()
 	}
 	if v, ok := obj["preferred"]; ok {
 		_ = v
@@ -543,14 +516,11 @@ func iPV6AddressApply(ctx context.Context, obj client.Object, m *IPV6AddressMode
 		m.Scope = types.Int64Null()
 	}
 	if v, ok := obj["slave"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Slave = types.BoolValue(b)
 		} else {
 			m.Slave = types.BoolNull()
 		}
-	} else {
-		m.Slave = types.BoolNull()
 	}
 	if v, ok := obj["valid"]; ok {
 		_ = v

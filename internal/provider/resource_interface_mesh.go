@@ -600,14 +600,11 @@ func interfaceMeshApply(ctx context.Context, obj client.Object, m *InterfaceMesh
 		m.DefaultHoplimit = types.Int64Null()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["mac-address"]; ok {
 		_ = v
@@ -620,14 +617,11 @@ func interfaceMeshApply(ctx context.Context, obj client.Object, m *InterfaceMesh
 		m.MACAddress = types.StringNull()
 	}
 	if v, ok := obj["mesh-portal"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.MeshPortal = types.BoolValue(b)
 		} else {
 			m.MeshPortal = types.BoolNull()
 		}
-	} else {
-		m.MeshPortal = types.BoolNull()
 	}
 	if v, ok := obj["mesh-traceroute"]; ok {
 		_ = v
@@ -660,24 +654,18 @@ func interfaceMeshApply(ctx context.Context, obj client.Object, m *InterfaceMesh
 		m.PrepLifetime = types.StringNull()
 	}
 	if v, ok := obj["preq-destination-only"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.PreqDestinationOnly = types.BoolValue(b)
 		} else {
 			m.PreqDestinationOnly = types.BoolNull()
 		}
-	} else {
-		m.PreqDestinationOnly = types.BoolNull()
 	}
 	if v, ok := obj["preq-reply-and-forward"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.PreqReplyAndForward = types.BoolValue(b)
 		} else {
 			m.PreqReplyAndForward = types.BoolNull()
 		}
-	} else {
-		m.PreqReplyAndForward = types.BoolNull()
 	}
 	if v, ok := obj["preq-retries"]; ok {
 		_ = v
@@ -730,13 +718,10 @@ func interfaceMeshApply(ctx context.Context, obj client.Object, m *InterfaceMesh
 		m.RannPropagationDelay = types.Int64Null()
 	}
 	if v, ok := obj["reoptimize-paths"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.ReoptimizePaths = types.BoolValue(b)
 		} else {
 			m.ReoptimizePaths = types.BoolNull()
 		}
-	} else {
-		m.ReoptimizePaths = types.BoolNull()
 	}
 }

@@ -508,24 +508,18 @@ func interfaceApply(ctx context.Context, obj client.Object, m *InterfaceModel) {
 		m.DefaultName = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["fp-rps-drop"]; ok {
 		_ = v
@@ -598,14 +592,11 @@ func interfaceApply(ctx context.Context, obj client.Object, m *InterfaceModel) {
 		m.FpTxRxRate = types.StringNull()
 	}
 	if v, ok := obj["inactive"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Inactive = types.BoolValue(b)
 		} else {
 			m.Inactive = types.BoolNull()
 		}
-	} else {
-		m.Inactive = types.BoolNull()
 	}
 	if v, ok := obj["last-link-down-time"]; ok {
 		_ = v
@@ -698,14 +689,11 @@ func interfaceApply(ctx context.Context, obj client.Object, m *InterfaceModel) {
 		m.Notrunning = types.StringNull()
 	}
 	if v, ok := obj["passthrough"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Passthrough = types.BoolValue(b)
 		} else {
 			m.Passthrough = types.BoolNull()
 		}
-	} else {
-		m.Passthrough = types.BoolNull()
 	}
 	if v, ok := obj["reset-traffic-counters"]; ok {
 		_ = v
@@ -718,14 +706,11 @@ func interfaceApply(ctx context.Context, obj client.Object, m *InterfaceModel) {
 		m.ResetTrafficCounters = types.StringNull()
 	}
 	if v, ok := obj["running"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Running = types.BoolValue(b)
 		} else {
 			m.Running = types.BoolNull()
 		}
-	} else {
-		m.Running = types.BoolNull()
 	}
 	if v, ok := obj["rx-byte"]; ok {
 		_ = v
@@ -768,14 +753,11 @@ func interfaceApply(ctx context.Context, obj client.Object, m *InterfaceModel) {
 		m.RxPacket = types.Int64Null()
 	}
 	if v, ok := obj["slave"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Slave = types.BoolValue(b)
 		} else {
 			m.Slave = types.BoolNull()
 		}
-	} else {
-		m.Slave = types.BoolNull()
 	}
 	if v, ok := obj["torch"]; ok {
 		_ = v

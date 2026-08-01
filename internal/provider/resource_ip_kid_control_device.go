@@ -289,14 +289,11 @@ func iPKidControlDeviceApply(ctx context.Context, obj client.Object, m *IPKidCon
 		m.Activity = types.StringNull()
 	}
 	if v, ok := obj["blocked"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Blocked = types.BoolValue(b)
 		} else {
 			m.Blocked = types.BoolNull()
 		}
-	} else {
-		m.Blocked = types.BoolNull()
 	}
 	if v, ok := obj["bytes"]; ok {
 		_ = v
@@ -309,24 +306,18 @@ func iPKidControlDeviceApply(ctx context.Context, obj client.Object, m *IPKidCon
 		m.Bytes = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["ip-address"]; ok {
 		_ = v
@@ -359,14 +350,11 @@ func iPKidControlDeviceApply(ctx context.Context, obj client.Object, m *IPKidCon
 		m.Name = types.StringNull()
 	}
 	if v, ok := obj["rate-limited"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.RateLimited = types.BoolValue(b)
 		} else {
 			m.RateLimited = types.BoolNull()
 		}
-	} else {
-		m.RateLimited = types.BoolNull()
 	}
 	if v, ok := obj["rate-up-down"]; ok {
 		_ = v
