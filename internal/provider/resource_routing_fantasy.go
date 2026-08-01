@@ -266,25 +266,25 @@ func (r *RoutingFantasyResource) Update(ctx context.Context, req resource.Update
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.DstAddress.Equal(state.DstAddress) {
+	if !plan.DstAddress.Equal(state.DstAddress) && !plan.DstAddress.IsUnknown() {
 		body["dst-address"] = plan.DstAddress.ValueString()
 	}
-	if !plan.Gateway.Equal(state.Gateway) {
+	if !plan.Gateway.Equal(state.Gateway) && !plan.Gateway.IsUnknown() {
 		body["gateway"] = plan.Gateway.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Scope.Equal(state.Scope) {
+	if !plan.Scope.Equal(state.Scope) && !plan.Scope.IsUnknown() {
 		body["scope"] = plan.Scope.ValueString()
 	}
-	if !plan.TargetScope.Equal(state.TargetScope) {
+	if !plan.TargetScope.Equal(state.TargetScope) && !plan.TargetScope.IsUnknown() {
 		body["target-scope"] = plan.TargetScope.ValueString()
 	}
 	if !plan.Count.Equal(state.Count) && !plan.Count.IsUnknown() {

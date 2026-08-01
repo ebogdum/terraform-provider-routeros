@@ -77,7 +77,7 @@ func (r *SystemResourceHardwareUSBSettingsResource) Create(ctx context.Context, 
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	systemResourceHardwareUSBSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	systemResourceHardwareUSBSettingsUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -90,7 +90,12 @@ func (r *SystemResourceHardwareUSBSettingsResource) Update(ctx context.Context, 
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	systemResourceHardwareUSBSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state SystemResourceHardwareUSBSettingsModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	systemResourceHardwareUSBSettingsUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -131,13 +136,13 @@ func (r *SystemResourceHardwareUSBSettingsResource) ImportState(ctx context.Cont
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/system/resource/hardware/usb-settings", types.StringValue(routerName))))...)
 }
 
-func systemResourceHardwareUSBSettingsUpsert(ctx context.Context, reg *client.Registry, plan *SystemResourceHardwareUSBSettingsModel, diags *diagBuf) {
+func systemResourceHardwareUSBSettingsUpsert(ctx context.Context, reg *client.Registry, plan, state *SystemResourceHardwareUSBSettingsModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.Authorization.IsNull() || plan.Authorization.IsUnknown()) {
+	if !(plan.Authorization.IsNull() || plan.Authorization.IsUnknown()) && (state == nil || !plan.Authorization.Equal(state.Authorization)) {
 		body["authorization"] = client.FormatBool(plan.Authorization.ValueBool())
 	}
 	obj, err := c.SetSingleton(ctx, "/system/resource/hardware/usb-settings", body)

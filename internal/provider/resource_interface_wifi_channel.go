@@ -241,37 +241,37 @@ func (r *InterfaceWifiChannelResource) Update(ctx context.Context, req resource.
 		return
 	}
 	body := client.Object{}
-	if !plan.Band.Equal(state.Band) {
+	if !plan.Band.Equal(state.Band) && !plan.Band.IsUnknown() {
 		body["band"] = plan.Band.ValueString()
 	}
-	if !plan.ChannelWidth.Equal(state.ChannelWidth) {
+	if !plan.ChannelWidth.Equal(state.ChannelWidth) && !plan.ChannelWidth.IsUnknown() {
 		body["channel-width"] = plan.ChannelWidth.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.DeprioritizeUnii34.Equal(state.DeprioritizeUnii34) {
+	if !plan.DeprioritizeUnii34.Equal(state.DeprioritizeUnii34) && !plan.DeprioritizeUnii34.IsUnknown() {
 		body["deprioritize-unii-3-4"] = plan.DeprioritizeUnii34.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Frequency.Equal(state.Frequency) {
+	if !plan.Frequency.Equal(state.Frequency) && !plan.Frequency.IsUnknown() {
 		body["frequency"] = plan.Frequency.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.ReselectInterval.Equal(state.ReselectInterval) {
+	if !plan.ReselectInterval.Equal(state.ReselectInterval) && !plan.ReselectInterval.IsUnknown() {
 		body["reselect-interval"] = plan.ReselectInterval.ValueString()
 	}
-	if !plan.ReselectTime.Equal(state.ReselectTime) {
+	if !plan.ReselectTime.Equal(state.ReselectTime) && !plan.ReselectTime.IsUnknown() {
 		body["reselect-time"] = plan.ReselectTime.ValueString()
 	}
-	if !plan.SecondaryFrequency.Equal(state.SecondaryFrequency) {
+	if !plan.SecondaryFrequency.Equal(state.SecondaryFrequency) && !plan.SecondaryFrequency.IsUnknown() {
 		body["secondary-frequency"] = plan.SecondaryFrequency.ValueString()
 	}
-	if !plan.SkipDfsChannels.Equal(state.SkipDfsChannels) {
+	if !plan.SkipDfsChannels.Equal(state.SkipDfsChannels) && !plan.SkipDfsChannels.IsUnknown() {
 		body["skip-dfs-channels"] = plan.SkipDfsChannels.ValueString()
 	}
 	if !plan.PreamblePuncturing.Equal(state.PreamblePuncturing) && !plan.PreamblePuncturing.IsUnknown() {

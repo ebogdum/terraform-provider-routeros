@@ -320,49 +320,49 @@ func (r *IPIpsecPolicyResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 	body := client.Object{}
-	if !plan.Action.Equal(state.Action) {
+	if !plan.Action.Equal(state.Action) && !plan.Action.IsUnknown() {
 		body["action"] = plan.Action.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.DstAddress.Equal(state.DstAddress) {
+	if !plan.DstAddress.Equal(state.DstAddress) && !plan.DstAddress.IsUnknown() {
 		body["dst-address"] = plan.DstAddress.ValueString()
 	}
-	if !plan.DstPort.Equal(state.DstPort) {
+	if !plan.DstPort.Equal(state.DstPort) && !plan.DstPort.IsUnknown() {
 		body["dst-port"] = client.FormatInt64(plan.DstPort.ValueInt64())
 	}
-	if !plan.Group.Equal(state.Group) {
+	if !plan.Group.Equal(state.Group) && !plan.Group.IsUnknown() {
 		body["group"] = plan.Group.ValueString()
 	}
-	if !plan.IpsecProtocols.Equal(state.IpsecProtocols) {
+	if !plan.IpsecProtocols.Equal(state.IpsecProtocols) && !plan.IpsecProtocols.IsUnknown() {
 		body["ipsec-protocols"] = plan.IpsecProtocols.ValueString()
 	}
-	if !plan.Level.Equal(state.Level) {
+	if !plan.Level.Equal(state.Level) && !plan.Level.IsUnknown() {
 		body["level"] = plan.Level.ValueString()
 	}
-	if !plan.Peer.Equal(state.Peer) {
+	if !plan.Peer.Equal(state.Peer) && !plan.Peer.IsUnknown() {
 		body["peer"] = plan.Peer.ValueString()
 	}
-	if !plan.Proposal.Equal(state.Proposal) {
+	if !plan.Proposal.Equal(state.Proposal) && !plan.Proposal.IsUnknown() {
 		body["proposal"] = plan.Proposal.ValueString()
 	}
-	if !plan.Protocol.Equal(state.Protocol) {
+	if !plan.Protocol.Equal(state.Protocol) && !plan.Protocol.IsUnknown() {
 		body["protocol"] = plan.Protocol.ValueString()
 	}
-	if !plan.SrcAddress.Equal(state.SrcAddress) {
+	if !plan.SrcAddress.Equal(state.SrcAddress) && !plan.SrcAddress.IsUnknown() {
 		body["src-address"] = plan.SrcAddress.ValueString()
 	}
-	if !plan.SrcPort.Equal(state.SrcPort) {
+	if !plan.SrcPort.Equal(state.SrcPort) && !plan.SrcPort.IsUnknown() {
 		body["src-port"] = client.FormatInt64(plan.SrcPort.ValueInt64())
 	}
-	if !plan.Template.Equal(state.Template) {
+	if !plan.Template.Equal(state.Template) && !plan.Template.IsUnknown() {
 		body["template"] = client.FormatBool(plan.Template.ValueBool())
 	}
-	if !plan.Tunnel.Equal(state.Tunnel) {
+	if !plan.Tunnel.Equal(state.Tunnel) && !plan.Tunnel.IsUnknown() {
 		body["tunnel"] = client.FormatBool(plan.Tunnel.ValueBool())
 	}
 	if len(body) > 0 {

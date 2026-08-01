@@ -203,25 +203,25 @@ func (r *InterfaceMeshPortResource) Update(ctx context.Context, req resource.Upd
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.HelloInterval.Equal(state.HelloInterval) {
+	if !plan.HelloInterval.Equal(state.HelloInterval) && !plan.HelloInterval.IsUnknown() {
 		body["hello-interval"] = client.FormatInt64(plan.HelloInterval.ValueInt64())
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.Mesh.Equal(state.Mesh) {
+	if !plan.Mesh.Equal(state.Mesh) && !plan.Mesh.IsUnknown() {
 		body["mesh"] = plan.Mesh.ValueString()
 	}
-	if !plan.PathCost.Equal(state.PathCost) {
+	if !plan.PathCost.Equal(state.PathCost) && !plan.PathCost.IsUnknown() {
 		body["path-cost"] = client.FormatInt64(plan.PathCost.ValueInt64())
 	}
-	if !plan.PortType.Equal(state.PortType) {
+	if !plan.PortType.Equal(state.PortType) && !plan.PortType.IsUnknown() {
 		body["port-type"] = plan.PortType.ValueString()
 	}
 	if len(body) > 0 {

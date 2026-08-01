@@ -449,46 +449,46 @@ func (r *CertificateResource) Update(ctx context.Context, req resource.UpdateReq
 		return
 	}
 	body := client.Object{}
-	if !plan.CommonName.Equal(state.CommonName) {
+	if !plan.CommonName.Equal(state.CommonName) && !plan.CommonName.IsUnknown() {
 		body["common-name"] = plan.CommonName.ValueString()
 	}
-	if !plan.Country.Equal(state.Country) {
+	if !plan.Country.Equal(state.Country) && !plan.Country.IsUnknown() {
 		body["country"] = plan.Country.ValueString()
 	}
-	if !plan.DaysValid.Equal(state.DaysValid) {
+	if !plan.DaysValid.Equal(state.DaysValid) && !plan.DaysValid.IsUnknown() {
 		body["days-valid"] = client.FormatInt64(plan.DaysValid.ValueInt64())
 	}
-	if !plan.DigestAlgorithm.Equal(state.DigestAlgorithm) {
+	if !plan.DigestAlgorithm.Equal(state.DigestAlgorithm) && !plan.DigestAlgorithm.IsUnknown() {
 		body["digest-algorithm"] = plan.DigestAlgorithm.ValueString()
 	}
-	if !plan.KeySize.Equal(state.KeySize) {
+	if !plan.KeySize.Equal(state.KeySize) && !plan.KeySize.IsUnknown() {
 		body["key-size"] = plan.KeySize.ValueString()
 	}
-	if !plan.KeyUsage.Equal(state.KeyUsage) {
+	if !plan.KeyUsage.Equal(state.KeyUsage) && !plan.KeyUsage.IsUnknown() {
 		body["key-usage"] = plan.KeyUsage.ValueString()
 	}
-	if !plan.Locality.Equal(state.Locality) {
+	if !plan.Locality.Equal(state.Locality) && !plan.Locality.IsUnknown() {
 		body["locality"] = plan.Locality.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Organization.Equal(state.Organization) {
+	if !plan.Organization.Equal(state.Organization) && !plan.Organization.IsUnknown() {
 		body["organization"] = plan.Organization.ValueString()
 	}
-	if !plan.State.Equal(state.State) {
+	if !plan.State.Equal(state.State) && !plan.State.IsUnknown() {
 		body["state"] = plan.State.ValueString()
 	}
-	if !plan.SubjectAltName.Equal(state.SubjectAltName) {
+	if !plan.SubjectAltName.Equal(state.SubjectAltName) && !plan.SubjectAltName.IsUnknown() {
 		body["subject-alt-name"] = plan.SubjectAltName.ValueString()
 	}
-	if !plan.TrustStore.Equal(state.TrustStore) {
+	if !plan.TrustStore.Equal(state.TrustStore) && !plan.TrustStore.IsUnknown() {
 		body["trust-store"] = plan.TrustStore.ValueString()
 	}
-	if !plan.Trusted.Equal(state.Trusted) {
+	if !plan.Trusted.Equal(state.Trusted) && !plan.Trusted.IsUnknown() {
 		body["trusted"] = client.FormatBool(plan.Trusted.ValueBool())
 	}
-	if !plan.Unit.Equal(state.Unit) {
+	if !plan.Unit.Equal(state.Unit) && !plan.Unit.IsUnknown() {
 		body["unit"] = plan.Unit.ValueString()
 	}
 	if len(body) > 0 {

@@ -40,6 +40,7 @@ type SystemWatchdogModel struct {
 	WatchAddress       types.String `tfsdk:"watch_address"`
 	WatchdogTimer      types.Bool   `tfsdk:"watchdog_timer"`
 	Router             types.String `tfsdk:"router"`
+	LockoutAck         types.Bool   `tfsdk:"lockout_ack"`
 }
 
 func NewSystemWatchdogResource() resource.Resource { return &SystemWatchdogResource{} }
@@ -99,6 +100,9 @@ func (r *SystemWatchdogResource) Schema(_ context.Context, _ resource.SchemaRequ
 			"watchdog_timer": schema.BoolAttribute{Optional: true, Computed: true,
 				Description: "Whether to reboot if a system is unresponsive for a minute.",
 			},
+			"lockout_ack": schema.BoolAttribute{Optional: true,
+				Description: "Acknowledge that a `watch_address` the device cannot reach will reboot-loop it off the network.",
+			},
 			"router": schema.StringAttribute{Optional: true,
 				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
 			},
@@ -112,7 +116,7 @@ func (r *SystemWatchdogResource) Create(ctx context.Context, req resource.Create
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	systemWatchdogUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	systemWatchdogUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -125,7 +129,12 @@ func (r *SystemWatchdogResource) Update(ctx context.Context, req resource.Update
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	systemWatchdogUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state SystemWatchdogModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	systemWatchdogUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -166,38 +175,42 @@ func (r *SystemWatchdogResource) ImportState(ctx context.Context, req resource.I
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/system/watchdog", types.StringValue(routerName))))...)
 }
 
-func systemWatchdogUpsert(ctx context.Context, reg *client.Registry, plan *SystemWatchdogModel, diags *diagBuf) {
+func systemWatchdogUpsert(ctx context.Context, reg *client.Registry, plan, state *SystemWatchdogModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.AutoSendSupout.IsNull() || plan.AutoSendSupout.IsUnknown()) {
+	if !(plan.AutoSendSupout.IsNull() || plan.AutoSendSupout.IsUnknown()) && (state == nil || !plan.AutoSendSupout.Equal(state.AutoSendSupout)) {
 		body["auto-send-supout"] = client.FormatBool(plan.AutoSendSupout.ValueBool())
 	}
-	if !(plan.AutomaticSupout.IsNull() || plan.AutomaticSupout.IsUnknown()) {
+	if !(plan.AutomaticSupout.IsNull() || plan.AutomaticSupout.IsUnknown()) && (state == nil || !plan.AutomaticSupout.Equal(state.AutomaticSupout)) {
 		body["automatic-supout"] = client.FormatBool(plan.AutomaticSupout.ValueBool())
 	}
-	if !(plan.PingStartAfterBoot.IsNull() || plan.PingStartAfterBoot.IsUnknown()) {
+	if !(plan.PingStartAfterBoot.IsNull() || plan.PingStartAfterBoot.IsUnknown()) && (state == nil || !plan.PingStartAfterBoot.Equal(state.PingStartAfterBoot)) {
 		body["ping-start-after-boot"] = plan.PingStartAfterBoot.ValueString()
 	}
-	if !(plan.PingTimeout.IsNull() || plan.PingTimeout.IsUnknown()) {
+	if !(plan.PingTimeout.IsNull() || plan.PingTimeout.IsUnknown()) && (state == nil || !plan.PingTimeout.Equal(state.PingTimeout)) {
 		body["ping-timeout"] = plan.PingTimeout.ValueString()
 	}
-	if !(plan.SendEmailFrom.IsNull() || plan.SendEmailFrom.IsUnknown()) {
+	if !(plan.SendEmailFrom.IsNull() || plan.SendEmailFrom.IsUnknown()) && (state == nil || !plan.SendEmailFrom.Equal(state.SendEmailFrom)) {
 		body["send-email-from"] = plan.SendEmailFrom.ValueString()
 	}
-	if !(plan.SendEmailTo.IsNull() || plan.SendEmailTo.IsUnknown()) {
+	if !(plan.SendEmailTo.IsNull() || plan.SendEmailTo.IsUnknown()) && (state == nil || !plan.SendEmailTo.Equal(state.SendEmailTo)) {
 		body["send-email-to"] = plan.SendEmailTo.ValueString()
 	}
-	if !(plan.SendSMTPServer.IsNull() || plan.SendSMTPServer.IsUnknown()) {
+	if !(plan.SendSMTPServer.IsNull() || plan.SendSMTPServer.IsUnknown()) && (state == nil || !plan.SendSMTPServer.Equal(state.SendSMTPServer)) {
 		body["send-smtp-server"] = plan.SendSMTPServer.ValueString()
 	}
-	if !(plan.WatchAddress.IsNull() || plan.WatchAddress.IsUnknown()) {
+	if !(plan.WatchAddress.IsNull() || plan.WatchAddress.IsUnknown()) && (state == nil || !plan.WatchAddress.Equal(state.WatchAddress)) {
 		body["watch-address"] = plan.WatchAddress.ValueString()
 	}
-	if !(plan.WatchdogTimer.IsNull() || plan.WatchdogTimer.IsUnknown()) {
+	if !(plan.WatchdogTimer.IsNull() || plan.WatchdogTimer.IsUnknown()) && (state == nil || !plan.WatchdogTimer.Equal(state.WatchdogTimer)) {
 		body["watchdog-timer"] = client.FormatBool(plan.WatchdogTimer.ValueBool())
+	}
+	if err := schemautil.CheckWatchdogLockout(body, !plan.LockoutAck.IsNull() && plan.LockoutAck.ValueBool()); err != nil {
+		diags.AddError("Refusing /system/watchdog change", err.Error())
+		return
 	}
 	obj, err := c.SetSingleton(ctx, "/system/watchdog", body)
 	if err != nil {
@@ -209,6 +222,9 @@ func systemWatchdogUpsert(ctx context.Context, reg *client.Registry, plan *Syste
 }
 
 func systemWatchdogApply(ctx context.Context, obj client.Object, m *SystemWatchdogModel) {
+	if m.LockoutAck.IsUnknown() {
+		m.LockoutAck = types.BoolNull()
+	}
 	_ = ctx
 	if v, ok := obj["auto-send-supout"]; ok {
 		_ = v

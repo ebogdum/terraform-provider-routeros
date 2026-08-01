@@ -185,25 +185,25 @@ func (r *LcdResource) Update(ctx context.Context, req resource.UpdateRequest, re
 		return
 	}
 	body := client.Object{}
-	if !plan.BacklightTimeout.Equal(state.BacklightTimeout) {
+	if !plan.BacklightTimeout.Equal(state.BacklightTimeout) && !plan.BacklightTimeout.IsUnknown() {
 		body["backlight-timeout"] = plan.BacklightTimeout.ValueString()
 	}
-	if !plan.ColorScheme.Equal(state.ColorScheme) {
+	if !plan.ColorScheme.Equal(state.ColorScheme) && !plan.ColorScheme.IsUnknown() {
 		body["color-scheme"] = plan.ColorScheme.ValueString()
 	}
-	if !plan.DefaultScreen.Equal(state.DefaultScreen) {
+	if !plan.DefaultScreen.Equal(state.DefaultScreen) && !plan.DefaultScreen.IsUnknown() {
 		body["default-screen"] = plan.DefaultScreen.ValueString()
 	}
-	if !plan.Enabled.Equal(state.Enabled) {
+	if !plan.Enabled.Equal(state.Enabled) && !plan.Enabled.IsUnknown() {
 		body["enabled"] = plan.Enabled.ValueString()
 	}
-	if !plan.ReadOnlyMode.Equal(state.ReadOnlyMode) {
+	if !plan.ReadOnlyMode.Equal(state.ReadOnlyMode) && !plan.ReadOnlyMode.IsUnknown() {
 		body["read-only-mode"] = plan.ReadOnlyMode.ValueString()
 	}
-	if !plan.TimeInterval.Equal(state.TimeInterval) {
+	if !plan.TimeInterval.Equal(state.TimeInterval) && !plan.TimeInterval.IsUnknown() {
 		body["time-interval"] = plan.TimeInterval.ValueString()
 	}
-	if !plan.TouchScreen.Equal(state.TouchScreen) {
+	if !plan.TouchScreen.Equal(state.TouchScreen) && !plan.TouchScreen.IsUnknown() {
 		body["touch-screen"] = plan.TouchScreen.ValueString()
 	}
 	if len(body) > 0 {

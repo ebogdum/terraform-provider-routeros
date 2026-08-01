@@ -111,7 +111,7 @@ func (r *IPIPsecKeyQKDResource) Create(ctx context.Context, req resource.CreateR
 		resp.Diagnostics.Append(diags...)
 		return
 	}
-	iPIPsecKeyQKDUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	iPIPsecKeyQKDUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -144,7 +144,12 @@ func (r *IPIPsecKeyQKDResource) Update(ctx context.Context, req resource.UpdateR
 		resp.Diagnostics.Append(diags...)
 		return
 	}
-	iPIPsecKeyQKDUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state IPIPsecKeyQKDModel
+	if diags := req.State.Get(ctx, &state); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	iPIPsecKeyQKDUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -166,31 +171,31 @@ func (r *IPIPsecKeyQKDResource) ImportState(ctx context.Context, req resource.Im
 		types.StringValue(stateIDFor("/ip/ipsec/key/qkd", types.StringValue(routerName))))...)
 }
 
-func iPIPsecKeyQKDUpsert(ctx context.Context, reg *client.Registry, plan *IPIPsecKeyQKDModel, diags *diagBuf) {
+func iPIPsecKeyQKDUpsert(ctx context.Context, reg *client.Registry, plan, state *IPIPsecKeyQKDModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.Address.IsNull() || plan.Address.IsUnknown()) {
+	if !(plan.Address.IsNull() || plan.Address.IsUnknown()) && (state == nil || !plan.Address.Equal(state.Address)) {
 		body["address"] = plan.Address.ValueString()
 	}
-	if !(plan.CacheSize.IsNull() || plan.CacheSize.IsUnknown()) {
+	if !(plan.CacheSize.IsNull() || plan.CacheSize.IsUnknown()) && (state == nil || !plan.CacheSize.Equal(state.CacheSize)) {
 		body["cache-size"] = client.FormatInt64(plan.CacheSize.ValueInt64())
 	}
-	if !(plan.Certificate.IsNull() || plan.Certificate.IsUnknown()) {
+	if !(plan.Certificate.IsNull() || plan.Certificate.IsUnknown()) && (state == nil || !plan.Certificate.Equal(state.Certificate)) {
 		body["certificate"] = plan.Certificate.ValueString()
 	}
-	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) {
+	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) && (state == nil || !plan.Enabled.Equal(state.Enabled)) {
 		body["enabled"] = client.FormatBool(plan.Enabled.ValueBool())
 	}
-	if !(plan.KeySize.IsNull() || plan.KeySize.IsUnknown()) {
+	if !(plan.KeySize.IsNull() || plan.KeySize.IsUnknown()) && (state == nil || !plan.KeySize.Equal(state.KeySize)) {
 		body["key-size"] = client.FormatInt64(plan.KeySize.ValueInt64())
 	}
-	if !(plan.KmeID.IsNull() || plan.KmeID.IsUnknown()) {
+	if !(plan.KmeID.IsNull() || plan.KmeID.IsUnknown()) && (state == nil || !plan.KmeID.Equal(state.KmeID)) {
 		body["kme-id"] = plan.KmeID.ValueString()
 	}
-	if !(plan.PeerSaeID.IsNull() || plan.PeerSaeID.IsUnknown()) {
+	if !(plan.PeerSaeID.IsNull() || plan.PeerSaeID.IsUnknown()) && (state == nil || !plan.PeerSaeID.Equal(state.PeerSaeID)) {
 		body["peer-sae-id"] = plan.PeerSaeID.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/ip/ipsec/key/qkd", body)

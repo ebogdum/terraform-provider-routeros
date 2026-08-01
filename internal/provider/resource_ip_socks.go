@@ -98,7 +98,7 @@ func (r *IPSocksResource) Create(ctx context.Context, req resource.CreateRequest
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPSocksUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	iPSocksUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -111,7 +111,12 @@ func (r *IPSocksResource) Update(ctx context.Context, req resource.UpdateRequest
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPSocksUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state IPSocksModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	iPSocksUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -152,31 +157,31 @@ func (r *IPSocksResource) ImportState(ctx context.Context, req resource.ImportSt
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/ip/socks", types.StringValue(routerName))))...)
 }
 
-func iPSocksUpsert(ctx context.Context, reg *client.Registry, plan *IPSocksModel, diags *diagBuf) {
+func iPSocksUpsert(ctx context.Context, reg *client.Registry, plan, state *IPSocksModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.AuthMethod.IsNull() || plan.AuthMethod.IsUnknown()) {
+	if !(plan.AuthMethod.IsNull() || plan.AuthMethod.IsUnknown()) && (state == nil || !plan.AuthMethod.Equal(state.AuthMethod)) {
 		body["auth-method"] = plan.AuthMethod.ValueString()
 	}
-	if !(plan.ConnectionIdleTimeout.IsNull() || plan.ConnectionIdleTimeout.IsUnknown()) {
+	if !(plan.ConnectionIdleTimeout.IsNull() || plan.ConnectionIdleTimeout.IsUnknown()) && (state == nil || !plan.ConnectionIdleTimeout.Equal(state.ConnectionIdleTimeout)) {
 		body["connection-idle-timeout"] = plan.ConnectionIdleTimeout.ValueString()
 	}
-	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) {
+	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) && (state == nil || !plan.Enabled.Equal(state.Enabled)) {
 		body["enabled"] = client.FormatBool(plan.Enabled.ValueBool())
 	}
-	if !(plan.MaxConnections.IsNull() || plan.MaxConnections.IsUnknown()) {
+	if !(plan.MaxConnections.IsNull() || plan.MaxConnections.IsUnknown()) && (state == nil || !plan.MaxConnections.Equal(state.MaxConnections)) {
 		body["max-connections"] = client.FormatInt64(plan.MaxConnections.ValueInt64())
 	}
-	if !(plan.Port.IsNull() || plan.Port.IsUnknown()) {
+	if !(plan.Port.IsNull() || plan.Port.IsUnknown()) && (state == nil || !plan.Port.Equal(state.Port)) {
 		body["port"] = client.FormatInt64(plan.Port.ValueInt64())
 	}
-	if !(plan.Version.IsNull() || plan.Version.IsUnknown()) {
+	if !(plan.Version.IsNull() || plan.Version.IsUnknown()) && (state == nil || !plan.Version.Equal(state.Version)) {
 		body["version"] = client.FormatInt64(plan.Version.ValueInt64())
 	}
-	if !(plan.Vrf.IsNull() || plan.Vrf.IsUnknown()) {
+	if !(plan.Vrf.IsNull() || plan.Vrf.IsUnknown()) && (state == nil || !plan.Vrf.Equal(state.Vrf)) {
 		body["vrf"] = plan.Vrf.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/ip/socks", body)

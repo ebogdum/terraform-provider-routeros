@@ -82,7 +82,7 @@ func (r *SystemClockManualResource) Create(ctx context.Context, req resource.Cre
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	systemClockManualUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	systemClockManualUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -95,7 +95,12 @@ func (r *SystemClockManualResource) Update(ctx context.Context, req resource.Upd
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	systemClockManualUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state SystemClockManualModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	systemClockManualUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -136,22 +141,22 @@ func (r *SystemClockManualResource) ImportState(ctx context.Context, req resourc
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/system/clock/manual", types.StringValue(routerName))))...)
 }
 
-func systemClockManualUpsert(ctx context.Context, reg *client.Registry, plan *SystemClockManualModel, diags *diagBuf) {
+func systemClockManualUpsert(ctx context.Context, reg *client.Registry, plan, state *SystemClockManualModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.DstDelta.IsNull() || plan.DstDelta.IsUnknown()) {
+	if !(plan.DstDelta.IsNull() || plan.DstDelta.IsUnknown()) && (state == nil || !plan.DstDelta.Equal(state.DstDelta)) {
 		body["dst-delta"] = plan.DstDelta.ValueString()
 	}
-	if !(plan.DstEnd.IsNull() || plan.DstEnd.IsUnknown()) {
+	if !(plan.DstEnd.IsNull() || plan.DstEnd.IsUnknown()) && (state == nil || !plan.DstEnd.Equal(state.DstEnd)) {
 		body["dst-end"] = plan.DstEnd.ValueString()
 	}
-	if !(plan.DstStart.IsNull() || plan.DstStart.IsUnknown()) {
+	if !(plan.DstStart.IsNull() || plan.DstStart.IsUnknown()) && (state == nil || !plan.DstStart.Equal(state.DstStart)) {
 		body["dst-start"] = plan.DstStart.ValueString()
 	}
-	if !(plan.TimeZone.IsNull() || plan.TimeZone.IsUnknown()) {
+	if !(plan.TimeZone.IsNull() || plan.TimeZone.IsUnknown()) && (state == nil || !plan.TimeZone.Equal(state.TimeZone)) {
 		body["time-zone"] = plan.TimeZone.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/system/clock/manual", body)

@@ -175,13 +175,13 @@ func (r *IPMediaResource) Update(ctx context.Context, req resource.UpdateRequest
 		return
 	}
 	body := client.Object{}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.Path.Equal(state.Path) {
+	if !plan.Path.Equal(state.Path) && !plan.Path.IsUnknown() {
 		body["path"] = plan.Path.ValueString()
 	}
 	if !plan.AllowedHostname.Equal(state.AllowedHostname) && !plan.AllowedHostname.IsUnknown() {

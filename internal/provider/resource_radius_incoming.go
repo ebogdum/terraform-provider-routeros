@@ -78,7 +78,7 @@ func (r *RADIUSIncomingResource) Create(ctx context.Context, req resource.Create
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	rADIUSIncomingUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	rADIUSIncomingUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -91,7 +91,12 @@ func (r *RADIUSIncomingResource) Update(ctx context.Context, req resource.Update
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	rADIUSIncomingUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state RADIUSIncomingModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	rADIUSIncomingUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -132,19 +137,19 @@ func (r *RADIUSIncomingResource) ImportState(ctx context.Context, req resource.I
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/radius/incoming", types.StringValue(routerName))))...)
 }
 
-func rADIUSIncomingUpsert(ctx context.Context, reg *client.Registry, plan *RADIUSIncomingModel, diags *diagBuf) {
+func rADIUSIncomingUpsert(ctx context.Context, reg *client.Registry, plan, state *RADIUSIncomingModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.Accept.IsNull() || plan.Accept.IsUnknown()) {
+	if !(plan.Accept.IsNull() || plan.Accept.IsUnknown()) && (state == nil || !plan.Accept.Equal(state.Accept)) {
 		body["accept"] = client.FormatBool(plan.Accept.ValueBool())
 	}
-	if !(plan.Port.IsNull() || plan.Port.IsUnknown()) {
+	if !(plan.Port.IsNull() || plan.Port.IsUnknown()) && (state == nil || !plan.Port.Equal(state.Port)) {
 		body["port"] = client.FormatInt64(plan.Port.ValueInt64())
 	}
-	if !(plan.Vrf.IsNull() || plan.Vrf.IsUnknown()) {
+	if !(plan.Vrf.IsNull() || plan.Vrf.IsUnknown()) && (state == nil || !plan.Vrf.Equal(state.Vrf)) {
 		body["vrf"] = plan.Vrf.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/radius/incoming", body)

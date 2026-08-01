@@ -86,7 +86,7 @@ func (r *IPIpsecSettingsResource) Create(ctx context.Context, req resource.Creat
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPIpsecSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	iPIpsecSettingsUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -99,7 +99,12 @@ func (r *IPIpsecSettingsResource) Update(ctx context.Context, req resource.Updat
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPIpsecSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state IPIpsecSettingsModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	iPIpsecSettingsUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -140,22 +145,22 @@ func (r *IPIpsecSettingsResource) ImportState(ctx context.Context, req resource.
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/ip/ipsec/settings", types.StringValue(routerName))))...)
 }
 
-func iPIpsecSettingsUpsert(ctx context.Context, reg *client.Registry, plan *IPIpsecSettingsModel, diags *diagBuf) {
+func iPIpsecSettingsUpsert(ctx context.Context, reg *client.Registry, plan, state *IPIpsecSettingsModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.Accounting.IsNull() || plan.Accounting.IsUnknown()) {
+	if !(plan.Accounting.IsNull() || plan.Accounting.IsUnknown()) && (state == nil || !plan.Accounting.Equal(state.Accounting)) {
 		body["accounting"] = client.FormatBool(plan.Accounting.ValueBool())
 	}
-	if !(plan.DdosCookieThreshold.IsNull() || plan.DdosCookieThreshold.IsUnknown()) {
+	if !(plan.DdosCookieThreshold.IsNull() || plan.DdosCookieThreshold.IsUnknown()) && (state == nil || !plan.DdosCookieThreshold.Equal(state.DdosCookieThreshold)) {
 		body["ddos-cookie-threshold"] = client.FormatInt64(plan.DdosCookieThreshold.ValueInt64())
 	}
-	if !(plan.InterimUpdate.IsNull() || plan.InterimUpdate.IsUnknown()) {
+	if !(plan.InterimUpdate.IsNull() || plan.InterimUpdate.IsUnknown()) && (state == nil || !plan.InterimUpdate.Equal(state.InterimUpdate)) {
 		body["interim-update"] = plan.InterimUpdate.ValueString()
 	}
-	if !(plan.XauthUseRADIUS.IsNull() || plan.XauthUseRADIUS.IsUnknown()) {
+	if !(plan.XauthUseRADIUS.IsNull() || plan.XauthUseRADIUS.IsUnknown()) && (state == nil || !plan.XauthUseRADIUS.Equal(state.XauthUseRADIUS)) {
 		body["xauth-use-radius"] = client.FormatBool(plan.XauthUseRADIUS.ValueBool())
 	}
 	obj, err := c.SetSingleton(ctx, "/ip/ipsec/settings", body)

@@ -90,7 +90,7 @@ func (r *PPPAaaResource) Create(ctx context.Context, req resource.CreateRequest,
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	pPPAaaUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	pPPAaaUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -103,7 +103,12 @@ func (r *PPPAaaResource) Update(ctx context.Context, req resource.UpdateRequest,
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	pPPAaaUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state PPPAaaModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	pPPAaaUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -144,25 +149,25 @@ func (r *PPPAaaResource) ImportState(ctx context.Context, req resource.ImportSta
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/ppp/aaa", types.StringValue(routerName))))...)
 }
 
-func pPPAaaUpsert(ctx context.Context, reg *client.Registry, plan *PPPAaaModel, diags *diagBuf) {
+func pPPAaaUpsert(ctx context.Context, reg *client.Registry, plan, state *PPPAaaModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.Accounting.IsNull() || plan.Accounting.IsUnknown()) {
+	if !(plan.Accounting.IsNull() || plan.Accounting.IsUnknown()) && (state == nil || !plan.Accounting.Equal(state.Accounting)) {
 		body["accounting"] = client.FormatBool(plan.Accounting.ValueBool())
 	}
-	if !(plan.EnableIPV6Accounting.IsNull() || plan.EnableIPV6Accounting.IsUnknown()) {
+	if !(plan.EnableIPV6Accounting.IsNull() || plan.EnableIPV6Accounting.IsUnknown()) && (state == nil || !plan.EnableIPV6Accounting.Equal(state.EnableIPV6Accounting)) {
 		body["enable-ipv6-accounting"] = client.FormatBool(plan.EnableIPV6Accounting.ValueBool())
 	}
-	if !(plan.InterimUpdate.IsNull() || plan.InterimUpdate.IsUnknown()) {
+	if !(plan.InterimUpdate.IsNull() || plan.InterimUpdate.IsUnknown()) && (state == nil || !plan.InterimUpdate.Equal(state.InterimUpdate)) {
 		body["interim-update"] = plan.InterimUpdate.ValueString()
 	}
-	if !(plan.UseCircuitIDInNasPortID.IsNull() || plan.UseCircuitIDInNasPortID.IsUnknown()) {
+	if !(plan.UseCircuitIDInNasPortID.IsNull() || plan.UseCircuitIDInNasPortID.IsUnknown()) && (state == nil || !plan.UseCircuitIDInNasPortID.Equal(state.UseCircuitIDInNasPortID)) {
 		body["use-circuit-id-in-nas-port-id"] = client.FormatBool(plan.UseCircuitIDInNasPortID.ValueBool())
 	}
-	if !(plan.UseRADIUS.IsNull() || plan.UseRADIUS.IsUnknown()) {
+	if !(plan.UseRADIUS.IsNull() || plan.UseRADIUS.IsUnknown()) && (state == nil || !plan.UseRADIUS.Equal(state.UseRADIUS)) {
 		body["use-radius"] = client.FormatBool(plan.UseRADIUS.ValueBool())
 	}
 	obj, err := c.SetSingleton(ctx, "/ppp/aaa", body)

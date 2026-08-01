@@ -90,7 +90,7 @@ func (r *ToolBandwidthServerResource) Create(ctx context.Context, req resource.C
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	toolBandwidthServerUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	toolBandwidthServerUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -103,7 +103,12 @@ func (r *ToolBandwidthServerResource) Update(ctx context.Context, req resource.U
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	toolBandwidthServerUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state ToolBandwidthServerModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	toolBandwidthServerUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -144,28 +149,28 @@ func (r *ToolBandwidthServerResource) ImportState(ctx context.Context, req resou
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/tool/bandwidth-server", types.StringValue(routerName))))...)
 }
 
-func toolBandwidthServerUpsert(ctx context.Context, reg *client.Registry, plan *ToolBandwidthServerModel, diags *diagBuf) {
+func toolBandwidthServerUpsert(ctx context.Context, reg *client.Registry, plan, state *ToolBandwidthServerModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.AllocateUDPPortsFrom.IsNull() || plan.AllocateUDPPortsFrom.IsUnknown()) {
+	if !(plan.AllocateUDPPortsFrom.IsNull() || plan.AllocateUDPPortsFrom.IsUnknown()) && (state == nil || !plan.AllocateUDPPortsFrom.Equal(state.AllocateUDPPortsFrom)) {
 		body["allocate-udp-ports-from"] = client.FormatInt64(plan.AllocateUDPPortsFrom.ValueInt64())
 	}
-	if !(plan.AllowedAddresses4.IsNull() || plan.AllowedAddresses4.IsUnknown()) {
+	if !(plan.AllowedAddresses4.IsNull() || plan.AllowedAddresses4.IsUnknown()) && (state == nil || !plan.AllowedAddresses4.Equal(state.AllowedAddresses4)) {
 		body["allowed-addresses4"] = plan.AllowedAddresses4.ValueString()
 	}
-	if !(plan.AllowedAddresses6.IsNull() || plan.AllowedAddresses6.IsUnknown()) {
+	if !(plan.AllowedAddresses6.IsNull() || plan.AllowedAddresses6.IsUnknown()) && (state == nil || !plan.AllowedAddresses6.Equal(state.AllowedAddresses6)) {
 		body["allowed-addresses6"] = plan.AllowedAddresses6.ValueString()
 	}
-	if !(plan.Authenticate.IsNull() || plan.Authenticate.IsUnknown()) {
+	if !(plan.Authenticate.IsNull() || plan.Authenticate.IsUnknown()) && (state == nil || !plan.Authenticate.Equal(state.Authenticate)) {
 		body["authenticate"] = client.FormatBool(plan.Authenticate.ValueBool())
 	}
-	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) {
+	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) && (state == nil || !plan.Enabled.Equal(state.Enabled)) {
 		body["enabled"] = client.FormatBool(plan.Enabled.ValueBool())
 	}
-	if !(plan.MaxSessions.IsNull() || plan.MaxSessions.IsUnknown()) {
+	if !(plan.MaxSessions.IsNull() || plan.MaxSessions.IsUnknown()) && (state == nil || !plan.MaxSessions.Equal(state.MaxSessions)) {
 		body["max-sessions"] = client.FormatInt64(plan.MaxSessions.ValueInt64())
 	}
 	obj, err := c.SetSingleton(ctx, "/tool/bandwidth-server", body)

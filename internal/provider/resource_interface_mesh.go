@@ -364,25 +364,25 @@ func (r *InterfaceMeshResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 	body := client.Object{}
-	if !plan.ARP.Equal(state.ARP) {
+	if !plan.ARP.Equal(state.ARP) && !plan.ARP.IsUnknown() {
 		body["arp"] = plan.ARP.ValueString()
 	}
-	if !plan.ARPTimeout.Equal(state.ARPTimeout) {
+	if !plan.ARPTimeout.Equal(state.ARPTimeout) && !plan.ARPTimeout.IsUnknown() {
 		body["arp-timeout"] = plan.ARPTimeout.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.MeshPortal.Equal(state.MeshPortal) {
+	if !plan.MeshPortal.Equal(state.MeshPortal) && !plan.MeshPortal.IsUnknown() {
 		body["mesh-portal"] = client.FormatBool(plan.MeshPortal.ValueBool())
 	}
-	if !plan.MTU.Equal(state.MTU) {
+	if !plan.MTU.Equal(state.MTU) && !plan.MTU.IsUnknown() {
 		body["mtu"] = client.FormatInt64(plan.MTU.ValueInt64())
 	}
-	if !plan.ReoptimizePaths.Equal(state.ReoptimizePaths) {
+	if !plan.ReoptimizePaths.Equal(state.ReoptimizePaths) && !plan.ReoptimizePaths.IsUnknown() {
 		body["reoptimize-paths"] = client.FormatBool(plan.ReoptimizePaths.ValueBool())
 	}
 	if !plan.AdminMac.Equal(state.AdminMac) && !plan.AdminMac.IsUnknown() {

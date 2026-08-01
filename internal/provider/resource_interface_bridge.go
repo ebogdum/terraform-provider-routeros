@@ -686,136 +686,136 @@ func (r *InterfaceBridgeResource) Update(ctx context.Context, req resource.Updat
 		return
 	}
 	body := client.Object{}
-	if !plan.AdminMAC.Equal(state.AdminMAC) {
+	if !plan.AdminMAC.Equal(state.AdminMAC) && !plan.AdminMAC.IsUnknown() {
 		body["admin-mac"] = plan.AdminMAC.ValueString()
 	}
-	if !plan.AgeingTime.Equal(state.AgeingTime) {
+	if !plan.AgeingTime.Equal(state.AgeingTime) && !plan.AgeingTime.IsUnknown() {
 		body["ageing-time"] = plan.AgeingTime.ValueString()
 	}
-	if !plan.ARP.Equal(state.ARP) {
+	if !plan.ARP.Equal(state.ARP) && !plan.ARP.IsUnknown() {
 		body["arp"] = plan.ARP.ValueString()
 	}
-	if !plan.ARPTimeout.Equal(state.ARPTimeout) {
+	if !plan.ARPTimeout.Equal(state.ARPTimeout) && !plan.ARPTimeout.IsUnknown() {
 		body["arp-timeout"] = plan.ARPTimeout.ValueString()
 	}
-	if !plan.AutoMAC.Equal(state.AutoMAC) {
+	if !plan.AutoMAC.Equal(state.AutoMAC) && !plan.AutoMAC.IsUnknown() {
 		body["auto-mac"] = client.FormatBool(plan.AutoMAC.ValueBool())
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.DHCPSnooping.Equal(state.DHCPSnooping) {
+	if !plan.DHCPSnooping.Equal(state.DHCPSnooping) && !plan.DHCPSnooping.IsUnknown() {
 		body["dhcp-snooping"] = client.FormatBool(plan.DHCPSnooping.ValueBool())
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.EtherType.Equal(state.EtherType) {
+	if !plan.EtherType.Equal(state.EtherType) && !plan.EtherType.IsUnknown() {
 		body["ether-type"] = plan.EtherType.ValueString()
 	}
-	if !plan.FastForward.Equal(state.FastForward) {
+	if !plan.FastForward.Equal(state.FastForward) && !plan.FastForward.IsUnknown() {
 		body["fast-forward"] = client.FormatBool(plan.FastForward.ValueBool())
 	}
-	if !plan.ForwardDelay.Equal(state.ForwardDelay) {
+	if !plan.ForwardDelay.Equal(state.ForwardDelay) && !plan.ForwardDelay.IsUnknown() {
 		body["forward-delay"] = plan.ForwardDelay.ValueString()
 	}
-	if !plan.FrameTypes.Equal(state.FrameTypes) {
+	if !plan.FrameTypes.Equal(state.FrameTypes) && !plan.FrameTypes.IsUnknown() {
 		body["frame-types"] = plan.FrameTypes.ValueString()
 	}
-	if !plan.IgmpSnooping.Equal(state.IgmpSnooping) {
+	if !plan.IgmpSnooping.Equal(state.IgmpSnooping) && !plan.IgmpSnooping.IsUnknown() {
 		body["igmp-snooping"] = client.FormatBool(plan.IgmpSnooping.ValueBool())
 	}
-	if !plan.IgmpVersion.Equal(state.IgmpVersion) {
+	if !plan.IgmpVersion.Equal(state.IgmpVersion) && !plan.IgmpVersion.IsUnknown() {
 		body["igmp-version"] = plan.IgmpVersion.ValueString()
 	}
-	if !plan.IngressFiltering.Equal(state.IngressFiltering) {
+	if !plan.IngressFiltering.Equal(state.IngressFiltering) && !plan.IngressFiltering.IsUnknown() {
 		body["ingress-filtering"] = client.FormatBool(plan.IngressFiltering.ValueBool())
 	}
-	if !plan.LastMemberInterval.Equal(state.LastMemberInterval) {
+	if !plan.LastMemberInterval.Equal(state.LastMemberInterval) && !plan.LastMemberInterval.IsUnknown() {
 		body["last-member-interval"] = plan.LastMemberInterval.ValueString()
 	}
-	if !plan.LastMemberQueryCount.Equal(state.LastMemberQueryCount) {
+	if !plan.LastMemberQueryCount.Equal(state.LastMemberQueryCount) && !plan.LastMemberQueryCount.IsUnknown() {
 		body["last-member-query-count"] = client.FormatInt64(plan.LastMemberQueryCount.ValueInt64())
 	}
-	if !plan.MaxHops.Equal(state.MaxHops) {
+	if !plan.MaxHops.Equal(state.MaxHops) && !plan.MaxHops.IsUnknown() {
 		body["max-hops"] = client.FormatInt64(plan.MaxHops.ValueInt64())
 	}
-	if !plan.MaxLearnedEntries.Equal(state.MaxLearnedEntries) {
+	if !plan.MaxLearnedEntries.Equal(state.MaxLearnedEntries) && !plan.MaxLearnedEntries.IsUnknown() {
 		body["max-learned-entries"] = plan.MaxLearnedEntries.ValueString()
 	}
-	if !plan.MaxMessageAge.Equal(state.MaxMessageAge) {
+	if !plan.MaxMessageAge.Equal(state.MaxMessageAge) && !plan.MaxMessageAge.IsUnknown() {
 		body["max-message-age"] = plan.MaxMessageAge.ValueString()
 	}
-	if !plan.MembershipInterval.Equal(state.MembershipInterval) {
+	if !plan.MembershipInterval.Equal(state.MembershipInterval) && !plan.MembershipInterval.IsUnknown() {
 		body["membership-interval"] = plan.MembershipInterval.ValueString()
 	}
-	if !plan.MlagHeartbeat.Equal(state.MlagHeartbeat) {
+	if !plan.MlagHeartbeat.Equal(state.MlagHeartbeat) && !plan.MlagHeartbeat.IsUnknown() {
 		body["mlag-heartbeat"] = plan.MlagHeartbeat.ValueString()
 	}
-	if !plan.MlagPeerPort.Equal(state.MlagPeerPort) {
+	if !plan.MlagPeerPort.Equal(state.MlagPeerPort) && !plan.MlagPeerPort.IsUnknown() {
 		body["mlag-peer-port"] = plan.MlagPeerPort.ValueString()
 	}
-	if !plan.MlagPriority.Equal(state.MlagPriority) {
+	if !plan.MlagPriority.Equal(state.MlagPriority) && !plan.MlagPriority.IsUnknown() {
 		body["mlag-priority"] = client.FormatInt64(plan.MlagPriority.ValueInt64())
 	}
-	if !plan.MldVersion.Equal(state.MldVersion) {
+	if !plan.MldVersion.Equal(state.MldVersion) && !plan.MldVersion.IsUnknown() {
 		body["mld-version"] = plan.MldVersion.ValueString()
 	}
-	if !plan.MTU.Equal(state.MTU) {
+	if !plan.MTU.Equal(state.MTU) && !plan.MTU.IsUnknown() {
 		body["mtu"] = plan.MTU.ValueString()
 	}
-	if !plan.MulticastQuerier.Equal(state.MulticastQuerier) {
+	if !plan.MulticastQuerier.Equal(state.MulticastQuerier) && !plan.MulticastQuerier.IsUnknown() {
 		body["multicast-querier"] = client.FormatBool(plan.MulticastQuerier.ValueBool())
 	}
-	if !plan.MulticastRouter.Equal(state.MulticastRouter) {
+	if !plan.MulticastRouter.Equal(state.MulticastRouter) && !plan.MulticastRouter.IsUnknown() {
 		body["multicast-router"] = plan.MulticastRouter.ValueString()
 	}
-	if !plan.Mvrp.Equal(state.Mvrp) {
+	if !plan.Mvrp.Equal(state.Mvrp) && !plan.Mvrp.IsUnknown() {
 		body["mvrp"] = client.FormatBool(plan.Mvrp.ValueBool())
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.PortCostMode.Equal(state.PortCostMode) {
+	if !plan.PortCostMode.Equal(state.PortCostMode) && !plan.PortCostMode.IsUnknown() {
 		body["port-cost-mode"] = plan.PortCostMode.ValueString()
 	}
-	if !plan.Priority.Equal(state.Priority) {
+	if !plan.Priority.Equal(state.Priority) && !plan.Priority.IsUnknown() {
 		body["priority"] = client.FormatInt64(plan.Priority.ValueInt64())
 	}
-	if !plan.ProtocolMode.Equal(state.ProtocolMode) {
+	if !plan.ProtocolMode.Equal(state.ProtocolMode) && !plan.ProtocolMode.IsUnknown() {
 		body["protocol-mode"] = plan.ProtocolMode.ValueString()
 	}
-	if !plan.Pvid.Equal(state.Pvid) {
+	if !plan.Pvid.Equal(state.Pvid) && !plan.Pvid.IsUnknown() {
 		body["pvid"] = client.FormatInt64(plan.Pvid.ValueInt64())
 	}
-	if !plan.QuerierInterval.Equal(state.QuerierInterval) {
+	if !plan.QuerierInterval.Equal(state.QuerierInterval) && !plan.QuerierInterval.IsUnknown() {
 		body["querier-interval"] = plan.QuerierInterval.ValueString()
 	}
-	if !plan.QueryInterval.Equal(state.QueryInterval) {
+	if !plan.QueryInterval.Equal(state.QueryInterval) && !plan.QueryInterval.IsUnknown() {
 		body["query-interval"] = plan.QueryInterval.ValueString()
 	}
-	if !plan.QueryResponseInterval.Equal(state.QueryResponseInterval) {
+	if !plan.QueryResponseInterval.Equal(state.QueryResponseInterval) && !plan.QueryResponseInterval.IsUnknown() {
 		body["query-response-interval"] = plan.QueryResponseInterval.ValueString()
 	}
-	if !plan.RaGuard.Equal(state.RaGuard) {
+	if !plan.RaGuard.Equal(state.RaGuard) && !plan.RaGuard.IsUnknown() {
 		body["ra-guard"] = client.FormatBool(plan.RaGuard.ValueBool())
 	}
-	if !plan.RegionName.Equal(state.RegionName) {
+	if !plan.RegionName.Equal(state.RegionName) && !plan.RegionName.IsUnknown() {
 		body["region-name"] = plan.RegionName.ValueString()
 	}
-	if !plan.RegionRevision.Equal(state.RegionRevision) {
+	if !plan.RegionRevision.Equal(state.RegionRevision) && !plan.RegionRevision.IsUnknown() {
 		body["region-revision"] = client.FormatInt64(plan.RegionRevision.ValueInt64())
 	}
-	if !plan.StartupQueryCount.Equal(state.StartupQueryCount) {
+	if !plan.StartupQueryCount.Equal(state.StartupQueryCount) && !plan.StartupQueryCount.IsUnknown() {
 		body["startup-query-count"] = client.FormatInt64(plan.StartupQueryCount.ValueInt64())
 	}
-	if !plan.StartupQueryInterval.Equal(state.StartupQueryInterval) {
+	if !plan.StartupQueryInterval.Equal(state.StartupQueryInterval) && !plan.StartupQueryInterval.IsUnknown() {
 		body["startup-query-interval"] = plan.StartupQueryInterval.ValueString()
 	}
-	if !plan.TransmitHoldCount.Equal(state.TransmitHoldCount) {
+	if !plan.TransmitHoldCount.Equal(state.TransmitHoldCount) && !plan.TransmitHoldCount.IsUnknown() {
 		body["transmit-hold-count"] = client.FormatInt64(plan.TransmitHoldCount.ValueInt64())
 	}
-	if !plan.VLANFiltering.Equal(state.VLANFiltering) {
+	if !plan.VLANFiltering.Equal(state.VLANFiltering) && !plan.VLANFiltering.IsUnknown() {
 		body["vlan-filtering"] = client.FormatBool(plan.VLANFiltering.ValueBool())
 	}
 	if !plan.DhcpAgentCircuitId.Equal(state.DhcpAgentCircuitId) && !plan.DhcpAgentCircuitId.IsUnknown() {

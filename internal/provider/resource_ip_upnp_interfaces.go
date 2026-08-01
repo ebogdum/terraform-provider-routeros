@@ -156,13 +156,13 @@ func (r *IPUpnpInterfacesResource) Update(ctx context.Context, req resource.Upda
 		return
 	}
 	body := client.Object{}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.Type.Equal(state.Type) {
+	if !plan.Type.Equal(state.Type) && !plan.Type.IsUnknown() {
 		body["type"] = plan.Type.ValueString()
 	}
 	if !plan.ForcedIp.Equal(state.ForcedIp) && !plan.ForcedIp.IsUnknown() {

@@ -105,7 +105,7 @@ func (r *RoutingSettingsResource) Create(ctx context.Context, req resource.Creat
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	routingSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	routingSettingsUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -118,7 +118,12 @@ func (r *RoutingSettingsResource) Update(ctx context.Context, req resource.Updat
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	routingSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state RoutingSettingsModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	routingSettingsUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -159,31 +164,31 @@ func (r *RoutingSettingsResource) ImportState(ctx context.Context, req resource.
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/routing/settings", types.StringValue(routerName))))...)
 }
 
-func routingSettingsUpsert(ctx context.Context, reg *client.Registry, plan *RoutingSettingsModel, diags *diagBuf) {
+func routingSettingsUpsert(ctx context.Context, reg *client.Registry, plan, state *RoutingSettingsModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.CheckGatewayPingCount.IsNull() || plan.CheckGatewayPingCount.IsUnknown()) {
+	if !(plan.CheckGatewayPingCount.IsNull() || plan.CheckGatewayPingCount.IsUnknown()) && (state == nil || !plan.CheckGatewayPingCount.Equal(state.CheckGatewayPingCount)) {
 		body["check-gateway-ping-count"] = client.FormatInt64(plan.CheckGatewayPingCount.ValueInt64())
 	}
-	if !(plan.CheckGatewayPingInterval.IsNull() || plan.CheckGatewayPingInterval.IsUnknown()) {
+	if !(plan.CheckGatewayPingInterval.IsNull() || plan.CheckGatewayPingInterval.IsUnknown()) && (state == nil || !plan.CheckGatewayPingInterval.Equal(state.CheckGatewayPingInterval)) {
 		body["check-gateway-ping-interval"] = plan.CheckGatewayPingInterval.ValueString()
 	}
-	if !(plan.CheckGatewayPingTimeout.IsNull() || plan.CheckGatewayPingTimeout.IsUnknown()) {
+	if !(plan.CheckGatewayPingTimeout.IsNull() || plan.CheckGatewayPingTimeout.IsUnknown()) && (state == nil || !plan.CheckGatewayPingTimeout.Equal(state.CheckGatewayPingTimeout)) {
 		body["check-gateway-ping-timeout"] = plan.CheckGatewayPingTimeout.ValueString()
 	}
-	if !(plan.PolicyRules.IsNull() || plan.PolicyRules.IsUnknown()) {
+	if !(plan.PolicyRules.IsNull() || plan.PolicyRules.IsUnknown()) && (state == nil || !plan.PolicyRules.Equal(state.PolicyRules)) {
 		body["policy-rules"] = encodeStringList(ctx, plan.PolicyRules, diags)
 	}
-	if !(plan.SingleProcess.IsNull() || plan.SingleProcess.IsUnknown()) {
+	if !(plan.SingleProcess.IsNull() || plan.SingleProcess.IsUnknown()) && (state == nil || !plan.SingleProcess.Equal(state.SingleProcess)) {
 		body["single-process"] = client.FormatBool(plan.SingleProcess.ValueBool())
 	}
-	if !(plan.ConnectedInChain.IsNull() || plan.ConnectedInChain.IsUnknown()) {
+	if !(plan.ConnectedInChain.IsNull() || plan.ConnectedInChain.IsUnknown()) && (state == nil || !plan.ConnectedInChain.Equal(state.ConnectedInChain)) {
 		body["connected-in-chain"] = plan.ConnectedInChain.ValueString()
 	}
-	if !(plan.DynamicInChain.IsNull() || plan.DynamicInChain.IsUnknown()) {
+	if !(plan.DynamicInChain.IsNull() || plan.DynamicInChain.IsUnknown()) && (state == nil || !plan.DynamicInChain.Equal(state.DynamicInChain)) {
 		body["dynamic-in-chain"] = plan.DynamicInChain.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/routing/settings", body)

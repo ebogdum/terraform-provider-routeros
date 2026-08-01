@@ -296,55 +296,55 @@ func (r *RADIUSResource) Update(ctx context.Context, req resource.UpdateRequest,
 		return
 	}
 	body := client.Object{}
-	if !plan.AccountingBackup.Equal(state.AccountingBackup) {
+	if !plan.AccountingBackup.Equal(state.AccountingBackup) && !plan.AccountingBackup.IsUnknown() {
 		body["accounting-backup"] = client.FormatBool(plan.AccountingBackup.ValueBool())
 	}
-	if !plan.AccountingPort.Equal(state.AccountingPort) {
+	if !plan.AccountingPort.Equal(state.AccountingPort) && !plan.AccountingPort.IsUnknown() {
 		body["accounting-port"] = client.FormatInt64(plan.AccountingPort.ValueInt64())
 	}
-	if !plan.Address.Equal(state.Address) {
+	if !plan.Address.Equal(state.Address) && !plan.Address.IsUnknown() {
 		body["address"] = plan.Address.ValueString()
 	}
-	if !plan.AuthenticationPort.Equal(state.AuthenticationPort) {
+	if !plan.AuthenticationPort.Equal(state.AuthenticationPort) && !plan.AuthenticationPort.IsUnknown() {
 		body["authentication-port"] = client.FormatInt64(plan.AuthenticationPort.ValueInt64())
 	}
-	if !plan.CalledID.Equal(state.CalledID) {
+	if !plan.CalledID.Equal(state.CalledID) && !plan.CalledID.IsUnknown() {
 		body["called-id"] = plan.CalledID.ValueString()
 	}
-	if !plan.Certificate.Equal(state.Certificate) {
+	if !plan.Certificate.Equal(state.Certificate) && !plan.Certificate.IsUnknown() {
 		body["certificate"] = plan.Certificate.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Domain.Equal(state.Domain) {
+	if !plan.Domain.Equal(state.Domain) && !plan.Domain.IsUnknown() {
 		body["domain"] = plan.Domain.ValueString()
 	}
-	if !plan.Protocol.Equal(state.Protocol) {
+	if !plan.Protocol.Equal(state.Protocol) && !plan.Protocol.IsUnknown() {
 		body["protocol"] = plan.Protocol.ValueString()
 	}
-	if !plan.RadsecTimeout.Equal(state.RadsecTimeout) {
+	if !plan.RadsecTimeout.Equal(state.RadsecTimeout) && !plan.RadsecTimeout.IsUnknown() {
 		body["radsec-timeout"] = plan.RadsecTimeout.ValueString()
 	}
-	if !plan.Realm.Equal(state.Realm) {
+	if !plan.Realm.Equal(state.Realm) && !plan.Realm.IsUnknown() {
 		body["realm"] = plan.Realm.ValueString()
 	}
-	if !plan.RequireMessageAuth.Equal(state.RequireMessageAuth) {
+	if !plan.RequireMessageAuth.Equal(state.RequireMessageAuth) && !plan.RequireMessageAuth.IsUnknown() {
 		body["require-message-auth"] = plan.RequireMessageAuth.ValueString()
 	}
-	if !plan.Secret.Equal(state.Secret) {
+	if !plan.Secret.Equal(state.Secret) && !plan.Secret.IsUnknown() {
 		body["secret"] = plan.Secret.ValueString()
 	}
-	if !plan.Service.Equal(state.Service) {
+	if !plan.Service.Equal(state.Service) && !plan.Service.IsUnknown() {
 		body["service"] = plan.Service.ValueString()
 	}
-	if !plan.SrcAddress.Equal(state.SrcAddress) {
+	if !plan.SrcAddress.Equal(state.SrcAddress) && !plan.SrcAddress.IsUnknown() {
 		body["src-address"] = plan.SrcAddress.ValueString()
 	}
-	if !plan.Timeout.Equal(state.Timeout) {
+	if !plan.Timeout.Equal(state.Timeout) && !plan.Timeout.IsUnknown() {
 		body["timeout"] = client.FormatInt64(plan.Timeout.ValueInt64())
 	}
 	if len(body) > 0 {

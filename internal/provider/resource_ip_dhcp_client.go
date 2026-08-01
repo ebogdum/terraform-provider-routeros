@@ -384,52 +384,52 @@ func (r *IPDHCPClientResource) Update(ctx context.Context, req resource.UpdateRe
 		return
 	}
 	body := client.Object{}
-	if !plan.AddDefaultRoute.Equal(state.AddDefaultRoute) {
+	if !plan.AddDefaultRoute.Equal(state.AddDefaultRoute) && !plan.AddDefaultRoute.IsUnknown() {
 		body["add-default-route"] = plan.AddDefaultRoute.ValueString()
 	}
-	if !plan.AllowReconfigure.Equal(state.AllowReconfigure) {
+	if !plan.AllowReconfigure.Equal(state.AllowReconfigure) && !plan.AllowReconfigure.IsUnknown() {
 		body["allow-reconfigure"] = client.FormatBool(plan.AllowReconfigure.ValueBool())
 	}
-	if !plan.CheckGateway.Equal(state.CheckGateway) {
+	if !plan.CheckGateway.Equal(state.CheckGateway) && !plan.CheckGateway.IsUnknown() {
 		body["check-gateway"] = plan.CheckGateway.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.DefaultRouteDistance.Equal(state.DefaultRouteDistance) {
+	if !plan.DefaultRouteDistance.Equal(state.DefaultRouteDistance) && !plan.DefaultRouteDistance.IsUnknown() {
 		body["default-route-distance"] = client.FormatInt64(plan.DefaultRouteDistance.ValueInt64())
 	}
-	if !plan.DefaultRouteTables.Equal(state.DefaultRouteTables) {
+	if !plan.DefaultRouteTables.Equal(state.DefaultRouteTables) && !plan.DefaultRouteTables.IsUnknown() {
 		body["default-route-tables"] = plan.DefaultRouteTables.ValueString()
 	}
-	if !plan.DHCPOptions.Equal(state.DHCPOptions) {
+	if !plan.DHCPOptions.Equal(state.DHCPOptions) && !plan.DHCPOptions.IsUnknown() {
 		body["dhcp-options"] = encodeStringList(ctx, plan.DHCPOptions, &resp.Diagnostics)
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Dscp.Equal(state.Dscp) {
+	if !plan.Dscp.Equal(state.Dscp) && !plan.Dscp.IsUnknown() {
 		body["dscp"] = client.FormatInt64(plan.Dscp.ValueInt64())
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Script.Equal(state.Script) {
+	if !plan.Script.Equal(state.Script) && !plan.Script.IsUnknown() {
 		body["script"] = plan.Script.ValueString()
 	}
-	if !plan.UseBroadcast.Equal(state.UseBroadcast) {
+	if !plan.UseBroadcast.Equal(state.UseBroadcast) && !plan.UseBroadcast.IsUnknown() {
 		body["use-broadcast"] = plan.UseBroadcast.ValueString()
 	}
-	if !plan.UsePeerDNS.Equal(state.UsePeerDNS) {
+	if !plan.UsePeerDNS.Equal(state.UsePeerDNS) && !plan.UsePeerDNS.IsUnknown() {
 		body["use-peer-dns"] = client.FormatBool(plan.UsePeerDNS.ValueBool())
 	}
-	if !plan.UsePeerNTP.Equal(state.UsePeerNTP) {
+	if !plan.UsePeerNTP.Equal(state.UsePeerNTP) && !plan.UsePeerNTP.IsUnknown() {
 		body["use-peer-ntp"] = client.FormatBool(plan.UsePeerNTP.ValueBool())
 	}
-	if !plan.VLANPriority.Equal(state.VLANPriority) {
+	if !plan.VLANPriority.Equal(state.VLANPriority) && !plan.VLANPriority.IsUnknown() {
 		body["vlan-priority"] = client.FormatInt64(plan.VLANPriority.ValueInt64())
 	}
 	if len(body) > 0 {

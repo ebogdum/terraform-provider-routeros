@@ -70,7 +70,7 @@ func (r *IPNATPmpResource) Create(ctx context.Context, req resource.CreateReques
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPNATPmpUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	iPNATPmpUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -83,7 +83,12 @@ func (r *IPNATPmpResource) Update(ctx context.Context, req resource.UpdateReques
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPNATPmpUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state IPNATPmpModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	iPNATPmpUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -124,13 +129,13 @@ func (r *IPNATPmpResource) ImportState(ctx context.Context, req resource.ImportS
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/ip/nat-pmp", types.StringValue(routerName))))...)
 }
 
-func iPNATPmpUpsert(ctx context.Context, reg *client.Registry, plan *IPNATPmpModel, diags *diagBuf) {
+func iPNATPmpUpsert(ctx context.Context, reg *client.Registry, plan, state *IPNATPmpModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) {
+	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) && (state == nil || !plan.Enabled.Equal(state.Enabled)) {
 		body["enabled"] = client.FormatBool(plan.Enabled.ValueBool())
 	}
 	obj, err := c.SetSingleton(ctx, "/ip/nat-pmp", body)

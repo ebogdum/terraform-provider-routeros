@@ -247,43 +247,43 @@ func (r *InterfaceWifiSteeringResource) Update(ctx context.Context, req resource
 		return
 	}
 	body := client.Object{}
-	if !plan.X2gProbeDelay.Equal(state.X2gProbeDelay) {
+	if !plan.X2gProbeDelay.Equal(state.X2gProbeDelay) && !plan.X2gProbeDelay.IsUnknown() {
 		body["2g-probe-delay"] = plan.X2gProbeDelay.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.NeighborGroup.Equal(state.NeighborGroup) {
+	if !plan.NeighborGroup.Equal(state.NeighborGroup) && !plan.NeighborGroup.IsUnknown() {
 		body["neighbor-group"] = plan.NeighborGroup.ValueString()
 	}
-	if !plan.NeighborGroups.Equal(state.NeighborGroups) {
+	if !plan.NeighborGroups.Equal(state.NeighborGroups) && !plan.NeighborGroups.IsUnknown() {
 		body["neighbor-groups"] = plan.NeighborGroups.ValueString()
 	}
-	if !plan.Rrm.Equal(state.Rrm) {
+	if !plan.Rrm.Equal(state.Rrm) && !plan.Rrm.IsUnknown() {
 		body["rrm"] = plan.Rrm.ValueString()
 	}
-	if !plan.TransitionRequestCount.Equal(state.TransitionRequestCount) {
+	if !plan.TransitionRequestCount.Equal(state.TransitionRequestCount) && !plan.TransitionRequestCount.IsUnknown() {
 		body["transition-request-count"] = plan.TransitionRequestCount.ValueString()
 	}
-	if !plan.TransitionThreshold.Equal(state.TransitionThreshold) {
+	if !plan.TransitionThreshold.Equal(state.TransitionThreshold) && !plan.TransitionThreshold.IsUnknown() {
 		body["transition-threshold"] = plan.TransitionThreshold.ValueString()
 	}
-	if !plan.TransitionThresholdPeriod.Equal(state.TransitionThresholdPeriod) {
+	if !plan.TransitionThresholdPeriod.Equal(state.TransitionThresholdPeriod) && !plan.TransitionThresholdPeriod.IsUnknown() {
 		body["transition-threshold-period"] = plan.TransitionThresholdPeriod.ValueString()
 	}
-	if !plan.TransitionThresholdTime.Equal(state.TransitionThresholdTime) {
+	if !plan.TransitionThresholdTime.Equal(state.TransitionThresholdTime) && !plan.TransitionThresholdTime.IsUnknown() {
 		body["transition-threshold-time"] = plan.TransitionThresholdTime.ValueString()
 	}
-	if !plan.TransitionTime.Equal(state.TransitionTime) {
+	if !plan.TransitionTime.Equal(state.TransitionTime) && !plan.TransitionTime.IsUnknown() {
 		body["transition-time"] = plan.TransitionTime.ValueString()
 	}
-	if !plan.Wnm.Equal(state.Wnm) {
+	if !plan.Wnm.Equal(state.Wnm) && !plan.Wnm.IsUnknown() {
 		body["wnm"] = plan.Wnm.ValueString()
 	}
 	if !plan.TransitionRequestPeriod.Equal(state.TransitionRequestPeriod) && !plan.TransitionRequestPeriod.IsUnknown() {

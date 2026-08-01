@@ -75,7 +75,7 @@ func (r *ToolMACServerMACWinboxResource) Create(ctx context.Context, req resourc
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	toolMACServerMACWinboxUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	toolMACServerMACWinboxUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -88,7 +88,12 @@ func (r *ToolMACServerMACWinboxResource) Update(ctx context.Context, req resourc
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	toolMACServerMACWinboxUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state ToolMACServerMACWinboxModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	toolMACServerMACWinboxUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -129,13 +134,13 @@ func (r *ToolMACServerMACWinboxResource) ImportState(ctx context.Context, req re
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/tool/mac-server/mac-winbox", types.StringValue(routerName))))...)
 }
 
-func toolMACServerMACWinboxUpsert(ctx context.Context, reg *client.Registry, plan *ToolMACServerMACWinboxModel, diags *diagBuf) {
+func toolMACServerMACWinboxUpsert(ctx context.Context, reg *client.Registry, plan, state *ToolMACServerMACWinboxModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.AllowedInterfaceList.IsNull() || plan.AllowedInterfaceList.IsUnknown()) {
+	if !(plan.AllowedInterfaceList.IsNull() || plan.AllowedInterfaceList.IsUnknown()) && (state == nil || !plan.AllowedInterfaceList.Equal(state.AllowedInterfaceList)) {
 		body["allowed-interface-list"] = plan.AllowedInterfaceList.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/tool/mac-server/mac-winbox", body)

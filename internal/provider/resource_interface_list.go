@@ -167,16 +167,16 @@ func (r *InterfaceListResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Exclude.Equal(state.Exclude) {
+	if !plan.Exclude.Equal(state.Exclude) && !plan.Exclude.IsUnknown() {
 		body["exclude"] = plan.Exclude.ValueString()
 	}
-	if !plan.Include.Equal(state.Include) {
+	if !plan.Include.Equal(state.Include) && !plan.Include.IsUnknown() {
 		body["include"] = plan.Include.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
 	if len(body) > 0 {

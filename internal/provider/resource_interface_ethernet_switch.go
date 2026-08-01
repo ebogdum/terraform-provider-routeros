@@ -205,28 +205,28 @@ func (r *InterfaceEthernetSwitchResource) Update(ctx context.Context, req resour
 		return
 	}
 	body := client.Object{}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.MirrorSource.Equal(state.MirrorSource) {
+	if !plan.MirrorSource.Equal(state.MirrorSource) && !plan.MirrorSource.IsUnknown() {
 		body["mirror-source"] = plan.MirrorSource.ValueString()
 	}
-	if !plan.MirrorTarget.Equal(state.MirrorTarget) {
+	if !plan.MirrorTarget.Equal(state.MirrorTarget) && !plan.MirrorTarget.IsUnknown() {
 		body["mirror-target"] = plan.MirrorTarget.ValueString()
 	}
-	if !plan.CPUFlowControl.Equal(state.CPUFlowControl) {
+	if !plan.CPUFlowControl.Equal(state.CPUFlowControl) && !plan.CPUFlowControl.IsUnknown() {
 		body["cpu-flow-control"] = plan.CPUFlowControl.ValueString()
 	}
-	if !plan.Autorestart.Equal(state.Autorestart) {
+	if !plan.Autorestart.Equal(state.Autorestart) && !plan.Autorestart.IsUnknown() {
 		body["autorestart"] = plan.Autorestart.ValueString()
 	}
-	if !plan.FasttrackHw.Equal(state.FasttrackHw) {
+	if !plan.FasttrackHw.Equal(state.FasttrackHw) && !plan.FasttrackHw.IsUnknown() {
 		body["fasttrack-hw"] = plan.FasttrackHw.ValueString()
 	}
-	if !plan.IcmpReplyOnError.Equal(state.IcmpReplyOnError) {
+	if !plan.IcmpReplyOnError.Equal(state.IcmpReplyOnError) && !plan.IcmpReplyOnError.IsUnknown() {
 		body["icmp-reply-on-error"] = plan.IcmpReplyOnError.ValueString()
 	}
-	if !plan.IPV6Hw.Equal(state.IPV6Hw) {
+	if !plan.IPV6Hw.Equal(state.IPV6Hw) && !plan.IPV6Hw.IsUnknown() {
 		body["ipv6-hw"] = plan.IPV6Hw.ValueString()
 	}
 	if !plan.SwitchAllPorts.Equal(state.SwitchAllPorts) && !plan.SwitchAllPorts.IsUnknown() {

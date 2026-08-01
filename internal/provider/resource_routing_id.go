@@ -191,19 +191,19 @@ func (r *RoutingIDResource) Update(ctx context.Context, req resource.UpdateReque
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.SelectDynamicID.Equal(state.SelectDynamicID) {
+	if !plan.SelectDynamicID.Equal(state.SelectDynamicID) && !plan.SelectDynamicID.IsUnknown() {
 		body["select-dynamic-id"] = plan.SelectDynamicID.ValueString()
 	}
-	if !plan.SelectFromVrf.Equal(state.SelectFromVrf) {
+	if !plan.SelectFromVrf.Equal(state.SelectFromVrf) && !plan.SelectFromVrf.IsUnknown() {
 		body["select-from-vrf"] = plan.SelectFromVrf.ValueString()
 	}
 	if len(body) > 0 {

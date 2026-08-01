@@ -172,7 +172,7 @@ func (r *IPCloudResource) Create(ctx context.Context, req resource.CreateRequest
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPCloudUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	iPCloudUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -185,7 +185,12 @@ func (r *IPCloudResource) Update(ctx context.Context, req resource.UpdateRequest
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPCloudUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state IPCloudModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	iPCloudUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -226,25 +231,25 @@ func (r *IPCloudResource) ImportState(ctx context.Context, req resource.ImportSt
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/ip/cloud", types.StringValue(routerName))))...)
 }
 
-func iPCloudUpsert(ctx context.Context, reg *client.Registry, plan *IPCloudModel, diags *diagBuf) {
+func iPCloudUpsert(ctx context.Context, reg *client.Registry, plan, state *IPCloudModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.BackToHomeVPN.IsNull() || plan.BackToHomeVPN.IsUnknown()) {
+	if !(plan.BackToHomeVPN.IsNull() || plan.BackToHomeVPN.IsUnknown()) && (state == nil || !plan.BackToHomeVPN.Equal(state.BackToHomeVPN)) {
 		body["back-to-home-vpn"] = plan.BackToHomeVPN.ValueString()
 	}
-	if !(plan.DdnsEnabled.IsNull() || plan.DdnsEnabled.IsUnknown()) {
+	if !(plan.DdnsEnabled.IsNull() || plan.DdnsEnabled.IsUnknown()) && (state == nil || !plan.DdnsEnabled.Equal(state.DdnsEnabled)) {
 		body["ddns-enabled"] = plan.DdnsEnabled.ValueString()
 	}
-	if !(plan.DdnsUpdateInterval.IsNull() || plan.DdnsUpdateInterval.IsUnknown()) {
+	if !(plan.DdnsUpdateInterval.IsNull() || plan.DdnsUpdateInterval.IsUnknown()) && (state == nil || !plan.DdnsUpdateInterval.Equal(state.DdnsUpdateInterval)) {
 		body["ddns-update-interval"] = plan.DdnsUpdateInterval.ValueString()
 	}
-	if !(plan.UpdateTime.IsNull() || plan.UpdateTime.IsUnknown()) {
+	if !(plan.UpdateTime.IsNull() || plan.UpdateTime.IsUnknown()) && (state == nil || !plan.UpdateTime.Equal(state.UpdateTime)) {
 		body["update-time"] = client.FormatBool(plan.UpdateTime.ValueBool())
 	}
-	if !(plan.VPNPreferRelayCode.IsNull() || plan.VPNPreferRelayCode.IsUnknown()) {
+	if !(plan.VPNPreferRelayCode.IsNull() || plan.VPNPreferRelayCode.IsUnknown()) && (state == nil || !plan.VPNPreferRelayCode.Equal(state.VPNPreferRelayCode)) {
 		body["vpn-prefer-relay-code"] = plan.VPNPreferRelayCode.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/ip/cloud", body)

@@ -92,7 +92,7 @@ func (r *InterfaceDetectInternetResource) Create(ctx context.Context, req resour
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	interfaceDetectInternetUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	interfaceDetectInternetUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -105,7 +105,12 @@ func (r *InterfaceDetectInternetResource) Update(ctx context.Context, req resour
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	interfaceDetectInternetUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state InterfaceDetectInternetModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	interfaceDetectInternetUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -146,25 +151,25 @@ func (r *InterfaceDetectInternetResource) ImportState(ctx context.Context, req r
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/interface/detect-internet", types.StringValue(routerName))))...)
 }
 
-func interfaceDetectInternetUpsert(ctx context.Context, reg *client.Registry, plan *InterfaceDetectInternetModel, diags *diagBuf) {
+func interfaceDetectInternetUpsert(ctx context.Context, reg *client.Registry, plan, state *InterfaceDetectInternetModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.DetectInterfaceList.IsNull() || plan.DetectInterfaceList.IsUnknown()) {
+	if !(plan.DetectInterfaceList.IsNull() || plan.DetectInterfaceList.IsUnknown()) && (state == nil || !plan.DetectInterfaceList.Equal(state.DetectInterfaceList)) {
 		body["detect-interface-list"] = plan.DetectInterfaceList.ValueString()
 	}
-	if !(plan.InternetInterfaceList.IsNull() || plan.InternetInterfaceList.IsUnknown()) {
+	if !(plan.InternetInterfaceList.IsNull() || plan.InternetInterfaceList.IsUnknown()) && (state == nil || !plan.InternetInterfaceList.Equal(state.InternetInterfaceList)) {
 		body["internet-interface-list"] = plan.InternetInterfaceList.ValueString()
 	}
-	if !(plan.LanInterfaceList.IsNull() || plan.LanInterfaceList.IsUnknown()) {
+	if !(plan.LanInterfaceList.IsNull() || plan.LanInterfaceList.IsUnknown()) && (state == nil || !plan.LanInterfaceList.Equal(state.LanInterfaceList)) {
 		body["lan-interface-list"] = plan.LanInterfaceList.ValueString()
 	}
-	if !(plan.RequestInterval.IsNull() || plan.RequestInterval.IsUnknown()) {
+	if !(plan.RequestInterval.IsNull() || plan.RequestInterval.IsUnknown()) && (state == nil || !plan.RequestInterval.Equal(state.RequestInterval)) {
 		body["request-interval"] = plan.RequestInterval.ValueString()
 	}
-	if !(plan.WanInterfaceList.IsNull() || plan.WanInterfaceList.IsUnknown()) {
+	if !(plan.WanInterfaceList.IsNull() || plan.WanInterfaceList.IsUnknown()) && (state == nil || !plan.WanInterfaceList.Equal(state.WanInterfaceList)) {
 		body["wan-interface-list"] = plan.WanInterfaceList.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/interface/detect-internet", body)

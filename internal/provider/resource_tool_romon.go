@@ -74,7 +74,7 @@ func (r *ToolRomonResource) Create(ctx context.Context, req resource.CreateReque
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	toolRomonUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	toolRomonUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -87,7 +87,12 @@ func (r *ToolRomonResource) Update(ctx context.Context, req resource.UpdateReque
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	toolRomonUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state ToolRomonModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	toolRomonUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -128,16 +133,16 @@ func (r *ToolRomonResource) ImportState(ctx context.Context, req resource.Import
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/tool/romon", types.StringValue(routerName))))...)
 }
 
-func toolRomonUpsert(ctx context.Context, reg *client.Registry, plan *ToolRomonModel, diags *diagBuf) {
+func toolRomonUpsert(ctx context.Context, reg *client.Registry, plan, state *ToolRomonModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) {
+	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) && (state == nil || !plan.Enabled.Equal(state.Enabled)) {
 		body["enabled"] = client.FormatBool(plan.Enabled.ValueBool())
 	}
-	if !(plan.Secrets.IsNull() || plan.Secrets.IsUnknown()) {
+	if !(plan.Secrets.IsNull() || plan.Secrets.IsUnknown()) && (state == nil || !plan.Secrets.Equal(state.Secrets)) {
 		body["secrets"] = plan.Secrets.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/tool/romon", body)

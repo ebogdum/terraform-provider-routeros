@@ -102,7 +102,7 @@ func (r *SystemNTPServerResource) Create(ctx context.Context, req resource.Creat
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	systemNTPServerUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	systemNTPServerUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -115,7 +115,12 @@ func (r *SystemNTPServerResource) Update(ctx context.Context, req resource.Updat
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	systemNTPServerUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state SystemNTPServerModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	systemNTPServerUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -156,37 +161,37 @@ func (r *SystemNTPServerResource) ImportState(ctx context.Context, req resource.
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/system/ntp/server", types.StringValue(routerName))))...)
 }
 
-func systemNTPServerUpsert(ctx context.Context, reg *client.Registry, plan *SystemNTPServerModel, diags *diagBuf) {
+func systemNTPServerUpsert(ctx context.Context, reg *client.Registry, plan, state *SystemNTPServerModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.AuthKey.IsNull() || plan.AuthKey.IsUnknown()) {
+	if !(plan.AuthKey.IsNull() || plan.AuthKey.IsUnknown()) && (state == nil || !plan.AuthKey.Equal(state.AuthKey)) {
 		body["auth-key"] = plan.AuthKey.ValueString()
 	}
-	if !(plan.Broadcast.IsNull() || plan.Broadcast.IsUnknown()) {
+	if !(plan.Broadcast.IsNull() || plan.Broadcast.IsUnknown()) && (state == nil || !plan.Broadcast.Equal(state.Broadcast)) {
 		body["broadcast"] = client.FormatBool(plan.Broadcast.ValueBool())
 	}
-	if !(plan.BroadcastAddresses.IsNull() || plan.BroadcastAddresses.IsUnknown()) {
+	if !(plan.BroadcastAddresses.IsNull() || plan.BroadcastAddresses.IsUnknown()) && (state == nil || !plan.BroadcastAddresses.Equal(state.BroadcastAddresses)) {
 		body["broadcast-addresses"] = plan.BroadcastAddresses.ValueString()
 	}
-	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) {
+	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) && (state == nil || !plan.Enabled.Equal(state.Enabled)) {
 		body["enabled"] = client.FormatBool(plan.Enabled.ValueBool())
 	}
-	if !(plan.LocalClockStratum.IsNull() || plan.LocalClockStratum.IsUnknown()) {
+	if !(plan.LocalClockStratum.IsNull() || plan.LocalClockStratum.IsUnknown()) && (state == nil || !plan.LocalClockStratum.Equal(state.LocalClockStratum)) {
 		body["local-clock-stratum"] = client.FormatInt64(plan.LocalClockStratum.ValueInt64())
 	}
-	if !(plan.Manycast.IsNull() || plan.Manycast.IsUnknown()) {
+	if !(plan.Manycast.IsNull() || plan.Manycast.IsUnknown()) && (state == nil || !plan.Manycast.Equal(state.Manycast)) {
 		body["manycast"] = client.FormatBool(plan.Manycast.ValueBool())
 	}
-	if !(plan.Multicast.IsNull() || plan.Multicast.IsUnknown()) {
+	if !(plan.Multicast.IsNull() || plan.Multicast.IsUnknown()) && (state == nil || !plan.Multicast.Equal(state.Multicast)) {
 		body["multicast"] = client.FormatBool(plan.Multicast.ValueBool())
 	}
-	if !(plan.UseLocalClock.IsNull() || plan.UseLocalClock.IsUnknown()) {
+	if !(plan.UseLocalClock.IsNull() || plan.UseLocalClock.IsUnknown()) && (state == nil || !plan.UseLocalClock.Equal(state.UseLocalClock)) {
 		body["use-local-clock"] = client.FormatBool(plan.UseLocalClock.ValueBool())
 	}
-	if !(plan.Vrf.IsNull() || plan.Vrf.IsUnknown()) {
+	if !(plan.Vrf.IsNull() || plan.Vrf.IsUnknown()) && (state == nil || !plan.Vrf.Equal(state.Vrf)) {
 		body["vrf"] = plan.Vrf.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/system/ntp/server", body)

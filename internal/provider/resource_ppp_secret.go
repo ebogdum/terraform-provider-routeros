@@ -272,46 +272,46 @@ func (r *PPPSecretResource) Update(ctx context.Context, req resource.UpdateReque
 		return
 	}
 	body := client.Object{}
-	if !plan.CallerID.Equal(state.CallerID) {
+	if !plan.CallerID.Equal(state.CallerID) && !plan.CallerID.IsUnknown() {
 		body["caller-id"] = plan.CallerID.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.IPV6Routes.Equal(state.IPV6Routes) {
+	if !plan.IPV6Routes.Equal(state.IPV6Routes) && !plan.IPV6Routes.IsUnknown() {
 		body["ipv6-routes"] = plan.IPV6Routes.ValueString()
 	}
-	if !plan.LimitBytesIn.Equal(state.LimitBytesIn) {
+	if !plan.LimitBytesIn.Equal(state.LimitBytesIn) && !plan.LimitBytesIn.IsUnknown() {
 		body["limit-bytes-in"] = plan.LimitBytesIn.ValueString()
 	}
-	if !plan.LimitBytesOut.Equal(state.LimitBytesOut) {
+	if !plan.LimitBytesOut.Equal(state.LimitBytesOut) && !plan.LimitBytesOut.IsUnknown() {
 		body["limit-bytes-out"] = plan.LimitBytesOut.ValueString()
 	}
-	if !plan.LocalAddress.Equal(state.LocalAddress) {
+	if !plan.LocalAddress.Equal(state.LocalAddress) && !plan.LocalAddress.IsUnknown() {
 		body["local-address"] = plan.LocalAddress.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Password.Equal(state.Password) {
+	if !plan.Password.Equal(state.Password) && !plan.Password.IsUnknown() {
 		body["password"] = plan.Password.ValueString()
 	}
-	if !plan.Profile.Equal(state.Profile) {
+	if !plan.Profile.Equal(state.Profile) && !plan.Profile.IsUnknown() {
 		body["profile"] = plan.Profile.ValueString()
 	}
-	if !plan.RemoteAddress.Equal(state.RemoteAddress) {
+	if !plan.RemoteAddress.Equal(state.RemoteAddress) && !plan.RemoteAddress.IsUnknown() {
 		body["remote-address"] = plan.RemoteAddress.ValueString()
 	}
-	if !plan.RemoteIPV6Prefix.Equal(state.RemoteIPV6Prefix) {
+	if !plan.RemoteIPV6Prefix.Equal(state.RemoteIPV6Prefix) && !plan.RemoteIPV6Prefix.IsUnknown() {
 		body["remote-ipv6-prefix"] = plan.RemoteIPV6Prefix.ValueString()
 	}
-	if !plan.Routes.Equal(state.Routes) {
+	if !plan.Routes.Equal(state.Routes) && !plan.Routes.IsUnknown() {
 		body["routes"] = plan.Routes.ValueString()
 	}
-	if !plan.Service.Equal(state.Service) {
+	if !plan.Service.Equal(state.Service) && !plan.Service.IsUnknown() {
 		body["service"] = plan.Service.ValueString()
 	}
 	if len(body) > 0 {

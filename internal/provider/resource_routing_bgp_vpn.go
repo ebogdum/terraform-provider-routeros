@@ -267,28 +267,28 @@ func (r *RoutingBGPVPNResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.ExportRouteTargets.Equal(state.ExportRouteTargets) {
+	if !plan.ExportRouteTargets.Equal(state.ExportRouteTargets) && !plan.ExportRouteTargets.IsUnknown() {
 		body["export.route-targets"] = plan.ExportRouteTargets.ValueString()
 	}
-	if !plan.ImportRouteTargets.Equal(state.ImportRouteTargets) {
+	if !plan.ImportRouteTargets.Equal(state.ImportRouteTargets) && !plan.ImportRouteTargets.IsUnknown() {
 		body["import.route-targets"] = plan.ImportRouteTargets.ValueString()
 	}
-	if !plan.Instance.Equal(state.Instance) {
+	if !plan.Instance.Equal(state.Instance) && !plan.Instance.IsUnknown() {
 		body["instance"] = plan.Instance.ValueString()
 	}
-	if !plan.LabelAllocationPolicy.Equal(state.LabelAllocationPolicy) {
+	if !plan.LabelAllocationPolicy.Equal(state.LabelAllocationPolicy) && !plan.LabelAllocationPolicy.IsUnknown() {
 		body["label-allocation-policy"] = plan.LabelAllocationPolicy.ValueString()
 	}
-	if !plan.RouteDistinguisher.Equal(state.RouteDistinguisher) {
+	if !plan.RouteDistinguisher.Equal(state.RouteDistinguisher) && !plan.RouteDistinguisher.IsUnknown() {
 		body["route-distinguisher"] = plan.RouteDistinguisher.ValueString()
 	}
-	if !plan.Vrf.Equal(state.Vrf) {
+	if !plan.Vrf.Equal(state.Vrf) && !plan.Vrf.IsUnknown() {
 		body["vrf"] = plan.Vrf.ValueString()
 	}
 	if !plan.ExportFilterChain.Equal(state.ExportFilterChain) && !plan.ExportFilterChain.IsUnknown() {

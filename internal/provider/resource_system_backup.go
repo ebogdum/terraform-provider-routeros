@@ -159,16 +159,16 @@ func (r *SystemBackupResource) Update(ctx context.Context, req resource.UpdateRe
 		return
 	}
 	body := client.Object{}
-	if !plan.DontEncrypt.Equal(state.DontEncrypt) {
+	if !plan.DontEncrypt.Equal(state.DontEncrypt) && !plan.DontEncrypt.IsUnknown() {
 		body["dont-encrypt"] = plan.DontEncrypt.ValueString()
 	}
-	if !plan.Encryption.Equal(state.Encryption) {
+	if !plan.Encryption.Equal(state.Encryption) && !plan.Encryption.IsUnknown() {
 		body["encryption"] = plan.Encryption.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Password.Equal(state.Password) {
+	if !plan.Password.Equal(state.Password) && !plan.Password.IsUnknown() {
 		body["password"] = plan.Password.ValueString()
 	}
 	if len(body) > 0 {

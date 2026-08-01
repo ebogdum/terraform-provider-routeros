@@ -190,7 +190,7 @@ func (r *CertificateCrlResource) Update(ctx context.Context, req resource.Update
 		return
 	}
 	body := client.Object{}
-	if !plan.URL.Equal(state.URL) {
+	if !plan.URL.Equal(state.URL) && !plan.URL.IsUnknown() {
 		body["url"] = plan.URL.ValueString()
 	}
 	if len(body) > 0 {

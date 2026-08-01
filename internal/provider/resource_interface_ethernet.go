@@ -1137,116 +1137,116 @@ func (r *InterfaceEthernetResource) Update(ctx context.Context, req resource.Upd
 		return
 	}
 	body := client.Object{}
-	if !plan.Advertise.Equal(state.Advertise) {
+	if !plan.Advertise.Equal(state.Advertise) && !plan.Advertise.IsUnknown() {
 		body["advertise"] = encodeStringList(ctx, plan.Advertise, &resp.Diagnostics)
 	}
-	if !plan.ARP.Equal(state.ARP) {
+	if !plan.ARP.Equal(state.ARP) && !plan.ARP.IsUnknown() {
 		body["arp"] = plan.ARP.ValueString()
 	}
-	if !plan.ARPTimeout.Equal(state.ARPTimeout) {
+	if !plan.ARPTimeout.Equal(state.ARPTimeout) && !plan.ARPTimeout.IsUnknown() {
 		body["arp-timeout"] = plan.ARPTimeout.ValueString()
 	}
-	if !plan.AutoNegotiation.Equal(state.AutoNegotiation) {
+	if !plan.AutoNegotiation.Equal(state.AutoNegotiation) && !plan.AutoNegotiation.IsUnknown() {
 		body["auto-negotiation"] = client.FormatBool(plan.AutoNegotiation.ValueBool())
 	}
-	if !plan.Blink.Equal(state.Blink) {
+	if !plan.Blink.Equal(state.Blink) && !plan.Blink.IsUnknown() {
 		body["blink"] = plan.Blink.ValueString()
 	}
-	if !plan.Bandwidth.Equal(state.Bandwidth) {
+	if !plan.Bandwidth.Equal(state.Bandwidth) && !plan.Bandwidth.IsUnknown() {
 		body["bandwidth"] = plan.Bandwidth.ValueString()
 	}
-	if !plan.CableSettings.Equal(state.CableSettings) {
+	if !plan.CableSettings.Equal(state.CableSettings) && !plan.CableSettings.IsUnknown() {
 		body["cable-settings"] = plan.CableSettings.ValueString()
 	}
-	if !plan.CableTest.Equal(state.CableTest) {
+	if !plan.CableTest.Equal(state.CableTest) && !plan.CableTest.IsUnknown() {
 		body["cable-test"] = plan.CableTest.ValueString()
 	}
-	if !plan.ComboMode.Equal(state.ComboMode) {
+	if !plan.ComboMode.Equal(state.ComboMode) && !plan.ComboMode.IsUnknown() {
 		body["combo-mode"] = plan.ComboMode.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.DisableRunningCheck.Equal(state.DisableRunningCheck) {
+	if !plan.DisableRunningCheck.Equal(state.DisableRunningCheck) && !plan.DisableRunningCheck.IsUnknown() {
 		body["disable-running-check"] = client.FormatBool(plan.DisableRunningCheck.ValueBool())
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Extrastats.Equal(state.Extrastats) {
+	if !plan.Extrastats.Equal(state.Extrastats) && !plan.Extrastats.IsUnknown() {
 		body["extrastats"] = plan.Extrastats.ValueString()
 	}
-	if !plan.FecMode.Equal(state.FecMode) {
+	if !plan.FecMode.Equal(state.FecMode) && !plan.FecMode.IsUnknown() {
 		body["fec-mode"] = plan.FecMode.ValueString()
 	}
-	if !plan.Flowcntrl.Equal(state.Flowcntrl) {
+	if !plan.Flowcntrl.Equal(state.Flowcntrl) && !plan.Flowcntrl.IsUnknown() {
 		body["flowcntrl"] = plan.Flowcntrl.ValueString()
 	}
-	if !plan.IgnoreRxLos.Equal(state.IgnoreRxLos) {
+	if !plan.IgnoreRxLos.Equal(state.IgnoreRxLos) && !plan.IgnoreRxLos.IsUnknown() {
 		body["ignore-rx-los"] = client.FormatBool(plan.IgnoreRxLos.ValueBool())
 	}
-	if !plan.LoopProtect.Equal(state.LoopProtect) {
+	if !plan.LoopProtect.Equal(state.LoopProtect) && !plan.LoopProtect.IsUnknown() {
 		body["loop-protect"] = plan.LoopProtect.ValueString()
 	}
-	if !plan.LoopProtectDisableTime.Equal(state.LoopProtectDisableTime) {
+	if !plan.LoopProtectDisableTime.Equal(state.LoopProtectDisableTime) && !plan.LoopProtectDisableTime.IsUnknown() {
 		body["loop-protect-disable-time"] = plan.LoopProtectDisableTime.ValueString()
 	}
-	if !plan.LoopProtectSendInterval.Equal(state.LoopProtectSendInterval) {
+	if !plan.LoopProtectSendInterval.Equal(state.LoopProtectSendInterval) && !plan.LoopProtectSendInterval.IsUnknown() {
 		body["loop-protect-send-interval"] = plan.LoopProtectSendInterval.ValueString()
 	}
-	if !plan.MACAddress.Equal(state.MACAddress) {
+	if !plan.MACAddress.Equal(state.MACAddress) && !plan.MACAddress.IsUnknown() {
 		body["mac-address"] = plan.MACAddress.ValueString()
 	}
-	if !plan.MTU.Equal(state.MTU) {
+	if !plan.MTU.Equal(state.MTU) && !plan.MTU.IsUnknown() {
 		body["mtu"] = client.FormatInt64(plan.MTU.ValueInt64())
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
 
-	if !plan.OrigMACAddress.Equal(state.OrigMACAddress) {
+	if !plan.OrigMACAddress.Equal(state.OrigMACAddress) && !plan.OrigMACAddress.IsUnknown() {
 		body["orig-mac-address"] = plan.OrigMACAddress.ValueString()
 	}
-	if !plan.PoEOut.Equal(state.PoEOut) {
+	if !plan.PoEOut.Equal(state.PoEOut) && !plan.PoEOut.IsUnknown() {
 		body["poe-out"] = plan.PoEOut.ValueString()
 	}
-	if !plan.PoEPriority.Equal(state.PoEPriority) {
+	if !plan.PoEPriority.Equal(state.PoEPriority) && !plan.PoEPriority.IsUnknown() {
 		body["poe-priority"] = client.FormatInt64(plan.PoEPriority.ValueInt64())
 	}
-	if !plan.PoEVoltage.Equal(state.PoEVoltage) {
+	if !plan.PoEVoltage.Equal(state.PoEVoltage) && !plan.PoEVoltage.IsUnknown() {
 		body["poe-voltage"] = plan.PoEVoltage.ValueString()
 	}
-	if !plan.Poe.Equal(state.Poe) {
+	if !plan.Poe.Equal(state.Poe) && !plan.Poe.IsUnknown() {
 		body["poe"] = plan.Poe.ValueString()
 	}
-	if !plan.Poeping.Equal(state.Poeping) {
+	if !plan.Poeping.Equal(state.Poeping) && !plan.Poeping.IsUnknown() {
 		body["poeping"] = plan.Poeping.ValueString()
 	}
-	if !plan.PowerCycleInterval.Equal(state.PowerCycleInterval) {
+	if !plan.PowerCycleInterval.Equal(state.PowerCycleInterval) && !plan.PowerCycleInterval.IsUnknown() {
 		body["power-cycle-interval"] = plan.PowerCycleInterval.ValueString()
 	}
-	if !plan.PowerCyclePingEnabled.Equal(state.PowerCyclePingEnabled) {
+	if !plan.PowerCyclePingEnabled.Equal(state.PowerCyclePingEnabled) && !plan.PowerCyclePingEnabled.IsUnknown() {
 		body["power-cycle-ping-enabled"] = client.FormatBool(plan.PowerCyclePingEnabled.ValueBool())
 	}
-	if !plan.Qstats.Equal(state.Qstats) {
+	if !plan.Qstats.Equal(state.Qstats) && !plan.Qstats.IsUnknown() {
 		body["qstats"] = plan.Qstats.ValueString()
 	}
-	if !plan.RateSelect.Equal(state.RateSelect) {
+	if !plan.RateSelect.Equal(state.RateSelect) && !plan.RateSelect.IsUnknown() {
 		body["rate-select"] = plan.RateSelect.ValueString()
 	}
-	if !plan.RxFlowControl.Equal(state.RxFlowControl) {
+	if !plan.RxFlowControl.Equal(state.RxFlowControl) && !plan.RxFlowControl.IsUnknown() {
 		body["rx-flow-control"] = plan.RxFlowControl.ValueString()
 	}
-	if !plan.Sfp.Equal(state.Sfp) {
+	if !plan.Sfp.Equal(state.Sfp) && !plan.Sfp.IsUnknown() {
 		body["sfp"] = client.FormatBool(plan.Sfp.ValueBool())
 	}
-	if !plan.SfpShutdownTemperature.Equal(state.SfpShutdownTemperature) {
+	if !plan.SfpShutdownTemperature.Equal(state.SfpShutdownTemperature) && !plan.SfpShutdownTemperature.IsUnknown() {
 		body["sfp-shutdown-temperature"] = client.FormatInt64(plan.SfpShutdownTemperature.ValueInt64())
 	}
-	if !plan.Speed.Equal(state.Speed) {
+	if !plan.Speed.Equal(state.Speed) && !plan.Speed.IsUnknown() {
 		body["speed"] = plan.Speed.ValueString()
 	}
-	if !plan.TxFlowControl.Equal(state.TxFlowControl) {
+	if !plan.TxFlowControl.Equal(state.TxFlowControl) && !plan.TxFlowControl.IsUnknown() {
 		body["tx-flow-control"] = plan.TxFlowControl.ValueString()
 	}
 	if !plan.L2mtu.Equal(state.L2mtu) && !plan.L2mtu.IsUnknown() {

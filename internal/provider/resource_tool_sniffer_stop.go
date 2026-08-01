@@ -392,94 +392,94 @@ func (r *ToolSnifferStopResource) Update(ctx context.Context, req resource.Updat
 		return
 	}
 	body := client.Object{}
-	if !plan.FileLimit.Equal(state.FileLimit) {
+	if !plan.FileLimit.Equal(state.FileLimit) && !plan.FileLimit.IsUnknown() {
 		body["file-limit"] = plan.FileLimit.ValueString()
 	}
-	if !plan.FileName.Equal(state.FileName) {
+	if !plan.FileName.Equal(state.FileName) && !plan.FileName.IsUnknown() {
 		body["file-name"] = plan.FileName.ValueString()
 	}
-	if !plan.FilterCpu.Equal(state.FilterCpu) {
+	if !plan.FilterCpu.Equal(state.FilterCpu) && !plan.FilterCpu.IsUnknown() {
 		body["filter-cpu"] = plan.FilterCpu.ValueString()
 	}
-	if !plan.FilterDirection.Equal(state.FilterDirection) {
+	if !plan.FilterDirection.Equal(state.FilterDirection) && !plan.FilterDirection.IsUnknown() {
 		body["filter-direction"] = plan.FilterDirection.ValueString()
 	}
-	if !plan.FilterDstIPAddress.Equal(state.FilterDstIPAddress) {
+	if !plan.FilterDstIPAddress.Equal(state.FilterDstIPAddress) && !plan.FilterDstIPAddress.IsUnknown() {
 		body["filter-dst-ip-address"] = plan.FilterDstIPAddress.ValueString()
 	}
-	if !plan.FilterDstIPV6Address.Equal(state.FilterDstIPV6Address) {
+	if !plan.FilterDstIPV6Address.Equal(state.FilterDstIPV6Address) && !plan.FilterDstIPV6Address.IsUnknown() {
 		body["filter-dst-ipv6-address"] = plan.FilterDstIPV6Address.ValueString()
 	}
-	if !plan.FilterDstMACAddress.Equal(state.FilterDstMACAddress) {
+	if !plan.FilterDstMACAddress.Equal(state.FilterDstMACAddress) && !plan.FilterDstMACAddress.IsUnknown() {
 		body["filter-dst-mac-address"] = plan.FilterDstMACAddress.ValueString()
 	}
-	if !plan.FilterDstPort.Equal(state.FilterDstPort) {
+	if !plan.FilterDstPort.Equal(state.FilterDstPort) && !plan.FilterDstPort.IsUnknown() {
 		body["filter-dst-port"] = plan.FilterDstPort.ValueString()
 	}
-	if !plan.FilterInterface.Equal(state.FilterInterface) {
+	if !plan.FilterInterface.Equal(state.FilterInterface) && !plan.FilterInterface.IsUnknown() {
 		body["filter-interface"] = plan.FilterInterface.ValueString()
 	}
-	if !plan.FilterIPAddress.Equal(state.FilterIPAddress) {
+	if !plan.FilterIPAddress.Equal(state.FilterIPAddress) && !plan.FilterIPAddress.IsUnknown() {
 		body["filter-ip-address"] = plan.FilterIPAddress.ValueString()
 	}
-	if !plan.FilterIPProtocol.Equal(state.FilterIPProtocol) {
+	if !plan.FilterIPProtocol.Equal(state.FilterIPProtocol) && !plan.FilterIPProtocol.IsUnknown() {
 		body["filter-ip-protocol"] = plan.FilterIPProtocol.ValueString()
 	}
-	if !plan.FilterIPV6Address.Equal(state.FilterIPV6Address) {
+	if !plan.FilterIPV6Address.Equal(state.FilterIPV6Address) && !plan.FilterIPV6Address.IsUnknown() {
 		body["filter-ipv6-address"] = plan.FilterIPV6Address.ValueString()
 	}
-	if !plan.FilterMACAddress.Equal(state.FilterMACAddress) {
+	if !plan.FilterMACAddress.Equal(state.FilterMACAddress) && !plan.FilterMACAddress.IsUnknown() {
 		body["filter-mac-address"] = plan.FilterMACAddress.ValueString()
 	}
-	if !plan.FilterMACProtocol.Equal(state.FilterMACProtocol) {
+	if !plan.FilterMACProtocol.Equal(state.FilterMACProtocol) && !plan.FilterMACProtocol.IsUnknown() {
 		body["filter-mac-protocol"] = plan.FilterMACProtocol.ValueString()
 	}
-	if !plan.FilterOperatorBetweenEntries.Equal(state.FilterOperatorBetweenEntries) {
+	if !plan.FilterOperatorBetweenEntries.Equal(state.FilterOperatorBetweenEntries) && !plan.FilterOperatorBetweenEntries.IsUnknown() {
 		body["filter-operator-between-entries"] = plan.FilterOperatorBetweenEntries.ValueString()
 	}
-	if !plan.FilterPort.Equal(state.FilterPort) {
+	if !plan.FilterPort.Equal(state.FilterPort) && !plan.FilterPort.IsUnknown() {
 		body["filter-port"] = plan.FilterPort.ValueString()
 	}
-	if !plan.FilterSize.Equal(state.FilterSize) {
+	if !plan.FilterSize.Equal(state.FilterSize) && !plan.FilterSize.IsUnknown() {
 		body["filter-size"] = plan.FilterSize.ValueString()
 	}
-	if !plan.FilterSrcIPAddress.Equal(state.FilterSrcIPAddress) {
+	if !plan.FilterSrcIPAddress.Equal(state.FilterSrcIPAddress) && !plan.FilterSrcIPAddress.IsUnknown() {
 		body["filter-src-ip-address"] = plan.FilterSrcIPAddress.ValueString()
 	}
-	if !plan.FilterSrcIPV6Address.Equal(state.FilterSrcIPV6Address) {
+	if !plan.FilterSrcIPV6Address.Equal(state.FilterSrcIPV6Address) && !plan.FilterSrcIPV6Address.IsUnknown() {
 		body["filter-src-ipv6-address"] = plan.FilterSrcIPV6Address.ValueString()
 	}
-	if !plan.FilterSrcMACAddress.Equal(state.FilterSrcMACAddress) {
+	if !plan.FilterSrcMACAddress.Equal(state.FilterSrcMACAddress) && !plan.FilterSrcMACAddress.IsUnknown() {
 		body["filter-src-mac-address"] = plan.FilterSrcMACAddress.ValueString()
 	}
-	if !plan.FilterSrcPort.Equal(state.FilterSrcPort) {
+	if !plan.FilterSrcPort.Equal(state.FilterSrcPort) && !plan.FilterSrcPort.IsUnknown() {
 		body["filter-src-port"] = plan.FilterSrcPort.ValueString()
 	}
-	if !plan.FilterStream.Equal(state.FilterStream) {
+	if !plan.FilterStream.Equal(state.FilterStream) && !plan.FilterStream.IsUnknown() {
 		body["filter-stream"] = plan.FilterStream.ValueString()
 	}
-	if !plan.FilterVLAN.Equal(state.FilterVLAN) {
+	if !plan.FilterVLAN.Equal(state.FilterVLAN) && !plan.FilterVLAN.IsUnknown() {
 		body["filter-vlan"] = plan.FilterVLAN.ValueString()
 	}
-	if !plan.MemoryLimit.Equal(state.MemoryLimit) {
+	if !plan.MemoryLimit.Equal(state.MemoryLimit) && !plan.MemoryLimit.IsUnknown() {
 		body["memory-limit"] = plan.MemoryLimit.ValueString()
 	}
-	if !plan.MemoryScroll.Equal(state.MemoryScroll) {
+	if !plan.MemoryScroll.Equal(state.MemoryScroll) && !plan.MemoryScroll.IsUnknown() {
 		body["memory-scroll"] = plan.MemoryScroll.ValueString()
 	}
-	if !plan.OnlyHeaders.Equal(state.OnlyHeaders) {
+	if !plan.OnlyHeaders.Equal(state.OnlyHeaders) && !plan.OnlyHeaders.IsUnknown() {
 		body["only-headers"] = plan.OnlyHeaders.ValueString()
 	}
-	if !plan.ShowFrame.Equal(state.ShowFrame) {
+	if !plan.ShowFrame.Equal(state.ShowFrame) && !plan.ShowFrame.IsUnknown() {
 		body["show-frame"] = plan.ShowFrame.ValueString()
 	}
-	if !plan.StreamingEnabled.Equal(state.StreamingEnabled) {
+	if !plan.StreamingEnabled.Equal(state.StreamingEnabled) && !plan.StreamingEnabled.IsUnknown() {
 		body["streaming-enabled"] = plan.StreamingEnabled.ValueString()
 	}
-	if !plan.StreamingPort.Equal(state.StreamingPort) {
+	if !plan.StreamingPort.Equal(state.StreamingPort) && !plan.StreamingPort.IsUnknown() {
 		body["streaming-port"] = plan.StreamingPort.ValueString()
 	}
-	if !plan.StreamingServer.Equal(state.StreamingServer) {
+	if !plan.StreamingServer.Equal(state.StreamingServer) && !plan.StreamingServer.IsUnknown() {
 		body["streaming-server"] = plan.StreamingServer.ValueString()
 	}
 	if len(body) > 0 {

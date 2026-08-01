@@ -329,49 +329,49 @@ func (r *IPHotspotUserResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 	body := client.Object{}
-	if !plan.Address.Equal(state.Address) {
+	if !plan.Address.Equal(state.Address) && !plan.Address.IsUnknown() {
 		body["address"] = plan.Address.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Email.Equal(state.Email) {
+	if !plan.Email.Equal(state.Email) && !plan.Email.IsUnknown() {
 		body["email"] = plan.Email.ValueString()
 	}
-	if !plan.LimitBytesIn.Equal(state.LimitBytesIn) {
+	if !plan.LimitBytesIn.Equal(state.LimitBytesIn) && !plan.LimitBytesIn.IsUnknown() {
 		body["limit-bytes-in"] = plan.LimitBytesIn.ValueString()
 	}
-	if !plan.LimitBytesOut.Equal(state.LimitBytesOut) {
+	if !plan.LimitBytesOut.Equal(state.LimitBytesOut) && !plan.LimitBytesOut.IsUnknown() {
 		body["limit-bytes-out"] = plan.LimitBytesOut.ValueString()
 	}
-	if !plan.LimitBytesTotal.Equal(state.LimitBytesTotal) {
+	if !plan.LimitBytesTotal.Equal(state.LimitBytesTotal) && !plan.LimitBytesTotal.IsUnknown() {
 		body["limit-bytes-total"] = plan.LimitBytesTotal.ValueString()
 	}
-	if !plan.LimitUptime.Equal(state.LimitUptime) {
+	if !plan.LimitUptime.Equal(state.LimitUptime) && !plan.LimitUptime.IsUnknown() {
 		body["limit-uptime"] = plan.LimitUptime.ValueString()
 	}
-	if !plan.MACAddress.Equal(state.MACAddress) {
+	if !plan.MACAddress.Equal(state.MACAddress) && !plan.MACAddress.IsUnknown() {
 		body["mac-address"] = plan.MACAddress.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.OtpSecret.Equal(state.OtpSecret) {
+	if !plan.OtpSecret.Equal(state.OtpSecret) && !plan.OtpSecret.IsUnknown() {
 		body["otp-secret"] = plan.OtpSecret.ValueString()
 	}
-	if !plan.Password.Equal(state.Password) {
+	if !plan.Password.Equal(state.Password) && !plan.Password.IsUnknown() {
 		body["password"] = plan.Password.ValueString()
 	}
-	if !plan.Profile.Equal(state.Profile) {
+	if !plan.Profile.Equal(state.Profile) && !plan.Profile.IsUnknown() {
 		body["profile"] = plan.Profile.ValueString()
 	}
-	if !plan.Routes.Equal(state.Routes) {
+	if !plan.Routes.Equal(state.Routes) && !plan.Routes.IsUnknown() {
 		body["routes"] = plan.Routes.ValueString()
 	}
-	if !plan.Server.Equal(state.Server) {
+	if !plan.Server.Equal(state.Server) && !plan.Server.IsUnknown() {
 		body["server"] = plan.Server.ValueString()
 	}
 	if len(body) > 0 {

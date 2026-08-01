@@ -70,7 +70,7 @@ func (r *SystemIdentityResource) Create(ctx context.Context, req resource.Create
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	systemIdentityUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	systemIdentityUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -83,7 +83,12 @@ func (r *SystemIdentityResource) Update(ctx context.Context, req resource.Update
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	systemIdentityUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state SystemIdentityModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	systemIdentityUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -124,13 +129,13 @@ func (r *SystemIdentityResource) ImportState(ctx context.Context, req resource.I
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/system/identity", types.StringValue(routerName))))...)
 }
 
-func systemIdentityUpsert(ctx context.Context, reg *client.Registry, plan *SystemIdentityModel, diags *diagBuf) {
+func systemIdentityUpsert(ctx context.Context, reg *client.Registry, plan, state *SystemIdentityModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
+	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) && (state == nil || !plan.Name.Equal(state.Name)) {
 		body["name"] = plan.Name.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/system/identity", body)

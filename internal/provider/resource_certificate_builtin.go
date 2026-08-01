@@ -294,58 +294,58 @@ func (r *CertificateBuiltinResource) Update(ctx context.Context, req resource.Up
 		return
 	}
 	body := client.Object{}
-	if !plan.Akid.Equal(state.Akid) {
+	if !plan.Akid.Equal(state.Akid) && !plan.Akid.IsUnknown() {
 		body["akid"] = plan.Akid.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.CommonName.Equal(state.CommonName) {
+	if !plan.CommonName.Equal(state.CommonName) && !plan.CommonName.IsUnknown() {
 		body["common-name"] = plan.CommonName.ValueString()
 	}
-	if !plan.Country.Equal(state.Country) {
+	if !plan.Country.Equal(state.Country) && !plan.Country.IsUnknown() {
 		body["country"] = plan.Country.ValueString()
 	}
-	if !plan.DaysValid.Equal(state.DaysValid) {
+	if !plan.DaysValid.Equal(state.DaysValid) && !plan.DaysValid.IsUnknown() {
 		body["days-valid"] = client.FormatInt64(plan.DaysValid.ValueInt64())
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.InvalidAfter.Equal(state.InvalidAfter) {
+	if !plan.InvalidAfter.Equal(state.InvalidAfter) && !plan.InvalidAfter.IsUnknown() {
 		body["invalid-after"] = plan.InvalidAfter.ValueString()
 	}
-	if !plan.InvalidBefore.Equal(state.InvalidBefore) {
+	if !plan.InvalidBefore.Equal(state.InvalidBefore) && !plan.InvalidBefore.IsUnknown() {
 		body["invalid-before"] = plan.InvalidBefore.ValueString()
 	}
-	if !plan.Issuer.Equal(state.Issuer) {
+	if !plan.Issuer.Equal(state.Issuer) && !plan.Issuer.IsUnknown() {
 		body["issuer"] = plan.Issuer.ValueString()
 	}
-	if !plan.KeyType.Equal(state.KeyType) {
+	if !plan.KeyType.Equal(state.KeyType) && !plan.KeyType.IsUnknown() {
 		body["key-type"] = plan.KeyType.ValueString()
 	}
-	if !plan.KeyUsage.Equal(state.KeyUsage) {
+	if !plan.KeyUsage.Equal(state.KeyUsage) && !plan.KeyUsage.IsUnknown() {
 		body["key-usage"] = encodeStringList(ctx, plan.KeyUsage, &resp.Diagnostics)
 	}
-	if !plan.Locality.Equal(state.Locality) {
+	if !plan.Locality.Equal(state.Locality) && !plan.Locality.IsUnknown() {
 		body["locality"] = plan.Locality.ValueString()
 	}
-	if !plan.Organization.Equal(state.Organization) {
+	if !plan.Organization.Equal(state.Organization) && !plan.Organization.IsUnknown() {
 		body["organization"] = plan.Organization.ValueString()
 	}
-	if !plan.SerialNumber.Equal(state.SerialNumber) {
+	if !plan.SerialNumber.Equal(state.SerialNumber) && !plan.SerialNumber.IsUnknown() {
 		body["serial-number"] = plan.SerialNumber.ValueString()
 	}
-	if !plan.Skid.Equal(state.Skid) {
+	if !plan.Skid.Equal(state.Skid) && !plan.Skid.IsUnknown() {
 		body["skid"] = plan.Skid.ValueString()
 	}
-	if !plan.State.Equal(state.State) {
+	if !plan.State.Equal(state.State) && !plan.State.IsUnknown() {
 		body["state"] = plan.State.ValueString()
 	}
-	if !plan.SubjectAltName.Equal(state.SubjectAltName) {
+	if !plan.SubjectAltName.Equal(state.SubjectAltName) && !plan.SubjectAltName.IsUnknown() {
 		body["subject-alt-name"] = plan.SubjectAltName.ValueString()
 	}
-	if !plan.Unit.Equal(state.Unit) {
+	if !plan.Unit.Equal(state.Unit) && !plan.Unit.IsUnknown() {
 		body["unit"] = plan.Unit.ValueString()
 	}
 	if !plan.KeySize.Equal(state.KeySize) && !plan.KeySize.IsUnknown() {

@@ -191,19 +191,19 @@ func (r *SystemScriptResource) Update(ctx context.Context, req resource.UpdateRe
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.DonTRequirePermissions.Equal(state.DonTRequirePermissions) {
+	if !plan.DonTRequirePermissions.Equal(state.DonTRequirePermissions) && !plan.DonTRequirePermissions.IsUnknown() {
 		body["dont-require-permissions"] = client.FormatBool(plan.DonTRequirePermissions.ValueBool())
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Policy.Equal(state.Policy) {
+	if !plan.Policy.Equal(state.Policy) && !plan.Policy.IsUnknown() {
 		body["policy"] = encodeStringList(ctx, plan.Policy, &resp.Diagnostics)
 	}
-	if !plan.Source.Equal(state.Source) {
+	if !plan.Source.Equal(state.Source) && !plan.Source.IsUnknown() {
 		body["source"] = plan.Source.ValueString()
 	}
 	if len(body) > 0 {

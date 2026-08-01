@@ -133,7 +133,7 @@ func (r *InterfaceEthernetSwitchRuleResource) Update(ctx context.Context, req re
 		return
 	}
 	body := client.Object{}
-	if !plan.QosHwOffloading.Equal(state.QosHwOffloading) {
+	if !plan.QosHwOffloading.Equal(state.QosHwOffloading) && !plan.QosHwOffloading.IsUnknown() {
 		body["qos-hw-offloading"] = plan.QosHwOffloading.ValueString()
 	}
 	if len(body) > 0 {

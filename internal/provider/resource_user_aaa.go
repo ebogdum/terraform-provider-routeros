@@ -90,7 +90,7 @@ func (r *UserAaaResource) Create(ctx context.Context, req resource.CreateRequest
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	userAaaUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	userAaaUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -103,7 +103,12 @@ func (r *UserAaaResource) Update(ctx context.Context, req resource.UpdateRequest
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	userAaaUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state UserAaaModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	userAaaUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -144,25 +149,25 @@ func (r *UserAaaResource) ImportState(ctx context.Context, req resource.ImportSt
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/user/aaa", types.StringValue(routerName))))...)
 }
 
-func userAaaUpsert(ctx context.Context, reg *client.Registry, plan *UserAaaModel, diags *diagBuf) {
+func userAaaUpsert(ctx context.Context, reg *client.Registry, plan, state *UserAaaModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.Accounting.IsNull() || plan.Accounting.IsUnknown()) {
+	if !(plan.Accounting.IsNull() || plan.Accounting.IsUnknown()) && (state == nil || !plan.Accounting.Equal(state.Accounting)) {
 		body["accounting"] = client.FormatBool(plan.Accounting.ValueBool())
 	}
-	if !(plan.DefaultGroup.IsNull() || plan.DefaultGroup.IsUnknown()) {
+	if !(plan.DefaultGroup.IsNull() || plan.DefaultGroup.IsUnknown()) && (state == nil || !plan.DefaultGroup.Equal(state.DefaultGroup)) {
 		body["default-group"] = plan.DefaultGroup.ValueString()
 	}
-	if !(plan.ExcludeGroups.IsNull() || plan.ExcludeGroups.IsUnknown()) {
+	if !(plan.ExcludeGroups.IsNull() || plan.ExcludeGroups.IsUnknown()) && (state == nil || !plan.ExcludeGroups.Equal(state.ExcludeGroups)) {
 		body["exclude-groups"] = plan.ExcludeGroups.ValueString()
 	}
-	if !(plan.InterimUpdate.IsNull() || plan.InterimUpdate.IsUnknown()) {
+	if !(plan.InterimUpdate.IsNull() || plan.InterimUpdate.IsUnknown()) && (state == nil || !plan.InterimUpdate.Equal(state.InterimUpdate)) {
 		body["interim-update"] = plan.InterimUpdate.ValueString()
 	}
-	if !(plan.UseRADIUS.IsNull() || plan.UseRADIUS.IsUnknown()) {
+	if !(plan.UseRADIUS.IsNull() || plan.UseRADIUS.IsUnknown()) && (state == nil || !plan.UseRADIUS.Equal(state.UseRADIUS)) {
 		body["use-radius"] = client.FormatBool(plan.UseRADIUS.ValueBool())
 	}
 	obj, err := c.SetSingleton(ctx, "/user/aaa", body)

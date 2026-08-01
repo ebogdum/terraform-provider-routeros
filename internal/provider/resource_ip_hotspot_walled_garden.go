@@ -203,25 +203,25 @@ func (r *IPHotspotWalledGardenResource) Update(ctx context.Context, req resource
 		return
 	}
 	body := client.Object{}
-	if !plan.Action.Equal(state.Action) {
+	if !plan.Action.Equal(state.Action) && !plan.Action.IsUnknown() {
 		body["action"] = plan.Action.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.DstPort.Equal(state.DstPort) {
+	if !plan.DstPort.Equal(state.DstPort) && !plan.DstPort.IsUnknown() {
 		body["dst-port"] = plan.DstPort.ValueString()
 	}
-	if !plan.Path.Equal(state.Path) {
+	if !plan.Path.Equal(state.Path) && !plan.Path.IsUnknown() {
 		body["path"] = plan.Path.ValueString()
 	}
-	if !plan.Server.Equal(state.Server) {
+	if !plan.Server.Equal(state.Server) && !plan.Server.IsUnknown() {
 		body["server"] = plan.Server.ValueString()
 	}
-	if !plan.SrcAddress.Equal(state.SrcAddress) {
+	if !plan.SrcAddress.Equal(state.SrcAddress) && !plan.SrcAddress.IsUnknown() {
 		body["src-address"] = plan.SrcAddress.ValueString()
 	}
 	if !plan.DstHost.Equal(state.DstHost) && !plan.DstHost.IsUnknown() {

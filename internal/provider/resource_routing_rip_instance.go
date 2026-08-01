@@ -254,34 +254,34 @@ func (r *RoutingRipInstanceResource) Update(ctx context.Context, req resource.Up
 		return
 	}
 	body := client.Object{}
-	if !plan.Afi.Equal(state.Afi) {
+	if !plan.Afi.Equal(state.Afi) && !plan.Afi.IsUnknown() {
 		body["afi"] = plan.Afi.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.OriginateDefault.Equal(state.OriginateDefault) {
+	if !plan.OriginateDefault.Equal(state.OriginateDefault) && !plan.OriginateDefault.IsUnknown() {
 		body["originate-default"] = plan.OriginateDefault.ValueString()
 	}
-	if !plan.Redistribute.Equal(state.Redistribute) {
+	if !plan.Redistribute.Equal(state.Redistribute) && !plan.Redistribute.IsUnknown() {
 		body["redistribute"] = plan.Redistribute.ValueString()
 	}
-	if !plan.RouteGcTimeout.Equal(state.RouteGcTimeout) {
+	if !plan.RouteGcTimeout.Equal(state.RouteGcTimeout) && !plan.RouteGcTimeout.IsUnknown() {
 		body["route-gc-timeout"] = plan.RouteGcTimeout.ValueString()
 	}
-	if !plan.RouteTimeout.Equal(state.RouteTimeout) {
+	if !plan.RouteTimeout.Equal(state.RouteTimeout) && !plan.RouteTimeout.IsUnknown() {
 		body["route-timeout"] = plan.RouteTimeout.ValueString()
 	}
-	if !plan.RoutingTable.Equal(state.RoutingTable) {
+	if !plan.RoutingTable.Equal(state.RoutingTable) && !plan.RoutingTable.IsUnknown() {
 		body["routing-table"] = plan.RoutingTable.ValueString()
 	}
-	if !plan.UpdateInterval.Equal(state.UpdateInterval) {
+	if !plan.UpdateInterval.Equal(state.UpdateInterval) && !plan.UpdateInterval.IsUnknown() {
 		body["update-interval"] = plan.UpdateInterval.ValueString()
 	}
-	if !plan.Vrf.Equal(state.Vrf) {
+	if !plan.Vrf.Equal(state.Vrf) && !plan.Vrf.IsUnknown() {
 		body["vrf"] = plan.Vrf.ValueString()
 	}
 	if !plan.InFilterChain.Equal(state.InFilterChain) && !plan.InFilterChain.IsUnknown() {

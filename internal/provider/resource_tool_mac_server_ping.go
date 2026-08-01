@@ -70,7 +70,7 @@ func (r *ToolMACServerPingResource) Create(ctx context.Context, req resource.Cre
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	toolMACServerPingUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	toolMACServerPingUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -83,7 +83,12 @@ func (r *ToolMACServerPingResource) Update(ctx context.Context, req resource.Upd
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	toolMACServerPingUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state ToolMACServerPingModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	toolMACServerPingUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -124,13 +129,13 @@ func (r *ToolMACServerPingResource) ImportState(ctx context.Context, req resourc
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/tool/mac-server/ping", types.StringValue(routerName))))...)
 }
 
-func toolMACServerPingUpsert(ctx context.Context, reg *client.Registry, plan *ToolMACServerPingModel, diags *diagBuf) {
+func toolMACServerPingUpsert(ctx context.Context, reg *client.Registry, plan, state *ToolMACServerPingModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) {
+	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) && (state == nil || !plan.Enabled.Equal(state.Enabled)) {
 		body["enabled"] = plan.Enabled.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/tool/mac-server/ping", body)

@@ -190,7 +190,7 @@ func (r *IPFirewallConnectionTrackingResource) Create(ctx context.Context, req r
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPFirewallConnectionTrackingUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	iPFirewallConnectionTrackingUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -203,7 +203,12 @@ func (r *IPFirewallConnectionTrackingResource) Update(ctx context.Context, req r
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPFirewallConnectionTrackingUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state IPFirewallConnectionTrackingModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	iPFirewallConnectionTrackingUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -244,61 +249,61 @@ func (r *IPFirewallConnectionTrackingResource) ImportState(ctx context.Context, 
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/ip/firewall/connection/tracking", types.StringValue(routerName))))...)
 }
 
-func iPFirewallConnectionTrackingUpsert(ctx context.Context, reg *client.Registry, plan *IPFirewallConnectionTrackingModel, diags *diagBuf) {
+func iPFirewallConnectionTrackingUpsert(ctx context.Context, reg *client.Registry, plan, state *IPFirewallConnectionTrackingModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) {
+	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) && (state == nil || !plan.Enabled.Equal(state.Enabled)) {
 		body["enabled"] = plan.Enabled.ValueString()
 	}
-	if !(plan.GenericTimeout.IsNull() || plan.GenericTimeout.IsUnknown()) {
+	if !(plan.GenericTimeout.IsNull() || plan.GenericTimeout.IsUnknown()) && (state == nil || !plan.GenericTimeout.Equal(state.GenericTimeout)) {
 		body["generic-timeout"] = plan.GenericTimeout.ValueString()
 	}
-	if !(plan.IcmpTimeout.IsNull() || plan.IcmpTimeout.IsUnknown()) {
+	if !(plan.IcmpTimeout.IsNull() || plan.IcmpTimeout.IsUnknown()) && (state == nil || !plan.IcmpTimeout.Equal(state.IcmpTimeout)) {
 		body["icmp-timeout"] = plan.IcmpTimeout.ValueString()
 	}
-	if !(plan.LiberalTCPTracking.IsNull() || plan.LiberalTCPTracking.IsUnknown()) {
+	if !(plan.LiberalTCPTracking.IsNull() || plan.LiberalTCPTracking.IsUnknown()) && (state == nil || !plan.LiberalTCPTracking.Equal(state.LiberalTCPTracking)) {
 		body["liberal-tcp-tracking"] = client.FormatBool(plan.LiberalTCPTracking.ValueBool())
 	}
-	if !(plan.LooseTCPTracking.IsNull() || plan.LooseTCPTracking.IsUnknown()) {
+	if !(plan.LooseTCPTracking.IsNull() || plan.LooseTCPTracking.IsUnknown()) && (state == nil || !plan.LooseTCPTracking.Equal(state.LooseTCPTracking)) {
 		body["loose-tcp-tracking"] = client.FormatBool(plan.LooseTCPTracking.ValueBool())
 	}
-	if !(plan.TCPCloseTimeout.IsNull() || plan.TCPCloseTimeout.IsUnknown()) {
+	if !(plan.TCPCloseTimeout.IsNull() || plan.TCPCloseTimeout.IsUnknown()) && (state == nil || !plan.TCPCloseTimeout.Equal(state.TCPCloseTimeout)) {
 		body["tcp-close-timeout"] = plan.TCPCloseTimeout.ValueString()
 	}
-	if !(plan.TCPCloseWaitTimeout.IsNull() || plan.TCPCloseWaitTimeout.IsUnknown()) {
+	if !(plan.TCPCloseWaitTimeout.IsNull() || plan.TCPCloseWaitTimeout.IsUnknown()) && (state == nil || !plan.TCPCloseWaitTimeout.Equal(state.TCPCloseWaitTimeout)) {
 		body["tcp-close-wait-timeout"] = plan.TCPCloseWaitTimeout.ValueString()
 	}
-	if !(plan.TCPEstablishedTimeout.IsNull() || plan.TCPEstablishedTimeout.IsUnknown()) {
+	if !(plan.TCPEstablishedTimeout.IsNull() || plan.TCPEstablishedTimeout.IsUnknown()) && (state == nil || !plan.TCPEstablishedTimeout.Equal(state.TCPEstablishedTimeout)) {
 		body["tcp-established-timeout"] = plan.TCPEstablishedTimeout.ValueString()
 	}
-	if !(plan.TCPFinWaitTimeout.IsNull() || plan.TCPFinWaitTimeout.IsUnknown()) {
+	if !(plan.TCPFinWaitTimeout.IsNull() || plan.TCPFinWaitTimeout.IsUnknown()) && (state == nil || !plan.TCPFinWaitTimeout.Equal(state.TCPFinWaitTimeout)) {
 		body["tcp-fin-wait-timeout"] = plan.TCPFinWaitTimeout.ValueString()
 	}
-	if !(plan.TCPLastAckTimeout.IsNull() || plan.TCPLastAckTimeout.IsUnknown()) {
+	if !(plan.TCPLastAckTimeout.IsNull() || plan.TCPLastAckTimeout.IsUnknown()) && (state == nil || !plan.TCPLastAckTimeout.Equal(state.TCPLastAckTimeout)) {
 		body["tcp-last-ack-timeout"] = plan.TCPLastAckTimeout.ValueString()
 	}
-	if !(plan.TCPMaxRetransTimeout.IsNull() || plan.TCPMaxRetransTimeout.IsUnknown()) {
+	if !(plan.TCPMaxRetransTimeout.IsNull() || plan.TCPMaxRetransTimeout.IsUnknown()) && (state == nil || !plan.TCPMaxRetransTimeout.Equal(state.TCPMaxRetransTimeout)) {
 		body["tcp-max-retrans-timeout"] = plan.TCPMaxRetransTimeout.ValueString()
 	}
-	if !(plan.TCPSynReceivedTimeout.IsNull() || plan.TCPSynReceivedTimeout.IsUnknown()) {
+	if !(plan.TCPSynReceivedTimeout.IsNull() || plan.TCPSynReceivedTimeout.IsUnknown()) && (state == nil || !plan.TCPSynReceivedTimeout.Equal(state.TCPSynReceivedTimeout)) {
 		body["tcp-syn-received-timeout"] = plan.TCPSynReceivedTimeout.ValueString()
 	}
-	if !(plan.TCPSynSentTimeout.IsNull() || plan.TCPSynSentTimeout.IsUnknown()) {
+	if !(plan.TCPSynSentTimeout.IsNull() || plan.TCPSynSentTimeout.IsUnknown()) && (state == nil || !plan.TCPSynSentTimeout.Equal(state.TCPSynSentTimeout)) {
 		body["tcp-syn-sent-timeout"] = plan.TCPSynSentTimeout.ValueString()
 	}
-	if !(plan.TCPTimeWaitTimeout.IsNull() || plan.TCPTimeWaitTimeout.IsUnknown()) {
+	if !(plan.TCPTimeWaitTimeout.IsNull() || plan.TCPTimeWaitTimeout.IsUnknown()) && (state == nil || !plan.TCPTimeWaitTimeout.Equal(state.TCPTimeWaitTimeout)) {
 		body["tcp-time-wait-timeout"] = plan.TCPTimeWaitTimeout.ValueString()
 	}
-	if !(plan.TCPUnackedTimeout.IsNull() || plan.TCPUnackedTimeout.IsUnknown()) {
+	if !(plan.TCPUnackedTimeout.IsNull() || plan.TCPUnackedTimeout.IsUnknown()) && (state == nil || !plan.TCPUnackedTimeout.Equal(state.TCPUnackedTimeout)) {
 		body["tcp-unacked-timeout"] = plan.TCPUnackedTimeout.ValueString()
 	}
-	if !(plan.UDPStreamTimeout.IsNull() || plan.UDPStreamTimeout.IsUnknown()) {
+	if !(plan.UDPStreamTimeout.IsNull() || plan.UDPStreamTimeout.IsUnknown()) && (state == nil || !plan.UDPStreamTimeout.Equal(state.UDPStreamTimeout)) {
 		body["udp-stream-timeout"] = plan.UDPStreamTimeout.ValueString()
 	}
-	if !(plan.UDPTimeout.IsNull() || plan.UDPTimeout.IsUnknown()) {
+	if !(plan.UDPTimeout.IsNull() || plan.UDPTimeout.IsUnknown()) && (state == nil || !plan.UDPTimeout.Equal(state.UDPTimeout)) {
 		body["udp-timeout"] = plan.UDPTimeout.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/ip/firewall/connection/tracking", body)

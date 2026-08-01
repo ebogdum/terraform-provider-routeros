@@ -797,229 +797,229 @@ func (r *ToolProfileCpuResource) Update(ctx context.Context, req resource.Update
 		return
 	}
 	body := client.Object{}
-	if !plan.Backup.Equal(state.Backup) {
+	if !plan.Backup.Equal(state.Backup) && !plan.Backup.IsUnknown() {
 		body["backup"] = plan.Backup.ValueString()
 	}
-	if !plan.Bfd.Equal(state.Bfd) {
+	if !plan.Bfd.Equal(state.Bfd) && !plan.Bfd.IsUnknown() {
 		body["bfd"] = plan.Bfd.ValueString()
 	}
-	if !plan.BGP.Equal(state.BGP) {
+	if !plan.BGP.Equal(state.BGP) && !plan.BGP.IsUnknown() {
 		body["bgp"] = plan.BGP.ValueString()
 	}
-	if !plan.Bridging.Equal(state.Bridging) {
+	if !plan.Bridging.Equal(state.Bridging) && !plan.Bridging.IsUnknown() {
 		body["bridging"] = plan.Bridging.ValueString()
 	}
-	if !plan.Btest.Equal(state.Btest) {
+	if !plan.Btest.Equal(state.Btest) && !plan.Btest.IsUnknown() {
 		body["btest"] = plan.Btest.ValueString()
 	}
-	if !plan.Certificate.Equal(state.Certificate) {
+	if !plan.Certificate.Equal(state.Certificate) && !plan.Certificate.IsUnknown() {
 		body["certificate"] = plan.Certificate.ValueString()
 	}
-	if !plan.Console.Equal(state.Console) {
+	if !plan.Console.Equal(state.Console) && !plan.Console.IsUnknown() {
 		body["console"] = plan.Console.ValueString()
 	}
-	if !plan.Container.Equal(state.Container) {
+	if !plan.Container.Equal(state.Container) && !plan.Container.IsUnknown() {
 		body["container"] = plan.Container.ValueString()
 	}
-	if !plan.DHCP.Equal(state.DHCP) {
+	if !plan.DHCP.Equal(state.DHCP) && !plan.DHCP.IsUnknown() {
 		body["dhcp"] = plan.DHCP.ValueString()
 	}
-	if !plan.Disk.Equal(state.Disk) {
+	if !plan.Disk.Equal(state.Disk) && !plan.Disk.IsUnknown() {
 		body["disk"] = plan.Disk.ValueString()
 	}
-	if !plan.DNS.Equal(state.DNS) {
+	if !plan.DNS.Equal(state.DNS) && !plan.DNS.IsUnknown() {
 		body["dns"] = plan.DNS.ValueString()
 	}
-	if !plan.Dude.Equal(state.Dude) {
+	if !plan.Dude.Equal(state.Dude) && !plan.Dude.IsUnknown() {
 		body["dude"] = plan.Dude.ValueString()
 	}
-	if !plan.EMail.Equal(state.EMail) {
+	if !plan.EMail.Equal(state.EMail) && !plan.EMail.IsUnknown() {
 		body["e-mail"] = plan.EMail.ValueString()
 	}
-	if !plan.Encrypting.Equal(state.Encrypting) {
+	if !plan.Encrypting.Equal(state.Encrypting) && !plan.Encrypting.IsUnknown() {
 		body["encrypting"] = plan.Encrypting.ValueString()
 	}
-	if !plan.Eoip.Equal(state.Eoip) {
+	if !plan.Eoip.Equal(state.Eoip) && !plan.Eoip.IsUnknown() {
 		body["eoip"] = plan.Eoip.ValueString()
 	}
-	if !plan.Ethernet.Equal(state.Ethernet) {
+	if !plan.Ethernet.Equal(state.Ethernet) && !plan.Ethernet.IsUnknown() {
 		body["ethernet"] = plan.Ethernet.ValueString()
 	}
-	if !plan.Fetcher.Equal(state.Fetcher) {
+	if !plan.Fetcher.Equal(state.Fetcher) && !plan.Fetcher.IsUnknown() {
 		body["fetcher"] = plan.Fetcher.ValueString()
 	}
-	if !plan.Fileman.Equal(state.Fileman) {
+	if !plan.Fileman.Equal(state.Fileman) && !plan.Fileman.IsUnknown() {
 		body["fileman"] = plan.Fileman.ValueString()
 	}
-	if !plan.Firewall.Equal(state.Firewall) {
+	if !plan.Firewall.Equal(state.Firewall) && !plan.Firewall.IsUnknown() {
 		body["firewall"] = plan.Firewall.ValueString()
 	}
-	if !plan.FirewallMgmt.Equal(state.FirewallMgmt) {
+	if !plan.FirewallMgmt.Equal(state.FirewallMgmt) && !plan.FirewallMgmt.IsUnknown() {
 		body["firewall-mgmt"] = plan.FirewallMgmt.ValueString()
 	}
-	if !plan.Flash.Equal(state.Flash) {
+	if !plan.Flash.Equal(state.Flash) && !plan.Flash.IsUnknown() {
 		body["flash"] = plan.Flash.ValueString()
 	}
-	if !plan.Ftp.Equal(state.Ftp) {
+	if !plan.Ftp.Equal(state.Ftp) && !plan.Ftp.IsUnknown() {
 		body["ftp"] = plan.Ftp.ValueString()
 	}
-	if !plan.Gps.Equal(state.Gps) {
+	if !plan.Gps.Equal(state.Gps) && !plan.Gps.IsUnknown() {
 		body["gps"] = plan.Gps.ValueString()
 	}
-	if !plan.Graphing.Equal(state.Graphing) {
+	if !plan.Graphing.Equal(state.Graphing) && !plan.Graphing.IsUnknown() {
 		body["graphing"] = plan.Graphing.ValueString()
 	}
-	if !plan.Gre.Equal(state.Gre) {
+	if !plan.Gre.Equal(state.Gre) && !plan.Gre.IsUnknown() {
 		body["gre"] = plan.Gre.ValueString()
 	}
-	if !plan.Health.Equal(state.Health) {
+	if !plan.Health.Equal(state.Health) && !plan.Health.IsUnknown() {
 		body["health"] = plan.Health.ValueString()
 	}
-	if !plan.Hotspot.Equal(state.Hotspot) {
+	if !plan.Hotspot.Equal(state.Hotspot) && !plan.Hotspot.IsUnknown() {
 		body["hotspot"] = plan.Hotspot.ValueString()
 	}
-	if !plan.Idle.Equal(state.Idle) {
+	if !plan.Idle.Equal(state.Idle) && !plan.Idle.IsUnknown() {
 		body["idle"] = plan.Idle.ValueString()
 	}
-	if !plan.IgmpProxy.Equal(state.IgmpProxy) {
+	if !plan.IgmpProxy.Equal(state.IgmpProxy) && !plan.IgmpProxy.IsUnknown() {
 		body["igmp-proxy"] = plan.IgmpProxy.ValueString()
 	}
-	if !plan.InternetDetect.Equal(state.InternetDetect) {
+	if !plan.InternetDetect.Equal(state.InternetDetect) && !plan.InternetDetect.IsUnknown() {
 		body["internet-detect"] = plan.InternetDetect.ValueString()
 	}
-	if !plan.IPPool.Equal(state.IPPool) {
+	if !plan.IPPool.Equal(state.IPPool) && !plan.IPPool.IsUnknown() {
 		body["ip-pool"] = plan.IPPool.ValueString()
 	}
-	if !plan.Ipsec.Equal(state.Ipsec) {
+	if !plan.Ipsec.Equal(state.Ipsec) && !plan.Ipsec.IsUnknown() {
 		body["ipsec"] = plan.Ipsec.ValueString()
 	}
-	if !plan.Kvm.Equal(state.Kvm) {
+	if !plan.Kvm.Equal(state.Kvm) && !plan.Kvm.IsUnknown() {
 		body["kvm"] = plan.Kvm.ValueString()
 	}
-	if !plan.L7Matcher.Equal(state.L7Matcher) {
+	if !plan.L7Matcher.Equal(state.L7Matcher) && !plan.L7Matcher.IsUnknown() {
 		body["l7-matcher"] = plan.L7Matcher.ValueString()
 	}
-	if !plan.Lcd.Equal(state.Lcd) {
+	if !plan.Lcd.Equal(state.Lcd) && !plan.Lcd.IsUnknown() {
 		body["lcd"] = plan.Lcd.ValueString()
 	}
-	if !plan.Ldp.Equal(state.Ldp) {
+	if !plan.Ldp.Equal(state.Ldp) && !plan.Ldp.IsUnknown() {
 		body["ldp"] = plan.Ldp.ValueString()
 	}
-	if !plan.Logging.Equal(state.Logging) {
+	if !plan.Logging.Equal(state.Logging) && !plan.Logging.IsUnknown() {
 		body["logging"] = plan.Logging.ValueString()
 	}
-	if !plan.Management.Equal(state.Management) {
+	if !plan.Management.Equal(state.Management) && !plan.Management.IsUnknown() {
 		body["management"] = plan.Management.ValueString()
 	}
-	if !plan.MPLS.Equal(state.MPLS) {
+	if !plan.MPLS.Equal(state.MPLS) && !plan.MPLS.IsUnknown() {
 		body["mpls"] = plan.MPLS.ValueString()
 	}
-	if !plan.NeighbourDiscovery.Equal(state.NeighbourDiscovery) {
+	if !plan.NeighbourDiscovery.Equal(state.NeighbourDiscovery) && !plan.NeighbourDiscovery.IsUnknown() {
 		body["neighbour-discovery"] = plan.NeighbourDiscovery.ValueString()
 	}
-	if !plan.Networking.Equal(state.Networking) {
+	if !plan.Networking.Equal(state.Networking) && !plan.Networking.IsUnknown() {
 		body["networking"] = plan.Networking.ValueString()
 	}
-	if !plan.NTP.Equal(state.NTP) {
+	if !plan.NTP.Equal(state.NTP) && !plan.NTP.IsUnknown() {
 		body["ntp"] = plan.NTP.ValueString()
 	}
-	if !plan.OSPF.Equal(state.OSPF) {
+	if !plan.OSPF.Equal(state.OSPF) && !plan.OSPF.IsUnknown() {
 		body["ospf"] = plan.OSPF.ValueString()
 	}
-	if !plan.OVPN.Equal(state.OVPN) {
+	if !plan.OVPN.Equal(state.OVPN) && !plan.OVPN.IsUnknown() {
 		body["ovpn"] = plan.OVPN.ValueString()
 	}
-	if !plan.Pim.Equal(state.Pim) {
+	if !plan.Pim.Equal(state.Pim) && !plan.Pim.IsUnknown() {
 		body["pim"] = plan.Pim.ValueString()
 	}
-	if !plan.Profiling.Equal(state.Profiling) {
+	if !plan.Profiling.Equal(state.Profiling) && !plan.Profiling.IsUnknown() {
 		body["profiling"] = plan.Profiling.ValueString()
 	}
-	if !plan.QueueMgmt.Equal(state.QueueMgmt) {
+	if !plan.QueueMgmt.Equal(state.QueueMgmt) && !plan.QueueMgmt.IsUnknown() {
 		body["queue-mgmt"] = plan.QueueMgmt.ValueString()
 	}
-	if !plan.Queuing.Equal(state.Queuing) {
+	if !plan.Queuing.Equal(state.Queuing) && !plan.Queuing.IsUnknown() {
 		body["queuing"] = plan.Queuing.ValueString()
 	}
-	if !plan.RADIUS.Equal(state.RADIUS) {
+	if !plan.RADIUS.Equal(state.RADIUS) && !plan.RADIUS.IsUnknown() {
 		body["radius"] = plan.RADIUS.ValueString()
 	}
-	if !plan.Radv.Equal(state.Radv) {
+	if !plan.Radv.Equal(state.Radv) && !plan.Radv.IsUnknown() {
 		body["radv"] = plan.Radv.ValueString()
 	}
-	if !plan.RemoteAccess.Equal(state.RemoteAccess) {
+	if !plan.RemoteAccess.Equal(state.RemoteAccess) && !plan.RemoteAccess.IsUnknown() {
 		body["remote-access"] = plan.RemoteAccess.ValueString()
 	}
-	if !plan.Rip.Equal(state.Rip) {
+	if !plan.Rip.Equal(state.Rip) && !plan.Rip.IsUnknown() {
 		body["rip"] = plan.Rip.ValueString()
 	}
-	if !plan.Routing.Equal(state.Routing) {
+	if !plan.Routing.Equal(state.Routing) && !plan.Routing.IsUnknown() {
 		body["routing"] = plan.Routing.ValueString()
 	}
-	if !plan.Serial.Equal(state.Serial) {
+	if !plan.Serial.Equal(state.Serial) && !plan.Serial.IsUnknown() {
 		body["serial"] = plan.Serial.ValueString()
 	}
-	if !plan.Sniffing.Equal(state.Sniffing) {
+	if !plan.Sniffing.Equal(state.Sniffing) && !plan.Sniffing.IsUnknown() {
 		body["sniffing"] = plan.Sniffing.ValueString()
 	}
-	if !plan.SNMP.Equal(state.SNMP) {
+	if !plan.SNMP.Equal(state.SNMP) && !plan.SNMP.IsUnknown() {
 		body["snmp"] = plan.SNMP.ValueString()
 	}
-	if !plan.Socks.Equal(state.Socks) {
+	if !plan.Socks.Equal(state.Socks) && !plan.Socks.IsUnknown() {
 		body["socks"] = plan.Socks.ValueString()
 	}
-	if !plan.Spi.Equal(state.Spi) {
+	if !plan.Spi.Equal(state.Spi) && !plan.Spi.IsUnknown() {
 		body["spi"] = plan.Spi.ValueString()
 	}
-	if !plan.SSH.Equal(state.SSH) {
+	if !plan.SSH.Equal(state.SSH) && !plan.SSH.IsUnknown() {
 		body["ssh"] = plan.SSH.ValueString()
 	}
-	if !plan.SSL.Equal(state.SSL) {
+	if !plan.SSL.Equal(state.SSL) && !plan.SSL.IsUnknown() {
 		body["ssl"] = plan.SSL.ValueString()
 	}
-	if !plan.Telnet.Equal(state.Telnet) {
+	if !plan.Telnet.Equal(state.Telnet) && !plan.Telnet.IsUnknown() {
 		body["telnet"] = plan.Telnet.ValueString()
 	}
-	if !plan.Tftp.Equal(state.Tftp) {
+	if !plan.Tftp.Equal(state.Tftp) && !plan.Tftp.IsUnknown() {
 		body["tftp"] = plan.Tftp.ValueString()
 	}
-	if !plan.TrafficAccounting.Equal(state.TrafficAccounting) {
+	if !plan.TrafficAccounting.Equal(state.TrafficAccounting) && !plan.TrafficAccounting.IsUnknown() {
 		body["traffic-accounting"] = plan.TrafficAccounting.ValueString()
 	}
-	if !plan.TrafficFlow.Equal(state.TrafficFlow) {
+	if !plan.TrafficFlow.Equal(state.TrafficFlow) && !plan.TrafficFlow.IsUnknown() {
 		body["traffic-flow"] = plan.TrafficFlow.ValueString()
 	}
-	if !plan.Unclassified.Equal(state.Unclassified) {
+	if !plan.Unclassified.Equal(state.Unclassified) && !plan.Unclassified.IsUnknown() {
 		body["unclassified"] = plan.Unclassified.ValueString()
 	}
-	if !plan.Upnp.Equal(state.Upnp) {
+	if !plan.Upnp.Equal(state.Upnp) && !plan.Upnp.IsUnknown() {
 		body["upnp"] = plan.Upnp.ValueString()
 	}
-	if !plan.Usb.Equal(state.Usb) {
+	if !plan.Usb.Equal(state.Usb) && !plan.Usb.IsUnknown() {
 		body["usb"] = plan.Usb.ValueString()
 	}
-	if !plan.UserManager.Equal(state.UserManager) {
+	if !plan.UserManager.Equal(state.UserManager) && !plan.UserManager.IsUnknown() {
 		body["user-manager"] = plan.UserManager.ValueString()
 	}
-	if !plan.VRRP.Equal(state.VRRP) {
+	if !plan.VRRP.Equal(state.VRRP) && !plan.VRRP.IsUnknown() {
 		body["vrrp"] = plan.VRRP.ValueString()
 	}
-	if !plan.WebProxy.Equal(state.WebProxy) {
+	if !plan.WebProxy.Equal(state.WebProxy) && !plan.WebProxy.IsUnknown() {
 		body["web-proxy"] = plan.WebProxy.ValueString()
 	}
-	if !plan.Winbox.Equal(state.Winbox) {
+	if !plan.Winbox.Equal(state.Winbox) && !plan.Winbox.IsUnknown() {
 		body["winbox"] = plan.Winbox.ValueString()
 	}
-	if !plan.Wireguard.Equal(state.Wireguard) {
+	if !plan.Wireguard.Equal(state.Wireguard) && !plan.Wireguard.IsUnknown() {
 		body["wireguard"] = plan.Wireguard.ValueString()
 	}
-	if !plan.Wireless.Equal(state.Wireless) {
+	if !plan.Wireless.Equal(state.Wireless) && !plan.Wireless.IsUnknown() {
 		body["wireless"] = plan.Wireless.ValueString()
 	}
-	if !plan.Www.Equal(state.Www) {
+	if !plan.Www.Equal(state.Www) && !plan.Www.IsUnknown() {
 		body["www"] = plan.Www.ValueString()
 	}
-	if !plan.Zerotier.Equal(state.Zerotier) {
+	if !plan.Zerotier.Equal(state.Zerotier) && !plan.Zerotier.IsUnknown() {
 		body["zerotier"] = plan.Zerotier.ValueString()
 	}
 	if len(body) > 0 {

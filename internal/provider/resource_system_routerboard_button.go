@@ -114,7 +114,7 @@ func (r *SystemRouterboardButtonResource) Create(ctx context.Context, req resour
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	r.upsert(ctx, &plan, &resp.Diagnostics)
+	r.upsert(ctx, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -127,7 +127,12 @@ func (r *SystemRouterboardButtonResource) Update(ctx context.Context, req resour
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	r.upsert(ctx, &plan, &resp.Diagnostics)
+	var state SystemRouterboardButtonModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	r.upsert(ctx, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -170,19 +175,19 @@ func (r *SystemRouterboardButtonResource) ImportState(ctx context.Context, req r
 		types.StringValue(stateIDFor(r.menuPath, types.StringValue(routerName))))...)
 }
 
-func (r *SystemRouterboardButtonResource) upsert(ctx context.Context, plan *SystemRouterboardButtonModel, diags *diagBuf) {
+func (r *SystemRouterboardButtonResource) upsert(ctx context.Context, plan, state *SystemRouterboardButtonModel, diags *diagBuf) {
 	c := pickClient(r.reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) {
+	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) && (state == nil || !plan.Enabled.Equal(state.Enabled)) {
 		body["enabled"] = client.FormatBool(plan.Enabled.ValueBool())
 	}
-	if !(plan.HoldTime.IsNull() || plan.HoldTime.IsUnknown()) {
+	if !(plan.HoldTime.IsNull() || plan.HoldTime.IsUnknown()) && (state == nil || !plan.HoldTime.Equal(state.HoldTime)) {
 		body["hold-time"] = plan.HoldTime.ValueString()
 	}
-	if !(plan.OnEvent.IsNull() || plan.OnEvent.IsUnknown()) {
+	if !(plan.OnEvent.IsNull() || plan.OnEvent.IsUnknown()) && (state == nil || !plan.OnEvent.Equal(state.OnEvent)) {
 		body["on-event"] = plan.OnEvent.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, r.menuPath, body)

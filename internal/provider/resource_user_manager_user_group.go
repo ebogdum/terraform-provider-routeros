@@ -176,22 +176,22 @@ func (r *UserManagerUserGroupResource) Update(ctx context.Context, req resource.
 		return
 	}
 	body := client.Object{}
-	if !plan.Attributes.Equal(state.Attributes) {
+	if !plan.Attributes.Equal(state.Attributes) && !plan.Attributes.IsUnknown() {
 		body["attributes"] = plan.Attributes.ValueString()
 	}
-	if !plan.Default.Equal(state.Default) {
+	if !plan.Default.Equal(state.Default) && !plan.Default.IsUnknown() {
 		body["default"] = plan.Default.ValueString()
 	}
-	if !plan.DefaultName.Equal(state.DefaultName) {
+	if !plan.DefaultName.Equal(state.DefaultName) && !plan.DefaultName.IsUnknown() {
 		body["default-name"] = plan.DefaultName.ValueString()
 	}
-	if !plan.InnerAuths.Equal(state.InnerAuths) {
+	if !plan.InnerAuths.Equal(state.InnerAuths) && !plan.InnerAuths.IsUnknown() {
 		body["inner-auths"] = plan.InnerAuths.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.OuterAuths.Equal(state.OuterAuths) {
+	if !plan.OuterAuths.Equal(state.OuterAuths) && !plan.OuterAuths.IsUnknown() {
 		body["outer-auths"] = plan.OuterAuths.ValueString()
 	}
 	if len(body) > 0 {

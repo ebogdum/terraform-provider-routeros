@@ -293,46 +293,46 @@ func (r *RoutingOSPFInstanceResource) Update(ctx context.Context, req resource.U
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.DomainID.Equal(state.DomainID) {
+	if !plan.DomainID.Equal(state.DomainID) && !plan.DomainID.IsUnknown() {
 		body["domain-id"] = plan.DomainID.ValueString()
 	}
-	if !plan.DomainTag.Equal(state.DomainTag) {
+	if !plan.DomainTag.Equal(state.DomainTag) && !plan.DomainTag.IsUnknown() {
 		body["domain-tag"] = plan.DomainTag.ValueString()
 	}
-	if !plan.MPLSTeAddress.Equal(state.MPLSTeAddress) {
+	if !plan.MPLSTeAddress.Equal(state.MPLSTeAddress) && !plan.MPLSTeAddress.IsUnknown() {
 		body["mpls-te-address"] = plan.MPLSTeAddress.ValueString()
 	}
-	if !plan.MPLSTeArea.Equal(state.MPLSTeArea) {
+	if !plan.MPLSTeArea.Equal(state.MPLSTeArea) && !plan.MPLSTeArea.IsUnknown() {
 		body["mpls-te-area"] = plan.MPLSTeArea.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.OriginateDefault.Equal(state.OriginateDefault) {
+	if !plan.OriginateDefault.Equal(state.OriginateDefault) && !plan.OriginateDefault.IsUnknown() {
 		body["originate-default"] = plan.OriginateDefault.ValueString()
 	}
-	if !plan.OutFilterSelect.Equal(state.OutFilterSelect) {
+	if !plan.OutFilterSelect.Equal(state.OutFilterSelect) && !plan.OutFilterSelect.IsUnknown() {
 		body["out-filter-select"] = plan.OutFilterSelect.ValueString()
 	}
-	if !plan.Redistribute.Equal(state.Redistribute) {
+	if !plan.Redistribute.Equal(state.Redistribute) && !plan.Redistribute.IsUnknown() {
 		body["redistribute"] = plan.Redistribute.ValueString()
 	}
-	if !plan.RouterID.Equal(state.RouterID) {
+	if !plan.RouterID.Equal(state.RouterID) && !plan.RouterID.IsUnknown() {
 		body["router-id"] = plan.RouterID.ValueString()
 	}
-	if !plan.RoutingTable.Equal(state.RoutingTable) {
+	if !plan.RoutingTable.Equal(state.RoutingTable) && !plan.RoutingTable.IsUnknown() {
 		body["routing-table"] = plan.RoutingTable.ValueString()
 	}
-	if !plan.Version.Equal(state.Version) {
+	if !plan.Version.Equal(state.Version) && !plan.Version.IsUnknown() {
 		body["version"] = plan.Version.ValueString()
 	}
-	if !plan.Vrf.Equal(state.Vrf) {
+	if !plan.Vrf.Equal(state.Vrf) && !plan.Vrf.IsUnknown() {
 		body["vrf"] = plan.Vrf.ValueString()
 	}
 	if !plan.InFilterChain.Equal(state.InFilterChain) && !plan.InFilterChain.IsUnknown() {

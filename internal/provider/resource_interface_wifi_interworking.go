@@ -420,100 +420,100 @@ func (r *InterfaceWifiInterworkingResource) Update(ctx context.Context, req reso
 		return
 	}
 	body := client.Object{}
-	if !plan.X3gppInfo.Equal(state.X3gppInfo) {
+	if !plan.X3gppInfo.Equal(state.X3gppInfo) && !plan.X3gppInfo.IsUnknown() {
 		body["3gpp-info"] = plan.X3gppInfo.ValueString()
 	}
-	if !plan.X3gppInfoRaw.Equal(state.X3gppInfoRaw) {
+	if !plan.X3gppInfoRaw.Equal(state.X3gppInfoRaw) && !plan.X3gppInfoRaw.IsUnknown() {
 		body["3gpp-info-raw"] = plan.X3gppInfoRaw.ValueString()
 	}
-	if !plan.AuthenticationTypes.Equal(state.AuthenticationTypes) {
+	if !plan.AuthenticationTypes.Equal(state.AuthenticationTypes) && !plan.AuthenticationTypes.IsUnknown() {
 		body["authentication-types"] = plan.AuthenticationTypes.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.ConnectionCapabilities.Equal(state.ConnectionCapabilities) {
+	if !plan.ConnectionCapabilities.Equal(state.ConnectionCapabilities) && !plan.ConnectionCapabilities.IsUnknown() {
 		body["connection-capabilities"] = plan.ConnectionCapabilities.ValueString()
 	}
-	if !plan.Dgaf.Equal(state.Dgaf) {
+	if !plan.Dgaf.Equal(state.Dgaf) && !plan.Dgaf.IsUnknown() {
 		body["dgaf"] = plan.Dgaf.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.DomainNames.Equal(state.DomainNames) {
+	if !plan.DomainNames.Equal(state.DomainNames) && !plan.DomainNames.IsUnknown() {
 		body["domain-names"] = plan.DomainNames.ValueString()
 	}
-	if !plan.Esr.Equal(state.Esr) {
+	if !plan.Esr.Equal(state.Esr) && !plan.Esr.IsUnknown() {
 		body["esr"] = plan.Esr.ValueString()
 	}
-	if !plan.Hessid.Equal(state.Hessid) {
+	if !plan.Hessid.Equal(state.Hessid) && !plan.Hessid.IsUnknown() {
 		body["hessid"] = plan.Hessid.ValueString()
 	}
-	if !plan.Hotspot20.Equal(state.Hotspot20) {
+	if !plan.Hotspot20.Equal(state.Hotspot20) && !plan.Hotspot20.IsUnknown() {
 		body["hotspot20"] = plan.Hotspot20.ValueString()
 	}
-	if !plan.Internet.Equal(state.Internet) {
+	if !plan.Internet.Equal(state.Internet) && !plan.Internet.IsUnknown() {
 		body["internet"] = plan.Internet.ValueString()
 	}
-	if !plan.Ipv4Availability.Equal(state.Ipv4Availability) {
+	if !plan.Ipv4Availability.Equal(state.Ipv4Availability) && !plan.Ipv4Availability.IsUnknown() {
 		body["ipv4-availability"] = plan.Ipv4Availability.ValueString()
 	}
-	if !plan.IPV6Availability.Equal(state.IPV6Availability) {
+	if !plan.IPV6Availability.Equal(state.IPV6Availability) && !plan.IPV6Availability.IsUnknown() {
 		body["ipv6-availability"] = plan.IPV6Availability.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.NetworkType.Equal(state.NetworkType) {
+	if !plan.NetworkType.Equal(state.NetworkType) && !plan.NetworkType.IsUnknown() {
 		body["network-type"] = plan.NetworkType.ValueString()
 	}
-	if !plan.OperationalClasses.Equal(state.OperationalClasses) {
+	if !plan.OperationalClasses.Equal(state.OperationalClasses) && !plan.OperationalClasses.IsUnknown() {
 		body["operational-classes"] = plan.OperationalClasses.ValueString()
 	}
-	if !plan.OperatorNames.Equal(state.OperatorNames) {
+	if !plan.OperatorNames.Equal(state.OperatorNames) && !plan.OperatorNames.IsUnknown() {
 		body["operator-names"] = plan.OperatorNames.ValueString()
 	}
-	if !plan.Realms.Equal(state.Realms) {
+	if !plan.Realms.Equal(state.Realms) && !plan.Realms.IsUnknown() {
 		body["realms"] = plan.Realms.ValueString()
 	}
-	if !plan.RealmsRaw.Equal(state.RealmsRaw) {
+	if !plan.RealmsRaw.Equal(state.RealmsRaw) && !plan.RealmsRaw.IsUnknown() {
 		body["realms-raw"] = plan.RealmsRaw.ValueString()
 	}
-	if !plan.RoamingOis.Equal(state.RoamingOis) {
+	if !plan.RoamingOis.Equal(state.RoamingOis) && !plan.RoamingOis.IsUnknown() {
 		body["roaming-ois"] = plan.RoamingOis.ValueString()
 	}
-	if !plan.Uesa.Equal(state.Uesa) {
+	if !plan.Uesa.Equal(state.Uesa) && !plan.Uesa.IsUnknown() {
 		body["uesa"] = plan.Uesa.ValueString()
 	}
-	if !plan.Venue.Equal(state.Venue) {
+	if !plan.Venue.Equal(state.Venue) && !plan.Venue.IsUnknown() {
 		body["venue"] = plan.Venue.ValueString()
 	}
-	if !plan.VenueNames.Equal(state.VenueNames) {
+	if !plan.VenueNames.Equal(state.VenueNames) && !plan.VenueNames.IsUnknown() {
 		body["venue-names"] = plan.VenueNames.ValueString()
 	}
-	if !plan.WanAtCapacity.Equal(state.WanAtCapacity) {
+	if !plan.WanAtCapacity.Equal(state.WanAtCapacity) && !plan.WanAtCapacity.IsUnknown() {
 		body["wan-at-capacity"] = plan.WanAtCapacity.ValueString()
 	}
-	if !plan.WanDownlink.Equal(state.WanDownlink) {
+	if !plan.WanDownlink.Equal(state.WanDownlink) && !plan.WanDownlink.IsUnknown() {
 		body["wan-downlink"] = plan.WanDownlink.ValueString()
 	}
-	if !plan.WanDownlinkLoad.Equal(state.WanDownlinkLoad) {
+	if !plan.WanDownlinkLoad.Equal(state.WanDownlinkLoad) && !plan.WanDownlinkLoad.IsUnknown() {
 		body["wan-downlink-load"] = plan.WanDownlinkLoad.ValueString()
 	}
-	if !plan.WanMeasurementDuration.Equal(state.WanMeasurementDuration) {
+	if !plan.WanMeasurementDuration.Equal(state.WanMeasurementDuration) && !plan.WanMeasurementDuration.IsUnknown() {
 		body["wan-measurement-duration"] = plan.WanMeasurementDuration.ValueString()
 	}
-	if !plan.WanStatus.Equal(state.WanStatus) {
+	if !plan.WanStatus.Equal(state.WanStatus) && !plan.WanStatus.IsUnknown() {
 		body["wan-status"] = plan.WanStatus.ValueString()
 	}
-	if !plan.WanSymmetric.Equal(state.WanSymmetric) {
+	if !plan.WanSymmetric.Equal(state.WanSymmetric) && !plan.WanSymmetric.IsUnknown() {
 		body["wan-symmetric"] = plan.WanSymmetric.ValueString()
 	}
-	if !plan.WanUplink.Equal(state.WanUplink) {
+	if !plan.WanUplink.Equal(state.WanUplink) && !plan.WanUplink.IsUnknown() {
 		body["wan-uplink"] = plan.WanUplink.ValueString()
 	}
-	if !plan.WanUplinkLoad.Equal(state.WanUplinkLoad) {
+	if !plan.WanUplinkLoad.Equal(state.WanUplinkLoad) && !plan.WanUplinkLoad.IsUnknown() {
 		body["wan-uplink-load"] = plan.WanUplinkLoad.ValueString()
 	}
 	if !plan.Hotspot20Dgaf.Equal(state.Hotspot20Dgaf) && !plan.Hotspot20Dgaf.IsUnknown() {

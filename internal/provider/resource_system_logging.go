@@ -191,22 +191,22 @@ func (r *SystemLoggingResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 	body := client.Object{}
-	if !plan.Action.Equal(state.Action) {
+	if !plan.Action.Equal(state.Action) && !plan.Action.IsUnknown() {
 		body["action"] = plan.Action.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Prefix.Equal(state.Prefix) {
+	if !plan.Prefix.Equal(state.Prefix) && !plan.Prefix.IsUnknown() {
 		body["prefix"] = plan.Prefix.ValueString()
 	}
-	if !plan.Regex.Equal(state.Regex) {
+	if !plan.Regex.Equal(state.Regex) && !plan.Regex.IsUnknown() {
 		body["regex"] = plan.Regex.ValueString()
 	}
-	if !plan.Topics.Equal(state.Topics) {
+	if !plan.Topics.Equal(state.Topics) && !plan.Topics.IsUnknown() {
 		body["topics"] = plan.Topics.ValueString()
 	}
 	if len(body) > 0 {

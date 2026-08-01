@@ -311,16 +311,16 @@ func (r *InterfaceEthernetPoeResource) Update(ctx context.Context, req resource.
 		return
 	}
 	body := client.Object{}
-	if !plan.Export.Equal(state.Export) {
+	if !plan.Export.Equal(state.Export) && !plan.Export.IsUnknown() {
 		body["export"] = plan.Export.ValueString()
 	}
-	if !plan.Monitor.Equal(state.Monitor) {
+	if !plan.Monitor.Equal(state.Monitor) && !plan.Monitor.IsUnknown() {
 		body["monitor"] = plan.Monitor.ValueString()
 	}
-	if !plan.PowerCycle.Equal(state.PowerCycle) {
+	if !plan.PowerCycle.Equal(state.PowerCycle) && !plan.PowerCycle.IsUnknown() {
 		body["power-cycle"] = plan.PowerCycle.ValueString()
 	}
-	if !plan.Print.Equal(state.Print) {
+	if !plan.Print.Equal(state.Print) && !plan.Print.IsUnknown() {
 		body["print"] = plan.Print.ValueString()
 	}
 	if !plan.Duration.Equal(state.Duration) && !plan.Duration.IsUnknown() {

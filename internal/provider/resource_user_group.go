@@ -179,16 +179,16 @@ func (r *UserGroupResource) Update(ctx context.Context, req resource.UpdateReque
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Policy.Equal(state.Policy) {
+	if !plan.Policy.Equal(state.Policy) && !plan.Policy.IsUnknown() {
 		body["policy"] = encodeStringList(ctx, plan.Policy, &resp.Diagnostics)
 	}
-	if !plan.Skin.Equal(state.Skin) {
+	if !plan.Skin.Equal(state.Skin) && !plan.Skin.IsUnknown() {
 		body["skin"] = plan.Skin.ValueString()
 	}
 	if err := schemautil.CheckUserGroupPolicyLockout("/user/group", body, !plan.LockoutAck.IsNull() && plan.LockoutAck.ValueBool()); err != nil {

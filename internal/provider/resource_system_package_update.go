@@ -92,7 +92,7 @@ func (r *SystemPackageUpdateResource) Create(ctx context.Context, req resource.C
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	systemPackageUpdateUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	systemPackageUpdateUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -105,7 +105,12 @@ func (r *SystemPackageUpdateResource) Update(ctx context.Context, req resource.U
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	systemPackageUpdateUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state SystemPackageUpdateModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	systemPackageUpdateUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -146,22 +151,22 @@ func (r *SystemPackageUpdateResource) ImportState(ctx context.Context, req resou
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/system/package/update", types.StringValue(routerName))))...)
 }
 
-func systemPackageUpdateUpsert(ctx context.Context, reg *client.Registry, plan *SystemPackageUpdateModel, diags *diagBuf) {
+func systemPackageUpdateUpsert(ctx context.Context, reg *client.Registry, plan, state *SystemPackageUpdateModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.Channel.IsNull() || plan.Channel.IsUnknown()) {
+	if !(plan.Channel.IsNull() || plan.Channel.IsUnknown()) && (state == nil || !plan.Channel.Equal(state.Channel)) {
 		body["channel"] = plan.Channel.ValueString()
 	}
-	if !(plan.CheckCertificate.IsNull() || plan.CheckCertificate.IsUnknown()) {
+	if !(plan.CheckCertificate.IsNull() || plan.CheckCertificate.IsUnknown()) && (state == nil || !plan.CheckCertificate.Equal(state.CheckCertificate)) {
 		body["check-certificate"] = plan.CheckCertificate.ValueString()
 	}
-	if !(plan.IpVersion.IsNull() || plan.IpVersion.IsUnknown()) {
+	if !(plan.IpVersion.IsNull() || plan.IpVersion.IsUnknown()) && (state == nil || !plan.IpVersion.Equal(state.IpVersion)) {
 		body["ip-version"] = plan.IpVersion.ValueString()
 	}
-	if !(plan.Mode.IsNull() || plan.Mode.IsUnknown()) {
+	if !(plan.Mode.IsNull() || plan.Mode.IsUnknown()) && (state == nil || !plan.Mode.Equal(state.Mode)) {
 		body["mode"] = plan.Mode.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/system/package/update", body)

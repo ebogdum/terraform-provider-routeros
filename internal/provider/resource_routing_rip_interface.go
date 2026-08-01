@@ -231,40 +231,40 @@ func (r *RoutingRipInterfaceResource) Update(ctx context.Context, req resource.U
 		return
 	}
 	body := client.Object{}
-	if !plan.Cost.Equal(state.Cost) {
+	if !plan.Cost.Equal(state.Cost) && !plan.Cost.IsUnknown() {
 		body["cost"] = plan.Cost.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Instance.Equal(state.Instance) {
+	if !plan.Instance.Equal(state.Instance) && !plan.Instance.IsUnknown() {
 		body["instance"] = plan.Instance.ValueString()
 	}
-	if !plan.Interfaces.Equal(state.Interfaces) {
+	if !plan.Interfaces.Equal(state.Interfaces) && !plan.Interfaces.IsUnknown() {
 		body["interfaces"] = plan.Interfaces.ValueString()
 	}
-	if !plan.KeyChain.Equal(state.KeyChain) {
+	if !plan.KeyChain.Equal(state.KeyChain) && !plan.KeyChain.IsUnknown() {
 		body["key-chain"] = plan.KeyChain.ValueString()
 	}
-	if !plan.Mode.Equal(state.Mode) {
+	if !plan.Mode.Equal(state.Mode) && !plan.Mode.IsUnknown() {
 		body["mode"] = plan.Mode.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Password.Equal(state.Password) {
+	if !plan.Password.Equal(state.Password) && !plan.Password.IsUnknown() {
 		body["password"] = plan.Password.ValueString()
 	}
-	if !plan.PoisonReverse.Equal(state.PoisonReverse) {
+	if !plan.PoisonReverse.Equal(state.PoisonReverse) && !plan.PoisonReverse.IsUnknown() {
 		body["poison-reverse"] = plan.PoisonReverse.ValueString()
 	}
-	if !plan.SourceAddresses.Equal(state.SourceAddresses) {
+	if !plan.SourceAddresses.Equal(state.SourceAddresses) && !plan.SourceAddresses.IsUnknown() {
 		body["source-addresses"] = plan.SourceAddresses.ValueString()
 	}
-	if !plan.SplitHorizon.Equal(state.SplitHorizon) {
+	if !plan.SplitHorizon.Equal(state.SplitHorizon) && !plan.SplitHorizon.IsUnknown() {
 		body["split-horizon"] = plan.SplitHorizon.ValueString()
 	}
-	if !plan.UseBfd.Equal(state.UseBfd) {
+	if !plan.UseBfd.Equal(state.UseBfd) && !plan.UseBfd.IsUnknown() {
 		body["use-bfd"] = plan.UseBfd.ValueString()
 	}
 	if len(body) > 0 {

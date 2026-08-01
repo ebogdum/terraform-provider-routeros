@@ -652,64 +652,64 @@ func (r *InterfaceBridgeNATResource) Update(ctx context.Context, req resource.Up
 		return
 	}
 	body := client.Object{}
-	if !plan.Action.Equal(state.Action) {
+	if !plan.Action.Equal(state.Action) && !plan.Action.IsUnknown() {
 		body["action"] = plan.Action.ValueString()
 	}
-	if !plan.Chain.Equal(state.Chain) {
+	if !plan.Chain.Equal(state.Chain) && !plan.Chain.IsUnknown() {
 		body["chain"] = plan.Chain.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.DstAddress.Equal(state.DstAddress) {
+	if !plan.DstAddress.Equal(state.DstAddress) && !plan.DstAddress.IsUnknown() {
 		body["dst-address"] = plan.DstAddress.ValueString()
 	}
-	if !plan.DstPort.Equal(state.DstPort) {
+	if !plan.DstPort.Equal(state.DstPort) && !plan.DstPort.IsUnknown() {
 		body["dst-port"] = plan.DstPort.ValueString()
 	}
-	if !plan.InInterface.Equal(state.InInterface) {
+	if !plan.InInterface.Equal(state.InInterface) && !plan.InInterface.IsUnknown() {
 		body["in-interface"] = plan.InInterface.ValueString()
 	}
-	if !plan.InInterfaceList.Equal(state.InInterfaceList) {
+	if !plan.InInterfaceList.Equal(state.InInterfaceList) && !plan.InInterfaceList.IsUnknown() {
 		body["in-interface-list"] = plan.InInterfaceList.ValueString()
 	}
-	if !plan.IngressPriority.Equal(state.IngressPriority) {
+	if !plan.IngressPriority.Equal(state.IngressPriority) && !plan.IngressPriority.IsUnknown() {
 		body["ingress-priority"] = plan.IngressPriority.ValueString()
 	}
-	if !plan.JumpTarget.Equal(state.JumpTarget) {
+	if !plan.JumpTarget.Equal(state.JumpTarget) && !plan.JumpTarget.IsUnknown() {
 		body["jump-target"] = plan.JumpTarget.ValueString()
 	}
-	if !plan.Limit.Equal(state.Limit) {
+	if !plan.Limit.Equal(state.Limit) && !plan.Limit.IsUnknown() {
 		body["limit"] = plan.Limit.ValueString()
 	}
-	if !plan.Log.Equal(state.Log) {
+	if !plan.Log.Equal(state.Log) && !plan.Log.IsUnknown() {
 		body["log"] = plan.Log.ValueString()
 	}
-	if !plan.LogPrefix.Equal(state.LogPrefix) {
+	if !plan.LogPrefix.Equal(state.LogPrefix) && !plan.LogPrefix.IsUnknown() {
 		body["log-prefix"] = plan.LogPrefix.ValueString()
 	}
-	if !plan.OutInterface.Equal(state.OutInterface) {
+	if !plan.OutInterface.Equal(state.OutInterface) && !plan.OutInterface.IsUnknown() {
 		body["out-interface"] = plan.OutInterface.ValueString()
 	}
-	if !plan.OutInterfaceList.Equal(state.OutInterfaceList) {
+	if !plan.OutInterfaceList.Equal(state.OutInterfaceList) && !plan.OutInterfaceList.IsUnknown() {
 		body["out-interface-list"] = plan.OutInterfaceList.ValueString()
 	}
-	if !plan.PacketMark.Equal(state.PacketMark) {
+	if !plan.PacketMark.Equal(state.PacketMark) && !plan.PacketMark.IsUnknown() {
 		body["packet-mark"] = plan.PacketMark.ValueString()
 	}
-	if !plan.SrcAddress.Equal(state.SrcAddress) {
+	if !plan.SrcAddress.Equal(state.SrcAddress) && !plan.SrcAddress.IsUnknown() {
 		body["src-address"] = plan.SrcAddress.ValueString()
 	}
-	if !plan.SrcMACAddress.Equal(state.SrcMACAddress) {
+	if !plan.SrcMACAddress.Equal(state.SrcMACAddress) && !plan.SrcMACAddress.IsUnknown() {
 		body["src-mac-address"] = plan.SrcMACAddress.ValueString()
 	}
-	if !plan.SrcPort.Equal(state.SrcPort) {
+	if !plan.SrcPort.Equal(state.SrcPort) && !plan.SrcPort.IsUnknown() {
 		body["src-port"] = plan.SrcPort.ValueString()
 	}
-	if !plan.TLSHost.Equal(state.TLSHost) {
+	if !plan.TLSHost.Equal(state.TLSHost) && !plan.TLSHost.IsUnknown() {
 		body["tls-host"] = plan.TLSHost.ValueString()
 	}
 	if !plan.ArpDstAddress.Equal(state.ArpDstAddress) && !plan.ArpDstAddress.IsUnknown() {

@@ -90,7 +90,7 @@ func (r *CapsManManagerResource) Create(ctx context.Context, req resource.Create
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	capsManManagerUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	capsManManagerUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -103,7 +103,12 @@ func (r *CapsManManagerResource) Update(ctx context.Context, req resource.Update
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	capsManManagerUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state CapsManManagerModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	capsManManagerUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -144,28 +149,28 @@ func (r *CapsManManagerResource) ImportState(ctx context.Context, req resource.I
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/caps-man/manager", types.StringValue(routerName))))...)
 }
 
-func capsManManagerUpsert(ctx context.Context, reg *client.Registry, plan *CapsManManagerModel, diags *diagBuf) {
+func capsManManagerUpsert(ctx context.Context, reg *client.Registry, plan, state *CapsManManagerModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.CACertificate.IsNull() || plan.CACertificate.IsUnknown()) {
+	if !(plan.CACertificate.IsNull() || plan.CACertificate.IsUnknown()) && (state == nil || !plan.CACertificate.Equal(state.CACertificate)) {
 		body["ca-certificate"] = plan.CACertificate.ValueString()
 	}
-	if !(plan.Certificate.IsNull() || plan.Certificate.IsUnknown()) {
+	if !(plan.Certificate.IsNull() || plan.Certificate.IsUnknown()) && (state == nil || !plan.Certificate.Equal(state.Certificate)) {
 		body["certificate"] = plan.Certificate.ValueString()
 	}
-	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) {
+	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) && (state == nil || !plan.Enabled.Equal(state.Enabled)) {
 		body["enabled"] = client.FormatBool(plan.Enabled.ValueBool())
 	}
-	if !(plan.PackagePath.IsNull() || plan.PackagePath.IsUnknown()) {
+	if !(plan.PackagePath.IsNull() || plan.PackagePath.IsUnknown()) && (state == nil || !plan.PackagePath.Equal(state.PackagePath)) {
 		body["package-path"] = plan.PackagePath.ValueString()
 	}
-	if !(plan.RequirePeerCertificate.IsNull() || plan.RequirePeerCertificate.IsUnknown()) {
+	if !(plan.RequirePeerCertificate.IsNull() || plan.RequirePeerCertificate.IsUnknown()) && (state == nil || !plan.RequirePeerCertificate.Equal(state.RequirePeerCertificate)) {
 		body["require-peer-certificate"] = client.FormatBool(plan.RequirePeerCertificate.ValueBool())
 	}
-	if !(plan.UpgradePolicy.IsNull() || plan.UpgradePolicy.IsUnknown()) {
+	if !(plan.UpgradePolicy.IsNull() || plan.UpgradePolicy.IsUnknown()) && (state == nil || !plan.UpgradePolicy.Equal(state.UpgradePolicy)) {
 		body["upgrade-policy"] = plan.UpgradePolicy.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/caps-man/manager", body)

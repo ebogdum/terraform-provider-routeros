@@ -238,37 +238,37 @@ func (r *RoutingRuleResource) Update(ctx context.Context, req resource.UpdateReq
 		return
 	}
 	body := client.Object{}
-	if !plan.Action.Equal(state.Action) {
+	if !plan.Action.Equal(state.Action) && !plan.Action.IsUnknown() {
 		body["action"] = plan.Action.ValueString()
 	}
-	if !plan.Chain.Equal(state.Chain) {
+	if !plan.Chain.Equal(state.Chain) && !plan.Chain.IsUnknown() {
 		body["chain"] = plan.Chain.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.DstAddress.Equal(state.DstAddress) {
+	if !plan.DstAddress.Equal(state.DstAddress) && !plan.DstAddress.IsUnknown() {
 		body["dst-address"] = plan.DstAddress.ValueString()
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.MinPrefix.Equal(state.MinPrefix) {
+	if !plan.MinPrefix.Equal(state.MinPrefix) && !plan.MinPrefix.IsUnknown() {
 		body["min-prefix"] = plan.MinPrefix.ValueString()
 	}
-	if !plan.Realm.Equal(state.Realm) {
+	if !plan.Realm.Equal(state.Realm) && !plan.Realm.IsUnknown() {
 		body["realm"] = plan.Realm.ValueString()
 	}
-	if !plan.RoutingMark.Equal(state.RoutingMark) {
+	if !plan.RoutingMark.Equal(state.RoutingMark) && !plan.RoutingMark.IsUnknown() {
 		body["routing-mark"] = plan.RoutingMark.ValueString()
 	}
-	if !plan.SrcAddress.Equal(state.SrcAddress) {
+	if !plan.SrcAddress.Equal(state.SrcAddress) && !plan.SrcAddress.IsUnknown() {
 		body["src-address"] = plan.SrcAddress.ValueString()
 	}
-	if !plan.Vrf.Equal(state.Vrf) {
+	if !plan.Vrf.Equal(state.Vrf) && !plan.Vrf.IsUnknown() {
 		body["vrf"] = client.FormatBool(plan.Vrf.ValueBool())
 	}
 	if !plan.Table.Equal(state.Table) && !plan.Table.IsUnknown() {

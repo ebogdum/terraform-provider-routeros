@@ -101,7 +101,7 @@ func (r *SystemPackageLocalUpdateMirrorResource) Create(ctx context.Context, req
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	systemPackageLocalUpdateMirrorUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	systemPackageLocalUpdateMirrorUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -114,7 +114,12 @@ func (r *SystemPackageLocalUpdateMirrorResource) Update(ctx context.Context, req
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	systemPackageLocalUpdateMirrorUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state SystemPackageLocalUpdateMirrorModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	systemPackageLocalUpdateMirrorUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -155,25 +160,25 @@ func (r *SystemPackageLocalUpdateMirrorResource) ImportState(ctx context.Context
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/system/package/local-update/mirror", types.StringValue(routerName))))...)
 }
 
-func systemPackageLocalUpdateMirrorUpsert(ctx context.Context, reg *client.Registry, plan *SystemPackageLocalUpdateMirrorModel, diags *diagBuf) {
+func systemPackageLocalUpdateMirrorUpsert(ctx context.Context, reg *client.Registry, plan, state *SystemPackageLocalUpdateMirrorModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.CheckInterval.IsNull() || plan.CheckInterval.IsUnknown()) {
+	if !(plan.CheckInterval.IsNull() || plan.CheckInterval.IsUnknown()) && (state == nil || !plan.CheckInterval.Equal(state.CheckInterval)) {
 		body["check-interval"] = plan.CheckInterval.ValueString()
 	}
-	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) {
+	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) && (state == nil || !plan.Enabled.Equal(state.Enabled)) {
 		body["enabled"] = client.FormatBool(plan.Enabled.ValueBool())
 	}
-	if !(plan.PrimaryServer.IsNull() || plan.PrimaryServer.IsUnknown()) {
+	if !(plan.PrimaryServer.IsNull() || plan.PrimaryServer.IsUnknown()) && (state == nil || !plan.PrimaryServer.Equal(state.PrimaryServer)) {
 		body["primary-server"] = plan.PrimaryServer.ValueString()
 	}
-	if !(plan.SecondaryServer.IsNull() || plan.SecondaryServer.IsUnknown()) {
+	if !(plan.SecondaryServer.IsNull() || plan.SecondaryServer.IsUnknown()) && (state == nil || !plan.SecondaryServer.Equal(state.SecondaryServer)) {
 		body["secondary-server"] = plan.SecondaryServer.ValueString()
 	}
-	if !(plan.User.IsNull() || plan.User.IsUnknown()) {
+	if !(plan.User.IsNull() || plan.User.IsUnknown()) && (state == nil || !plan.User.Equal(state.User)) {
 		body["user"] = plan.User.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/system/package/local-update/mirror", body)

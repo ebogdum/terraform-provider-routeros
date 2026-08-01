@@ -93,7 +93,7 @@ func (r *IPv6NdPrefixDefaultResource) Create(ctx context.Context, req resource.C
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPv6NdPrefixDefaultUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	iPv6NdPrefixDefaultUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -106,7 +106,12 @@ func (r *IPv6NdPrefixDefaultResource) Update(ctx context.Context, req resource.U
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPv6NdPrefixDefaultUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state IPv6NdPrefixDefaultModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	iPv6NdPrefixDefaultUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -147,22 +152,22 @@ func (r *IPv6NdPrefixDefaultResource) ImportState(ctx context.Context, req resou
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/ipv6/nd/prefix/default", types.StringValue(routerName))))...)
 }
 
-func iPv6NdPrefixDefaultUpsert(ctx context.Context, reg *client.Registry, plan *IPv6NdPrefixDefaultModel, diags *diagBuf) {
+func iPv6NdPrefixDefaultUpsert(ctx context.Context, reg *client.Registry, plan, state *IPv6NdPrefixDefaultModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.Autonomous.IsNull() || plan.Autonomous.IsUnknown()) {
+	if !(plan.Autonomous.IsNull() || plan.Autonomous.IsUnknown()) && (state == nil || !plan.Autonomous.Equal(state.Autonomous)) {
 		body["autonomous"] = client.FormatBool(plan.Autonomous.ValueBool())
 	}
-	if !(plan.Dhcp6PdPreferred.IsNull() || plan.Dhcp6PdPreferred.IsUnknown()) {
+	if !(plan.Dhcp6PdPreferred.IsNull() || plan.Dhcp6PdPreferred.IsUnknown()) && (state == nil || !plan.Dhcp6PdPreferred.Equal(state.Dhcp6PdPreferred)) {
 		body["dhcp6-pd-preferred"] = client.FormatBool(plan.Dhcp6PdPreferred.ValueBool())
 	}
-	if !(plan.PreferredLifetime.IsNull() || plan.PreferredLifetime.IsUnknown()) {
+	if !(plan.PreferredLifetime.IsNull() || plan.PreferredLifetime.IsUnknown()) && (state == nil || !plan.PreferredLifetime.Equal(state.PreferredLifetime)) {
 		body["preferred-lifetime"] = plan.PreferredLifetime.ValueString()
 	}
-	if !(plan.ValidLifetime.IsNull() || plan.ValidLifetime.IsUnknown()) {
+	if !(plan.ValidLifetime.IsNull() || plan.ValidLifetime.IsUnknown()) && (state == nil || !plan.ValidLifetime.Equal(state.ValidLifetime)) {
 		body["valid-lifetime"] = plan.ValidLifetime.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/ipv6/nd/prefix/default", body)

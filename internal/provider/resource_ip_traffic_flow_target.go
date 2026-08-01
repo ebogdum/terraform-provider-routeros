@@ -203,19 +203,19 @@ func (r *IPTrafficFlowTargetResource) Update(ctx context.Context, req resource.U
 		return
 	}
 	body := client.Object{}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.DstAddress.Equal(state.DstAddress) {
+	if !plan.DstAddress.Equal(state.DstAddress) && !plan.DstAddress.IsUnknown() {
 		body["dst-address"] = plan.DstAddress.ValueString()
 	}
-	if !plan.Port.Equal(state.Port) {
+	if !plan.Port.Equal(state.Port) && !plan.Port.IsUnknown() {
 		body["port"] = client.FormatInt64(plan.Port.ValueInt64())
 	}
-	if !plan.SrcAddress.Equal(state.SrcAddress) {
+	if !plan.SrcAddress.Equal(state.SrcAddress) && !plan.SrcAddress.IsUnknown() {
 		body["src-address"] = plan.SrcAddress.ValueString()
 	}
-	if !plan.Version.Equal(state.Version) {
+	if !plan.Version.Equal(state.Version) && !plan.Version.IsUnknown() {
 		body["version"] = plan.Version.ValueString()
 	}
 	if !plan.V9TemplateRefresh.Equal(state.V9TemplateRefresh) && !plan.V9TemplateRefresh.IsUnknown() {

@@ -151,7 +151,7 @@ func (r *IPFirewallLayer7ProtocolResource) Update(ctx context.Context, req resou
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
 	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {

@@ -194,28 +194,28 @@ func (r *UserManagerAttributeResource) Update(ctx context.Context, req resource.
 		return
 	}
 	body := client.Object{}
-	if !plan.Default.Equal(state.Default) {
+	if !plan.Default.Equal(state.Default) && !plan.Default.IsUnknown() {
 		body["default"] = plan.Default.ValueString()
 	}
-	if !plan.DefaultName.Equal(state.DefaultName) {
+	if !plan.DefaultName.Equal(state.DefaultName) && !plan.DefaultName.IsUnknown() {
 		body["default-name"] = plan.DefaultName.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.PacketTypes.Equal(state.PacketTypes) {
+	if !plan.PacketTypes.Equal(state.PacketTypes) && !plan.PacketTypes.IsUnknown() {
 		body["packet-types"] = plan.PacketTypes.ValueString()
 	}
-	if !plan.StandardName.Equal(state.StandardName) {
+	if !plan.StandardName.Equal(state.StandardName) && !plan.StandardName.IsUnknown() {
 		body["standard-name"] = plan.StandardName.ValueString()
 	}
-	if !plan.TypeID.Equal(state.TypeID) {
+	if !plan.TypeID.Equal(state.TypeID) && !plan.TypeID.IsUnknown() {
 		body["type-id"] = plan.TypeID.ValueString()
 	}
-	if !plan.ValueType.Equal(state.ValueType) {
+	if !plan.ValueType.Equal(state.ValueType) && !plan.ValueType.IsUnknown() {
 		body["value-type"] = plan.ValueType.ValueString()
 	}
-	if !plan.VendorID.Equal(state.VendorID) {
+	if !plan.VendorID.Equal(state.VendorID) && !plan.VendorID.IsUnknown() {
 		body["vendor-id"] = plan.VendorID.ValueString()
 	}
 	if len(body) > 0 {

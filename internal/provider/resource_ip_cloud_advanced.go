@@ -75,7 +75,7 @@ func (r *IPCloudAdvancedResource) Create(ctx context.Context, req resource.Creat
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPCloudAdvancedUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	iPCloudAdvancedUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -88,7 +88,12 @@ func (r *IPCloudAdvancedResource) Update(ctx context.Context, req resource.Updat
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPCloudAdvancedUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state IPCloudAdvancedModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	iPCloudAdvancedUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -129,13 +134,13 @@ func (r *IPCloudAdvancedResource) ImportState(ctx context.Context, req resource.
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/ip/cloud/advanced", types.StringValue(routerName))))...)
 }
 
-func iPCloudAdvancedUpsert(ctx context.Context, reg *client.Registry, plan *IPCloudAdvancedModel, diags *diagBuf) {
+func iPCloudAdvancedUpsert(ctx context.Context, reg *client.Registry, plan, state *IPCloudAdvancedModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.UseLocalAddress.IsNull() || plan.UseLocalAddress.IsUnknown()) {
+	if !(plan.UseLocalAddress.IsNull() || plan.UseLocalAddress.IsUnknown()) && (state == nil || !plan.UseLocalAddress.Equal(state.UseLocalAddress)) {
 		body["use-local-address"] = client.FormatBool(plan.UseLocalAddress.ValueBool())
 	}
 	obj, err := c.SetSingleton(ctx, "/ip/cloud/advanced", body)

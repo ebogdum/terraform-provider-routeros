@@ -976,190 +976,190 @@ func (r *DiskResource) Update(ctx context.Context, req resource.UpdateRequest, r
 		return
 	}
 	body := client.Object{}
-	if !plan.Acquired.Equal(state.Acquired) {
+	if !plan.Acquired.Equal(state.Acquired) && !plan.Acquired.IsUnknown() {
 		body["acquired"] = client.FormatBool(plan.Acquired.ValueBool())
 	}
-	if !plan.BlockDevice.Equal(state.BlockDevice) {
+	if !plan.BlockDevice.Equal(state.BlockDevice) && !plan.BlockDevice.IsUnknown() {
 		body["block-device"] = client.FormatBool(plan.BlockDevice.ValueBool())
 	}
-	if !plan.Btrfs.Equal(state.Btrfs) {
+	if !plan.Btrfs.Equal(state.Btrfs) && !plan.Btrfs.IsUnknown() {
 		body["btrfs"] = plan.Btrfs.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.EjectDrive.Equal(state.EjectDrive) {
+	if !plan.EjectDrive.Equal(state.EjectDrive) && !plan.EjectDrive.IsUnknown() {
 		body["eject-drive"] = plan.EjectDrive.ValueString()
 	}
-	if !plan.Empty.Equal(state.Empty) {
+	if !plan.Empty.Equal(state.Empty) && !plan.Empty.IsUnknown() {
 		body["empty"] = client.FormatBool(plan.Empty.ValueBool())
 	}
-	if !plan.Encrypted.Equal(state.Encrypted) {
+	if !plan.Encrypted.Equal(state.Encrypted) && !plan.Encrypted.IsUnknown() {
 		body["encrypted"] = client.FormatBool(plan.Encrypted.ValueBool())
 	}
-	if !plan.Formatting.Equal(state.Formatting) {
+	if !plan.Formatting.Equal(state.Formatting) && !plan.Formatting.IsUnknown() {
 		body["formatting"] = client.FormatBool(plan.Formatting.ValueBool())
 	}
-	if !plan.GuidPartitionTable.Equal(state.GuidPartitionTable) {
+	if !plan.GuidPartitionTable.Equal(state.GuidPartitionTable) && !plan.GuidPartitionTable.IsUnknown() {
 		body["guid-partition-table"] = client.FormatBool(plan.GuidPartitionTable.ValueBool())
 	}
-	if !plan.IScsiExport.Equal(state.IScsiExport) {
+	if !plan.IScsiExport.Equal(state.IScsiExport) && !plan.IScsiExport.IsUnknown() {
 		body["i-scsi-export"] = client.FormatBool(plan.IScsiExport.ValueBool())
 	}
-	if !plan.IScsiServerIqn.Equal(state.IScsiServerIqn) {
+	if !plan.IScsiServerIqn.Equal(state.IScsiServerIqn) && !plan.IScsiServerIqn.IsUnknown() {
 		body["i-scsi-server-iqn"] = plan.IScsiServerIqn.ValueString()
 	}
-	if !plan.IScsiServerPort.Equal(state.IScsiServerPort) {
+	if !plan.IScsiServerPort.Equal(state.IScsiServerPort) && !plan.IScsiServerPort.IsUnknown() {
 		body["i-scsi-server-port"] = client.FormatInt64(plan.IScsiServerPort.ValueInt64())
 	}
-	if !plan.IscsiSharing.Equal(state.IscsiSharing) {
+	if !plan.IscsiSharing.Equal(state.IscsiSharing) && !plan.IscsiSharing.IsUnknown() {
 		body["iscsi-sharing"] = plan.IscsiSharing.ValueString()
 	}
-	if !plan.MediaInterface.Equal(state.MediaInterface) {
+	if !plan.MediaInterface.Equal(state.MediaInterface) && !plan.MediaInterface.IsUnknown() {
 		body["media-interface"] = plan.MediaInterface.ValueString()
 	}
-	if !plan.MediaSharing.Equal(state.MediaSharing) {
+	if !plan.MediaSharing.Equal(state.MediaSharing) && !plan.MediaSharing.IsUnknown() {
 		body["media-sharing"] = client.FormatBool(plan.MediaSharing.ValueBool())
 	}
-	if !plan.MountCompress.Equal(state.MountCompress) {
+	if !plan.MountCompress.Equal(state.MountCompress) && !plan.MountCompress.IsUnknown() {
 		body["mount-compress"] = client.FormatBool(plan.MountCompress.ValueBool())
 	}
-	if !plan.MountFilesystem.Equal(state.MountFilesystem) {
+	if !plan.MountFilesystem.Equal(state.MountFilesystem) && !plan.MountFilesystem.IsUnknown() {
 		body["mount-filesystem"] = client.FormatBool(plan.MountFilesystem.ValueBool())
 	}
-	if !plan.MountPointTemplate.Equal(state.MountPointTemplate) {
+	if !plan.MountPointTemplate.Equal(state.MountPointTemplate) && !plan.MountPointTemplate.IsUnknown() {
 		body["mount-point-template"] = plan.MountPointTemplate.ValueString()
 	}
-	if !plan.MountReadOnly.Equal(state.MountReadOnly) {
+	if !plan.MountReadOnly.Equal(state.MountReadOnly) && !plan.MountReadOnly.IsUnknown() {
 		body["mount-read-only"] = client.FormatBool(plan.MountReadOnly.ValueBool())
 	}
-	if !plan.Mounted.Equal(state.Mounted) {
+	if !plan.Mounted.Equal(state.Mounted) && !plan.Mounted.IsUnknown() {
 		body["mounted"] = client.FormatBool(plan.Mounted.ValueBool())
 	}
-	if !plan.Newfileman.Equal(state.Newfileman) {
+	if !plan.Newfileman.Equal(state.Newfileman) && !plan.Newfileman.IsUnknown() {
 		body["newfileman"] = plan.Newfileman.ValueString()
 	}
-	if !plan.NfsSharing.Equal(state.NfsSharing) {
+	if !plan.NfsSharing.Equal(state.NfsSharing) && !plan.NfsSharing.IsUnknown() {
 		body["nfs-sharing"] = client.FormatBool(plan.NfsSharing.ValueBool())
 	}
-	if !plan.Nvme.Equal(state.Nvme) {
+	if !plan.Nvme.Equal(state.Nvme) && !plan.Nvme.IsUnknown() {
 		body["nvme"] = plan.Nvme.ValueString()
 	}
-	if !plan.NvmeTCPExport.Equal(state.NvmeTCPExport) {
+	if !plan.NvmeTCPExport.Equal(state.NvmeTCPExport) && !plan.NvmeTCPExport.IsUnknown() {
 		body["nvme-tcp-export"] = client.FormatBool(plan.NvmeTCPExport.ValueBool())
 	}
-	if !plan.NvmeTCPServerAllowHostName.Equal(state.NvmeTCPServerAllowHostName) {
+	if !plan.NvmeTCPServerAllowHostName.Equal(state.NvmeTCPServerAllowHostName) && !plan.NvmeTCPServerAllowHostName.IsUnknown() {
 		body["nvme-tcp-server-allow-host-name"] = plan.NvmeTCPServerAllowHostName.ValueString()
 	}
-	if !plan.NvmeTCPServerNqn.Equal(state.NvmeTCPServerNqn) {
+	if !plan.NvmeTCPServerNqn.Equal(state.NvmeTCPServerNqn) && !plan.NvmeTCPServerNqn.IsUnknown() {
 		body["nvme-tcp-server-nqn"] = plan.NvmeTCPServerNqn.ValueString()
 	}
-	if !plan.NvmeTCPServerPassword.Equal(state.NvmeTCPServerPassword) {
+	if !plan.NvmeTCPServerPassword.Equal(state.NvmeTCPServerPassword) && !plan.NvmeTCPServerPassword.IsUnknown() {
 		body["nvme-tcp-server-password"] = plan.NvmeTCPServerPassword.ValueString()
 	}
-	if !plan.NvmeTCPServerPort.Equal(state.NvmeTCPServerPort) {
+	if !plan.NvmeTCPServerPort.Equal(state.NvmeTCPServerPort) && !plan.NvmeTCPServerPort.IsUnknown() {
 		body["nvme-tcp-server-port"] = client.FormatInt64(plan.NvmeTCPServerPort.ValueInt64())
 	}
-	if !plan.Oldfileman.Equal(state.Oldfileman) {
+	if !plan.Oldfileman.Equal(state.Oldfileman) && !plan.Oldfileman.IsUnknown() {
 		body["oldfileman"] = plan.Oldfileman.ValueString()
 	}
-	if !plan.Parent.Equal(state.Parent) {
+	if !plan.Parent.Equal(state.Parent) && !plan.Parent.IsUnknown() {
 		body["parent"] = plan.Parent.ValueString()
 	}
-	if !plan.Part.Equal(state.Part) {
+	if !plan.Part.Equal(state.Part) && !plan.Part.IsUnknown() {
 		body["part"] = plan.Part.ValueString()
 	}
-	if !plan.Partition.Equal(state.Partition) {
+	if !plan.Partition.Equal(state.Partition) && !plan.Partition.IsUnknown() {
 		body["partition"] = client.FormatBool(plan.Partition.ValueBool())
 	}
-	if !plan.PartitionOffset.Equal(state.PartitionOffset) {
+	if !plan.PartitionOffset.Equal(state.PartitionOffset) && !plan.PartitionOffset.IsUnknown() {
 		body["partition-offset"] = plan.PartitionOffset.ValueString()
 	}
-	if !plan.PartitionSize.Equal(state.PartitionSize) {
+	if !plan.PartitionSize.Equal(state.PartitionSize) && !plan.PartitionSize.IsUnknown() {
 		body["partition-size"] = plan.PartitionSize.ValueString()
 	}
-	if !plan.Raid.Equal(state.Raid) {
+	if !plan.Raid.Equal(state.Raid) && !plan.Raid.IsUnknown() {
 		body["raid"] = plan.Raid.ValueString()
 	}
-	if !plan.RaidAndMaster.Equal(state.RaidAndMaster) {
+	if !plan.RaidAndMaster.Equal(state.RaidAndMaster) && !plan.RaidAndMaster.IsUnknown() {
 		body["raid-and-master"] = plan.RaidAndMaster.ValueString()
 	}
-	if !plan.RaidAndType.Equal(state.RaidAndType) {
+	if !plan.RaidAndType.Equal(state.RaidAndType) && !plan.RaidAndType.IsUnknown() {
 		body["raid-and-type"] = plan.RaidAndType.ValueString()
 	}
-	if !plan.RaidMaster.Equal(state.RaidMaster) {
+	if !plan.RaidMaster.Equal(state.RaidMaster) && !plan.RaidMaster.IsUnknown() {
 		body["raid-master"] = plan.RaidMaster.ValueString()
 	}
-	if !plan.RaidMember.Equal(state.RaidMember) {
+	if !plan.RaidMember.Equal(state.RaidMember) && !plan.RaidMember.IsUnknown() {
 		body["raid-member"] = client.FormatBool(plan.RaidMember.ValueBool())
 	}
-	if !plan.RaidMemberFailed.Equal(state.RaidMemberFailed) {
+	if !plan.RaidMemberFailed.Equal(state.RaidMemberFailed) && !plan.RaidMemberFailed.IsUnknown() {
 		body["raid-member-failed"] = client.FormatBool(plan.RaidMemberFailed.ValueBool())
 	}
-	if !plan.RaidRole.Equal(state.RaidRole) {
+	if !plan.RaidRole.Equal(state.RaidRole) && !plan.RaidRole.IsUnknown() {
 		body["raid-role"] = plan.RaidRole.ValueString()
 	}
-	if !plan.RaidScrub.Equal(state.RaidScrub) {
+	if !plan.RaidScrub.Equal(state.RaidScrub) && !plan.RaidScrub.IsUnknown() {
 		body["raid-scrub"] = plan.RaidScrub.ValueString()
 	}
-	if !plan.ReadOnly.Equal(state.ReadOnly) {
+	if !plan.ReadOnly.Equal(state.ReadOnly) && !plan.ReadOnly.IsUnknown() {
 		body["read-only"] = client.FormatBool(plan.ReadOnly.ValueBool())
 	}
-	if !plan.ResetCounters.Equal(state.ResetCounters) {
+	if !plan.ResetCounters.Equal(state.ResetCounters) && !plan.ResetCounters.IsUnknown() {
 		body["reset-counters"] = plan.ResetCounters.ValueString()
 	}
-	if !plan.Rose.Equal(state.Rose) {
+	if !plan.Rose.Equal(state.Rose) && !plan.Rose.IsUnknown() {
 		body["rose"] = plan.Rose.ValueString()
 	}
-	if !plan.Scan.Equal(state.Scan) {
+	if !plan.Scan.Equal(state.Scan) && !plan.Scan.IsUnknown() {
 		body["scan"] = plan.Scan.ValueString()
 	}
-	if !plan.SelfEncryptedAndLocked.Equal(state.SelfEncryptedAndLocked) {
+	if !plan.SelfEncryptedAndLocked.Equal(state.SelfEncryptedAndLocked) && !plan.SelfEncryptedAndLocked.IsUnknown() {
 		body["self-encrypted-and-locked"] = client.FormatBool(plan.SelfEncryptedAndLocked.ValueBool())
 	}
-	if !plan.SelfEncryptionEnabled.Equal(state.SelfEncryptionEnabled) {
+	if !plan.SelfEncryptionEnabled.Equal(state.SelfEncryptionEnabled) && !plan.SelfEncryptionEnabled.IsUnknown() {
 		body["self-encryption-enabled"] = client.FormatBool(plan.SelfEncryptionEnabled.ValueBool())
 	}
-	if !plan.SelfEncryptionPassword.Equal(state.SelfEncryptionPassword) {
+	if !plan.SelfEncryptionPassword.Equal(state.SelfEncryptionPassword) && !plan.SelfEncryptionPassword.IsUnknown() {
 		body["self-encryption-password"] = plan.SelfEncryptionPassword.ValueString()
 	}
-	if !plan.SelfEncryptionSupported.Equal(state.SelfEncryptionSupported) {
+	if !plan.SelfEncryptionSupported.Equal(state.SelfEncryptionSupported) && !plan.SelfEncryptionSupported.IsUnknown() {
 		body["self-encryption-supported"] = client.FormatBool(plan.SelfEncryptionSupported.ValueBool())
 	}
-	if !plan.Slot.Equal(state.Slot) {
+	if !plan.Slot.Equal(state.Slot) && !plan.Slot.IsUnknown() {
 		body["slot"] = plan.Slot.ValueString()
 	}
-	if !plan.SmbServerEncryption.Equal(state.SmbServerEncryption) {
+	if !plan.SmbServerEncryption.Equal(state.SmbServerEncryption) && !plan.SmbServerEncryption.IsUnknown() {
 		body["smb-server-encryption"] = client.FormatBool(plan.SmbServerEncryption.ValueBool())
 	}
-	if !plan.SmbServerPassword.Equal(state.SmbServerPassword) {
+	if !plan.SmbServerPassword.Equal(state.SmbServerPassword) && !plan.SmbServerPassword.IsUnknown() {
 		body["smb-server-password"] = plan.SmbServerPassword.ValueString()
 	}
-	if !plan.SmbServerUser.Equal(state.SmbServerUser) {
+	if !plan.SmbServerUser.Equal(state.SmbServerUser) && !plan.SmbServerUser.IsUnknown() {
 		body["smb-server-user"] = plan.SmbServerUser.ValueString()
 	}
-	if !plan.SmbSharing.Equal(state.SmbSharing) {
+	if !plan.SmbSharing.Equal(state.SmbSharing) && !plan.SmbSharing.IsUnknown() {
 		body["smb-sharing"] = client.FormatBool(plan.SmbSharing.ValueBool())
 	}
-	if !plan.Swap.Equal(state.Swap) {
+	if !plan.Swap.Equal(state.Swap) && !plan.Swap.IsUnknown() {
 		body["swap"] = client.FormatBool(plan.Swap.ValueBool())
 	}
-	if !plan.SwapEnabled.Equal(state.SwapEnabled) {
+	if !plan.SwapEnabled.Equal(state.SwapEnabled) && !plan.SwapEnabled.IsUnknown() {
 		body["swap-enabled"] = client.FormatBool(plan.SwapEnabled.ValueBool())
 	}
-	if !plan.Tmpfs.Equal(state.Tmpfs) {
+	if !plan.Tmpfs.Equal(state.Tmpfs) && !plan.Tmpfs.IsUnknown() {
 		body["tmpfs"] = plan.Tmpfs.ValueString()
 	}
-	if !plan.TmpfsMaxSize.Equal(state.TmpfsMaxSize) {
+	if !plan.TmpfsMaxSize.Equal(state.TmpfsMaxSize) && !plan.TmpfsMaxSize.IsUnknown() {
 		body["tmpfs-max-size"] = plan.TmpfsMaxSize.ValueString()
 	}
-	if !plan.Trim.Equal(state.Trim) {
+	if !plan.Trim.Equal(state.Trim) && !plan.Trim.IsUnknown() {
 		body["trim"] = plan.Trim.ValueString()
 	}
-	if !plan.Type.Equal(state.Type) {
+	if !plan.Type.Equal(state.Type) && !plan.Type.IsUnknown() {
 		body["type"] = plan.Type.ValueString()
 	}
 	if len(body) > 0 {

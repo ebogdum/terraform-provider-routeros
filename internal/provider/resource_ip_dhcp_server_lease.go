@@ -461,58 +461,58 @@ func (r *IPDHCPServerLeaseResource) Update(ctx context.Context, req resource.Upd
 		return
 	}
 	body := client.Object{}
-	if !plan.Address.Equal(state.Address) {
+	if !plan.Address.Equal(state.Address) && !plan.Address.IsUnknown() {
 		body["address"] = plan.Address.ValueString()
 	}
-	if !plan.AgentCircuitID.Equal(state.AgentCircuitID) {
+	if !plan.AgentCircuitID.Equal(state.AgentCircuitID) && !plan.AgentCircuitID.IsUnknown() {
 		body["agent-circuit-id"] = plan.AgentCircuitID.ValueString()
 	}
-	if !plan.AgentRemoteID.Equal(state.AgentRemoteID) {
+	if !plan.AgentRemoteID.Equal(state.AgentRemoteID) && !plan.AgentRemoteID.IsUnknown() {
 		body["agent-remote-id"] = plan.AgentRemoteID.ValueString()
 	}
-	if !plan.AllowDualStackQueue.Equal(state.AllowDualStackQueue) {
+	if !plan.AllowDualStackQueue.Equal(state.AllowDualStackQueue) && !plan.AllowDualStackQueue.IsUnknown() {
 		body["allow-dual-stack-queue"] = plan.AllowDualStackQueue.ValueString()
 	}
-	if !plan.AlwaysBroadcast.Equal(state.AlwaysBroadcast) {
+	if !plan.AlwaysBroadcast.Equal(state.AlwaysBroadcast) && !plan.AlwaysBroadcast.IsUnknown() {
 		body["always-broadcast"] = client.FormatBool(plan.AlwaysBroadcast.ValueBool())
 	}
-	if !plan.BlockAccess.Equal(state.BlockAccess) {
+	if !plan.BlockAccess.Equal(state.BlockAccess) && !plan.BlockAccess.IsUnknown() {
 		body["block-access"] = client.FormatBool(plan.BlockAccess.ValueBool())
 	}
-	if !plan.ClientID.Equal(state.ClientID) {
+	if !plan.ClientID.Equal(state.ClientID) && !plan.ClientID.IsUnknown() {
 		body["client-id"] = plan.ClientID.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.DHCPOptionSet.Equal(state.DHCPOptionSet) {
+	if !plan.DHCPOptionSet.Equal(state.DHCPOptionSet) && !plan.DHCPOptionSet.IsUnknown() {
 		body["dhcp-option-set"] = plan.DHCPOptionSet.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.InsertQueueBefore.Equal(state.InsertQueueBefore) {
+	if !plan.InsertQueueBefore.Equal(state.InsertQueueBefore) && !plan.InsertQueueBefore.IsUnknown() {
 		body["insert-queue-before"] = plan.InsertQueueBefore.ValueString()
 	}
-	if !plan.LeaseTime.Equal(state.LeaseTime) {
+	if !plan.LeaseTime.Equal(state.LeaseTime) && !plan.LeaseTime.IsUnknown() {
 		body["lease-time"] = plan.LeaseTime.ValueString()
 	}
-	if !plan.MACAddress.Equal(state.MACAddress) {
+	if !plan.MACAddress.Equal(state.MACAddress) && !plan.MACAddress.IsUnknown() {
 		body["mac-address"] = plan.MACAddress.ValueString()
 	}
-	if !plan.ParentQueue.Equal(state.ParentQueue) {
+	if !plan.ParentQueue.Equal(state.ParentQueue) && !plan.ParentQueue.IsUnknown() {
 		body["parent-queue"] = plan.ParentQueue.ValueString()
 	}
-	if !plan.QueueType.Equal(state.QueueType) {
+	if !plan.QueueType.Equal(state.QueueType) && !plan.QueueType.IsUnknown() {
 		body["queue-type"] = plan.QueueType.ValueString()
 	}
-	if !plan.RateLimit.Equal(state.RateLimit) {
+	if !plan.RateLimit.Equal(state.RateLimit) && !plan.RateLimit.IsUnknown() {
 		body["rate-limit"] = plan.RateLimit.ValueString()
 	}
-	if !plan.Routes.Equal(state.Routes) {
+	if !plan.Routes.Equal(state.Routes) && !plan.Routes.IsUnknown() {
 		body["routes"] = plan.Routes.ValueString()
 	}
-	if !plan.Server.Equal(state.Server) {
+	if !plan.Server.Equal(state.Server) && !plan.Server.IsUnknown() {
 		body["server"] = plan.Server.ValueString()
 	}
 	if !plan.AddressLists.Equal(state.AddressLists) && !plan.AddressLists.IsUnknown() {

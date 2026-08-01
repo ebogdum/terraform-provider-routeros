@@ -213,25 +213,25 @@ func (r *RoutingBGPInstanceResource) Update(ctx context.Context, req resource.Up
 		return
 	}
 	body := client.Object{}
-	if !plan.As.Equal(state.As) {
+	if !plan.As.Equal(state.As) && !plan.As.IsUnknown() {
 		body["as"] = plan.As.ValueString()
 	}
-	if !plan.ClusterID.Equal(state.ClusterID) {
+	if !plan.ClusterID.Equal(state.ClusterID) && !plan.ClusterID.IsUnknown() {
 		body["cluster-id"] = plan.ClusterID.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.RouterID.Equal(state.RouterID) {
+	if !plan.RouterID.Equal(state.RouterID) && !plan.RouterID.IsUnknown() {
 		body["router-id"] = plan.RouterID.ValueString()
 	}
-	if !plan.RoutingTable.Equal(state.RoutingTable) {
+	if !plan.RoutingTable.Equal(state.RoutingTable) && !plan.RoutingTable.IsUnknown() {
 		body["routing-table"] = plan.RoutingTable.ValueString()
 	}
-	if !plan.Vrf.Equal(state.Vrf) {
+	if !plan.Vrf.Equal(state.Vrf) && !plan.Vrf.IsUnknown() {
 		body["vrf"] = plan.Vrf.ValueString()
 	}
 	if !plan.IgnoreAsPathLen.Equal(state.IgnoreAsPathLen) && !plan.IgnoreAsPathLen.IsUnknown() {

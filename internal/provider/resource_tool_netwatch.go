@@ -449,40 +449,40 @@ func (r *ToolNetwatchResource) Update(ctx context.Context, req resource.UpdateRe
 		return
 	}
 	body := client.Object{}
-	if !plan.Certificate.Equal(state.Certificate) {
+	if !plan.Certificate.Equal(state.Certificate) && !plan.Certificate.IsUnknown() {
 		body["certificate"] = plan.Certificate.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.DNSServer.Equal(state.DNSServer) {
+	if !plan.DNSServer.Equal(state.DNSServer) && !plan.DNSServer.IsUnknown() {
 		body["dns-server"] = plan.DNSServer.ValueString()
 	}
-	if !plan.Host.Equal(state.Host) {
+	if !plan.Host.Equal(state.Host) && !plan.Host.IsUnknown() {
 		body["host"] = plan.Host.ValueString()
 	}
-	if !plan.Interval.Equal(state.Interval) {
+	if !plan.Interval.Equal(state.Interval) && !plan.Interval.IsUnknown() {
 		body["interval"] = plan.Interval.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Port.Equal(state.Port) {
+	if !plan.Port.Equal(state.Port) && !plan.Port.IsUnknown() {
 		body["port"] = plan.Port.ValueString()
 	}
-	if !plan.SrcAddress.Equal(state.SrcAddress) {
+	if !plan.SrcAddress.Equal(state.SrcAddress) && !plan.SrcAddress.IsUnknown() {
 		body["src-address"] = plan.SrcAddress.ValueString()
 	}
-	if !plan.Timeout.Equal(state.Timeout) {
+	if !plan.Timeout.Equal(state.Timeout) && !plan.Timeout.IsUnknown() {
 		body["timeout"] = plan.Timeout.ValueString()
 	}
-	if !plan.Ttl.Equal(state.Ttl) {
+	if !plan.Ttl.Equal(state.Ttl) && !plan.Ttl.IsUnknown() {
 		body["ttl"] = plan.Ttl.ValueString()
 	}
-	if !plan.Type.Equal(state.Type) {
+	if !plan.Type.Equal(state.Type) && !plan.Type.IsUnknown() {
 		body["type"] = plan.Type.ValueString()
 	}
 	if !plan.AcceptIcmpTimeExceeded.Equal(state.AcceptIcmpTimeExceeded) && !plan.AcceptIcmpTimeExceeded.IsUnknown() {

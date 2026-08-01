@@ -259,40 +259,40 @@ func (r *QueueTreeResource) Update(ctx context.Context, req resource.UpdateReque
 		return
 	}
 	body := client.Object{}
-	if !plan.BurstLimit.Equal(state.BurstLimit) {
+	if !plan.BurstLimit.Equal(state.BurstLimit) && !plan.BurstLimit.IsUnknown() {
 		body["burst-limit"] = plan.BurstLimit.ValueString()
 	}
-	if !plan.BurstThreshold.Equal(state.BurstThreshold) {
+	if !plan.BurstThreshold.Equal(state.BurstThreshold) && !plan.BurstThreshold.IsUnknown() {
 		body["burst-threshold"] = plan.BurstThreshold.ValueString()
 	}
-	if !plan.BurstTime.Equal(state.BurstTime) {
+	if !plan.BurstTime.Equal(state.BurstTime) && !plan.BurstTime.IsUnknown() {
 		body["burst-time"] = plan.BurstTime.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.LimitAt.Equal(state.LimitAt) {
+	if !plan.LimitAt.Equal(state.LimitAt) && !plan.LimitAt.IsUnknown() {
 		body["limit-at"] = plan.LimitAt.ValueString()
 	}
-	if !plan.MaxLimit.Equal(state.MaxLimit) {
+	if !plan.MaxLimit.Equal(state.MaxLimit) && !plan.MaxLimit.IsUnknown() {
 		body["max-limit"] = plan.MaxLimit.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.PacketMark.Equal(state.PacketMark) {
+	if !plan.PacketMark.Equal(state.PacketMark) && !plan.PacketMark.IsUnknown() {
 		body["packet-mark"] = plan.PacketMark.ValueString()
 	}
-	if !plan.Parent.Equal(state.Parent) {
+	if !plan.Parent.Equal(state.Parent) && !plan.Parent.IsUnknown() {
 		body["parent"] = plan.Parent.ValueString()
 	}
-	if !plan.Priority.Equal(state.Priority) {
+	if !plan.Priority.Equal(state.Priority) && !plan.Priority.IsUnknown() {
 		body["priority"] = plan.Priority.ValueString()
 	}
-	if !plan.Queue.Equal(state.Queue) {
+	if !plan.Queue.Equal(state.Queue) && !plan.Queue.IsUnknown() {
 		body["queue"] = plan.Queue.ValueString()
 	}
 	if !plan.BucketSize.Equal(state.BucketSize) && !plan.BucketSize.IsUnknown() {

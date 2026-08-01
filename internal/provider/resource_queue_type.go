@@ -585,70 +585,70 @@ func (r *QueueTypeResource) Update(ctx context.Context, req resource.UpdateReque
 		return
 	}
 	body := client.Object{}
-	if !plan.Kind.Equal(state.Kind) {
+	if !plan.Kind.Equal(state.Kind) && !plan.Kind.IsUnknown() {
 		body["kind"] = plan.Kind.ValueString()
 	}
-	if !plan.MqPfifoLimit.Equal(state.MqPfifoLimit) {
+	if !plan.MqPfifoLimit.Equal(state.MqPfifoLimit) && !plan.MqPfifoLimit.IsUnknown() {
 		body["mq-pfifo-limit"] = client.FormatInt64(plan.MqPfifoLimit.ValueInt64())
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.PcqBurstRate.Equal(state.PcqBurstRate) {
+	if !plan.PcqBurstRate.Equal(state.PcqBurstRate) && !plan.PcqBurstRate.IsUnknown() {
 		body["pcq-burst-rate"] = client.FormatInt64(plan.PcqBurstRate.ValueInt64())
 	}
-	if !plan.PcqBurstThreshold.Equal(state.PcqBurstThreshold) {
+	if !plan.PcqBurstThreshold.Equal(state.PcqBurstThreshold) && !plan.PcqBurstThreshold.IsUnknown() {
 		body["pcq-burst-threshold"] = client.FormatInt64(plan.PcqBurstThreshold.ValueInt64())
 	}
-	if !plan.PcqBurstTime.Equal(state.PcqBurstTime) {
+	if !plan.PcqBurstTime.Equal(state.PcqBurstTime) && !plan.PcqBurstTime.IsUnknown() {
 		body["pcq-burst-time"] = plan.PcqBurstTime.ValueString()
 	}
-	if !plan.PcqClassifier.Equal(state.PcqClassifier) {
+	if !plan.PcqClassifier.Equal(state.PcqClassifier) && !plan.PcqClassifier.IsUnknown() {
 		body["pcq-classifier"] = plan.PcqClassifier.ValueString()
 	}
-	if !plan.PcqDstAddressMask.Equal(state.PcqDstAddressMask) {
+	if !plan.PcqDstAddressMask.Equal(state.PcqDstAddressMask) && !plan.PcqDstAddressMask.IsUnknown() {
 		body["pcq-dst-address-mask"] = client.FormatInt64(plan.PcqDstAddressMask.ValueInt64())
 	}
-	if !plan.PcqDstAddress6Mask.Equal(state.PcqDstAddress6Mask) {
+	if !plan.PcqDstAddress6Mask.Equal(state.PcqDstAddress6Mask) && !plan.PcqDstAddress6Mask.IsUnknown() {
 		body["pcq-dst-address6-mask"] = client.FormatInt64(plan.PcqDstAddress6Mask.ValueInt64())
 	}
-	if !plan.PcqLimit.Equal(state.PcqLimit) {
+	if !plan.PcqLimit.Equal(state.PcqLimit) && !plan.PcqLimit.IsUnknown() {
 		body["pcq-limit"] = client.FormatInt64(plan.PcqLimit.ValueInt64())
 	}
-	if !plan.PcqRate.Equal(state.PcqRate) {
+	if !plan.PcqRate.Equal(state.PcqRate) && !plan.PcqRate.IsUnknown() {
 		body["pcq-rate"] = client.FormatInt64(plan.PcqRate.ValueInt64())
 	}
-	if !plan.PcqSrcAddressMask.Equal(state.PcqSrcAddressMask) {
+	if !plan.PcqSrcAddressMask.Equal(state.PcqSrcAddressMask) && !plan.PcqSrcAddressMask.IsUnknown() {
 		body["pcq-src-address-mask"] = client.FormatInt64(plan.PcqSrcAddressMask.ValueInt64())
 	}
-	if !plan.PcqSrcAddress6Mask.Equal(state.PcqSrcAddress6Mask) {
+	if !plan.PcqSrcAddress6Mask.Equal(state.PcqSrcAddress6Mask) && !plan.PcqSrcAddress6Mask.IsUnknown() {
 		body["pcq-src-address6-mask"] = client.FormatInt64(plan.PcqSrcAddress6Mask.ValueInt64())
 	}
-	if !plan.PcqTotalLimit.Equal(state.PcqTotalLimit) {
+	if !plan.PcqTotalLimit.Equal(state.PcqTotalLimit) && !plan.PcqTotalLimit.IsUnknown() {
 		body["pcq-total-limit"] = client.FormatInt64(plan.PcqTotalLimit.ValueInt64())
 	}
-	if !plan.PfifoLimit.Equal(state.PfifoLimit) {
+	if !plan.PfifoLimit.Equal(state.PfifoLimit) && !plan.PfifoLimit.IsUnknown() {
 		body["pfifo-limit"] = client.FormatInt64(plan.PfifoLimit.ValueInt64())
 	}
-	if !plan.RedAvgPacket.Equal(state.RedAvgPacket) {
+	if !plan.RedAvgPacket.Equal(state.RedAvgPacket) && !plan.RedAvgPacket.IsUnknown() {
 		body["red-avg-packet"] = client.FormatInt64(plan.RedAvgPacket.ValueInt64())
 	}
-	if !plan.RedBurst.Equal(state.RedBurst) {
+	if !plan.RedBurst.Equal(state.RedBurst) && !plan.RedBurst.IsUnknown() {
 		body["red-burst"] = client.FormatInt64(plan.RedBurst.ValueInt64())
 	}
-	if !plan.RedLimit.Equal(state.RedLimit) {
+	if !plan.RedLimit.Equal(state.RedLimit) && !plan.RedLimit.IsUnknown() {
 		body["red-limit"] = client.FormatInt64(plan.RedLimit.ValueInt64())
 	}
-	if !plan.RedMaxThreshold.Equal(state.RedMaxThreshold) {
+	if !plan.RedMaxThreshold.Equal(state.RedMaxThreshold) && !plan.RedMaxThreshold.IsUnknown() {
 		body["red-max-threshold"] = client.FormatInt64(plan.RedMaxThreshold.ValueInt64())
 	}
-	if !plan.RedMinThreshold.Equal(state.RedMinThreshold) {
+	if !plan.RedMinThreshold.Equal(state.RedMinThreshold) && !plan.RedMinThreshold.IsUnknown() {
 		body["red-min-threshold"] = client.FormatInt64(plan.RedMinThreshold.ValueInt64())
 	}
-	if !plan.SfqAllot.Equal(state.SfqAllot) {
+	if !plan.SfqAllot.Equal(state.SfqAllot) && !plan.SfqAllot.IsUnknown() {
 		body["sfq-allot"] = client.FormatInt64(plan.SfqAllot.ValueInt64())
 	}
-	if !plan.SfqPerturb.Equal(state.SfqPerturb) {
+	if !plan.SfqPerturb.Equal(state.SfqPerturb) && !plan.SfqPerturb.IsUnknown() {
 		body["sfq-perturb"] = client.FormatInt64(plan.SfqPerturb.ValueInt64())
 	}
 	if !plan.BfifoLimit.Equal(state.BfifoLimit) && !plan.BfifoLimit.IsUnknown() {

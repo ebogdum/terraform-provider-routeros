@@ -303,49 +303,49 @@ func (r *IPV6NdResource) Update(ctx context.Context, req resource.UpdateRequest,
 		return
 	}
 	body := client.Object{}
-	if !plan.AdvertiseDNS.Equal(state.AdvertiseDNS) {
+	if !plan.AdvertiseDNS.Equal(state.AdvertiseDNS) && !plan.AdvertiseDNS.IsUnknown() {
 		body["advertise-dns"] = plan.AdvertiseDNS.ValueString()
 	}
-	if !plan.AdvertiseMACAddress.Equal(state.AdvertiseMACAddress) {
+	if !plan.AdvertiseMACAddress.Equal(state.AdvertiseMACAddress) && !plan.AdvertiseMACAddress.IsUnknown() {
 		body["advertise-mac-address"] = client.FormatBool(plan.AdvertiseMACAddress.ValueBool())
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.HopLimit.Equal(state.HopLimit) {
+	if !plan.HopLimit.Equal(state.HopLimit) && !plan.HopLimit.IsUnknown() {
 		body["hop-limit"] = plan.HopLimit.ValueString()
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.ManagedAddressConfiguration.Equal(state.ManagedAddressConfiguration) {
+	if !plan.ManagedAddressConfiguration.Equal(state.ManagedAddressConfiguration) && !plan.ManagedAddressConfiguration.IsUnknown() {
 		body["managed-address-configuration"] = client.FormatBool(plan.ManagedAddressConfiguration.ValueBool())
 	}
-	if !plan.MTU.Equal(state.MTU) {
+	if !plan.MTU.Equal(state.MTU) && !plan.MTU.IsUnknown() {
 		body["mtu"] = plan.MTU.ValueString()
 	}
-	if !plan.OtherConfiguration.Equal(state.OtherConfiguration) {
+	if !plan.OtherConfiguration.Equal(state.OtherConfiguration) && !plan.OtherConfiguration.IsUnknown() {
 		body["other-configuration"] = client.FormatBool(plan.OtherConfiguration.ValueBool())
 	}
-	if !plan.RaDelay.Equal(state.RaDelay) {
+	if !plan.RaDelay.Equal(state.RaDelay) && !plan.RaDelay.IsUnknown() {
 		body["ra-delay"] = plan.RaDelay.ValueString()
 	}
-	if !plan.RaInterval.Equal(state.RaInterval) {
+	if !plan.RaInterval.Equal(state.RaInterval) && !plan.RaInterval.IsUnknown() {
 		body["ra-interval"] = plan.RaInterval.ValueString()
 	}
-	if !plan.RaLifetime.Equal(state.RaLifetime) {
+	if !plan.RaLifetime.Equal(state.RaLifetime) && !plan.RaLifetime.IsUnknown() {
 		body["ra-lifetime"] = plan.RaLifetime.ValueString()
 	}
-	if !plan.RaPreference.Equal(state.RaPreference) {
+	if !plan.RaPreference.Equal(state.RaPreference) && !plan.RaPreference.IsUnknown() {
 		body["ra-preference"] = plan.RaPreference.ValueString()
 	}
-	if !plan.ReachableTime.Equal(state.ReachableTime) {
+	if !plan.ReachableTime.Equal(state.ReachableTime) && !plan.ReachableTime.IsUnknown() {
 		body["reachable-time"] = plan.ReachableTime.ValueString()
 	}
-	if !plan.RetransmitInterval.Equal(state.RetransmitInterval) {
+	if !plan.RetransmitInterval.Equal(state.RetransmitInterval) && !plan.RetransmitInterval.IsUnknown() {
 		body["retransmit-interval"] = plan.RetransmitInterval.ValueString()
 	}
 	if !plan.Dns.Equal(state.Dns) && !plan.Dns.IsUnknown() {

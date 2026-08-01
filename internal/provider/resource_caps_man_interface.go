@@ -741,25 +741,25 @@ func (r *CapsManInterfaceResource) Update(ctx context.Context, req resource.Upda
 		return
 	}
 	body := client.Object{}
-	if !plan.ARPTimeout.Equal(state.ARPTimeout) {
+	if !plan.ARPTimeout.Equal(state.ARPTimeout) && !plan.ARPTimeout.IsUnknown() {
 		body["arp-timeout"] = plan.ARPTimeout.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.MACAddress.Equal(state.MACAddress) {
+	if !plan.MACAddress.Equal(state.MACAddress) && !plan.MACAddress.IsUnknown() {
 		body["mac-address"] = plan.MACAddress.ValueString()
 	}
-	if !plan.MasterInterface.Equal(state.MasterInterface) {
+	if !plan.MasterInterface.Equal(state.MasterInterface) && !plan.MasterInterface.IsUnknown() {
 		body["master-interface"] = plan.MasterInterface.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.RadioMAC.Equal(state.RadioMAC) {
+	if !plan.RadioMAC.Equal(state.RadioMAC) && !plan.RadioMAC.IsUnknown() {
 		body["radio-mac"] = plan.RadioMAC.ValueString()
 	}
 	if !plan.Arp.Equal(state.Arp) && !plan.Arp.IsUnknown() {

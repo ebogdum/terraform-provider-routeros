@@ -218,28 +218,28 @@ func (r *IPSmbSharesResource) Update(ctx context.Context, req resource.UpdateReq
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Directory.Equal(state.Directory) {
+	if !plan.Directory.Equal(state.Directory) && !plan.Directory.IsUnknown() {
 		body["directory"] = plan.Directory.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.InvalidUsers.Equal(state.InvalidUsers) {
+	if !plan.InvalidUsers.Equal(state.InvalidUsers) && !plan.InvalidUsers.IsUnknown() {
 		body["invalid-users"] = plan.InvalidUsers.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.ReadOnly.Equal(state.ReadOnly) {
+	if !plan.ReadOnly.Equal(state.ReadOnly) && !plan.ReadOnly.IsUnknown() {
 		body["read-only"] = client.FormatBool(plan.ReadOnly.ValueBool())
 	}
-	if !plan.RequireEncryption.Equal(state.RequireEncryption) {
+	if !plan.RequireEncryption.Equal(state.RequireEncryption) && !plan.RequireEncryption.IsUnknown() {
 		body["require-encryption"] = client.FormatBool(plan.RequireEncryption.ValueBool())
 	}
-	if !plan.ValidUsers.Equal(state.ValidUsers) {
+	if !plan.ValidUsers.Equal(state.ValidUsers) && !plan.ValidUsers.IsUnknown() {
 		body["valid-users"] = plan.ValidUsers.ValueString()
 	}
 	if len(body) > 0 {

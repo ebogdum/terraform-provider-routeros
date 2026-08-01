@@ -285,58 +285,58 @@ func (r *InterfaceW60gResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 	body := client.Object{}
-	if !plan.ARP.Equal(state.ARP) {
+	if !plan.ARP.Equal(state.ARP) && !plan.ARP.IsUnknown() {
 		body["arp"] = plan.ARP.ValueString()
 	}
-	if !plan.ARPTimeout.Equal(state.ARPTimeout) {
+	if !plan.ARPTimeout.Equal(state.ARPTimeout) && !plan.ARPTimeout.IsUnknown() {
 		body["arp-timeout"] = plan.ARPTimeout.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = plan.Disabled.ValueString()
 	}
-	if !plan.Frequency.Equal(state.Frequency) {
+	if !plan.Frequency.Equal(state.Frequency) && !plan.Frequency.IsUnknown() {
 		body["frequency"] = plan.Frequency.ValueString()
 	}
-	if !plan.IsolateStations.Equal(state.IsolateStations) {
+	if !plan.IsolateStations.Equal(state.IsolateStations) && !plan.IsolateStations.IsUnknown() {
 		body["isolate-stations"] = plan.IsolateStations.ValueString()
 	}
-	if !plan.L2mtu.Equal(state.L2mtu) {
+	if !plan.L2mtu.Equal(state.L2mtu) && !plan.L2mtu.IsUnknown() {
 		body["l2mtu"] = plan.L2mtu.ValueString()
 	}
-	if !plan.MACAddress.Equal(state.MACAddress) {
+	if !plan.MACAddress.Equal(state.MACAddress) && !plan.MACAddress.IsUnknown() {
 		body["mac-address"] = plan.MACAddress.ValueString()
 	}
-	if !plan.MdmgFix.Equal(state.MdmgFix) {
+	if !plan.MdmgFix.Equal(state.MdmgFix) && !plan.MdmgFix.IsUnknown() {
 		body["mdmg-fix"] = plan.MdmgFix.ValueString()
 	}
-	if !plan.Mode.Equal(state.Mode) {
+	if !plan.Mode.Equal(state.Mode) && !plan.Mode.IsUnknown() {
 		body["mode"] = plan.Mode.ValueString()
 	}
-	if !plan.MTU.Equal(state.MTU) {
+	if !plan.MTU.Equal(state.MTU) && !plan.MTU.IsUnknown() {
 		body["mtu"] = plan.MTU.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Password.Equal(state.Password) {
+	if !plan.Password.Equal(state.Password) && !plan.Password.IsUnknown() {
 		body["password"] = plan.Password.ValueString()
 	}
-	if !plan.PutStationsInBridge.Equal(state.PutStationsInBridge) {
+	if !plan.PutStationsInBridge.Equal(state.PutStationsInBridge) && !plan.PutStationsInBridge.IsUnknown() {
 		body["put-stations-in-bridge"] = plan.PutStationsInBridge.ValueString()
 	}
-	if !plan.Region.Equal(state.Region) {
+	if !plan.Region.Equal(state.Region) && !plan.Region.IsUnknown() {
 		body["region"] = plan.Region.ValueString()
 	}
-	if !plan.ScanList.Equal(state.ScanList) {
+	if !plan.ScanList.Equal(state.ScanList) && !plan.ScanList.IsUnknown() {
 		body["scan-list"] = plan.ScanList.ValueString()
 	}
-	if !plan.Ssid.Equal(state.Ssid) {
+	if !plan.Ssid.Equal(state.Ssid) && !plan.Ssid.IsUnknown() {
 		body["ssid"] = plan.Ssid.ValueString()
 	}
-	if !plan.TxSector.Equal(state.TxSector) {
+	if !plan.TxSector.Equal(state.TxSector) && !plan.TxSector.IsUnknown() {
 		body["tx-sector"] = plan.TxSector.ValueString()
 	}
 	if len(body) > 0 {

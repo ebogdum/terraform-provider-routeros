@@ -189,19 +189,19 @@ func (r *IPV6PoolResource) Update(ctx context.Context, req resource.UpdateReques
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.FromPool.Equal(state.FromPool) {
+	if !plan.FromPool.Equal(state.FromPool) && !plan.FromPool.IsUnknown() {
 		body["from-pool"] = plan.FromPool.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Prefix.Equal(state.Prefix) {
+	if !plan.Prefix.Equal(state.Prefix) && !plan.Prefix.IsUnknown() {
 		body["prefix"] = plan.Prefix.ValueString()
 	}
-	if !plan.PrefixLength.Equal(state.PrefixLength) {
+	if !plan.PrefixLength.Equal(state.PrefixLength) && !plan.PrefixLength.IsUnknown() {
 		body["prefix-length"] = client.FormatInt64(plan.PrefixLength.ValueInt64())
 	}
 	if len(body) > 0 {

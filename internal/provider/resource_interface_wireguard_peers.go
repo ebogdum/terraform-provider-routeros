@@ -341,58 +341,58 @@ func (r *InterfaceWireguardPeersResource) Update(ctx context.Context, req resour
 		return
 	}
 	body := client.Object{}
-	if !plan.AllowedAddress.Equal(state.AllowedAddress) {
+	if !plan.AllowedAddress.Equal(state.AllowedAddress) && !plan.AllowedAddress.IsUnknown() {
 		body["allowed-address"] = plan.AllowedAddress.ValueString()
 	}
-	if !plan.ClientAddress.Equal(state.ClientAddress) {
+	if !plan.ClientAddress.Equal(state.ClientAddress) && !plan.ClientAddress.IsUnknown() {
 		body["client-address"] = plan.ClientAddress.ValueString()
 	}
-	if !plan.ClientAllowedAddress.Equal(state.ClientAllowedAddress) {
+	if !plan.ClientAllowedAddress.Equal(state.ClientAllowedAddress) && !plan.ClientAllowedAddress.IsUnknown() {
 		body["client-allowed-address"] = plan.ClientAllowedAddress.ValueString()
 	}
-	if !plan.ClientDNS.Equal(state.ClientDNS) {
+	if !plan.ClientDNS.Equal(state.ClientDNS) && !plan.ClientDNS.IsUnknown() {
 		body["client-dns"] = plan.ClientDNS.ValueString()
 	}
-	if !plan.ClientEndpoint.Equal(state.ClientEndpoint) {
+	if !plan.ClientEndpoint.Equal(state.ClientEndpoint) && !plan.ClientEndpoint.IsUnknown() {
 		body["client-endpoint"] = plan.ClientEndpoint.ValueString()
 	}
-	if !plan.ClientKeepalive.Equal(state.ClientKeepalive) {
+	if !plan.ClientKeepalive.Equal(state.ClientKeepalive) && !plan.ClientKeepalive.IsUnknown() {
 		body["client-keepalive"] = plan.ClientKeepalive.ValueString()
 	}
-	if !plan.ClientListenPort.Equal(state.ClientListenPort) {
+	if !plan.ClientListenPort.Equal(state.ClientListenPort) && !plan.ClientListenPort.IsUnknown() {
 		body["client-listen-port"] = client.FormatInt64(plan.ClientListenPort.ValueInt64())
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.EndpointAddress.Equal(state.EndpointAddress) {
+	if !plan.EndpointAddress.Equal(state.EndpointAddress) && !plan.EndpointAddress.IsUnknown() {
 		body["endpoint-address"] = plan.EndpointAddress.ValueString()
 	}
-	if !plan.EndpointPort.Equal(state.EndpointPort) {
+	if !plan.EndpointPort.Equal(state.EndpointPort) && !plan.EndpointPort.IsUnknown() {
 		body["endpoint-port"] = client.FormatInt64(plan.EndpointPort.ValueInt64())
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.PersistentKeepalive.Equal(state.PersistentKeepalive) {
+	if !plan.PersistentKeepalive.Equal(state.PersistentKeepalive) && !plan.PersistentKeepalive.IsUnknown() {
 		body["persistent-keepalive"] = plan.PersistentKeepalive.ValueString()
 	}
-	if !plan.PresharedKey.Equal(state.PresharedKey) {
+	if !plan.PresharedKey.Equal(state.PresharedKey) && !plan.PresharedKey.IsUnknown() {
 		body["preshared-key"] = plan.PresharedKey.ValueString()
 	}
-	if !plan.PrivateKey.Equal(state.PrivateKey) {
+	if !plan.PrivateKey.Equal(state.PrivateKey) && !plan.PrivateKey.IsUnknown() {
 		body["private-key"] = plan.PrivateKey.ValueString()
 	}
-	if !plan.PublicKey.Equal(state.PublicKey) {
+	if !plan.PublicKey.Equal(state.PublicKey) && !plan.PublicKey.IsUnknown() {
 		body["public-key"] = plan.PublicKey.ValueString()
 	}
-	if !plan.Responder.Equal(state.Responder) {
+	if !plan.Responder.Equal(state.Responder) && !plan.Responder.IsUnknown() {
 		body["responder"] = client.FormatBool(plan.Responder.ValueBool())
 	}
 	if len(body) > 0 {

@@ -217,25 +217,25 @@ func (r *IPTftpResource) Update(ctx context.Context, req resource.UpdateRequest,
 		return
 	}
 	body := client.Object{}
-	if !plan.Allow.Equal(state.Allow) {
+	if !plan.Allow.Equal(state.Allow) && !plan.Allow.IsUnknown() {
 		body["allow"] = client.FormatBool(plan.Allow.ValueBool())
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.IPAddresses.Equal(state.IPAddresses) {
+	if !plan.IPAddresses.Equal(state.IPAddresses) && !plan.IPAddresses.IsUnknown() {
 		body["ip-addresses"] = plan.IPAddresses.ValueString()
 	}
-	if !plan.ReadOnly.Equal(state.ReadOnly) {
+	if !plan.ReadOnly.Equal(state.ReadOnly) && !plan.ReadOnly.IsUnknown() {
 		body["read-only"] = client.FormatBool(plan.ReadOnly.ValueBool())
 	}
-	if !plan.RealFilename.Equal(state.RealFilename) {
+	if !plan.RealFilename.Equal(state.RealFilename) && !plan.RealFilename.IsUnknown() {
 		body["real-filename"] = plan.RealFilename.ValueString()
 	}
-	if !plan.ReqFilename.Equal(state.ReqFilename) {
+	if !plan.ReqFilename.Equal(state.ReqFilename) && !plan.ReqFilename.IsUnknown() {
 		body["req-filename"] = plan.ReqFilename.ValueString()
 	}
 	if !plan.AllowOverwrite.Equal(state.AllowOverwrite) && !plan.AllowOverwrite.IsUnknown() {

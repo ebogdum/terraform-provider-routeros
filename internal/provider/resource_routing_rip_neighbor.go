@@ -149,13 +149,13 @@ func (r *RoutingRipNeighborResource) Update(ctx context.Context, req resource.Up
 		return
 	}
 	body := client.Object{}
-	if !plan.Address.Equal(state.Address) {
+	if !plan.Address.Equal(state.Address) && !plan.Address.IsUnknown() {
 		body["address"] = plan.Address.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Instance.Equal(state.Instance) {
+	if !plan.Instance.Equal(state.Instance) && !plan.Instance.IsUnknown() {
 		body["instance"] = plan.Instance.ValueString()
 	}
 	if len(body) > 0 {

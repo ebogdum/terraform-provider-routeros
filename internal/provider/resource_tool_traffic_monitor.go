@@ -196,28 +196,28 @@ func (r *ToolTrafficMonitorResource) Update(ctx context.Context, req resource.Up
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.OnEvent.Equal(state.OnEvent) {
+	if !plan.OnEvent.Equal(state.OnEvent) && !plan.OnEvent.IsUnknown() {
 		body["on-event"] = plan.OnEvent.ValueString()
 	}
-	if !plan.Threshold.Equal(state.Threshold) {
+	if !plan.Threshold.Equal(state.Threshold) && !plan.Threshold.IsUnknown() {
 		body["threshold"] = plan.Threshold.ValueString()
 	}
-	if !plan.Traffic.Equal(state.Traffic) {
+	if !plan.Traffic.Equal(state.Traffic) && !plan.Traffic.IsUnknown() {
 		body["traffic"] = plan.Traffic.ValueString()
 	}
-	if !plan.Trigger.Equal(state.Trigger) {
+	if !plan.Trigger.Equal(state.Trigger) && !plan.Trigger.IsUnknown() {
 		body["trigger"] = plan.Trigger.ValueString()
 	}
 	if len(body) > 0 {

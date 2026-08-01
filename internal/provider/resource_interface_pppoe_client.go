@@ -294,58 +294,58 @@ func (r *InterfacePppoeClientResource) Update(ctx context.Context, req resource.
 		return
 	}
 	body := client.Object{}
-	if !plan.AcName.Equal(state.AcName) {
+	if !plan.AcName.Equal(state.AcName) && !plan.AcName.IsUnknown() {
 		body["ac-name"] = plan.AcName.ValueString()
 	}
-	if !plan.AddDefaultRoute.Equal(state.AddDefaultRoute) {
+	if !plan.AddDefaultRoute.Equal(state.AddDefaultRoute) && !plan.AddDefaultRoute.IsUnknown() {
 		body["add-default-route"] = plan.AddDefaultRoute.ValueString()
 	}
-	if !plan.Allow.Equal(state.Allow) {
+	if !plan.Allow.Equal(state.Allow) && !plan.Allow.IsUnknown() {
 		body["allow"] = plan.Allow.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.DefaultRouteDistance.Equal(state.DefaultRouteDistance) {
+	if !plan.DefaultRouteDistance.Equal(state.DefaultRouteDistance) && !plan.DefaultRouteDistance.IsUnknown() {
 		body["default-route-distance"] = plan.DefaultRouteDistance.ValueString()
 	}
-	if !plan.DialOnDemand.Equal(state.DialOnDemand) {
+	if !plan.DialOnDemand.Equal(state.DialOnDemand) && !plan.DialOnDemand.IsUnknown() {
 		body["dial-on-demand"] = plan.DialOnDemand.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.KeepaliveTimeout.Equal(state.KeepaliveTimeout) {
+	if !plan.KeepaliveTimeout.Equal(state.KeepaliveTimeout) && !plan.KeepaliveTimeout.IsUnknown() {
 		body["keepalive-timeout"] = plan.KeepaliveTimeout.ValueString()
 	}
-	if !plan.MaxMru.Equal(state.MaxMru) {
+	if !plan.MaxMru.Equal(state.MaxMru) && !plan.MaxMru.IsUnknown() {
 		body["max-mru"] = plan.MaxMru.ValueString()
 	}
-	if !plan.MaxMTU.Equal(state.MaxMTU) {
+	if !plan.MaxMTU.Equal(state.MaxMTU) && !plan.MaxMTU.IsUnknown() {
 		body["max-mtu"] = plan.MaxMTU.ValueString()
 	}
-	if !plan.Mrru.Equal(state.Mrru) {
+	if !plan.Mrru.Equal(state.Mrru) && !plan.Mrru.IsUnknown() {
 		body["mrru"] = plan.Mrru.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Password.Equal(state.Password) {
+	if !plan.Password.Equal(state.Password) && !plan.Password.IsUnknown() {
 		body["password"] = plan.Password.ValueString()
 	}
-	if !plan.Profile.Equal(state.Profile) {
+	if !plan.Profile.Equal(state.Profile) && !plan.Profile.IsUnknown() {
 		body["profile"] = plan.Profile.ValueString()
 	}
-	if !plan.ServiceName.Equal(state.ServiceName) {
+	if !plan.ServiceName.Equal(state.ServiceName) && !plan.ServiceName.IsUnknown() {
 		body["service-name"] = plan.ServiceName.ValueString()
 	}
-	if !plan.UsePeerDNS.Equal(state.UsePeerDNS) {
+	if !plan.UsePeerDNS.Equal(state.UsePeerDNS) && !plan.UsePeerDNS.IsUnknown() {
 		body["use-peer-dns"] = plan.UsePeerDNS.ValueString()
 	}
-	if !plan.User.Equal(state.User) {
+	if !plan.User.Equal(state.User) && !plan.User.IsUnknown() {
 		body["user"] = plan.User.ValueString()
 	}
 	if !plan.HostUniq.Equal(state.HostUniq) && !plan.HostUniq.IsUnknown() {

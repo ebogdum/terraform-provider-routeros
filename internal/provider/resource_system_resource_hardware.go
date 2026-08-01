@@ -350,64 +350,64 @@ func (r *SystemResourceHardwareResource) Update(ctx context.Context, req resourc
 		return
 	}
 	body := client.Object{}
-	if !plan.Category.Equal(state.Category) {
+	if !plan.Category.Equal(state.Category) && !plan.Category.IsUnknown() {
 		body["category"] = plan.Category.ValueString()
 	}
-	if !plan.DeviceID.Equal(state.DeviceID) {
+	if !plan.DeviceID.Equal(state.DeviceID) && !plan.DeviceID.IsUnknown() {
 		body["device-id"] = plan.DeviceID.ValueString()
 	}
-	if !plan.Devices.Equal(state.Devices) {
+	if !plan.Devices.Equal(state.Devices) && !plan.Devices.IsUnknown() {
 		body["devices"] = plan.Devices.ValueString()
 	}
-	if !plan.Io.Equal(state.Io) {
+	if !plan.Io.Equal(state.Io) && !plan.Io.IsUnknown() {
 		body["io"] = plan.Io.ValueString()
 	}
-	if !plan.Irq.Equal(state.Irq) {
+	if !plan.Irq.Equal(state.Irq) && !plan.Irq.IsUnknown() {
 		body["irq"] = client.FormatInt64(plan.Irq.ValueInt64())
 	}
-	if !plan.Location.Equal(state.Location) {
+	if !plan.Location.Equal(state.Location) && !plan.Location.IsUnknown() {
 		body["location"] = plan.Location.ValueString()
 	}
-	if !plan.Memory.Equal(state.Memory) {
+	if !plan.Memory.Equal(state.Memory) && !plan.Memory.IsUnknown() {
 		body["memory"] = plan.Memory.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Owner.Equal(state.Owner) {
+	if !plan.Owner.Equal(state.Owner) && !plan.Owner.IsUnknown() {
 		body["owner"] = plan.Owner.ValueString()
 	}
-	if !plan.Parent.Equal(state.Parent) {
+	if !plan.Parent.Equal(state.Parent) && !plan.Parent.IsUnknown() {
 		body["parent"] = client.FormatInt64(plan.Parent.ValueInt64())
 	}
-	if !plan.Pci.Equal(state.Pci) {
+	if !plan.Pci.Equal(state.Pci) && !plan.Pci.IsUnknown() {
 		body["pci"] = plan.Pci.ValueString()
 	}
-	if !plan.Ports.Equal(state.Ports) {
+	if !plan.Ports.Equal(state.Ports) && !plan.Ports.IsUnknown() {
 		body["ports"] = client.FormatInt64(plan.Ports.ValueInt64())
 	}
-	if !plan.SerialNumber.Equal(state.SerialNumber) {
+	if !plan.SerialNumber.Equal(state.SerialNumber) && !plan.SerialNumber.IsUnknown() {
 		body["serial-number"] = plan.SerialNumber.ValueString()
 	}
-	if !plan.Speed.Equal(state.Speed) {
+	if !plan.Speed.Equal(state.Speed) && !plan.Speed.IsUnknown() {
 		body["speed"] = plan.Speed.ValueString()
 	}
-	if !plan.StdDescr.Equal(state.StdDescr) {
+	if !plan.StdDescr.Equal(state.StdDescr) && !plan.StdDescr.IsUnknown() {
 		body["std-descr"] = plan.StdDescr.ValueString()
 	}
-	if !plan.Type.Equal(state.Type) {
+	if !plan.Type.Equal(state.Type) && !plan.Type.IsUnknown() {
 		body["type"] = plan.Type.ValueString()
 	}
-	if !plan.Usb.Equal(state.Usb) {
+	if !plan.Usb.Equal(state.Usb) && !plan.Usb.IsUnknown() {
 		body["usb"] = plan.Usb.ValueString()
 	}
-	if !plan.UsbVersion.Equal(state.UsbVersion) {
+	if !plan.UsbVersion.Equal(state.UsbVersion) && !plan.UsbVersion.IsUnknown() {
 		body["usb-version"] = plan.UsbVersion.ValueString()
 	}
-	if !plan.Vendor.Equal(state.Vendor) {
+	if !plan.Vendor.Equal(state.Vendor) && !plan.Vendor.IsUnknown() {
 		body["vendor"] = plan.Vendor.ValueString()
 	}
-	if !plan.VendorID.Equal(state.VendorID) {
+	if !plan.VendorID.Equal(state.VendorID) && !plan.VendorID.IsUnknown() {
 		body["vendor-id"] = plan.VendorID.ValueString()
 	}
 	if !plan.Allow.Equal(state.Allow) && !plan.Allow.IsUnknown() {

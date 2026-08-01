@@ -177,22 +177,22 @@ func (r *UserManagerRouterResource) Update(ctx context.Context, req resource.Upd
 		return
 	}
 	body := client.Object{}
-	if !plan.Address.Equal(state.Address) {
+	if !plan.Address.Equal(state.Address) && !plan.Address.IsUnknown() {
 		body["address"] = plan.Address.ValueString()
 	}
-	if !plan.CoaPort.Equal(state.CoaPort) {
+	if !plan.CoaPort.Equal(state.CoaPort) && !plan.CoaPort.IsUnknown() {
 		body["coa-port"] = plan.CoaPort.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = plan.Disabled.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Protocol.Equal(state.Protocol) {
+	if !plan.Protocol.Equal(state.Protocol) && !plan.Protocol.IsUnknown() {
 		body["protocol"] = plan.Protocol.ValueString()
 	}
-	if !plan.SharedSecret.Equal(state.SharedSecret) {
+	if !plan.SharedSecret.Equal(state.SharedSecret) && !plan.SharedSecret.IsUnknown() {
 		body["shared-secret"] = plan.SharedSecret.ValueString()
 	}
 	if len(body) > 0 {

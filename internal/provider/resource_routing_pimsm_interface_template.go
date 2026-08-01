@@ -228,37 +228,37 @@ func (r *RoutingPimsmInterfaceTemplateResource) Update(ctx context.Context, req 
 		return
 	}
 	body := client.Object{}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.HelloDelay.Equal(state.HelloDelay) {
+	if !plan.HelloDelay.Equal(state.HelloDelay) && !plan.HelloDelay.IsUnknown() {
 		body["hello-delay"] = plan.HelloDelay.ValueString()
 	}
-	if !plan.HelloPeriod.Equal(state.HelloPeriod) {
+	if !plan.HelloPeriod.Equal(state.HelloPeriod) && !plan.HelloPeriod.IsUnknown() {
 		body["hello-period"] = plan.HelloPeriod.ValueString()
 	}
-	if !plan.Instance.Equal(state.Instance) {
+	if !plan.Instance.Equal(state.Instance) && !plan.Instance.IsUnknown() {
 		body["instance"] = plan.Instance.ValueString()
 	}
-	if !plan.Interfaces.Equal(state.Interfaces) {
+	if !plan.Interfaces.Equal(state.Interfaces) && !plan.Interfaces.IsUnknown() {
 		body["interfaces"] = plan.Interfaces.ValueString()
 	}
-	if !plan.JoinPrunePeriod.Equal(state.JoinPrunePeriod) {
+	if !plan.JoinPrunePeriod.Equal(state.JoinPrunePeriod) && !plan.JoinPrunePeriod.IsUnknown() {
 		body["join-prune-period"] = plan.JoinPrunePeriod.ValueString()
 	}
-	if !plan.JoinTrackingSupport.Equal(state.JoinTrackingSupport) {
+	if !plan.JoinTrackingSupport.Equal(state.JoinTrackingSupport) && !plan.JoinTrackingSupport.IsUnknown() {
 		body["join-tracking-support"] = plan.JoinTrackingSupport.ValueString()
 	}
-	if !plan.OverrideInterval.Equal(state.OverrideInterval) {
+	if !plan.OverrideInterval.Equal(state.OverrideInterval) && !plan.OverrideInterval.IsUnknown() {
 		body["override-interval"] = plan.OverrideInterval.ValueString()
 	}
-	if !plan.Priority.Equal(state.Priority) {
+	if !plan.Priority.Equal(state.Priority) && !plan.Priority.IsUnknown() {
 		body["priority"] = plan.Priority.ValueString()
 	}
-	if !plan.PropagationDelay.Equal(state.PropagationDelay) {
+	if !plan.PropagationDelay.Equal(state.PropagationDelay) && !plan.PropagationDelay.IsUnknown() {
 		body["propagation-delay"] = plan.PropagationDelay.ValueString()
 	}
-	if !plan.SourceAddresses.Equal(state.SourceAddresses) {
+	if !plan.SourceAddresses.Equal(state.SourceAddresses) && !plan.SourceAddresses.IsUnknown() {
 		body["source-addresses"] = plan.SourceAddresses.ValueString()
 	}
 	if len(body) > 0 {

@@ -150,13 +150,13 @@ func (r *PPPL2TPSecretResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 	body := client.Object{}
-	if !plan.Address.Equal(state.Address) {
+	if !plan.Address.Equal(state.Address) && !plan.Address.IsUnknown() {
 		body["address"] = plan.Address.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Secret.Equal(state.Secret) {
+	if !plan.Secret.Equal(state.Secret) && !plan.Secret.IsUnknown() {
 		body["secret"] = plan.Secret.ValueString()
 	}
 	if len(body) > 0 {

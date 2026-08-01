@@ -166,13 +166,13 @@ func (r *InterfaceEthernetSwitchPortIsolationResource) Update(ctx context.Contex
 		return
 	}
 	body := client.Object{}
-	if !plan.ForwardTo.Equal(state.ForwardTo) {
+	if !plan.ForwardTo.Equal(state.ForwardTo) && !plan.ForwardTo.IsUnknown() {
 		body["forward-to"] = plan.ForwardTo.ValueString()
 	}
-	if !plan.ForwardingOverride.Equal(state.ForwardingOverride) {
+	if !plan.ForwardingOverride.Equal(state.ForwardingOverride) && !plan.ForwardingOverride.IsUnknown() {
 		body["forwarding-override"] = client.FormatBool(plan.ForwardingOverride.ValueBool())
 	}
-	if !plan.Override.Equal(state.Override) {
+	if !plan.Override.Equal(state.Override) && !plan.Override.IsUnknown() {
 		body["override"] = plan.Override.ValueString()
 	}
 	if len(body) > 0 {

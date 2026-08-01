@@ -419,76 +419,76 @@ func (r *IPDHCPServerResource) Update(ctx context.Context, req resource.UpdateRe
 		return
 	}
 	body := client.Object{}
-	if !plan.AddressPool.Equal(state.AddressPool) {
+	if !plan.AddressPool.Equal(state.AddressPool) && !plan.AddressPool.IsUnknown() {
 		body["address-pool"] = plan.AddressPool.ValueString()
 	}
-	if !plan.AllowDualStackQueue.Equal(state.AllowDualStackQueue) {
+	if !plan.AllowDualStackQueue.Equal(state.AllowDualStackQueue) && !plan.AllowDualStackQueue.IsUnknown() {
 		body["allow-dual-stack-queue"] = client.FormatBool(plan.AllowDualStackQueue.ValueBool())
 	}
-	if !plan.AlwaysBroadcast.Equal(state.AlwaysBroadcast) {
+	if !plan.AlwaysBroadcast.Equal(state.AlwaysBroadcast) && !plan.AlwaysBroadcast.IsUnknown() {
 		body["always-broadcast"] = client.FormatBool(plan.AlwaysBroadcast.ValueBool())
 	}
-	if !plan.Authoritative.Equal(state.Authoritative) {
+	if !plan.Authoritative.Equal(state.Authoritative) && !plan.Authoritative.IsUnknown() {
 		body["authoritative"] = plan.Authoritative.ValueString()
 	}
-	if !plan.BootpLeaseTime.Equal(state.BootpLeaseTime) {
+	if !plan.BootpLeaseTime.Equal(state.BootpLeaseTime) && !plan.BootpLeaseTime.IsUnknown() {
 		body["bootp-lease-time"] = plan.BootpLeaseTime.ValueString()
 	}
-	if !plan.BootpSupport.Equal(state.BootpSupport) {
+	if !plan.BootpSupport.Equal(state.BootpSupport) && !plan.BootpSupport.IsUnknown() {
 		body["bootp-support"] = plan.BootpSupport.ValueString()
 	}
-	if !plan.ClientMACLimit.Equal(state.ClientMACLimit) {
+	if !plan.ClientMACLimit.Equal(state.ClientMACLimit) && !plan.ClientMACLimit.IsUnknown() {
 		body["client-mac-limit"] = plan.ClientMACLimit.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.ConflictDetection.Equal(state.ConflictDetection) {
+	if !plan.ConflictDetection.Equal(state.ConflictDetection) && !plan.ConflictDetection.IsUnknown() {
 		body["conflict-detection"] = client.FormatBool(plan.ConflictDetection.ValueBool())
 	}
-	if !plan.DelayThreshold.Equal(state.DelayThreshold) {
+	if !plan.DelayThreshold.Equal(state.DelayThreshold) && !plan.DelayThreshold.IsUnknown() {
 		body["delay-threshold"] = plan.DelayThreshold.ValueString()
 	}
-	if !plan.DHCPOptionSet.Equal(state.DHCPOptionSet) {
+	if !plan.DHCPOptionSet.Equal(state.DHCPOptionSet) && !plan.DHCPOptionSet.IsUnknown() {
 		body["dhcp-option-set"] = plan.DHCPOptionSet.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.DynamicLeaseIdentifiers.Equal(state.DynamicLeaseIdentifiers) {
+	if !plan.DynamicLeaseIdentifiers.Equal(state.DynamicLeaseIdentifiers) && !plan.DynamicLeaseIdentifiers.IsUnknown() {
 		body["dynamic-lease-identifiers"] = plan.DynamicLeaseIdentifiers.ValueString()
 	}
-	if !plan.InsertQueueBefore.Equal(state.InsertQueueBefore) {
+	if !plan.InsertQueueBefore.Equal(state.InsertQueueBefore) && !plan.InsertQueueBefore.IsUnknown() {
 		body["insert-queue-before"] = plan.InsertQueueBefore.ValueString()
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.LeaseScript.Equal(state.LeaseScript) {
+	if !plan.LeaseScript.Equal(state.LeaseScript) && !plan.LeaseScript.IsUnknown() {
 		body["lease-script"] = plan.LeaseScript.ValueString()
 	}
-	if !plan.LeaseTime.Equal(state.LeaseTime) {
+	if !plan.LeaseTime.Equal(state.LeaseTime) && !plan.LeaseTime.IsUnknown() {
 		body["lease-time"] = plan.LeaseTime.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.ParentQueue.Equal(state.ParentQueue) {
+	if !plan.ParentQueue.Equal(state.ParentQueue) && !plan.ParentQueue.IsUnknown() {
 		body["parent-queue"] = plan.ParentQueue.ValueString()
 	}
-	if !plan.Relay.Equal(state.Relay) {
+	if !plan.Relay.Equal(state.Relay) && !plan.Relay.IsUnknown() {
 		body["relay"] = plan.Relay.ValueString()
 	}
-	if !plan.ServerAddress.Equal(state.ServerAddress) {
+	if !plan.ServerAddress.Equal(state.ServerAddress) && !plan.ServerAddress.IsUnknown() {
 		body["server-address"] = plan.ServerAddress.ValueString()
 	}
-	if !plan.UseFramedAsClassless.Equal(state.UseFramedAsClassless) {
+	if !plan.UseFramedAsClassless.Equal(state.UseFramedAsClassless) && !plan.UseFramedAsClassless.IsUnknown() {
 		body["use-framed-as-classless"] = client.FormatBool(plan.UseFramedAsClassless.ValueBool())
 	}
-	if !plan.UseRADIUS.Equal(state.UseRADIUS) {
+	if !plan.UseRADIUS.Equal(state.UseRADIUS) && !plan.UseRADIUS.IsUnknown() {
 		body["use-radius"] = plan.UseRADIUS.ValueString()
 	}
-	if !plan.UseReconfigure.Equal(state.UseReconfigure) {
+	if !plan.UseReconfigure.Equal(state.UseReconfigure) && !plan.UseReconfigure.IsUnknown() {
 		body["use-reconfigure"] = client.FormatBool(plan.UseReconfigure.ValueBool())
 	}
 	if !plan.AddArp.Equal(state.AddArp) && !plan.AddArp.IsUnknown() {

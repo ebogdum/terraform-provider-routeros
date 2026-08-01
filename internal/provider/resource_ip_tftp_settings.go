@@ -70,7 +70,7 @@ func (r *IPTftpSettingsResource) Create(ctx context.Context, req resource.Create
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPTftpSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	iPTftpSettingsUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -83,7 +83,12 @@ func (r *IPTftpSettingsResource) Update(ctx context.Context, req resource.Update
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPTftpSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state IPTftpSettingsModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	iPTftpSettingsUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -124,13 +129,13 @@ func (r *IPTftpSettingsResource) ImportState(ctx context.Context, req resource.I
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/ip/tftp/settings", types.StringValue(routerName))))...)
 }
 
-func iPTftpSettingsUpsert(ctx context.Context, reg *client.Registry, plan *IPTftpSettingsModel, diags *diagBuf) {
+func iPTftpSettingsUpsert(ctx context.Context, reg *client.Registry, plan, state *IPTftpSettingsModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.MaxBlockSize.IsNull() || plan.MaxBlockSize.IsUnknown()) {
+	if !(plan.MaxBlockSize.IsNull() || plan.MaxBlockSize.IsUnknown()) && (state == nil || !plan.MaxBlockSize.Equal(state.MaxBlockSize)) {
 		body["max-block-size"] = plan.MaxBlockSize.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/ip/tftp/settings", body)

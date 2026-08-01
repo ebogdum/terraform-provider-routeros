@@ -27,11 +27,17 @@ func ParseBool(s string) (bool, error) {
 	return false, fmt.Errorf("routeros: %q is not a bool", s)
 }
 
+// FormatBool renders a bool for a RouterOS write body as "yes"/"no". RouterOS
+// reads bools back as "true"/"false" in JSON but several menus (bridge-port
+// `hw`, dns-static `match-subdomain`, ...) reject "true"/"false" on write with
+// "must be either yes or no". "yes"/"no" is RouterOS's native input form and is
+// accepted for every bool, so it is the safe universal choice. Reads use
+// ParseBool, which accepts both forms.
 func FormatBool(b bool) string {
 	if b {
-		return "true"
+		return "yes"
 	}
-	return "false"
+	return "no"
 }
 
 // --- int ---

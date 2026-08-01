@@ -685,169 +685,169 @@ func (r *IPV6FirewallFilterResource) Update(ctx context.Context, req resource.Up
 		return
 	}
 	body := client.Object{}
-	if !plan.Action.Equal(state.Action) {
+	if !plan.Action.Equal(state.Action) && !plan.Action.IsUnknown() {
 		body["action"] = plan.Action.ValueString()
 	}
-	if !plan.AddressList.Equal(state.AddressList) {
+	if !plan.AddressList.Equal(state.AddressList) && !plan.AddressList.IsUnknown() {
 		body["address-list"] = plan.AddressList.ValueString()
 	}
-	if !plan.AddressListTimeout.Equal(state.AddressListTimeout) {
+	if !plan.AddressListTimeout.Equal(state.AddressListTimeout) && !plan.AddressListTimeout.IsUnknown() {
 		body["address-list-timeout"] = plan.AddressListTimeout.ValueString()
 	}
-	if !plan.Chain.Equal(state.Chain) {
+	if !plan.Chain.Equal(state.Chain) && !plan.Chain.IsUnknown() {
 		body["chain"] = plan.Chain.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.ConnectionBytes.Equal(state.ConnectionBytes) {
+	if !plan.ConnectionBytes.Equal(state.ConnectionBytes) && !plan.ConnectionBytes.IsUnknown() {
 		body["connection-bytes"] = plan.ConnectionBytes.ValueString()
 	}
-	if !plan.ConnectionLimit.Equal(state.ConnectionLimit) {
+	if !plan.ConnectionLimit.Equal(state.ConnectionLimit) && !plan.ConnectionLimit.IsUnknown() {
 		body["connection-limit"] = plan.ConnectionLimit.ValueString()
 	}
-	if !plan.ConnectionMark.Equal(state.ConnectionMark) {
+	if !plan.ConnectionMark.Equal(state.ConnectionMark) && !plan.ConnectionMark.IsUnknown() {
 		body["connection-mark"] = plan.ConnectionMark.ValueString()
 	}
-	if !plan.ConnectionNATState.Equal(state.ConnectionNATState) {
+	if !plan.ConnectionNATState.Equal(state.ConnectionNATState) && !plan.ConnectionNATState.IsUnknown() {
 		body["connection-nat-state"] = plan.ConnectionNATState.ValueString()
 	}
-	if !plan.ConnectionRate.Equal(state.ConnectionRate) {
+	if !plan.ConnectionRate.Equal(state.ConnectionRate) && !plan.ConnectionRate.IsUnknown() {
 		body["connection-rate"] = plan.ConnectionRate.ValueString()
 	}
-	if !plan.ConnectionState.Equal(state.ConnectionState) {
+	if !plan.ConnectionState.Equal(state.ConnectionState) && !plan.ConnectionState.IsUnknown() {
 		body["connection-state"] = plan.ConnectionState.ValueString()
 	}
-	if !plan.ConnectionType.Equal(state.ConnectionType) {
+	if !plan.ConnectionType.Equal(state.ConnectionType) && !plan.ConnectionType.IsUnknown() {
 		body["connection-type"] = plan.ConnectionType.ValueString()
 	}
-	if !plan.Content.Equal(state.Content) {
+	if !plan.Content.Equal(state.Content) && !plan.Content.IsUnknown() {
 		body["content"] = plan.Content.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Dscp.Equal(state.Dscp) {
+	if !plan.Dscp.Equal(state.Dscp) && !plan.Dscp.IsUnknown() {
 		body["dscp"] = plan.Dscp.ValueString()
 	}
-	if !plan.DstAddress.Equal(state.DstAddress) {
+	if !plan.DstAddress.Equal(state.DstAddress) && !plan.DstAddress.IsUnknown() {
 		body["dst-address"] = plan.DstAddress.ValueString()
 	}
-	if !plan.DstAddressList.Equal(state.DstAddressList) {
+	if !plan.DstAddressList.Equal(state.DstAddressList) && !plan.DstAddressList.IsUnknown() {
 		body["dst-address-list"] = plan.DstAddressList.ValueString()
 	}
-	if !plan.DstAddressType.Equal(state.DstAddressType) {
+	if !plan.DstAddressType.Equal(state.DstAddressType) && !plan.DstAddressType.IsUnknown() {
 		body["dst-address-type"] = plan.DstAddressType.ValueString()
 	}
-	if !plan.DstLimit.Equal(state.DstLimit) {
+	if !plan.DstLimit.Equal(state.DstLimit) && !plan.DstLimit.IsUnknown() {
 		body["dst-limit"] = plan.DstLimit.ValueString()
 	}
-	if !plan.DstPort.Equal(state.DstPort) {
+	if !plan.DstPort.Equal(state.DstPort) && !plan.DstPort.IsUnknown() {
 		body["dst-port"] = plan.DstPort.ValueString()
 	}
-	if !plan.HopLimit.Equal(state.HopLimit) {
+	if !plan.HopLimit.Equal(state.HopLimit) && !plan.HopLimit.IsUnknown() {
 		body["hop-limit"] = plan.HopLimit.ValueString()
 	}
-	if !plan.IcmpOptions.Equal(state.IcmpOptions) {
+	if !plan.IcmpOptions.Equal(state.IcmpOptions) && !plan.IcmpOptions.IsUnknown() {
 		body["icmp-options"] = plan.IcmpOptions.ValueString()
 	}
-	if !plan.InBridgePort.Equal(state.InBridgePort) {
+	if !plan.InBridgePort.Equal(state.InBridgePort) && !plan.InBridgePort.IsUnknown() {
 		body["in-bridge-port"] = plan.InBridgePort.ValueString()
 	}
-	if !plan.InBridgePortList.Equal(state.InBridgePortList) {
+	if !plan.InBridgePortList.Equal(state.InBridgePortList) && !plan.InBridgePortList.IsUnknown() {
 		body["in-bridge-port-list"] = plan.InBridgePortList.ValueString()
 	}
-	if !plan.InInterface.Equal(state.InInterface) {
+	if !plan.InInterface.Equal(state.InInterface) && !plan.InInterface.IsUnknown() {
 		body["in-interface"] = plan.InInterface.ValueString()
 	}
-	if !plan.InInterfaceList.Equal(state.InInterfaceList) {
+	if !plan.InInterfaceList.Equal(state.InInterfaceList) && !plan.InInterfaceList.IsUnknown() {
 		body["in-interface-list"] = plan.InInterfaceList.ValueString()
 	}
-	if !plan.IngressPriority.Equal(state.IngressPriority) {
+	if !plan.IngressPriority.Equal(state.IngressPriority) && !plan.IngressPriority.IsUnknown() {
 		body["ingress-priority"] = plan.IngressPriority.ValueString()
 	}
-	if !plan.IpsecPolicy.Equal(state.IpsecPolicy) {
+	if !plan.IpsecPolicy.Equal(state.IpsecPolicy) && !plan.IpsecPolicy.IsUnknown() {
 		body["ipsec-policy"] = plan.IpsecPolicy.ValueString()
 	}
-	if !plan.JumpTarget.Equal(state.JumpTarget) {
+	if !plan.JumpTarget.Equal(state.JumpTarget) && !plan.JumpTarget.IsUnknown() {
 		body["jump-target"] = plan.JumpTarget.ValueString()
 	}
-	if !plan.Limit.Equal(state.Limit) {
+	if !plan.Limit.Equal(state.Limit) && !plan.Limit.IsUnknown() {
 		body["limit"] = plan.Limit.ValueString()
 	}
-	if !plan.Log.Equal(state.Log) {
+	if !plan.Log.Equal(state.Log) && !plan.Log.IsUnknown() {
 		body["log"] = plan.Log.ValueString()
 	}
-	if !plan.LogPrefix.Equal(state.LogPrefix) {
+	if !plan.LogPrefix.Equal(state.LogPrefix) && !plan.LogPrefix.IsUnknown() {
 		body["log-prefix"] = plan.LogPrefix.ValueString()
 	}
-	if !plan.Nth.Equal(state.Nth) {
+	if !plan.Nth.Equal(state.Nth) && !plan.Nth.IsUnknown() {
 		body["nth"] = plan.Nth.ValueString()
 	}
-	if !plan.OutBridgePort.Equal(state.OutBridgePort) {
+	if !plan.OutBridgePort.Equal(state.OutBridgePort) && !plan.OutBridgePort.IsUnknown() {
 		body["out-bridge-port"] = plan.OutBridgePort.ValueString()
 	}
-	if !plan.OutBridgePortList.Equal(state.OutBridgePortList) {
+	if !plan.OutBridgePortList.Equal(state.OutBridgePortList) && !plan.OutBridgePortList.IsUnknown() {
 		body["out-bridge-port-list"] = plan.OutBridgePortList.ValueString()
 	}
-	if !plan.OutInterface.Equal(state.OutInterface) {
+	if !plan.OutInterface.Equal(state.OutInterface) && !plan.OutInterface.IsUnknown() {
 		body["out-interface"] = plan.OutInterface.ValueString()
 	}
-	if !plan.OutInterfaceList.Equal(state.OutInterfaceList) {
+	if !plan.OutInterfaceList.Equal(state.OutInterfaceList) && !plan.OutInterfaceList.IsUnknown() {
 		body["out-interface-list"] = plan.OutInterfaceList.ValueString()
 	}
-	if !plan.PacketMark.Equal(state.PacketMark) {
+	if !plan.PacketMark.Equal(state.PacketMark) && !plan.PacketMark.IsUnknown() {
 		body["packet-mark"] = plan.PacketMark.ValueString()
 	}
-	if !plan.PacketSize.Equal(state.PacketSize) {
+	if !plan.PacketSize.Equal(state.PacketSize) && !plan.PacketSize.IsUnknown() {
 		body["packet-size"] = plan.PacketSize.ValueString()
 	}
-	if !plan.PerConnectionClassifier.Equal(state.PerConnectionClassifier) {
+	if !plan.PerConnectionClassifier.Equal(state.PerConnectionClassifier) && !plan.PerConnectionClassifier.IsUnknown() {
 		body["per-connection-classifier"] = plan.PerConnectionClassifier.ValueString()
 	}
-	if !plan.Port.Equal(state.Port) {
+	if !plan.Port.Equal(state.Port) && !plan.Port.IsUnknown() {
 		body["port"] = plan.Port.ValueString()
 	}
-	if !plan.Priority.Equal(state.Priority) {
+	if !plan.Priority.Equal(state.Priority) && !plan.Priority.IsUnknown() {
 		body["priority"] = plan.Priority.ValueString()
 	}
-	if !plan.Protocol.Equal(state.Protocol) {
+	if !plan.Protocol.Equal(state.Protocol) && !plan.Protocol.IsUnknown() {
 		body["protocol"] = plan.Protocol.ValueString()
 	}
-	if !plan.Random.Equal(state.Random) {
+	if !plan.Random.Equal(state.Random) && !plan.Random.IsUnknown() {
 		body["random"] = plan.Random.ValueString()
 	}
-	if !plan.RejectWith.Equal(state.RejectWith) {
+	if !plan.RejectWith.Equal(state.RejectWith) && !plan.RejectWith.IsUnknown() {
 		body["reject-with"] = plan.RejectWith.ValueString()
 	}
-	if !plan.RoutingMark.Equal(state.RoutingMark) {
+	if !plan.RoutingMark.Equal(state.RoutingMark) && !plan.RoutingMark.IsUnknown() {
 		body["routing-mark"] = plan.RoutingMark.ValueString()
 	}
-	if !plan.SrcAddress.Equal(state.SrcAddress) {
+	if !plan.SrcAddress.Equal(state.SrcAddress) && !plan.SrcAddress.IsUnknown() {
 		body["src-address"] = plan.SrcAddress.ValueString()
 	}
-	if !plan.SrcAddressList.Equal(state.SrcAddressList) {
+	if !plan.SrcAddressList.Equal(state.SrcAddressList) && !plan.SrcAddressList.IsUnknown() {
 		body["src-address-list"] = plan.SrcAddressList.ValueString()
 	}
-	if !plan.SrcAddressType.Equal(state.SrcAddressType) {
+	if !plan.SrcAddressType.Equal(state.SrcAddressType) && !plan.SrcAddressType.IsUnknown() {
 		body["src-address-type"] = plan.SrcAddressType.ValueString()
 	}
-	if !plan.SrcMACAddress.Equal(state.SrcMACAddress) {
+	if !plan.SrcMACAddress.Equal(state.SrcMACAddress) && !plan.SrcMACAddress.IsUnknown() {
 		body["src-mac-address"] = plan.SrcMACAddress.ValueString()
 	}
-	if !plan.SrcPort.Equal(state.SrcPort) {
+	if !plan.SrcPort.Equal(state.SrcPort) && !plan.SrcPort.IsUnknown() {
 		body["src-port"] = plan.SrcPort.ValueString()
 	}
-	if !plan.TCPFlags.Equal(state.TCPFlags) {
+	if !plan.TCPFlags.Equal(state.TCPFlags) && !plan.TCPFlags.IsUnknown() {
 		body["tcp-flags"] = plan.TCPFlags.ValueString()
 	}
-	if !plan.TCPMss.Equal(state.TCPMss) {
+	if !plan.TCPMss.Equal(state.TCPMss) && !plan.TCPMss.IsUnknown() {
 		body["tcp-mss"] = plan.TCPMss.ValueString()
 	}
-	if !plan.Time.Equal(state.Time) {
+	if !plan.Time.Equal(state.Time) && !plan.Time.IsUnknown() {
 		body["time"] = plan.Time.ValueString()
 	}
-	if !plan.TLSHost.Equal(state.TLSHost) {
+	if !plan.TLSHost.Equal(state.TLSHost) && !plan.TLSHost.IsUnknown() {
 		body["tls-host"] = plan.TLSHost.ValueString()
 	}
 	if !plan.Headers.Equal(state.Headers) && !plan.Headers.IsUnknown() {

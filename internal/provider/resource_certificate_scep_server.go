@@ -190,16 +190,16 @@ func (r *CertificateScepServerResource) Update(ctx context.Context, req resource
 		return
 	}
 	body := client.Object{}
-	if !plan.DaysValid.Equal(state.DaysValid) {
+	if !plan.DaysValid.Equal(state.DaysValid) && !plan.DaysValid.IsUnknown() {
 		body["days-valid"] = client.FormatInt64(plan.DaysValid.ValueInt64())
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Path.Equal(state.Path) {
+	if !plan.Path.Equal(state.Path) && !plan.Path.IsUnknown() {
 		body["path"] = plan.Path.ValueString()
 	}
-	if !plan.RequestLifetime.Equal(state.RequestLifetime) {
+	if !plan.RequestLifetime.Equal(state.RequestLifetime) && !plan.RequestLifetime.IsUnknown() {
 		body["request-lifetime"] = plan.RequestLifetime.ValueString()
 	}
 	if !plan.CaCert.Equal(state.CaCert) && !plan.CaCert.IsUnknown() {

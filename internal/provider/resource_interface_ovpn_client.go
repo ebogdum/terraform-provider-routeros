@@ -309,43 +309,43 @@ func (r *InterfaceOVPNClientResource) Update(ctx context.Context, req resource.U
 		return
 	}
 	body := client.Object{}
-	if !plan.Certificate.Equal(state.Certificate) {
+	if !plan.Certificate.Equal(state.Certificate) && !plan.Certificate.IsUnknown() {
 		body["certificate"] = plan.Certificate.ValueString()
 	}
-	if !plan.Cipher.Equal(state.Cipher) {
+	if !plan.Cipher.Equal(state.Cipher) && !plan.Cipher.IsUnknown() {
 		body["cipher"] = plan.Cipher.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.ConnectTo.Equal(state.ConnectTo) {
+	if !plan.ConnectTo.Equal(state.ConnectTo) && !plan.ConnectTo.IsUnknown() {
 		body["connect-to"] = plan.ConnectTo.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.MACAddress.Equal(state.MACAddress) {
+	if !plan.MACAddress.Equal(state.MACAddress) && !plan.MACAddress.IsUnknown() {
 		body["mac-address"] = plan.MACAddress.ValueString()
 	}
-	if !plan.MaxMTU.Equal(state.MaxMTU) {
+	if !plan.MaxMTU.Equal(state.MaxMTU) && !plan.MaxMTU.IsUnknown() {
 		body["max-mtu"] = plan.MaxMTU.ValueString()
 	}
-	if !plan.Mode.Equal(state.Mode) {
+	if !plan.Mode.Equal(state.Mode) && !plan.Mode.IsUnknown() {
 		body["mode"] = plan.Mode.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Password.Equal(state.Password) {
+	if !plan.Password.Equal(state.Password) && !plan.Password.IsUnknown() {
 		body["password"] = plan.Password.ValueString()
 	}
-	if !plan.Profile.Equal(state.Profile) {
+	if !plan.Profile.Equal(state.Profile) && !plan.Profile.IsUnknown() {
 		body["profile"] = plan.Profile.ValueString()
 	}
-	if !plan.User.Equal(state.User) {
+	if !plan.User.Equal(state.User) && !plan.User.IsUnknown() {
 		body["user"] = plan.User.ValueString()
 	}
-	if !plan.VerifyServerCertificate.Equal(state.VerifyServerCertificate) {
+	if !plan.VerifyServerCertificate.Equal(state.VerifyServerCertificate) && !plan.VerifyServerCertificate.IsUnknown() {
 		body["verify-server-certificate"] = plan.VerifyServerCertificate.ValueString()
 	}
 	if !plan.AddDefaultRoute.Equal(state.AddDefaultRoute) && !plan.AddDefaultRoute.IsUnknown() {

@@ -187,22 +187,22 @@ func (r *RoutingOSPFStaticNeighborResource) Update(ctx context.Context, req reso
 		return
 	}
 	body := client.Object{}
-	if !plan.Address.Equal(state.Address) {
+	if !plan.Address.Equal(state.Address) && !plan.Address.IsUnknown() {
 		body["address"] = plan.Address.ValueString()
 	}
-	if !plan.Area.Equal(state.Area) {
+	if !plan.Area.Equal(state.Area) && !plan.Area.IsUnknown() {
 		body["area"] = plan.Area.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.InstanceID.Equal(state.InstanceID) {
+	if !plan.InstanceID.Equal(state.InstanceID) && !plan.InstanceID.IsUnknown() {
 		body["instance-id"] = client.FormatInt64(plan.InstanceID.ValueInt64())
 	}
-	if !plan.PollInterval.Equal(state.PollInterval) {
+	if !plan.PollInterval.Equal(state.PollInterval) && !plan.PollInterval.IsUnknown() {
 		body["poll-interval"] = plan.PollInterval.ValueString()
 	}
 	if len(body) > 0 {

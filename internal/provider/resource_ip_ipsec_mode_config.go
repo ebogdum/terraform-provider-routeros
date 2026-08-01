@@ -262,40 +262,40 @@ func (r *IPIpsecModeConfigResource) Update(ctx context.Context, req resource.Upd
 		return
 	}
 	body := client.Object{}
-	if !plan.Address.Equal(state.Address) {
+	if !plan.Address.Equal(state.Address) && !plan.Address.IsUnknown() {
 		body["address"] = plan.Address.ValueString()
 	}
-	if !plan.AddressPool.Equal(state.AddressPool) {
+	if !plan.AddressPool.Equal(state.AddressPool) && !plan.AddressPool.IsUnknown() {
 		body["address-pool"] = plan.AddressPool.ValueString()
 	}
-	if !plan.AddressPrefixLength.Equal(state.AddressPrefixLength) {
+	if !plan.AddressPrefixLength.Equal(state.AddressPrefixLength) && !plan.AddressPrefixLength.IsUnknown() {
 		body["address-prefix-length"] = client.FormatInt64(plan.AddressPrefixLength.ValueInt64())
 	}
-	if !plan.ConnectionMark.Equal(state.ConnectionMark) {
+	if !plan.ConnectionMark.Equal(state.ConnectionMark) && !plan.ConnectionMark.IsUnknown() {
 		body["connection-mark"] = plan.ConnectionMark.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Responder.Equal(state.Responder) {
+	if !plan.Responder.Equal(state.Responder) && !plan.Responder.IsUnknown() {
 		body["responder"] = client.FormatBool(plan.Responder.ValueBool())
 	}
-	if !plan.SplitDNS.Equal(state.SplitDNS) {
+	if !plan.SplitDNS.Equal(state.SplitDNS) && !plan.SplitDNS.IsUnknown() {
 		body["split-dns"] = plan.SplitDNS.ValueString()
 	}
-	if !plan.SplitInclude.Equal(state.SplitInclude) {
+	if !plan.SplitInclude.Equal(state.SplitInclude) && !plan.SplitInclude.IsUnknown() {
 		body["split-include"] = plan.SplitInclude.ValueString()
 	}
-	if !plan.SrcAddressList.Equal(state.SrcAddressList) {
+	if !plan.SrcAddressList.Equal(state.SrcAddressList) && !plan.SrcAddressList.IsUnknown() {
 		body["src-address-list"] = plan.SrcAddressList.ValueString()
 	}
-	if !plan.StaticDNS.Equal(state.StaticDNS) {
+	if !plan.StaticDNS.Equal(state.StaticDNS) && !plan.StaticDNS.IsUnknown() {
 		body["static-dns"] = plan.StaticDNS.ValueString()
 	}
-	if !plan.SystemDNS.Equal(state.SystemDNS) {
+	if !plan.SystemDNS.Equal(state.SystemDNS) && !plan.SystemDNS.IsUnknown() {
 		body["system-dns"] = client.FormatBool(plan.SystemDNS.ValueBool())
 	}
-	if !plan.UseResponderDNS.Equal(state.UseResponderDNS) {
+	if !plan.UseResponderDNS.Equal(state.UseResponderDNS) && !plan.UseResponderDNS.IsUnknown() {
 		body["use-responder-dns"] = plan.UseResponderDNS.ValueString()
 	}
 	if len(body) > 0 {

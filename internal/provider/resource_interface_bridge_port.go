@@ -447,91 +447,91 @@ func (r *InterfaceBridgePortResource) Update(ctx context.Context, req resource.U
 		return
 	}
 	body := client.Object{}
-	if !plan.AutoIsolate.Equal(state.AutoIsolate) {
+	if !plan.AutoIsolate.Equal(state.AutoIsolate) && !plan.AutoIsolate.IsUnknown() {
 		body["auto-isolate"] = client.FormatBool(plan.AutoIsolate.ValueBool())
 	}
-	if !plan.BpduGuard.Equal(state.BpduGuard) {
+	if !plan.BpduGuard.Equal(state.BpduGuard) && !plan.BpduGuard.IsUnknown() {
 		body["bpdu-guard"] = client.FormatBool(plan.BpduGuard.ValueBool())
 	}
-	if !plan.Bridge.Equal(state.Bridge) {
+	if !plan.Bridge.Equal(state.Bridge) && !plan.Bridge.IsUnknown() {
 		body["bridge"] = plan.Bridge.ValueString()
 	}
-	if !plan.BroadcastFlood.Equal(state.BroadcastFlood) {
+	if !plan.BroadcastFlood.Equal(state.BroadcastFlood) && !plan.BroadcastFlood.IsUnknown() {
 		body["broadcast-flood"] = client.FormatBool(plan.BroadcastFlood.ValueBool())
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Edge.Equal(state.Edge) {
+	if !plan.Edge.Equal(state.Edge) && !plan.Edge.IsUnknown() {
 		body["edge"] = plan.Edge.ValueString()
 	}
-	if !plan.FastLeave.Equal(state.FastLeave) {
+	if !plan.FastLeave.Equal(state.FastLeave) && !plan.FastLeave.IsUnknown() {
 		body["fast-leave"] = client.FormatBool(plan.FastLeave.ValueBool())
 	}
-	if !plan.FrameTypes.Equal(state.FrameTypes) {
+	if !plan.FrameTypes.Equal(state.FrameTypes) && !plan.FrameTypes.IsUnknown() {
 		body["frame-types"] = plan.FrameTypes.ValueString()
 	}
-	if !plan.Horizon.Equal(state.Horizon) {
+	if !plan.Horizon.Equal(state.Horizon) && !plan.Horizon.IsUnknown() {
 		body["horizon"] = plan.Horizon.ValueString()
 	}
-	if !plan.Hw.Equal(state.Hw) {
+	if !plan.Hw.Equal(state.Hw) && !plan.Hw.IsUnknown() {
 		body["hw"] = plan.Hw.ValueString()
 	}
-	if !plan.IngressFiltering.Equal(state.IngressFiltering) {
+	if !plan.IngressFiltering.Equal(state.IngressFiltering) && !plan.IngressFiltering.IsUnknown() {
 		body["ingress-filtering"] = client.FormatBool(plan.IngressFiltering.ValueBool())
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.InternalPathCost.Equal(state.InternalPathCost) {
+	if !plan.InternalPathCost.Equal(state.InternalPathCost) && !plan.InternalPathCost.IsUnknown() {
 		body["internal-path-cost"] = plan.InternalPathCost.ValueString()
 	}
-	if !plan.Learn.Equal(state.Learn) {
+	if !plan.Learn.Equal(state.Learn) && !plan.Learn.IsUnknown() {
 		body["learn"] = plan.Learn.ValueString()
 	}
-	if !plan.MulticastRouter.Equal(state.MulticastRouter) {
+	if !plan.MulticastRouter.Equal(state.MulticastRouter) && !plan.MulticastRouter.IsUnknown() {
 		body["multicast-router"] = plan.MulticastRouter.ValueString()
 	}
-	if !plan.MvrpApplicantState.Equal(state.MvrpApplicantState) {
+	if !plan.MvrpApplicantState.Equal(state.MvrpApplicantState) && !plan.MvrpApplicantState.IsUnknown() {
 		body["mvrp-applicant-state"] = plan.MvrpApplicantState.ValueString()
 	}
-	if !plan.MvrpRegistrarState.Equal(state.MvrpRegistrarState) {
+	if !plan.MvrpRegistrarState.Equal(state.MvrpRegistrarState) && !plan.MvrpRegistrarState.IsUnknown() {
 		body["mvrp-registrar-state"] = plan.MvrpRegistrarState.ValueString()
 	}
-	if !plan.PathCost.Equal(state.PathCost) {
+	if !plan.PathCost.Equal(state.PathCost) && !plan.PathCost.IsUnknown() {
 		body["path-cost"] = plan.PathCost.ValueString()
 	}
-	if !plan.PointToPoint.Equal(state.PointToPoint) {
+	if !plan.PointToPoint.Equal(state.PointToPoint) && !plan.PointToPoint.IsUnknown() {
 		body["point-to-point"] = plan.PointToPoint.ValueString()
 	}
-	if !plan.Priority.Equal(state.Priority) {
+	if !plan.Priority.Equal(state.Priority) && !plan.Priority.IsUnknown() {
 		body["priority"] = client.FormatInt64(plan.Priority.ValueInt64())
 	}
-	if !plan.Pvid.Equal(state.Pvid) {
+	if !plan.Pvid.Equal(state.Pvid) && !plan.Pvid.IsUnknown() {
 		body["pvid"] = client.FormatInt64(plan.Pvid.ValueInt64())
 	}
-	if !plan.RestrictedRole.Equal(state.RestrictedRole) {
+	if !plan.RestrictedRole.Equal(state.RestrictedRole) && !plan.RestrictedRole.IsUnknown() {
 		body["restricted-role"] = client.FormatBool(plan.RestrictedRole.ValueBool())
 	}
-	if !plan.RestrictedTcn.Equal(state.RestrictedTcn) {
+	if !plan.RestrictedTcn.Equal(state.RestrictedTcn) && !plan.RestrictedTcn.IsUnknown() {
 		body["restricted-tcn"] = client.FormatBool(plan.RestrictedTcn.ValueBool())
 	}
-	if !plan.TagStacking.Equal(state.TagStacking) {
+	if !plan.TagStacking.Equal(state.TagStacking) && !plan.TagStacking.IsUnknown() {
 		body["tag-stacking"] = client.FormatBool(plan.TagStacking.ValueBool())
 	}
-	if !plan.Trusted.Equal(state.Trusted) {
+	if !plan.Trusted.Equal(state.Trusted) && !plan.Trusted.IsUnknown() {
 		body["trusted"] = client.FormatBool(plan.Trusted.ValueBool())
 	}
-	if !plan.TrustedRa.Equal(state.TrustedRa) {
+	if !plan.TrustedRa.Equal(state.TrustedRa) && !plan.TrustedRa.IsUnknown() {
 		body["trusted-ra"] = client.FormatBool(plan.TrustedRa.ValueBool())
 	}
-	if !plan.UnknownMulticastFlood.Equal(state.UnknownMulticastFlood) {
+	if !plan.UnknownMulticastFlood.Equal(state.UnknownMulticastFlood) && !plan.UnknownMulticastFlood.IsUnknown() {
 		body["unknown-multicast-flood"] = client.FormatBool(plan.UnknownMulticastFlood.ValueBool())
 	}
-	if !plan.UnknownUnicastFlood.Equal(state.UnknownUnicastFlood) {
+	if !plan.UnknownUnicastFlood.Equal(state.UnknownUnicastFlood) && !plan.UnknownUnicastFlood.IsUnknown() {
 		body["unknown-unicast-flood"] = client.FormatBool(plan.UnknownUnicastFlood.ValueBool())
 	}
 	if !plan.TrustedDhcpv6.Equal(state.TrustedDhcpv6) && !plan.TrustedDhcpv6.IsUnknown() {

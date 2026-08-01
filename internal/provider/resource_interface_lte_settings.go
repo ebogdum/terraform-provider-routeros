@@ -93,7 +93,7 @@ func (r *InterfaceLTESettingsResource) Create(ctx context.Context, req resource.
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	interfaceLTESettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	interfaceLTESettingsUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -106,7 +106,12 @@ func (r *InterfaceLTESettingsResource) Update(ctx context.Context, req resource.
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	interfaceLTESettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state InterfaceLTESettingsModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	interfaceLTESettingsUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -147,22 +152,22 @@ func (r *InterfaceLTESettingsResource) ImportState(ctx context.Context, req reso
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/interface/lte/settings", types.StringValue(routerName))))...)
 }
 
-func interfaceLTESettingsUpsert(ctx context.Context, reg *client.Registry, plan *InterfaceLTESettingsModel, diags *diagBuf) {
+func interfaceLTESettingsUpsert(ctx context.Context, reg *client.Registry, plan, state *InterfaceLTESettingsModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.EsimChannel.IsNull() || plan.EsimChannel.IsUnknown()) {
+	if !(plan.EsimChannel.IsNull() || plan.EsimChannel.IsUnknown()) && (state == nil || !plan.EsimChannel.Equal(state.EsimChannel)) {
 		body["esim-channel"] = plan.EsimChannel.ValueString()
 	}
-	if !(plan.FirmwarePath.IsNull() || plan.FirmwarePath.IsUnknown()) {
+	if !(plan.FirmwarePath.IsNull() || plan.FirmwarePath.IsUnknown()) && (state == nil || !plan.FirmwarePath.Equal(state.FirmwarePath)) {
 		body["firmware-path"] = plan.FirmwarePath.ValueString()
 	}
-	if !(plan.LinkRecoveryTimer.IsNull() || plan.LinkRecoveryTimer.IsUnknown()) {
+	if !(plan.LinkRecoveryTimer.IsNull() || plan.LinkRecoveryTimer.IsUnknown()) && (state == nil || !plan.LinkRecoveryTimer.Equal(state.LinkRecoveryTimer)) {
 		body["link-recovery-timer"] = client.FormatInt64(plan.LinkRecoveryTimer.ValueInt64())
 	}
-	if !(plan.Mode.IsNull() || plan.Mode.IsUnknown()) {
+	if !(plan.Mode.IsNull() || plan.Mode.IsUnknown()) && (state == nil || !plan.Mode.Equal(state.Mode)) {
 		body["mode"] = plan.Mode.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/interface/lte/settings", body)

@@ -201,22 +201,22 @@ func (r *MPLSMangleResource) Update(ctx context.Context, req resource.UpdateRequ
 		return
 	}
 	body := client.Object{}
-	if !plan.Chain.Equal(state.Chain) {
+	if !plan.Chain.Equal(state.Chain) && !plan.Chain.IsUnknown() {
 		body["chain"] = plan.Chain.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Exp.Equal(state.Exp) {
+	if !plan.Exp.Equal(state.Exp) && !plan.Exp.IsUnknown() {
 		body["exp"] = plan.Exp.ValueString()
 	}
-	if !plan.SetExp.Equal(state.SetExp) {
+	if !plan.SetExp.Equal(state.SetExp) && !plan.SetExp.IsUnknown() {
 		body["set-exp"] = plan.SetExp.ValueString()
 	}
-	if !plan.SetMark.Equal(state.SetMark) {
+	if !plan.SetMark.Equal(state.SetMark) && !plan.SetMark.IsUnknown() {
 		body["set-mark"] = plan.SetMark.ValueString()
 	}
 	if len(body) > 0 {

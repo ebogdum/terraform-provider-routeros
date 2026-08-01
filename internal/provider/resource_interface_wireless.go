@@ -997,274 +997,274 @@ func (r *InterfaceWirelessResource) Update(ctx context.Context, req resource.Upd
 		return
 	}
 	body := client.Object{}
-	if !plan.AdaptiveNoiseImmunity.Equal(state.AdaptiveNoiseImmunity) {
+	if !plan.AdaptiveNoiseImmunity.Equal(state.AdaptiveNoiseImmunity) && !plan.AdaptiveNoiseImmunity.IsUnknown() {
 		body["adaptive-noise-immunity"] = plan.AdaptiveNoiseImmunity.ValueString()
 	}
-	if !plan.AllowSharedkey.Equal(state.AllowSharedkey) {
+	if !plan.AllowSharedkey.Equal(state.AllowSharedkey) && !plan.AllowSharedkey.IsUnknown() {
 		body["allow-sharedkey"] = plan.AllowSharedkey.ValueString()
 	}
-	if !plan.AmpduPriorities.Equal(state.AmpduPriorities) {
+	if !plan.AmpduPriorities.Equal(state.AmpduPriorities) && !plan.AmpduPriorities.IsUnknown() {
 		body["ampdu-priorities"] = plan.AmpduPriorities.ValueString()
 	}
-	if !plan.AmsduLimit.Equal(state.AmsduLimit) {
+	if !plan.AmsduLimit.Equal(state.AmsduLimit) && !plan.AmsduLimit.IsUnknown() {
 		body["amsdu-limit"] = plan.AmsduLimit.ValueString()
 	}
-	if !plan.AmsduThreshold.Equal(state.AmsduThreshold) {
+	if !plan.AmsduThreshold.Equal(state.AmsduThreshold) && !plan.AmsduThreshold.IsUnknown() {
 		body["amsdu-threshold"] = plan.AmsduThreshold.ValueString()
 	}
-	if !plan.AntennaGain.Equal(state.AntennaGain) {
+	if !plan.AntennaGain.Equal(state.AntennaGain) && !plan.AntennaGain.IsUnknown() {
 		body["antenna-gain"] = plan.AntennaGain.ValueString()
 	}
-	if !plan.AntennaMode.Equal(state.AntennaMode) {
+	if !plan.AntennaMode.Equal(state.AntennaMode) && !plan.AntennaMode.IsUnknown() {
 		body["antenna-mode"] = plan.AntennaMode.ValueString()
 	}
-	if !plan.Area.Equal(state.Area) {
+	if !plan.Area.Equal(state.Area) && !plan.Area.IsUnknown() {
 		body["area"] = plan.Area.ValueString()
 	}
-	if !plan.ARP.Equal(state.ARP) {
+	if !plan.ARP.Equal(state.ARP) && !plan.ARP.IsUnknown() {
 		body["arp"] = plan.ARP.ValueString()
 	}
-	if !plan.ARPTimeout.Equal(state.ARPTimeout) {
+	if !plan.ARPTimeout.Equal(state.ARPTimeout) && !plan.ARPTimeout.IsUnknown() {
 		body["arp-timeout"] = plan.ARPTimeout.ValueString()
 	}
-	if !plan.Band.Equal(state.Band) {
+	if !plan.Band.Equal(state.Band) && !plan.Band.IsUnknown() {
 		body["band"] = plan.Band.ValueString()
 	}
-	if !plan.BasicRatesB.Equal(state.BasicRatesB) {
+	if !plan.BasicRatesB.Equal(state.BasicRatesB) && !plan.BasicRatesB.IsUnknown() {
 		body["basic-rates-b"] = plan.BasicRatesB.ValueString()
 	}
-	if !plan.BridgeMode.Equal(state.BridgeMode) {
+	if !plan.BridgeMode.Equal(state.BridgeMode) && !plan.BridgeMode.IsUnknown() {
 		body["bridge-mode"] = plan.BridgeMode.ValueString()
 	}
-	if !plan.BurstTime.Equal(state.BurstTime) {
+	if !plan.BurstTime.Equal(state.BurstTime) && !plan.BurstTime.IsUnknown() {
 		body["burst-time"] = plan.BurstTime.ValueString()
 	}
-	if !plan.ChannelWidth.Equal(state.ChannelWidth) {
+	if !plan.ChannelWidth.Equal(state.ChannelWidth) && !plan.ChannelWidth.IsUnknown() {
 		body["channel-width"] = plan.ChannelWidth.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Compression.Equal(state.Compression) {
+	if !plan.Compression.Equal(state.Compression) && !plan.Compression.IsUnknown() {
 		body["compression"] = plan.Compression.ValueString()
 	}
-	if !plan.Country.Equal(state.Country) {
+	if !plan.Country.Equal(state.Country) && !plan.Country.IsUnknown() {
 		body["country"] = plan.Country.ValueString()
 	}
-	if !plan.DefaultApTxLimit.Equal(state.DefaultApTxLimit) {
+	if !plan.DefaultApTxLimit.Equal(state.DefaultApTxLimit) && !plan.DefaultApTxLimit.IsUnknown() {
 		body["default-ap-tx-limit"] = plan.DefaultApTxLimit.ValueString()
 	}
-	if !plan.DefaultAuthentication.Equal(state.DefaultAuthentication) {
+	if !plan.DefaultAuthentication.Equal(state.DefaultAuthentication) && !plan.DefaultAuthentication.IsUnknown() {
 		body["default-authentication"] = plan.DefaultAuthentication.ValueString()
 	}
-	if !plan.DefaultClientTxLimit.Equal(state.DefaultClientTxLimit) {
+	if !plan.DefaultClientTxLimit.Equal(state.DefaultClientTxLimit) && !plan.DefaultClientTxLimit.IsUnknown() {
 		body["default-client-tx-limit"] = plan.DefaultClientTxLimit.ValueString()
 	}
-	if !plan.DefaultForwarding.Equal(state.DefaultForwarding) {
+	if !plan.DefaultForwarding.Equal(state.DefaultForwarding) && !plan.DefaultForwarding.IsUnknown() {
 		body["default-forwarding"] = plan.DefaultForwarding.ValueString()
 	}
-	if !plan.DisableRunningCheck.Equal(state.DisableRunningCheck) {
+	if !plan.DisableRunningCheck.Equal(state.DisableRunningCheck) && !plan.DisableRunningCheck.IsUnknown() {
 		body["disable-running-check"] = plan.DisableRunningCheck.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.DisconnectTimeout.Equal(state.DisconnectTimeout) {
+	if !plan.DisconnectTimeout.Equal(state.DisconnectTimeout) && !plan.DisconnectTimeout.IsUnknown() {
 		body["disconnect-timeout"] = plan.DisconnectTimeout.ValueString()
 	}
-	if !plan.Distance.Equal(state.Distance) {
+	if !plan.Distance.Equal(state.Distance) && !plan.Distance.IsUnknown() {
 		body["distance"] = plan.Distance.ValueString()
 	}
-	if !plan.FrameLifetime.Equal(state.FrameLifetime) {
+	if !plan.FrameLifetime.Equal(state.FrameLifetime) && !plan.FrameLifetime.IsUnknown() {
 		body["frame-lifetime"] = plan.FrameLifetime.ValueString()
 	}
-	if !plan.Frequency.Equal(state.Frequency) {
+	if !plan.Frequency.Equal(state.Frequency) && !plan.Frequency.IsUnknown() {
 		body["frequency"] = plan.Frequency.ValueString()
 	}
-	if !plan.FrequencyMode.Equal(state.FrequencyMode) {
+	if !plan.FrequencyMode.Equal(state.FrequencyMode) && !plan.FrequencyMode.IsUnknown() {
 		body["frequency-mode"] = plan.FrequencyMode.ValueString()
 	}
-	if !plan.FrequencyOffset.Equal(state.FrequencyOffset) {
+	if !plan.FrequencyOffset.Equal(state.FrequencyOffset) && !plan.FrequencyOffset.IsUnknown() {
 		body["frequency-offset"] = plan.FrequencyOffset.ValueString()
 	}
-	if !plan.GuardInterval.Equal(state.GuardInterval) {
+	if !plan.GuardInterval.Equal(state.GuardInterval) && !plan.GuardInterval.IsUnknown() {
 		body["guard-interval"] = plan.GuardInterval.ValueString()
 	}
-	if !plan.HideSsid.Equal(state.HideSsid) {
+	if !plan.HideSsid.Equal(state.HideSsid) && !plan.HideSsid.IsUnknown() {
 		body["hide-ssid"] = plan.HideSsid.ValueString()
 	}
-	if !plan.HtBasicMcs.Equal(state.HtBasicMcs) {
+	if !plan.HtBasicMcs.Equal(state.HtBasicMcs) && !plan.HtBasicMcs.IsUnknown() {
 		body["ht-basic-mcs"] = plan.HtBasicMcs.ValueString()
 	}
-	if !plan.HtSupportedMcs.Equal(state.HtSupportedMcs) {
+	if !plan.HtSupportedMcs.Equal(state.HtSupportedMcs) && !plan.HtSupportedMcs.IsUnknown() {
 		body["ht-supported-mcs"] = plan.HtSupportedMcs.ValueString()
 	}
-	if !plan.HwFragmentationThreshold.Equal(state.HwFragmentationThreshold) {
+	if !plan.HwFragmentationThreshold.Equal(state.HwFragmentationThreshold) && !plan.HwFragmentationThreshold.IsUnknown() {
 		body["hw-fragmentation-threshold"] = plan.HwFragmentationThreshold.ValueString()
 	}
-	if !plan.HwProtectionMode.Equal(state.HwProtectionMode) {
+	if !plan.HwProtectionMode.Equal(state.HwProtectionMode) && !plan.HwProtectionMode.IsUnknown() {
 		body["hw-protection-mode"] = plan.HwProtectionMode.ValueString()
 	}
-	if !plan.HwProtectionThreshold.Equal(state.HwProtectionThreshold) {
+	if !plan.HwProtectionThreshold.Equal(state.HwProtectionThreshold) && !plan.HwProtectionThreshold.IsUnknown() {
 		body["hw-protection-threshold"] = plan.HwProtectionThreshold.ValueString()
 	}
-	if !plan.HwRetries.Equal(state.HwRetries) {
+	if !plan.HwRetries.Equal(state.HwRetries) && !plan.HwRetries.IsUnknown() {
 		body["hw-retries"] = plan.HwRetries.ValueString()
 	}
-	if !plan.Installation.Equal(state.Installation) {
+	if !plan.Installation.Equal(state.Installation) && !plan.Installation.IsUnknown() {
 		body["installation"] = plan.Installation.ValueString()
 	}
-	if !plan.InterworkingProfile.Equal(state.InterworkingProfile) {
+	if !plan.InterworkingProfile.Equal(state.InterworkingProfile) && !plan.InterworkingProfile.IsUnknown() {
 		body["interworking-profile"] = plan.InterworkingProfile.ValueString()
 	}
-	if !plan.KeepaliveFrames.Equal(state.KeepaliveFrames) {
+	if !plan.KeepaliveFrames.Equal(state.KeepaliveFrames) && !plan.KeepaliveFrames.IsUnknown() {
 		body["keepalive-frames"] = plan.KeepaliveFrames.ValueString()
 	}
-	if !plan.L2mtu.Equal(state.L2mtu) {
+	if !plan.L2mtu.Equal(state.L2mtu) && !plan.L2mtu.IsUnknown() {
 		body["l2mtu"] = plan.L2mtu.ValueString()
 	}
-	if !plan.MACAddress.Equal(state.MACAddress) {
+	if !plan.MACAddress.Equal(state.MACAddress) && !plan.MACAddress.IsUnknown() {
 		body["mac-address"] = plan.MACAddress.ValueString()
 	}
-	if !plan.MasterInterface.Equal(state.MasterInterface) {
+	if !plan.MasterInterface.Equal(state.MasterInterface) && !plan.MasterInterface.IsUnknown() {
 		body["master-interface"] = plan.MasterInterface.ValueString()
 	}
-	if !plan.MaxStationCount.Equal(state.MaxStationCount) {
+	if !plan.MaxStationCount.Equal(state.MaxStationCount) && !plan.MaxStationCount.IsUnknown() {
 		body["max-station-count"] = plan.MaxStationCount.ValueString()
 	}
-	if !plan.Mode.Equal(state.Mode) {
+	if !plan.Mode.Equal(state.Mode) && !plan.Mode.IsUnknown() {
 		body["mode"] = plan.Mode.ValueString()
 	}
-	if !plan.MTU.Equal(state.MTU) {
+	if !plan.MTU.Equal(state.MTU) && !plan.MTU.IsUnknown() {
 		body["mtu"] = plan.MTU.ValueString()
 	}
-	if !plan.MulticastBuffering.Equal(state.MulticastBuffering) {
+	if !plan.MulticastBuffering.Equal(state.MulticastBuffering) && !plan.MulticastBuffering.IsUnknown() {
 		body["multicast-buffering"] = plan.MulticastBuffering.ValueString()
 	}
-	if !plan.MulticastHelper.Equal(state.MulticastHelper) {
+	if !plan.MulticastHelper.Equal(state.MulticastHelper) && !plan.MulticastHelper.IsUnknown() {
 		body["multicast-helper"] = plan.MulticastHelper.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.NoiseFloorThreshold.Equal(state.NoiseFloorThreshold) {
+	if !plan.NoiseFloorThreshold.Equal(state.NoiseFloorThreshold) && !plan.NoiseFloorThreshold.IsUnknown() {
 		body["noise-floor-threshold"] = plan.NoiseFloorThreshold.ValueString()
 	}
-	if !plan.Nv2CellRADIUS.Equal(state.Nv2CellRADIUS) {
+	if !plan.Nv2CellRADIUS.Equal(state.Nv2CellRADIUS) && !plan.Nv2CellRADIUS.IsUnknown() {
 		body["nv2-cell-radius"] = plan.Nv2CellRADIUS.ValueString()
 	}
-	if !plan.Nv2NoiseFloorOffset.Equal(state.Nv2NoiseFloorOffset) {
+	if !plan.Nv2NoiseFloorOffset.Equal(state.Nv2NoiseFloorOffset) && !plan.Nv2NoiseFloorOffset.IsUnknown() {
 		body["nv2-noise-floor-offset"] = plan.Nv2NoiseFloorOffset.ValueString()
 	}
-	if !plan.Nv2PresharedKey.Equal(state.Nv2PresharedKey) {
+	if !plan.Nv2PresharedKey.Equal(state.Nv2PresharedKey) && !plan.Nv2PresharedKey.IsUnknown() {
 		body["nv2-preshared-key"] = plan.Nv2PresharedKey.ValueString()
 	}
-	if !plan.Nv2Qos.Equal(state.Nv2Qos) {
+	if !plan.Nv2Qos.Equal(state.Nv2Qos) && !plan.Nv2Qos.IsUnknown() {
 		body["nv2-qos"] = plan.Nv2Qos.ValueString()
 	}
-	if !plan.Nv2QueueCount.Equal(state.Nv2QueueCount) {
+	if !plan.Nv2QueueCount.Equal(state.Nv2QueueCount) && !plan.Nv2QueueCount.IsUnknown() {
 		body["nv2-queue-count"] = plan.Nv2QueueCount.ValueString()
 	}
-	if !plan.Nv2Security.Equal(state.Nv2Security) {
+	if !plan.Nv2Security.Equal(state.Nv2Security) && !plan.Nv2Security.IsUnknown() {
 		body["nv2-security"] = plan.Nv2Security.ValueString()
 	}
-	if !plan.OnFailRetryTime.Equal(state.OnFailRetryTime) {
+	if !plan.OnFailRetryTime.Equal(state.OnFailRetryTime) && !plan.OnFailRetryTime.IsUnknown() {
 		body["on-fail-retry-time"] = plan.OnFailRetryTime.ValueString()
 	}
-	if !plan.PreambleMode.Equal(state.PreambleMode) {
+	if !plan.PreambleMode.Equal(state.PreambleMode) && !plan.PreambleMode.IsUnknown() {
 		body["preamble-mode"] = plan.PreambleMode.ValueString()
 	}
-	if !plan.PrismCardtype.Equal(state.PrismCardtype) {
+	if !plan.PrismCardtype.Equal(state.PrismCardtype) && !plan.PrismCardtype.IsUnknown() {
 		body["prism-cardtype"] = plan.PrismCardtype.ValueString()
 	}
-	if !plan.RadioName.Equal(state.RadioName) {
+	if !plan.RadioName.Equal(state.RadioName) && !plan.RadioName.IsUnknown() {
 		body["radio-name"] = plan.RadioName.ValueString()
 	}
-	if !plan.RateSelection.Equal(state.RateSelection) {
+	if !plan.RateSelection.Equal(state.RateSelection) && !plan.RateSelection.IsUnknown() {
 		body["rate-selection"] = plan.RateSelection.ValueString()
 	}
-	if !plan.RateSet.Equal(state.RateSet) {
+	if !plan.RateSet.Equal(state.RateSet) && !plan.RateSet.IsUnknown() {
 		body["rate-set"] = plan.RateSet.ValueString()
 	}
-	if !plan.RxChains.Equal(state.RxChains) {
+	if !plan.RxChains.Equal(state.RxChains) && !plan.RxChains.IsUnknown() {
 		body["rx-chains"] = plan.RxChains.ValueString()
 	}
-	if !plan.RxHtChainNames.Equal(state.RxHtChainNames) {
+	if !plan.RxHtChainNames.Equal(state.RxHtChainNames) && !plan.RxHtChainNames.IsUnknown() {
 		body["rx-ht-chain-names"] = plan.RxHtChainNames.ValueString()
 	}
-	if !plan.RxHtChains.Equal(state.RxHtChains) {
+	if !plan.RxHtChains.Equal(state.RxHtChains) && !plan.RxHtChains.IsUnknown() {
 		body["rx-ht-chains"] = plan.RxHtChains.ValueString()
 	}
-	if !plan.ScanList.Equal(state.ScanList) {
+	if !plan.ScanList.Equal(state.ScanList) && !plan.ScanList.IsUnknown() {
 		body["scan-list"] = plan.ScanList.ValueString()
 	}
-	if !plan.SecurityProfile.Equal(state.SecurityProfile) {
+	if !plan.SecurityProfile.Equal(state.SecurityProfile) && !plan.SecurityProfile.IsUnknown() {
 		body["security-profile"] = plan.SecurityProfile.ValueString()
 	}
-	if !plan.SkipDfsChannels.Equal(state.SkipDfsChannels) {
+	if !plan.SkipDfsChannels.Equal(state.SkipDfsChannels) && !plan.SkipDfsChannels.IsUnknown() {
 		body["skip-dfs-channels"] = plan.SkipDfsChannels.ValueString()
 	}
-	if !plan.Ssid.Equal(state.Ssid) {
+	if !plan.Ssid.Equal(state.Ssid) && !plan.Ssid.IsUnknown() {
 		body["ssid"] = plan.Ssid.ValueString()
 	}
-	if !plan.StationBridgeCloneMAC.Equal(state.StationBridgeCloneMAC) {
+	if !plan.StationBridgeCloneMAC.Equal(state.StationBridgeCloneMAC) && !plan.StationBridgeCloneMAC.IsUnknown() {
 		body["station-bridge-clone-mac"] = plan.StationBridgeCloneMAC.ValueString()
 	}
-	if !plan.StationRoaming.Equal(state.StationRoaming) {
+	if !plan.StationRoaming.Equal(state.StationRoaming) && !plan.StationRoaming.IsUnknown() {
 		body["station-roaming"] = plan.StationRoaming.ValueString()
 	}
-	if !plan.SupportedRatesB.Equal(state.SupportedRatesB) {
+	if !plan.SupportedRatesB.Equal(state.SupportedRatesB) && !plan.SupportedRatesB.IsUnknown() {
 		body["supported-rates-b"] = plan.SupportedRatesB.ValueString()
 	}
-	if !plan.TdmaPeriodSize.Equal(state.TdmaPeriodSize) {
+	if !plan.TdmaPeriodSize.Equal(state.TdmaPeriodSize) && !plan.TdmaPeriodSize.IsUnknown() {
 		body["tdma-period-size"] = plan.TdmaPeriodSize.ValueString()
 	}
-	if !plan.TxChains.Equal(state.TxChains) {
+	if !plan.TxChains.Equal(state.TxChains) && !plan.TxChains.IsUnknown() {
 		body["tx-chains"] = plan.TxChains.ValueString()
 	}
-	if !plan.TxHtChainNames.Equal(state.TxHtChainNames) {
+	if !plan.TxHtChainNames.Equal(state.TxHtChainNames) && !plan.TxHtChainNames.IsUnknown() {
 		body["tx-ht-chain-names"] = plan.TxHtChainNames.ValueString()
 	}
-	if !plan.TxHtChains.Equal(state.TxHtChains) {
+	if !plan.TxHtChains.Equal(state.TxHtChains) && !plan.TxHtChains.IsUnknown() {
 		body["tx-ht-chains"] = plan.TxHtChains.ValueString()
 	}
-	if !plan.TxPower.Equal(state.TxPower) {
+	if !plan.TxPower.Equal(state.TxPower) && !plan.TxPower.IsUnknown() {
 		body["tx-power"] = plan.TxPower.ValueString()
 	}
-	if !plan.TxPowerMode.Equal(state.TxPowerMode) {
+	if !plan.TxPowerMode.Equal(state.TxPowerMode) && !plan.TxPowerMode.IsUnknown() {
 		body["tx-power-mode"] = plan.TxPowerMode.ValueString()
 	}
-	if !plan.UpdateStatsInterval.Equal(state.UpdateStatsInterval) {
+	if !plan.UpdateStatsInterval.Equal(state.UpdateStatsInterval) && !plan.UpdateStatsInterval.IsUnknown() {
 		body["update-stats-interval"] = plan.UpdateStatsInterval.ValueString()
 	}
-	if !plan.VhtBasicMcs.Equal(state.VhtBasicMcs) {
+	if !plan.VhtBasicMcs.Equal(state.VhtBasicMcs) && !plan.VhtBasicMcs.IsUnknown() {
 		body["vht-basic-mcs"] = plan.VhtBasicMcs.ValueString()
 	}
-	if !plan.VhtSupportedMcs.Equal(state.VhtSupportedMcs) {
+	if !plan.VhtSupportedMcs.Equal(state.VhtSupportedMcs) && !plan.VhtSupportedMcs.IsUnknown() {
 		body["vht-supported-mcs"] = plan.VhtSupportedMcs.ValueString()
 	}
-	if !plan.WdsCostRange.Equal(state.WdsCostRange) {
+	if !plan.WdsCostRange.Equal(state.WdsCostRange) && !plan.WdsCostRange.IsUnknown() {
 		body["wds-cost-range"] = plan.WdsCostRange.ValueString()
 	}
-	if !plan.WdsDefaultBridge.Equal(state.WdsDefaultBridge) {
+	if !plan.WdsDefaultBridge.Equal(state.WdsDefaultBridge) && !plan.WdsDefaultBridge.IsUnknown() {
 		body["wds-default-bridge"] = plan.WdsDefaultBridge.ValueString()
 	}
-	if !plan.WdsDefaultCost.Equal(state.WdsDefaultCost) {
+	if !plan.WdsDefaultCost.Equal(state.WdsDefaultCost) && !plan.WdsDefaultCost.IsUnknown() {
 		body["wds-default-cost"] = plan.WdsDefaultCost.ValueString()
 	}
-	if !plan.WdsIgnoreSsid.Equal(state.WdsIgnoreSsid) {
+	if !plan.WdsIgnoreSsid.Equal(state.WdsIgnoreSsid) && !plan.WdsIgnoreSsid.IsUnknown() {
 		body["wds-ignore-ssid"] = plan.WdsIgnoreSsid.ValueString()
 	}
-	if !plan.WdsMode.Equal(state.WdsMode) {
+	if !plan.WdsMode.Equal(state.WdsMode) && !plan.WdsMode.IsUnknown() {
 		body["wds-mode"] = plan.WdsMode.ValueString()
 	}
-	if !plan.WirelessProtocol.Equal(state.WirelessProtocol) {
+	if !plan.WirelessProtocol.Equal(state.WirelessProtocol) && !plan.WirelessProtocol.IsUnknown() {
 		body["wireless-protocol"] = plan.WirelessProtocol.ValueString()
 	}
-	if !plan.WmmSupport.Equal(state.WmmSupport) {
+	if !plan.WmmSupport.Equal(state.WmmSupport) && !plan.WmmSupport.IsUnknown() {
 		body["wmm-support"] = plan.WmmSupport.ValueString()
 	}
-	if !plan.WpsMode.Equal(state.WpsMode) {
+	if !plan.WpsMode.Equal(state.WpsMode) && !plan.WpsMode.IsUnknown() {
 		body["wps-mode"] = plan.WpsMode.ValueString()
 	}
 	if !plan.DfsTestMode.Equal(state.DfsTestMode) && !plan.DfsTestMode.IsUnknown() {

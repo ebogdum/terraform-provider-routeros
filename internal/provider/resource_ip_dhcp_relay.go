@@ -229,31 +229,31 @@ func (r *IPDHCPRelayResource) Update(ctx context.Context, req resource.UpdateReq
 		return
 	}
 	body := client.Object{}
-	if !plan.AddRelayInfo.Equal(state.AddRelayInfo) {
+	if !plan.AddRelayInfo.Equal(state.AddRelayInfo) && !plan.AddRelayInfo.IsUnknown() {
 		body["add-relay-info"] = client.FormatBool(plan.AddRelayInfo.ValueBool())
 	}
-	if !plan.DelayThreshold.Equal(state.DelayThreshold) {
+	if !plan.DelayThreshold.Equal(state.DelayThreshold) && !plan.DelayThreshold.IsUnknown() {
 		body["delay-threshold"] = plan.DelayThreshold.ValueString()
 	}
-	if !plan.DHCPServer.Equal(state.DHCPServer) {
+	if !plan.DHCPServer.Equal(state.DHCPServer) && !plan.DHCPServer.IsUnknown() {
 		body["dhcp-server"] = plan.DHCPServer.ValueString()
 	}
-	if !plan.DHCPServerVrf.Equal(state.DHCPServerVrf) {
+	if !plan.DHCPServerVrf.Equal(state.DHCPServerVrf) && !plan.DHCPServerVrf.IsUnknown() {
 		body["dhcp-server-vrf"] = plan.DHCPServerVrf.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.LocalAddress.Equal(state.LocalAddress) {
+	if !plan.LocalAddress.Equal(state.LocalAddress) && !plan.LocalAddress.IsUnknown() {
 		body["local-address"] = plan.LocalAddress.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.RelayInfoRemoteID.Equal(state.RelayInfoRemoteID) {
+	if !plan.RelayInfoRemoteID.Equal(state.RelayInfoRemoteID) && !plan.RelayInfoRemoteID.IsUnknown() {
 		body["relay-info-remote-id"] = plan.RelayInfoRemoteID.ValueString()
 	}
 	if !plan.LocalAddressAsSrcIp.Equal(state.LocalAddressAsSrcIp) && !plan.LocalAddressAsSrcIp.IsUnknown() {

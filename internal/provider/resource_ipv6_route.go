@@ -259,28 +259,28 @@ func (r *IPV6RouteResource) Update(ctx context.Context, req resource.UpdateReque
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Distance.Equal(state.Distance) {
+	if !plan.Distance.Equal(state.Distance) && !plan.Distance.IsUnknown() {
 		body["distance"] = client.FormatInt64(plan.Distance.ValueInt64())
 	}
-	if !plan.DstAddress.Equal(state.DstAddress) {
+	if !plan.DstAddress.Equal(state.DstAddress) && !plan.DstAddress.IsUnknown() {
 		body["dst-address"] = plan.DstAddress.ValueString()
 	}
-	if !plan.Gateway.Equal(state.Gateway) {
+	if !plan.Gateway.Equal(state.Gateway) && !plan.Gateway.IsUnknown() {
 		body["gateway"] = plan.Gateway.ValueString()
 	}
-	if !plan.RoutingTable.Equal(state.RoutingTable) {
+	if !plan.RoutingTable.Equal(state.RoutingTable) && !plan.RoutingTable.IsUnknown() {
 		body["routing-table"] = plan.RoutingTable.ValueString()
 	}
-	if !plan.Scope.Equal(state.Scope) {
+	if !plan.Scope.Equal(state.Scope) && !plan.Scope.IsUnknown() {
 		body["scope"] = client.FormatInt64(plan.Scope.ValueInt64())
 	}
-	if !plan.TargetScope.Equal(state.TargetScope) {
+	if !plan.TargetScope.Equal(state.TargetScope) && !plan.TargetScope.IsUnknown() {
 		body["target-scope"] = client.FormatInt64(plan.TargetScope.ValueInt64())
 	}
 	if !plan.Blackhole.Equal(state.Blackhole) && !plan.Blackhole.IsUnknown() {

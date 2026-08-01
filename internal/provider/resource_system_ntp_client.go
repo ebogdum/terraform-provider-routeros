@@ -90,7 +90,7 @@ func (r *SystemNTPClientResource) Create(ctx context.Context, req resource.Creat
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	systemNTPClientUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	systemNTPClientUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -103,7 +103,12 @@ func (r *SystemNTPClientResource) Update(ctx context.Context, req resource.Updat
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	systemNTPClientUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state SystemNTPClientModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	systemNTPClientUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -144,22 +149,22 @@ func (r *SystemNTPClientResource) ImportState(ctx context.Context, req resource.
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/system/ntp/client", types.StringValue(routerName))))...)
 }
 
-func systemNTPClientUpsert(ctx context.Context, reg *client.Registry, plan *SystemNTPClientModel, diags *diagBuf) {
+func systemNTPClientUpsert(ctx context.Context, reg *client.Registry, plan, state *SystemNTPClientModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) {
+	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) && (state == nil || !plan.Enabled.Equal(state.Enabled)) {
 		body["enabled"] = client.FormatBool(plan.Enabled.ValueBool())
 	}
-	if !(plan.Mode.IsNull() || plan.Mode.IsUnknown()) {
+	if !(plan.Mode.IsNull() || plan.Mode.IsUnknown()) && (state == nil || !plan.Mode.Equal(state.Mode)) {
 		body["mode"] = plan.Mode.ValueString()
 	}
-	if !(plan.Servers.IsNull() || plan.Servers.IsUnknown()) {
+	if !(plan.Servers.IsNull() || plan.Servers.IsUnknown()) && (state == nil || !plan.Servers.Equal(state.Servers)) {
 		body["servers"] = plan.Servers.ValueString()
 	}
-	if !(plan.Vrf.IsNull() || plan.Vrf.IsUnknown()) {
+	if !(plan.Vrf.IsNull() || plan.Vrf.IsUnknown()) && (state == nil || !plan.Vrf.Equal(state.Vrf)) {
 		body["vrf"] = plan.Vrf.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/system/ntp/client", body)

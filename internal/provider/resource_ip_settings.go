@@ -166,7 +166,7 @@ func (r *IPSettingsResource) Create(ctx context.Context, req resource.CreateRequ
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	iPSettingsUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -179,7 +179,12 @@ func (r *IPSettingsResource) Update(ctx context.Context, req resource.UpdateRequ
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state IPSettingsModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	iPSettingsUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -220,61 +225,61 @@ func (r *IPSettingsResource) ImportState(ctx context.Context, req resource.Impor
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/ip/settings", types.StringValue(routerName))))...)
 }
 
-func iPSettingsUpsert(ctx context.Context, reg *client.Registry, plan *IPSettingsModel, diags *diagBuf) {
+func iPSettingsUpsert(ctx context.Context, reg *client.Registry, plan, state *IPSettingsModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.AcceptRedirects.IsNull() || plan.AcceptRedirects.IsUnknown()) {
+	if !(plan.AcceptRedirects.IsNull() || plan.AcceptRedirects.IsUnknown()) && (state == nil || !plan.AcceptRedirects.Equal(state.AcceptRedirects)) {
 		body["accept-redirects"] = client.FormatBool(plan.AcceptRedirects.ValueBool())
 	}
-	if !(plan.AcceptSourceRoute.IsNull() || plan.AcceptSourceRoute.IsUnknown()) {
+	if !(plan.AcceptSourceRoute.IsNull() || plan.AcceptSourceRoute.IsUnknown()) && (state == nil || !plan.AcceptSourceRoute.Equal(state.AcceptSourceRoute)) {
 		body["accept-source-route"] = client.FormatBool(plan.AcceptSourceRoute.ValueBool())
 	}
-	if !(plan.AllowFastPath.IsNull() || plan.AllowFastPath.IsUnknown()) {
+	if !(plan.AllowFastPath.IsNull() || plan.AllowFastPath.IsUnknown()) && (state == nil || !plan.AllowFastPath.Equal(state.AllowFastPath)) {
 		body["allow-fast-path"] = client.FormatBool(plan.AllowFastPath.ValueBool())
 	}
-	if !(plan.ARPTimeout.IsNull() || plan.ARPTimeout.IsUnknown()) {
+	if !(plan.ARPTimeout.IsNull() || plan.ARPTimeout.IsUnknown()) && (state == nil || !plan.ARPTimeout.Equal(state.ARPTimeout)) {
 		body["arp-timeout"] = plan.ARPTimeout.ValueString()
 	}
-	if !(plan.IcmpErrorsUseInboundInterfaceAddress.IsNull() || plan.IcmpErrorsUseInboundInterfaceAddress.IsUnknown()) {
+	if !(plan.IcmpErrorsUseInboundInterfaceAddress.IsNull() || plan.IcmpErrorsUseInboundInterfaceAddress.IsUnknown()) && (state == nil || !plan.IcmpErrorsUseInboundInterfaceAddress.Equal(state.IcmpErrorsUseInboundInterfaceAddress)) {
 		body["icmp-errors-use-inbound-interface-address"] = client.FormatBool(plan.IcmpErrorsUseInboundInterfaceAddress.ValueBool())
 	}
-	if !(plan.IcmpRateLimit.IsNull() || plan.IcmpRateLimit.IsUnknown()) {
+	if !(plan.IcmpRateLimit.IsNull() || plan.IcmpRateLimit.IsUnknown()) && (state == nil || !plan.IcmpRateLimit.Equal(state.IcmpRateLimit)) {
 		body["icmp-rate-limit"] = client.FormatInt64(plan.IcmpRateLimit.ValueInt64())
 	}
-	if !(plan.IcmpRateMask.IsNull() || plan.IcmpRateMask.IsUnknown()) {
+	if !(plan.IcmpRateMask.IsNull() || plan.IcmpRateMask.IsUnknown()) && (state == nil || !plan.IcmpRateMask.Equal(state.IcmpRateMask)) {
 		body["icmp-rate-mask"] = client.FormatInt64(plan.IcmpRateMask.ValueInt64())
 	}
-	if !(plan.IPForward.IsNull() || plan.IPForward.IsUnknown()) {
+	if !(plan.IPForward.IsNull() || plan.IPForward.IsUnknown()) && (state == nil || !plan.IPForward.Equal(state.IPForward)) {
 		body["ip-forward"] = client.FormatBool(plan.IPForward.ValueBool())
 	}
-	if !(plan.Ipv4MultipathHashPolicy.IsNull() || plan.Ipv4MultipathHashPolicy.IsUnknown()) {
+	if !(plan.Ipv4MultipathHashPolicy.IsNull() || plan.Ipv4MultipathHashPolicy.IsUnknown()) && (state == nil || !plan.Ipv4MultipathHashPolicy.Equal(state.Ipv4MultipathHashPolicy)) {
 		body["ipv4-multipath-hash-policy"] = plan.Ipv4MultipathHashPolicy.ValueString()
 	}
-	if !(plan.MaxNeighborEntries.IsNull() || plan.MaxNeighborEntries.IsUnknown()) {
+	if !(plan.MaxNeighborEntries.IsNull() || plan.MaxNeighborEntries.IsUnknown()) && (state == nil || !plan.MaxNeighborEntries.Equal(state.MaxNeighborEntries)) {
 		body["max-neighbor-entries"] = client.FormatInt64(plan.MaxNeighborEntries.ValueInt64())
 	}
-	if !(plan.RpFilter.IsNull() || plan.RpFilter.IsUnknown()) {
+	if !(plan.RpFilter.IsNull() || plan.RpFilter.IsUnknown()) && (state == nil || !plan.RpFilter.Equal(state.RpFilter)) {
 		body["rp-filter"] = client.FormatBool(plan.RpFilter.ValueBool())
 	}
-	if !(plan.SecureRedirects.IsNull() || plan.SecureRedirects.IsUnknown()) {
+	if !(plan.SecureRedirects.IsNull() || plan.SecureRedirects.IsUnknown()) && (state == nil || !plan.SecureRedirects.Equal(state.SecureRedirects)) {
 		body["secure-redirects"] = client.FormatBool(plan.SecureRedirects.ValueBool())
 	}
-	if !(plan.SendRedirects.IsNull() || plan.SendRedirects.IsUnknown()) {
+	if !(plan.SendRedirects.IsNull() || plan.SendRedirects.IsUnknown()) && (state == nil || !plan.SendRedirects.Equal(state.SendRedirects)) {
 		body["send-redirects"] = client.FormatBool(plan.SendRedirects.ValueBool())
 	}
-	if !(plan.TCPSyncookies.IsNull() || plan.TCPSyncookies.IsUnknown()) {
+	if !(plan.TCPSyncookies.IsNull() || plan.TCPSyncookies.IsUnknown()) && (state == nil || !plan.TCPSyncookies.Equal(state.TCPSyncookies)) {
 		body["tcp-syncookies"] = client.FormatBool(plan.TCPSyncookies.ValueBool())
 	}
-	if !(plan.TCPTimestamps.IsNull() || plan.TCPTimestamps.IsUnknown()) {
+	if !(plan.TCPTimestamps.IsNull() || plan.TCPTimestamps.IsUnknown()) && (state == nil || !plan.TCPTimestamps.Equal(state.TCPTimestamps)) {
 		body["tcp-timestamps"] = plan.TCPTimestamps.ValueString()
 	}
-	if !(plan.Ipv4FragmentTime.IsNull() || plan.Ipv4FragmentTime.IsUnknown()) {
+	if !(plan.Ipv4FragmentTime.IsNull() || plan.Ipv4FragmentTime.IsUnknown()) && (state == nil || !plan.Ipv4FragmentTime.Equal(state.Ipv4FragmentTime)) {
 		body["ipv4-fragment-time"] = plan.Ipv4FragmentTime.ValueString()
 	}
-	if !(plan.Ipv4HighFragmentThresh.IsNull() || plan.Ipv4HighFragmentThresh.IsUnknown()) {
+	if !(plan.Ipv4HighFragmentThresh.IsNull() || plan.Ipv4HighFragmentThresh.IsUnknown()) && (state == nil || !plan.Ipv4HighFragmentThresh.Equal(state.Ipv4HighFragmentThresh)) {
 		body["ipv4-high-fragment-thresh"] = plan.Ipv4HighFragmentThresh.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/ip/settings", body)

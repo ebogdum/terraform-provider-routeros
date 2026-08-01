@@ -225,31 +225,31 @@ func (r *Interface6to4Resource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 	body := client.Object{}
-	if !plan.ClampTCPMss.Equal(state.ClampTCPMss) {
+	if !plan.ClampTCPMss.Equal(state.ClampTCPMss) && !plan.ClampTCPMss.IsUnknown() {
 		body["clamp-tcp-mss"] = client.FormatBool(plan.ClampTCPMss.ValueBool())
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.DontFragment.Equal(state.DontFragment) {
+	if !plan.DontFragment.Equal(state.DontFragment) && !plan.DontFragment.IsUnknown() {
 		body["dont-fragment"] = client.FormatBool(plan.DontFragment.ValueBool())
 	}
-	if !plan.Dscp.Equal(state.Dscp) {
+	if !plan.Dscp.Equal(state.Dscp) && !plan.Dscp.IsUnknown() {
 		body["dscp"] = plan.Dscp.ValueString()
 	}
-	if !plan.LocalAddress.Equal(state.LocalAddress) {
+	if !plan.LocalAddress.Equal(state.LocalAddress) && !plan.LocalAddress.IsUnknown() {
 		body["local-address"] = plan.LocalAddress.ValueString()
 	}
-	if !plan.MTU.Equal(state.MTU) {
+	if !plan.MTU.Equal(state.MTU) && !plan.MTU.IsUnknown() {
 		body["mtu"] = plan.MTU.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.RemoteAddress.Equal(state.RemoteAddress) {
+	if !plan.RemoteAddress.Equal(state.RemoteAddress) && !plan.RemoteAddress.IsUnknown() {
 		body["remote-address"] = plan.RemoteAddress.ValueString()
 	}
 	if !plan.IpsecSecret.Equal(state.IpsecSecret) && !plan.IpsecSecret.IsUnknown() {

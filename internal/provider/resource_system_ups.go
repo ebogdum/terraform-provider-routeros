@@ -325,31 +325,31 @@ func (r *SystemUpsResource) Update(ctx context.Context, req resource.UpdateReque
 		return
 	}
 	body := client.Object{}
-	if !plan.AlarmSetting.Equal(state.AlarmSetting) {
+	if !plan.AlarmSetting.Equal(state.AlarmSetting) && !plan.AlarmSetting.IsUnknown() {
 		body["alarm-setting"] = plan.AlarmSetting.ValueString()
 	}
-	if !plan.Beep.Equal(state.Beep) {
+	if !plan.Beep.Equal(state.Beep) && !plan.Beep.IsUnknown() {
 		body["beep"] = plan.Beep.ValueString()
 	}
-	if !plan.CheckCapabilities.Equal(state.CheckCapabilities) {
+	if !plan.CheckCapabilities.Equal(state.CheckCapabilities) && !plan.CheckCapabilities.IsUnknown() {
 		body["check-capabilities"] = plan.CheckCapabilities.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.MinRuntime.Equal(state.MinRuntime) {
+	if !plan.MinRuntime.Equal(state.MinRuntime) && !plan.MinRuntime.IsUnknown() {
 		body["min-runtime"] = plan.MinRuntime.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.OfflineTime.Equal(state.OfflineTime) {
+	if !plan.OfflineTime.Equal(state.OfflineTime) && !plan.OfflineTime.IsUnknown() {
 		body["offline-time"] = plan.OfflineTime.ValueString()
 	}
-	if !plan.Port.Equal(state.Port) {
+	if !plan.Port.Equal(state.Port) && !plan.Port.IsUnknown() {
 		body["port"] = plan.Port.ValueString()
 	}
 	if len(body) > 0 {

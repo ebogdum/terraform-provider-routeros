@@ -143,7 +143,7 @@ func (r *IPNeighborDiscoverySettingsResource) Create(ctx context.Context, req re
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPNeighborDiscoverySettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	iPNeighborDiscoverySettingsUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -156,7 +156,12 @@ func (r *IPNeighborDiscoverySettingsResource) Update(ctx context.Context, req re
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPNeighborDiscoverySettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state IPNeighborDiscoverySettingsModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	iPNeighborDiscoverySettingsUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -197,46 +202,46 @@ func (r *IPNeighborDiscoverySettingsResource) ImportState(ctx context.Context, r
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/ip/neighbor/discovery-settings", types.StringValue(routerName))))...)
 }
 
-func iPNeighborDiscoverySettingsUpsert(ctx context.Context, reg *client.Registry, plan *IPNeighborDiscoverySettingsModel, diags *diagBuf) {
+func iPNeighborDiscoverySettingsUpsert(ctx context.Context, reg *client.Registry, plan, state *IPNeighborDiscoverySettingsModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.DiscoverInterfaceList.IsNull() || plan.DiscoverInterfaceList.IsUnknown()) {
+	if !(plan.DiscoverInterfaceList.IsNull() || plan.DiscoverInterfaceList.IsUnknown()) && (state == nil || !plan.DiscoverInterfaceList.Equal(state.DiscoverInterfaceList)) {
 		body["discover-interface-list"] = plan.DiscoverInterfaceList.ValueString()
 	}
-	if !(plan.DiscoverInterval.IsNull() || plan.DiscoverInterval.IsUnknown()) {
+	if !(plan.DiscoverInterval.IsNull() || plan.DiscoverInterval.IsUnknown()) && (state == nil || !plan.DiscoverInterval.Equal(state.DiscoverInterval)) {
 		body["discover-interval"] = plan.DiscoverInterval.ValueString()
 	}
-	if !(plan.LldpMACPhyConfig.IsNull() || plan.LldpMACPhyConfig.IsUnknown()) {
+	if !(plan.LldpMACPhyConfig.IsNull() || plan.LldpMACPhyConfig.IsUnknown()) && (state == nil || !plan.LldpMACPhyConfig.Equal(state.LldpMACPhyConfig)) {
 		body["lldp-mac-phy-config"] = client.FormatBool(plan.LldpMACPhyConfig.ValueBool())
 	}
-	if !(plan.LldpMaxFrameSize.IsNull() || plan.LldpMaxFrameSize.IsUnknown()) {
+	if !(plan.LldpMaxFrameSize.IsNull() || plan.LldpMaxFrameSize.IsUnknown()) && (state == nil || !plan.LldpMaxFrameSize.Equal(state.LldpMaxFrameSize)) {
 		body["lldp-max-frame-size"] = client.FormatBool(plan.LldpMaxFrameSize.ValueBool())
 	}
-	if !(plan.LldpMedNetPolicyVlan.IsNull() || plan.LldpMedNetPolicyVlan.IsUnknown()) {
+	if !(plan.LldpMedNetPolicyVlan.IsNull() || plan.LldpMedNetPolicyVlan.IsUnknown()) && (state == nil || !plan.LldpMedNetPolicyVlan.Equal(state.LldpMedNetPolicyVlan)) {
 		body["lldp-med-net-policy-vlan"] = plan.LldpMedNetPolicyVlan.ValueString()
 	}
-	if !(plan.LldpPoePower.IsNull() || plan.LldpPoePower.IsUnknown()) {
+	if !(plan.LldpPoePower.IsNull() || plan.LldpPoePower.IsUnknown()) && (state == nil || !plan.LldpPoePower.Equal(state.LldpPoePower)) {
 		body["lldp-poe-power"] = client.FormatBool(plan.LldpPoePower.ValueBool())
 	}
-	if !(plan.LldpVlanInfo.IsNull() || plan.LldpVlanInfo.IsUnknown()) {
+	if !(plan.LldpVlanInfo.IsNull() || plan.LldpVlanInfo.IsUnknown()) && (state == nil || !plan.LldpVlanInfo.Equal(state.LldpVlanInfo)) {
 		body["lldp-vlan-info"] = client.FormatBool(plan.LldpVlanInfo.ValueBool())
 	}
-	if !(plan.Mode.IsNull() || plan.Mode.IsUnknown()) {
+	if !(plan.Mode.IsNull() || plan.Mode.IsUnknown()) && (state == nil || !plan.Mode.Equal(state.Mode)) {
 		body["mode"] = plan.Mode.ValueString()
 	}
-	if !(plan.Protocol.IsNull() || plan.Protocol.IsUnknown()) {
+	if !(plan.Protocol.IsNull() || plan.Protocol.IsUnknown()) && (state == nil || !plan.Protocol.Equal(state.Protocol)) {
 		body["protocol"] = plan.Protocol.ValueString()
 	}
-	if !(plan.AddDnsEntries.IsNull() || plan.AddDnsEntries.IsUnknown()) {
+	if !(plan.AddDnsEntries.IsNull() || plan.AddDnsEntries.IsUnknown()) && (state == nil || !plan.AddDnsEntries.Equal(state.AddDnsEntries)) {
 		body["add-dns-entries"] = plan.AddDnsEntries.ValueString()
 	}
-	if !(plan.AddDnsEntriesSuffix.IsNull() || plan.AddDnsEntriesSuffix.IsUnknown()) {
+	if !(plan.AddDnsEntriesSuffix.IsNull() || plan.AddDnsEntriesSuffix.IsUnknown()) && (state == nil || !plan.AddDnsEntriesSuffix.Equal(state.AddDnsEntriesSuffix)) {
 		body["add-dns-entries-suffix"] = plan.AddDnsEntriesSuffix.ValueString()
 	}
-	if !(plan.LldpMed.IsNull() || plan.LldpMed.IsUnknown()) {
+	if !(plan.LldpMed.IsNull() || plan.LldpMed.IsUnknown()) && (state == nil || !plan.LldpMed.Equal(state.LldpMed)) {
 		body["lldp-med"] = plan.LldpMed.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/ip/neighbor/discovery-settings", body)

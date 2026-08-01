@@ -212,34 +212,34 @@ func (r *RoutingRpkiResource) Update(ctx context.Context, req resource.UpdateReq
 		return
 	}
 	body := client.Object{}
-	if !plan.Address.Equal(state.Address) {
+	if !plan.Address.Equal(state.Address) && !plan.Address.IsUnknown() {
 		body["address"] = plan.Address.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.ExpireInterval.Equal(state.ExpireInterval) {
+	if !plan.ExpireInterval.Equal(state.ExpireInterval) && !plan.ExpireInterval.IsUnknown() {
 		body["expire-interval"] = plan.ExpireInterval.ValueString()
 	}
-	if !plan.Group.Equal(state.Group) {
+	if !plan.Group.Equal(state.Group) && !plan.Group.IsUnknown() {
 		body["group"] = plan.Group.ValueString()
 	}
-	if !plan.Port.Equal(state.Port) {
+	if !plan.Port.Equal(state.Port) && !plan.Port.IsUnknown() {
 		body["port"] = plan.Port.ValueString()
 	}
-	if !plan.Preference.Equal(state.Preference) {
+	if !plan.Preference.Equal(state.Preference) && !plan.Preference.IsUnknown() {
 		body["preference"] = plan.Preference.ValueString()
 	}
-	if !plan.RefreshInterval.Equal(state.RefreshInterval) {
+	if !plan.RefreshInterval.Equal(state.RefreshInterval) && !plan.RefreshInterval.IsUnknown() {
 		body["refresh-interval"] = plan.RefreshInterval.ValueString()
 	}
-	if !plan.RetryInterval.Equal(state.RetryInterval) {
+	if !plan.RetryInterval.Equal(state.RetryInterval) && !plan.RetryInterval.IsUnknown() {
 		body["retry-interval"] = plan.RetryInterval.ValueString()
 	}
-	if !plan.Vrf.Equal(state.Vrf) {
+	if !plan.Vrf.Equal(state.Vrf) && !plan.Vrf.IsUnknown() {
 		body["vrf"] = plan.Vrf.ValueString()
 	}
 	if len(body) > 0 {

@@ -327,19 +327,19 @@ func (r *IPV6DHCPClientResource) Update(ctx context.Context, req resource.Update
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.DefaultRouteDistance.Equal(state.DefaultRouteDistance) {
+	if !plan.DefaultRouteDistance.Equal(state.DefaultRouteDistance) && !plan.DefaultRouteDistance.IsUnknown() {
 		body["default-route-distance"] = plan.DefaultRouteDistance.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.Request.Equal(state.Request) {
+	if !plan.Request.Equal(state.Request) && !plan.Request.IsUnknown() {
 		body["request"] = plan.Request.ValueString()
 	}
 	if !plan.AcceptPrefixWithoutAddress.Equal(state.AcceptPrefixWithoutAddress) && !plan.AcceptPrefixWithoutAddress.IsUnknown() {

@@ -490,109 +490,109 @@ func (r *PPPProfileResource) Update(ctx context.Context, req resource.UpdateRequ
 		return
 	}
 	body := client.Object{}
-	if !plan.AddressList.Equal(state.AddressList) {
+	if !plan.AddressList.Equal(state.AddressList) && !plan.AddressList.IsUnknown() {
 		body["address-list"] = plan.AddressList.ValueString()
 	}
-	if !plan.Bridge.Equal(state.Bridge) {
+	if !plan.Bridge.Equal(state.Bridge) && !plan.Bridge.IsUnknown() {
 		body["bridge"] = plan.Bridge.ValueString()
 	}
-	if !plan.BridgeHorizon.Equal(state.BridgeHorizon) {
+	if !plan.BridgeHorizon.Equal(state.BridgeHorizon) && !plan.BridgeHorizon.IsUnknown() {
 		body["bridge-horizon"] = plan.BridgeHorizon.ValueString()
 	}
-	if !plan.BridgeLearning.Equal(state.BridgeLearning) {
+	if !plan.BridgeLearning.Equal(state.BridgeLearning) && !plan.BridgeLearning.IsUnknown() {
 		body["bridge-learning"] = plan.BridgeLearning.ValueString()
 	}
-	if !plan.BridgePathCost.Equal(state.BridgePathCost) {
+	if !plan.BridgePathCost.Equal(state.BridgePathCost) && !plan.BridgePathCost.IsUnknown() {
 		body["bridge-path-cost"] = plan.BridgePathCost.ValueString()
 	}
-	if !plan.BridgePortPriority.Equal(state.BridgePortPriority) {
+	if !plan.BridgePortPriority.Equal(state.BridgePortPriority) && !plan.BridgePortPriority.IsUnknown() {
 		body["bridge-port-priority"] = plan.BridgePortPriority.ValueString()
 	}
-	if !plan.BridgePortTrusted.Equal(state.BridgePortTrusted) {
+	if !plan.BridgePortTrusted.Equal(state.BridgePortTrusted) && !plan.BridgePortTrusted.IsUnknown() {
 		body["bridge-port-trusted"] = plan.BridgePortTrusted.ValueString()
 	}
-	if !plan.BridgePortVid.Equal(state.BridgePortVid) {
+	if !plan.BridgePortVid.Equal(state.BridgePortVid) && !plan.BridgePortVid.IsUnknown() {
 		body["bridge-port-vid"] = plan.BridgePortVid.ValueString()
 	}
-	if !plan.ChangeTCPMss.Equal(state.ChangeTCPMss) {
+	if !plan.ChangeTCPMss.Equal(state.ChangeTCPMss) && !plan.ChangeTCPMss.IsUnknown() {
 		body["change-tcp-mss"] = plan.ChangeTCPMss.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Dhcpv6LeaseTime.Equal(state.Dhcpv6LeaseTime) {
+	if !plan.Dhcpv6LeaseTime.Equal(state.Dhcpv6LeaseTime) && !plan.Dhcpv6LeaseTime.IsUnknown() {
 		body["dhcpv6-lease-time"] = plan.Dhcpv6LeaseTime.ValueString()
 	}
-	if !plan.Dhcpv6PdPool.Equal(state.Dhcpv6PdPool) {
+	if !plan.Dhcpv6PdPool.Equal(state.Dhcpv6PdPool) && !plan.Dhcpv6PdPool.IsUnknown() {
 		body["dhcpv6-pd-pool"] = plan.Dhcpv6PdPool.ValueString()
 	}
-	if !plan.Dhcpv6UseRADIUS.Equal(state.Dhcpv6UseRADIUS) {
+	if !plan.Dhcpv6UseRADIUS.Equal(state.Dhcpv6UseRADIUS) && !plan.Dhcpv6UseRADIUS.IsUnknown() {
 		body["dhcpv6-use-radius"] = plan.Dhcpv6UseRADIUS.ValueString()
 	}
-	if !plan.DNSServer.Equal(state.DNSServer) {
+	if !plan.DNSServer.Equal(state.DNSServer) && !plan.DNSServer.IsUnknown() {
 		body["dns-server"] = plan.DNSServer.ValueString()
 	}
-	if !plan.IdleTimeout.Equal(state.IdleTimeout) {
+	if !plan.IdleTimeout.Equal(state.IdleTimeout) && !plan.IdleTimeout.IsUnknown() {
 		body["idle-timeout"] = plan.IdleTimeout.ValueString()
 	}
-	if !plan.IncomingFilter.Equal(state.IncomingFilter) {
+	if !plan.IncomingFilter.Equal(state.IncomingFilter) && !plan.IncomingFilter.IsUnknown() {
 		body["incoming-filter"] = plan.IncomingFilter.ValueString()
 	}
-	if !plan.InsertQueueBefore.Equal(state.InsertQueueBefore) {
+	if !plan.InsertQueueBefore.Equal(state.InsertQueueBefore) && !plan.InsertQueueBefore.IsUnknown() {
 		body["insert-queue-before"] = plan.InsertQueueBefore.ValueString()
 	}
-	if !plan.InterfaceList.Equal(state.InterfaceList) {
+	if !plan.InterfaceList.Equal(state.InterfaceList) && !plan.InterfaceList.IsUnknown() {
 		body["interface-list"] = plan.InterfaceList.ValueString()
 	}
-	if !plan.LocalAddress.Equal(state.LocalAddress) {
+	if !plan.LocalAddress.Equal(state.LocalAddress) && !plan.LocalAddress.IsUnknown() {
 		body["local-address"] = plan.LocalAddress.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.OnDown.Equal(state.OnDown) {
+	if !plan.OnDown.Equal(state.OnDown) && !plan.OnDown.IsUnknown() {
 		body["on-down"] = plan.OnDown.ValueString()
 	}
-	if !plan.OnUp.Equal(state.OnUp) {
+	if !plan.OnUp.Equal(state.OnUp) && !plan.OnUp.IsUnknown() {
 		body["on-up"] = plan.OnUp.ValueString()
 	}
-	if !plan.OnlyOne.Equal(state.OnlyOne) {
+	if !plan.OnlyOne.Equal(state.OnlyOne) && !plan.OnlyOne.IsUnknown() {
 		body["only-one"] = plan.OnlyOne.ValueString()
 	}
-	if !plan.OutgoingFilter.Equal(state.OutgoingFilter) {
+	if !plan.OutgoingFilter.Equal(state.OutgoingFilter) && !plan.OutgoingFilter.IsUnknown() {
 		body["outgoing-filter"] = plan.OutgoingFilter.ValueString()
 	}
-	if !plan.ParentQueue.Equal(state.ParentQueue) {
+	if !plan.ParentQueue.Equal(state.ParentQueue) && !plan.ParentQueue.IsUnknown() {
 		body["parent-queue"] = plan.ParentQueue.ValueString()
 	}
-	if !plan.RemoteAddress.Equal(state.RemoteAddress) {
+	if !plan.RemoteAddress.Equal(state.RemoteAddress) && !plan.RemoteAddress.IsUnknown() {
 		body["remote-address"] = plan.RemoteAddress.ValueString()
 	}
-	if !plan.RemoteIPV6PrefixPool.Equal(state.RemoteIPV6PrefixPool) {
+	if !plan.RemoteIPV6PrefixPool.Equal(state.RemoteIPV6PrefixPool) && !plan.RemoteIPV6PrefixPool.IsUnknown() {
 		body["remote-ipv6-prefix-pool"] = plan.RemoteIPV6PrefixPool.ValueString()
 	}
-	if !plan.RemoteIPV6PrefixReuse.Equal(state.RemoteIPV6PrefixReuse) {
+	if !plan.RemoteIPV6PrefixReuse.Equal(state.RemoteIPV6PrefixReuse) && !plan.RemoteIPV6PrefixReuse.IsUnknown() {
 		body["remote-ipv6-prefix-reuse"] = plan.RemoteIPV6PrefixReuse.ValueString()
 	}
-	if !plan.SessionTimeout.Equal(state.SessionTimeout) {
+	if !plan.SessionTimeout.Equal(state.SessionTimeout) && !plan.SessionTimeout.IsUnknown() {
 		body["session-timeout"] = plan.SessionTimeout.ValueString()
 	}
-	if !plan.UseCompression.Equal(state.UseCompression) {
+	if !plan.UseCompression.Equal(state.UseCompression) && !plan.UseCompression.IsUnknown() {
 		body["use-compression"] = plan.UseCompression.ValueString()
 	}
-	if !plan.UseEncryption.Equal(state.UseEncryption) {
+	if !plan.UseEncryption.Equal(state.UseEncryption) && !plan.UseEncryption.IsUnknown() {
 		body["use-encryption"] = plan.UseEncryption.ValueString()
 	}
-	if !plan.UseIPV6.Equal(state.UseIPV6) {
+	if !plan.UseIPV6.Equal(state.UseIPV6) && !plan.UseIPV6.IsUnknown() {
 		body["use-ipv6"] = plan.UseIPV6.ValueString()
 	}
-	if !plan.UseMPLS.Equal(state.UseMPLS) {
+	if !plan.UseMPLS.Equal(state.UseMPLS) && !plan.UseMPLS.IsUnknown() {
 		body["use-mpls"] = plan.UseMPLS.ValueString()
 	}
-	if !plan.UseUpnp.Equal(state.UseUpnp) {
+	if !plan.UseUpnp.Equal(state.UseUpnp) && !plan.UseUpnp.IsUnknown() {
 		body["use-upnp"] = plan.UseUpnp.ValueString()
 	}
-	if !plan.WinsServer.Equal(state.WinsServer) {
+	if !plan.WinsServer.Equal(state.WinsServer) && !plan.WinsServer.IsUnknown() {
 		body["wins-server"] = plan.WinsServer.ValueString()
 	}
 	if !plan.QueueType.Equal(state.QueueType) && !plan.QueueType.IsUnknown() {

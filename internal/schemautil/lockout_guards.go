@@ -7,10 +7,49 @@ package schemautil
 
 import (
 	"errors"
+	"net"
 	"strings"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
 )
+
+// CheckWatchdogLockout refuses a /system/watchdog watch-address that can never
+// be a valid ping target -- documentation (TEST-NET), loopback, link-local,
+// unspecified, multicast or reserved space. RouterOS's ping watchdog reboots
+// the board when the address is unreachable, so a bad watch-address
+// reboot-loops the device off the network with no Terraform-side error. The
+// caller passes the intended body; set acknowledged (lockout_ack=true) to
+// override.
+func CheckWatchdogLockout(body client.Object, acknowledged bool) error {
+	if acknowledged {
+		return nil
+	}
+	addr := strings.TrimSpace(body["watch-address"])
+	if addr == "" || strings.EqualFold(addr, "none") {
+		return nil
+	}
+	ip := net.ParseIP(addr)
+	if ip == nil {
+		return nil // not an IP literal (e.g. a name); nothing to judge here
+	}
+	unroutable := ip.IsLoopback() || ip.IsLinkLocalUnicast() || ip.IsLinkLocalMulticast() ||
+		ip.IsMulticast() || ip.IsUnspecified()
+	// RFC 5737 documentation ranges + RFC 6598/reserved that never answer pings.
+	for _, cidr := range []string{"192.0.2.0/24", "198.51.100.0/24", "203.0.113.0/24", "240.0.0.0/4"} {
+		_, n, _ := net.ParseCIDR(cidr)
+		if n != nil && n.Contains(ip) {
+			unroutable = true
+			break
+		}
+	}
+	if !unroutable {
+		return nil
+	}
+	return errors.New("refusing /system/watchdog watch-address=" + addr +
+		": this address cannot answer pings, so RouterOS's ping watchdog will " +
+		"reboot-loop the device off the network. Use a reachable address, `none`, " +
+		"or set lockout_ack=true to override")
+}
 
 // CheckUserDeleteLockout refuses to delete or disable a user named "admin"
 // (or the last enabled member of the "full" group). Caller passes the row's

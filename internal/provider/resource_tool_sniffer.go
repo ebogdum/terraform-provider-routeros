@@ -194,7 +194,7 @@ func (r *ToolSnifferResource) Create(ctx context.Context, req resource.CreateReq
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	toolSnifferUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	toolSnifferUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -207,7 +207,12 @@ func (r *ToolSnifferResource) Update(ctx context.Context, req resource.UpdateReq
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	toolSnifferUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state ToolSnifferModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	toolSnifferUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -248,103 +253,103 @@ func (r *ToolSnifferResource) ImportState(ctx context.Context, req resource.Impo
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/tool/sniffer", types.StringValue(routerName))))...)
 }
 
-func toolSnifferUpsert(ctx context.Context, reg *client.Registry, plan *ToolSnifferModel, diags *diagBuf) {
+func toolSnifferUpsert(ctx context.Context, reg *client.Registry, plan, state *ToolSnifferModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.FileLimit.IsNull() || plan.FileLimit.IsUnknown()) {
+	if !(plan.FileLimit.IsNull() || plan.FileLimit.IsUnknown()) && (state == nil || !plan.FileLimit.Equal(state.FileLimit)) {
 		body["file-limit"] = client.FormatInt64(plan.FileLimit.ValueInt64())
 	}
-	if !(plan.FileName.IsNull() || plan.FileName.IsUnknown()) {
+	if !(plan.FileName.IsNull() || plan.FileName.IsUnknown()) && (state == nil || !plan.FileName.Equal(state.FileName)) {
 		body["file-name"] = plan.FileName.ValueString()
 	}
-	if !(plan.FilterCpu.IsNull() || plan.FilterCpu.IsUnknown()) {
+	if !(plan.FilterCpu.IsNull() || plan.FilterCpu.IsUnknown()) && (state == nil || !plan.FilterCpu.Equal(state.FilterCpu)) {
 		body["filter-cpu"] = plan.FilterCpu.ValueString()
 	}
-	if !(plan.FilterDirection.IsNull() || plan.FilterDirection.IsUnknown()) {
+	if !(plan.FilterDirection.IsNull() || plan.FilterDirection.IsUnknown()) && (state == nil || !plan.FilterDirection.Equal(state.FilterDirection)) {
 		body["filter-direction"] = plan.FilterDirection.ValueString()
 	}
-	if !(plan.FilterDstIPAddress.IsNull() || plan.FilterDstIPAddress.IsUnknown()) {
+	if !(plan.FilterDstIPAddress.IsNull() || plan.FilterDstIPAddress.IsUnknown()) && (state == nil || !plan.FilterDstIPAddress.Equal(state.FilterDstIPAddress)) {
 		body["filter-dst-ip-address"] = plan.FilterDstIPAddress.ValueString()
 	}
-	if !(plan.FilterDstIPV6Address.IsNull() || plan.FilterDstIPV6Address.IsUnknown()) {
+	if !(plan.FilterDstIPV6Address.IsNull() || plan.FilterDstIPV6Address.IsUnknown()) && (state == nil || !plan.FilterDstIPV6Address.Equal(state.FilterDstIPV6Address)) {
 		body["filter-dst-ipv6-address"] = plan.FilterDstIPV6Address.ValueString()
 	}
-	if !(plan.FilterDstMACAddress.IsNull() || plan.FilterDstMACAddress.IsUnknown()) {
+	if !(plan.FilterDstMACAddress.IsNull() || plan.FilterDstMACAddress.IsUnknown()) && (state == nil || !plan.FilterDstMACAddress.Equal(state.FilterDstMACAddress)) {
 		body["filter-dst-mac-address"] = plan.FilterDstMACAddress.ValueString()
 	}
-	if !(plan.FilterDstPort.IsNull() || plan.FilterDstPort.IsUnknown()) {
+	if !(plan.FilterDstPort.IsNull() || plan.FilterDstPort.IsUnknown()) && (state == nil || !plan.FilterDstPort.Equal(state.FilterDstPort)) {
 		body["filter-dst-port"] = plan.FilterDstPort.ValueString()
 	}
-	if !(plan.FilterInterface.IsNull() || plan.FilterInterface.IsUnknown()) {
+	if !(plan.FilterInterface.IsNull() || plan.FilterInterface.IsUnknown()) && (state == nil || !plan.FilterInterface.Equal(state.FilterInterface)) {
 		body["filter-interface"] = plan.FilterInterface.ValueString()
 	}
-	if !(plan.FilterIPAddress.IsNull() || plan.FilterIPAddress.IsUnknown()) {
+	if !(plan.FilterIPAddress.IsNull() || plan.FilterIPAddress.IsUnknown()) && (state == nil || !plan.FilterIPAddress.Equal(state.FilterIPAddress)) {
 		body["filter-ip-address"] = plan.FilterIPAddress.ValueString()
 	}
-	if !(plan.FilterIPProtocol.IsNull() || plan.FilterIPProtocol.IsUnknown()) {
+	if !(plan.FilterIPProtocol.IsNull() || plan.FilterIPProtocol.IsUnknown()) && (state == nil || !plan.FilterIPProtocol.Equal(state.FilterIPProtocol)) {
 		body["filter-ip-protocol"] = plan.FilterIPProtocol.ValueString()
 	}
-	if !(plan.FilterIPV6Address.IsNull() || plan.FilterIPV6Address.IsUnknown()) {
+	if !(plan.FilterIPV6Address.IsNull() || plan.FilterIPV6Address.IsUnknown()) && (state == nil || !plan.FilterIPV6Address.Equal(state.FilterIPV6Address)) {
 		body["filter-ipv6-address"] = plan.FilterIPV6Address.ValueString()
 	}
-	if !(plan.FilterMACAddress.IsNull() || plan.FilterMACAddress.IsUnknown()) {
+	if !(plan.FilterMACAddress.IsNull() || plan.FilterMACAddress.IsUnknown()) && (state == nil || !plan.FilterMACAddress.Equal(state.FilterMACAddress)) {
 		body["filter-mac-address"] = plan.FilterMACAddress.ValueString()
 	}
-	if !(plan.FilterMACProtocol.IsNull() || plan.FilterMACProtocol.IsUnknown()) {
+	if !(plan.FilterMACProtocol.IsNull() || plan.FilterMACProtocol.IsUnknown()) && (state == nil || !plan.FilterMACProtocol.Equal(state.FilterMACProtocol)) {
 		body["filter-mac-protocol"] = plan.FilterMACProtocol.ValueString()
 	}
-	if !(plan.FilterOperatorBetweenEntries.IsNull() || plan.FilterOperatorBetweenEntries.IsUnknown()) {
+	if !(plan.FilterOperatorBetweenEntries.IsNull() || plan.FilterOperatorBetweenEntries.IsUnknown()) && (state == nil || !plan.FilterOperatorBetweenEntries.Equal(state.FilterOperatorBetweenEntries)) {
 		body["filter-operator-between-entries"] = plan.FilterOperatorBetweenEntries.ValueString()
 	}
-	if !(plan.FilterPort.IsNull() || plan.FilterPort.IsUnknown()) {
+	if !(plan.FilterPort.IsNull() || plan.FilterPort.IsUnknown()) && (state == nil || !plan.FilterPort.Equal(state.FilterPort)) {
 		body["filter-port"] = plan.FilterPort.ValueString()
 	}
-	if !(plan.FilterSize.IsNull() || plan.FilterSize.IsUnknown()) {
+	if !(plan.FilterSize.IsNull() || plan.FilterSize.IsUnknown()) && (state == nil || !plan.FilterSize.Equal(state.FilterSize)) {
 		body["filter-size"] = plan.FilterSize.ValueString()
 	}
-	if !(plan.FilterSrcIPAddress.IsNull() || plan.FilterSrcIPAddress.IsUnknown()) {
+	if !(plan.FilterSrcIPAddress.IsNull() || plan.FilterSrcIPAddress.IsUnknown()) && (state == nil || !plan.FilterSrcIPAddress.Equal(state.FilterSrcIPAddress)) {
 		body["filter-src-ip-address"] = plan.FilterSrcIPAddress.ValueString()
 	}
-	if !(plan.FilterSrcIPV6Address.IsNull() || plan.FilterSrcIPV6Address.IsUnknown()) {
+	if !(plan.FilterSrcIPV6Address.IsNull() || plan.FilterSrcIPV6Address.IsUnknown()) && (state == nil || !plan.FilterSrcIPV6Address.Equal(state.FilterSrcIPV6Address)) {
 		body["filter-src-ipv6-address"] = plan.FilterSrcIPV6Address.ValueString()
 	}
-	if !(plan.FilterSrcMACAddress.IsNull() || plan.FilterSrcMACAddress.IsUnknown()) {
+	if !(plan.FilterSrcMACAddress.IsNull() || plan.FilterSrcMACAddress.IsUnknown()) && (state == nil || !plan.FilterSrcMACAddress.Equal(state.FilterSrcMACAddress)) {
 		body["filter-src-mac-address"] = plan.FilterSrcMACAddress.ValueString()
 	}
-	if !(plan.FilterSrcPort.IsNull() || plan.FilterSrcPort.IsUnknown()) {
+	if !(plan.FilterSrcPort.IsNull() || plan.FilterSrcPort.IsUnknown()) && (state == nil || !plan.FilterSrcPort.Equal(state.FilterSrcPort)) {
 		body["filter-src-port"] = plan.FilterSrcPort.ValueString()
 	}
-	if !(plan.FilterStream.IsNull() || plan.FilterStream.IsUnknown()) {
+	if !(plan.FilterStream.IsNull() || plan.FilterStream.IsUnknown()) && (state == nil || !plan.FilterStream.Equal(state.FilterStream)) {
 		body["filter-stream"] = client.FormatBool(plan.FilterStream.ValueBool())
 	}
-	if !(plan.FilterVLAN.IsNull() || plan.FilterVLAN.IsUnknown()) {
+	if !(plan.FilterVLAN.IsNull() || plan.FilterVLAN.IsUnknown()) && (state == nil || !plan.FilterVLAN.Equal(state.FilterVLAN)) {
 		body["filter-vlan"] = plan.FilterVLAN.ValueString()
 	}
-	if !(plan.MaxPacketSize.IsNull() || plan.MaxPacketSize.IsUnknown()) {
+	if !(plan.MaxPacketSize.IsNull() || plan.MaxPacketSize.IsUnknown()) && (state == nil || !plan.MaxPacketSize.Equal(state.MaxPacketSize)) {
 		body["max-packet-size"] = client.FormatInt64(plan.MaxPacketSize.ValueInt64())
 	}
-	if !(plan.MemoryLimit.IsNull() || plan.MemoryLimit.IsUnknown()) {
+	if !(plan.MemoryLimit.IsNull() || plan.MemoryLimit.IsUnknown()) && (state == nil || !plan.MemoryLimit.Equal(state.MemoryLimit)) {
 		body["memory-limit"] = client.FormatInt64(plan.MemoryLimit.ValueInt64())
 	}
-	if !(plan.MemoryScroll.IsNull() || plan.MemoryScroll.IsUnknown()) {
+	if !(plan.MemoryScroll.IsNull() || plan.MemoryScroll.IsUnknown()) && (state == nil || !plan.MemoryScroll.Equal(state.MemoryScroll)) {
 		body["memory-scroll"] = client.FormatBool(plan.MemoryScroll.ValueBool())
 	}
-	if !(plan.OnlyHeaders.IsNull() || plan.OnlyHeaders.IsUnknown()) {
+	if !(plan.OnlyHeaders.IsNull() || plan.OnlyHeaders.IsUnknown()) && (state == nil || !plan.OnlyHeaders.Equal(state.OnlyHeaders)) {
 		body["only-headers"] = client.FormatBool(plan.OnlyHeaders.ValueBool())
 	}
-	if !(plan.QuickRows.IsNull() || plan.QuickRows.IsUnknown()) {
+	if !(plan.QuickRows.IsNull() || plan.QuickRows.IsUnknown()) && (state == nil || !plan.QuickRows.Equal(state.QuickRows)) {
 		body["quick-rows"] = client.FormatInt64(plan.QuickRows.ValueInt64())
 	}
-	if !(plan.QuickShowFrame.IsNull() || plan.QuickShowFrame.IsUnknown()) {
+	if !(plan.QuickShowFrame.IsNull() || plan.QuickShowFrame.IsUnknown()) && (state == nil || !plan.QuickShowFrame.Equal(state.QuickShowFrame)) {
 		body["quick-show-frame"] = client.FormatBool(plan.QuickShowFrame.ValueBool())
 	}
-	if !(plan.StreamingEnabled.IsNull() || plan.StreamingEnabled.IsUnknown()) {
+	if !(plan.StreamingEnabled.IsNull() || plan.StreamingEnabled.IsUnknown()) && (state == nil || !plan.StreamingEnabled.Equal(state.StreamingEnabled)) {
 		body["streaming-enabled"] = client.FormatBool(plan.StreamingEnabled.ValueBool())
 	}
-	if !(plan.StreamingServer.IsNull() || plan.StreamingServer.IsUnknown()) {
+	if !(plan.StreamingServer.IsNull() || plan.StreamingServer.IsUnknown()) && (state == nil || !plan.StreamingServer.Equal(state.StreamingServer)) {
 		body["streaming-server"] = plan.StreamingServer.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/tool/sniffer", body)

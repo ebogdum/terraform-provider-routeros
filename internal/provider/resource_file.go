@@ -235,10 +235,10 @@ func (r *FileResource) Update(ctx context.Context, req resource.UpdateRequest, r
 		return
 	}
 	body := client.Object{}
-	if !plan.Contents.Equal(state.Contents) {
+	if !plan.Contents.Equal(state.Contents) && !plan.Contents.IsUnknown() {
 		body["contents"] = plan.Contents.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
 	if len(body) > 0 {

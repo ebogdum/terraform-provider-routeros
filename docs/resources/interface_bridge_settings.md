@@ -29,11 +29,11 @@ This resource supports the following arguments:
 
 * `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `allow_fast_path` - (Optional) Type: `bool`.
-* `bridge_fast_forward_bytes` - (Optional) Type: `int`.
-* `bridge_fast_forward_packets` - (Optional) Type: `int`.
-* `bridge_fast_path_active` - (Optional) Type: `bool`.
-* `bridge_fast_path_bytes` - (Optional) Type: `int`.
-* `bridge_fast_path_packets` - (Optional) Type: `int`.
+* `bridge_fast_forward_bytes` - (Read-only) Type: `int`.
+* `bridge_fast_forward_packets` - (Read-only) Type: `int`.
+* `bridge_fast_path_active` - (Read-only) Type: `bool`.
+* `bridge_fast_path_bytes` - (Read-only) Type: `int`.
+* `bridge_fast_path_packets` - (Read-only) Type: `int`.
 * `use_ip_firewall` - (Optional) Type: `bool`.
 * `use_ip_firewall_for_pppoe` - (Optional) Type: `bool`.
 * `use_ip_firewall_for_vlan` - (Optional) Type: `bool`.

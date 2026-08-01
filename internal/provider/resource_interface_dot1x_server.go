@@ -264,46 +264,46 @@ func (r *InterfaceDot1xServerResource) Update(ctx context.Context, req resource.
 		return
 	}
 	body := client.Object{}
-	if !plan.Accounting.Equal(state.Accounting) {
+	if !plan.Accounting.Equal(state.Accounting) && !plan.Accounting.IsUnknown() {
 		body["accounting"] = client.FormatBool(plan.Accounting.ValueBool())
 	}
-	if !plan.AuthTimeout.Equal(state.AuthTimeout) {
+	if !plan.AuthTimeout.Equal(state.AuthTimeout) && !plan.AuthTimeout.IsUnknown() {
 		body["auth-timeout"] = plan.AuthTimeout.ValueString()
 	}
-	if !plan.AuthTypes.Equal(state.AuthTypes) {
+	if !plan.AuthTypes.Equal(state.AuthTypes) && !plan.AuthTypes.IsUnknown() {
 		body["auth-types"] = plan.AuthTypes.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.GuestVLANID.Equal(state.GuestVLANID) {
+	if !plan.GuestVLANID.Equal(state.GuestVLANID) && !plan.GuestVLANID.IsUnknown() {
 		body["guest-vlan-id"] = plan.GuestVLANID.ValueString()
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.InterimUpdate.Equal(state.InterimUpdate) {
+	if !plan.InterimUpdate.Equal(state.InterimUpdate) && !plan.InterimUpdate.IsUnknown() {
 		body["interim-update"] = plan.InterimUpdate.ValueString()
 	}
-	if !plan.MACAuthMode.Equal(state.MACAuthMode) {
+	if !plan.MACAuthMode.Equal(state.MACAuthMode) && !plan.MACAuthMode.IsUnknown() {
 		body["mac-auth-mode"] = plan.MACAuthMode.ValueString()
 	}
-	if !plan.RADIUSMACFormat.Equal(state.RADIUSMACFormat) {
+	if !plan.RADIUSMACFormat.Equal(state.RADIUSMACFormat) && !plan.RADIUSMACFormat.IsUnknown() {
 		body["radius-mac-format"] = plan.RADIUSMACFormat.ValueString()
 	}
-	if !plan.ReauthTimeout.Equal(state.ReauthTimeout) {
+	if !plan.ReauthTimeout.Equal(state.ReauthTimeout) && !plan.ReauthTimeout.IsUnknown() {
 		body["reauth-timeout"] = plan.ReauthTimeout.ValueString()
 	}
-	if !plan.RejectVLANID.Equal(state.RejectVLANID) {
+	if !plan.RejectVLANID.Equal(state.RejectVLANID) && !plan.RejectVLANID.IsUnknown() {
 		body["reject-vlan-id"] = plan.RejectVLANID.ValueString()
 	}
-	if !plan.RetransTimeout.Equal(state.RetransTimeout) {
+	if !plan.RetransTimeout.Equal(state.RetransTimeout) && !plan.RetransTimeout.IsUnknown() {
 		body["retrans-timeout"] = plan.RetransTimeout.ValueString()
 	}
-	if !plan.ServerFailVLANID.Equal(state.ServerFailVLANID) {
+	if !plan.ServerFailVLANID.Equal(state.ServerFailVLANID) && !plan.ServerFailVLANID.IsUnknown() {
 		body["server-fail-vlan-id"] = plan.ServerFailVLANID.ValueString()
 	}
 	if len(body) > 0 {
