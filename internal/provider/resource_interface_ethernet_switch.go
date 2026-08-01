@@ -158,12 +158,30 @@ func (r *InterfaceEthernetSwitchResource) Create(ctx context.Context, req resour
 	if !(plan.SwitchAllPorts.IsNull() || plan.SwitchAllPorts.IsUnknown()) {
 		body["switch-all-ports"] = plan.SwitchAllPorts.ValueString()
 	}
-	obj, err := c.Add(ctx, "/interface/ethernet/switch", body)
+	rows, err := c.List(ctx, "/interface/ethernet/switch")
 	if err != nil {
-		resp.Diagnostics.AddError("Create /interface/ethernet/switch failed", err.Error())
+		resp.Diagnostics.AddError("Read /interface/ethernet/switch failed", err.Error())
+		return
+	}
+	want := plan.Name.ValueString()
+	var id string
+	for _, row := range rows {
+		if row["name"] == want || row["default-name"] == want {
+			id = row[".id"]
+			break
+		}
+	}
+	if id == "" {
+		resp.Diagnostics.AddError("Unknown /interface/ethernet/switch "+want, fmt.Sprintf("/interface/ethernet/switch is a fixed hardware row set; no row matches name %q. Import the interface instead of creating it.", want))
+		return
+	}
+	obj, err := c.Set(ctx, "/interface/ethernet/switch", id, body)
+	if err != nil {
+		resp.Diagnostics.AddError("Adopt /interface/ethernet/switch failed", err.Error())
 		return
 	}
 	interfaceEthernetSwitchApply(ctx, obj, &plan)
+	plan.ID = types.StringValue(id)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -246,18 +264,11 @@ func (r *InterfaceEthernetSwitchResource) Update(ctx context.Context, req resour
 }
 
 func (r *InterfaceEthernetSwitchResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state InterfaceEthernetSwitchModel
-	if diags := req.State.Get(ctx, &state); diags.HasError() {
-		resp.Diagnostics.Append(diags...)
-		return
-	}
-	c := pickClient(r.reg, state.Router, &resp.Diagnostics)
-	if c == nil {
-		return
-	}
-	if err := c.Remove(ctx, "/interface/ethernet/switch", state.ID.ValueString()); err != nil {
-		resp.Diagnostics.AddError("Delete /interface/ethernet/switch failed", err.Error())
-	}
+	// Fixed hardware row: cannot be removed. Drop from state; the row keeps
+	// its last-applied settings (adopt-only, like /ip/service).
+	_ = ctx
+	_ = req
+	_ = resp
 }
 
 func (r *InterfaceEthernetSwitchResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {

@@ -1090,12 +1090,30 @@ func (r *InterfaceEthernetResource) Create(ctx context.Context, req resource.Cre
 	if !(plan.SfpRateSelect.IsNull() || plan.SfpRateSelect.IsUnknown()) {
 		body["sfp-rate-select"] = plan.SfpRateSelect.ValueString()
 	}
-	obj, err := c.Add(ctx, "/interface/ethernet", body)
+	rows, err := c.List(ctx, "/interface/ethernet")
 	if err != nil {
-		resp.Diagnostics.AddError("Create /interface/ethernet failed", err.Error())
+		resp.Diagnostics.AddError("Read /interface/ethernet failed", err.Error())
+		return
+	}
+	want := plan.Name.ValueString()
+	var id string
+	for _, row := range rows {
+		if row["name"] == want || row["default-name"] == want {
+			id = row[".id"]
+			break
+		}
+	}
+	if id == "" {
+		resp.Diagnostics.AddError("Unknown /interface/ethernet "+want, fmt.Sprintf("/interface/ethernet is a fixed hardware row set; no row matches name %q. Import the interface instead of creating it.", want))
+		return
+	}
+	obj, err := c.Set(ctx, "/interface/ethernet", id, body)
+	if err != nil {
+		resp.Diagnostics.AddError("Adopt /interface/ethernet failed", err.Error())
 		return
 	}
 	interfaceEthernetApply(ctx, obj, &plan)
+	plan.ID = types.StringValue(id)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -1275,18 +1293,11 @@ func (r *InterfaceEthernetResource) Update(ctx context.Context, req resource.Upd
 }
 
 func (r *InterfaceEthernetResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state InterfaceEthernetModel
-	if diags := req.State.Get(ctx, &state); diags.HasError() {
-		resp.Diagnostics.Append(diags...)
-		return
-	}
-	c := pickClient(r.reg, state.Router, &resp.Diagnostics)
-	if c == nil {
-		return
-	}
-	if err := c.Remove(ctx, "/interface/ethernet", state.ID.ValueString()); err != nil {
-		resp.Diagnostics.AddError("Delete /interface/ethernet failed", err.Error())
-	}
+	// Fixed hardware row: cannot be removed. Drop from state; the row keeps
+	// its last-applied settings (adopt-only, like /ip/service).
+	_ = ctx
+	_ = req
+	_ = resp
 }
 
 func (r *InterfaceEthernetResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
