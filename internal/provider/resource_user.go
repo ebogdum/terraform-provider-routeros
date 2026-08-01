@@ -181,6 +181,7 @@ func (r *UserResource) Create(ctx context.Context, req resource.CreateRequest, r
 		return
 	}
 	userApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -222,28 +223,28 @@ func (r *UserResource) Update(ctx context.Context, req resource.UpdateRequest, r
 		return
 	}
 	body := client.Object{}
-	if !plan.Address.Equal(state.Address) {
+	if !plan.Address.Equal(state.Address) && !plan.Address.IsUnknown() {
 		body["address"] = plan.Address.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Group.Equal(state.Group) {
+	if !plan.Group.Equal(state.Group) && !plan.Group.IsUnknown() {
 		body["group"] = plan.Group.ValueString()
 	}
-	if !plan.InactivityPolicy.Equal(state.InactivityPolicy) {
+	if !plan.InactivityPolicy.Equal(state.InactivityPolicy) && !plan.InactivityPolicy.IsUnknown() {
 		body["inactivity-policy"] = plan.InactivityPolicy.ValueString()
 	}
-	if !plan.InactivityTimeout.Equal(state.InactivityTimeout) {
+	if !plan.InactivityTimeout.Equal(state.InactivityTimeout) && !plan.InactivityTimeout.IsUnknown() {
 		body["inactivity-timeout"] = plan.InactivityTimeout.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Password.Equal(state.Password) {
+	if !plan.Password.Equal(state.Password) && !plan.Password.IsUnknown() {
 		body["password"] = plan.Password.ValueString()
 	}
 	// Block disabling the last admin via Update.
@@ -264,6 +265,7 @@ func (r *UserResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

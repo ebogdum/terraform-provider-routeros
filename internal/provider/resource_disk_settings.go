@@ -86,10 +86,11 @@ func (r *DiskSettingsResource) Create(ctx context.Context, req resource.CreateRe
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	diskSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	diskSettingsUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -99,10 +100,16 @@ func (r *DiskSettingsResource) Update(ctx context.Context, req resource.UpdateRe
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	diskSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state DiskSettingsModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	diskSettingsUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -140,25 +147,25 @@ func (r *DiskSettingsResource) ImportState(ctx context.Context, req resource.Imp
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/disk/settings", types.StringValue(routerName))))...)
 }
 
-func diskSettingsUpsert(ctx context.Context, reg *client.Registry, plan *DiskSettingsModel, diags *diagBuf) {
+func diskSettingsUpsert(ctx context.Context, reg *client.Registry, plan, state *DiskSettingsModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.AutoMediaInterface.IsNull() || plan.AutoMediaInterface.IsUnknown()) {
+	if !(plan.AutoMediaInterface.IsNull() || plan.AutoMediaInterface.IsUnknown()) && (state == nil || !plan.AutoMediaInterface.Equal(state.AutoMediaInterface)) {
 		body["auto-media-interface"] = plan.AutoMediaInterface.ValueString()
 	}
-	if !(plan.AutoMediaSharing.IsNull() || plan.AutoMediaSharing.IsUnknown()) {
+	if !(plan.AutoMediaSharing.IsNull() || plan.AutoMediaSharing.IsUnknown()) && (state == nil || !plan.AutoMediaSharing.Equal(state.AutoMediaSharing)) {
 		body["auto-media-sharing"] = client.FormatBool(plan.AutoMediaSharing.ValueBool())
 	}
-	if !(plan.AutoSmbSharing.IsNull() || plan.AutoSmbSharing.IsUnknown()) {
+	if !(plan.AutoSmbSharing.IsNull() || plan.AutoSmbSharing.IsUnknown()) && (state == nil || !plan.AutoSmbSharing.Equal(state.AutoSmbSharing)) {
 		body["auto-smb-sharing"] = client.FormatBool(plan.AutoSmbSharing.ValueBool())
 	}
-	if !(plan.AutoSmbUser.IsNull() || plan.AutoSmbUser.IsUnknown()) {
+	if !(plan.AutoSmbUser.IsNull() || plan.AutoSmbUser.IsUnknown()) && (state == nil || !plan.AutoSmbUser.Equal(state.AutoSmbUser)) {
 		body["auto-smb-user"] = plan.AutoSmbUser.ValueString()
 	}
-	if !(plan.DefaultMountPointTemplate.IsNull() || plan.DefaultMountPointTemplate.IsUnknown()) {
+	if !(plan.DefaultMountPointTemplate.IsNull() || plan.DefaultMountPointTemplate.IsUnknown()) && (state == nil || !plan.DefaultMountPointTemplate.Equal(state.DefaultMountPointTemplate)) {
 		body["default-mount-point-template"] = plan.DefaultMountPointTemplate.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/disk/settings", body)

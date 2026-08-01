@@ -110,10 +110,11 @@ func (r *ToolSmsResource) Create(ctx context.Context, req resource.CreateRequest
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	toolSmsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	toolSmsUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -123,10 +124,16 @@ func (r *ToolSmsResource) Update(ctx context.Context, req resource.UpdateRequest
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	toolSmsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state ToolSmsModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	toolSmsUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -164,37 +171,37 @@ func (r *ToolSmsResource) ImportState(ctx context.Context, req resource.ImportSt
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/tool/sms", types.StringValue(routerName))))...)
 }
 
-func toolSmsUpsert(ctx context.Context, reg *client.Registry, plan *ToolSmsModel, diags *diagBuf) {
+func toolSmsUpsert(ctx context.Context, reg *client.Registry, plan, state *ToolSmsModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.AllowedNumber.IsNull() || plan.AllowedNumber.IsUnknown()) {
+	if !(plan.AllowedNumber.IsNull() || plan.AllowedNumber.IsUnknown()) && (state == nil || !plan.AllowedNumber.Equal(state.AllowedNumber)) {
 		body["allowed-number"] = plan.AllowedNumber.ValueString()
 	}
-	if !(plan.Channel.IsNull() || plan.Channel.IsUnknown()) {
+	if !(plan.Channel.IsNull() || plan.Channel.IsUnknown()) && (state == nil || !plan.Channel.Equal(state.Channel)) {
 		body["channel"] = client.FormatInt64(plan.Channel.ValueInt64())
 	}
-	if !(plan.Polling.IsNull() || plan.Polling.IsUnknown()) {
+	if !(plan.Polling.IsNull() || plan.Polling.IsUnknown()) && (state == nil || !plan.Polling.Equal(state.Polling)) {
 		body["polling"] = client.FormatBool(plan.Polling.ValueBool())
 	}
-	if !(plan.Port.IsNull() || plan.Port.IsUnknown()) {
+	if !(plan.Port.IsNull() || plan.Port.IsUnknown()) && (state == nil || !plan.Port.Equal(state.Port)) {
 		body["port"] = plan.Port.ValueString()
 	}
-	if !(plan.ReceiveEnabled.IsNull() || plan.ReceiveEnabled.IsUnknown()) {
+	if !(plan.ReceiveEnabled.IsNull() || plan.ReceiveEnabled.IsUnknown()) && (state == nil || !plan.ReceiveEnabled.Equal(state.ReceiveEnabled)) {
 		body["receive-enabled"] = client.FormatBool(plan.ReceiveEnabled.ValueBool())
 	}
-	if !(plan.RemoveSentSmsAfterSend.IsNull() || plan.RemoveSentSmsAfterSend.IsUnknown()) {
+	if !(plan.RemoveSentSmsAfterSend.IsNull() || plan.RemoveSentSmsAfterSend.IsUnknown()) && (state == nil || !plan.RemoveSentSmsAfterSend.Equal(state.RemoveSentSmsAfterSend)) {
 		body["remove-sent-sms-after-send"] = client.FormatBool(plan.RemoveSentSmsAfterSend.ValueBool())
 	}
-	if !(plan.Secret.IsNull() || plan.Secret.IsUnknown()) {
+	if !(plan.Secret.IsNull() || plan.Secret.IsUnknown()) && (state == nil || !plan.Secret.Equal(state.Secret)) {
 		body["secret"] = plan.Secret.ValueString()
 	}
-	if !(plan.SimPin.IsNull() || plan.SimPin.IsUnknown()) {
+	if !(plan.SimPin.IsNull() || plan.SimPin.IsUnknown()) && (state == nil || !plan.SimPin.Equal(state.SimPin)) {
 		body["sim-pin"] = plan.SimPin.ValueString()
 	}
-	if !(plan.SmsStorage.IsNull() || plan.SmsStorage.IsUnknown()) {
+	if !(plan.SmsStorage.IsNull() || plan.SmsStorage.IsUnknown()) && (state == nil || !plan.SmsStorage.Equal(state.SmsStorage)) {
 		body["sms-storage"] = plan.SmsStorage.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/tool/sms", body)

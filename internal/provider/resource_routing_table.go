@@ -137,6 +137,7 @@ func (r *RoutingTableResource) Create(ctx context.Context, req resource.CreateRe
 		return
 	}
 	routingTableApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -178,16 +179,16 @@ func (r *RoutingTableResource) Update(ctx context.Context, req resource.UpdateRe
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Fib.Equal(state.Fib) {
+	if !plan.Fib.Equal(state.Fib) && !plan.Fib.IsUnknown() {
 		body["fib"] = client.FormatBool(plan.Fib.ValueBool())
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
 	if len(body) > 0 {
@@ -200,6 +201,7 @@ func (r *RoutingTableResource) Update(ctx context.Context, req resource.UpdateRe
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -287,14 +289,18 @@ func routingTableApply(ctx context.Context, obj client.Object, m *RoutingTableMo
 		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["fib"]; ok {
-		_ = v
-		if b, err := client.ParseBool(v); err == nil {
+		if strings.TrimSpace(v) == "" {
+			// RouterOS returns fib as a valueless presence flag: the key is
+			// present with an empty value when the table is a FIB table.
+			m.Fib = types.BoolValue(true)
+		} else if b, err := client.ParseBool(v); err == nil {
 			m.Fib = types.BoolValue(b)
 		} else {
 			m.Fib = types.BoolNull()
 		}
 	} else {
-		m.Fib = types.BoolNull()
+		// Key absent means the table is not a FIB table.
+		m.Fib = types.BoolValue(false)
 	}
 	if v, ok := obj["invalid"]; ok {
 		_ = v

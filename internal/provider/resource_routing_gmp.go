@@ -131,6 +131,7 @@ func (r *RoutingGmpResource) Create(ctx context.Context, req resource.CreateRequ
 		return
 	}
 	routingGmpApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -172,16 +173,16 @@ func (r *RoutingGmpResource) Update(ctx context.Context, req resource.UpdateRequ
 		return
 	}
 	body := client.Object{}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Exclude.Equal(state.Exclude) {
+	if !plan.Exclude.Equal(state.Exclude) && !plan.Exclude.IsUnknown() {
 		body["exclude"] = client.FormatBool(plan.Exclude.ValueBool())
 	}
-	if !plan.Interfaces.Equal(state.Interfaces) {
+	if !plan.Interfaces.Equal(state.Interfaces) && !plan.Interfaces.IsUnknown() {
 		body["interfaces"] = plan.Interfaces.ValueString()
 	}
-	if !plan.Sources.Equal(state.Sources) {
+	if !plan.Sources.Equal(state.Sources) && !plan.Sources.IsUnknown() {
 		body["sources"] = plan.Sources.ValueString()
 	}
 	if !plan.Groups.Equal(state.Groups) && !plan.Groups.IsUnknown() {
@@ -197,6 +198,7 @@ func (r *RoutingGmpResource) Update(ctx context.Context, req resource.UpdateRequ
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

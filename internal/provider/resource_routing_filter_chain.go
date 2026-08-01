@@ -100,6 +100,7 @@ func (r *RoutingFilterChainResource) Create(ctx context.Context, req resource.Cr
 		return
 	}
 	routingFilterChainApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -141,7 +142,7 @@ func (r *RoutingFilterChainResource) Update(ctx context.Context, req resource.Up
 		return
 	}
 	body := client.Object{}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
 	if len(body) > 0 {
@@ -154,6 +155,7 @@ func (r *RoutingFilterChainResource) Update(ctx context.Context, req resource.Up
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

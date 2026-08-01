@@ -198,6 +198,7 @@ func (r *InterfacePPPServerResource) Create(ctx context.Context, req resource.Cr
 		return
 	}
 	interfacePPPServerApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -239,28 +240,28 @@ func (r *InterfacePPPServerResource) Update(ctx context.Context, req resource.Up
 		return
 	}
 	body := client.Object{}
-	if !plan.Authentication.Equal(state.Authentication) {
+	if !plan.Authentication.Equal(state.Authentication) && !plan.Authentication.IsUnknown() {
 		body["authentication"] = plan.Authentication.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.MaxMru.Equal(state.MaxMru) {
+	if !plan.MaxMru.Equal(state.MaxMru) && !plan.MaxMru.IsUnknown() {
 		body["max-mru"] = plan.MaxMru.ValueString()
 	}
-	if !plan.MaxMTU.Equal(state.MaxMTU) {
+	if !plan.MaxMTU.Equal(state.MaxMTU) && !plan.MaxMTU.IsUnknown() {
 		body["max-mtu"] = plan.MaxMTU.ValueString()
 	}
-	if !plan.Mrru.Equal(state.Mrru) {
+	if !plan.Mrru.Equal(state.Mrru) && !plan.Mrru.IsUnknown() {
 		body["mrru"] = plan.Mrru.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Profile.Equal(state.Profile) {
+	if !plan.Profile.Equal(state.Profile) && !plan.Profile.IsUnknown() {
 		body["profile"] = plan.Profile.ValueString()
 	}
 	if !plan.DataChannel.Equal(state.DataChannel) && !plan.DataChannel.IsUnknown() {
@@ -288,6 +289,7 @@ func (r *InterfacePPPServerResource) Update(ctx context.Context, req resource.Up
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

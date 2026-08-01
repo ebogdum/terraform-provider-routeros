@@ -31,42 +31,42 @@ type IPDHCPServerResource struct {
 }
 
 type IPDHCPServerModel struct {
-	ID                            types.String `tfsdk:"id"`
-	SupportBroadbandTr101         types.String `tfsdk:"support_broadband_tr101"`
-	AddressLists                  types.String `tfsdk:"address_lists"`
-	AddDnsEntriesSuffix           types.String `tfsdk:"add_dns_entries_suffix"`
-	AddDnsEntries                 types.String `tfsdk:"add_dns_entries"`
-	AddArp                        types.String `tfsdk:"add_arp"`
-	AddARPForLeases               types.Bool   `tfsdk:"add_arp_for_leases"`
-	AddressList                   types.String `tfsdk:"address_list"`
-	AddressPool                   types.String `tfsdk:"address_pool"`
-	AllowDualStackQueue           types.Bool   `tfsdk:"allow_dual_stack_queue"`
-	AlwaysBroadcast               types.Bool   `tfsdk:"always_broadcast"`
-	Authoritative                 types.String `tfsdk:"authoritative"`
-	BootpLeaseTime                types.String `tfsdk:"bootp_lease_time"`
-	BootpSupport                  types.String `tfsdk:"bootp_support"`
-	ClientMACLimit                types.String `tfsdk:"client_mac_limit"`
-	Comment                       types.String `tfsdk:"comment"`
-	ConflictDetection             types.Bool   `tfsdk:"conflict_detection"`
-	DelayThreshold                types.String `tfsdk:"delay_threshold"`
-	DHCPOptionSet                 types.String `tfsdk:"dhcp_option_set"`
-	Disabled                      types.Bool   `tfsdk:"disabled"`
-	DynamicLeaseIdentifiers       types.String `tfsdk:"dynamic_lease_identifiers"`
-	Dynbootp                      types.String `tfsdk:"dynbootp"`
-	InsertQueueBefore             types.String `tfsdk:"insert_queue_before"`
-	Interface                     types.String `tfsdk:"interface"`
-	Invalid                       types.Bool   `tfsdk:"invalid"`
-	LeaseScript                   types.String `tfsdk:"lease_script"`
-	LeaseTime                     types.String `tfsdk:"lease_time"`
-	Name                          types.String `tfsdk:"name"`
-	ParentQueue                   types.String `tfsdk:"parent_queue"`
-	Relay                         types.String `tfsdk:"relay"`
-	ServerAddress                 types.String `tfsdk:"server_address"`
-	SupportTheBroadbandForumTr101 types.Bool   `tfsdk:"support_the_broadband_forum_tr_101"`
-	UseFramedAsClassless          types.Bool   `tfsdk:"use_framed_as_classless"`
-	UseRADIUS                     types.String `tfsdk:"use_radius"`
-	UseReconfigure                types.Bool   `tfsdk:"use_reconfigure"`
-	Router                        types.String `tfsdk:"router"`
+	ID                            types.String    `tfsdk:"id"`
+	SupportBroadbandTr101         types.String    `tfsdk:"support_broadband_tr101"`
+	AddressLists                  types.String    `tfsdk:"address_lists"`
+	AddDnsEntriesSuffix           types.String    `tfsdk:"add_dns_entries_suffix"`
+	AddDnsEntries                 types.String    `tfsdk:"add_dns_entries"`
+	AddArp                        boolStringValue `tfsdk:"add_arp"`
+	AddARPForLeases               types.Bool      `tfsdk:"add_arp_for_leases"`
+	AddressList                   types.String    `tfsdk:"address_list"`
+	AddressPool                   types.String    `tfsdk:"address_pool"`
+	AllowDualStackQueue           types.Bool      `tfsdk:"allow_dual_stack_queue"`
+	AlwaysBroadcast               types.Bool      `tfsdk:"always_broadcast"`
+	Authoritative                 types.String    `tfsdk:"authoritative"`
+	BootpLeaseTime                types.String    `tfsdk:"bootp_lease_time"`
+	BootpSupport                  types.String    `tfsdk:"bootp_support"`
+	ClientMACLimit                types.String    `tfsdk:"client_mac_limit"`
+	Comment                       types.String    `tfsdk:"comment"`
+	ConflictDetection             types.Bool      `tfsdk:"conflict_detection"`
+	DelayThreshold                types.String    `tfsdk:"delay_threshold"`
+	DHCPOptionSet                 types.String    `tfsdk:"dhcp_option_set"`
+	Disabled                      types.Bool      `tfsdk:"disabled"`
+	DynamicLeaseIdentifiers       types.String    `tfsdk:"dynamic_lease_identifiers"`
+	Dynbootp                      types.String    `tfsdk:"dynbootp"`
+	InsertQueueBefore             types.String    `tfsdk:"insert_queue_before"`
+	Interface                     types.String    `tfsdk:"interface"`
+	Invalid                       types.Bool      `tfsdk:"invalid"`
+	LeaseScript                   types.String    `tfsdk:"lease_script"`
+	LeaseTime                     types.String    `tfsdk:"lease_time"`
+	Name                          types.String    `tfsdk:"name"`
+	ParentQueue                   types.String    `tfsdk:"parent_queue"`
+	Relay                         types.String    `tfsdk:"relay"`
+	ServerAddress                 types.String    `tfsdk:"server_address"`
+	SupportTheBroadbandForumTr101 types.Bool      `tfsdk:"support_the_broadband_forum_tr_101"`
+	UseFramedAsClassless          types.Bool      `tfsdk:"use_framed_as_classless"`
+	UseRADIUS                     types.String    `tfsdk:"use_radius"`
+	UseReconfigure                types.Bool      `tfsdk:"use_reconfigure"`
+	Router                        types.String    `tfsdk:"router"`
 }
 
 func NewIPDHCPServerResource() resource.Resource { return &IPDHCPServerResource{} }
@@ -113,6 +113,7 @@ func (r *IPDHCPServerResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description: "RouterOS `add-dns-entries`.",
 			},
 			"add_arp": schema.StringAttribute{
+				CustomType:  boolStringType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "RouterOS `add-arp`.",
@@ -378,6 +379,7 @@ func (r *IPDHCPServerResource) Create(ctx context.Context, req resource.CreateRe
 		return
 	}
 	iPDHCPServerApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -419,76 +421,76 @@ func (r *IPDHCPServerResource) Update(ctx context.Context, req resource.UpdateRe
 		return
 	}
 	body := client.Object{}
-	if !plan.AddressPool.Equal(state.AddressPool) {
+	if !plan.AddressPool.Equal(state.AddressPool) && !plan.AddressPool.IsUnknown() {
 		body["address-pool"] = plan.AddressPool.ValueString()
 	}
-	if !plan.AllowDualStackQueue.Equal(state.AllowDualStackQueue) {
+	if !plan.AllowDualStackQueue.Equal(state.AllowDualStackQueue) && !plan.AllowDualStackQueue.IsUnknown() {
 		body["allow-dual-stack-queue"] = client.FormatBool(plan.AllowDualStackQueue.ValueBool())
 	}
-	if !plan.AlwaysBroadcast.Equal(state.AlwaysBroadcast) {
+	if !plan.AlwaysBroadcast.Equal(state.AlwaysBroadcast) && !plan.AlwaysBroadcast.IsUnknown() {
 		body["always-broadcast"] = client.FormatBool(plan.AlwaysBroadcast.ValueBool())
 	}
-	if !plan.Authoritative.Equal(state.Authoritative) {
+	if !plan.Authoritative.Equal(state.Authoritative) && !plan.Authoritative.IsUnknown() {
 		body["authoritative"] = plan.Authoritative.ValueString()
 	}
-	if !plan.BootpLeaseTime.Equal(state.BootpLeaseTime) {
+	if !plan.BootpLeaseTime.Equal(state.BootpLeaseTime) && !plan.BootpLeaseTime.IsUnknown() {
 		body["bootp-lease-time"] = plan.BootpLeaseTime.ValueString()
 	}
-	if !plan.BootpSupport.Equal(state.BootpSupport) {
+	if !plan.BootpSupport.Equal(state.BootpSupport) && !plan.BootpSupport.IsUnknown() {
 		body["bootp-support"] = plan.BootpSupport.ValueString()
 	}
-	if !plan.ClientMACLimit.Equal(state.ClientMACLimit) {
+	if !plan.ClientMACLimit.Equal(state.ClientMACLimit) && !plan.ClientMACLimit.IsUnknown() {
 		body["client-mac-limit"] = plan.ClientMACLimit.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.ConflictDetection.Equal(state.ConflictDetection) {
+	if !plan.ConflictDetection.Equal(state.ConflictDetection) && !plan.ConflictDetection.IsUnknown() {
 		body["conflict-detection"] = client.FormatBool(plan.ConflictDetection.ValueBool())
 	}
-	if !plan.DelayThreshold.Equal(state.DelayThreshold) {
+	if !plan.DelayThreshold.Equal(state.DelayThreshold) && !plan.DelayThreshold.IsUnknown() {
 		body["delay-threshold"] = plan.DelayThreshold.ValueString()
 	}
-	if !plan.DHCPOptionSet.Equal(state.DHCPOptionSet) {
+	if !plan.DHCPOptionSet.Equal(state.DHCPOptionSet) && !plan.DHCPOptionSet.IsUnknown() {
 		body["dhcp-option-set"] = plan.DHCPOptionSet.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.DynamicLeaseIdentifiers.Equal(state.DynamicLeaseIdentifiers) {
+	if !plan.DynamicLeaseIdentifiers.Equal(state.DynamicLeaseIdentifiers) && !plan.DynamicLeaseIdentifiers.IsUnknown() {
 		body["dynamic-lease-identifiers"] = plan.DynamicLeaseIdentifiers.ValueString()
 	}
-	if !plan.InsertQueueBefore.Equal(state.InsertQueueBefore) {
+	if !plan.InsertQueueBefore.Equal(state.InsertQueueBefore) && !plan.InsertQueueBefore.IsUnknown() {
 		body["insert-queue-before"] = plan.InsertQueueBefore.ValueString()
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.LeaseScript.Equal(state.LeaseScript) {
+	if !plan.LeaseScript.Equal(state.LeaseScript) && !plan.LeaseScript.IsUnknown() {
 		body["lease-script"] = plan.LeaseScript.ValueString()
 	}
-	if !plan.LeaseTime.Equal(state.LeaseTime) {
+	if !plan.LeaseTime.Equal(state.LeaseTime) && !plan.LeaseTime.IsUnknown() {
 		body["lease-time"] = plan.LeaseTime.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.ParentQueue.Equal(state.ParentQueue) {
+	if !plan.ParentQueue.Equal(state.ParentQueue) && !plan.ParentQueue.IsUnknown() {
 		body["parent-queue"] = plan.ParentQueue.ValueString()
 	}
-	if !plan.Relay.Equal(state.Relay) {
+	if !plan.Relay.Equal(state.Relay) && !plan.Relay.IsUnknown() {
 		body["relay"] = plan.Relay.ValueString()
 	}
-	if !plan.ServerAddress.Equal(state.ServerAddress) {
+	if !plan.ServerAddress.Equal(state.ServerAddress) && !plan.ServerAddress.IsUnknown() {
 		body["server-address"] = plan.ServerAddress.ValueString()
 	}
-	if !plan.UseFramedAsClassless.Equal(state.UseFramedAsClassless) {
+	if !plan.UseFramedAsClassless.Equal(state.UseFramedAsClassless) && !plan.UseFramedAsClassless.IsUnknown() {
 		body["use-framed-as-classless"] = client.FormatBool(plan.UseFramedAsClassless.ValueBool())
 	}
-	if !plan.UseRADIUS.Equal(state.UseRADIUS) {
+	if !plan.UseRADIUS.Equal(state.UseRADIUS) && !plan.UseRADIUS.IsUnknown() {
 		body["use-radius"] = plan.UseRADIUS.ValueString()
 	}
-	if !plan.UseReconfigure.Equal(state.UseReconfigure) {
+	if !plan.UseReconfigure.Equal(state.UseReconfigure) && !plan.UseReconfigure.IsUnknown() {
 		body["use-reconfigure"] = client.FormatBool(plan.UseReconfigure.ValueBool())
 	}
 	if !plan.AddArp.Equal(state.AddArp) && !plan.AddArp.IsUnknown() {
@@ -516,6 +518,7 @@ func (r *IPDHCPServerResource) Update(ctx context.Context, req resource.UpdateRe
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -593,9 +596,9 @@ func iPDHCPServerApply(ctx context.Context, obj client.Object, m *IPDHCPServerMo
 		m.AddDnsEntries = types.StringNull()
 	}
 	if v, ok := obj["add-arp"]; ok && v != "" {
-		m.AddArp = types.StringValue(v)
+		m.AddArp = newBoolStringValue(v)
 	} else {
-		m.AddArp = types.StringNull()
+		m.AddArp = newBoolStringNull()
 	}
 	if v, ok := obj["add-arp-for-leases"]; ok {
 		_ = v

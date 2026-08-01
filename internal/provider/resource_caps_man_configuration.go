@@ -170,6 +170,7 @@ func (r *CapsManConfigurationResource) Create(ctx context.Context, req resource.
 		return
 	}
 	capsManConfigurationApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -211,34 +212,34 @@ func (r *CapsManConfigurationResource) Update(ctx context.Context, req resource.
 		return
 	}
 	body := client.Object{}
-	if !plan.Datapath.Equal(state.Datapath) {
+	if !plan.Datapath.Equal(state.Datapath) && !plan.Datapath.IsUnknown() {
 		body["datapath"] = plan.Datapath.ValueString()
 	}
-	if !plan.Security.Equal(state.Security) {
+	if !plan.Security.Equal(state.Security) && !plan.Security.IsUnknown() {
 		body["security"] = plan.Security.ValueString()
 	}
-	if !plan.Rates.Equal(state.Rates) {
+	if !plan.Rates.Equal(state.Rates) && !plan.Rates.IsUnknown() {
 		body["rates"] = plan.Rates.ValueString()
 	}
-	if !plan.Channel.Equal(state.Channel) {
+	if !plan.Channel.Equal(state.Channel) && !plan.Channel.IsUnknown() {
 		body["channel"] = plan.Channel.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Country.Equal(state.Country) {
+	if !plan.Country.Equal(state.Country) && !plan.Country.IsUnknown() {
 		body["country"] = plan.Country.ValueString()
 	}
-	if !plan.Distance.Equal(state.Distance) {
+	if !plan.Distance.Equal(state.Distance) && !plan.Distance.IsUnknown() {
 		body["distance"] = plan.Distance.ValueString()
 	}
-	if !plan.Mode.Equal(state.Mode) {
+	if !plan.Mode.Equal(state.Mode) && !plan.Mode.IsUnknown() {
 		body["mode"] = plan.Mode.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Ssid.Equal(state.Ssid) {
+	if !plan.Ssid.Equal(state.Ssid) && !plan.Ssid.IsUnknown() {
 		body["ssid"] = plan.Ssid.ValueString()
 	}
 	if len(body) > 0 {
@@ -251,6 +252,7 @@ func (r *CapsManConfigurationResource) Update(ctx context.Context, req resource.
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

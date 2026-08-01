@@ -149,10 +149,11 @@ func (r *InterfaceSSTPServerServerResource) Create(ctx context.Context, req reso
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	interfaceSSTPServerServerUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	interfaceSSTPServerServerUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -162,10 +163,16 @@ func (r *InterfaceSSTPServerServerResource) Update(ctx context.Context, req reso
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	interfaceSSTPServerServerUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state InterfaceSSTPServerServerModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	interfaceSSTPServerServerUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -203,49 +210,49 @@ func (r *InterfaceSSTPServerServerResource) ImportState(ctx context.Context, req
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/interface/sstp-server/server", types.StringValue(routerName))))...)
 }
 
-func interfaceSSTPServerServerUpsert(ctx context.Context, reg *client.Registry, plan *InterfaceSSTPServerServerModel, diags *diagBuf) {
+func interfaceSSTPServerServerUpsert(ctx context.Context, reg *client.Registry, plan, state *InterfaceSSTPServerServerModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.Authentication.IsNull() || plan.Authentication.IsUnknown()) {
+	if !(plan.Authentication.IsNull() || plan.Authentication.IsUnknown()) && (state == nil || !plan.Authentication.Equal(state.Authentication)) {
 		body["authentication"] = plan.Authentication.ValueString()
 	}
-	if !(plan.Certificate.IsNull() || plan.Certificate.IsUnknown()) {
+	if !(plan.Certificate.IsNull() || plan.Certificate.IsUnknown()) && (state == nil || !plan.Certificate.Equal(state.Certificate)) {
 		body["certificate"] = plan.Certificate.ValueString()
 	}
-	if !(plan.Ciphers.IsNull() || plan.Ciphers.IsUnknown()) {
+	if !(plan.Ciphers.IsNull() || plan.Ciphers.IsUnknown()) && (state == nil || !plan.Ciphers.Equal(state.Ciphers)) {
 		body["ciphers"] = plan.Ciphers.ValueString()
 	}
-	if !(plan.DefaultProfile.IsNull() || plan.DefaultProfile.IsUnknown()) {
+	if !(plan.DefaultProfile.IsNull() || plan.DefaultProfile.IsUnknown()) && (state == nil || !plan.DefaultProfile.Equal(state.DefaultProfile)) {
 		body["default-profile"] = plan.DefaultProfile.ValueString()
 	}
-	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) {
+	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) && (state == nil || !plan.Enabled.Equal(state.Enabled)) {
 		body["enabled"] = client.FormatBool(plan.Enabled.ValueBool())
 	}
-	if !(plan.KeepaliveTimeout.IsNull() || plan.KeepaliveTimeout.IsUnknown()) {
+	if !(plan.KeepaliveTimeout.IsNull() || plan.KeepaliveTimeout.IsUnknown()) && (state == nil || !plan.KeepaliveTimeout.Equal(state.KeepaliveTimeout)) {
 		body["keepalive-timeout"] = client.FormatInt64(plan.KeepaliveTimeout.ValueInt64())
 	}
-	if !(plan.MaxMru.IsNull() || plan.MaxMru.IsUnknown()) {
+	if !(plan.MaxMru.IsNull() || plan.MaxMru.IsUnknown()) && (state == nil || !plan.MaxMru.Equal(state.MaxMru)) {
 		body["max-mru"] = client.FormatInt64(plan.MaxMru.ValueInt64())
 	}
-	if !(plan.MaxMtu.IsNull() || plan.MaxMtu.IsUnknown()) {
+	if !(plan.MaxMtu.IsNull() || plan.MaxMtu.IsUnknown()) && (state == nil || !plan.MaxMtu.Equal(state.MaxMtu)) {
 		body["max-mtu"] = client.FormatInt64(plan.MaxMtu.ValueInt64())
 	}
-	if !(plan.Mrru.IsNull() || plan.Mrru.IsUnknown()) {
+	if !(plan.Mrru.IsNull() || plan.Mrru.IsUnknown()) && (state == nil || !plan.Mrru.Equal(state.Mrru)) {
 		body["mrru"] = plan.Mrru.ValueString()
 	}
-	if !(plan.Pfs.IsNull() || plan.Pfs.IsUnknown()) {
+	if !(plan.Pfs.IsNull() || plan.Pfs.IsUnknown()) && (state == nil || !plan.Pfs.Equal(state.Pfs)) {
 		body["pfs"] = client.FormatBool(plan.Pfs.ValueBool())
 	}
-	if !(plan.Port.IsNull() || plan.Port.IsUnknown()) {
+	if !(plan.Port.IsNull() || plan.Port.IsUnknown()) && (state == nil || !plan.Port.Equal(state.Port)) {
 		body["port"] = client.FormatInt64(plan.Port.ValueInt64())
 	}
-	if !(plan.TlsVersion.IsNull() || plan.TlsVersion.IsUnknown()) {
+	if !(plan.TlsVersion.IsNull() || plan.TlsVersion.IsUnknown()) && (state == nil || !plan.TlsVersion.Equal(state.TlsVersion)) {
 		body["tls-version"] = plan.TlsVersion.ValueString()
 	}
-	if !(plan.VerifyClientCertificate.IsNull() || plan.VerifyClientCertificate.IsUnknown()) {
+	if !(plan.VerifyClientCertificate.IsNull() || plan.VerifyClientCertificate.IsUnknown()) && (state == nil || !plan.VerifyClientCertificate.Equal(state.VerifyClientCertificate)) {
 		body["verify-client-certificate"] = client.FormatBool(plan.VerifyClientCertificate.ValueBool())
 	}
 	obj, err := c.SetSingleton(ctx, "/interface/sstp-server/server", body)

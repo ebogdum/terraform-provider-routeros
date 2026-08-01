@@ -18,8 +18,9 @@ func TestParseFormatBool(t *testing.T) {
 			t.Fatalf("ParseBool(%q) = %v,%v want %v", tc.in, got, err, tc.want)
 		}
 	}
-	if FormatBool(true) != "true" || FormatBool(false) != "false" {
-		t.Fatal("FormatBool")
+	// RouterOS writes use yes/no (true/false is rejected by several menus).
+	if FormatBool(true) != "yes" || FormatBool(false) != "no" {
+		t.Fatal("FormatBool must emit yes/no for RouterOS writes")
 	}
 	if _, err := ParseBool("maybe"); err == nil {
 		t.Fatal("want error on bogus bool")

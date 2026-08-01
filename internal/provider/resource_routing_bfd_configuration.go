@@ -178,6 +178,7 @@ func (r *RoutingBfdConfigurationResource) Create(ctx context.Context, req resour
 		return
 	}
 	routingBfdConfigurationApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -219,34 +220,34 @@ func (r *RoutingBfdConfigurationResource) Update(ctx context.Context, req resour
 		return
 	}
 	body := client.Object{}
-	if !plan.AddressList.Equal(state.AddressList) {
+	if !plan.AddressList.Equal(state.AddressList) && !plan.AddressList.IsUnknown() {
 		body["address-list"] = plan.AddressList.ValueString()
 	}
-	if !plan.Addresses.Equal(state.Addresses) {
+	if !plan.Addresses.Equal(state.Addresses) && !plan.Addresses.IsUnknown() {
 		body["addresses"] = plan.Addresses.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.ForbidBfd.Equal(state.ForbidBfd) {
+	if !plan.ForbidBfd.Equal(state.ForbidBfd) && !plan.ForbidBfd.IsUnknown() {
 		body["forbid-bfd"] = plan.ForbidBfd.ValueString()
 	}
-	if !plan.Interfaces.Equal(state.Interfaces) {
+	if !plan.Interfaces.Equal(state.Interfaces) && !plan.Interfaces.IsUnknown() {
 		body["interfaces"] = plan.Interfaces.ValueString()
 	}
-	if !plan.MinRx.Equal(state.MinRx) {
+	if !plan.MinRx.Equal(state.MinRx) && !plan.MinRx.IsUnknown() {
 		body["min-rx"] = plan.MinRx.ValueString()
 	}
-	if !plan.MinTx.Equal(state.MinTx) {
+	if !plan.MinTx.Equal(state.MinTx) && !plan.MinTx.IsUnknown() {
 		body["min-tx"] = plan.MinTx.ValueString()
 	}
-	if !plan.Multiplier.Equal(state.Multiplier) {
+	if !plan.Multiplier.Equal(state.Multiplier) && !plan.Multiplier.IsUnknown() {
 		body["multiplier"] = plan.Multiplier.ValueString()
 	}
-	if !plan.Vrf.Equal(state.Vrf) {
+	if !plan.Vrf.Equal(state.Vrf) && !plan.Vrf.IsUnknown() {
 		body["vrf"] = plan.Vrf.ValueString()
 	}
 	if len(body) > 0 {
@@ -259,6 +260,7 @@ func (r *RoutingBfdConfigurationResource) Update(ctx context.Context, req resour
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

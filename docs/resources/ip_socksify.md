@@ -29,7 +29,6 @@ resource "routeros_ip_socksify" "socksify_example" {
 This resource supports the following arguments:
 
 * `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
-* `comment` - (Optional) Type: `string`. Free-form comment.
 * `connection_timeout` - (Optional) Type: `string`. RouterOS `connection-timeout`.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 * `name` - (Required) Type: `string`.

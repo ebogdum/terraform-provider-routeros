@@ -144,6 +144,7 @@ func (r *IPReverseProxyResource) Create(ctx context.Context, req resource.Create
 		return
 	}
 	iPReverseProxyApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -185,10 +186,10 @@ func (r *IPReverseProxyResource) Update(ctx context.Context, req resource.Update
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
 	if !plan.Certificate.Equal(state.Certificate) && !plan.Certificate.IsUnknown() {
@@ -216,6 +217,7 @@ func (r *IPReverseProxyResource) Update(ctx context.Context, req resource.Update
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -274,9 +276,9 @@ func iPReverseProxyApply(ctx context.Context, obj client.Object, m *IPReversePro
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["vrf"]; ok && v != "" {
 		m.Vrf = types.StringValue(v)
-	} else {
-		m.Vrf = types.StringNull()
 	}
+	// Absent means RouterOS is at its default (e.g. vrf "main"), which it omits
+	// from the response; keep the configured value rather than nulling it.
 	if v, ok := obj["sni"]; ok && v != "" {
 		m.Sni = types.StringValue(v)
 	} else {

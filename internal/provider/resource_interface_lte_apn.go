@@ -220,6 +220,7 @@ func (r *InterfaceLteApnResource) Create(ctx context.Context, req resource.Creat
 		return
 	}
 	interfaceLteApnApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -261,31 +262,31 @@ func (r *InterfaceLteApnResource) Update(ctx context.Context, req resource.Updat
 		return
 	}
 	body := client.Object{}
-	if !plan.AddDefaultRoute.Equal(state.AddDefaultRoute) {
+	if !plan.AddDefaultRoute.Equal(state.AddDefaultRoute) && !plan.AddDefaultRoute.IsUnknown() {
 		body["add-default-route"] = client.FormatBool(plan.AddDefaultRoute.ValueBool())
 	}
-	if !plan.Apn.Equal(state.Apn) {
+	if !plan.Apn.Equal(state.Apn) && !plan.Apn.IsUnknown() {
 		body["apn"] = plan.Apn.ValueString()
 	}
-	if !plan.Authentication.Equal(state.Authentication) {
+	if !plan.Authentication.Equal(state.Authentication) && !plan.Authentication.IsUnknown() {
 		body["authentication"] = plan.Authentication.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.DefaultRouteDistance.Equal(state.DefaultRouteDistance) {
+	if !plan.DefaultRouteDistance.Equal(state.DefaultRouteDistance) && !plan.DefaultRouteDistance.IsUnknown() {
 		body["default-route-distance"] = client.FormatInt64(plan.DefaultRouteDistance.ValueInt64())
 	}
-	if !plan.IPType.Equal(state.IPType) {
+	if !plan.IPType.Equal(state.IPType) && !plan.IPType.IsUnknown() {
 		body["ip-type"] = plan.IPType.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.UseNetworkApn.Equal(state.UseNetworkApn) {
+	if !plan.UseNetworkApn.Equal(state.UseNetworkApn) && !plan.UseNetworkApn.IsUnknown() {
 		body["use-network-apn"] = client.FormatBool(plan.UseNetworkApn.ValueBool())
 	}
-	if !plan.UsePeerDNS.Equal(state.UsePeerDNS) {
+	if !plan.UsePeerDNS.Equal(state.UsePeerDNS) && !plan.UsePeerDNS.IsUnknown() {
 		body["use-peer-dns"] = client.FormatBool(plan.UsePeerDNS.ValueBool())
 	}
 	if !plan.Ipv6Interface.Equal(state.Ipv6Interface) && !plan.Ipv6Interface.IsUnknown() {
@@ -316,6 +317,7 @@ func (r *InterfaceLteApnResource) Update(ctx context.Context, req resource.Updat
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

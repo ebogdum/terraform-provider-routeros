@@ -279,6 +279,7 @@ func (r *ContainerResource) Create(ctx context.Context, req resource.CreateReque
 		return
 	}
 	containerApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -320,70 +321,70 @@ func (r *ContainerResource) Update(ctx context.Context, req resource.UpdateReque
 		return
 	}
 	body := client.Object{}
-	if !plan.AutoRestartInterval.Equal(state.AutoRestartInterval) {
+	if !plan.AutoRestartInterval.Equal(state.AutoRestartInterval) && !plan.AutoRestartInterval.IsUnknown() {
 		body["auto-restart-interval"] = plan.AutoRestartInterval.ValueString()
 	}
-	if !plan.Cmd.Equal(state.Cmd) {
+	if !plan.Cmd.Equal(state.Cmd) && !plan.Cmd.IsUnknown() {
 		body["cmd"] = plan.Cmd.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.CpuList.Equal(state.CpuList) {
+	if !plan.CpuList.Equal(state.CpuList) && !plan.CpuList.IsUnknown() {
 		body["cpu-list"] = plan.CpuList.ValueString()
 	}
-	if !plan.Devices.Equal(state.Devices) {
+	if !plan.Devices.Equal(state.Devices) && !plan.Devices.IsUnknown() {
 		body["devices"] = plan.Devices.ValueString()
 	}
-	if !plan.DNS.Equal(state.DNS) {
+	if !plan.DNS.Equal(state.DNS) && !plan.DNS.IsUnknown() {
 		body["dns"] = plan.DNS.ValueString()
 	}
-	if !plan.DomainName.Equal(state.DomainName) {
+	if !plan.DomainName.Equal(state.DomainName) && !plan.DomainName.IsUnknown() {
 		body["domain-name"] = plan.DomainName.ValueString()
 	}
-	if !plan.Entrypoint.Equal(state.Entrypoint) {
+	if !plan.Entrypoint.Equal(state.Entrypoint) && !plan.Entrypoint.IsUnknown() {
 		body["entrypoint"] = plan.Entrypoint.ValueString()
 	}
-	if !plan.Envlist.Equal(state.Envlist) {
+	if !plan.Envlist.Equal(state.Envlist) && !plan.Envlist.IsUnknown() {
 		body["envlist"] = plan.Envlist.ValueString()
 	}
-	if !plan.Hostname.Equal(state.Hostname) {
+	if !plan.Hostname.Equal(state.Hostname) && !plan.Hostname.IsUnknown() {
 		body["hostname"] = plan.Hostname.ValueString()
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.Logging.Equal(state.Logging) {
+	if !plan.Logging.Equal(state.Logging) && !plan.Logging.IsUnknown() {
 		body["logging"] = plan.Logging.ValueString()
 	}
-	if !plan.MemoryHigh.Equal(state.MemoryHigh) {
+	if !plan.MemoryHigh.Equal(state.MemoryHigh) && !plan.MemoryHigh.IsUnknown() {
 		body["memory-high"] = plan.MemoryHigh.ValueString()
 	}
-	if !plan.MemoryMax.Equal(state.MemoryMax) {
+	if !plan.MemoryMax.Equal(state.MemoryMax) && !plan.MemoryMax.IsUnknown() {
 		body["memory-max"] = plan.MemoryMax.ValueString()
 	}
-	if !plan.Mount.Equal(state.Mount) {
+	if !plan.Mount.Equal(state.Mount) && !plan.Mount.IsUnknown() {
 		body["mount"] = plan.Mount.ValueString()
 	}
-	if !plan.Mountlists.Equal(state.Mountlists) {
+	if !plan.Mountlists.Equal(state.Mountlists) && !plan.Mountlists.IsUnknown() {
 		body["mountlists"] = plan.Mountlists.ValueString()
 	}
-	if !plan.RemoteImage.Equal(state.RemoteImage) {
+	if !plan.RemoteImage.Equal(state.RemoteImage) && !plan.RemoteImage.IsUnknown() {
 		body["remote-image"] = plan.RemoteImage.ValueString()
 	}
-	if !plan.RootDir.Equal(state.RootDir) {
+	if !plan.RootDir.Equal(state.RootDir) && !plan.RootDir.IsUnknown() {
 		body["root-dir"] = plan.RootDir.ValueString()
 	}
-	if !plan.StartOnBoot.Equal(state.StartOnBoot) {
+	if !plan.StartOnBoot.Equal(state.StartOnBoot) && !plan.StartOnBoot.IsUnknown() {
 		body["start-on-boot"] = plan.StartOnBoot.ValueString()
 	}
-	if !plan.StopSignal.Equal(state.StopSignal) {
+	if !plan.StopSignal.Equal(state.StopSignal) && !plan.StopSignal.IsUnknown() {
 		body["stop-signal"] = plan.StopSignal.ValueString()
 	}
-	if !plan.User.Equal(state.User) {
+	if !plan.User.Equal(state.User) && !plan.User.IsUnknown() {
 		body["user"] = plan.User.ValueString()
 	}
-	if !plan.Workdir.Equal(state.Workdir) {
+	if !plan.Workdir.Equal(state.Workdir) && !plan.Workdir.IsUnknown() {
 		body["workdir"] = plan.Workdir.ValueString()
 	}
 	if len(body) > 0 {
@@ -396,6 +397,7 @@ func (r *ContainerResource) Update(ctx context.Context, req resource.UpdateReque
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

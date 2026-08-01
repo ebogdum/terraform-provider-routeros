@@ -249,6 +249,7 @@ func (r *IPRouteResource) Create(ctx context.Context, req resource.CreateRequest
 		return
 	}
 	iPRouteApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -290,31 +291,31 @@ func (r *IPRouteResource) Update(ctx context.Context, req resource.UpdateRequest
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Distance.Equal(state.Distance) {
+	if !plan.Distance.Equal(state.Distance) && !plan.Distance.IsUnknown() {
 		body["distance"] = client.FormatInt64(plan.Distance.ValueInt64())
 	}
-	if !plan.DstAddress.Equal(state.DstAddress) {
+	if !plan.DstAddress.Equal(state.DstAddress) && !plan.DstAddress.IsUnknown() {
 		body["dst-address"] = plan.DstAddress.ValueString()
 	}
-	if !plan.Gateway.Equal(state.Gateway) {
+	if !plan.Gateway.Equal(state.Gateway) && !plan.Gateway.IsUnknown() {
 		body["gateway"] = plan.Gateway.ValueString()
 	}
-	if !plan.RoutingTable.Equal(state.RoutingTable) {
+	if !plan.RoutingTable.Equal(state.RoutingTable) && !plan.RoutingTable.IsUnknown() {
 		body["routing-table"] = plan.RoutingTable.ValueString()
 	}
-	if !plan.Scope.Equal(state.Scope) {
+	if !plan.Scope.Equal(state.Scope) && !plan.Scope.IsUnknown() {
 		body["scope"] = client.FormatInt64(plan.Scope.ValueInt64())
 	}
-	if !plan.TargetScope.Equal(state.TargetScope) {
+	if !plan.TargetScope.Equal(state.TargetScope) && !plan.TargetScope.IsUnknown() {
 		body["target-scope"] = client.FormatInt64(plan.TargetScope.ValueInt64())
 	}
-	if !plan.VrfInterface.Equal(state.VrfInterface) {
+	if !plan.VrfInterface.Equal(state.VrfInterface) && !plan.VrfInterface.IsUnknown() {
 		body["vrf-interface"] = plan.VrfInterface.ValueString()
 	}
 	if !plan.Blackhole.Equal(state.Blackhole) && !plan.Blackhole.IsUnknown() {
@@ -336,6 +337,7 @@ func (r *IPRouteResource) Update(ctx context.Context, req resource.UpdateRequest
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -402,10 +404,16 @@ func iPRouteApply(ctx context.Context, obj client.Object, m *IPRouteModel) {
 	} else {
 		m.CheckGateway = types.StringNull()
 	}
-	if v, ok := obj["blackhole"]; ok && v != "" {
-		m.Blackhole = types.StringValue(v)
+	if v, ok := obj["blackhole"]; ok {
+		// RouterOS returns blackhole as a valueless presence flag: the key is
+		// present with an empty value when the route is a blackhole route.
+		if strings.TrimSpace(v) == "" {
+			m.Blackhole = types.StringValue("true")
+		} else {
+			m.Blackhole = types.StringValue(v)
+		}
 	} else {
-		m.Blackhole = types.StringNull()
+		m.Blackhole = types.StringValue("false")
 	}
 	if v, ok := obj["active"]; ok {
 		_ = v

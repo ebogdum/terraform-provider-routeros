@@ -70,10 +70,11 @@ func (r *SystemLedsSettingsResource) Create(ctx context.Context, req resource.Cr
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	systemLedsSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	systemLedsSettingsUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -83,10 +84,16 @@ func (r *SystemLedsSettingsResource) Update(ctx context.Context, req resource.Up
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	systemLedsSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state SystemLedsSettingsModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	systemLedsSettingsUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -124,13 +131,13 @@ func (r *SystemLedsSettingsResource) ImportState(ctx context.Context, req resour
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/system/leds/settings", types.StringValue(routerName))))...)
 }
 
-func systemLedsSettingsUpsert(ctx context.Context, reg *client.Registry, plan *SystemLedsSettingsModel, diags *diagBuf) {
+func systemLedsSettingsUpsert(ctx context.Context, reg *client.Registry, plan, state *SystemLedsSettingsModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.AllLedsOff.IsNull() || plan.AllLedsOff.IsUnknown()) {
+	if !(plan.AllLedsOff.IsNull() || plan.AllLedsOff.IsUnknown()) && (state == nil || !plan.AllLedsOff.Equal(state.AllLedsOff)) {
 		body["all-leds-off"] = plan.AllLedsOff.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/system/leds/settings", body)

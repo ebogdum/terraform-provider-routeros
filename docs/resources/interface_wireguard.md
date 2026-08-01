@@ -18,7 +18,6 @@ resource "routeros_interface_wireguard" "wireguard_example" {
   disabled = false
 
   # Optional attributes (uncomment as needed):
-  # l2_mtu = 1500
   # listen_port = "443"
   # mtu = 1420
   # name = "tf-example"
@@ -34,7 +33,6 @@ This resource supports the following arguments:
 * `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `l2_mtu` - (Read-only) Type: `int`.
 * `listen_port` - (Optional) Type: `int`.
 * `mtu` - (Optional) Type: `string`. A number, or `auto`.
 * `name` - (Optional) Type: `string`.

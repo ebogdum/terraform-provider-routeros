@@ -97,18 +97,33 @@ func (r *InterfaceEthernetSwitchPortResource) Create(ctx context.Context, req re
 	if !(plan.DefaultVlanID.IsNull() || plan.DefaultVlanID.IsUnknown()) {
 		body["default-vlan-id"] = plan.DefaultVlanID.ValueString()
 	}
-	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
-		body["name"] = plan.Name.ValueString()
-	}
-	if !(plan.Switch.IsNull() || plan.Switch.IsUnknown()) {
-		body["switch"] = plan.Switch.ValueString()
-	}
-	obj, err := c.Add(ctx, "/interface/ethernet/switch/port", body)
+	// name and switch identify the fixed row to adopt; the device rejects them
+	// as write parameters, so they are used only to match, never written.
+	rows, err := c.List(ctx, "/interface/ethernet/switch/port")
 	if err != nil {
-		resp.Diagnostics.AddError("Create /interface/ethernet/switch/port failed", err.Error())
+		resp.Diagnostics.AddError("Read /interface/ethernet/switch/port failed", err.Error())
+		return
+	}
+	want := plan.Name.ValueString()
+	var id string
+	for _, row := range rows {
+		if row["name"] == want || row["default-name"] == want {
+			id = row[".id"]
+			break
+		}
+	}
+	if id == "" {
+		resp.Diagnostics.AddError("Unknown /interface/ethernet/switch/port "+want, fmt.Sprintf("/interface/ethernet/switch/port is a fixed hardware row set; no row matches name %q. Import the interface instead of creating it.", want))
+		return
+	}
+	obj, err := c.Set(ctx, "/interface/ethernet/switch/port", id, body)
+	if err != nil {
+		resp.Diagnostics.AddError("Adopt /interface/ethernet/switch/port failed", err.Error())
 		return
 	}
 	interfaceEthernetSwitchPortApply(ctx, obj, &plan)
+	plan.ID = types.StringValue(id)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -153,12 +168,7 @@ func (r *InterfaceEthernetSwitchPortResource) Update(ctx context.Context, req re
 	if !plan.DefaultVlanID.Equal(state.DefaultVlanID) && !plan.DefaultVlanID.IsUnknown() {
 		body["default-vlan-id"] = plan.DefaultVlanID.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
-		body["name"] = plan.Name.ValueString()
-	}
-	if !plan.Switch.Equal(state.Switch) && !plan.Switch.IsUnknown() {
-		body["switch"] = plan.Switch.ValueString()
-	}
+	// name and switch are the row identifiers, not writable; never send them.
 	var obj client.Object
 	var err error
 	if len(body) > 0 {
@@ -176,22 +186,16 @@ func (r *InterfaceEthernetSwitchPortResource) Update(ctx context.Context, req re
 	}
 	interfaceEthernetSwitchPortApply(ctx, obj, &plan)
 	plan.ID = state.ID
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
 func (r *InterfaceEthernetSwitchPortResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state InterfaceEthernetSwitchPortModel
-	if diags := req.State.Get(ctx, &state); diags.HasError() {
-		resp.Diagnostics.Append(diags...)
-		return
-	}
-	c := pickClient(r.reg, state.Router, &resp.Diagnostics)
-	if c == nil {
-		return
-	}
-	if err := c.Remove(ctx, "/interface/ethernet/switch/port", state.ID.ValueString()); err != nil {
-		resp.Diagnostics.AddError("Delete /interface/ethernet/switch/port failed", err.Error())
-	}
+	// Fixed hardware row: cannot be removed. Drop from state; the row keeps
+	// its last-applied settings (adopt-only, like /ip/service).
+	_ = ctx
+	_ = req
+	_ = resp
 }
 
 func (r *InterfaceEthernetSwitchPortResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {

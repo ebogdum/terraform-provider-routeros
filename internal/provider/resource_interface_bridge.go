@@ -31,76 +31,76 @@ type InterfaceBridgeResource struct {
 }
 
 type InterfaceBridgeModel struct {
-	ID                       types.String `tfsdk:"id"`
-	ForwardReservedAddresses types.String `tfsdk:"forward_reserved_addresses"`
-	Dhcpv6Snooping           types.String `tfsdk:"dhcpv6_snooping"`
-	Dhcpv6AgentRemoteId      types.String `tfsdk:"dhcpv6_agent_remote_id"`
-	Dhcpv6AgentCircuitId     types.String `tfsdk:"dhcpv6_agent_circuit_id"`
-	DhcpAgentRemoteId        types.String `tfsdk:"dhcp_agent_remote_id"`
-	DhcpAgentCircuitId       types.String `tfsdk:"dhcp_agent_circuit_id"`
-	ActiveRole               types.String `tfsdk:"active_role"`
-	AddDHCPOption82          types.Bool   `tfsdk:"add_dhcp_option_82"`
-	AdminMAC                 types.String `tfsdk:"admin_mac"`
-	AdminMACAddress          types.String `tfsdk:"admin_mac_address"`
-	AgeingTime               types.String `tfsdk:"ageing_time"`
-	ARP                      types.String `tfsdk:"arp"`
-	ARPTimeout               types.String `tfsdk:"arp_timeout"`
-	AutoMAC                  types.Bool   `tfsdk:"auto_mac"`
-	Comment                  types.String `tfsdk:"comment"`
-	DHCPSnooping             types.Bool   `tfsdk:"dhcp_snooping"`
-	Disabled                 types.Bool   `tfsdk:"disabled"`
-	Dumb                     types.String `tfsdk:"dumb"`
-	EtherType                types.String `tfsdk:"ether_type"`
-	FastForward              types.Bool   `tfsdk:"fast_forward"`
-	ForwardDelay             types.String `tfsdk:"forward_delay"`
-	ForwardReserved          types.Bool   `tfsdk:"forward_reserved"`
-	FpTxRxPacketRate         types.String `tfsdk:"fp_tx_rx_packet_rate"`
-	FpTxRxRate               types.String `tfsdk:"fp_tx_rx_rate"`
-	FrameTypes               types.String `tfsdk:"frame_types"`
-	Heartbeat                types.String `tfsdk:"heartbeat"`
-	Igmp                     types.String `tfsdk:"igmp"`
-	IgmpSnooping             types.Bool   `tfsdk:"igmp_snooping"`
-	IgmpVersion              types.String `tfsdk:"igmp_version"`
-	IngressFiltering         types.Bool   `tfsdk:"ingress_filtering"`
-	LastMemberInterval       types.String `tfsdk:"last_member_interval"`
-	LastMemberQueryCount     types.Int64  `tfsdk:"last_member_query_count"`
-	MACAddress               types.String `tfsdk:"mac_address"`
-	MaxHops                  types.Int64  `tfsdk:"max_hops"`
-	MaxLearnedEntries        types.String `tfsdk:"max_learned_entries"`
-	MaxMessageAge            types.String `tfsdk:"max_message_age"`
-	MembershipInterval       types.String `tfsdk:"membership_interval"`
-	MlagHeartbeat            types.String `tfsdk:"mlag_heartbeat"`
-	MlagPeerPort             types.String `tfsdk:"mlag_peer_port"`
-	MlagPriority             types.Int64  `tfsdk:"mlag_priority"`
-	MldVersion               types.String `tfsdk:"mld_version"`
-	Mstp                     types.String `tfsdk:"mstp"`
-	MTU                      types.String `tfsdk:"mtu"`
-	MulticastQuerier         types.Bool   `tfsdk:"multicast_querier"`
-	MulticastRouter          types.String `tfsdk:"multicast_router"`
-	Mvrp                     types.Bool   `tfsdk:"mvrp"`
-	Name                     types.String `tfsdk:"name"`
-	PeerPort                 types.String `tfsdk:"peer_port"`
-	PortCostMode             types.String `tfsdk:"port_cost_mode"`
-	Priority                 types.Int64  `tfsdk:"priority"`
-	ProtocolMode             types.String `tfsdk:"protocol_mode"`
-	Pvid                     types.Int64  `tfsdk:"pvid"`
-	QuerierInterval          types.String `tfsdk:"querier_interval"`
-	QueryInterval            types.String `tfsdk:"query_interval"`
-	QueryResponseInterval    types.String `tfsdk:"query_response_interval"`
-	RaGuard                  types.Bool   `tfsdk:"ra_guard"`
-	RegionName               types.String `tfsdk:"region_name"`
-	RegionRevision           types.Int64  `tfsdk:"region_revision"`
-	StartupQueryCount        types.Int64  `tfsdk:"startup_query_count"`
-	StartupQueryInterval     types.String `tfsdk:"startup_query_interval"`
-	State                    types.String `tfsdk:"state"`
-	Status                   types.Int64  `tfsdk:"status"`
-	TransmitHoldCount        types.Int64  `tfsdk:"transmit_hold_count"`
-	TxRxPacketRate           types.String `tfsdk:"tx_rx_packet_rate"`
-	TxRxRate                 types.String `tfsdk:"tx_rx_rate"`
-	Type                     types.String `tfsdk:"type"`
-	VLAN                     types.String `tfsdk:"vlan"`
-	VLANFiltering            types.Bool   `tfsdk:"vlan_filtering"`
-	Router                   types.String `tfsdk:"router"`
+	ID                       types.String    `tfsdk:"id"`
+	ForwardReservedAddresses types.String    `tfsdk:"forward_reserved_addresses"`
+	Dhcpv6Snooping           boolStringValue `tfsdk:"dhcpv6_snooping"`
+	Dhcpv6AgentRemoteId      types.String    `tfsdk:"dhcpv6_agent_remote_id"`
+	Dhcpv6AgentCircuitId     types.String    `tfsdk:"dhcpv6_agent_circuit_id"`
+	DhcpAgentRemoteId        types.String    `tfsdk:"dhcp_agent_remote_id"`
+	DhcpAgentCircuitId       types.String    `tfsdk:"dhcp_agent_circuit_id"`
+	ActiveRole               types.String    `tfsdk:"active_role"`
+	AddDHCPOption82          types.Bool      `tfsdk:"add_dhcp_option_82"`
+	AdminMAC                 types.String    `tfsdk:"admin_mac"`
+	AdminMACAddress          types.String    `tfsdk:"admin_mac_address"`
+	AgeingTime               types.String    `tfsdk:"ageing_time"`
+	ARP                      types.String    `tfsdk:"arp"`
+	ARPTimeout               types.String    `tfsdk:"arp_timeout"`
+	AutoMAC                  types.Bool      `tfsdk:"auto_mac"`
+	Comment                  types.String    `tfsdk:"comment"`
+	DHCPSnooping             types.Bool      `tfsdk:"dhcp_snooping"`
+	Disabled                 types.Bool      `tfsdk:"disabled"`
+	Dumb                     types.String    `tfsdk:"dumb"`
+	EtherType                types.String    `tfsdk:"ether_type"`
+	FastForward              types.Bool      `tfsdk:"fast_forward"`
+	ForwardDelay             types.String    `tfsdk:"forward_delay"`
+	ForwardReserved          types.Bool      `tfsdk:"forward_reserved"`
+	FpTxRxPacketRate         types.String    `tfsdk:"fp_tx_rx_packet_rate"`
+	FpTxRxRate               types.String    `tfsdk:"fp_tx_rx_rate"`
+	FrameTypes               types.String    `tfsdk:"frame_types"`
+	Heartbeat                types.String    `tfsdk:"heartbeat"`
+	Igmp                     types.String    `tfsdk:"igmp"`
+	IgmpSnooping             types.Bool      `tfsdk:"igmp_snooping"`
+	IgmpVersion              types.String    `tfsdk:"igmp_version"`
+	IngressFiltering         types.Bool      `tfsdk:"ingress_filtering"`
+	LastMemberInterval       types.String    `tfsdk:"last_member_interval"`
+	LastMemberQueryCount     types.Int64     `tfsdk:"last_member_query_count"`
+	MACAddress               types.String    `tfsdk:"mac_address"`
+	MaxHops                  types.Int64     `tfsdk:"max_hops"`
+	MaxLearnedEntries        types.String    `tfsdk:"max_learned_entries"`
+	MaxMessageAge            types.String    `tfsdk:"max_message_age"`
+	MembershipInterval       types.String    `tfsdk:"membership_interval"`
+	MlagHeartbeat            types.String    `tfsdk:"mlag_heartbeat"`
+	MlagPeerPort             types.String    `tfsdk:"mlag_peer_port"`
+	MlagPriority             types.Int64     `tfsdk:"mlag_priority"`
+	MldVersion               types.String    `tfsdk:"mld_version"`
+	Mstp                     types.String    `tfsdk:"mstp"`
+	MTU                      types.String    `tfsdk:"mtu"`
+	MulticastQuerier         types.Bool      `tfsdk:"multicast_querier"`
+	MulticastRouter          types.String    `tfsdk:"multicast_router"`
+	Mvrp                     types.Bool      `tfsdk:"mvrp"`
+	Name                     types.String    `tfsdk:"name"`
+	PeerPort                 types.String    `tfsdk:"peer_port"`
+	PortCostMode             types.String    `tfsdk:"port_cost_mode"`
+	Priority                 types.Int64     `tfsdk:"priority"`
+	ProtocolMode             types.String    `tfsdk:"protocol_mode"`
+	Pvid                     types.Int64     `tfsdk:"pvid"`
+	QuerierInterval          types.String    `tfsdk:"querier_interval"`
+	QueryInterval            types.String    `tfsdk:"query_interval"`
+	QueryResponseInterval    types.String    `tfsdk:"query_response_interval"`
+	RaGuard                  types.Bool      `tfsdk:"ra_guard"`
+	RegionName               types.String    `tfsdk:"region_name"`
+	RegionRevision           types.Int64     `tfsdk:"region_revision"`
+	StartupQueryCount        types.Int64     `tfsdk:"startup_query_count"`
+	StartupQueryInterval     types.String    `tfsdk:"startup_query_interval"`
+	State                    types.String    `tfsdk:"state"`
+	Status                   types.Int64     `tfsdk:"status"`
+	TransmitHoldCount        types.Int64     `tfsdk:"transmit_hold_count"`
+	TxRxPacketRate           types.String    `tfsdk:"tx_rx_packet_rate"`
+	TxRxRate                 types.String    `tfsdk:"tx_rx_rate"`
+	Type                     types.String    `tfsdk:"type"`
+	VLAN                     types.String    `tfsdk:"vlan"`
+	VLANFiltering            types.Bool      `tfsdk:"vlan_filtering"`
+	Router                   types.String    `tfsdk:"router"`
 }
 
 func NewInterfaceBridgeResource() resource.Resource { return &InterfaceBridgeResource{} }
@@ -132,6 +132,7 @@ func (r *InterfaceBridgeResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "RouterOS `forward-reserved-addresses`.",
 			},
 			"dhcpv6_snooping": schema.StringAttribute{
+				CustomType:  boolStringType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "RouterOS `dhcpv6-snooping`.",
@@ -645,6 +646,7 @@ func (r *InterfaceBridgeResource) Create(ctx context.Context, req resource.Creat
 		return
 	}
 	interfaceBridgeApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -686,136 +688,136 @@ func (r *InterfaceBridgeResource) Update(ctx context.Context, req resource.Updat
 		return
 	}
 	body := client.Object{}
-	if !plan.AdminMAC.Equal(state.AdminMAC) {
+	if !plan.AdminMAC.Equal(state.AdminMAC) && !plan.AdminMAC.IsUnknown() {
 		body["admin-mac"] = plan.AdminMAC.ValueString()
 	}
-	if !plan.AgeingTime.Equal(state.AgeingTime) {
+	if !plan.AgeingTime.Equal(state.AgeingTime) && !plan.AgeingTime.IsUnknown() {
 		body["ageing-time"] = plan.AgeingTime.ValueString()
 	}
-	if !plan.ARP.Equal(state.ARP) {
+	if !plan.ARP.Equal(state.ARP) && !plan.ARP.IsUnknown() {
 		body["arp"] = plan.ARP.ValueString()
 	}
-	if !plan.ARPTimeout.Equal(state.ARPTimeout) {
+	if !plan.ARPTimeout.Equal(state.ARPTimeout) && !plan.ARPTimeout.IsUnknown() {
 		body["arp-timeout"] = plan.ARPTimeout.ValueString()
 	}
-	if !plan.AutoMAC.Equal(state.AutoMAC) {
+	if !plan.AutoMAC.Equal(state.AutoMAC) && !plan.AutoMAC.IsUnknown() {
 		body["auto-mac"] = client.FormatBool(plan.AutoMAC.ValueBool())
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.DHCPSnooping.Equal(state.DHCPSnooping) {
+	if !plan.DHCPSnooping.Equal(state.DHCPSnooping) && !plan.DHCPSnooping.IsUnknown() {
 		body["dhcp-snooping"] = client.FormatBool(plan.DHCPSnooping.ValueBool())
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.EtherType.Equal(state.EtherType) {
+	if !plan.EtherType.Equal(state.EtherType) && !plan.EtherType.IsUnknown() {
 		body["ether-type"] = plan.EtherType.ValueString()
 	}
-	if !plan.FastForward.Equal(state.FastForward) {
+	if !plan.FastForward.Equal(state.FastForward) && !plan.FastForward.IsUnknown() {
 		body["fast-forward"] = client.FormatBool(plan.FastForward.ValueBool())
 	}
-	if !plan.ForwardDelay.Equal(state.ForwardDelay) {
+	if !plan.ForwardDelay.Equal(state.ForwardDelay) && !plan.ForwardDelay.IsUnknown() {
 		body["forward-delay"] = plan.ForwardDelay.ValueString()
 	}
-	if !plan.FrameTypes.Equal(state.FrameTypes) {
+	if !plan.FrameTypes.Equal(state.FrameTypes) && !plan.FrameTypes.IsUnknown() {
 		body["frame-types"] = plan.FrameTypes.ValueString()
 	}
-	if !plan.IgmpSnooping.Equal(state.IgmpSnooping) {
+	if !plan.IgmpSnooping.Equal(state.IgmpSnooping) && !plan.IgmpSnooping.IsUnknown() {
 		body["igmp-snooping"] = client.FormatBool(plan.IgmpSnooping.ValueBool())
 	}
-	if !plan.IgmpVersion.Equal(state.IgmpVersion) {
+	if !plan.IgmpVersion.Equal(state.IgmpVersion) && !plan.IgmpVersion.IsUnknown() {
 		body["igmp-version"] = plan.IgmpVersion.ValueString()
 	}
-	if !plan.IngressFiltering.Equal(state.IngressFiltering) {
+	if !plan.IngressFiltering.Equal(state.IngressFiltering) && !plan.IngressFiltering.IsUnknown() {
 		body["ingress-filtering"] = client.FormatBool(plan.IngressFiltering.ValueBool())
 	}
-	if !plan.LastMemberInterval.Equal(state.LastMemberInterval) {
+	if !plan.LastMemberInterval.Equal(state.LastMemberInterval) && !plan.LastMemberInterval.IsUnknown() {
 		body["last-member-interval"] = plan.LastMemberInterval.ValueString()
 	}
-	if !plan.LastMemberQueryCount.Equal(state.LastMemberQueryCount) {
+	if !plan.LastMemberQueryCount.Equal(state.LastMemberQueryCount) && !plan.LastMemberQueryCount.IsUnknown() {
 		body["last-member-query-count"] = client.FormatInt64(plan.LastMemberQueryCount.ValueInt64())
 	}
-	if !plan.MaxHops.Equal(state.MaxHops) {
+	if !plan.MaxHops.Equal(state.MaxHops) && !plan.MaxHops.IsUnknown() {
 		body["max-hops"] = client.FormatInt64(plan.MaxHops.ValueInt64())
 	}
-	if !plan.MaxLearnedEntries.Equal(state.MaxLearnedEntries) {
+	if !plan.MaxLearnedEntries.Equal(state.MaxLearnedEntries) && !plan.MaxLearnedEntries.IsUnknown() {
 		body["max-learned-entries"] = plan.MaxLearnedEntries.ValueString()
 	}
-	if !plan.MaxMessageAge.Equal(state.MaxMessageAge) {
+	if !plan.MaxMessageAge.Equal(state.MaxMessageAge) && !plan.MaxMessageAge.IsUnknown() {
 		body["max-message-age"] = plan.MaxMessageAge.ValueString()
 	}
-	if !plan.MembershipInterval.Equal(state.MembershipInterval) {
+	if !plan.MembershipInterval.Equal(state.MembershipInterval) && !plan.MembershipInterval.IsUnknown() {
 		body["membership-interval"] = plan.MembershipInterval.ValueString()
 	}
-	if !plan.MlagHeartbeat.Equal(state.MlagHeartbeat) {
+	if !plan.MlagHeartbeat.Equal(state.MlagHeartbeat) && !plan.MlagHeartbeat.IsUnknown() {
 		body["mlag-heartbeat"] = plan.MlagHeartbeat.ValueString()
 	}
-	if !plan.MlagPeerPort.Equal(state.MlagPeerPort) {
+	if !plan.MlagPeerPort.Equal(state.MlagPeerPort) && !plan.MlagPeerPort.IsUnknown() {
 		body["mlag-peer-port"] = plan.MlagPeerPort.ValueString()
 	}
-	if !plan.MlagPriority.Equal(state.MlagPriority) {
+	if !plan.MlagPriority.Equal(state.MlagPriority) && !plan.MlagPriority.IsUnknown() {
 		body["mlag-priority"] = client.FormatInt64(plan.MlagPriority.ValueInt64())
 	}
-	if !plan.MldVersion.Equal(state.MldVersion) {
+	if !plan.MldVersion.Equal(state.MldVersion) && !plan.MldVersion.IsUnknown() {
 		body["mld-version"] = plan.MldVersion.ValueString()
 	}
-	if !plan.MTU.Equal(state.MTU) {
+	if !plan.MTU.Equal(state.MTU) && !plan.MTU.IsUnknown() {
 		body["mtu"] = plan.MTU.ValueString()
 	}
-	if !plan.MulticastQuerier.Equal(state.MulticastQuerier) {
+	if !plan.MulticastQuerier.Equal(state.MulticastQuerier) && !plan.MulticastQuerier.IsUnknown() {
 		body["multicast-querier"] = client.FormatBool(plan.MulticastQuerier.ValueBool())
 	}
-	if !plan.MulticastRouter.Equal(state.MulticastRouter) {
+	if !plan.MulticastRouter.Equal(state.MulticastRouter) && !plan.MulticastRouter.IsUnknown() {
 		body["multicast-router"] = plan.MulticastRouter.ValueString()
 	}
-	if !plan.Mvrp.Equal(state.Mvrp) {
+	if !plan.Mvrp.Equal(state.Mvrp) && !plan.Mvrp.IsUnknown() {
 		body["mvrp"] = client.FormatBool(plan.Mvrp.ValueBool())
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.PortCostMode.Equal(state.PortCostMode) {
+	if !plan.PortCostMode.Equal(state.PortCostMode) && !plan.PortCostMode.IsUnknown() {
 		body["port-cost-mode"] = plan.PortCostMode.ValueString()
 	}
-	if !plan.Priority.Equal(state.Priority) {
+	if !plan.Priority.Equal(state.Priority) && !plan.Priority.IsUnknown() {
 		body["priority"] = client.FormatInt64(plan.Priority.ValueInt64())
 	}
-	if !plan.ProtocolMode.Equal(state.ProtocolMode) {
+	if !plan.ProtocolMode.Equal(state.ProtocolMode) && !plan.ProtocolMode.IsUnknown() {
 		body["protocol-mode"] = plan.ProtocolMode.ValueString()
 	}
-	if !plan.Pvid.Equal(state.Pvid) {
+	if !plan.Pvid.Equal(state.Pvid) && !plan.Pvid.IsUnknown() {
 		body["pvid"] = client.FormatInt64(plan.Pvid.ValueInt64())
 	}
-	if !plan.QuerierInterval.Equal(state.QuerierInterval) {
+	if !plan.QuerierInterval.Equal(state.QuerierInterval) && !plan.QuerierInterval.IsUnknown() {
 		body["querier-interval"] = plan.QuerierInterval.ValueString()
 	}
-	if !plan.QueryInterval.Equal(state.QueryInterval) {
+	if !plan.QueryInterval.Equal(state.QueryInterval) && !plan.QueryInterval.IsUnknown() {
 		body["query-interval"] = plan.QueryInterval.ValueString()
 	}
-	if !plan.QueryResponseInterval.Equal(state.QueryResponseInterval) {
+	if !plan.QueryResponseInterval.Equal(state.QueryResponseInterval) && !plan.QueryResponseInterval.IsUnknown() {
 		body["query-response-interval"] = plan.QueryResponseInterval.ValueString()
 	}
-	if !plan.RaGuard.Equal(state.RaGuard) {
+	if !plan.RaGuard.Equal(state.RaGuard) && !plan.RaGuard.IsUnknown() {
 		body["ra-guard"] = client.FormatBool(plan.RaGuard.ValueBool())
 	}
-	if !plan.RegionName.Equal(state.RegionName) {
+	if !plan.RegionName.Equal(state.RegionName) && !plan.RegionName.IsUnknown() {
 		body["region-name"] = plan.RegionName.ValueString()
 	}
-	if !plan.RegionRevision.Equal(state.RegionRevision) {
+	if !plan.RegionRevision.Equal(state.RegionRevision) && !plan.RegionRevision.IsUnknown() {
 		body["region-revision"] = client.FormatInt64(plan.RegionRevision.ValueInt64())
 	}
-	if !plan.StartupQueryCount.Equal(state.StartupQueryCount) {
+	if !plan.StartupQueryCount.Equal(state.StartupQueryCount) && !plan.StartupQueryCount.IsUnknown() {
 		body["startup-query-count"] = client.FormatInt64(plan.StartupQueryCount.ValueInt64())
 	}
-	if !plan.StartupQueryInterval.Equal(state.StartupQueryInterval) {
+	if !plan.StartupQueryInterval.Equal(state.StartupQueryInterval) && !plan.StartupQueryInterval.IsUnknown() {
 		body["startup-query-interval"] = plan.StartupQueryInterval.ValueString()
 	}
-	if !plan.TransmitHoldCount.Equal(state.TransmitHoldCount) {
+	if !plan.TransmitHoldCount.Equal(state.TransmitHoldCount) && !plan.TransmitHoldCount.IsUnknown() {
 		body["transmit-hold-count"] = client.FormatInt64(plan.TransmitHoldCount.ValueInt64())
 	}
-	if !plan.VLANFiltering.Equal(state.VLANFiltering) {
+	if !plan.VLANFiltering.Equal(state.VLANFiltering) && !plan.VLANFiltering.IsUnknown() {
 		body["vlan-filtering"] = client.FormatBool(plan.VLANFiltering.ValueBool())
 	}
 	if !plan.DhcpAgentCircuitId.Equal(state.DhcpAgentCircuitId) && !plan.DhcpAgentCircuitId.IsUnknown() {
@@ -846,6 +848,7 @@ func (r *InterfaceBridgeResource) Update(ctx context.Context, req resource.Updat
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -908,9 +911,7 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 		m.ForwardReservedAddresses = types.StringNull()
 	}
 	if v, ok := obj["dhcpv6-snooping"]; ok && v != "" {
-		m.Dhcpv6Snooping = types.StringValue(v)
-	} else {
-		m.Dhcpv6Snooping = types.StringNull()
+		m.Dhcpv6Snooping = newBoolStringValue(v)
 	}
 	if v, ok := obj["dhcpv6-agent-remote-id"]; ok && v != "" {
 		m.Dhcpv6AgentRemoteId = types.StringValue(v)

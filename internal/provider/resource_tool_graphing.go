@@ -74,10 +74,11 @@ func (r *ToolGraphingResource) Create(ctx context.Context, req resource.CreateRe
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	toolGraphingUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	toolGraphingUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -87,10 +88,16 @@ func (r *ToolGraphingResource) Update(ctx context.Context, req resource.UpdateRe
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	toolGraphingUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state ToolGraphingModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	toolGraphingUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -128,16 +135,16 @@ func (r *ToolGraphingResource) ImportState(ctx context.Context, req resource.Imp
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/tool/graphing", types.StringValue(routerName))))...)
 }
 
-func toolGraphingUpsert(ctx context.Context, reg *client.Registry, plan *ToolGraphingModel, diags *diagBuf) {
+func toolGraphingUpsert(ctx context.Context, reg *client.Registry, plan, state *ToolGraphingModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.PageRefresh.IsNull() || plan.PageRefresh.IsUnknown()) {
+	if !(plan.PageRefresh.IsNull() || plan.PageRefresh.IsUnknown()) && (state == nil || !plan.PageRefresh.Equal(state.PageRefresh)) {
 		body["page-refresh"] = client.FormatInt64(plan.PageRefresh.ValueInt64())
 	}
-	if !(plan.StoreEvery.IsNull() || plan.StoreEvery.IsUnknown()) {
+	if !(plan.StoreEvery.IsNull() || plan.StoreEvery.IsUnknown()) && (state == nil || !plan.StoreEvery.Equal(state.StoreEvery)) {
 		body["store-every"] = plan.StoreEvery.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/tool/graphing", body)

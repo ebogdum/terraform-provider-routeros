@@ -99,6 +99,7 @@ func (r *CapsManRadioResource) Create(ctx context.Context, req resource.CreateRe
 		return
 	}
 	capsManRadioApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -140,10 +141,10 @@ func (r *CapsManRadioResource) Update(ctx context.Context, req resource.UpdateRe
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
 	if len(body) > 0 {
@@ -156,6 +157,7 @@ func (r *CapsManRadioResource) Update(ctx context.Context, req resource.UpdateRe
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

@@ -621,6 +621,7 @@ func (r *IPFirewallCaleaResource) Create(ctx context.Context, req resource.Creat
 		return
 	}
 	iPFirewallCaleaApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -662,10 +663,10 @@ func (r *IPFirewallCaleaResource) Update(ctx context.Context, req resource.Updat
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
 	if !plan.Action.Equal(state.Action) && !plan.Action.IsUnknown() {
@@ -852,6 +853,7 @@ func (r *IPFirewallCaleaResource) Update(ctx context.Context, req resource.Updat
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

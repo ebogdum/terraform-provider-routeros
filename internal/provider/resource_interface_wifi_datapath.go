@@ -188,6 +188,7 @@ func (r *InterfaceWifiDatapathResource) Create(ctx context.Context, req resource
 		return
 	}
 	interfaceWifiDatapathApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -229,40 +230,40 @@ func (r *InterfaceWifiDatapathResource) Update(ctx context.Context, req resource
 		return
 	}
 	body := client.Object{}
-	if !plan.Bridge.Equal(state.Bridge) {
+	if !plan.Bridge.Equal(state.Bridge) && !plan.Bridge.IsUnknown() {
 		body["bridge"] = plan.Bridge.ValueString()
 	}
-	if !plan.BridgeCost.Equal(state.BridgeCost) {
+	if !plan.BridgeCost.Equal(state.BridgeCost) && !plan.BridgeCost.IsUnknown() {
 		body["bridge-cost"] = plan.BridgeCost.ValueString()
 	}
-	if !plan.BridgeHorizon.Equal(state.BridgeHorizon) {
+	if !plan.BridgeHorizon.Equal(state.BridgeHorizon) && !plan.BridgeHorizon.IsUnknown() {
 		body["bridge-horizon"] = plan.BridgeHorizon.ValueString()
 	}
-	if !plan.ClientIsolation.Equal(state.ClientIsolation) {
+	if !plan.ClientIsolation.Equal(state.ClientIsolation) && !plan.ClientIsolation.IsUnknown() {
 		body["client-isolation"] = plan.ClientIsolation.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.InterfaceList.Equal(state.InterfaceList) {
+	if !plan.InterfaceList.Equal(state.InterfaceList) && !plan.InterfaceList.IsUnknown() {
 		body["interface-list"] = plan.InterfaceList.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.OpenFlowSwitch.Equal(state.OpenFlowSwitch) {
+	if !plan.OpenFlowSwitch.Equal(state.OpenFlowSwitch) && !plan.OpenFlowSwitch.IsUnknown() {
 		body["open-flow-switch"] = plan.OpenFlowSwitch.ValueString()
 	}
-	if !plan.Openflow.Equal(state.Openflow) {
+	if !plan.Openflow.Equal(state.Openflow) && !plan.Openflow.IsUnknown() {
 		body["openflow"] = plan.Openflow.ValueString()
 	}
-	if !plan.TrafficProcessing.Equal(state.TrafficProcessing) {
+	if !plan.TrafficProcessing.Equal(state.TrafficProcessing) && !plan.TrafficProcessing.IsUnknown() {
 		body["traffic-processing"] = plan.TrafficProcessing.ValueString()
 	}
-	if !plan.VLANID.Equal(state.VLANID) {
+	if !plan.VLANID.Equal(state.VLANID) && !plan.VLANID.IsUnknown() {
 		body["vlan-id"] = plan.VLANID.ValueString()
 	}
 	if len(body) > 0 {
@@ -275,6 +276,7 @@ func (r *InterfaceWifiDatapathResource) Update(ctx context.Context, req resource
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

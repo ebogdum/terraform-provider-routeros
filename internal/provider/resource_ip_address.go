@@ -113,10 +113,9 @@ func (r *IPAddressResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Description: "",
 			},
 			"network": schema.StringAttribute{
-				Optional:    true,
+				// Derived by RouterOS from `address`; read-only.
 				Computed:    true,
 				Description: "",
-				Validators:  []validator.String{schemautil.IsIP()},
 			},
 			"slave": schema.BoolAttribute{
 				Computed:    true,
@@ -169,6 +168,7 @@ func (r *IPAddressResource) Create(ctx context.Context, req resource.CreateReque
 		return
 	}
 	iPAddressApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -210,16 +210,16 @@ func (r *IPAddressResource) Update(ctx context.Context, req resource.UpdateReque
 		return
 	}
 	body := client.Object{}
-	if !plan.Address.Equal(state.Address) {
+	if !plan.Address.Equal(state.Address) && !plan.Address.IsUnknown() {
 		body["address"] = plan.Address.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
 	if !plan.Broadcast.Equal(state.Broadcast) && !plan.Broadcast.IsUnknown() {
@@ -238,6 +238,7 @@ func (r *IPAddressResource) Update(ctx context.Context, req resource.UpdateReque
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

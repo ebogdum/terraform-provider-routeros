@@ -214,6 +214,7 @@ func (r *IPARPResource) Create(ctx context.Context, req resource.CreateRequest, 
 		return
 	}
 	iPARPApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -255,22 +256,22 @@ func (r *IPARPResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		return
 	}
 	body := client.Object{}
-	if !plan.Address.Equal(state.Address) {
+	if !plan.Address.Equal(state.Address) && !plan.Address.IsUnknown() {
 		body["address"] = plan.Address.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.MACAddress.Equal(state.MACAddress) {
+	if !plan.MACAddress.Equal(state.MACAddress) && !plan.MACAddress.IsUnknown() {
 		body["mac-address"] = plan.MACAddress.ValueString()
 	}
-	if !plan.Published.Equal(state.Published) {
+	if !plan.Published.Equal(state.Published) && !plan.Published.IsUnknown() {
 		body["published"] = client.FormatBool(plan.Published.ValueBool())
 	}
 	if len(body) > 0 {
@@ -283,6 +284,7 @@ func (r *IPARPResource) Update(ctx context.Context, req resource.UpdateRequest, 
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

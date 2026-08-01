@@ -204,6 +204,7 @@ func (r *CapsManProvisioningResource) Create(ctx context.Context, req resource.C
 		return
 	}
 	capsManProvisioningApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -245,43 +246,43 @@ func (r *CapsManProvisioningResource) Update(ctx context.Context, req resource.U
 		return
 	}
 	body := client.Object{}
-	if !plan.Action.Equal(state.Action) {
+	if !plan.Action.Equal(state.Action) && !plan.Action.IsUnknown() {
 		body["action"] = plan.Action.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.CommonNameRegexp.Equal(state.CommonNameRegexp) {
+	if !plan.CommonNameRegexp.Equal(state.CommonNameRegexp) && !plan.CommonNameRegexp.IsUnknown() {
 		body["common-name-regexp"] = plan.CommonNameRegexp.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.HwSupportedModes.Equal(state.HwSupportedModes) {
+	if !plan.HwSupportedModes.Equal(state.HwSupportedModes) && !plan.HwSupportedModes.IsUnknown() {
 		body["hw-supported-modes"] = plan.HwSupportedModes.ValueString()
 	}
-	if !plan.IdentityRegexp.Equal(state.IdentityRegexp) {
+	if !plan.IdentityRegexp.Equal(state.IdentityRegexp) && !plan.IdentityRegexp.IsUnknown() {
 		body["identity-regexp"] = plan.IdentityRegexp.ValueString()
 	}
-	if !plan.IPAddressRanges.Equal(state.IPAddressRanges) {
+	if !plan.IPAddressRanges.Equal(state.IPAddressRanges) && !plan.IPAddressRanges.IsUnknown() {
 		body["ip-address-ranges"] = plan.IPAddressRanges.ValueString()
 	}
-	if !plan.MasterConfiguration.Equal(state.MasterConfiguration) {
+	if !plan.MasterConfiguration.Equal(state.MasterConfiguration) && !plan.MasterConfiguration.IsUnknown() {
 		body["master-configuration"] = plan.MasterConfiguration.ValueString()
 	}
-	if !plan.NameFormat.Equal(state.NameFormat) {
+	if !plan.NameFormat.Equal(state.NameFormat) && !plan.NameFormat.IsUnknown() {
 		body["name-format"] = plan.NameFormat.ValueString()
 	}
-	if !plan.NamePrefix.Equal(state.NamePrefix) {
+	if !plan.NamePrefix.Equal(state.NamePrefix) && !plan.NamePrefix.IsUnknown() {
 		body["name-prefix"] = plan.NamePrefix.ValueString()
 	}
-	if !plan.RadioMAC.Equal(state.RadioMAC) {
+	if !plan.RadioMAC.Equal(state.RadioMAC) && !plan.RadioMAC.IsUnknown() {
 		body["radio-mac"] = plan.RadioMAC.ValueString()
 	}
-	if !plan.SlaveConfiguration.Equal(state.SlaveConfiguration) {
+	if !plan.SlaveConfiguration.Equal(state.SlaveConfiguration) && !plan.SlaveConfiguration.IsUnknown() {
 		body["slave-configuration"] = plan.SlaveConfiguration.ValueString()
 	}
-	if !plan.SlaveConfigurations.Equal(state.SlaveConfigurations) {
+	if !plan.SlaveConfigurations.Equal(state.SlaveConfigurations) && !plan.SlaveConfigurations.IsUnknown() {
 		body["slave-configurations"] = plan.SlaveConfigurations.ValueString()
 	}
 	if len(body) > 0 {
@@ -294,6 +295,7 @@ func (r *CapsManProvisioningResource) Update(ctx context.Context, req resource.U
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

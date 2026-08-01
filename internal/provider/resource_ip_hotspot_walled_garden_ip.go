@@ -185,6 +185,7 @@ func (r *IPHotspotWalledGardenIPResource) Create(ctx context.Context, req resour
 		return
 	}
 	iPHotspotWalledGardenIPApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -226,37 +227,37 @@ func (r *IPHotspotWalledGardenIPResource) Update(ctx context.Context, req resour
 		return
 	}
 	body := client.Object{}
-	if !plan.Action.Equal(state.Action) {
+	if !plan.Action.Equal(state.Action) && !plan.Action.IsUnknown() {
 		body["action"] = plan.Action.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.DstAddress.Equal(state.DstAddress) {
+	if !plan.DstAddress.Equal(state.DstAddress) && !plan.DstAddress.IsUnknown() {
 		body["dst-address"] = plan.DstAddress.ValueString()
 	}
-	if !plan.DstAddressList.Equal(state.DstAddressList) {
+	if !plan.DstAddressList.Equal(state.DstAddressList) && !plan.DstAddressList.IsUnknown() {
 		body["dst-address-list"] = plan.DstAddressList.ValueString()
 	}
-	if !plan.DstHost.Equal(state.DstHost) {
+	if !plan.DstHost.Equal(state.DstHost) && !plan.DstHost.IsUnknown() {
 		body["dst-host"] = plan.DstHost.ValueString()
 	}
-	if !plan.DstPort.Equal(state.DstPort) {
+	if !plan.DstPort.Equal(state.DstPort) && !plan.DstPort.IsUnknown() {
 		body["dst-port"] = plan.DstPort.ValueString()
 	}
-	if !plan.Protocol.Equal(state.Protocol) {
+	if !plan.Protocol.Equal(state.Protocol) && !plan.Protocol.IsUnknown() {
 		body["protocol"] = plan.Protocol.ValueString()
 	}
-	if !plan.Server.Equal(state.Server) {
+	if !plan.Server.Equal(state.Server) && !plan.Server.IsUnknown() {
 		body["server"] = plan.Server.ValueString()
 	}
-	if !plan.SrcAddress.Equal(state.SrcAddress) {
+	if !plan.SrcAddress.Equal(state.SrcAddress) && !plan.SrcAddress.IsUnknown() {
 		body["src-address"] = plan.SrcAddress.ValueString()
 	}
-	if !plan.SrcAddressList.Equal(state.SrcAddressList) {
+	if !plan.SrcAddressList.Equal(state.SrcAddressList) && !plan.SrcAddressList.IsUnknown() {
 		body["src-address-list"] = plan.SrcAddressList.ValueString()
 	}
 	if len(body) > 0 {
@@ -269,6 +270,7 @@ func (r *IPHotspotWalledGardenIPResource) Update(ctx context.Context, req resour
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

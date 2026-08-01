@@ -28,20 +28,20 @@ type IPNeighborDiscoverySettingsResource struct {
 }
 
 type IPNeighborDiscoverySettingsModel struct {
-	ID                    types.String `tfsdk:"id"`
-	LldpMed               types.String `tfsdk:"lldp_med"`
-	AddDnsEntriesSuffix   types.String `tfsdk:"add_dns_entries_suffix"`
-	AddDnsEntries         types.String `tfsdk:"add_dns_entries"`
-	DiscoverInterfaceList types.String `tfsdk:"discover_interface_list"`
-	DiscoverInterval      types.String `tfsdk:"discover_interval"`
-	LldpMACPhyConfig      types.Bool   `tfsdk:"lldp_mac_phy_config"`
-	LldpMaxFrameSize      types.Bool   `tfsdk:"lldp_max_frame_size"`
-	LldpMedNetPolicyVlan  types.String `tfsdk:"lldp_med_net_policy_vlan"`
-	LldpPoePower          types.Bool   `tfsdk:"lldp_poe_power"`
-	LldpVlanInfo          types.Bool   `tfsdk:"lldp_vlan_info"`
-	Mode                  types.String `tfsdk:"mode"`
-	Protocol              types.String `tfsdk:"protocol"`
-	Router                types.String `tfsdk:"router"`
+	ID                    types.String    `tfsdk:"id"`
+	LldpMed               boolStringValue `tfsdk:"lldp_med"`
+	AddDnsEntriesSuffix   types.String    `tfsdk:"add_dns_entries_suffix"`
+	AddDnsEntries         boolStringValue `tfsdk:"add_dns_entries"`
+	DiscoverInterfaceList types.String    `tfsdk:"discover_interface_list"`
+	DiscoverInterval      types.String    `tfsdk:"discover_interval"`
+	LldpMACPhyConfig      types.Bool      `tfsdk:"lldp_mac_phy_config"`
+	LldpMaxFrameSize      types.Bool      `tfsdk:"lldp_max_frame_size"`
+	LldpMedNetPolicyVlan  types.String    `tfsdk:"lldp_med_net_policy_vlan"`
+	LldpPoePower          types.Bool      `tfsdk:"lldp_poe_power"`
+	LldpVlanInfo          types.Bool      `tfsdk:"lldp_vlan_info"`
+	Mode                  types.String    `tfsdk:"mode"`
+	Protocol              types.String    `tfsdk:"protocol"`
+	Router                types.String    `tfsdk:"router"`
 }
 
 func NewIPNeighborDiscoverySettingsResource() resource.Resource {
@@ -70,6 +70,7 @@ func (r *IPNeighborDiscoverySettingsResource) Schema(_ context.Context, _ resour
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"lldp_med": schema.StringAttribute{
+				CustomType:  boolStringType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "RouterOS `lldp-med`.",
@@ -80,6 +81,7 @@ func (r *IPNeighborDiscoverySettingsResource) Schema(_ context.Context, _ resour
 				Description: "RouterOS `add-dns-entries-suffix`.",
 			},
 			"add_dns_entries": schema.StringAttribute{
+				CustomType:  boolStringType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "RouterOS `add-dns-entries`.",
@@ -143,10 +145,11 @@ func (r *IPNeighborDiscoverySettingsResource) Create(ctx context.Context, req re
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPNeighborDiscoverySettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	iPNeighborDiscoverySettingsUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -156,10 +159,16 @@ func (r *IPNeighborDiscoverySettingsResource) Update(ctx context.Context, req re
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPNeighborDiscoverySettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state IPNeighborDiscoverySettingsModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	iPNeighborDiscoverySettingsUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -197,46 +206,46 @@ func (r *IPNeighborDiscoverySettingsResource) ImportState(ctx context.Context, r
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/ip/neighbor/discovery-settings", types.StringValue(routerName))))...)
 }
 
-func iPNeighborDiscoverySettingsUpsert(ctx context.Context, reg *client.Registry, plan *IPNeighborDiscoverySettingsModel, diags *diagBuf) {
+func iPNeighborDiscoverySettingsUpsert(ctx context.Context, reg *client.Registry, plan, state *IPNeighborDiscoverySettingsModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.DiscoverInterfaceList.IsNull() || plan.DiscoverInterfaceList.IsUnknown()) {
+	if !(plan.DiscoverInterfaceList.IsNull() || plan.DiscoverInterfaceList.IsUnknown()) && (state == nil || !plan.DiscoverInterfaceList.Equal(state.DiscoverInterfaceList)) {
 		body["discover-interface-list"] = plan.DiscoverInterfaceList.ValueString()
 	}
-	if !(plan.DiscoverInterval.IsNull() || plan.DiscoverInterval.IsUnknown()) {
+	if !(plan.DiscoverInterval.IsNull() || plan.DiscoverInterval.IsUnknown()) && (state == nil || !plan.DiscoverInterval.Equal(state.DiscoverInterval)) {
 		body["discover-interval"] = plan.DiscoverInterval.ValueString()
 	}
-	if !(plan.LldpMACPhyConfig.IsNull() || plan.LldpMACPhyConfig.IsUnknown()) {
+	if !(plan.LldpMACPhyConfig.IsNull() || plan.LldpMACPhyConfig.IsUnknown()) && (state == nil || !plan.LldpMACPhyConfig.Equal(state.LldpMACPhyConfig)) {
 		body["lldp-mac-phy-config"] = client.FormatBool(plan.LldpMACPhyConfig.ValueBool())
 	}
-	if !(plan.LldpMaxFrameSize.IsNull() || plan.LldpMaxFrameSize.IsUnknown()) {
+	if !(plan.LldpMaxFrameSize.IsNull() || plan.LldpMaxFrameSize.IsUnknown()) && (state == nil || !plan.LldpMaxFrameSize.Equal(state.LldpMaxFrameSize)) {
 		body["lldp-max-frame-size"] = client.FormatBool(plan.LldpMaxFrameSize.ValueBool())
 	}
-	if !(plan.LldpMedNetPolicyVlan.IsNull() || plan.LldpMedNetPolicyVlan.IsUnknown()) {
+	if !(plan.LldpMedNetPolicyVlan.IsNull() || plan.LldpMedNetPolicyVlan.IsUnknown()) && (state == nil || !plan.LldpMedNetPolicyVlan.Equal(state.LldpMedNetPolicyVlan)) {
 		body["lldp-med-net-policy-vlan"] = plan.LldpMedNetPolicyVlan.ValueString()
 	}
-	if !(plan.LldpPoePower.IsNull() || plan.LldpPoePower.IsUnknown()) {
+	if !(plan.LldpPoePower.IsNull() || plan.LldpPoePower.IsUnknown()) && (state == nil || !plan.LldpPoePower.Equal(state.LldpPoePower)) {
 		body["lldp-poe-power"] = client.FormatBool(plan.LldpPoePower.ValueBool())
 	}
-	if !(plan.LldpVlanInfo.IsNull() || plan.LldpVlanInfo.IsUnknown()) {
+	if !(plan.LldpVlanInfo.IsNull() || plan.LldpVlanInfo.IsUnknown()) && (state == nil || !plan.LldpVlanInfo.Equal(state.LldpVlanInfo)) {
 		body["lldp-vlan-info"] = client.FormatBool(plan.LldpVlanInfo.ValueBool())
 	}
-	if !(plan.Mode.IsNull() || plan.Mode.IsUnknown()) {
+	if !(plan.Mode.IsNull() || plan.Mode.IsUnknown()) && (state == nil || !plan.Mode.Equal(state.Mode)) {
 		body["mode"] = plan.Mode.ValueString()
 	}
-	if !(plan.Protocol.IsNull() || plan.Protocol.IsUnknown()) {
+	if !(plan.Protocol.IsNull() || plan.Protocol.IsUnknown()) && (state == nil || !plan.Protocol.Equal(state.Protocol)) {
 		body["protocol"] = plan.Protocol.ValueString()
 	}
-	if !(plan.AddDnsEntries.IsNull() || plan.AddDnsEntries.IsUnknown()) {
+	if !(plan.AddDnsEntries.IsNull() || plan.AddDnsEntries.IsUnknown()) && (state == nil || !plan.AddDnsEntries.Equal(state.AddDnsEntries)) {
 		body["add-dns-entries"] = plan.AddDnsEntries.ValueString()
 	}
-	if !(plan.AddDnsEntriesSuffix.IsNull() || plan.AddDnsEntriesSuffix.IsUnknown()) {
+	if !(plan.AddDnsEntriesSuffix.IsNull() || plan.AddDnsEntriesSuffix.IsUnknown()) && (state == nil || !plan.AddDnsEntriesSuffix.Equal(state.AddDnsEntriesSuffix)) {
 		body["add-dns-entries-suffix"] = plan.AddDnsEntriesSuffix.ValueString()
 	}
-	if !(plan.LldpMed.IsNull() || plan.LldpMed.IsUnknown()) {
+	if !(plan.LldpMed.IsNull() || plan.LldpMed.IsUnknown()) && (state == nil || !plan.LldpMed.Equal(state.LldpMed)) {
 		body["lldp-med"] = plan.LldpMed.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/ip/neighbor/discovery-settings", body)
@@ -251,9 +260,7 @@ func iPNeighborDiscoverySettingsUpsert(ctx context.Context, reg *client.Registry
 func iPNeighborDiscoverySettingsApply(ctx context.Context, obj client.Object, m *IPNeighborDiscoverySettingsModel) {
 	_ = ctx
 	if v, ok := obj["lldp-med"]; ok && v != "" {
-		m.LldpMed = types.StringValue(v)
-	} else {
-		m.LldpMed = types.StringNull()
+		m.LldpMed = newBoolStringValue(v)
 	}
 	if v, ok := obj["add-dns-entries-suffix"]; ok && v != "" {
 		m.AddDnsEntriesSuffix = types.StringValue(v)
@@ -261,9 +268,7 @@ func iPNeighborDiscoverySettingsApply(ctx context.Context, obj client.Object, m 
 		m.AddDnsEntriesSuffix = types.StringNull()
 	}
 	if v, ok := obj["add-dns-entries"]; ok && v != "" {
-		m.AddDnsEntries = types.StringValue(v)
-	} else {
-		m.AddDnsEntries = types.StringNull()
+		m.AddDnsEntries = newBoolStringValue(v)
 	}
 	if v, ok := obj["discover-interface-list"]; ok && v != "" {
 		m.DiscoverInterfaceList = types.StringValue(v)

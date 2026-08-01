@@ -36,6 +36,7 @@ This resource supports the following arguments:
 * `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `auto_send_supout` - (Optional) Type: `bool`. After the support output file is automatically generated, it can be sent by email.
 * `automatic_supout` - (Optional) Type: `bool`. When software failure happens, a file named "autosupout.rif" is generated automatically. The previous "autosupout.rif" file is renamed to "autosupout.old.rif".
+* `lockout_ack` - (Optional) Type: `bool`. Acknowledge that a `watch_address` the device cannot reach will reboot-loop it off the network.
 * `no_ping_delay` - (Optional) Type: `string`. Specifies how long will it wait before trying to reach the watch-address.
 * `ping_start_after_boot` - (Optional) Type: `string`.
 * `ping_timeout` - (Optional) Type: `string`. Specifies the time interval in which the device will be pinged 6 times (after "no-ping-delay").

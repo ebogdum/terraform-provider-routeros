@@ -140,10 +140,11 @@ func (r *IPProxyResource) Create(ctx context.Context, req resource.CreateRequest
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPProxyUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	iPProxyUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -153,10 +154,16 @@ func (r *IPProxyResource) Update(ctx context.Context, req resource.UpdateRequest
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPProxyUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state IPProxyModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	iPProxyUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -194,61 +201,61 @@ func (r *IPProxyResource) ImportState(ctx context.Context, req resource.ImportSt
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/ip/proxy", types.StringValue(routerName))))...)
 }
 
-func iPProxyUpsert(ctx context.Context, reg *client.Registry, plan *IPProxyModel, diags *diagBuf) {
+func iPProxyUpsert(ctx context.Context, reg *client.Registry, plan, state *IPProxyModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.AlwaysFromCache.IsNull() || plan.AlwaysFromCache.IsUnknown()) {
+	if !(plan.AlwaysFromCache.IsNull() || plan.AlwaysFromCache.IsUnknown()) && (state == nil || !plan.AlwaysFromCache.Equal(state.AlwaysFromCache)) {
 		body["always-from-cache"] = client.FormatBool(plan.AlwaysFromCache.ValueBool())
 	}
-	if !(plan.Anonymous.IsNull() || plan.Anonymous.IsUnknown()) {
+	if !(plan.Anonymous.IsNull() || plan.Anonymous.IsUnknown()) && (state == nil || !plan.Anonymous.Equal(state.Anonymous)) {
 		body["anonymous"] = client.FormatBool(plan.Anonymous.ValueBool())
 	}
-	if !(plan.CacheAdministrator.IsNull() || plan.CacheAdministrator.IsUnknown()) {
+	if !(plan.CacheAdministrator.IsNull() || plan.CacheAdministrator.IsUnknown()) && (state == nil || !plan.CacheAdministrator.Equal(state.CacheAdministrator)) {
 		body["cache-administrator"] = plan.CacheAdministrator.ValueString()
 	}
-	if !(plan.CacheHitDscp.IsNull() || plan.CacheHitDscp.IsUnknown()) {
+	if !(plan.CacheHitDscp.IsNull() || plan.CacheHitDscp.IsUnknown()) && (state == nil || !plan.CacheHitDscp.Equal(state.CacheHitDscp)) {
 		body["cache-hit-dscp"] = client.FormatInt64(plan.CacheHitDscp.ValueInt64())
 	}
-	if !(plan.CacheOnDisk.IsNull() || plan.CacheOnDisk.IsUnknown()) {
+	if !(plan.CacheOnDisk.IsNull() || plan.CacheOnDisk.IsUnknown()) && (state == nil || !plan.CacheOnDisk.Equal(state.CacheOnDisk)) {
 		body["cache-on-disk"] = client.FormatBool(plan.CacheOnDisk.ValueBool())
 	}
-	if !(plan.CachePath.IsNull() || plan.CachePath.IsUnknown()) {
+	if !(plan.CachePath.IsNull() || plan.CachePath.IsUnknown()) && (state == nil || !plan.CachePath.Equal(state.CachePath)) {
 		body["cache-path"] = plan.CachePath.ValueString()
 	}
-	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) {
+	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) && (state == nil || !plan.Enabled.Equal(state.Enabled)) {
 		body["enabled"] = client.FormatBool(plan.Enabled.ValueBool())
 	}
-	if !(plan.MaxCacheObjectSize.IsNull() || plan.MaxCacheObjectSize.IsUnknown()) {
+	if !(plan.MaxCacheObjectSize.IsNull() || plan.MaxCacheObjectSize.IsUnknown()) && (state == nil || !plan.MaxCacheObjectSize.Equal(state.MaxCacheObjectSize)) {
 		body["max-cache-object-size"] = client.FormatInt64(plan.MaxCacheObjectSize.ValueInt64())
 	}
-	if !(plan.MaxCacheSize.IsNull() || plan.MaxCacheSize.IsUnknown()) {
+	if !(plan.MaxCacheSize.IsNull() || plan.MaxCacheSize.IsUnknown()) && (state == nil || !plan.MaxCacheSize.Equal(state.MaxCacheSize)) {
 		body["max-cache-size"] = plan.MaxCacheSize.ValueString()
 	}
-	if !(plan.MaxClientConnections.IsNull() || plan.MaxClientConnections.IsUnknown()) {
+	if !(plan.MaxClientConnections.IsNull() || plan.MaxClientConnections.IsUnknown()) && (state == nil || !plan.MaxClientConnections.Equal(state.MaxClientConnections)) {
 		body["max-client-connections"] = client.FormatInt64(plan.MaxClientConnections.ValueInt64())
 	}
-	if !(plan.MaxFreshTime.IsNull() || plan.MaxFreshTime.IsUnknown()) {
+	if !(plan.MaxFreshTime.IsNull() || plan.MaxFreshTime.IsUnknown()) && (state == nil || !plan.MaxFreshTime.Equal(state.MaxFreshTime)) {
 		body["max-fresh-time"] = plan.MaxFreshTime.ValueString()
 	}
-	if !(plan.MaxServerConnections.IsNull() || plan.MaxServerConnections.IsUnknown()) {
+	if !(plan.MaxServerConnections.IsNull() || plan.MaxServerConnections.IsUnknown()) && (state == nil || !plan.MaxServerConnections.Equal(state.MaxServerConnections)) {
 		body["max-server-connections"] = client.FormatInt64(plan.MaxServerConnections.ValueInt64())
 	}
-	if !(plan.ParentProxy.IsNull() || plan.ParentProxy.IsUnknown()) {
+	if !(plan.ParentProxy.IsNull() || plan.ParentProxy.IsUnknown()) && (state == nil || !plan.ParentProxy.Equal(state.ParentProxy)) {
 		body["parent-proxy"] = plan.ParentProxy.ValueString()
 	}
-	if !(plan.ParentProxyPort.IsNull() || plan.ParentProxyPort.IsUnknown()) {
+	if !(plan.ParentProxyPort.IsNull() || plan.ParentProxyPort.IsUnknown()) && (state == nil || !plan.ParentProxyPort.Equal(state.ParentProxyPort)) {
 		body["parent-proxy-port"] = client.FormatInt64(plan.ParentProxyPort.ValueInt64())
 	}
-	if !(plan.Port.IsNull() || plan.Port.IsUnknown()) {
+	if !(plan.Port.IsNull() || plan.Port.IsUnknown()) && (state == nil || !plan.Port.Equal(state.Port)) {
 		body["port"] = client.FormatInt64(plan.Port.ValueInt64())
 	}
-	if !(plan.SerializeConnections.IsNull() || plan.SerializeConnections.IsUnknown()) {
+	if !(plan.SerializeConnections.IsNull() || plan.SerializeConnections.IsUnknown()) && (state == nil || !plan.SerializeConnections.Equal(state.SerializeConnections)) {
 		body["serialize-connections"] = client.FormatBool(plan.SerializeConnections.ValueBool())
 	}
-	if !(plan.SrcAddress.IsNull() || plan.SrcAddress.IsUnknown()) {
+	if !(plan.SrcAddress.IsNull() || plan.SrcAddress.IsUnknown()) && (state == nil || !plan.SrcAddress.Equal(state.SrcAddress)) {
 		body["src-address"] = plan.SrcAddress.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/ip/proxy", body)

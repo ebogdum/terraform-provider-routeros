@@ -34,7 +34,7 @@ type UserGroupModel struct {
 	Comment    types.String `tfsdk:"comment"`
 	Name       types.String `tfsdk:"name"`
 	Policies   types.String `tfsdk:"policies"`
-	Policy     types.List   `tfsdk:"policy"`
+	Policy     types.Set    `tfsdk:"policy"`
 	Skin       types.String `tfsdk:"skin"`
 	System     types.Bool   `tfsdk:"system"`
 	Router     types.String `tfsdk:"router"`
@@ -77,7 +77,7 @@ func (r *UserGroupResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Computed:    true,
 				Description: "",
 			},
-			"policy": schema.ListAttribute{
+			"policy": schema.SetAttribute{
 				Optional:    true,
 				Computed:    true,
 				ElementType: types.StringType,
@@ -123,7 +123,7 @@ func (r *UserGroupResource) Create(ctx context.Context, req resource.CreateReque
 		body["name"] = plan.Name.ValueString()
 	}
 	if !(plan.Policy.IsNull() || plan.Policy.IsUnknown()) {
-		body["policy"] = encodeStringList(ctx, plan.Policy, &resp.Diagnostics)
+		body["policy"] = encodeStringSet(ctx, plan.Policy, &resp.Diagnostics)
 	}
 	if !(plan.Skin.IsNull() || plan.Skin.IsUnknown()) {
 		body["skin"] = plan.Skin.ValueString()
@@ -138,6 +138,7 @@ func (r *UserGroupResource) Create(ctx context.Context, req resource.CreateReque
 		return
 	}
 	userGroupApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -179,16 +180,16 @@ func (r *UserGroupResource) Update(ctx context.Context, req resource.UpdateReque
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Policy.Equal(state.Policy) {
-		body["policy"] = encodeStringList(ctx, plan.Policy, &resp.Diagnostics)
+	if !plan.Policy.Equal(state.Policy) && !plan.Policy.IsUnknown() {
+		body["policy"] = encodeStringSet(ctx, plan.Policy, &resp.Diagnostics)
 	}
-	if !plan.Skin.Equal(state.Skin) {
+	if !plan.Skin.Equal(state.Skin) && !plan.Skin.IsUnknown() {
 		body["skin"] = plan.Skin.ValueString()
 	}
 	if err := schemautil.CheckUserGroupPolicyLockout("/user/group", body, !plan.LockoutAck.IsNull() && plan.LockoutAck.ValueBool()); err != nil {
@@ -205,6 +206,7 @@ func (r *UserGroupResource) Update(ctx context.Context, req resource.UpdateReque
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -298,9 +300,9 @@ func userGroupApply(ctx context.Context, obj client.Object, m *UserGroupModel) {
 	}
 	if v, ok := obj["policy"]; ok {
 		_ = v
-		m.Policy = decodeStringList(ctx, v)
+		m.Policy = decodePolicySet(ctx, v)
 	} else {
-		m.Policy = types.ListNull(types.StringType)
+		m.Policy = types.SetNull(types.StringType)
 	}
 	if v, ok := obj["skin"]; ok {
 		_ = v

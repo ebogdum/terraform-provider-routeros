@@ -243,6 +243,7 @@ func (r *IotLoraResource) Create(ctx context.Context, req resource.CreateRequest
 		return
 	}
 	iotLoraApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -284,43 +285,43 @@ func (r *IotLoraResource) Update(ctx context.Context, req resource.UpdateRequest
 		return
 	}
 	body := client.Object{}
-	if !plan.AntennaGain.Equal(state.AntennaGain) {
+	if !plan.AntennaGain.Equal(state.AntennaGain) && !plan.AntennaGain.IsUnknown() {
 		body["antenna-gain"] = plan.AntennaGain.ValueString()
 	}
-	if !plan.ChannelPlan.Equal(state.ChannelPlan) {
+	if !plan.ChannelPlan.Equal(state.ChannelPlan) && !plan.ChannelPlan.IsUnknown() {
 		body["channel-plan"] = plan.ChannelPlan.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = plan.Disabled.ValueString()
 	}
-	if !plan.Forward.Equal(state.Forward) {
+	if !plan.Forward.Equal(state.Forward) && !plan.Forward.IsUnknown() {
 		body["forward"] = plan.Forward.ValueString()
 	}
-	if !plan.GatewayID.Equal(state.GatewayID) {
+	if !plan.GatewayID.Equal(state.GatewayID) && !plan.GatewayID.IsUnknown() {
 		body["gateway-id"] = plan.GatewayID.ValueString()
 	}
-	if !plan.LbtEnabled.Equal(state.LbtEnabled) {
+	if !plan.LbtEnabled.Equal(state.LbtEnabled) && !plan.LbtEnabled.IsUnknown() {
 		body["lbt-enabled"] = plan.LbtEnabled.ValueString()
 	}
-	if !plan.ListenTime.Equal(state.ListenTime) {
+	if !plan.ListenTime.Equal(state.ListenTime) && !plan.ListenTime.IsUnknown() {
 		body["listen-time"] = plan.ListenTime.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Network.Equal(state.Network) {
+	if !plan.Network.Equal(state.Network) && !plan.Network.IsUnknown() {
 		body["network"] = plan.Network.ValueString()
 	}
-	if !plan.RssiThreshold.Equal(state.RssiThreshold) {
+	if !plan.RssiThreshold.Equal(state.RssiThreshold) && !plan.RssiThreshold.IsUnknown() {
 		body["rssi-threshold"] = plan.RssiThreshold.ValueString()
 	}
-	if !plan.Servers.Equal(state.Servers) {
+	if !plan.Servers.Equal(state.Servers) && !plan.Servers.IsUnknown() {
 		body["servers"] = plan.Servers.ValueString()
 	}
-	if !plan.SpoofGps.Equal(state.SpoofGps) {
+	if !plan.SpoofGps.Equal(state.SpoofGps) && !plan.SpoofGps.IsUnknown() {
 		body["spoof-gps"] = plan.SpoofGps.ValueString()
 	}
-	if !plan.SrcAddress.Equal(state.SrcAddress) {
+	if !plan.SrcAddress.Equal(state.SrcAddress) && !plan.SrcAddress.IsUnknown() {
 		body["src-address"] = plan.SrcAddress.ValueString()
 	}
 	if !plan.Alt.Equal(state.Alt) && !plan.Alt.IsUnknown() {
@@ -348,6 +349,7 @@ func (r *IotLoraResource) Update(ctx context.Context, req resource.UpdateRequest
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

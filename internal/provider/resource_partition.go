@@ -133,6 +133,7 @@ func (r *PartitionResource) Create(ctx context.Context, req resource.CreateReque
 		return
 	}
 	partitionApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -174,13 +175,13 @@ func (r *PartitionResource) Update(ctx context.Context, req resource.UpdateReque
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.FallbackTo.Equal(state.FallbackTo) {
+	if !plan.FallbackTo.Equal(state.FallbackTo) && !plan.FallbackTo.IsUnknown() {
 		body["fallback-to"] = plan.FallbackTo.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
 	if len(body) > 0 {
@@ -193,6 +194,7 @@ func (r *PartitionResource) Update(ctx context.Context, req resource.UpdateReque
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

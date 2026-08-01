@@ -88,10 +88,11 @@ func (r *IPDHCPServerConfigResource) Create(ctx context.Context, req resource.Cr
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPDHCPServerConfigUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	iPDHCPServerConfigUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -101,10 +102,16 @@ func (r *IPDHCPServerConfigResource) Update(ctx context.Context, req resource.Up
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPDHCPServerConfigUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state IPDHCPServerConfigModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	iPDHCPServerConfigUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -142,22 +149,22 @@ func (r *IPDHCPServerConfigResource) ImportState(ctx context.Context, req resour
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/ip/dhcp-server/config", types.StringValue(routerName))))...)
 }
 
-func iPDHCPServerConfigUpsert(ctx context.Context, reg *client.Registry, plan *IPDHCPServerConfigModel, diags *diagBuf) {
+func iPDHCPServerConfigUpsert(ctx context.Context, reg *client.Registry, plan, state *IPDHCPServerConfigModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.Accounting.IsNull() || plan.Accounting.IsUnknown()) {
+	if !(plan.Accounting.IsNull() || plan.Accounting.IsUnknown()) && (state == nil || !plan.Accounting.Equal(state.Accounting)) {
 		body["accounting"] = client.FormatBool(plan.Accounting.ValueBool())
 	}
-	if !(plan.InterimUpdate.IsNull() || plan.InterimUpdate.IsUnknown()) {
+	if !(plan.InterimUpdate.IsNull() || plan.InterimUpdate.IsUnknown()) && (state == nil || !plan.InterimUpdate.Equal(state.InterimUpdate)) {
 		body["interim-update"] = plan.InterimUpdate.ValueString()
 	}
-	if !(plan.RADIUSPassword.IsNull() || plan.RADIUSPassword.IsUnknown()) {
+	if !(plan.RADIUSPassword.IsNull() || plan.RADIUSPassword.IsUnknown()) && (state == nil || !plan.RADIUSPassword.Equal(state.RADIUSPassword)) {
 		body["radius-password"] = plan.RADIUSPassword.ValueString()
 	}
-	if !(plan.StoreLeasesDisk.IsNull() || plan.StoreLeasesDisk.IsUnknown()) {
+	if !(plan.StoreLeasesDisk.IsNull() || plan.StoreLeasesDisk.IsUnknown()) && (state == nil || !plan.StoreLeasesDisk.Equal(state.StoreLeasesDisk)) {
 		body["store-leases-disk"] = plan.StoreLeasesDisk.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/ip/dhcp-server/config", body)

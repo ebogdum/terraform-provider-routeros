@@ -141,6 +141,7 @@ func (r *IPFirewallServicePortResource) Create(ctx context.Context, req resource
 	}
 	iPFirewallServicePortApply(ctx, obj, &plan)
 	plan.ID = types.StringValue(id)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -211,6 +212,7 @@ func (r *IPFirewallServicePortResource) Update(ctx context.Context, req resource
 	}
 	iPFirewallServicePortApply(ctx, obj, &plan)
 	plan.ID = state.ID
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

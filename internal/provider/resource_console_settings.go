@@ -78,10 +78,11 @@ func (r *ConsoleSettingsResource) Create(ctx context.Context, req resource.Creat
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	consoleSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	consoleSettingsUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -91,10 +92,16 @@ func (r *ConsoleSettingsResource) Update(ctx context.Context, req resource.Updat
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	consoleSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state ConsoleSettingsModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	consoleSettingsUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -132,19 +139,19 @@ func (r *ConsoleSettingsResource) ImportState(ctx context.Context, req resource.
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/console/settings", types.StringValue(routerName))))...)
 }
 
-func consoleSettingsUpsert(ctx context.Context, reg *client.Registry, plan *ConsoleSettingsModel, diags *diagBuf) {
+func consoleSettingsUpsert(ctx context.Context, reg *client.Registry, plan, state *ConsoleSettingsModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.LogScriptErrors.IsNull() || plan.LogScriptErrors.IsUnknown()) {
+	if !(plan.LogScriptErrors.IsNull() || plan.LogScriptErrors.IsUnknown()) && (state == nil || !plan.LogScriptErrors.Equal(state.LogScriptErrors)) {
 		body["log-script-errors"] = client.FormatBool(plan.LogScriptErrors.ValueBool())
 	}
-	if !(plan.SanitizeNames.IsNull() || plan.SanitizeNames.IsUnknown()) {
+	if !(plan.SanitizeNames.IsNull() || plan.SanitizeNames.IsUnknown()) && (state == nil || !plan.SanitizeNames.Equal(state.SanitizeNames)) {
 		body["sanitize-names"] = client.FormatBool(plan.SanitizeNames.ValueBool())
 	}
-	if !(plan.TabWidth.IsNull() || plan.TabWidth.IsUnknown()) {
+	if !(plan.TabWidth.IsNull() || plan.TabWidth.IsUnknown()) && (state == nil || !plan.TabWidth.Equal(state.TabWidth)) {
 		body["tab-width"] = client.FormatInt64(plan.TabWidth.ValueInt64())
 	}
 	obj, err := c.SetSingleton(ctx, "/console/settings", body)

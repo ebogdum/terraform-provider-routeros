@@ -47,7 +47,6 @@ type InterfaceModel struct {
 	FpTxRxPacketRate     types.String `tfsdk:"fp_tx_rx_packet_rate"`
 	FpTxRxRate           types.String `tfsdk:"fp_tx_rx_rate"`
 	Inactive             types.Bool   `tfsdk:"inactive"`
-	L2MTU                types.Int64  `tfsdk:"l2_mtu"`
 	LastLinkDownTime     types.String `tfsdk:"last_link_down_time"`
 	LastLinkUpTime       types.String `tfsdk:"last_link_up_time"`
 	Link                 types.Int64  `tfsdk:"link"`
@@ -78,7 +77,7 @@ type InterfaceModel struct {
 	TxRxPacketRate       types.String `tfsdk:"tx_rx_packet_rate"`
 	TxRxPackets          types.String `tfsdk:"tx_rx_packets"`
 	TxRxRate             types.String `tfsdk:"tx_rx_rate"`
-	Type                 types.Int64  `tfsdk:"type"`
+	Type                 types.String `tfsdk:"type"`
 	Vrf                  types.String `tfsdk:"vrf"`
 	Router               types.String `tfsdk:"router"`
 }
@@ -165,10 +164,6 @@ func (r *InterfaceResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Description: "",
 			},
 			"inactive": schema.BoolAttribute{
-				Computed:    true,
-				Description: "",
-			},
-			"l2_mtu": schema.Int64Attribute{
 				Computed:    true,
 				Description: "",
 			},
@@ -296,7 +291,7 @@ func (r *InterfaceResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Computed:    true,
 				Description: "",
 			},
-			"type": schema.Int64Attribute{
+			"type": schema.StringAttribute{
 				Computed:    true,
 				Description: "",
 			},
@@ -341,6 +336,7 @@ func (r *InterfaceResource) Create(ctx context.Context, req resource.CreateReque
 		return
 	}
 	interfaceApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -382,16 +378,16 @@ func (r *InterfaceResource) Update(ctx context.Context, req resource.UpdateReque
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.MTU.Equal(state.MTU) {
+	if !plan.MTU.Equal(state.MTU) && !plan.MTU.IsUnknown() {
 		body["mtu"] = plan.MTU.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
 	if len(body) > 0 {
@@ -404,6 +400,7 @@ func (r *InterfaceResource) Update(ctx context.Context, req resource.UpdateReque
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -609,16 +606,6 @@ func interfaceApply(ctx context.Context, obj client.Object, m *InterfaceModel) {
 		}
 	} else {
 		m.Inactive = types.BoolNull()
-	}
-	if v, ok := obj["l2-mtu"]; ok {
-		_ = v
-		if n, err := client.ParseInt64(v); err == nil {
-			m.L2MTU = types.Int64Value(n)
-		} else {
-			m.L2MTU = types.Int64Null()
-		}
-	} else {
-		m.L2MTU = types.Int64Null()
 	}
 	if v, ok := obj["last-link-down-time"]; ok {
 		_ = v
@@ -920,15 +907,10 @@ func interfaceApply(ctx context.Context, obj client.Object, m *InterfaceModel) {
 	} else {
 		m.TxRxRate = types.StringNull()
 	}
-	if v, ok := obj["type"]; ok {
-		_ = v
-		if n, err := client.ParseInt64(v); err == nil {
-			m.Type = types.Int64Value(n)
-		} else {
-			m.Type = types.Int64Null()
-		}
+	if v, ok := obj["type"]; ok && v != "" {
+		m.Type = types.StringValue(v)
 	} else {
-		m.Type = types.Int64Null()
+		m.Type = types.StringNull()
 	}
 	if v, ok := obj["vrf"]; ok {
 		_ = v

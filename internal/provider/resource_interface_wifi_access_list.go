@@ -252,6 +252,7 @@ func (r *InterfaceWifiAccessListResource) Create(ctx context.Context, req resour
 		return
 	}
 	interfaceWifiAccessListApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -293,52 +294,52 @@ func (r *InterfaceWifiAccessListResource) Update(ctx context.Context, req resour
 		return
 	}
 	body := client.Object{}
-	if !plan.Action.Equal(state.Action) {
+	if !plan.Action.Equal(state.Action) && !plan.Action.IsUnknown() {
 		body["action"] = plan.Action.ValueString()
 	}
-	if !plan.AllowSignalOutOfRange.Equal(state.AllowSignalOutOfRange) {
+	if !plan.AllowSignalOutOfRange.Equal(state.AllowSignalOutOfRange) && !plan.AllowSignalOutOfRange.IsUnknown() {
 		body["allow-signal-out-of-range"] = plan.AllowSignalOutOfRange.ValueString()
 	}
-	if !plan.ClientIsolation.Equal(state.ClientIsolation) {
+	if !plan.ClientIsolation.Equal(state.ClientIsolation) && !plan.ClientIsolation.IsUnknown() {
 		body["client-isolation"] = plan.ClientIsolation.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.MACAddress.Equal(state.MACAddress) {
+	if !plan.MACAddress.Equal(state.MACAddress) && !plan.MACAddress.IsUnknown() {
 		body["mac-address"] = plan.MACAddress.ValueString()
 	}
-	if !plan.MACAddressMask.Equal(state.MACAddressMask) {
+	if !plan.MACAddressMask.Equal(state.MACAddressMask) && !plan.MACAddressMask.IsUnknown() {
 		body["mac-address-mask"] = plan.MACAddressMask.ValueString()
 	}
-	if !plan.MultiPassphraseGroup.Equal(state.MultiPassphraseGroup) {
+	if !plan.MultiPassphraseGroup.Equal(state.MultiPassphraseGroup) && !plan.MultiPassphraseGroup.IsUnknown() {
 		body["multi-passphrase-group"] = plan.MultiPassphraseGroup.ValueString()
 	}
-	if !plan.Passphrase.Equal(state.Passphrase) {
+	if !plan.Passphrase.Equal(state.Passphrase) && !plan.Passphrase.IsUnknown() {
 		body["passphrase"] = plan.Passphrase.ValueString()
 	}
-	if !plan.RADIUSAccounting.Equal(state.RADIUSAccounting) {
+	if !plan.RADIUSAccounting.Equal(state.RADIUSAccounting) && !plan.RADIUSAccounting.IsUnknown() {
 		body["radius-accounting"] = plan.RADIUSAccounting.ValueString()
 	}
-	if !plan.SignalRange.Equal(state.SignalRange) {
+	if !plan.SignalRange.Equal(state.SignalRange) && !plan.SignalRange.IsUnknown() {
 		body["signal-range"] = plan.SignalRange.ValueString()
 	}
-	if !plan.SsidRegexp.Equal(state.SsidRegexp) {
+	if !plan.SsidRegexp.Equal(state.SsidRegexp) && !plan.SsidRegexp.IsUnknown() {
 		body["ssid-regexp"] = plan.SsidRegexp.ValueString()
 	}
-	if !plan.Time.Equal(state.Time) {
+	if !plan.Time.Equal(state.Time) && !plan.Time.IsUnknown() {
 		body["time"] = plan.Time.ValueString()
 	}
-	if !plan.VLANID.Equal(state.VLANID) {
+	if !plan.VLANID.Equal(state.VLANID) && !plan.VLANID.IsUnknown() {
 		body["vlan-id"] = plan.VLANID.ValueString()
 	}
-	if !plan.Weekdays.Equal(state.Weekdays) {
+	if !plan.Weekdays.Equal(state.Weekdays) && !plan.Weekdays.IsUnknown() {
 		body["weekdays"] = plan.Weekdays.ValueString()
 	}
 	if !plan.Days.Equal(state.Days) && !plan.Days.IsUnknown() {
@@ -354,6 +355,7 @@ func (r *InterfaceWifiAccessListResource) Update(ctx context.Context, req resour
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

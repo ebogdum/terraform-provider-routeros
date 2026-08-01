@@ -29,16 +29,16 @@ type MPLSLdpInterfaceResource struct {
 }
 
 type MPLSLdpInterfaceModel struct {
-	ID                     types.String `tfsdk:"id"`
-	TransportAddresses     types.String `tfsdk:"transport_addresses"`
-	HoldTime               types.String `tfsdk:"hold_time"`
-	HelloInterval          types.String `tfsdk:"hello_interval"`
-	Afi                    types.String `tfsdk:"afi"`
-	AcceptDynamicNeighbors types.String `tfsdk:"accept_dynamic_neighbors"`
-	Comment                types.String `tfsdk:"comment"`
-	Disabled               types.Bool   `tfsdk:"disabled"`
-	Interface              types.String `tfsdk:"interface"`
-	Router                 types.String `tfsdk:"router"`
+	ID                     types.String    `tfsdk:"id"`
+	TransportAddresses     types.String    `tfsdk:"transport_addresses"`
+	HoldTime               types.String    `tfsdk:"hold_time"`
+	HelloInterval          types.String    `tfsdk:"hello_interval"`
+	Afi                    types.String    `tfsdk:"afi"`
+	AcceptDynamicNeighbors boolStringValue `tfsdk:"accept_dynamic_neighbors"`
+	Comment                types.String    `tfsdk:"comment"`
+	Disabled               types.Bool      `tfsdk:"disabled"`
+	Interface              types.String    `tfsdk:"interface"`
+	Router                 types.String    `tfsdk:"router"`
 }
 
 func NewMPLSLdpInterfaceResource() resource.Resource { return &MPLSLdpInterfaceResource{} }
@@ -85,6 +85,7 @@ func (r *MPLSLdpInterfaceResource) Schema(_ context.Context, _ resource.SchemaRe
 				Description: "RouterOS `afi`.",
 			},
 			"accept_dynamic_neighbors": schema.StringAttribute{
+				CustomType:  boolStringType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "RouterOS `accept-dynamic-neighbors`.",
@@ -152,6 +153,7 @@ func (r *MPLSLdpInterfaceResource) Create(ctx context.Context, req resource.Crea
 		return
 	}
 	mPLSLdpInterfaceApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -193,13 +195,13 @@ func (r *MPLSLdpInterfaceResource) Update(ctx context.Context, req resource.Upda
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
 	if !plan.AcceptDynamicNeighbors.Equal(state.AcceptDynamicNeighbors) && !plan.AcceptDynamicNeighbors.IsUnknown() {
@@ -227,6 +229,7 @@ func (r *MPLSLdpInterfaceResource) Update(ctx context.Context, req resource.Upda
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -304,9 +307,9 @@ func mPLSLdpInterfaceApply(ctx context.Context, obj client.Object, m *MPLSLdpInt
 		m.Afi = types.StringNull()
 	}
 	if v, ok := obj["accept-dynamic-neighbors"]; ok && v != "" {
-		m.AcceptDynamicNeighbors = types.StringValue(v)
+		m.AcceptDynamicNeighbors = newBoolStringValue(v)
 	} else {
-		m.AcceptDynamicNeighbors = types.StringNull()
+		m.AcceptDynamicNeighbors = newBoolStringNull()
 	}
 	if v, ok := obj["comment"]; ok {
 		_ = v

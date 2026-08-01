@@ -94,10 +94,11 @@ func (r *UserManagerResource) Create(ctx context.Context, req resource.CreateReq
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	userManagerUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	userManagerUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -107,10 +108,16 @@ func (r *UserManagerResource) Update(ctx context.Context, req resource.UpdateReq
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	userManagerUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state UserManagerModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	userManagerUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -148,31 +155,31 @@ func (r *UserManagerResource) ImportState(ctx context.Context, req resource.Impo
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/user-manager", types.StringValue(routerName))))...)
 }
 
-func userManagerUpsert(ctx context.Context, reg *client.Registry, plan *UserManagerModel, diags *diagBuf) {
+func userManagerUpsert(ctx context.Context, reg *client.Registry, plan, state *UserManagerModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.AccountingPort.IsNull() || plan.AccountingPort.IsUnknown()) {
+	if !(plan.AccountingPort.IsNull() || plan.AccountingPort.IsUnknown()) && (state == nil || !plan.AccountingPort.Equal(state.AccountingPort)) {
 		body["accounting-port"] = plan.AccountingPort.ValueString()
 	}
-	if !(plan.AuthenticationPort.IsNull() || plan.AuthenticationPort.IsUnknown()) {
+	if !(plan.AuthenticationPort.IsNull() || plan.AuthenticationPort.IsUnknown()) && (state == nil || !plan.AuthenticationPort.Equal(state.AuthenticationPort)) {
 		body["authentication-port"] = plan.AuthenticationPort.ValueString()
 	}
-	if !(plan.Certificate.IsNull() || plan.Certificate.IsUnknown()) {
+	if !(plan.Certificate.IsNull() || plan.Certificate.IsUnknown()) && (state == nil || !plan.Certificate.Equal(state.Certificate)) {
 		body["certificate"] = plan.Certificate.ValueString()
 	}
-	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) {
+	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) && (state == nil || !plan.Enabled.Equal(state.Enabled)) {
 		body["enabled"] = plan.Enabled.ValueString()
 	}
-	if !(plan.RadsecCertificate.IsNull() || plan.RadsecCertificate.IsUnknown()) {
+	if !(plan.RadsecCertificate.IsNull() || plan.RadsecCertificate.IsUnknown()) && (state == nil || !plan.RadsecCertificate.Equal(state.RadsecCertificate)) {
 		body["radsec-certificate"] = plan.RadsecCertificate.ValueString()
 	}
-	if !(plan.RequireMessageAuth.IsNull() || plan.RequireMessageAuth.IsUnknown()) {
+	if !(plan.RequireMessageAuth.IsNull() || plan.RequireMessageAuth.IsUnknown()) && (state == nil || !plan.RequireMessageAuth.Equal(state.RequireMessageAuth)) {
 		body["require-message-auth"] = plan.RequireMessageAuth.ValueString()
 	}
-	if !(plan.UseProfiles.IsNull() || plan.UseProfiles.IsUnknown()) {
+	if !(plan.UseProfiles.IsNull() || plan.UseProfiles.IsUnknown()) && (state == nil || !plan.UseProfiles.Equal(state.UseProfiles)) {
 		body["use-profiles"] = plan.UseProfiles.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/user-manager", body)

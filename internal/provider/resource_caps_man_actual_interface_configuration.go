@@ -101,6 +101,7 @@ func (r *CapsManActualInterfaceConfigurationResource) Create(ctx context.Context
 		return
 	}
 	capsManActualInterfaceConfigurationApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -142,10 +143,10 @@ func (r *CapsManActualInterfaceConfigurationResource) Update(ctx context.Context
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
 	if len(body) > 0 {
@@ -158,6 +159,7 @@ func (r *CapsManActualInterfaceConfigurationResource) Update(ctx context.Context
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

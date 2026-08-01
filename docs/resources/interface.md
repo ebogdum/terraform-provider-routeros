@@ -58,7 +58,6 @@ This resource supports the following arguments:
 * `fp_tx_rx_packet_rate` - (Read-only) Type: `string`.
 * `fp_tx_rx_rate` - (Read-only) Type: `string`.
 * `inactive` - (Read-only) Type: `bool`.
-* `l2_mtu` - (Read-only) Type: `int`.
 * `last_link_down_time` - (Read-only) Type: `string`.
 * `last_link_up_time` - (Read-only) Type: `string`.
 * `link` - (Read-only) Type: `int`.

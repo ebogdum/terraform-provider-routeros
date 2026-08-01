@@ -565,6 +565,7 @@ func (r *RoutingBGPTemplateResource) Create(ctx context.Context, req resource.Cr
 		return
 	}
 	routingBGPTemplateApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -606,82 +607,82 @@ func (r *RoutingBGPTemplateResource) Update(ctx context.Context, req resource.Up
 		return
 	}
 	body := client.Object{}
-	if !plan.Afi.Equal(state.Afi) {
+	if !plan.Afi.Equal(state.Afi) && !plan.Afi.IsUnknown() {
 		body["afi"] = plan.Afi.ValueString()
 	}
-	if !plan.As.Equal(state.As) {
+	if !plan.As.Equal(state.As) && !plan.As.IsUnknown() {
 		body["as"] = plan.As.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.HoldTime.Equal(state.HoldTime) {
+	if !plan.HoldTime.Equal(state.HoldTime) && !plan.HoldTime.IsUnknown() {
 		body["hold-time"] = plan.HoldTime.ValueString()
 	}
-	if !plan.InputAcceptCommunities.Equal(state.InputAcceptCommunities) {
+	if !plan.InputAcceptCommunities.Equal(state.InputAcceptCommunities) && !plan.InputAcceptCommunities.IsUnknown() {
 		body["input.accept-communities"] = plan.InputAcceptCommunities.ValueString()
 	}
-	if !plan.InputAcceptExtCommunities.Equal(state.InputAcceptExtCommunities) {
+	if !plan.InputAcceptExtCommunities.Equal(state.InputAcceptExtCommunities) && !plan.InputAcceptExtCommunities.IsUnknown() {
 		body["input.accept-ext-communities"] = plan.InputAcceptExtCommunities.ValueString()
 	}
-	if !plan.InputAcceptLargeCommunities.Equal(state.InputAcceptLargeCommunities) {
+	if !plan.InputAcceptLargeCommunities.Equal(state.InputAcceptLargeCommunities) && !plan.InputAcceptLargeCommunities.IsUnknown() {
 		body["input.accept-large-communities"] = plan.InputAcceptLargeCommunities.ValueString()
 	}
-	if !plan.InputAcceptNlri.Equal(state.InputAcceptNlri) {
+	if !plan.InputAcceptNlri.Equal(state.InputAcceptNlri) && !plan.InputAcceptNlri.IsUnknown() {
 		body["input.accept-nlri"] = plan.InputAcceptNlri.ValueString()
 	}
-	if !plan.InputAffinity.Equal(state.InputAffinity) {
+	if !plan.InputAffinity.Equal(state.InputAffinity) && !plan.InputAffinity.IsUnknown() {
 		body["input.affinity"] = plan.InputAffinity.ValueString()
 	}
-	if !plan.InputFilter.Equal(state.InputFilter) {
+	if !plan.InputFilter.Equal(state.InputFilter) && !plan.InputFilter.IsUnknown() {
 		body["input.filter"] = plan.InputFilter.ValueString()
 	}
-	if !plan.InputFilterCommunities.Equal(state.InputFilterCommunities) {
+	if !plan.InputFilterCommunities.Equal(state.InputFilterCommunities) && !plan.InputFilterCommunities.IsUnknown() {
 		body["input.filter-communities"] = plan.InputFilterCommunities.ValueString()
 	}
-	if !plan.InputFilterExtCommunities.Equal(state.InputFilterExtCommunities) {
+	if !plan.InputFilterExtCommunities.Equal(state.InputFilterExtCommunities) && !plan.InputFilterExtCommunities.IsUnknown() {
 		body["input.filter-ext-communities"] = plan.InputFilterExtCommunities.ValueString()
 	}
-	if !plan.InputFilterLargeCommunities.Equal(state.InputFilterLargeCommunities) {
+	if !plan.InputFilterLargeCommunities.Equal(state.InputFilterLargeCommunities) && !plan.InputFilterLargeCommunities.IsUnknown() {
 		body["input.filter-large-communities"] = plan.InputFilterLargeCommunities.ValueString()
 	}
-	if !plan.InputFilterUnknown.Equal(state.InputFilterUnknown) {
+	if !plan.InputFilterUnknown.Equal(state.InputFilterUnknown) && !plan.InputFilterUnknown.IsUnknown() {
 		body["input.filter-unknown"] = plan.InputFilterUnknown.ValueString()
 	}
-	if !plan.KeepaliveTime.Equal(state.KeepaliveTime) {
+	if !plan.KeepaliveTime.Equal(state.KeepaliveTime) && !plan.KeepaliveTime.IsUnknown() {
 		body["keepalive-time"] = plan.KeepaliveTime.ValueString()
 	}
-	if !plan.Multihop.Equal(state.Multihop) {
+	if !plan.Multihop.Equal(state.Multihop) && !plan.Multihop.IsUnknown() {
 		body["multihop"] = plan.Multihop.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.NexthopChoice.Equal(state.NexthopChoice) {
+	if !plan.NexthopChoice.Equal(state.NexthopChoice) && !plan.NexthopChoice.IsUnknown() {
 		body["nexthop-choice"] = plan.NexthopChoice.ValueString()
 	}
-	if !plan.OutputAffinity.Equal(state.OutputAffinity) {
+	if !plan.OutputAffinity.Equal(state.OutputAffinity) && !plan.OutputAffinity.IsUnknown() {
 		body["output.affinity"] = plan.OutputAffinity.ValueString()
 	}
-	if !plan.OutputNetwork.Equal(state.OutputNetwork) {
+	if !plan.OutputNetwork.Equal(state.OutputNetwork) && !plan.OutputNetwork.IsUnknown() {
 		body["output.network"] = plan.OutputNetwork.ValueString()
 	}
-	if !plan.OutputRedistribute.Equal(state.OutputRedistribute) {
+	if !plan.OutputRedistribute.Equal(state.OutputRedistribute) && !plan.OutputRedistribute.IsUnknown() {
 		body["output.redistribute"] = plan.OutputRedistribute.ValueString()
 	}
-	if !plan.RoutingTable.Equal(state.RoutingTable) {
+	if !plan.RoutingTable.Equal(state.RoutingTable) && !plan.RoutingTable.IsUnknown() {
 		body["routing-table"] = plan.RoutingTable.ValueString()
 	}
-	if !plan.Templates.Equal(state.Templates) {
+	if !plan.Templates.Equal(state.Templates) && !plan.Templates.IsUnknown() {
 		body["templates"] = plan.Templates.ValueString()
 	}
-	if !plan.UseBfd.Equal(state.UseBfd) {
+	if !plan.UseBfd.Equal(state.UseBfd) && !plan.UseBfd.IsUnknown() {
 		body["use-bfd"] = plan.UseBfd.ValueString()
 	}
-	if !plan.Vrf.Equal(state.Vrf) {
+	if !plan.Vrf.Equal(state.Vrf) && !plan.Vrf.IsUnknown() {
 		body["vrf"] = plan.Vrf.ValueString()
 	}
 	if !plan.InputAddPath.Equal(state.InputAddPath) && !plan.InputAddPath.IsUnknown() {
@@ -751,6 +752,7 @@ func (r *RoutingBGPTemplateResource) Update(ctx context.Context, req resource.Up
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

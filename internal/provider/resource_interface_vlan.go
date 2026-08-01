@@ -29,21 +29,21 @@ type InterfaceVLANResource struct {
 }
 
 type InterfaceVLANModel struct {
-	ID                      types.String `tfsdk:"id"`
-	ARP                     types.String `tfsdk:"arp"`
-	ARPTimeout              types.String `tfsdk:"arp_timeout"`
-	Comment                 types.String `tfsdk:"comment"`
-	Disabled                types.Bool   `tfsdk:"disabled"`
-	Interface               types.String `tfsdk:"interface"`
-	LoopProtect             types.String `tfsdk:"loop_protect"`
-	LoopProtectDisableTime  types.String `tfsdk:"loop_protect_disable_time"`
-	LoopProtectSendInterval types.String `tfsdk:"loop_protect_send_interval"`
-	MTU                     types.String `tfsdk:"mtu"`
-	Mvrp                    types.String `tfsdk:"mvrp"`
-	Name                    types.String `tfsdk:"name"`
-	UseServiceTag           types.String `tfsdk:"use_service_tag"`
-	VLANID                  types.String `tfsdk:"vlan_id"`
-	Router                  types.String `tfsdk:"router"`
+	ID                      types.String    `tfsdk:"id"`
+	ARP                     types.String    `tfsdk:"arp"`
+	ARPTimeout              types.String    `tfsdk:"arp_timeout"`
+	Comment                 types.String    `tfsdk:"comment"`
+	Disabled                types.Bool      `tfsdk:"disabled"`
+	Interface               types.String    `tfsdk:"interface"`
+	LoopProtect             types.String    `tfsdk:"loop_protect"`
+	LoopProtectDisableTime  types.String    `tfsdk:"loop_protect_disable_time"`
+	LoopProtectSendInterval types.String    `tfsdk:"loop_protect_send_interval"`
+	MTU                     types.String    `tfsdk:"mtu"`
+	Mvrp                    boolStringValue `tfsdk:"mvrp"`
+	Name                    types.String    `tfsdk:"name"`
+	UseServiceTag           boolStringValue `tfsdk:"use_service_tag"`
+	VLANID                  types.String    `tfsdk:"vlan_id"`
+	Router                  types.String    `tfsdk:"router"`
 }
 
 func NewInterfaceVLANResource() resource.Resource { return &InterfaceVLANResource{} }
@@ -114,6 +114,7 @@ func (r *InterfaceVLANResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "Layer3 Maximum transmission unit",
 			},
 			"mvrp": schema.StringAttribute{
+				CustomType:  boolStringType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "Specifies whether this VLAN should declare its attributes through Multiple VLAN Registration Protocol (MVRP) as an applicant. Its main use case is for VLANs that is created on Ethernet interface (such as a \"router on a stick\" setup) that is connected to a bridge supporting MVRP . Enabling this option on a VLAN interface that is already part of an MVRP-enabled bridge has no effect, as the bridge manages MVRP in that case. \u00a0 This property only has an effect when use-service-tag \u00a0 is disabled .",
@@ -123,6 +124,7 @@ func (r *InterfaceVLANResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "Interface name",
 			},
 			"use_service_tag": schema.StringAttribute{
+				CustomType:  boolStringType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "IEEE 802.1ad compatible Service Tag",
@@ -195,6 +197,7 @@ func (r *InterfaceVLANResource) Create(ctx context.Context, req resource.CreateR
 		return
 	}
 	interfaceVLANApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -236,43 +239,43 @@ func (r *InterfaceVLANResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 	body := client.Object{}
-	if !plan.ARP.Equal(state.ARP) {
+	if !plan.ARP.Equal(state.ARP) && !plan.ARP.IsUnknown() {
 		body["arp"] = plan.ARP.ValueString()
 	}
-	if !plan.ARPTimeout.Equal(state.ARPTimeout) {
+	if !plan.ARPTimeout.Equal(state.ARPTimeout) && !plan.ARPTimeout.IsUnknown() {
 		body["arp-timeout"] = plan.ARPTimeout.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.LoopProtect.Equal(state.LoopProtect) {
+	if !plan.LoopProtect.Equal(state.LoopProtect) && !plan.LoopProtect.IsUnknown() {
 		body["loop-protect"] = plan.LoopProtect.ValueString()
 	}
-	if !plan.LoopProtectDisableTime.Equal(state.LoopProtectDisableTime) {
+	if !plan.LoopProtectDisableTime.Equal(state.LoopProtectDisableTime) && !plan.LoopProtectDisableTime.IsUnknown() {
 		body["loop-protect-disable-time"] = plan.LoopProtectDisableTime.ValueString()
 	}
-	if !plan.LoopProtectSendInterval.Equal(state.LoopProtectSendInterval) {
+	if !plan.LoopProtectSendInterval.Equal(state.LoopProtectSendInterval) && !plan.LoopProtectSendInterval.IsUnknown() {
 		body["loop-protect-send-interval"] = plan.LoopProtectSendInterval.ValueString()
 	}
-	if !plan.MTU.Equal(state.MTU) {
+	if !plan.MTU.Equal(state.MTU) && !plan.MTU.IsUnknown() {
 		body["mtu"] = plan.MTU.ValueString()
 	}
-	if !plan.Mvrp.Equal(state.Mvrp) {
+	if !plan.Mvrp.Equal(state.Mvrp) && !plan.Mvrp.IsUnknown() {
 		body["mvrp"] = plan.Mvrp.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.UseServiceTag.Equal(state.UseServiceTag) {
+	if !plan.UseServiceTag.Equal(state.UseServiceTag) && !plan.UseServiceTag.IsUnknown() {
 		body["use-service-tag"] = plan.UseServiceTag.ValueString()
 	}
-	if !plan.VLANID.Equal(state.VLANID) {
+	if !plan.VLANID.Equal(state.VLANID) && !plan.VLANID.IsUnknown() {
 		body["vlan-id"] = plan.VLANID.ValueString()
 	}
 	if len(body) > 0 {
@@ -285,6 +288,7 @@ func (r *InterfaceVLANResource) Update(ctx context.Context, req resource.UpdateR
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -434,12 +438,8 @@ func interfaceVLANApply(ctx context.Context, obj client.Object, m *InterfaceVLAN
 	if v, ok := obj["mvrp"]; ok {
 		_ = v
 		if v != "" {
-			m.Mvrp = types.StringValue(v)
-		} else {
-			m.Mvrp = types.StringNull()
+			m.Mvrp = newBoolStringValue(v)
 		}
-	} else {
-		m.Mvrp = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
 		_ = v
@@ -454,12 +454,8 @@ func interfaceVLANApply(ctx context.Context, obj client.Object, m *InterfaceVLAN
 	if v, ok := obj["use-service-tag"]; ok {
 		_ = v
 		if v != "" {
-			m.UseServiceTag = types.StringValue(v)
-		} else {
-			m.UseServiceTag = types.StringNull()
+			m.UseServiceTag = newBoolStringValue(v)
 		}
-	} else {
-		m.UseServiceTag = types.StringNull()
 	}
 	if v, ok := obj["vlan-id"]; ok {
 		_ = v

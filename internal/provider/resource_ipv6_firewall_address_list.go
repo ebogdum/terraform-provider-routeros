@@ -29,16 +29,16 @@ type IPV6FirewallAddressListResource struct {
 }
 
 type IPV6FirewallAddressListModel struct {
-	ID           types.String `tfsdk:"id"`
-	Address      types.String `tfsdk:"address"`
-	Comment      types.String `tfsdk:"comment"`
-	CreationTime types.String `tfsdk:"creation_time"`
-	Disabled     types.Bool   `tfsdk:"disabled"`
-	Dynamic      types.Bool   `tfsdk:"dynamic"`
-	List         types.String `tfsdk:"list"`
-	Parent       types.Int64  `tfsdk:"parent"`
-	Timeout      types.String `tfsdk:"timeout"`
-	Router       types.String `tfsdk:"router"`
+	ID           types.String  `tfsdk:"id"`
+	Address      hostAddrValue `tfsdk:"address"`
+	Comment      types.String  `tfsdk:"comment"`
+	CreationTime types.String  `tfsdk:"creation_time"`
+	Disabled     types.Bool    `tfsdk:"disabled"`
+	Dynamic      types.Bool    `tfsdk:"dynamic"`
+	List         types.String  `tfsdk:"list"`
+	Parent       types.Int64   `tfsdk:"parent"`
+	Timeout      types.String  `tfsdk:"timeout"`
+	Router       types.String  `tfsdk:"router"`
 }
 
 func NewIPV6FirewallAddressListResource() resource.Resource {
@@ -68,6 +68,7 @@ func (r *IPV6FirewallAddressListResource) Schema(_ context.Context, _ resource.S
 			},
 			"address": schema.StringAttribute{
 				Required:    true,
+				CustomType:  hostAddrType{},
 				Description: "",
 			},
 			"comment": schema.StringAttribute{
@@ -141,6 +142,7 @@ func (r *IPV6FirewallAddressListResource) Create(ctx context.Context, req resour
 		return
 	}
 	iPV6FirewallAddressListApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -182,19 +184,19 @@ func (r *IPV6FirewallAddressListResource) Update(ctx context.Context, req resour
 		return
 	}
 	body := client.Object{}
-	if !plan.Address.Equal(state.Address) {
+	if !plan.Address.Equal(state.Address) && !plan.Address.IsUnknown() {
 		body["address"] = plan.Address.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.List.Equal(state.List) {
+	if !plan.List.Equal(state.List) && !plan.List.IsUnknown() {
 		body["list"] = plan.List.ValueString()
 	}
-	if !plan.Timeout.Equal(state.Timeout) {
+	if !plan.Timeout.Equal(state.Timeout) && !plan.Timeout.IsUnknown() {
 		body["timeout"] = plan.Timeout.ValueString()
 	}
 	if len(body) > 0 {
@@ -207,6 +209,7 @@ func (r *IPV6FirewallAddressListResource) Update(ctx context.Context, req resour
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -266,12 +269,12 @@ func iPV6FirewallAddressListApply(ctx context.Context, obj client.Object, m *IPV
 	if v, ok := obj["address"]; ok {
 		_ = v
 		if v != "" {
-			m.Address = types.StringValue(v)
+			m.Address = newHostAddrValue(v)
 		} else {
-			m.Address = types.StringNull()
+			m.Address = newHostAddrNull()
 		}
 	} else {
-		m.Address = types.StringNull()
+		m.Address = newHostAddrNull()
 	}
 	if v, ok := obj["comment"]; ok {
 		_ = v

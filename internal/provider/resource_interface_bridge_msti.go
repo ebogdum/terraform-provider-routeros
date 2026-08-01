@@ -145,6 +145,7 @@ func (r *InterfaceBridgeMstiResource) Create(ctx context.Context, req resource.C
 		return
 	}
 	interfaceBridgeMstiApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -186,22 +187,22 @@ func (r *InterfaceBridgeMstiResource) Update(ctx context.Context, req resource.U
 		return
 	}
 	body := client.Object{}
-	if !plan.Bridge.Equal(state.Bridge) {
+	if !plan.Bridge.Equal(state.Bridge) && !plan.Bridge.IsUnknown() {
 		body["bridge"] = plan.Bridge.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Identifier.Equal(state.Identifier) {
+	if !plan.Identifier.Equal(state.Identifier) && !plan.Identifier.IsUnknown() {
 		body["identifier"] = client.FormatInt64(plan.Identifier.ValueInt64())
 	}
-	if !plan.Priority.Equal(state.Priority) {
+	if !plan.Priority.Equal(state.Priority) && !plan.Priority.IsUnknown() {
 		body["priority"] = client.FormatInt64(plan.Priority.ValueInt64())
 	}
-	if !plan.VLANMapping.Equal(state.VLANMapping) {
+	if !plan.VLANMapping.Equal(state.VLANMapping) && !plan.VLANMapping.IsUnknown() {
 		body["vlan-mapping"] = plan.VLANMapping.ValueString()
 	}
 	if len(body) > 0 {
@@ -214,6 +215,7 @@ func (r *InterfaceBridgeMstiResource) Update(ctx context.Context, req resource.U
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

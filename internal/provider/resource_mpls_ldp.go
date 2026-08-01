@@ -189,6 +189,7 @@ func (r *MPLSLdpResource) Create(ctx context.Context, req resource.CreateRequest
 		return
 	}
 	mPLSLdpApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -230,10 +231,10 @@ func (r *MPLSLdpResource) Update(ctx context.Context, req resource.UpdateRequest
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
 	if !plan.Afi.Equal(state.Afi) && !plan.Afi.IsUnknown() {
@@ -276,6 +277,7 @@ func (r *MPLSLdpResource) Update(ctx context.Context, req resource.UpdateRequest
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

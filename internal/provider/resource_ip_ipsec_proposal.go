@@ -160,6 +160,7 @@ func (r *IPIpsecProposalResource) Create(ctx context.Context, req resource.Creat
 		return
 	}
 	iPIpsecProposalApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -201,25 +202,25 @@ func (r *IPIpsecProposalResource) Update(ctx context.Context, req resource.Updat
 		return
 	}
 	body := client.Object{}
-	if !plan.AuthAlgorithms.Equal(state.AuthAlgorithms) {
+	if !plan.AuthAlgorithms.Equal(state.AuthAlgorithms) && !plan.AuthAlgorithms.IsUnknown() {
 		body["auth-algorithms"] = plan.AuthAlgorithms.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.EncAlgorithms.Equal(state.EncAlgorithms) {
+	if !plan.EncAlgorithms.Equal(state.EncAlgorithms) && !plan.EncAlgorithms.IsUnknown() {
 		body["enc-algorithms"] = encodeStringList(ctx, plan.EncAlgorithms, &resp.Diagnostics)
 	}
-	if !plan.Lifetime.Equal(state.Lifetime) {
+	if !plan.Lifetime.Equal(state.Lifetime) && !plan.Lifetime.IsUnknown() {
 		body["lifetime"] = plan.Lifetime.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.PfsGroup.Equal(state.PfsGroup) {
+	if !plan.PfsGroup.Equal(state.PfsGroup) && !plan.PfsGroup.IsUnknown() {
 		body["pfs-group"] = plan.PfsGroup.ValueString()
 	}
 	if len(body) > 0 {
@@ -232,6 +233,7 @@ func (r *IPIpsecProposalResource) Update(ctx context.Context, req resource.Updat
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

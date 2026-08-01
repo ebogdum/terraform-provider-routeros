@@ -98,10 +98,11 @@ func (r *ToolEMailResource) Create(ctx context.Context, req resource.CreateReque
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	toolEMailUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	toolEMailUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -111,10 +112,16 @@ func (r *ToolEMailResource) Update(ctx context.Context, req resource.UpdateReque
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	toolEMailUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state ToolEMailModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	toolEMailUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -152,34 +159,34 @@ func (r *ToolEMailResource) ImportState(ctx context.Context, req resource.Import
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/tool/e-mail", types.StringValue(routerName))))...)
 }
 
-func toolEMailUpsert(ctx context.Context, reg *client.Registry, plan *ToolEMailModel, diags *diagBuf) {
+func toolEMailUpsert(ctx context.Context, reg *client.Registry, plan, state *ToolEMailModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.CertificateVerification.IsNull() || plan.CertificateVerification.IsUnknown()) {
+	if !(plan.CertificateVerification.IsNull() || plan.CertificateVerification.IsUnknown()) && (state == nil || !plan.CertificateVerification.Equal(state.CertificateVerification)) {
 		body["certificate-verification"] = client.FormatBool(plan.CertificateVerification.ValueBool())
 	}
-	if !(plan.From.IsNull() || plan.From.IsUnknown()) {
+	if !(plan.From.IsNull() || plan.From.IsUnknown()) && (state == nil || !plan.From.Equal(state.From)) {
 		body["from"] = plan.From.ValueString()
 	}
-	if !(plan.Password.IsNull() || plan.Password.IsUnknown()) {
+	if !(plan.Password.IsNull() || plan.Password.IsUnknown()) && (state == nil || !plan.Password.Equal(state.Password)) {
 		body["password"] = plan.Password.ValueString()
 	}
-	if !(plan.Port.IsNull() || plan.Port.IsUnknown()) {
+	if !(plan.Port.IsNull() || plan.Port.IsUnknown()) && (state == nil || !plan.Port.Equal(state.Port)) {
 		body["port"] = client.FormatInt64(plan.Port.ValueInt64())
 	}
-	if !(plan.Server.IsNull() || plan.Server.IsUnknown()) {
+	if !(plan.Server.IsNull() || plan.Server.IsUnknown()) && (state == nil || !plan.Server.Equal(state.Server)) {
 		body["server"] = plan.Server.ValueString()
 	}
-	if !(plan.TLS.IsNull() || plan.TLS.IsUnknown()) {
+	if !(plan.TLS.IsNull() || plan.TLS.IsUnknown()) && (state == nil || !plan.TLS.Equal(state.TLS)) {
 		body["tls"] = client.FormatBool(plan.TLS.ValueBool())
 	}
-	if !(plan.User.IsNull() || plan.User.IsUnknown()) {
+	if !(plan.User.IsNull() || plan.User.IsUnknown()) && (state == nil || !plan.User.Equal(state.User)) {
 		body["user"] = plan.User.ValueString()
 	}
-	if !(plan.Vrf.IsNull() || plan.Vrf.IsUnknown()) {
+	if !(plan.Vrf.IsNull() || plan.Vrf.IsUnknown()) && (state == nil || !plan.Vrf.Equal(state.Vrf)) {
 		body["vrf"] = plan.Vrf.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/tool/e-mail", body)

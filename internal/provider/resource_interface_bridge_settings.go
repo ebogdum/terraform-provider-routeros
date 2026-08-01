@@ -104,10 +104,11 @@ func (r *InterfaceBridgeSettingsResource) Create(ctx context.Context, req resour
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	interfaceBridgeSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	interfaceBridgeSettingsUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -117,10 +118,16 @@ func (r *InterfaceBridgeSettingsResource) Update(ctx context.Context, req resour
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	interfaceBridgeSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state InterfaceBridgeSettingsModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	interfaceBridgeSettingsUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -158,22 +165,22 @@ func (r *InterfaceBridgeSettingsResource) ImportState(ctx context.Context, req r
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/interface/bridge/settings", types.StringValue(routerName))))...)
 }
 
-func interfaceBridgeSettingsUpsert(ctx context.Context, reg *client.Registry, plan *InterfaceBridgeSettingsModel, diags *diagBuf) {
+func interfaceBridgeSettingsUpsert(ctx context.Context, reg *client.Registry, plan, state *InterfaceBridgeSettingsModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.AllowFastPath.IsNull() || plan.AllowFastPath.IsUnknown()) {
+	if !(plan.AllowFastPath.IsNull() || plan.AllowFastPath.IsUnknown()) && (state == nil || !plan.AllowFastPath.Equal(state.AllowFastPath)) {
 		body["allow-fast-path"] = client.FormatBool(plan.AllowFastPath.ValueBool())
 	}
-	if !(plan.UseIPFirewall.IsNull() || plan.UseIPFirewall.IsUnknown()) {
+	if !(plan.UseIPFirewall.IsNull() || plan.UseIPFirewall.IsUnknown()) && (state == nil || !plan.UseIPFirewall.Equal(state.UseIPFirewall)) {
 		body["use-ip-firewall"] = client.FormatBool(plan.UseIPFirewall.ValueBool())
 	}
-	if !(plan.UseIPFirewallForPppoe.IsNull() || plan.UseIPFirewallForPppoe.IsUnknown()) {
+	if !(plan.UseIPFirewallForPppoe.IsNull() || plan.UseIPFirewallForPppoe.IsUnknown()) && (state == nil || !plan.UseIPFirewallForPppoe.Equal(state.UseIPFirewallForPppoe)) {
 		body["use-ip-firewall-for-pppoe"] = client.FormatBool(plan.UseIPFirewallForPppoe.ValueBool())
 	}
-	if !(plan.UseIPFirewallForVLAN.IsNull() || plan.UseIPFirewallForVLAN.IsUnknown()) {
+	if !(plan.UseIPFirewallForVLAN.IsNull() || plan.UseIPFirewallForVLAN.IsUnknown()) && (state == nil || !plan.UseIPFirewallForVLAN.Equal(state.UseIPFirewallForVLAN)) {
 		body["use-ip-firewall-for-vlan"] = client.FormatBool(plan.UseIPFirewallForVLAN.ValueBool())
 	}
 	obj, err := c.SetSingleton(ctx, "/interface/bridge/settings", body)

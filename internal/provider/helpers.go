@@ -3,16 +3,111 @@ package provider
 import (
 	"context"
 	"fmt"
+	"reflect"
+	"strconv"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
 )
 
+// canonRate expands every "/"-separated part of a rate value, returning the
+// canonical string and whether the whole value parsed.
+func canonRate(s string) (string, bool) {
+	s = strings.TrimSpace(s)
+	if s == "" {
+		return s, false
+	}
+	parts := strings.Split(s, "/")
+	out := make([]string, len(parts))
+	for i, p := range parts {
+		n, ok := expandRateSuffix(strings.TrimSpace(p))
+		if !ok {
+			return s, false
+		}
+		out[i] = n
+	}
+	// A single rate is symmetric (rx=tx); RouterOS stores it as the pair "X/X".
+	// Normalise to a pair so "10M" and "10M/10M" compare equal.
+	if len(out) == 1 {
+		out = append(out, out[0])
+	}
+	return strings.Join(out, "/"), true
+}
+
+func expandRateSuffix(p string) (string, bool) {
+	if p == "" {
+		return "", false
+	}
+	mult := int64(1)
+	num := p
+	switch p[len(p)-1] {
+	case 'k', 'K':
+		mult, num = 1000, p[:len(p)-1]
+	case 'M':
+		mult, num = 1000000, p[:len(p)-1]
+	case 'G':
+		mult, num = 1000000000, p[:len(p)-1]
+	}
+	if iv, err := strconv.ParseInt(num, 10, 64); err == nil {
+		return strconv.FormatInt(iv*mult, 10), true
+	}
+	if mult != 1 {
+		if fv, err := strconv.ParseFloat(num, 64); err == nil {
+			return strconv.FormatInt(int64(fv*float64(mult)), 10), true
+		}
+	}
+	return "", false
+}
+
 // diagBuf is the diagnostics type used by generated Apply/Upsert helpers.
 type diagBuf = diag.Diagnostics
+
+// nullifyUnknownAttrs resolves any attribute still marked Unknown on the model
+// to its typed Null value. It is called before writing plan-derived state back
+// to Terraform (Create/Update). An Apply helper only assigns an attribute when
+// the device response actually carries that key; a Computed attribute the
+// device never returns (e.g. /ip/cloud dns-name on a board with DDNS off) is
+// therefore left at its incoming value. On Create that incoming value is the
+// plan's Unknown, and Terraform rejects a result that still has Unknowns
+// ("Provider returned invalid result object after apply"). Resolving only
+// Unknown -> Null is safe in every path: user-set Optional values and prior
+// state are already known, so they are untouched.
+func nullifyUnknownAttrs(m any) {
+	rv := reflect.ValueOf(m)
+	if rv.Kind() != reflect.Pointer || rv.IsNil() {
+		return
+	}
+	rv = rv.Elem()
+	if rv.Kind() != reflect.Struct {
+		return
+	}
+	for i := 0; i < rv.NumField(); i++ {
+		f := rv.Field(i)
+		if !f.CanSet() {
+			continue
+		}
+		av, ok := f.Interface().(attr.Value)
+		if !ok || !av.IsUnknown() {
+			continue
+		}
+		switch av.(type) {
+		case types.String:
+			f.Set(reflect.ValueOf(types.StringNull()))
+		case types.Bool:
+			f.Set(reflect.ValueOf(types.BoolNull()))
+		case types.Int64:
+			f.Set(reflect.ValueOf(types.Int64Null()))
+		case types.Float64:
+			f.Set(reflect.ValueOf(types.Float64Null()))
+		case types.Number:
+			f.Set(reflect.ValueOf(types.NumberNull()))
+		}
+	}
+}
 
 // configureRegistry is called from every generated resource's and data source's
 // Configure(). It pulls a *client.Registry out of ProviderData and stores it.

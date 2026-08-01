@@ -29,13 +29,13 @@ type IPSocksUsersResource struct {
 }
 
 type IPSocksUsersModel struct {
-	ID        types.String `tfsdk:"id"`
-	RateLimit types.String `tfsdk:"rate_limit"`
-	OnlyOne   types.String `tfsdk:"only_one"`
-	Disabled  types.Bool   `tfsdk:"disabled"`
-	Name      types.String `tfsdk:"name"`
-	Password  types.String `tfsdk:"password"`
-	Router    types.String `tfsdk:"router"`
+	ID        types.String    `tfsdk:"id"`
+	RateLimit rosRateValue    `tfsdk:"rate_limit"`
+	OnlyOne   boolStringValue `tfsdk:"only_one"`
+	Disabled  types.Bool      `tfsdk:"disabled"`
+	Name      types.String    `tfsdk:"name"`
+	Password  types.String    `tfsdk:"password"`
+	Router    types.String    `tfsdk:"router"`
 }
 
 func NewIPSocksUsersResource() resource.Resource { return &IPSocksUsersResource{} }
@@ -62,11 +62,13 @@ func (r *IPSocksUsersResource) Schema(_ context.Context, _ resource.SchemaReques
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"rate_limit": schema.StringAttribute{
+				CustomType:  rosRateType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "RouterOS `rate-limit`.",
 			},
 			"only_one": schema.StringAttribute{
+				CustomType:  boolStringType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "RouterOS `only-one`.",
@@ -125,6 +127,7 @@ func (r *IPSocksUsersResource) Create(ctx context.Context, req resource.CreateRe
 		return
 	}
 	iPSocksUsersApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -166,13 +169,13 @@ func (r *IPSocksUsersResource) Update(ctx context.Context, req resource.UpdateRe
 		return
 	}
 	body := client.Object{}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Password.Equal(state.Password) {
+	if !plan.Password.Equal(state.Password) && !plan.Password.IsUnknown() {
 		body["password"] = plan.Password.ValueString()
 	}
 	if !plan.OnlyOne.Equal(state.OnlyOne) && !plan.OnlyOne.IsUnknown() {
@@ -191,6 +194,7 @@ func (r *IPSocksUsersResource) Update(ctx context.Context, req resource.UpdateRe
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -248,14 +252,14 @@ func iPSocksUsersApply(ctx context.Context, obj client.Object, m *IPSocksUsersMo
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["rate-limit"]; ok && v != "" {
-		m.RateLimit = types.StringValue(v)
+		m.RateLimit = newRosRateValue(v)
 	} else {
-		m.RateLimit = types.StringNull()
+		m.RateLimit = newRosRateNull()
 	}
 	if v, ok := obj["only-one"]; ok && v != "" {
-		m.OnlyOne = types.StringValue(v)
+		m.OnlyOne = newBoolStringValue(v)
 	} else {
-		m.OnlyOne = types.StringNull()
+		m.OnlyOne = newBoolStringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
 		_ = v

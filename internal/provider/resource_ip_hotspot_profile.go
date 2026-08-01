@@ -328,6 +328,7 @@ func (r *IPHotspotProfileResource) Create(ctx context.Context, req resource.Crea
 		return
 	}
 	iPHotspotProfileApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -369,40 +370,40 @@ func (r *IPHotspotProfileResource) Update(ctx context.Context, req resource.Upda
 		return
 	}
 	body := client.Object{}
-	if !plan.DNSName.Equal(state.DNSName) {
+	if !plan.DNSName.Equal(state.DNSName) && !plan.DNSName.IsUnknown() {
 		body["dns-name"] = plan.DNSName.ValueString()
 	}
-	if !plan.HotspotAddress.Equal(state.HotspotAddress) {
+	if !plan.HotspotAddress.Equal(state.HotspotAddress) && !plan.HotspotAddress.IsUnknown() {
 		body["hotspot-address"] = plan.HotspotAddress.ValueString()
 	}
-	if !plan.HtmlDirectory.Equal(state.HtmlDirectory) {
+	if !plan.HtmlDirectory.Equal(state.HtmlDirectory) && !plan.HtmlDirectory.IsUnknown() {
 		body["html-directory"] = plan.HtmlDirectory.ValueString()
 	}
-	if !plan.HtmlDirectoryOverride.Equal(state.HtmlDirectoryOverride) {
+	if !plan.HtmlDirectoryOverride.Equal(state.HtmlDirectoryOverride) && !plan.HtmlDirectoryOverride.IsUnknown() {
 		body["html-directory-override"] = plan.HtmlDirectoryOverride.ValueString()
 	}
-	if !plan.HTTPCookieLifetime.Equal(state.HTTPCookieLifetime) {
+	if !plan.HTTPCookieLifetime.Equal(state.HTTPCookieLifetime) && !plan.HTTPCookieLifetime.IsUnknown() {
 		body["http-cookie-lifetime"] = plan.HTTPCookieLifetime.ValueString()
 	}
-	if !plan.HTTPProxy.Equal(state.HTTPProxy) {
+	if !plan.HTTPProxy.Equal(state.HTTPProxy) && !plan.HTTPProxy.IsUnknown() {
 		body["http-proxy"] = plan.HTTPProxy.ValueString()
 	}
-	if !plan.InstallHotspotQueue.Equal(state.InstallHotspotQueue) {
+	if !plan.InstallHotspotQueue.Equal(state.InstallHotspotQueue) && !plan.InstallHotspotQueue.IsUnknown() {
 		body["install-hotspot-queue"] = client.FormatBool(plan.InstallHotspotQueue.ValueBool())
 	}
-	if !plan.LoginBy.Equal(state.LoginBy) {
+	if !plan.LoginBy.Equal(state.LoginBy) && !plan.LoginBy.IsUnknown() {
 		body["login-by"] = encodeStringList(ctx, plan.LoginBy, &resp.Diagnostics)
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.SMTPServer.Equal(state.SMTPServer) {
+	if !plan.SMTPServer.Equal(state.SMTPServer) && !plan.SMTPServer.IsUnknown() {
 		body["smtp-server"] = plan.SMTPServer.ValueString()
 	}
-	if !plan.SplitUserDomain.Equal(state.SplitUserDomain) {
+	if !plan.SplitUserDomain.Equal(state.SplitUserDomain) && !plan.SplitUserDomain.IsUnknown() {
 		body["split-user-domain"] = client.FormatBool(plan.SplitUserDomain.ValueBool())
 	}
-	if !plan.UseRADIUS.Equal(state.UseRADIUS) {
+	if !plan.UseRADIUS.Equal(state.UseRADIUS) && !plan.UseRADIUS.IsUnknown() {
 		body["use-radius"] = client.FormatBool(plan.UseRADIUS.ValueBool())
 	}
 	if !plan.MacAuthMode.Equal(state.MacAuthMode) && !plan.MacAuthMode.IsUnknown() {
@@ -457,6 +458,7 @@ func (r *IPHotspotProfileResource) Update(ctx context.Context, req resource.Upda
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

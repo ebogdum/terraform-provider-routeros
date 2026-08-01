@@ -323,6 +323,7 @@ func (r *SystemLoggingActionResource) Create(ctx context.Context, req resource.C
 		return
 	}
 	systemLoggingActionApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -364,52 +365,52 @@ func (r *SystemLoggingActionResource) Update(ctx context.Context, req resource.U
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.DiskFileCount.Equal(state.DiskFileCount) {
+	if !plan.DiskFileCount.Equal(state.DiskFileCount) && !plan.DiskFileCount.IsUnknown() {
 		body["disk-file-count"] = client.FormatInt64(plan.DiskFileCount.ValueInt64())
 	}
-	if !plan.DiskFileName.Equal(state.DiskFileName) {
+	if !plan.DiskFileName.Equal(state.DiskFileName) && !plan.DiskFileName.IsUnknown() {
 		body["disk-file-name"] = plan.DiskFileName.ValueString()
 	}
-	if !plan.DiskLinesPerFile.Equal(state.DiskLinesPerFile) {
+	if !plan.DiskLinesPerFile.Equal(state.DiskLinesPerFile) && !plan.DiskLinesPerFile.IsUnknown() {
 		body["disk-lines-per-file"] = client.FormatInt64(plan.DiskLinesPerFile.ValueInt64())
 	}
-	if !plan.DiskStopOnFull.Equal(state.DiskStopOnFull) {
+	if !plan.DiskStopOnFull.Equal(state.DiskStopOnFull) && !plan.DiskStopOnFull.IsUnknown() {
 		body["disk-stop-on-full"] = client.FormatBool(plan.DiskStopOnFull.ValueBool())
 	}
-	if !plan.MemoryLines.Equal(state.MemoryLines) {
+	if !plan.MemoryLines.Equal(state.MemoryLines) && !plan.MemoryLines.IsUnknown() {
 		body["memory-lines"] = client.FormatInt64(plan.MemoryLines.ValueInt64())
 	}
-	if !plan.MemoryStopOnFull.Equal(state.MemoryStopOnFull) {
+	if !plan.MemoryStopOnFull.Equal(state.MemoryStopOnFull) && !plan.MemoryStopOnFull.IsUnknown() {
 		body["memory-stop-on-full"] = client.FormatBool(plan.MemoryStopOnFull.ValueBool())
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Remember.Equal(state.Remember) {
+	if !plan.Remember.Equal(state.Remember) && !plan.Remember.IsUnknown() {
 		body["remember"] = client.FormatBool(plan.Remember.ValueBool())
 	}
-	if !plan.Remote.Equal(state.Remote) {
+	if !plan.Remote.Equal(state.Remote) && !plan.Remote.IsUnknown() {
 		body["remote"] = plan.Remote.ValueString()
 	}
-	if !plan.RemoteLogFormat.Equal(state.RemoteLogFormat) {
+	if !plan.RemoteLogFormat.Equal(state.RemoteLogFormat) && !plan.RemoteLogFormat.IsUnknown() {
 		body["remote-log-format"] = plan.RemoteLogFormat.ValueString()
 	}
-	if !plan.RemotePort.Equal(state.RemotePort) {
+	if !plan.RemotePort.Equal(state.RemotePort) && !plan.RemotePort.IsUnknown() {
 		body["remote-port"] = client.FormatInt64(plan.RemotePort.ValueInt64())
 	}
-	if !plan.RemoteProtocol.Equal(state.RemoteProtocol) {
+	if !plan.RemoteProtocol.Equal(state.RemoteProtocol) && !plan.RemoteProtocol.IsUnknown() {
 		body["remote-protocol"] = plan.RemoteProtocol.ValueString()
 	}
-	if !plan.SrcAddress.Equal(state.SrcAddress) {
+	if !plan.SrcAddress.Equal(state.SrcAddress) && !plan.SrcAddress.IsUnknown() {
 		body["src-address"] = plan.SrcAddress.ValueString()
 	}
-	if !plan.Target.Equal(state.Target) {
+	if !plan.Target.Equal(state.Target) && !plan.Target.IsUnknown() {
 		body["target"] = plan.Target.ValueString()
 	}
-	if !plan.Vrf.Equal(state.Vrf) {
+	if !plan.Vrf.Equal(state.Vrf) && !plan.Vrf.IsUnknown() {
 		body["vrf"] = plan.Vrf.ValueString()
 	}
 	if !plan.AddTopicsString.Equal(state.AddTopicsString) && !plan.AddTopicsString.IsUnknown() {
@@ -452,6 +453,7 @@ func (r *SystemLoggingActionResource) Update(ctx context.Context, req resource.U
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

@@ -157,6 +157,7 @@ func (r *IPKidControlDeviceResource) Create(ctx context.Context, req resource.Cr
 		return
 	}
 	iPKidControlDeviceApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -198,16 +199,16 @@ func (r *IPKidControlDeviceResource) Update(ctx context.Context, req resource.Up
 		return
 	}
 	body := client.Object{}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.MACAddress.Equal(state.MACAddress) {
+	if !plan.MACAddress.Equal(state.MACAddress) && !plan.MACAddress.IsUnknown() {
 		body["mac-address"] = plan.MACAddress.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.User.Equal(state.User) {
+	if !plan.User.Equal(state.User) && !plan.User.IsUnknown() {
 		body["user"] = plan.User.ValueString()
 	}
 	if len(body) > 0 {
@@ -220,6 +221,7 @@ func (r *IPKidControlDeviceResource) Update(ctx context.Context, req resource.Up
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

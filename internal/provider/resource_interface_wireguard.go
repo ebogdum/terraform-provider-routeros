@@ -33,7 +33,6 @@ type InterfaceWireguardModel struct {
 	Vrf        types.String `tfsdk:"vrf"`
 	Comment    types.String `tfsdk:"comment"`
 	Disabled   types.Bool   `tfsdk:"disabled"`
-	L2MTU      types.Int64  `tfsdk:"l2_mtu"`
 	ListenPort types.Int64  `tfsdk:"listen_port"`
 	MTU        types.String `tfsdk:"mtu"`
 	Name       types.String `tfsdk:"name"`
@@ -80,10 +79,6 @@ func (r *InterfaceWireguardResource) Schema(_ context.Context, _ resource.Schema
 				Optional:    true,
 				Computed:    true,
 				Description: "Whether the entry is disabled.",
-			},
-			"l2_mtu": schema.Int64Attribute{
-				Computed:    true,
-				Description: "",
 			},
 			"listen_port": schema.Int64Attribute{
 				Optional:    true,
@@ -160,6 +155,7 @@ func (r *InterfaceWireguardResource) Create(ctx context.Context, req resource.Cr
 		return
 	}
 	interfaceWireguardApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -201,22 +197,22 @@ func (r *InterfaceWireguardResource) Update(ctx context.Context, req resource.Up
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.ListenPort.Equal(state.ListenPort) {
+	if !plan.ListenPort.Equal(state.ListenPort) && !plan.ListenPort.IsUnknown() {
 		body["listen-port"] = client.FormatInt64(plan.ListenPort.ValueInt64())
 	}
-	if !plan.MTU.Equal(state.MTU) {
+	if !plan.MTU.Equal(state.MTU) && !plan.MTU.IsUnknown() {
 		body["mtu"] = plan.MTU.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.PrivateKey.Equal(state.PrivateKey) {
+	if !plan.PrivateKey.Equal(state.PrivateKey) && !plan.PrivateKey.IsUnknown() {
 		body["private-key"] = plan.PrivateKey.ValueString()
 	}
 	if !plan.Vrf.Equal(state.Vrf) && !plan.Vrf.IsUnknown() {
@@ -232,6 +228,7 @@ func (r *InterfaceWireguardResource) Update(ctx context.Context, req resource.Up
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -312,16 +309,6 @@ func interfaceWireguardApply(ctx context.Context, obj client.Object, m *Interfac
 		}
 	} else {
 		m.Disabled = types.BoolNull()
-	}
-	if v, ok := obj["l2-mtu"]; ok {
-		_ = v
-		if n, err := client.ParseInt64(v); err == nil {
-			m.L2MTU = types.Int64Value(n)
-		} else {
-			m.L2MTU = types.Int64Null()
-		}
-	} else {
-		m.L2MTU = types.Int64Null()
 	}
 	if v, ok := obj["listen-port"]; ok {
 		_ = v

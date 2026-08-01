@@ -81,6 +81,7 @@ func (r *UserManagerSessionResource) Create(ctx context.Context, req resource.Cr
 		return
 	}
 	userManagerSessionApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -132,6 +133,7 @@ func (r *UserManagerSessionResource) Update(ctx context.Context, req resource.Up
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

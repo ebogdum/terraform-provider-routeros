@@ -160,6 +160,7 @@ func (r *SystemNTPClientServersResource) Create(ctx context.Context, req resourc
 		return
 	}
 	systemNTPClientServersApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -201,25 +202,25 @@ func (r *SystemNTPClientServersResource) Update(ctx context.Context, req resourc
 		return
 	}
 	body := client.Object{}
-	if !plan.Address.Equal(state.Address) {
+	if !plan.Address.Equal(state.Address) && !plan.Address.IsUnknown() {
 		body["address"] = plan.Address.ValueString()
 	}
-	if !plan.AuthKey.Equal(state.AuthKey) {
+	if !plan.AuthKey.Equal(state.AuthKey) && !plan.AuthKey.IsUnknown() {
 		body["auth-key"] = plan.AuthKey.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Iburst.Equal(state.Iburst) {
+	if !plan.Iburst.Equal(state.Iburst) && !plan.Iburst.IsUnknown() {
 		body["iburst"] = client.FormatBool(plan.Iburst.ValueBool())
 	}
-	if !plan.MaxPoll.Equal(state.MaxPoll) {
+	if !plan.MaxPoll.Equal(state.MaxPoll) && !plan.MaxPoll.IsUnknown() {
 		body["max-poll"] = client.FormatInt64(plan.MaxPoll.ValueInt64())
 	}
-	if !plan.MinPoll.Equal(state.MinPoll) {
+	if !plan.MinPoll.Equal(state.MinPoll) && !plan.MinPoll.IsUnknown() {
 		body["min-poll"] = client.FormatInt64(plan.MinPoll.ValueInt64())
 	}
 	if len(body) > 0 {
@@ -232,6 +233,7 @@ func (r *SystemNTPClientServersResource) Update(ctx context.Context, req resourc
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

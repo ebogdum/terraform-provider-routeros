@@ -234,6 +234,7 @@ func (r *IPKidControlResource) Create(ctx context.Context, req resource.CreateRe
 		return
 	}
 	iPKidControlApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -275,13 +276,13 @@ func (r *IPKidControlResource) Update(ctx context.Context, req resource.UpdateRe
 		return
 	}
 	body := client.Object{}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.RateLimit.Equal(state.RateLimit) {
+	if !plan.RateLimit.Equal(state.RateLimit) && !plan.RateLimit.IsUnknown() {
 		body["rate-limit"] = plan.RateLimit.ValueString()
 	}
 	if !plan.Fri.Equal(state.Fri) && !plan.Fri.IsUnknown() {
@@ -336,6 +337,7 @@ func (r *IPKidControlResource) Update(ctx context.Context, req resource.UpdateRe
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

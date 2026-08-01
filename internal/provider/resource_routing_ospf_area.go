@@ -181,6 +181,7 @@ func (r *RoutingOSPFAreaResource) Create(ctx context.Context, req resource.Creat
 		return
 	}
 	routingOSPFAreaApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -222,31 +223,31 @@ func (r *RoutingOSPFAreaResource) Update(ctx context.Context, req resource.Updat
 		return
 	}
 	body := client.Object{}
-	if !plan.AreaID.Equal(state.AreaID) {
+	if !plan.AreaID.Equal(state.AreaID) && !plan.AreaID.IsUnknown() {
 		body["area-id"] = plan.AreaID.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.DefaultCost.Equal(state.DefaultCost) {
+	if !plan.DefaultCost.Equal(state.DefaultCost) && !plan.DefaultCost.IsUnknown() {
 		body["default-cost"] = plan.DefaultCost.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Instance.Equal(state.Instance) {
+	if !plan.Instance.Equal(state.Instance) && !plan.Instance.IsUnknown() {
 		body["instance"] = plan.Instance.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.NoSummaries.Equal(state.NoSummaries) {
+	if !plan.NoSummaries.Equal(state.NoSummaries) && !plan.NoSummaries.IsUnknown() {
 		body["no-summaries"] = client.FormatBool(plan.NoSummaries.ValueBool())
 	}
-	if !plan.NssaTranslator.Equal(state.NssaTranslator) {
+	if !plan.NssaTranslator.Equal(state.NssaTranslator) && !plan.NssaTranslator.IsUnknown() {
 		body["nssa-translator"] = plan.NssaTranslator.ValueString()
 	}
-	if !plan.Type.Equal(state.Type) {
+	if !plan.Type.Equal(state.Type) && !plan.Type.IsUnknown() {
 		body["type"] = plan.Type.ValueString()
 	}
 	if len(body) > 0 {
@@ -259,6 +260,7 @@ func (r *RoutingOSPFAreaResource) Update(ctx context.Context, req resource.Updat
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

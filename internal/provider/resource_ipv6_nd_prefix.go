@@ -188,6 +188,7 @@ func (r *IPV6NdPrefixResource) Create(ctx context.Context, req resource.CreateRe
 		return
 	}
 	iPV6NdPrefixApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -229,28 +230,28 @@ func (r *IPV6NdPrefixResource) Update(ctx context.Context, req resource.UpdateRe
 		return
 	}
 	body := client.Object{}
-	if !plan.X6to4Interface.Equal(state.X6to4Interface) {
+	if !plan.X6to4Interface.Equal(state.X6to4Interface) && !plan.X6to4Interface.IsUnknown() {
 		body["6to4-interface"] = plan.X6to4Interface.ValueString()
 	}
-	if !plan.Autonomous.Equal(state.Autonomous) {
+	if !plan.Autonomous.Equal(state.Autonomous) && !plan.Autonomous.IsUnknown() {
 		body["autonomous"] = client.FormatBool(plan.Autonomous.ValueBool())
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.OnLink.Equal(state.OnLink) {
+	if !plan.OnLink.Equal(state.OnLink) && !plan.OnLink.IsUnknown() {
 		body["on-link"] = client.FormatBool(plan.OnLink.ValueBool())
 	}
-	if !plan.PreferredLifetime.Equal(state.PreferredLifetime) {
+	if !plan.PreferredLifetime.Equal(state.PreferredLifetime) && !plan.PreferredLifetime.IsUnknown() {
 		body["preferred-lifetime"] = plan.PreferredLifetime.ValueString()
 	}
-	if !plan.Prefix.Equal(state.Prefix) {
+	if !plan.Prefix.Equal(state.Prefix) && !plan.Prefix.IsUnknown() {
 		body["prefix"] = plan.Prefix.ValueString()
 	}
-	if !plan.ValidLifetime.Equal(state.ValidLifetime) {
+	if !plan.ValidLifetime.Equal(state.ValidLifetime) && !plan.ValidLifetime.IsUnknown() {
 		body["valid-lifetime"] = plan.ValidLifetime.ValueString()
 	}
 	if !plan.Dhcp6PdPreferred.Equal(state.Dhcp6PdPreferred) && !plan.Dhcp6PdPreferred.IsUnknown() {
@@ -266,6 +267,7 @@ func (r *IPV6NdPrefixResource) Update(ctx context.Context, req resource.UpdateRe
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

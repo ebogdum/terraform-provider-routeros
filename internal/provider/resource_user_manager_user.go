@@ -155,6 +155,7 @@ func (r *UserManagerUserResource) Create(ctx context.Context, req resource.Creat
 		return
 	}
 	userManagerUserApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -230,6 +231,7 @@ func (r *UserManagerUserResource) Update(ctx context.Context, req resource.Updat
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

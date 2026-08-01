@@ -306,6 +306,7 @@ func (r *RoutingIsisInstanceResource) Create(ctx context.Context, req resource.C
 		return
 	}
 	routingIsisInstanceApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -347,10 +348,10 @@ func (r *RoutingIsisInstanceResource) Update(ctx context.Context, req resource.U
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
 	if !plan.L1LspMaxAge.Equal(state.L1LspMaxAge) && !plan.L1LspMaxAge.IsUnknown() {
@@ -432,6 +433,7 @@ func (r *RoutingIsisInstanceResource) Update(ctx context.Context, req resource.U
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

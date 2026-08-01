@@ -29,29 +29,26 @@ type InterfaceEthernetPoeResource struct {
 }
 
 type InterfaceEthernetPoeModel struct {
-	ID                    types.String `tfsdk:"id"`
-	Psu2MaxPower          types.String `tfsdk:"psu2_max_power"`
-	Psu1MaxPower          types.String `tfsdk:"psu1_max_power"`
-	PsuMaxPower           types.String `tfsdk:"psu_max_power"`
-	PowerCyclePingTimeout types.String `tfsdk:"power_cycle_ping_timeout"`
-	PowerCyclePingEnabled types.String `tfsdk:"power_cycle_ping_enabled"`
-	PowerCyclePingAddress types.String `tfsdk:"power_cycle_ping_address"`
-	PowerCycleInterval    types.String `tfsdk:"power_cycle_interval"`
-	PoeVoltage            types.String `tfsdk:"poe_voltage"`
-	PoePriority           types.String `tfsdk:"poe_priority"`
-	PoeOut                types.String `tfsdk:"poe_out"`
-	PoeInMaxPower         types.String `tfsdk:"poe_in_max_power"`
-	Name                  types.String `tfsdk:"name"`
-	Jack2MaxPower         types.String `tfsdk:"jack2_max_power"`
-	Jack1MaxPower         types.String `tfsdk:"jack1_max_power"`
-	JackMaxPower          types.String `tfsdk:"jack_max_power"`
-	Ether1PoeInLongCable  types.String `tfsdk:"ether1_poe_in_long_cable"`
-	Duration              types.String `tfsdk:"duration"`
-	Export                types.String `tfsdk:"export"`
-	Monitor               types.String `tfsdk:"monitor"`
-	PowerCycle            types.String `tfsdk:"power_cycle"`
-	Print                 types.String `tfsdk:"print"`
-	Router                types.String `tfsdk:"router"`
+	ID                    types.String    `tfsdk:"id"`
+	Psu2MaxPower          types.String    `tfsdk:"psu2_max_power"`
+	Psu1MaxPower          types.String    `tfsdk:"psu1_max_power"`
+	PsuMaxPower           types.String    `tfsdk:"psu_max_power"`
+	PowerCyclePingTimeout types.String    `tfsdk:"power_cycle_ping_timeout"`
+	PowerCyclePingEnabled boolStringValue `tfsdk:"power_cycle_ping_enabled"`
+	PowerCyclePingAddress types.String    `tfsdk:"power_cycle_ping_address"`
+	PowerCycleInterval    types.String    `tfsdk:"power_cycle_interval"`
+	PoeVoltage            types.String    `tfsdk:"poe_voltage"`
+	PoePriority           types.String    `tfsdk:"poe_priority"`
+	PoeOut                types.String    `tfsdk:"poe_out"`
+	PoeInMaxPower         types.String    `tfsdk:"poe_in_max_power"`
+	Name                  types.String    `tfsdk:"name"`
+	Jack2MaxPower         types.String    `tfsdk:"jack2_max_power"`
+	Jack1MaxPower         types.String    `tfsdk:"jack1_max_power"`
+	JackMaxPower          types.String    `tfsdk:"jack_max_power"`
+	Ether1PoeInLongCable  types.String    `tfsdk:"ether1_poe_in_long_cable"`
+	PowerCycle            types.String    `tfsdk:"power_cycle"`
+	Print                 types.String    `tfsdk:"print"`
+	Router                types.String    `tfsdk:"router"`
 }
 
 func NewInterfaceEthernetPoeResource() resource.Resource { return &InterfaceEthernetPoeResource{} }
@@ -98,6 +95,7 @@ func (r *InterfaceEthernetPoeResource) Schema(_ context.Context, _ resource.Sche
 				Description: "RouterOS `power-cycle-ping-timeout`.",
 			},
 			"power_cycle_ping_enabled": schema.StringAttribute{
+				CustomType:  boolStringType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "RouterOS `power-cycle-ping-enabled`.",
@@ -157,21 +155,6 @@ func (r *InterfaceEthernetPoeResource) Schema(_ context.Context, _ resource.Sche
 				Computed:    true,
 				Description: "RouterOS `ether1-poe-in-long-cable`.",
 			},
-			"duration": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "RouterOS `duration`.",
-			},
-			"export": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "export is displayed under \u00a0 /interface ethernet \u00a0 menu.",
-			},
-			"monitor": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "Shows poe-out-status of a specified port, or all ports with \u00a0 /interface ethernet poe monitor [find] \u00a0 command.",
-			},
 			"power_cycle": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -201,20 +184,11 @@ func (r *InterfaceEthernetPoeResource) Create(ctx context.Context, req resource.
 		return
 	}
 	body := client.Object{}
-	if !(plan.Export.IsNull() || plan.Export.IsUnknown()) {
-		body["export"] = plan.Export.ValueString()
-	}
-	if !(plan.Monitor.IsNull() || plan.Monitor.IsUnknown()) {
-		body["monitor"] = plan.Monitor.ValueString()
-	}
 	if !(plan.PowerCycle.IsNull() || plan.PowerCycle.IsUnknown()) {
 		body["power-cycle"] = plan.PowerCycle.ValueString()
 	}
 	if !(plan.Print.IsNull() || plan.Print.IsUnknown()) {
 		body["print"] = plan.Print.ValueString()
-	}
-	if !(plan.Duration.IsNull() || plan.Duration.IsUnknown()) {
-		body["duration"] = plan.Duration.ValueString()
 	}
 	if !(plan.Ether1PoeInLongCable.IsNull() || plan.Ether1PoeInLongCable.IsUnknown()) {
 		body["ether1-poe-in-long-cable"] = plan.Ether1PoeInLongCable.ValueString()
@@ -264,12 +238,31 @@ func (r *InterfaceEthernetPoeResource) Create(ctx context.Context, req resource.
 	if !(plan.Psu2MaxPower.IsNull() || plan.Psu2MaxPower.IsUnknown()) {
 		body["psu2-max-power"] = plan.Psu2MaxPower.ValueString()
 	}
-	obj, err := c.Add(ctx, "/interface/ethernet/poe", body)
+	rows, err := c.List(ctx, "/interface/ethernet/poe")
 	if err != nil {
-		resp.Diagnostics.AddError("Create /interface/ethernet/poe failed", err.Error())
+		resp.Diagnostics.AddError("Read /interface/ethernet/poe failed", err.Error())
+		return
+	}
+	want := plan.Name.ValueString()
+	var id string
+	for _, row := range rows {
+		if row["name"] == want || row["default-name"] == want {
+			id = row[".id"]
+			break
+		}
+	}
+	if id == "" {
+		resp.Diagnostics.AddError("Unknown /interface/ethernet/poe "+want, fmt.Sprintf("/interface/ethernet/poe is a fixed hardware row set; no row matches name %q. Import the interface instead of creating it.", want))
+		return
+	}
+	obj, err := c.Set(ctx, "/interface/ethernet/poe", id, body)
+	if err != nil {
+		resp.Diagnostics.AddError("Adopt /interface/ethernet/poe failed", err.Error())
 		return
 	}
 	interfaceEthernetPoeApply(ctx, obj, &plan)
+	plan.ID = types.StringValue(id)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -311,20 +304,11 @@ func (r *InterfaceEthernetPoeResource) Update(ctx context.Context, req resource.
 		return
 	}
 	body := client.Object{}
-	if !plan.Export.Equal(state.Export) {
-		body["export"] = plan.Export.ValueString()
-	}
-	if !plan.Monitor.Equal(state.Monitor) {
-		body["monitor"] = plan.Monitor.ValueString()
-	}
-	if !plan.PowerCycle.Equal(state.PowerCycle) {
+	if !plan.PowerCycle.Equal(state.PowerCycle) && !plan.PowerCycle.IsUnknown() {
 		body["power-cycle"] = plan.PowerCycle.ValueString()
 	}
-	if !plan.Print.Equal(state.Print) {
+	if !plan.Print.Equal(state.Print) && !plan.Print.IsUnknown() {
 		body["print"] = plan.Print.ValueString()
-	}
-	if !plan.Duration.Equal(state.Duration) && !plan.Duration.IsUnknown() {
-		body["duration"] = plan.Duration.ValueString()
 	}
 	if !plan.Ether1PoeInLongCable.Equal(state.Ether1PoeInLongCable) && !plan.Ether1PoeInLongCable.IsUnknown() {
 		body["ether1-poe-in-long-cable"] = plan.Ether1PoeInLongCable.ValueString()
@@ -384,22 +368,16 @@ func (r *InterfaceEthernetPoeResource) Update(ctx context.Context, req resource.
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
 func (r *InterfaceEthernetPoeResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state InterfaceEthernetPoeModel
-	if diags := req.State.Get(ctx, &state); diags.HasError() {
-		resp.Diagnostics.Append(diags...)
-		return
-	}
-	c := pickClient(r.reg, state.Router, &resp.Diagnostics)
-	if c == nil {
-		return
-	}
-	if err := c.Remove(ctx, "/interface/ethernet/poe", state.ID.ValueString()); err != nil {
-		resp.Diagnostics.AddError("Delete /interface/ethernet/poe failed", err.Error())
-	}
+	// Fixed hardware row: cannot be removed. Drop from state; the row keeps
+	// its last-applied settings (adopt-only, like /ip/service).
+	_ = ctx
+	_ = req
+	_ = resp
 }
 
 func (r *InterfaceEthernetPoeResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
@@ -461,9 +439,7 @@ func interfaceEthernetPoeApply(ctx context.Context, obj client.Object, m *Interf
 		m.PowerCyclePingTimeout = types.StringNull()
 	}
 	if v, ok := obj["power-cycle-ping-enabled"]; ok && v != "" {
-		m.PowerCyclePingEnabled = types.StringValue(v)
-	} else {
-		m.PowerCyclePingEnabled = types.StringNull()
+		m.PowerCyclePingEnabled = newBoolStringValue(v)
 	}
 	if v, ok := obj["power-cycle-ping-address"]; ok && v != "" {
 		m.PowerCyclePingAddress = types.StringValue(v)
@@ -519,31 +495,6 @@ func interfaceEthernetPoeApply(ctx context.Context, obj client.Object, m *Interf
 		m.Ether1PoeInLongCable = types.StringValue(v)
 	} else {
 		m.Ether1PoeInLongCable = types.StringNull()
-	}
-	if v, ok := obj["duration"]; ok && v != "" {
-		m.Duration = types.StringValue(v)
-	} else {
-		m.Duration = types.StringNull()
-	}
-	if v, ok := obj["export"]; ok {
-		_ = v
-		if v != "" {
-			m.Export = types.StringValue(v)
-		} else {
-			m.Export = types.StringNull()
-		}
-	} else {
-		m.Export = types.StringNull()
-	}
-	if v, ok := obj["monitor"]; ok {
-		_ = v
-		if v != "" {
-			m.Monitor = types.StringValue(v)
-		} else {
-			m.Monitor = types.StringNull()
-		}
-	} else {
-		m.Monitor = types.StringNull()
 	}
 	if v, ok := obj["power-cycle"]; ok {
 		_ = v

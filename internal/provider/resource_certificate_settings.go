@@ -87,10 +87,11 @@ func (r *CertificateSettingsResource) Create(ctx context.Context, req resource.C
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	certificateSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	certificateSettingsUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -100,10 +101,16 @@ func (r *CertificateSettingsResource) Update(ctx context.Context, req resource.U
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	certificateSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state CertificateSettingsModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	certificateSettingsUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -141,25 +148,25 @@ func (r *CertificateSettingsResource) ImportState(ctx context.Context, req resou
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/certificate/settings", types.StringValue(routerName))))...)
 }
 
-func certificateSettingsUpsert(ctx context.Context, reg *client.Registry, plan *CertificateSettingsModel, diags *diagBuf) {
+func certificateSettingsUpsert(ctx context.Context, reg *client.Registry, plan, state *CertificateSettingsModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.BuiltinTrustStore.IsNull() || plan.BuiltinTrustStore.IsUnknown()) {
+	if !(plan.BuiltinTrustStore.IsNull() || plan.BuiltinTrustStore.IsUnknown()) && (state == nil || !plan.BuiltinTrustStore.Equal(state.BuiltinTrustStore)) {
 		body["builtin-trust-store"] = plan.BuiltinTrustStore.ValueString()
 	}
-	if !(plan.CrlDownload.IsNull() || plan.CrlDownload.IsUnknown()) {
+	if !(plan.CrlDownload.IsNull() || plan.CrlDownload.IsUnknown()) && (state == nil || !plan.CrlDownload.Equal(state.CrlDownload)) {
 		body["crl-download"] = client.FormatBool(plan.CrlDownload.ValueBool())
 	}
-	if !(plan.CrlStore.IsNull() || plan.CrlStore.IsUnknown()) {
+	if !(plan.CrlStore.IsNull() || plan.CrlStore.IsUnknown()) && (state == nil || !plan.CrlStore.Equal(state.CrlStore)) {
 		body["crl-store"] = plan.CrlStore.ValueString()
 	}
-	if !(plan.CrlUse.IsNull() || plan.CrlUse.IsUnknown()) {
+	if !(plan.CrlUse.IsNull() || plan.CrlUse.IsUnknown()) && (state == nil || !plan.CrlUse.Equal(state.CrlUse)) {
 		body["crl-use"] = client.FormatBool(plan.CrlUse.ValueBool())
 	}
-	if !(plan.CurrentDefaults.IsNull() || plan.CurrentDefaults.IsUnknown()) {
+	if !(plan.CurrentDefaults.IsNull() || plan.CurrentDefaults.IsUnknown()) && (state == nil || !plan.CurrentDefaults.Equal(state.CurrentDefaults)) {
 		body["current-defaults"] = encodeStringList(ctx, plan.CurrentDefaults, diags)
 	}
 	obj, err := c.SetSingleton(ctx, "/certificate/settings", body)

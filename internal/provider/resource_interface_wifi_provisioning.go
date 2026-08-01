@@ -211,6 +211,7 @@ func (r *InterfaceWifiProvisioningResource) Create(ctx context.Context, req reso
 		return
 	}
 	interfaceWifiProvisioningApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -252,46 +253,46 @@ func (r *InterfaceWifiProvisioningResource) Update(ctx context.Context, req reso
 		return
 	}
 	body := client.Object{}
-	if !plan.Action.Equal(state.Action) {
+	if !plan.Action.Equal(state.Action) && !plan.Action.IsUnknown() {
 		body["action"] = plan.Action.ValueString()
 	}
-	if !plan.AddressRanges.Equal(state.AddressRanges) {
+	if !plan.AddressRanges.Equal(state.AddressRanges) && !plan.AddressRanges.IsUnknown() {
 		body["address-ranges"] = plan.AddressRanges.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.CommonNameRegexp.Equal(state.CommonNameRegexp) {
+	if !plan.CommonNameRegexp.Equal(state.CommonNameRegexp) && !plan.CommonNameRegexp.IsUnknown() {
 		body["common-name-regexp"] = plan.CommonNameRegexp.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.IdentityRegexp.Equal(state.IdentityRegexp) {
+	if !plan.IdentityRegexp.Equal(state.IdentityRegexp) && !plan.IdentityRegexp.IsUnknown() {
 		body["identity-regexp"] = plan.IdentityRegexp.ValueString()
 	}
-	if !plan.MasterConfiguration.Equal(state.MasterConfiguration) {
+	if !plan.MasterConfiguration.Equal(state.MasterConfiguration) && !plan.MasterConfiguration.IsUnknown() {
 		body["master-configuration"] = plan.MasterConfiguration.ValueString()
 	}
-	if !plan.MultiLinkMode.Equal(state.MultiLinkMode) {
+	if !plan.MultiLinkMode.Equal(state.MultiLinkMode) && !plan.MultiLinkMode.IsUnknown() {
 		body["multi-link-mode"] = plan.MultiLinkMode.ValueString()
 	}
-	if !plan.NameFormat.Equal(state.NameFormat) {
+	if !plan.NameFormat.Equal(state.NameFormat) && !plan.NameFormat.IsUnknown() {
 		body["name-format"] = plan.NameFormat.ValueString()
 	}
-	if !plan.RadioMAC.Equal(state.RadioMAC) {
+	if !plan.RadioMAC.Equal(state.RadioMAC) && !plan.RadioMAC.IsUnknown() {
 		body["radio-mac"] = plan.RadioMAC.ValueString()
 	}
-	if !plan.SlaveConfigurations.Equal(state.SlaveConfigurations) {
+	if !plan.SlaveConfigurations.Equal(state.SlaveConfigurations) && !plan.SlaveConfigurations.IsUnknown() {
 		body["slave-configurations"] = plan.SlaveConfigurations.ValueString()
 	}
-	if !plan.SlaveNameFormat.Equal(state.SlaveNameFormat) {
+	if !plan.SlaveNameFormat.Equal(state.SlaveNameFormat) && !plan.SlaveNameFormat.IsUnknown() {
 		body["slave-name-format"] = plan.SlaveNameFormat.ValueString()
 	}
-	if !plan.SupportedBands.Equal(state.SupportedBands) {
+	if !plan.SupportedBands.Equal(state.SupportedBands) && !plan.SupportedBands.IsUnknown() {
 		body["supported-bands"] = plan.SupportedBands.ValueString()
 	}
-	if !plan.SupportedHwCaps.Equal(state.SupportedHwCaps) {
+	if !plan.SupportedHwCaps.Equal(state.SupportedHwCaps) && !plan.SupportedHwCaps.IsUnknown() {
 		body["supported-hw-caps"] = plan.SupportedHwCaps.ValueString()
 	}
 	if len(body) > 0 {
@@ -304,6 +305,7 @@ func (r *InterfaceWifiProvisioningResource) Update(ctx context.Context, req reso
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

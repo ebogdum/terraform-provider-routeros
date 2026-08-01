@@ -117,6 +117,7 @@ func (r *RoutingFilterNumListResource) Create(ctx context.Context, req resource.
 		return
 	}
 	routingFilterNumListApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -158,10 +159,10 @@ func (r *RoutingFilterNumListResource) Update(ctx context.Context, req resource.
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
 	if !plan.List.Equal(state.List) && !plan.List.IsUnknown() {
@@ -180,6 +181,7 @@ func (r *RoutingFilterNumListResource) Update(ctx context.Context, req resource.
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

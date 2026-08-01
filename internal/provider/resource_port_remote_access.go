@@ -162,6 +162,7 @@ func (r *PortRemoteAccessResource) Create(ctx context.Context, req resource.Crea
 		return
 	}
 	portRemoteAccessApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -203,22 +204,22 @@ func (r *PortRemoteAccessResource) Update(ctx context.Context, req resource.Upda
 		return
 	}
 	body := client.Object{}
-	if !plan.Channel.Equal(state.Channel) {
+	if !plan.Channel.Equal(state.Channel) && !plan.Channel.IsUnknown() {
 		body["channel"] = plan.Channel.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.LocalAddress.Equal(state.LocalAddress) {
+	if !plan.LocalAddress.Equal(state.LocalAddress) && !plan.LocalAddress.IsUnknown() {
 		body["local-address"] = plan.LocalAddress.ValueString()
 	}
-	if !plan.Port.Equal(state.Port) {
+	if !plan.Port.Equal(state.Port) && !plan.Port.IsUnknown() {
 		body["port"] = plan.Port.ValueString()
 	}
-	if !plan.Protocol.Equal(state.Protocol) {
+	if !plan.Protocol.Equal(state.Protocol) && !plan.Protocol.IsUnknown() {
 		body["protocol"] = plan.Protocol.ValueString()
 	}
 	if !plan.IpPort.Equal(state.IpPort) && !plan.IpPort.IsUnknown() {
@@ -240,6 +241,7 @@ func (r *PortRemoteAccessResource) Update(ctx context.Context, req resource.Upda
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

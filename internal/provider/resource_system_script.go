@@ -36,7 +36,7 @@ type SystemScriptModel struct {
 	LastTimeStarted        types.String `tfsdk:"last_time_started"`
 	Name                   types.String `tfsdk:"name"`
 	Owner                  types.String `tfsdk:"owner"`
-	Policy                 types.List   `tfsdk:"policy"`
+	Policy                 types.Set    `tfsdk:"policy"`
 	RunCount               types.Int64  `tfsdk:"run_count"`
 	RunScript              types.String `tfsdk:"run_script"`
 	Source                 types.String `tfsdk:"source"`
@@ -92,7 +92,7 @@ func (r *SystemScriptResource) Schema(_ context.Context, _ resource.SchemaReques
 				Computed:    true,
 				Description: "",
 			},
-			"policy": schema.ListAttribute{
+			"policy": schema.SetAttribute{
 				Optional:    true,
 				Computed:    true,
 				ElementType: types.StringType,
@@ -139,7 +139,7 @@ func (r *SystemScriptResource) Create(ctx context.Context, req resource.CreateRe
 		body["name"] = plan.Name.ValueString()
 	}
 	if !(plan.Policy.IsNull() || plan.Policy.IsUnknown()) {
-		body["policy"] = encodeStringList(ctx, plan.Policy, &resp.Diagnostics)
+		body["policy"] = encodeStringSet(ctx, plan.Policy, &resp.Diagnostics)
 	}
 	if !(plan.Source.IsNull() || plan.Source.IsUnknown()) {
 		body["source"] = plan.Source.ValueString()
@@ -150,6 +150,7 @@ func (r *SystemScriptResource) Create(ctx context.Context, req resource.CreateRe
 		return
 	}
 	systemScriptApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -191,19 +192,19 @@ func (r *SystemScriptResource) Update(ctx context.Context, req resource.UpdateRe
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.DonTRequirePermissions.Equal(state.DonTRequirePermissions) {
+	if !plan.DonTRequirePermissions.Equal(state.DonTRequirePermissions) && !plan.DonTRequirePermissions.IsUnknown() {
 		body["dont-require-permissions"] = client.FormatBool(plan.DonTRequirePermissions.ValueBool())
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Policy.Equal(state.Policy) {
-		body["policy"] = encodeStringList(ctx, plan.Policy, &resp.Diagnostics)
+	if !plan.Policy.Equal(state.Policy) && !plan.Policy.IsUnknown() {
+		body["policy"] = encodeStringSet(ctx, plan.Policy, &resp.Diagnostics)
 	}
-	if !plan.Source.Equal(state.Source) {
+	if !plan.Source.Equal(state.Source) && !plan.Source.IsUnknown() {
 		body["source"] = plan.Source.ValueString()
 	}
 	if len(body) > 0 {
@@ -216,6 +217,7 @@ func (r *SystemScriptResource) Update(ctx context.Context, req resource.UpdateRe
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -334,9 +336,9 @@ func systemScriptApply(ctx context.Context, obj client.Object, m *SystemScriptMo
 	}
 	if v, ok := obj["policy"]; ok {
 		_ = v
-		m.Policy = decodeStringList(ctx, v)
+		m.Policy = decodePolicySet(ctx, v)
 	} else {
-		m.Policy = types.ListNull(types.StringType)
+		m.Policy = types.SetNull(types.StringType)
 	}
 	if v, ok := obj["run-count"]; ok {
 		_ = v

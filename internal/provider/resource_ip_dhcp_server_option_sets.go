@@ -99,6 +99,7 @@ func (r *IPDHCPServerOptionSetsResource) Create(ctx context.Context, req resourc
 		return
 	}
 	iPDHCPServerOptionSetsApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -156,6 +157,7 @@ func (r *IPDHCPServerOptionSetsResource) Update(ctx context.Context, req resourc
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

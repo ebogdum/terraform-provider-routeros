@@ -29,16 +29,14 @@ type IPDNSForwardersResource struct {
 }
 
 type IPDNSForwardersModel struct {
-	ID                   types.String `tfsdk:"id"`
-	VerifyDohCert        types.String `tfsdk:"verify_doh_cert"`
-	DohServers           types.String `tfsdk:"doh_servers"`
-	Comment              types.String `tfsdk:"comment"`
-	Disabled             types.Bool   `tfsdk:"disabled"`
-	DNSServers           types.String `tfsdk:"dns_servers"`
-	DoHServers           types.String `tfsdk:"do_h_servers"`
-	Name                 types.String `tfsdk:"name"`
-	VerifyDoHCertificate types.Bool   `tfsdk:"verify_do_h_certificate"`
-	Router               types.String `tfsdk:"router"`
+	ID            types.String `tfsdk:"id"`
+	VerifyDohCert types.String `tfsdk:"verify_doh_cert"`
+	DohServers    types.String `tfsdk:"doh_servers"`
+	Comment       types.String `tfsdk:"comment"`
+	Disabled      types.Bool   `tfsdk:"disabled"`
+	DNSServers    types.String `tfsdk:"dns_servers"`
+	Name          types.String `tfsdk:"name"`
+	Router        types.String `tfsdk:"router"`
 }
 
 func NewIPDNSForwardersResource() resource.Resource { return &IPDNSForwardersResource{} }
@@ -89,16 +87,8 @@ func (r *IPDNSForwardersResource) Schema(_ context.Context, _ resource.SchemaReq
 				Computed:    true,
 				Description: "",
 			},
-			"do_h_servers": schema.StringAttribute{
-				Computed:    true,
-				Description: "",
-			},
 			"name": schema.StringAttribute{
 				Optional:    true,
-				Computed:    true,
-				Description: "",
-			},
-			"verify_do_h_certificate": schema.BoolAttribute{
 				Computed:    true,
 				Description: "",
 			},
@@ -145,6 +135,7 @@ func (r *IPDNSForwardersResource) Create(ctx context.Context, req resource.Creat
 		return
 	}
 	iPDNSForwardersApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -186,16 +177,16 @@ func (r *IPDNSForwardersResource) Update(ctx context.Context, req resource.Updat
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.DNSServers.Equal(state.DNSServers) {
+	if !plan.DNSServers.Equal(state.DNSServers) && !plan.DNSServers.IsUnknown() {
 		body["dns-servers"] = plan.DNSServers.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
 	if !plan.DohServers.Equal(state.DohServers) && !plan.DohServers.IsUnknown() {
@@ -214,6 +205,7 @@ func (r *IPDNSForwardersResource) Update(ctx context.Context, req resource.Updat
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -310,16 +302,6 @@ func iPDNSForwardersApply(ctx context.Context, obj client.Object, m *IPDNSForwar
 	} else {
 		m.DNSServers = types.StringNull()
 	}
-	if v, ok := obj["do-h-servers"]; ok {
-		_ = v
-		if v != "" {
-			m.DoHServers = types.StringValue(v)
-		} else {
-			m.DoHServers = types.StringNull()
-		}
-	} else {
-		m.DoHServers = types.StringNull()
-	}
 	if v, ok := obj["name"]; ok {
 		_ = v
 		if v != "" {
@@ -329,15 +311,5 @@ func iPDNSForwardersApply(ctx context.Context, obj client.Object, m *IPDNSForwar
 		}
 	} else {
 		m.Name = types.StringNull()
-	}
-	if v, ok := obj["verify-do-h-certificate"]; ok {
-		_ = v
-		if b, err := client.ParseBool(v); err == nil {
-			m.VerifyDoHCertificate = types.BoolValue(b)
-		} else {
-			m.VerifyDoHCertificate = types.BoolNull()
-		}
-	} else {
-		m.VerifyDoHCertificate = types.BoolNull()
 	}
 }

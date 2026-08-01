@@ -135,6 +135,7 @@ func (r *IPPoolResource) Create(ctx context.Context, req resource.CreateRequest,
 		return
 	}
 	iPPoolApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -176,16 +177,16 @@ func (r *IPPoolResource) Update(ctx context.Context, req resource.UpdateRequest,
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.NextPool.Equal(state.NextPool) {
+	if !plan.NextPool.Equal(state.NextPool) && !plan.NextPool.IsUnknown() {
 		body["next-pool"] = plan.NextPool.ValueString()
 	}
-	if !plan.Ranges.Equal(state.Ranges) {
+	if !plan.Ranges.Equal(state.Ranges) && !plan.Ranges.IsUnknown() {
 		body["ranges"] = plan.Ranges.ValueString()
 	}
 	if len(body) > 0 {
@@ -198,6 +199,7 @@ func (r *IPPoolResource) Update(ctx context.Context, req resource.UpdateRequest,
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

@@ -75,10 +75,11 @@ func (r *IPMediaSettingsResource) Create(ctx context.Context, req resource.Creat
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPMediaSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	iPMediaSettingsUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -88,10 +89,16 @@ func (r *IPMediaSettingsResource) Update(ctx context.Context, req resource.Updat
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPMediaSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state IPMediaSettingsModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	iPMediaSettingsUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -129,13 +136,13 @@ func (r *IPMediaSettingsResource) ImportState(ctx context.Context, req resource.
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/ip/media/settings", types.StringValue(routerName))))...)
 }
 
-func iPMediaSettingsUpsert(ctx context.Context, reg *client.Registry, plan *IPMediaSettingsModel, diags *diagBuf) {
+func iPMediaSettingsUpsert(ctx context.Context, reg *client.Registry, plan, state *IPMediaSettingsModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.Thumbnails.IsNull() || plan.Thumbnails.IsUnknown()) {
+	if !(plan.Thumbnails.IsNull() || plan.Thumbnails.IsUnknown()) && (state == nil || !plan.Thumbnails.Equal(state.Thumbnails)) {
 		body["thumbnails"] = plan.Thumbnails.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/ip/media/settings", body)

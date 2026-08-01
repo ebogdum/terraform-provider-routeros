@@ -128,6 +128,7 @@ func (r *ToolTrafficGeneratorPortResource) Create(ctx context.Context, req resou
 		return
 	}
 	toolTrafficGeneratorPortApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -169,13 +170,13 @@ func (r *ToolTrafficGeneratorPortResource) Update(ctx context.Context, req resou
 		return
 	}
 	body := client.Object{}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
 	if len(body) > 0 {
@@ -188,6 +189,7 @@ func (r *ToolTrafficGeneratorPortResource) Update(ctx context.Context, req resou
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

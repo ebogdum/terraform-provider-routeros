@@ -32,7 +32,7 @@ type IPCloudModel struct {
 	DdnsUpdateInterval             types.String `tfsdk:"ddns_update_interval"`
 	DNSName                        types.String `tfsdk:"dns_name"`
 	PublicAddress                  types.String `tfsdk:"public_address"`
-	PublicAddressIvp6              types.String `tfsdk:"public_address_ivp6"`
+	PublicAddressIPv6              types.String `tfsdk:"public_address_ipv6"`
 	Status                         types.String `tfsdk:"status"`
 	UpdateTime                     types.Bool   `tfsdk:"update_time"`
 	VPNDNSName                     types.String `tfsdk:"vpn_dns_name"`
@@ -91,10 +91,10 @@ func (r *IPCloudResource) Schema(_ context.Context, _ resource.SchemaRequest, re
 			"dns_name": schema.StringAttribute{Optional: true, Computed: true,
 				Description: "Shows the DNS name assigned to the device. Name consists of 12 characters serial number appended by . sn.mynetname.net . This field is visible only after at least one ddns-request is successfully completed.",
 			},
-			"public_address": schema.StringAttribute{Optional: true, Computed: true,
+			"public_address": schema.StringAttribute{Computed: true,
 				Description: "Shows the device's IPv4 address that was sent to the cloud server. This field is visible only after at least one IP Cloud request was successfully completed.",
 			},
-			"public_address_ivp6": schema.StringAttribute{Optional: true, Computed: true,
+			"public_address_ipv6": schema.StringAttribute{Computed: true,
 				Description: "Shows the device's IPv6 address that was sent to the cloud server. This field is visible only after at least one IP Cloud request was successfully completed.",
 			},
 			"status": schema.StringAttribute{Optional: true, Computed: true,
@@ -172,10 +172,11 @@ func (r *IPCloudResource) Create(ctx context.Context, req resource.CreateRequest
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPCloudUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	iPCloudUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -185,10 +186,16 @@ func (r *IPCloudResource) Update(ctx context.Context, req resource.UpdateRequest
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPCloudUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state IPCloudModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	iPCloudUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -226,25 +233,25 @@ func (r *IPCloudResource) ImportState(ctx context.Context, req resource.ImportSt
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/ip/cloud", types.StringValue(routerName))))...)
 }
 
-func iPCloudUpsert(ctx context.Context, reg *client.Registry, plan *IPCloudModel, diags *diagBuf) {
+func iPCloudUpsert(ctx context.Context, reg *client.Registry, plan, state *IPCloudModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.BackToHomeVPN.IsNull() || plan.BackToHomeVPN.IsUnknown()) {
+	if !(plan.BackToHomeVPN.IsNull() || plan.BackToHomeVPN.IsUnknown()) && (state == nil || !plan.BackToHomeVPN.Equal(state.BackToHomeVPN)) {
 		body["back-to-home-vpn"] = plan.BackToHomeVPN.ValueString()
 	}
-	if !(plan.DdnsEnabled.IsNull() || plan.DdnsEnabled.IsUnknown()) {
+	if !(plan.DdnsEnabled.IsNull() || plan.DdnsEnabled.IsUnknown()) && (state == nil || !plan.DdnsEnabled.Equal(state.DdnsEnabled)) {
 		body["ddns-enabled"] = plan.DdnsEnabled.ValueString()
 	}
-	if !(plan.DdnsUpdateInterval.IsNull() || plan.DdnsUpdateInterval.IsUnknown()) {
+	if !(plan.DdnsUpdateInterval.IsNull() || plan.DdnsUpdateInterval.IsUnknown()) && (state == nil || !plan.DdnsUpdateInterval.Equal(state.DdnsUpdateInterval)) {
 		body["ddns-update-interval"] = plan.DdnsUpdateInterval.ValueString()
 	}
-	if !(plan.UpdateTime.IsNull() || plan.UpdateTime.IsUnknown()) {
+	if !(plan.UpdateTime.IsNull() || plan.UpdateTime.IsUnknown()) && (state == nil || !plan.UpdateTime.Equal(state.UpdateTime)) {
 		body["update-time"] = client.FormatBool(plan.UpdateTime.ValueBool())
 	}
-	if !(plan.VPNPreferRelayCode.IsNull() || plan.VPNPreferRelayCode.IsUnknown()) {
+	if !(plan.VPNPreferRelayCode.IsNull() || plan.VPNPreferRelayCode.IsUnknown()) && (state == nil || !plan.VPNPreferRelayCode.Equal(state.VPNPreferRelayCode)) {
 		body["vpn-prefer-relay-code"] = plan.VPNPreferRelayCode.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/ip/cloud", body)
@@ -298,12 +305,12 @@ func iPCloudApply(ctx context.Context, obj client.Object, m *IPCloudModel) {
 			m.PublicAddress = types.StringNull()
 		}
 	}
-	if v, ok := obj["public-address-ivp6"]; ok {
+	if v, ok := obj["public-address-ipv6"]; ok {
 		_ = v
 		if v != "" {
-			m.PublicAddressIvp6 = types.StringValue(v)
+			m.PublicAddressIPv6 = types.StringValue(v)
 		} else {
-			m.PublicAddressIvp6 = types.StringNull()
+			m.PublicAddressIPv6 = types.StringNull()
 		}
 	}
 	if v, ok := obj["status"]; ok {

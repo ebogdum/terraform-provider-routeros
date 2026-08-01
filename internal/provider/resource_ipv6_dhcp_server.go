@@ -250,6 +250,7 @@ func (r *IPV6DHCPServerResource) Create(ctx context.Context, req resource.Create
 		return
 	}
 	iPV6DHCPServerApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -291,22 +292,22 @@ func (r *IPV6DHCPServerResource) Update(ctx context.Context, req resource.Update
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.DHCPOption.Equal(state.DHCPOption) {
+	if !plan.DHCPOption.Equal(state.DHCPOption) && !plan.DHCPOption.IsUnknown() {
 		body["dhcp-option"] = plan.DHCPOption.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.LeaseTime.Equal(state.LeaseTime) {
+	if !plan.LeaseTime.Equal(state.LeaseTime) && !plan.LeaseTime.IsUnknown() {
 		body["lease-time"] = plan.LeaseTime.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
 	if !plan.AddressLists.Equal(state.AddressLists) && !plan.AddressLists.IsUnknown() {
@@ -358,6 +359,7 @@ func (r *IPV6DHCPServerResource) Update(ctx context.Context, req resource.Update
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

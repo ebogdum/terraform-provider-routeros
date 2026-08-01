@@ -194,6 +194,7 @@ func (r *IPIpsecPeerResource) Create(ctx context.Context, req resource.CreateReq
 		return
 	}
 	iPIpsecPeerApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -235,34 +236,34 @@ func (r *IPIpsecPeerResource) Update(ctx context.Context, req resource.UpdateReq
 		return
 	}
 	body := client.Object{}
-	if !plan.Address.Equal(state.Address) {
+	if !plan.Address.Equal(state.Address) && !plan.Address.IsUnknown() {
 		body["address"] = plan.Address.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.ExchangeMode.Equal(state.ExchangeMode) {
+	if !plan.ExchangeMode.Equal(state.ExchangeMode) && !plan.ExchangeMode.IsUnknown() {
 		body["exchange-mode"] = plan.ExchangeMode.ValueString()
 	}
-	if !plan.LocalAddress.Equal(state.LocalAddress) {
+	if !plan.LocalAddress.Equal(state.LocalAddress) && !plan.LocalAddress.IsUnknown() {
 		body["local-address"] = plan.LocalAddress.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Passive.Equal(state.Passive) {
+	if !plan.Passive.Equal(state.Passive) && !plan.Passive.IsUnknown() {
 		body["passive"] = client.FormatBool(plan.Passive.ValueBool())
 	}
-	if !plan.Port.Equal(state.Port) {
+	if !plan.Port.Equal(state.Port) && !plan.Port.IsUnknown() {
 		body["port"] = client.FormatInt64(plan.Port.ValueInt64())
 	}
-	if !plan.Profile.Equal(state.Profile) {
+	if !plan.Profile.Equal(state.Profile) && !plan.Profile.IsUnknown() {
 		body["profile"] = plan.Profile.ValueString()
 	}
-	if !plan.SendInitialContact.Equal(state.SendInitialContact) {
+	if !plan.SendInitialContact.Equal(state.SendInitialContact) && !plan.SendInitialContact.IsUnknown() {
 		body["send-initial-contact"] = client.FormatBool(plan.SendInitialContact.ValueBool())
 	}
 	if !plan.PpkSecret.Equal(state.PpkSecret) && !plan.PpkSecret.IsUnknown() {
@@ -278,6 +279,7 @@ func (r *IPIpsecPeerResource) Update(ctx context.Context, req resource.UpdateReq
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

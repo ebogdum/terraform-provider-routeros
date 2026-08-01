@@ -269,6 +269,7 @@ func (r *IPDHCPServerNetworkResource) Create(ctx context.Context, req resource.C
 		return
 	}
 	iPDHCPServerNetworkApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -310,43 +311,43 @@ func (r *IPDHCPServerNetworkResource) Update(ctx context.Context, req resource.U
 		return
 	}
 	body := client.Object{}
-	if !plan.Address.Equal(state.Address) {
+	if !plan.Address.Equal(state.Address) && !plan.Address.IsUnknown() {
 		body["address"] = plan.Address.ValueString()
 	}
-	if !plan.BootFileName.Equal(state.BootFileName) {
+	if !plan.BootFileName.Equal(state.BootFileName) && !plan.BootFileName.IsUnknown() {
 		body["boot-file-name"] = plan.BootFileName.ValueString()
 	}
-	if !plan.CapsManager.Equal(state.CapsManager) {
+	if !plan.CapsManager.Equal(state.CapsManager) && !plan.CapsManager.IsUnknown() {
 		body["caps-manager"] = plan.CapsManager.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.DHCPOption.Equal(state.DHCPOption) {
+	if !plan.DHCPOption.Equal(state.DHCPOption) && !plan.DHCPOption.IsUnknown() {
 		body["dhcp-option"] = plan.DHCPOption.ValueString()
 	}
-	if !plan.DHCPOptionSet.Equal(state.DHCPOptionSet) {
+	if !plan.DHCPOptionSet.Equal(state.DHCPOptionSet) && !plan.DHCPOptionSet.IsUnknown() {
 		body["dhcp-option-set"] = plan.DHCPOptionSet.ValueString()
 	}
-	if !plan.DNSServer.Equal(state.DNSServer) {
+	if !plan.DNSServer.Equal(state.DNSServer) && !plan.DNSServer.IsUnknown() {
 		body["dns-server"] = plan.DNSServer.ValueString()
 	}
-	if !plan.Domain.Equal(state.Domain) {
+	if !plan.Domain.Equal(state.Domain) && !plan.Domain.IsUnknown() {
 		body["domain"] = plan.Domain.ValueString()
 	}
-	if !plan.Gateway.Equal(state.Gateway) {
+	if !plan.Gateway.Equal(state.Gateway) && !plan.Gateway.IsUnknown() {
 		body["gateway"] = plan.Gateway.ValueString()
 	}
-	if !plan.Netmask.Equal(state.Netmask) {
+	if !plan.Netmask.Equal(state.Netmask) && !plan.Netmask.IsUnknown() {
 		body["netmask"] = plan.Netmask.ValueString()
 	}
-	if !plan.NextServer.Equal(state.NextServer) {
+	if !plan.NextServer.Equal(state.NextServer) && !plan.NextServer.IsUnknown() {
 		body["next-server"] = plan.NextServer.ValueString()
 	}
-	if !plan.NTPServer.Equal(state.NTPServer) {
+	if !plan.NTPServer.Equal(state.NTPServer) && !plan.NTPServer.IsUnknown() {
 		body["ntp-server"] = plan.NTPServer.ValueString()
 	}
-	if !plan.WinsServer.Equal(state.WinsServer) {
+	if !plan.WinsServer.Equal(state.WinsServer) && !plan.WinsServer.IsUnknown() {
 		body["wins-server"] = plan.WinsServer.ValueString()
 	}
 	if !plan.DnsNone.Equal(state.DnsNone) && !plan.DnsNone.IsUnknown() {
@@ -365,6 +366,7 @@ func (r *IPDHCPServerNetworkResource) Update(ctx context.Context, req resource.U
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

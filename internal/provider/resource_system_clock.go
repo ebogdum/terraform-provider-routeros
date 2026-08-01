@@ -90,10 +90,11 @@ func (r *SystemClockResource) Create(ctx context.Context, req resource.CreateReq
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	systemClockUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	systemClockUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -103,10 +104,16 @@ func (r *SystemClockResource) Update(ctx context.Context, req resource.UpdateReq
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	systemClockUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state SystemClockModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	systemClockUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -144,22 +151,22 @@ func (r *SystemClockResource) ImportState(ctx context.Context, req resource.Impo
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/system/clock", types.StringValue(routerName))))...)
 }
 
-func systemClockUpsert(ctx context.Context, reg *client.Registry, plan *SystemClockModel, diags *diagBuf) {
+func systemClockUpsert(ctx context.Context, reg *client.Registry, plan, state *SystemClockModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.Date.IsNull() || plan.Date.IsUnknown()) {
+	if !(plan.Date.IsNull() || plan.Date.IsUnknown()) && (state == nil || !plan.Date.Equal(state.Date)) {
 		body["date"] = plan.Date.ValueString()
 	}
-	if !(plan.Time.IsNull() || plan.Time.IsUnknown()) {
+	if !(plan.Time.IsNull() || plan.Time.IsUnknown()) && (state == nil || !plan.Time.Equal(state.Time)) {
 		body["time"] = plan.Time.ValueString()
 	}
-	if !(plan.TimeZoneAutodetect.IsNull() || plan.TimeZoneAutodetect.IsUnknown()) {
+	if !(plan.TimeZoneAutodetect.IsNull() || plan.TimeZoneAutodetect.IsUnknown()) && (state == nil || !plan.TimeZoneAutodetect.Equal(state.TimeZoneAutodetect)) {
 		body["time-zone-autodetect"] = client.FormatBool(plan.TimeZoneAutodetect.ValueBool())
 	}
-	if !(plan.TimeZoneName.IsNull() || plan.TimeZoneName.IsUnknown()) {
+	if !(plan.TimeZoneName.IsNull() || plan.TimeZoneName.IsUnknown()) && (state == nil || !plan.TimeZoneName.Equal(state.TimeZoneName)) {
 		body["time-zone-name"] = plan.TimeZoneName.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/system/clock", body)

@@ -78,10 +78,11 @@ func (r *SystemNoteResource) Create(ctx context.Context, req resource.CreateRequ
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	systemNoteUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	systemNoteUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -91,10 +92,16 @@ func (r *SystemNoteResource) Update(ctx context.Context, req resource.UpdateRequ
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	systemNoteUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state SystemNoteModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	systemNoteUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -132,19 +139,19 @@ func (r *SystemNoteResource) ImportState(ctx context.Context, req resource.Impor
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/system/note", types.StringValue(routerName))))...)
 }
 
-func systemNoteUpsert(ctx context.Context, reg *client.Registry, plan *SystemNoteModel, diags *diagBuf) {
+func systemNoteUpsert(ctx context.Context, reg *client.Registry, plan, state *SystemNoteModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.Note.IsNull() || plan.Note.IsUnknown()) {
+	if !(plan.Note.IsNull() || plan.Note.IsUnknown()) && (state == nil || !plan.Note.Equal(state.Note)) {
 		body["note"] = plan.Note.ValueString()
 	}
-	if !(plan.ShowAtCliLogin.IsNull() || plan.ShowAtCliLogin.IsUnknown()) {
+	if !(plan.ShowAtCliLogin.IsNull() || plan.ShowAtCliLogin.IsUnknown()) && (state == nil || !plan.ShowAtCliLogin.Equal(state.ShowAtCliLogin)) {
 		body["show-at-cli-login"] = client.FormatBool(plan.ShowAtCliLogin.ValueBool())
 	}
-	if !(plan.ShowAtLogin.IsNull() || plan.ShowAtLogin.IsUnknown()) {
+	if !(plan.ShowAtLogin.IsNull() || plan.ShowAtLogin.IsUnknown()) && (state == nil || !plan.ShowAtLogin.Equal(state.ShowAtLogin)) {
 		body["show-at-login"] = client.FormatBool(plan.ShowAtLogin.ValueBool())
 	}
 	obj, err := c.SetSingleton(ctx, "/system/note", body)

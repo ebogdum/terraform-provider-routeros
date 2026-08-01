@@ -26,9 +26,9 @@ type ToolMACServerPingResource struct {
 }
 
 type ToolMACServerPingModel struct {
-	ID      types.String `tfsdk:"id"`
-	Enabled types.String `tfsdk:"enabled"`
-	Router  types.String `tfsdk:"router"`
+	ID      types.String    `tfsdk:"id"`
+	Enabled boolStringValue `tfsdk:"enabled"`
+	Router  types.String    `tfsdk:"router"`
 }
 
 func NewToolMACServerPingResource() resource.Resource { return &ToolMACServerPingResource{} }
@@ -54,7 +54,8 @@ func (r *ToolMACServerPingResource) Schema(_ context.Context, _ resource.SchemaR
 				Description:   "Stable identifier (the singleton's menu path, optionally namespaced by router).",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
-			"enabled": schema.StringAttribute{Optional: true, Computed: true,
+			"enabled": schema.StringAttribute{
+				CustomType: boolStringType{}, Optional: true, Computed: true,
 				Description: "",
 			},
 			"router": schema.StringAttribute{Optional: true,
@@ -70,10 +71,11 @@ func (r *ToolMACServerPingResource) Create(ctx context.Context, req resource.Cre
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	toolMACServerPingUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	toolMACServerPingUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -83,10 +85,16 @@ func (r *ToolMACServerPingResource) Update(ctx context.Context, req resource.Upd
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	toolMACServerPingUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state ToolMACServerPingModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	toolMACServerPingUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -124,13 +132,13 @@ func (r *ToolMACServerPingResource) ImportState(ctx context.Context, req resourc
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/tool/mac-server/ping", types.StringValue(routerName))))...)
 }
 
-func toolMACServerPingUpsert(ctx context.Context, reg *client.Registry, plan *ToolMACServerPingModel, diags *diagBuf) {
+func toolMACServerPingUpsert(ctx context.Context, reg *client.Registry, plan, state *ToolMACServerPingModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) {
+	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) && (state == nil || !plan.Enabled.Equal(state.Enabled)) {
 		body["enabled"] = plan.Enabled.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/tool/mac-server/ping", body)
@@ -147,9 +155,7 @@ func toolMACServerPingApply(ctx context.Context, obj client.Object, m *ToolMACSe
 	if v, ok := obj["enabled"]; ok {
 		_ = v
 		if v != "" {
-			m.Enabled = types.StringValue(v)
-		} else {
-			m.Enabled = types.StringNull()
+			m.Enabled = newBoolStringValue(v)
 		}
 	}
 }

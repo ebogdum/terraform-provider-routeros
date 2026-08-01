@@ -29,13 +29,13 @@ type InterfaceListMemberResource struct {
 }
 
 type InterfaceListMemberModel struct {
-	ID        types.String `tfsdk:"id"`
-	Comment   types.String `tfsdk:"comment"`
-	Disabled  types.Bool   `tfsdk:"disabled"`
-	Dynamic   types.String `tfsdk:"dynamic"`
-	Interface types.String `tfsdk:"interface"`
-	List      types.String `tfsdk:"list"`
-	Router    types.String `tfsdk:"router"`
+	ID        types.String    `tfsdk:"id"`
+	Comment   types.String    `tfsdk:"comment"`
+	Disabled  types.Bool      `tfsdk:"disabled"`
+	Dynamic   boolStringValue `tfsdk:"dynamic"`
+	Interface types.String    `tfsdk:"interface"`
+	List      types.String    `tfsdk:"list"`
+	Router    types.String    `tfsdk:"router"`
 }
 
 func NewInterfaceListMemberResource() resource.Resource { return &InterfaceListMemberResource{} }
@@ -72,6 +72,7 @@ func (r *InterfaceListMemberResource) Schema(_ context.Context, _ resource.Schem
 				Description: "Whether the entry is disabled.",
 			},
 			"dynamic": schema.StringAttribute{
+				CustomType:  boolStringType{},
 				Computed:    true,
 				Description: "",
 			},
@@ -122,6 +123,7 @@ func (r *InterfaceListMemberResource) Create(ctx context.Context, req resource.C
 		return
 	}
 	interfaceListMemberApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -163,16 +165,16 @@ func (r *InterfaceListMemberResource) Update(ctx context.Context, req resource.U
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.List.Equal(state.List) {
+	if !plan.List.Equal(state.List) && !plan.List.IsUnknown() {
 		body["list"] = plan.List.ValueString()
 	}
 	if len(body) > 0 {
@@ -185,6 +187,7 @@ func (r *InterfaceListMemberResource) Update(ctx context.Context, req resource.U
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -264,12 +267,8 @@ func interfaceListMemberApply(ctx context.Context, obj client.Object, m *Interfa
 	if v, ok := obj["dynamic"]; ok {
 		_ = v
 		if v != "" {
-			m.Dynamic = types.StringValue(v)
-		} else {
-			m.Dynamic = types.StringNull()
+			m.Dynamic = newBoolStringValue(v)
 		}
-	} else {
-		m.Dynamic = types.StringNull()
 	}
 	if v, ok := obj["interface"]; ok {
 		_ = v

@@ -94,6 +94,7 @@ func (r *IPIPsecPolicyGroupResource) Create(ctx context.Context, req resource.Cr
 		return
 	}
 	iPIPsecPolicyGroupApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -155,6 +156,7 @@ func (r *IPIPsecPolicyGroupResource) Update(ctx context.Context, req resource.Up
 	}
 	iPIPsecPolicyGroupApply(ctx, obj, &plan)
 	plan.ID = state.ID
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

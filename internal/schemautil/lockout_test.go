@@ -212,6 +212,12 @@ func TestCheckMACServerLockout(t *testing.T) {
 		if err := CheckMACServerLockout(p, client.Object{"allowed-interface-list": ""}, true); err != nil {
 			t.Fatalf("%s ack should bypass: %v", p, err)
 		}
+		// Field absent from the body means the write does not touch
+		// allowed-interface-list, so the guard must not fire (an empty
+		// terraform config must not read as "set it to empty").
+		if err := CheckMACServerLockout(p, client.Object{}, false); err != nil {
+			t.Fatalf("%s with field absent should pass: %v", p, err)
+		}
 	}
 	if err := CheckMACServerLockout("/ip/address", client.Object{"allowed-interface-list": ""}, false); err != nil {
 		t.Fatalf("non-mac-server menu should pass: %v", err)

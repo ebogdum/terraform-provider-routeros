@@ -35,7 +35,6 @@ type IPSocksifyModel struct {
 	Socks5Port        types.String `tfsdk:"socks5_port"`
 	Socks5Password    types.String `tfsdk:"socks5_password"`
 	ConnectionTimeout types.String `tfsdk:"connection_timeout"`
-	Comment           types.String `tfsdk:"comment"`
 	Disabled          types.Bool   `tfsdk:"disabled"`
 	Name              types.String `tfsdk:"name"`
 	Port              types.Int64  `tfsdk:"port"`
@@ -91,11 +90,6 @@ func (r *IPSocksifyResource) Schema(_ context.Context, _ resource.SchemaRequest,
 				Computed:    true,
 				Description: "RouterOS `connection-timeout`.",
 			},
-			"comment": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "Free-form comment.",
-			},
 			"disabled": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -129,9 +123,6 @@ func (r *IPSocksifyResource) Create(ctx context.Context, req resource.CreateRequ
 		return
 	}
 	body := client.Object{}
-	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
-		body["comment"] = plan.Comment.ValueString()
-	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
@@ -162,6 +153,7 @@ func (r *IPSocksifyResource) Create(ctx context.Context, req resource.CreateRequ
 		return
 	}
 	iPSocksifyApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -203,16 +195,13 @@ func (r *IPSocksifyResource) Update(ctx context.Context, req resource.UpdateRequ
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
-		body["comment"] = plan.Comment.ValueString()
-	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Port.Equal(state.Port) {
+	if !plan.Port.Equal(state.Port) && !plan.Port.IsUnknown() {
 		body["port"] = client.FormatInt64(plan.Port.ValueInt64())
 	}
 	if !plan.ConnectionTimeout.Equal(state.ConnectionTimeout) && !plan.ConnectionTimeout.IsUnknown() {
@@ -240,6 +229,7 @@ func (r *IPSocksifyResource) Update(ctx context.Context, req resource.UpdateRequ
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -320,16 +310,6 @@ func iPSocksifyApply(ctx context.Context, obj client.Object, m *IPSocksifyModel)
 		m.ConnectionTimeout = types.StringValue(v)
 	} else {
 		m.ConnectionTimeout = types.StringNull()
-	}
-	if v, ok := obj["comment"]; ok {
-		_ = v
-		if v != "" {
-			m.Comment = types.StringValue(v)
-		} else {
-			m.Comment = types.StringNull()
-		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
 		_ = v

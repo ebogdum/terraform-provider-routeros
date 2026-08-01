@@ -77,7 +77,6 @@ type InterfaceWifiConfigurationModel struct {
 	FtMobilityDomain          types.String `tfsdk:"ft_mobility_domain"`
 	FtNasIdentifier           types.String `tfsdk:"ft_nas_identifier"`
 	FtOverDs                  types.String `tfsdk:"ft_over_ds"`
-	FtPreserveVLANID          types.String `tfsdk:"ft_preserve_vlan_id"`
 	FtR0KeyLifetime           types.String `tfsdk:"ft_r0_key_lifetime"`
 	FtReassocDeadline         types.String `tfsdk:"ft_reassoc_deadline"`
 	GroupEncryption           types.String `tfsdk:"group_encryption"`
@@ -113,7 +112,6 @@ type InterfaceWifiConfigurationModel struct {
 	OweTransitionInterface    types.String `tfsdk:"owe_transition_interface"`
 	Passphrase                types.String `tfsdk:"passphrase"`
 	PasswordFormat            types.String `tfsdk:"password_format"`
-	QoSClassifier             types.String `tfsdk:"qo_s_classifier"`
 	Realms                    types.String `tfsdk:"realms"`
 	RealmsRaw                 types.String `tfsdk:"realms_raw"`
 	ReselectInterval          types.String `tfsdk:"reselect_interval"`
@@ -417,11 +415,6 @@ func (r *InterfaceWifiConfigurationResource) Schema(_ context.Context, _ resourc
 				Computed:    true,
 				Description: "",
 			},
-			"ft_preserve_vlan_id": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "",
-			},
 			"ft_r0_key_lifetime": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -593,11 +586,6 @@ func (r *InterfaceWifiConfigurationResource) Schema(_ context.Context, _ resourc
 				Description: "",
 			},
 			"password_format": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "",
-			},
-			"qo_s_classifier": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -816,9 +804,6 @@ func (r *InterfaceWifiConfigurationResource) Create(ctx context.Context, req res
 		return
 	}
 	body := client.Object{}
-	if !(plan.X2gProbeDelay.IsNull() || plan.X2gProbeDelay.IsUnknown()) {
-		body["2g-probe-delay"] = plan.X2gProbeDelay.ValueString()
-	}
 	if !(plan.X3gppInfo.IsNull() || plan.X3gppInfo.IsUnknown()) {
 		body["3gpp-info"] = plan.X3gppInfo.ValueString()
 	}
@@ -954,9 +939,6 @@ func (r *InterfaceWifiConfigurationResource) Create(ctx context.Context, req res
 	if !(plan.FtOverDs.IsNull() || plan.FtOverDs.IsUnknown()) {
 		body["security.ft-over-ds"] = plan.FtOverDs.ValueString()
 	}
-	if !(plan.FtPreserveVLANID.IsNull() || plan.FtPreserveVLANID.IsUnknown()) {
-		body["ft-preserve-vlan-id"] = plan.FtPreserveVLANID.ValueString()
-	}
 	if !(plan.FtR0KeyLifetime.IsNull() || plan.FtR0KeyLifetime.IsUnknown()) {
 		body["ft-r0-key-lifetime"] = plan.FtR0KeyLifetime.ValueString()
 	}
@@ -1061,9 +1043,6 @@ func (r *InterfaceWifiConfigurationResource) Create(ctx context.Context, req res
 	}
 	if !(plan.PasswordFormat.IsNull() || plan.PasswordFormat.IsUnknown()) {
 		body["aaa.password-format"] = plan.PasswordFormat.ValueString()
-	}
-	if !(plan.QoSClassifier.IsNull() || plan.QoSClassifier.IsUnknown()) {
-		body["qo-s-classifier"] = plan.QoSClassifier.ValueString()
 	}
 	if !(plan.Realms.IsNull() || plan.Realms.IsUnknown()) {
 		body["realms"] = plan.Realms.ValueString()
@@ -1191,6 +1170,7 @@ func (r *InterfaceWifiConfigurationResource) Create(ctx context.Context, req res
 		return
 	}
 	interfaceWifiConfigurationApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -1232,370 +1212,361 @@ func (r *InterfaceWifiConfigurationResource) Update(ctx context.Context, req res
 		return
 	}
 	body := client.Object{}
-	if !plan.X2gProbeDelay.Equal(state.X2gProbeDelay) {
-		body["2g-probe-delay"] = plan.X2gProbeDelay.ValueString()
-	}
-	if !plan.X3gppInfo.Equal(state.X3gppInfo) {
+	if !plan.X3gppInfo.Equal(state.X3gppInfo) && !plan.X3gppInfo.IsUnknown() {
 		body["3gpp-info"] = plan.X3gppInfo.ValueString()
 	}
-	if !plan.X3gppInfoRaw.Equal(state.X3gppInfoRaw) {
+	if !plan.X3gppInfoRaw.Equal(state.X3gppInfoRaw) && !plan.X3gppInfoRaw.IsUnknown() {
 		body["3gpp-info-raw"] = plan.X3gppInfoRaw.ValueString()
 	}
-	if !plan.Aaa.Equal(state.Aaa) {
+	if !plan.Aaa.Equal(state.Aaa) && !plan.Aaa.IsUnknown() {
 		body["aaa"] = plan.Aaa.ValueString()
 	}
-	if !plan.AntennaGain.Equal(state.AntennaGain) {
+	if !plan.AntennaGain.Equal(state.AntennaGain) && !plan.AntennaGain.IsUnknown() {
 		body["antenna-gain"] = plan.AntennaGain.ValueString()
 	}
-	if !plan.AuthenticationTypes.Equal(state.AuthenticationTypes) {
+	if !plan.AuthenticationTypes.Equal(state.AuthenticationTypes) && !plan.AuthenticationTypes.IsUnknown() {
 		body["security.authentication-types"] = plan.AuthenticationTypes.ValueString()
 	}
-	if !plan.Band.Equal(state.Band) {
+	if !plan.Band.Equal(state.Band) && !plan.Band.IsUnknown() {
 		body["channel.band"] = plan.Band.ValueString()
 	}
-	if !plan.BeaconInterval.Equal(state.BeaconInterval) {
+	if !plan.BeaconInterval.Equal(state.BeaconInterval) && !plan.BeaconInterval.IsUnknown() {
 		body["beacon-interval"] = plan.BeaconInterval.ValueString()
 	}
-	if !plan.BeaconProtection.Equal(state.BeaconProtection) {
+	if !plan.BeaconProtection.Equal(state.BeaconProtection) && !plan.BeaconProtection.IsUnknown() {
 		body["beacon-protection"] = plan.BeaconProtection.ValueString()
 	}
-	if !plan.Bridge.Equal(state.Bridge) {
+	if !plan.Bridge.Equal(state.Bridge) && !plan.Bridge.IsUnknown() {
 		body["datapath.bridge"] = plan.Bridge.ValueString()
 	}
-	if !plan.BridgeCost.Equal(state.BridgeCost) {
+	if !plan.BridgeCost.Equal(state.BridgeCost) && !plan.BridgeCost.IsUnknown() {
 		body["datapath.bridge-cost"] = plan.BridgeCost.ValueString()
 	}
-	if !plan.BridgeHorizon.Equal(state.BridgeHorizon) {
+	if !plan.BridgeHorizon.Equal(state.BridgeHorizon) && !plan.BridgeHorizon.IsUnknown() {
 		body["datapath.bridge-horizon"] = plan.BridgeHorizon.ValueString()
 	}
-	if !plan.CalledFormat.Equal(state.CalledFormat) {
+	if !plan.CalledFormat.Equal(state.CalledFormat) && !plan.CalledFormat.IsUnknown() {
 		body["aaa.called-format"] = plan.CalledFormat.ValueString()
 	}
-	if !plan.CallingFormat.Equal(state.CallingFormat) {
+	if !plan.CallingFormat.Equal(state.CallingFormat) && !plan.CallingFormat.IsUnknown() {
 		body["aaa.calling-format"] = plan.CallingFormat.ValueString()
 	}
-	if !plan.Chains.Equal(state.Chains) {
+	if !plan.Chains.Equal(state.Chains) && !plan.Chains.IsUnknown() {
 		body["chains"] = plan.Chains.ValueString()
 	}
-	if !plan.Channel.Equal(state.Channel) {
+	if !plan.Channel.Equal(state.Channel) && !plan.Channel.IsUnknown() {
 		body["channel"] = plan.Channel.ValueString()
 	}
-	if !plan.ChannelWidth.Equal(state.ChannelWidth) {
+	if !plan.ChannelWidth.Equal(state.ChannelWidth) && !plan.ChannelWidth.IsUnknown() {
 		body["channel-width"] = plan.ChannelWidth.ValueString()
 	}
-	if !plan.Ciphers.Equal(state.Ciphers) {
+	if !plan.Ciphers.Equal(state.Ciphers) && !plan.Ciphers.IsUnknown() {
 		body["ciphers"] = plan.Ciphers.ValueString()
 	}
-	if !plan.ClientIsolation.Equal(state.ClientIsolation) {
+	if !plan.ClientIsolation.Equal(state.ClientIsolation) && !plan.ClientIsolation.IsUnknown() {
 		body["datapath.client-isolation"] = plan.ClientIsolation.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.ConnectGroup.Equal(state.ConnectGroup) {
+	if !plan.ConnectGroup.Equal(state.ConnectGroup) && !plan.ConnectGroup.IsUnknown() {
 		body["connect-group"] = plan.ConnectGroup.ValueString()
 	}
-	if !plan.ConnectPriority.Equal(state.ConnectPriority) {
+	if !plan.ConnectPriority.Equal(state.ConnectPriority) && !plan.ConnectPriority.IsUnknown() {
 		body["security.connect-priority"] = plan.ConnectPriority.ValueString()
 	}
-	if !plan.ConnectionCapabilities.Equal(state.ConnectionCapabilities) {
+	if !plan.ConnectionCapabilities.Equal(state.ConnectionCapabilities) && !plan.ConnectionCapabilities.IsUnknown() {
 		body["connection-capabilities"] = plan.ConnectionCapabilities.ValueString()
 	}
-	if !plan.Country.Equal(state.Country) {
+	if !plan.Country.Equal(state.Country) && !plan.Country.IsUnknown() {
 		body["country"] = plan.Country.ValueString()
 	}
-	if !plan.Datapath.Equal(state.Datapath) {
+	if !plan.Datapath.Equal(state.Datapath) && !plan.Datapath.IsUnknown() {
 		body["datapath"] = plan.Datapath.ValueString()
 	}
-	if !plan.DeprioritizeUnii34.Equal(state.DeprioritizeUnii34) {
+	if !plan.DeprioritizeUnii34.Equal(state.DeprioritizeUnii34) && !plan.DeprioritizeUnii34.IsUnknown() {
 		body["deprioritize-unii-3-4"] = plan.DeprioritizeUnii34.ValueString()
 	}
-	if !plan.Dgaf.Equal(state.Dgaf) {
+	if !plan.Dgaf.Equal(state.Dgaf) && !plan.Dgaf.IsUnknown() {
 		body["dgaf"] = plan.Dgaf.ValueString()
 	}
-	if !plan.DhGroups.Equal(state.DhGroups) {
+	if !plan.DhGroups.Equal(state.DhGroups) && !plan.DhGroups.IsUnknown() {
 		body["security.dh-groups"] = plan.DhGroups.ValueString()
 	}
-	if !plan.DisablePmkid.Equal(state.DisablePmkid) {
+	if !plan.DisablePmkid.Equal(state.DisablePmkid) && !plan.DisablePmkid.IsUnknown() {
 		body["security.disable-pmkid"] = plan.DisablePmkid.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Distance.Equal(state.Distance) {
+	if !plan.Distance.Equal(state.Distance) && !plan.Distance.IsUnknown() {
 		body["distance"] = plan.Distance.ValueString()
 	}
-	if !plan.DomainNames.Equal(state.DomainNames) {
+	if !plan.DomainNames.Equal(state.DomainNames) && !plan.DomainNames.IsUnknown() {
 		body["domain-names"] = plan.DomainNames.ValueString()
 	}
-	if !plan.DtimPeriod.Equal(state.DtimPeriod) {
+	if !plan.DtimPeriod.Equal(state.DtimPeriod) && !plan.DtimPeriod.IsUnknown() {
 		body["dtim-period"] = plan.DtimPeriod.ValueString()
 	}
-	if !plan.EAPAccounting.Equal(state.EAPAccounting) {
+	if !plan.EAPAccounting.Equal(state.EAPAccounting) && !plan.EAPAccounting.IsUnknown() {
 		body["security.eap-accounting"] = plan.EAPAccounting.ValueString()
 	}
-	if !plan.EAPAnonymousIdentity.Equal(state.EAPAnonymousIdentity) {
+	if !plan.EAPAnonymousIdentity.Equal(state.EAPAnonymousIdentity) && !plan.EAPAnonymousIdentity.IsUnknown() {
 		body["security.eap-anonymous-identity"] = plan.EAPAnonymousIdentity.ValueString()
 	}
-	if !plan.EAPCertificateMode.Equal(state.EAPCertificateMode) {
+	if !plan.EAPCertificateMode.Equal(state.EAPCertificateMode) && !plan.EAPCertificateMode.IsUnknown() {
 		body["security.eap-certificate-mode"] = plan.EAPCertificateMode.ValueString()
 	}
-	if !plan.EAPMethods.Equal(state.EAPMethods) {
+	if !plan.EAPMethods.Equal(state.EAPMethods) && !plan.EAPMethods.IsUnknown() {
 		body["security.eap-methods"] = plan.EAPMethods.ValueString()
 	}
-	if !plan.EAPPassword.Equal(state.EAPPassword) {
+	if !plan.EAPPassword.Equal(state.EAPPassword) && !plan.EAPPassword.IsUnknown() {
 		body["security.eap-password"] = plan.EAPPassword.ValueString()
 	}
-	if !plan.EAPTLSCertificate.Equal(state.EAPTLSCertificate) {
+	if !plan.EAPTLSCertificate.Equal(state.EAPTLSCertificate) && !plan.EAPTLSCertificate.IsUnknown() {
 		body["eap-tls-certificate"] = plan.EAPTLSCertificate.ValueString()
 	}
-	if !plan.EAPUsername.Equal(state.EAPUsername) {
+	if !plan.EAPUsername.Equal(state.EAPUsername) && !plan.EAPUsername.IsUnknown() {
 		body["security.eap-username"] = plan.EAPUsername.ValueString()
 	}
-	if !plan.Esr.Equal(state.Esr) {
+	if !plan.Esr.Equal(state.Esr) && !plan.Esr.IsUnknown() {
 		body["esr"] = plan.Esr.ValueString()
 	}
-	if !plan.Frequency.Equal(state.Frequency) {
+	if !plan.Frequency.Equal(state.Frequency) && !plan.Frequency.IsUnknown() {
 		body["channel.frequency"] = plan.Frequency.ValueString()
 	}
-	if !plan.FtEnabled.Equal(state.FtEnabled) {
+	if !plan.FtEnabled.Equal(state.FtEnabled) && !plan.FtEnabled.IsUnknown() {
 		body["ft-enabled"] = plan.FtEnabled.ValueString()
 	}
-	if !plan.FtMobilityDomain.Equal(state.FtMobilityDomain) {
+	if !plan.FtMobilityDomain.Equal(state.FtMobilityDomain) && !plan.FtMobilityDomain.IsUnknown() {
 		body["ft-mobility-domain"] = plan.FtMobilityDomain.ValueString()
 	}
-	if !plan.FtNasIdentifier.Equal(state.FtNasIdentifier) {
+	if !plan.FtNasIdentifier.Equal(state.FtNasIdentifier) && !plan.FtNasIdentifier.IsUnknown() {
 		body["ft-nas-identifier"] = plan.FtNasIdentifier.ValueString()
 	}
-	if !plan.FtOverDs.Equal(state.FtOverDs) {
+	if !plan.FtOverDs.Equal(state.FtOverDs) && !plan.FtOverDs.IsUnknown() {
 		body["security.ft-over-ds"] = plan.FtOverDs.ValueString()
 	}
-	if !plan.FtPreserveVLANID.Equal(state.FtPreserveVLANID) {
-		body["ft-preserve-vlan-id"] = plan.FtPreserveVLANID.ValueString()
-	}
-	if !plan.FtR0KeyLifetime.Equal(state.FtR0KeyLifetime) {
+	if !plan.FtR0KeyLifetime.Equal(state.FtR0KeyLifetime) && !plan.FtR0KeyLifetime.IsUnknown() {
 		body["ft-r0-key-lifetime"] = plan.FtR0KeyLifetime.ValueString()
 	}
-	if !plan.FtReassocDeadline.Equal(state.FtReassocDeadline) {
+	if !plan.FtReassocDeadline.Equal(state.FtReassocDeadline) && !plan.FtReassocDeadline.IsUnknown() {
 		body["ft-reassoc-deadline"] = plan.FtReassocDeadline.ValueString()
 	}
-	if !plan.GroupEncryption.Equal(state.GroupEncryption) {
+	if !plan.GroupEncryption.Equal(state.GroupEncryption) && !plan.GroupEncryption.IsUnknown() {
 		body["security.group-encryption"] = plan.GroupEncryption.ValueString()
 	}
-	if !plan.GroupKeyUpdate.Equal(state.GroupKeyUpdate) {
+	if !plan.GroupKeyUpdate.Equal(state.GroupKeyUpdate) && !plan.GroupKeyUpdate.IsUnknown() {
 		body["security.group-key-update"] = plan.GroupKeyUpdate.ValueString()
 	}
-	if !plan.Hessid.Equal(state.Hessid) {
+	if !plan.Hessid.Equal(state.Hessid) && !plan.Hessid.IsUnknown() {
 		body["hessid"] = plan.Hessid.ValueString()
 	}
-	if !plan.HideSsid.Equal(state.HideSsid) {
+	if !plan.HideSsid.Equal(state.HideSsid) && !plan.HideSsid.IsUnknown() {
 		body["hide-ssid"] = plan.HideSsid.ValueString()
 	}
-	if !plan.Hotspot20.Equal(state.Hotspot20) {
+	if !plan.Hotspot20.Equal(state.Hotspot20) && !plan.Hotspot20.IsUnknown() {
 		body["hotspot-2-0"] = plan.Hotspot20.ValueString()
 	}
-	if !plan.HwProtectionMode.Equal(state.HwProtectionMode) {
+	if !plan.HwProtectionMode.Equal(state.HwProtectionMode) && !plan.HwProtectionMode.IsUnknown() {
 		body["hw-protection-mode"] = plan.HwProtectionMode.ValueString()
 	}
-	if !plan.Installation.Equal(state.Installation) {
+	if !plan.Installation.Equal(state.Installation) && !plan.Installation.IsUnknown() {
 		body["installation"] = plan.Installation.ValueString()
 	}
-	if !plan.InterfaceList.Equal(state.InterfaceList) {
+	if !plan.InterfaceList.Equal(state.InterfaceList) && !plan.InterfaceList.IsUnknown() {
 		body["datapath.interface-list"] = plan.InterfaceList.ValueString()
 	}
-	if !plan.InterimUpdate.Equal(state.InterimUpdate) {
+	if !plan.InterimUpdate.Equal(state.InterimUpdate) && !plan.InterimUpdate.IsUnknown() {
 		body["aaa.interim-update"] = plan.InterimUpdate.ValueString()
 	}
-	if !plan.Internet.Equal(state.Internet) {
+	if !plan.Internet.Equal(state.Internet) && !plan.Internet.IsUnknown() {
 		body["internet"] = plan.Internet.ValueString()
 	}
-	if !plan.Interworking.Equal(state.Interworking) {
+	if !plan.Interworking.Equal(state.Interworking) && !plan.Interworking.IsUnknown() {
 		body["interworking"] = plan.Interworking.ValueString()
 	}
-	if !plan.Ipv4Availability.Equal(state.Ipv4Availability) {
+	if !plan.Ipv4Availability.Equal(state.Ipv4Availability) && !plan.Ipv4Availability.IsUnknown() {
 		body["ipv4-availability"] = plan.Ipv4Availability.ValueString()
 	}
-	if !plan.IPV6Availability.Equal(state.IPV6Availability) {
+	if !plan.IPV6Availability.Equal(state.IPV6Availability) && !plan.IPV6Availability.IsUnknown() {
 		body["ipv6-availability"] = plan.IPV6Availability.ValueString()
 	}
-	if !plan.MACCaching.Equal(state.MACCaching) {
+	if !plan.MACCaching.Equal(state.MACCaching) && !plan.MACCaching.IsUnknown() {
 		body["aaa.mac-caching"] = plan.MACCaching.ValueString()
 	}
-	if !plan.ManagementEncryption.Equal(state.ManagementEncryption) {
+	if !plan.ManagementEncryption.Equal(state.ManagementEncryption) && !plan.ManagementEncryption.IsUnknown() {
 		body["management-encryption"] = plan.ManagementEncryption.ValueString()
 	}
-	if !plan.ManagementProtection.Equal(state.ManagementProtection) {
+	if !plan.ManagementProtection.Equal(state.ManagementProtection) && !plan.ManagementProtection.IsUnknown() {
 		body["security.management-protection"] = plan.ManagementProtection.ValueString()
 	}
-	if !plan.Manager.Equal(state.Manager) {
+	if !plan.Manager.Equal(state.Manager) && !plan.Manager.IsUnknown() {
 		body["manager"] = plan.Manager.ValueString()
 	}
-	if !plan.MaxClients.Equal(state.MaxClients) {
+	if !plan.MaxClients.Equal(state.MaxClients) && !plan.MaxClients.IsUnknown() {
 		body["max-clients"] = plan.MaxClients.ValueString()
 	}
-	if !plan.MaxTxPower.Equal(state.MaxTxPower) {
+	if !plan.MaxTxPower.Equal(state.MaxTxPower) && !plan.MaxTxPower.IsUnknown() {
 		body["max-tx-power"] = plan.MaxTxPower.ValueString()
 	}
-	if !plan.Mode.Equal(state.Mode) {
+	if !plan.Mode.Equal(state.Mode) && !plan.Mode.IsUnknown() {
 		body["mode"] = plan.Mode.ValueString()
 	}
-	if !plan.MultiPassphraseGroup.Equal(state.MultiPassphraseGroup) {
+	if !plan.MultiPassphraseGroup.Equal(state.MultiPassphraseGroup) && !plan.MultiPassphraseGroup.IsUnknown() {
 		body["multi-passphrase-group"] = plan.MultiPassphraseGroup.ValueString()
 	}
-	if !plan.MulticastEnhance.Equal(state.MulticastEnhance) {
+	if !plan.MulticastEnhance.Equal(state.MulticastEnhance) && !plan.MulticastEnhance.IsUnknown() {
 		body["multicast-enhance"] = plan.MulticastEnhance.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.NasIdentifier.Equal(state.NasIdentifier) {
+	if !plan.NasIdentifier.Equal(state.NasIdentifier) && !plan.NasIdentifier.IsUnknown() {
 		body["aaa.nas-identifier"] = plan.NasIdentifier.ValueString()
 	}
-	if !plan.NeighborGroup.Equal(state.NeighborGroup) {
+	if !plan.NeighborGroup.Equal(state.NeighborGroup) && !plan.NeighborGroup.IsUnknown() {
 		body["steering.neighbor-group"] = plan.NeighborGroup.ValueString()
 	}
-	if !plan.NetworkType.Equal(state.NetworkType) {
+	if !plan.NetworkType.Equal(state.NetworkType) && !plan.NetworkType.IsUnknown() {
 		body["network-type"] = plan.NetworkType.ValueString()
 	}
-	if !plan.OpenFlowSwitch.Equal(state.OpenFlowSwitch) {
+	if !plan.OpenFlowSwitch.Equal(state.OpenFlowSwitch) && !plan.OpenFlowSwitch.IsUnknown() {
 		body["open-flow-switch"] = plan.OpenFlowSwitch.ValueString()
 	}
-	if !plan.Openflow.Equal(state.Openflow) {
+	if !plan.Openflow.Equal(state.Openflow) && !plan.Openflow.IsUnknown() {
 		body["openflow"] = plan.Openflow.ValueString()
 	}
-	if !plan.OperationalClasses.Equal(state.OperationalClasses) {
+	if !plan.OperationalClasses.Equal(state.OperationalClasses) && !plan.OperationalClasses.IsUnknown() {
 		body["operational-classes"] = plan.OperationalClasses.ValueString()
 	}
-	if !plan.OperatorNames.Equal(state.OperatorNames) {
+	if !plan.OperatorNames.Equal(state.OperatorNames) && !plan.OperatorNames.IsUnknown() {
 		body["operator-names"] = plan.OperatorNames.ValueString()
 	}
-	if !plan.OweTransitionInterface.Equal(state.OweTransitionInterface) {
+	if !plan.OweTransitionInterface.Equal(state.OweTransitionInterface) && !plan.OweTransitionInterface.IsUnknown() {
 		body["security.owe-transition-interface"] = plan.OweTransitionInterface.ValueString()
 	}
-	if !plan.Passphrase.Equal(state.Passphrase) {
+	if !plan.Passphrase.Equal(state.Passphrase) && !plan.Passphrase.IsUnknown() {
 		body["security.passphrase"] = plan.Passphrase.ValueString()
 	}
-	if !plan.PasswordFormat.Equal(state.PasswordFormat) {
+	if !plan.PasswordFormat.Equal(state.PasswordFormat) && !plan.PasswordFormat.IsUnknown() {
 		body["aaa.password-format"] = plan.PasswordFormat.ValueString()
 	}
-	if !plan.QoSClassifier.Equal(state.QoSClassifier) {
-		body["qo-s-classifier"] = plan.QoSClassifier.ValueString()
-	}
-	if !plan.Realms.Equal(state.Realms) {
+	if !plan.Realms.Equal(state.Realms) && !plan.Realms.IsUnknown() {
 		body["realms"] = plan.Realms.ValueString()
 	}
-	if !plan.RealmsRaw.Equal(state.RealmsRaw) {
+	if !plan.RealmsRaw.Equal(state.RealmsRaw) && !plan.RealmsRaw.IsUnknown() {
 		body["realms-raw"] = plan.RealmsRaw.ValueString()
 	}
-	if !plan.ReselectInterval.Equal(state.ReselectInterval) {
+	if !plan.ReselectInterval.Equal(state.ReselectInterval) && !plan.ReselectInterval.IsUnknown() {
 		body["channel.reselect-interval"] = plan.ReselectInterval.ValueString()
 	}
-	if !plan.ReselectTime.Equal(state.ReselectTime) {
+	if !plan.ReselectTime.Equal(state.ReselectTime) && !plan.ReselectTime.IsUnknown() {
 		body["channel.reselect-time"] = plan.ReselectTime.ValueString()
 	}
-	if !plan.RoamingOis.Equal(state.RoamingOis) {
+	if !plan.RoamingOis.Equal(state.RoamingOis) && !plan.RoamingOis.IsUnknown() {
 		body["roaming-ois"] = plan.RoamingOis.ValueString()
 	}
-	if !plan.Rrm.Equal(state.Rrm) {
+	if !plan.Rrm.Equal(state.Rrm) && !plan.Rrm.IsUnknown() {
 		body["steering.rrm"] = plan.Rrm.ValueString()
 	}
-	if !plan.SaeAntiCloggingThreshold.Equal(state.SaeAntiCloggingThreshold) {
+	if !plan.SaeAntiCloggingThreshold.Equal(state.SaeAntiCloggingThreshold) && !plan.SaeAntiCloggingThreshold.IsUnknown() {
 		body["sae-anti-clogging-threshold"] = plan.SaeAntiCloggingThreshold.ValueString()
 	}
-	if !plan.SaeMaxFailureRate.Equal(state.SaeMaxFailureRate) {
+	if !plan.SaeMaxFailureRate.Equal(state.SaeMaxFailureRate) && !plan.SaeMaxFailureRate.IsUnknown() {
 		body["security.sae-max-failure-rate"] = plan.SaeMaxFailureRate.ValueString()
 	}
-	if !plan.SaePwe.Equal(state.SaePwe) {
+	if !plan.SaePwe.Equal(state.SaePwe) && !plan.SaePwe.IsUnknown() {
 		body["security.sae-pwe"] = plan.SaePwe.ValueString()
 	}
-	if !plan.SecondaryFrequency.Equal(state.SecondaryFrequency) {
+	if !plan.SecondaryFrequency.Equal(state.SecondaryFrequency) && !plan.SecondaryFrequency.IsUnknown() {
 		body["channel.secondary-frequency"] = plan.SecondaryFrequency.ValueString()
 	}
-	if !plan.Security.Equal(state.Security) {
+	if !plan.Security.Equal(state.Security) && !plan.Security.IsUnknown() {
 		body["security"] = plan.Security.ValueString()
 	}
-	if !plan.SkipDfsChannels.Equal(state.SkipDfsChannels) {
+	if !plan.SkipDfsChannels.Equal(state.SkipDfsChannels) && !plan.SkipDfsChannels.IsUnknown() {
 		body["channel.skip-dfs-channels"] = plan.SkipDfsChannels.ValueString()
 	}
-	if !plan.Ssid.Equal(state.Ssid) {
+	if !plan.Ssid.Equal(state.Ssid) && !plan.Ssid.IsUnknown() {
 		body["ssid"] = plan.Ssid.ValueString()
 	}
-	if !plan.StationRoaming.Equal(state.StationRoaming) {
+	if !plan.StationRoaming.Equal(state.StationRoaming) && !plan.StationRoaming.IsUnknown() {
 		body["station-roaming"] = plan.StationRoaming.ValueString()
 	}
-	if !plan.Steering.Equal(state.Steering) {
+	if !plan.Steering.Equal(state.Steering) && !plan.Steering.IsUnknown() {
 		body["steering"] = plan.Steering.ValueString()
 	}
-	if !plan.TrafficProcessing.Equal(state.TrafficProcessing) {
+	if !plan.TrafficProcessing.Equal(state.TrafficProcessing) && !plan.TrafficProcessing.IsUnknown() {
 		body["datapath.traffic-processing"] = plan.TrafficProcessing.ValueString()
 	}
-	if !plan.TransitionRequestCount.Equal(state.TransitionRequestCount) {
+	if !plan.TransitionRequestCount.Equal(state.TransitionRequestCount) && !plan.TransitionRequestCount.IsUnknown() {
 		body["transition-request-count"] = plan.TransitionRequestCount.ValueString()
 	}
-	if !plan.TransitionThreshold.Equal(state.TransitionThreshold) {
+	if !plan.TransitionThreshold.Equal(state.TransitionThreshold) && !plan.TransitionThreshold.IsUnknown() {
 		body["transition-threshold"] = plan.TransitionThreshold.ValueString()
 	}
-	if !plan.TransitionThresholdPeriod.Equal(state.TransitionThresholdPeriod) {
+	if !plan.TransitionThresholdPeriod.Equal(state.TransitionThresholdPeriod) && !plan.TransitionThresholdPeriod.IsUnknown() {
 		body["transition-threshold-period"] = plan.TransitionThresholdPeriod.ValueString()
 	}
-	if !plan.TransitionThresholdTime.Equal(state.TransitionThresholdTime) {
+	if !plan.TransitionThresholdTime.Equal(state.TransitionThresholdTime) && !plan.TransitionThresholdTime.IsUnknown() {
 		body["transition-threshold-time"] = plan.TransitionThresholdTime.ValueString()
 	}
-	if !plan.TransitionTime.Equal(state.TransitionTime) {
+	if !plan.TransitionTime.Equal(state.TransitionTime) && !plan.TransitionTime.IsUnknown() {
 		body["transition-time"] = plan.TransitionTime.ValueString()
 	}
-	if !plan.TxChains.Equal(state.TxChains) {
+	if !plan.TxChains.Equal(state.TxChains) && !plan.TxChains.IsUnknown() {
 		body["tx-chains"] = plan.TxChains.ValueString()
 	}
-	if !plan.TxPower.Equal(state.TxPower) {
+	if !plan.TxPower.Equal(state.TxPower) && !plan.TxPower.IsUnknown() {
 		body["tx-power"] = plan.TxPower.ValueString()
 	}
-	if !plan.Types.Equal(state.Types) {
+	if !plan.Types.Equal(state.Types) && !plan.Types.IsUnknown() {
 		body["types"] = plan.Types.ValueString()
 	}
-	if !plan.Uesa.Equal(state.Uesa) {
+	if !plan.Uesa.Equal(state.Uesa) && !plan.Uesa.IsUnknown() {
 		body["uesa"] = plan.Uesa.ValueString()
 	}
-	if !plan.UsernameFormat.Equal(state.UsernameFormat) {
+	if !plan.UsernameFormat.Equal(state.UsernameFormat) && !plan.UsernameFormat.IsUnknown() {
 		body["aaa.username-format"] = plan.UsernameFormat.ValueString()
 	}
-	if !plan.Venue.Equal(state.Venue) {
+	if !plan.Venue.Equal(state.Venue) && !plan.Venue.IsUnknown() {
 		body["venue"] = plan.Venue.ValueString()
 	}
-	if !plan.VenueNames.Equal(state.VenueNames) {
+	if !plan.VenueNames.Equal(state.VenueNames) && !plan.VenueNames.IsUnknown() {
 		body["venue-names"] = plan.VenueNames.ValueString()
 	}
-	if !plan.VLANID.Equal(state.VLANID) {
+	if !plan.VLANID.Equal(state.VLANID) && !plan.VLANID.IsUnknown() {
 		body["datapath.vlan-id"] = plan.VLANID.ValueString()
 	}
-	if !plan.WanAtCapacity.Equal(state.WanAtCapacity) {
+	if !plan.WanAtCapacity.Equal(state.WanAtCapacity) && !plan.WanAtCapacity.IsUnknown() {
 		body["wan-at-capacity"] = plan.WanAtCapacity.ValueString()
 	}
-	if !plan.WanDownlink.Equal(state.WanDownlink) {
+	if !plan.WanDownlink.Equal(state.WanDownlink) && !plan.WanDownlink.IsUnknown() {
 		body["wan-downlink"] = plan.WanDownlink.ValueString()
 	}
-	if !plan.WanDownlinkLoad.Equal(state.WanDownlinkLoad) {
+	if !plan.WanDownlinkLoad.Equal(state.WanDownlinkLoad) && !plan.WanDownlinkLoad.IsUnknown() {
 		body["wan-downlink-load"] = plan.WanDownlinkLoad.ValueString()
 	}
-	if !plan.WanMeasurementDuration.Equal(state.WanMeasurementDuration) {
+	if !plan.WanMeasurementDuration.Equal(state.WanMeasurementDuration) && !plan.WanMeasurementDuration.IsUnknown() {
 		body["wan-measurement-duration"] = plan.WanMeasurementDuration.ValueString()
 	}
-	if !plan.WanStatus.Equal(state.WanStatus) {
+	if !plan.WanStatus.Equal(state.WanStatus) && !plan.WanStatus.IsUnknown() {
 		body["wan-status"] = plan.WanStatus.ValueString()
 	}
-	if !plan.WanSymmetric.Equal(state.WanSymmetric) {
+	if !plan.WanSymmetric.Equal(state.WanSymmetric) && !plan.WanSymmetric.IsUnknown() {
 		body["wan-symmetric"] = plan.WanSymmetric.ValueString()
 	}
-	if !plan.WanUplink.Equal(state.WanUplink) {
+	if !plan.WanUplink.Equal(state.WanUplink) && !plan.WanUplink.IsUnknown() {
 		body["wan-uplink"] = plan.WanUplink.ValueString()
 	}
-	if !plan.WanUplinkLoad.Equal(state.WanUplinkLoad) {
+	if !plan.WanUplinkLoad.Equal(state.WanUplinkLoad) && !plan.WanUplinkLoad.IsUnknown() {
 		body["wan-uplink-load"] = plan.WanUplinkLoad.ValueString()
 	}
-	if !plan.Wnm.Equal(state.Wnm) {
+	if !plan.Wnm.Equal(state.Wnm) && !plan.Wnm.IsUnknown() {
 		body["steering.wnm"] = plan.Wnm.ValueString()
 	}
-	if !plan.Wps.Equal(state.Wps) {
+	if !plan.Wps.Equal(state.Wps) && !plan.Wps.IsUnknown() {
 		body["security.wps"] = plan.Wps.ValueString()
 	}
 	if !plan.QosClassifier.Equal(state.QosClassifier) && !plan.QosClassifier.IsUnknown() {
@@ -1611,6 +1582,7 @@ func (r *InterfaceWifiConfigurationResource) Update(ctx context.Context, req res
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -2132,16 +2104,6 @@ func interfaceWifiConfigurationApply(ctx context.Context, obj client.Object, m *
 	} else {
 		m.FtOverDs = types.StringNull()
 	}
-	if v, ok := obj["ft-preserve-vlan-id"]; ok {
-		_ = v
-		if v != "" {
-			m.FtPreserveVLANID = types.StringValue(v)
-		} else {
-			m.FtPreserveVLANID = types.StringNull()
-		}
-	} else {
-		m.FtPreserveVLANID = types.StringNull()
-	}
 	if v, ok := obj["ft-r0-key-lifetime"]; ok {
 		_ = v
 		if v != "" {
@@ -2491,16 +2453,6 @@ func interfaceWifiConfigurationApply(ctx context.Context, obj client.Object, m *
 		}
 	} else {
 		m.PasswordFormat = types.StringNull()
-	}
-	if v, ok := obj["qo-s-classifier"]; ok {
-		_ = v
-		if v != "" {
-			m.QoSClassifier = types.StringValue(v)
-		} else {
-			m.QoSClassifier = types.StringNull()
-		}
-	} else {
-		m.QoSClassifier = types.StringNull()
 	}
 	if v, ok := obj["realms"]; ok {
 		_ = v

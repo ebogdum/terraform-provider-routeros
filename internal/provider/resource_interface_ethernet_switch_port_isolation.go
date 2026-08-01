@@ -79,8 +79,9 @@ func (r *InterfaceEthernetSwitchPortIsolationResource) Schema(_ context.Context,
 				Description: "",
 			},
 			"name": schema.StringAttribute{
+				Optional:    true,
 				Computed:    true,
-				Description: "",
+				Description: "Port name of the fixed row to adopt (e.g. `ether1`).",
 			},
 			"override": schema.StringAttribute{
 				Optional:    true,
@@ -109,6 +110,31 @@ func (r *InterfaceEthernetSwitchPortIsolationResource) Create(ctx context.Contex
 	if c == nil {
 		return
 	}
+	// Fixed device menu: the rows (one per switch port) already exist and
+	// cannot be added. Adopt the row whose name matches and configure it.
+	want := plan.Name.ValueString()
+	if want == "" {
+		resp.Diagnostics.AddError("name is required",
+			"/interface/ethernet/switch/port-isolation has fixed rows; set `name` to the port to manage (e.g. ether1)")
+		return
+	}
+	rows, err := c.List(ctx, "/interface/ethernet/switch/port-isolation")
+	if err != nil {
+		resp.Diagnostics.AddError("List /interface/ethernet/switch/port-isolation failed", err.Error())
+		return
+	}
+	var id string
+	for _, row := range rows {
+		if row["name"] == want {
+			id = row[".id"]
+			break
+		}
+	}
+	if id == "" {
+		resp.Diagnostics.AddError("Unknown port-isolation row "+want,
+			fmt.Sprintf("no /interface/ethernet/switch/port-isolation row named %q on the device", want))
+		return
+	}
 	body := client.Object{}
 	if !(plan.ForwardTo.IsNull() || plan.ForwardTo.IsUnknown()) {
 		body["forward-to"] = plan.ForwardTo.ValueString()
@@ -119,12 +145,13 @@ func (r *InterfaceEthernetSwitchPortIsolationResource) Create(ctx context.Contex
 	if !(plan.Override.IsNull() || plan.Override.IsUnknown()) {
 		body["override"] = plan.Override.ValueString()
 	}
-	obj, err := c.Add(ctx, "/interface/ethernet/switch/port-isolation", body)
+	obj, err := c.Set(ctx, "/interface/ethernet/switch/port-isolation", id, body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /interface/ethernet/switch/port-isolation failed", err.Error())
 		return
 	}
 	interfaceEthernetSwitchPortIsolationApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -166,13 +193,13 @@ func (r *InterfaceEthernetSwitchPortIsolationResource) Update(ctx context.Contex
 		return
 	}
 	body := client.Object{}
-	if !plan.ForwardTo.Equal(state.ForwardTo) {
+	if !plan.ForwardTo.Equal(state.ForwardTo) && !plan.ForwardTo.IsUnknown() {
 		body["forward-to"] = plan.ForwardTo.ValueString()
 	}
-	if !plan.ForwardingOverride.Equal(state.ForwardingOverride) {
+	if !plan.ForwardingOverride.Equal(state.ForwardingOverride) && !plan.ForwardingOverride.IsUnknown() {
 		body["forwarding-override"] = client.FormatBool(plan.ForwardingOverride.ValueBool())
 	}
-	if !plan.Override.Equal(state.Override) {
+	if !plan.Override.Equal(state.Override) && !plan.Override.IsUnknown() {
 		body["override"] = plan.Override.ValueString()
 	}
 	if len(body) > 0 {
@@ -185,6 +212,7 @@ func (r *InterfaceEthernetSwitchPortIsolationResource) Update(ctx context.Contex
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -198,9 +226,10 @@ func (r *InterfaceEthernetSwitchPortIsolationResource) Delete(ctx context.Contex
 	if c == nil {
 		return
 	}
-	if err := c.Remove(ctx, "/interface/ethernet/switch/port-isolation", state.ID.ValueString()); err != nil {
-		resp.Diagnostics.AddError("Delete /interface/ethernet/switch/port-isolation failed", err.Error())
-	}
+	// Fixed device row: it cannot be removed, only reconfigured. Drop it from
+	// Terraform state and leave the row in place.
+	_ = c
+	resp.State.RemoveResource(ctx)
 }
 
 func (r *InterfaceEthernetSwitchPortIsolationResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {

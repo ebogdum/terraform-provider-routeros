@@ -67,7 +67,6 @@ type InterfaceEthernetModel struct {
 	FullDuplex                types.String `tfsdk:"full_duplex"`
 	Hastxqueuestats           types.Bool   `tfsdk:"hastxqueuestats"`
 	IgnoreRxLos               types.Bool   `tfsdk:"ignore_rx_los"`
-	L2MTU                     types.Int64  `tfsdk:"l2_mtu"`
 	LinkPartnerAdvertising    types.String `tfsdk:"link_partner_advertising"`
 	LoopProtect               types.String `tfsdk:"loop_protect"`
 	LoopProtectDisableTime    types.String `tfsdk:"loop_protect_disable_time"`
@@ -390,10 +389,6 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 			},
 			"ignore_rx_los": schema.BoolAttribute{
 				Optional:    true,
-				Computed:    true,
-				Description: "",
-			},
-			"l2_mtu": schema.Int64Attribute{
 				Computed:    true,
 				Description: "",
 			},
@@ -1090,12 +1085,31 @@ func (r *InterfaceEthernetResource) Create(ctx context.Context, req resource.Cre
 	if !(plan.SfpRateSelect.IsNull() || plan.SfpRateSelect.IsUnknown()) {
 		body["sfp-rate-select"] = plan.SfpRateSelect.ValueString()
 	}
-	obj, err := c.Add(ctx, "/interface/ethernet", body)
+	rows, err := c.List(ctx, "/interface/ethernet")
 	if err != nil {
-		resp.Diagnostics.AddError("Create /interface/ethernet failed", err.Error())
+		resp.Diagnostics.AddError("Read /interface/ethernet failed", err.Error())
+		return
+	}
+	want := plan.Name.ValueString()
+	var id string
+	for _, row := range rows {
+		if row["name"] == want || row["default-name"] == want {
+			id = row[".id"]
+			break
+		}
+	}
+	if id == "" {
+		resp.Diagnostics.AddError("Unknown /interface/ethernet "+want, fmt.Sprintf("/interface/ethernet is a fixed hardware row set; no row matches name %q. Import the interface instead of creating it.", want))
+		return
+	}
+	obj, err := c.Set(ctx, "/interface/ethernet", id, body)
+	if err != nil {
+		resp.Diagnostics.AddError("Adopt /interface/ethernet failed", err.Error())
 		return
 	}
 	interfaceEthernetApply(ctx, obj, &plan)
+	plan.ID = types.StringValue(id)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -1137,116 +1151,116 @@ func (r *InterfaceEthernetResource) Update(ctx context.Context, req resource.Upd
 		return
 	}
 	body := client.Object{}
-	if !plan.Advertise.Equal(state.Advertise) {
+	if !plan.Advertise.Equal(state.Advertise) && !plan.Advertise.IsUnknown() {
 		body["advertise"] = encodeStringList(ctx, plan.Advertise, &resp.Diagnostics)
 	}
-	if !plan.ARP.Equal(state.ARP) {
+	if !plan.ARP.Equal(state.ARP) && !plan.ARP.IsUnknown() {
 		body["arp"] = plan.ARP.ValueString()
 	}
-	if !plan.ARPTimeout.Equal(state.ARPTimeout) {
+	if !plan.ARPTimeout.Equal(state.ARPTimeout) && !plan.ARPTimeout.IsUnknown() {
 		body["arp-timeout"] = plan.ARPTimeout.ValueString()
 	}
-	if !plan.AutoNegotiation.Equal(state.AutoNegotiation) {
+	if !plan.AutoNegotiation.Equal(state.AutoNegotiation) && !plan.AutoNegotiation.IsUnknown() {
 		body["auto-negotiation"] = client.FormatBool(plan.AutoNegotiation.ValueBool())
 	}
-	if !plan.Blink.Equal(state.Blink) {
+	if !plan.Blink.Equal(state.Blink) && !plan.Blink.IsUnknown() {
 		body["blink"] = plan.Blink.ValueString()
 	}
-	if !plan.Bandwidth.Equal(state.Bandwidth) {
+	if !plan.Bandwidth.Equal(state.Bandwidth) && !plan.Bandwidth.IsUnknown() {
 		body["bandwidth"] = plan.Bandwidth.ValueString()
 	}
-	if !plan.CableSettings.Equal(state.CableSettings) {
+	if !plan.CableSettings.Equal(state.CableSettings) && !plan.CableSettings.IsUnknown() {
 		body["cable-settings"] = plan.CableSettings.ValueString()
 	}
-	if !plan.CableTest.Equal(state.CableTest) {
+	if !plan.CableTest.Equal(state.CableTest) && !plan.CableTest.IsUnknown() {
 		body["cable-test"] = plan.CableTest.ValueString()
 	}
-	if !plan.ComboMode.Equal(state.ComboMode) {
+	if !plan.ComboMode.Equal(state.ComboMode) && !plan.ComboMode.IsUnknown() {
 		body["combo-mode"] = plan.ComboMode.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.DisableRunningCheck.Equal(state.DisableRunningCheck) {
+	if !plan.DisableRunningCheck.Equal(state.DisableRunningCheck) && !plan.DisableRunningCheck.IsUnknown() {
 		body["disable-running-check"] = client.FormatBool(plan.DisableRunningCheck.ValueBool())
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Extrastats.Equal(state.Extrastats) {
+	if !plan.Extrastats.Equal(state.Extrastats) && !plan.Extrastats.IsUnknown() {
 		body["extrastats"] = plan.Extrastats.ValueString()
 	}
-	if !plan.FecMode.Equal(state.FecMode) {
+	if !plan.FecMode.Equal(state.FecMode) && !plan.FecMode.IsUnknown() {
 		body["fec-mode"] = plan.FecMode.ValueString()
 	}
-	if !plan.Flowcntrl.Equal(state.Flowcntrl) {
+	if !plan.Flowcntrl.Equal(state.Flowcntrl) && !plan.Flowcntrl.IsUnknown() {
 		body["flowcntrl"] = plan.Flowcntrl.ValueString()
 	}
-	if !plan.IgnoreRxLos.Equal(state.IgnoreRxLos) {
+	if !plan.IgnoreRxLos.Equal(state.IgnoreRxLos) && !plan.IgnoreRxLos.IsUnknown() {
 		body["ignore-rx-los"] = client.FormatBool(plan.IgnoreRxLos.ValueBool())
 	}
-	if !plan.LoopProtect.Equal(state.LoopProtect) {
+	if !plan.LoopProtect.Equal(state.LoopProtect) && !plan.LoopProtect.IsUnknown() {
 		body["loop-protect"] = plan.LoopProtect.ValueString()
 	}
-	if !plan.LoopProtectDisableTime.Equal(state.LoopProtectDisableTime) {
+	if !plan.LoopProtectDisableTime.Equal(state.LoopProtectDisableTime) && !plan.LoopProtectDisableTime.IsUnknown() {
 		body["loop-protect-disable-time"] = plan.LoopProtectDisableTime.ValueString()
 	}
-	if !plan.LoopProtectSendInterval.Equal(state.LoopProtectSendInterval) {
+	if !plan.LoopProtectSendInterval.Equal(state.LoopProtectSendInterval) && !plan.LoopProtectSendInterval.IsUnknown() {
 		body["loop-protect-send-interval"] = plan.LoopProtectSendInterval.ValueString()
 	}
-	if !plan.MACAddress.Equal(state.MACAddress) {
+	if !plan.MACAddress.Equal(state.MACAddress) && !plan.MACAddress.IsUnknown() {
 		body["mac-address"] = plan.MACAddress.ValueString()
 	}
-	if !plan.MTU.Equal(state.MTU) {
+	if !plan.MTU.Equal(state.MTU) && !plan.MTU.IsUnknown() {
 		body["mtu"] = client.FormatInt64(plan.MTU.ValueInt64())
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
 
-	if !plan.OrigMACAddress.Equal(state.OrigMACAddress) {
+	if !plan.OrigMACAddress.Equal(state.OrigMACAddress) && !plan.OrigMACAddress.IsUnknown() {
 		body["orig-mac-address"] = plan.OrigMACAddress.ValueString()
 	}
-	if !plan.PoEOut.Equal(state.PoEOut) {
+	if !plan.PoEOut.Equal(state.PoEOut) && !plan.PoEOut.IsUnknown() {
 		body["poe-out"] = plan.PoEOut.ValueString()
 	}
-	if !plan.PoEPriority.Equal(state.PoEPriority) {
+	if !plan.PoEPriority.Equal(state.PoEPriority) && !plan.PoEPriority.IsUnknown() {
 		body["poe-priority"] = client.FormatInt64(plan.PoEPriority.ValueInt64())
 	}
-	if !plan.PoEVoltage.Equal(state.PoEVoltage) {
+	if !plan.PoEVoltage.Equal(state.PoEVoltage) && !plan.PoEVoltage.IsUnknown() {
 		body["poe-voltage"] = plan.PoEVoltage.ValueString()
 	}
-	if !plan.Poe.Equal(state.Poe) {
+	if !plan.Poe.Equal(state.Poe) && !plan.Poe.IsUnknown() {
 		body["poe"] = plan.Poe.ValueString()
 	}
-	if !plan.Poeping.Equal(state.Poeping) {
+	if !plan.Poeping.Equal(state.Poeping) && !plan.Poeping.IsUnknown() {
 		body["poeping"] = plan.Poeping.ValueString()
 	}
-	if !plan.PowerCycleInterval.Equal(state.PowerCycleInterval) {
+	if !plan.PowerCycleInterval.Equal(state.PowerCycleInterval) && !plan.PowerCycleInterval.IsUnknown() {
 		body["power-cycle-interval"] = plan.PowerCycleInterval.ValueString()
 	}
-	if !plan.PowerCyclePingEnabled.Equal(state.PowerCyclePingEnabled) {
+	if !plan.PowerCyclePingEnabled.Equal(state.PowerCyclePingEnabled) && !plan.PowerCyclePingEnabled.IsUnknown() {
 		body["power-cycle-ping-enabled"] = client.FormatBool(plan.PowerCyclePingEnabled.ValueBool())
 	}
-	if !plan.Qstats.Equal(state.Qstats) {
+	if !plan.Qstats.Equal(state.Qstats) && !plan.Qstats.IsUnknown() {
 		body["qstats"] = plan.Qstats.ValueString()
 	}
-	if !plan.RateSelect.Equal(state.RateSelect) {
+	if !plan.RateSelect.Equal(state.RateSelect) && !plan.RateSelect.IsUnknown() {
 		body["rate-select"] = plan.RateSelect.ValueString()
 	}
-	if !plan.RxFlowControl.Equal(state.RxFlowControl) {
+	if !plan.RxFlowControl.Equal(state.RxFlowControl) && !plan.RxFlowControl.IsUnknown() {
 		body["rx-flow-control"] = plan.RxFlowControl.ValueString()
 	}
-	if !plan.Sfp.Equal(state.Sfp) {
+	if !plan.Sfp.Equal(state.Sfp) && !plan.Sfp.IsUnknown() {
 		body["sfp"] = client.FormatBool(plan.Sfp.ValueBool())
 	}
-	if !plan.SfpShutdownTemperature.Equal(state.SfpShutdownTemperature) {
+	if !plan.SfpShutdownTemperature.Equal(state.SfpShutdownTemperature) && !plan.SfpShutdownTemperature.IsUnknown() {
 		body["sfp-shutdown-temperature"] = client.FormatInt64(plan.SfpShutdownTemperature.ValueInt64())
 	}
-	if !plan.Speed.Equal(state.Speed) {
+	if !plan.Speed.Equal(state.Speed) && !plan.Speed.IsUnknown() {
 		body["speed"] = plan.Speed.ValueString()
 	}
-	if !plan.TxFlowControl.Equal(state.TxFlowControl) {
+	if !plan.TxFlowControl.Equal(state.TxFlowControl) && !plan.TxFlowControl.IsUnknown() {
 		body["tx-flow-control"] = plan.TxFlowControl.ValueString()
 	}
 	if !plan.L2mtu.Equal(state.L2mtu) && !plan.L2mtu.IsUnknown() {
@@ -1271,22 +1285,16 @@ func (r *InterfaceEthernetResource) Update(ctx context.Context, req resource.Upd
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
 func (r *InterfaceEthernetResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state InterfaceEthernetModel
-	if diags := req.State.Get(ctx, &state); diags.HasError() {
-		resp.Diagnostics.Append(diags...)
-		return
-	}
-	c := pickClient(r.reg, state.Router, &resp.Diagnostics)
-	if c == nil {
-		return
-	}
-	if err := c.Remove(ctx, "/interface/ethernet", state.ID.ValueString()); err != nil {
-		resp.Diagnostics.AddError("Delete /interface/ethernet failed", err.Error())
-	}
+	// Fixed hardware row: cannot be removed. Drop from state; the row keeps
+	// its last-applied settings (adopt-only, like /ip/service).
+	_ = ctx
+	_ = req
+	_ = resp
 }
 
 func (r *InterfaceEthernetResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
@@ -1654,16 +1662,6 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		}
 	} else {
 		m.IgnoreRxLos = types.BoolNull()
-	}
-	if v, ok := obj["l2-mtu"]; ok {
-		_ = v
-		if n, err := client.ParseInt64(v); err == nil {
-			m.L2MTU = types.Int64Value(n)
-		} else {
-			m.L2MTU = types.Int64Null()
-		}
-	} else {
-		m.L2MTU = types.Int64Null()
 	}
 	if v, ok := obj["link-partner-advertising"]; ok {
 		_ = v

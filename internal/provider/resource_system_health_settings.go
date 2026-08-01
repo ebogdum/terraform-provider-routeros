@@ -135,10 +135,11 @@ func (r *SystemHealthSettingsResource) Create(ctx context.Context, req resource.
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	systemHealthSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	systemHealthSettingsUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -148,10 +149,16 @@ func (r *SystemHealthSettingsResource) Update(ctx context.Context, req resource.
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	systemHealthSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state SystemHealthSettingsModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	systemHealthSettingsUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -189,43 +196,43 @@ func (r *SystemHealthSettingsResource) ImportState(ctx context.Context, req reso
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/system/health/settings", types.StringValue(routerName))))...)
 }
 
-func systemHealthSettingsUpsert(ctx context.Context, reg *client.Registry, plan *SystemHealthSettingsModel, diags *diagBuf) {
+func systemHealthSettingsUpsert(ctx context.Context, reg *client.Registry, plan, state *SystemHealthSettingsModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.CPUOvertempCheck.IsNull() || plan.CPUOvertempCheck.IsUnknown()) {
+	if !(plan.CPUOvertempCheck.IsNull() || plan.CPUOvertempCheck.IsUnknown()) && (state == nil || !plan.CPUOvertempCheck.Equal(state.CPUOvertempCheck)) {
 		body["cpu-overtemp-check"] = client.FormatBool(plan.CPUOvertempCheck.ValueBool())
 	}
-	if !(plan.CPUOvertempStartupDelay.IsNull() || plan.CPUOvertempStartupDelay.IsUnknown()) {
+	if !(plan.CPUOvertempStartupDelay.IsNull() || plan.CPUOvertempStartupDelay.IsUnknown()) && (state == nil || !plan.CPUOvertempStartupDelay.Equal(state.CPUOvertempStartupDelay)) {
 		body["cpu-overtemp-startup-delay"] = plan.CPUOvertempStartupDelay.ValueString()
 	}
-	if !(plan.CPUOvertempThreshold.IsNull() || plan.CPUOvertempThreshold.IsUnknown()) {
+	if !(plan.CPUOvertempThreshold.IsNull() || plan.CPUOvertempThreshold.IsUnknown()) && (state == nil || !plan.CPUOvertempThreshold.Equal(state.CPUOvertempThreshold)) {
 		body["cpu-overtemp-threshold"] = plan.CPUOvertempThreshold.ValueString()
 	}
-	if !(plan.FanControlInterval.IsNull() || plan.FanControlInterval.IsUnknown()) {
+	if !(plan.FanControlInterval.IsNull() || plan.FanControlInterval.IsUnknown()) && (state == nil || !plan.FanControlInterval.Equal(state.FanControlInterval)) {
 		body["fan-control-interval"] = plan.FanControlInterval.ValueString()
 	}
-	if !(plan.FanFullSpeedTemp.IsNull() || plan.FanFullSpeedTemp.IsUnknown()) {
+	if !(plan.FanFullSpeedTemp.IsNull() || plan.FanFullSpeedTemp.IsUnknown()) && (state == nil || !plan.FanFullSpeedTemp.Equal(state.FanFullSpeedTemp)) {
 		body["fan-full-speed-temp"] = plan.FanFullSpeedTemp.ValueString()
 	}
-	if !(plan.FanMinSpeedPercent.IsNull() || plan.FanMinSpeedPercent.IsUnknown()) {
+	if !(plan.FanMinSpeedPercent.IsNull() || plan.FanMinSpeedPercent.IsUnknown()) && (state == nil || !plan.FanMinSpeedPercent.Equal(state.FanMinSpeedPercent)) {
 		body["fan-min-speed-percent"] = plan.FanMinSpeedPercent.ValueString()
 	}
-	if !(plan.FanMode.IsNull() || plan.FanMode.IsUnknown()) {
+	if !(plan.FanMode.IsNull() || plan.FanMode.IsUnknown()) && (state == nil || !plan.FanMode.Equal(state.FanMode)) {
 		body["fan-mode"] = plan.FanMode.ValueString()
 	}
-	if !(plan.FanOnThreshold.IsNull() || plan.FanOnThreshold.IsUnknown()) {
+	if !(plan.FanOnThreshold.IsNull() || plan.FanOnThreshold.IsUnknown()) && (state == nil || !plan.FanOnThreshold.Equal(state.FanOnThreshold)) {
 		body["fan-on-threshold"] = plan.FanOnThreshold.ValueString()
 	}
-	if !(plan.FanSwitch.IsNull() || plan.FanSwitch.IsUnknown()) {
+	if !(plan.FanSwitch.IsNull() || plan.FanSwitch.IsUnknown()) && (state == nil || !plan.FanSwitch.Equal(state.FanSwitch)) {
 		body["fan-switch"] = plan.FanSwitch.ValueString()
 	}
-	if !(plan.FanTargetTemp.IsNull() || plan.FanTargetTemp.IsUnknown()) {
+	if !(plan.FanTargetTemp.IsNull() || plan.FanTargetTemp.IsUnknown()) && (state == nil || !plan.FanTargetTemp.Equal(state.FanTargetTemp)) {
 		body["fan-target-temp"] = plan.FanTargetTemp.ValueString()
 	}
-	if !(plan.UseFan.IsNull() || plan.UseFan.IsUnknown()) {
+	if !(plan.UseFan.IsNull() || plan.UseFan.IsUnknown()) && (state == nil || !plan.UseFan.Equal(state.UseFan)) {
 		body["use-fan"] = plan.UseFan.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/system/health/settings", body)

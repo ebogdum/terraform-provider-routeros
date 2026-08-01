@@ -727,6 +727,7 @@ func (r *ToolTrafficGeneratorPacketTemplateResource) Create(ctx context.Context,
 		return
 	}
 	toolTrafficGeneratorPacketTemplateApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -768,55 +769,55 @@ func (r *ToolTrafficGeneratorPacketTemplateResource) Update(ctx context.Context,
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Data.Equal(state.Data) {
+	if !plan.Data.Equal(state.Data) && !plan.Data.IsUnknown() {
 		body["data"] = plan.Data.ValueString()
 	}
-	if !plan.DataByte.Equal(state.DataByte) {
+	if !plan.DataByte.Equal(state.DataByte) && !plan.DataByte.IsUnknown() {
 		body["data-byte"] = client.FormatInt64(plan.DataByte.ValueInt64())
 	}
-	if !plan.HeaderStack.Equal(state.HeaderStack) {
+	if !plan.HeaderStack.Equal(state.HeaderStack) && !plan.HeaderStack.IsUnknown() {
 		body["header-stack"] = plan.HeaderStack.ValueString()
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.IPID.Equal(state.IPID) {
+	if !plan.IPID.Equal(state.IPID) && !plan.IPID.IsUnknown() {
 		body["ip-id"] = plan.IPID.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Port.Equal(state.Port) {
+	if !plan.Port.Equal(state.Port) && !plan.Port.IsUnknown() {
 		body["port"] = plan.Port.ValueString()
 	}
-	if !plan.TCPAck.Equal(state.TCPAck) {
+	if !plan.TCPAck.Equal(state.TCPAck) && !plan.TCPAck.IsUnknown() {
 		body["tcp-ack"] = plan.TCPAck.ValueString()
 	}
-	if !plan.TCPDataOffset.Equal(state.TCPDataOffset) {
+	if !plan.TCPDataOffset.Equal(state.TCPDataOffset) && !plan.TCPDataOffset.IsUnknown() {
 		body["tcp-data-offset"] = plan.TCPDataOffset.ValueString()
 	}
-	if !plan.TCPDstPort.Equal(state.TCPDstPort) {
+	if !plan.TCPDstPort.Equal(state.TCPDstPort) && !plan.TCPDstPort.IsUnknown() {
 		body["tcp-dst-port"] = plan.TCPDstPort.ValueString()
 	}
-	if !plan.TCPFlags.Equal(state.TCPFlags) {
+	if !plan.TCPFlags.Equal(state.TCPFlags) && !plan.TCPFlags.IsUnknown() {
 		body["tcp-flags"] = plan.TCPFlags.ValueString()
 	}
-	if !plan.TCPSrcPort.Equal(state.TCPSrcPort) {
+	if !plan.TCPSrcPort.Equal(state.TCPSrcPort) && !plan.TCPSrcPort.IsUnknown() {
 		body["tcp-src-port"] = plan.TCPSrcPort.ValueString()
 	}
-	if !plan.TCPSyn.Equal(state.TCPSyn) {
+	if !plan.TCPSyn.Equal(state.TCPSyn) && !plan.TCPSyn.IsUnknown() {
 		body["tcp-syn"] = plan.TCPSyn.ValueString()
 	}
-	if !plan.TCPUrgentPointer.Equal(state.TCPUrgentPointer) {
+	if !plan.TCPUrgentPointer.Equal(state.TCPUrgentPointer) && !plan.TCPUrgentPointer.IsUnknown() {
 		body["tcp-urgent-pointer"] = plan.TCPUrgentPointer.ValueString()
 	}
-	if !plan.TCPWindowSize.Equal(state.TCPWindowSize) {
+	if !plan.TCPWindowSize.Equal(state.TCPWindowSize) && !plan.TCPWindowSize.IsUnknown() {
 		body["tcp-window-size"] = plan.TCPWindowSize.ValueString()
 	}
-	if !plan.VLANID.Equal(state.VLANID) {
+	if !plan.VLANID.Equal(state.VLANID) && !plan.VLANID.IsUnknown() {
 		body["vlan-id"] = plan.VLANID.ValueString()
 	}
 	if !plan.ComputeChecksumFromOffset.Equal(state.ComputeChecksumFromOffset) && !plan.ComputeChecksumFromOffset.IsUnknown() {
@@ -910,6 +911,7 @@ func (r *ToolTrafficGeneratorPacketTemplateResource) Update(ctx context.Context,
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

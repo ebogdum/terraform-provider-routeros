@@ -32,7 +32,6 @@ resource "routeros_interface_ethernet" "ethernet_example" {
   # fec_mode = "off"
   # flowcntrl = "replace-me"
   # ignore_rx_los = false
-  # l2_mtu = 0
   # loop_protect = "default"
   # loop_protect_disable_time = "1h"
   # loop_protect_send_interval = "1h"
@@ -102,7 +101,6 @@ This resource supports the following arguments:
 * `full_duplex` - (Read-only) Type: `string`.
 * `hastxqueuestats` - (Read-only) Type: `bool`.
 * `ignore_rx_los` - (Optional) Type: `bool`.
-* `l2_mtu` - (Read-only) Type: `int`.
 * `l2mtu` - (Optional) Type: `string`. RouterOS `l2mtu`.
 * `link_partner_advertising` - (Read-only) Type: `string`.
 * `loop_protect` - (Optional) Type: `string`.

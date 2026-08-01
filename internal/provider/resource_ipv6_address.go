@@ -228,6 +228,7 @@ func (r *IPV6AddressResource) Create(ctx context.Context, req resource.CreateReq
 		return
 	}
 	iPV6AddressApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -269,31 +270,31 @@ func (r *IPV6AddressResource) Update(ctx context.Context, req resource.UpdateReq
 		return
 	}
 	body := client.Object{}
-	if !plan.Address.Equal(state.Address) {
+	if !plan.Address.Equal(state.Address) && !plan.Address.IsUnknown() {
 		body["address"] = plan.Address.ValueString()
 	}
-	if !plan.Advertise.Equal(state.Advertise) {
+	if !plan.Advertise.Equal(state.Advertise) && !plan.Advertise.IsUnknown() {
 		body["advertise"] = client.FormatBool(plan.Advertise.ValueBool())
 	}
-	if !plan.AutoLinkLocal.Equal(state.AutoLinkLocal) {
+	if !plan.AutoLinkLocal.Equal(state.AutoLinkLocal) && !plan.AutoLinkLocal.IsUnknown() {
 		body["auto-link-local"] = client.FormatBool(plan.AutoLinkLocal.ValueBool())
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Eui64.Equal(state.Eui64) {
+	if !plan.Eui64.Equal(state.Eui64) && !plan.Eui64.IsUnknown() {
 		body["eui-64"] = client.FormatBool(plan.Eui64.ValueBool())
 	}
-	if !plan.FromPool.Equal(state.FromPool) {
+	if !plan.FromPool.Equal(state.FromPool) && !plan.FromPool.IsUnknown() {
 		body["from-pool"] = plan.FromPool.ValueString()
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.NoDad.Equal(state.NoDad) {
+	if !plan.NoDad.Equal(state.NoDad) && !plan.NoDad.IsUnknown() {
 		body["no-dad"] = client.FormatBool(plan.NoDad.ValueBool())
 	}
 	if !plan.FromPoolPolicy.Equal(state.FromPoolPolicy) && !plan.FromPoolPolicy.IsUnknown() {
@@ -309,6 +310,7 @@ func (r *IPV6AddressResource) Update(ctx context.Context, req resource.UpdateReq
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

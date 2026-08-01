@@ -114,6 +114,7 @@ func (r *QueueInterfaceResource) Create(ctx context.Context, req resource.Create
 	}
 	queueInterfaceApply(ctx, obj, &plan)
 	plan.ID = types.StringValue(id)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -175,6 +176,7 @@ func (r *QueueInterfaceResource) Update(ctx context.Context, req resource.Update
 	}
 	queueInterfaceApply(ctx, obj, &plan)
 	plan.ID = state.ID
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

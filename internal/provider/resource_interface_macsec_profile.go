@@ -112,6 +112,7 @@ func (r *InterfaceMacsecProfileResource) Create(ctx context.Context, req resourc
 		return
 	}
 	interfaceMacsecProfileApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -179,6 +180,7 @@ func (r *InterfaceMacsecProfileResource) Update(ctx context.Context, req resourc
 	}
 	interfaceMacsecProfileApply(ctx, obj, &plan)
 	plan.ID = state.ID
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

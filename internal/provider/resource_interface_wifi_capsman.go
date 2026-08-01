@@ -106,10 +106,11 @@ func (r *InterfaceWifiCapsmanResource) Create(ctx context.Context, req resource.
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	interfaceWifiCapsmanUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	interfaceWifiCapsmanUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -119,10 +120,16 @@ func (r *InterfaceWifiCapsmanResource) Update(ctx context.Context, req resource.
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	interfaceWifiCapsmanUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state InterfaceWifiCapsmanModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	interfaceWifiCapsmanUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -160,31 +167,31 @@ func (r *InterfaceWifiCapsmanResource) ImportState(ctx context.Context, req reso
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/interface/wifi/capsman", types.StringValue(routerName))))...)
 }
 
-func interfaceWifiCapsmanUpsert(ctx context.Context, reg *client.Registry, plan *InterfaceWifiCapsmanModel, diags *diagBuf) {
+func interfaceWifiCapsmanUpsert(ctx context.Context, reg *client.Registry, plan, state *InterfaceWifiCapsmanModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) {
+	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) && (state == nil || !plan.Enabled.Equal(state.Enabled)) {
 		body["enabled"] = client.FormatBool(plan.Enabled.ValueBool())
 	}
-	if !(plan.CaCertificate.IsNull() || plan.CaCertificate.IsUnknown()) {
+	if !(plan.CaCertificate.IsNull() || plan.CaCertificate.IsUnknown()) && (state == nil || !plan.CaCertificate.Equal(state.CaCertificate)) {
 		body["ca-certificate"] = plan.CaCertificate.ValueString()
 	}
-	if !(plan.Certificate.IsNull() || plan.Certificate.IsUnknown()) {
+	if !(plan.Certificate.IsNull() || plan.Certificate.IsUnknown()) && (state == nil || !plan.Certificate.Equal(state.Certificate)) {
 		body["certificate"] = plan.Certificate.ValueString()
 	}
-	if !(plan.Interfaces.IsNull() || plan.Interfaces.IsUnknown()) {
+	if !(plan.Interfaces.IsNull() || plan.Interfaces.IsUnknown()) && (state == nil || !plan.Interfaces.Equal(state.Interfaces)) {
 		body["interfaces"] = plan.Interfaces.ValueString()
 	}
-	if !(plan.PackagePath.IsNull() || plan.PackagePath.IsUnknown()) {
+	if !(plan.PackagePath.IsNull() || plan.PackagePath.IsUnknown()) && (state == nil || !plan.PackagePath.Equal(state.PackagePath)) {
 		body["package-path"] = plan.PackagePath.ValueString()
 	}
-	if !(plan.RequirePeerCertificate.IsNull() || plan.RequirePeerCertificate.IsUnknown()) {
+	if !(plan.RequirePeerCertificate.IsNull() || plan.RequirePeerCertificate.IsUnknown()) && (state == nil || !plan.RequirePeerCertificate.Equal(state.RequirePeerCertificate)) {
 		body["require-peer-certificate"] = plan.RequirePeerCertificate.ValueString()
 	}
-	if !(plan.UpgradePolicy.IsNull() || plan.UpgradePolicy.IsUnknown()) {
+	if !(plan.UpgradePolicy.IsNull() || plan.UpgradePolicy.IsUnknown()) && (state == nil || !plan.UpgradePolicy.Equal(state.UpgradePolicy)) {
 		body["upgrade-policy"] = plan.UpgradePolicy.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/interface/wifi/capsman", body)

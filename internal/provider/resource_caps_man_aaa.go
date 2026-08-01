@@ -86,10 +86,11 @@ func (r *CapsManAaaResource) Create(ctx context.Context, req resource.CreateRequ
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	capsManAaaUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	capsManAaaUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -99,10 +100,16 @@ func (r *CapsManAaaResource) Update(ctx context.Context, req resource.UpdateRequ
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	capsManAaaUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state CapsManAaaModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	capsManAaaUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -140,25 +147,25 @@ func (r *CapsManAaaResource) ImportState(ctx context.Context, req resource.Impor
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/caps-man/aaa", types.StringValue(routerName))))...)
 }
 
-func capsManAaaUpsert(ctx context.Context, reg *client.Registry, plan *CapsManAaaModel, diags *diagBuf) {
+func capsManAaaUpsert(ctx context.Context, reg *client.Registry, plan, state *CapsManAaaModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.CalledFormat.IsNull() || plan.CalledFormat.IsUnknown()) {
+	if !(plan.CalledFormat.IsNull() || plan.CalledFormat.IsUnknown()) && (state == nil || !plan.CalledFormat.Equal(state.CalledFormat)) {
 		body["called-format"] = plan.CalledFormat.ValueString()
 	}
-	if !(plan.InterimUpdate.IsNull() || plan.InterimUpdate.IsUnknown()) {
+	if !(plan.InterimUpdate.IsNull() || plan.InterimUpdate.IsUnknown()) && (state == nil || !plan.InterimUpdate.Equal(state.InterimUpdate)) {
 		body["interim-update"] = plan.InterimUpdate.ValueString()
 	}
-	if !(plan.MACCaching.IsNull() || plan.MACCaching.IsUnknown()) {
+	if !(plan.MACCaching.IsNull() || plan.MACCaching.IsUnknown()) && (state == nil || !plan.MACCaching.Equal(state.MACCaching)) {
 		body["mac-caching"] = plan.MACCaching.ValueString()
 	}
-	if !(plan.MACFormat.IsNull() || plan.MACFormat.IsUnknown()) {
+	if !(plan.MACFormat.IsNull() || plan.MACFormat.IsUnknown()) && (state == nil || !plan.MACFormat.Equal(state.MACFormat)) {
 		body["mac-format"] = plan.MACFormat.ValueString()
 	}
-	if !(plan.MACMode.IsNull() || plan.MACMode.IsUnknown()) {
+	if !(plan.MACMode.IsNull() || plan.MACMode.IsUnknown()) && (state == nil || !plan.MACMode.Equal(state.MACMode)) {
 		body["mac-mode"] = plan.MACMode.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/caps-man/aaa", body)

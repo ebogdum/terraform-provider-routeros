@@ -164,6 +164,7 @@ func (r *InterfaceBridgeVLANResource) Create(ctx context.Context, req resource.C
 		return
 	}
 	interfaceBridgeVLANApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -205,25 +206,25 @@ func (r *InterfaceBridgeVLANResource) Update(ctx context.Context, req resource.U
 		return
 	}
 	body := client.Object{}
-	if !plan.Bridge.Equal(state.Bridge) {
+	if !plan.Bridge.Equal(state.Bridge) && !plan.Bridge.IsUnknown() {
 		body["bridge"] = plan.Bridge.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.MvrpForbidden.Equal(state.MvrpForbidden) {
+	if !plan.MvrpForbidden.Equal(state.MvrpForbidden) && !plan.MvrpForbidden.IsUnknown() {
 		body["mvrp-forbidden"] = plan.MvrpForbidden.ValueString()
 	}
-	if !plan.Tagged.Equal(state.Tagged) {
+	if !plan.Tagged.Equal(state.Tagged) && !plan.Tagged.IsUnknown() {
 		body["tagged"] = plan.Tagged.ValueString()
 	}
-	if !plan.Untagged.Equal(state.Untagged) {
+	if !plan.Untagged.Equal(state.Untagged) && !plan.Untagged.IsUnknown() {
 		body["untagged"] = plan.Untagged.ValueString()
 	}
-	if !plan.VLANIds.Equal(state.VLANIds) {
+	if !plan.VLANIds.Equal(state.VLANIds) && !plan.VLANIds.IsUnknown() {
 		body["vlan-ids"] = plan.VLANIds.ValueString()
 	}
 	if len(body) > 0 {
@@ -236,6 +237,7 @@ func (r *InterfaceBridgeVLANResource) Update(ctx context.Context, req resource.U
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

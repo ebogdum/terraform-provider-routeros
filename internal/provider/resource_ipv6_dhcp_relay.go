@@ -162,6 +162,7 @@ func (r *IPV6DHCPRelayResource) Create(ctx context.Context, req resource.CreateR
 		return
 	}
 	iPV6DHCPRelayApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -203,10 +204,10 @@ func (r *IPV6DHCPRelayResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
 	if !plan.DelayThreshold.Equal(state.DelayThreshold) && !plan.DelayThreshold.IsUnknown() {
@@ -240,6 +241,7 @@ func (r *IPV6DHCPRelayResource) Update(ctx context.Context, req resource.UpdateR
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

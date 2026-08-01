@@ -298,6 +298,7 @@ func (r *InterfaceVplsResource) Create(ctx context.Context, req resource.CreateR
 		return
 	}
 	interfaceVplsApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -339,49 +340,49 @@ func (r *InterfaceVplsResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 	body := client.Object{}
-	if !plan.ARP.Equal(state.ARP) {
+	if !plan.ARP.Equal(state.ARP) && !plan.ARP.IsUnknown() {
 		body["arp"] = plan.ARP.ValueString()
 	}
-	if !plan.ARPTimeout.Equal(state.ARPTimeout) {
+	if !plan.ARPTimeout.Equal(state.ARPTimeout) && !plan.ARPTimeout.IsUnknown() {
 		body["arp-timeout"] = plan.ARPTimeout.ValueString()
 	}
-	if !plan.Bridge.Equal(state.Bridge) {
+	if !plan.Bridge.Equal(state.Bridge) && !plan.Bridge.IsUnknown() {
 		body["bridge"] = plan.Bridge.ValueString()
 	}
-	if !plan.BridgeCost.Equal(state.BridgeCost) {
+	if !plan.BridgeCost.Equal(state.BridgeCost) && !plan.BridgeCost.IsUnknown() {
 		body["bridge-cost"] = plan.BridgeCost.ValueString()
 	}
-	if !plan.BridgeHorizon.Equal(state.BridgeHorizon) {
+	if !plan.BridgeHorizon.Equal(state.BridgeHorizon) && !plan.BridgeHorizon.IsUnknown() {
 		body["bridge-horizon"] = plan.BridgeHorizon.ValueString()
 	}
-	if !plan.BridgePvid.Equal(state.BridgePvid) {
+	if !plan.BridgePvid.Equal(state.BridgePvid) && !plan.BridgePvid.IsUnknown() {
 		body["bridge-pvid"] = plan.BridgePvid.ValueString()
 	}
-	if !plan.CiscoStaticID.Equal(state.CiscoStaticID) {
+	if !plan.CiscoStaticID.Equal(state.CiscoStaticID) && !plan.CiscoStaticID.IsUnknown() {
 		body["cisco-static-id"] = plan.CiscoStaticID.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.MACAddress.Equal(state.MACAddress) {
+	if !plan.MACAddress.Equal(state.MACAddress) && !plan.MACAddress.IsUnknown() {
 		body["mac-address"] = plan.MACAddress.ValueString()
 	}
-	if !plan.MTU.Equal(state.MTU) {
+	if !plan.MTU.Equal(state.MTU) && !plan.MTU.IsUnknown() {
 		body["mtu"] = client.FormatInt64(plan.MTU.ValueInt64())
 	}
-	if !plan.PwControlWord.Equal(state.PwControlWord) {
+	if !plan.PwControlWord.Equal(state.PwControlWord) && !plan.PwControlWord.IsUnknown() {
 		body["pw-control-word"] = plan.PwControlWord.ValueString()
 	}
-	if !plan.PwL2mtu.Equal(state.PwL2mtu) {
+	if !plan.PwL2mtu.Equal(state.PwL2mtu) && !plan.PwL2mtu.IsUnknown() {
 		body["pw-l2mtu"] = plan.PwL2mtu.ValueString()
 	}
-	if !plan.PwType.Equal(state.PwType) {
+	if !plan.PwType.Equal(state.PwType) && !plan.PwType.IsUnknown() {
 		body["pw-type"] = plan.PwType.ValueString()
 	}
-	if !plan.VplsID.Equal(state.VplsID) {
+	if !plan.VplsID.Equal(state.VplsID) && !plan.VplsID.IsUnknown() {
 		body["vpls-id"] = plan.VplsID.ValueString()
 	}
 	if !plan.DisableRunningCheck.Equal(state.DisableRunningCheck) && !plan.DisableRunningCheck.IsUnknown() {
@@ -403,6 +404,7 @@ func (r *InterfaceVplsResource) Update(ctx context.Context, req resource.UpdateR
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

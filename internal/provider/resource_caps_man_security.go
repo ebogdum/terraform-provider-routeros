@@ -117,6 +117,7 @@ func (r *CapsManSecurityResource) Create(ctx context.Context, req resource.Creat
 		return
 	}
 	capsManSecurityApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -158,16 +159,16 @@ func (r *CapsManSecurityResource) Update(ctx context.Context, req resource.Updat
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Encryption.Equal(state.Encryption) {
+	if !plan.Encryption.Equal(state.Encryption) && !plan.Encryption.IsUnknown() {
 		body["encryption"] = plan.Encryption.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Passphrase.Equal(state.Passphrase) {
+	if !plan.Passphrase.Equal(state.Passphrase) && !plan.Passphrase.IsUnknown() {
 		body["passphrase"] = plan.Passphrase.ValueString()
 	}
 	if len(body) > 0 {
@@ -180,6 +181,7 @@ func (r *CapsManSecurityResource) Update(ctx context.Context, req resource.Updat
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

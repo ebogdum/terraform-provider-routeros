@@ -78,10 +78,11 @@ func (r *IPUpnpResource) Create(ctx context.Context, req resource.CreateRequest,
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPUpnpUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	iPUpnpUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -91,10 +92,16 @@ func (r *IPUpnpResource) Update(ctx context.Context, req resource.UpdateRequest,
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPUpnpUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state IPUpnpModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	iPUpnpUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -132,19 +139,19 @@ func (r *IPUpnpResource) ImportState(ctx context.Context, req resource.ImportSta
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/ip/upnp", types.StringValue(routerName))))...)
 }
 
-func iPUpnpUpsert(ctx context.Context, reg *client.Registry, plan *IPUpnpModel, diags *diagBuf) {
+func iPUpnpUpsert(ctx context.Context, reg *client.Registry, plan, state *IPUpnpModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.AllowDisableExternalInterface.IsNull() || plan.AllowDisableExternalInterface.IsUnknown()) {
+	if !(plan.AllowDisableExternalInterface.IsNull() || plan.AllowDisableExternalInterface.IsUnknown()) && (state == nil || !plan.AllowDisableExternalInterface.Equal(state.AllowDisableExternalInterface)) {
 		body["allow-disable-external-interface"] = client.FormatBool(plan.AllowDisableExternalInterface.ValueBool())
 	}
-	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) {
+	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) && (state == nil || !plan.Enabled.Equal(state.Enabled)) {
 		body["enabled"] = client.FormatBool(plan.Enabled.ValueBool())
 	}
-	if !(plan.ShowDummyRule.IsNull() || plan.ShowDummyRule.IsUnknown()) {
+	if !(plan.ShowDummyRule.IsNull() || plan.ShowDummyRule.IsUnknown()) && (state == nil || !plan.ShowDummyRule.Equal(state.ShowDummyRule)) {
 		body["show-dummy-rule"] = client.FormatBool(plan.ShowDummyRule.ValueBool())
 	}
 	obj, err := c.SetSingleton(ctx, "/ip/upnp", body)

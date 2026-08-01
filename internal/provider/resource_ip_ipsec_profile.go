@@ -220,6 +220,7 @@ func (r *IPIpsecProfileResource) Create(ctx context.Context, req resource.Create
 		return
 	}
 	iPIpsecProfileApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -261,37 +262,37 @@ func (r *IPIpsecProfileResource) Update(ctx context.Context, req resource.Update
 		return
 	}
 	body := client.Object{}
-	if !plan.DhGroup.Equal(state.DhGroup) {
+	if !plan.DhGroup.Equal(state.DhGroup) && !plan.DhGroup.IsUnknown() {
 		body["dh-group"] = encodeStringList(ctx, plan.DhGroup, &resp.Diagnostics)
 	}
-	if !plan.DpdInterval.Equal(state.DpdInterval) {
+	if !plan.DpdInterval.Equal(state.DpdInterval) && !plan.DpdInterval.IsUnknown() {
 		body["dpd-interval"] = plan.DpdInterval.ValueString()
 	}
-	if !plan.DpdMaximumFailures.Equal(state.DpdMaximumFailures) {
+	if !plan.DpdMaximumFailures.Equal(state.DpdMaximumFailures) && !plan.DpdMaximumFailures.IsUnknown() {
 		body["dpd-maximum-failures"] = client.FormatInt64(plan.DpdMaximumFailures.ValueInt64())
 	}
-	if !plan.EncAlgorithm.Equal(state.EncAlgorithm) {
+	if !plan.EncAlgorithm.Equal(state.EncAlgorithm) && !plan.EncAlgorithm.IsUnknown() {
 		body["enc-algorithm"] = encodeStringList(ctx, plan.EncAlgorithm, &resp.Diagnostics)
 	}
-	if !plan.HashAlgorithm.Equal(state.HashAlgorithm) {
+	if !plan.HashAlgorithm.Equal(state.HashAlgorithm) && !plan.HashAlgorithm.IsUnknown() {
 		body["hash-algorithm"] = plan.HashAlgorithm.ValueString()
 	}
-	if !plan.Lifebytes.Equal(state.Lifebytes) {
+	if !plan.Lifebytes.Equal(state.Lifebytes) && !plan.Lifebytes.IsUnknown() {
 		body["lifebytes"] = client.FormatInt64(plan.Lifebytes.ValueInt64())
 	}
-	if !plan.Lifetime.Equal(state.Lifetime) {
+	if !plan.Lifetime.Equal(state.Lifetime) && !plan.Lifetime.IsUnknown() {
 		body["lifetime"] = plan.Lifetime.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.NATTraversal.Equal(state.NATTraversal) {
+	if !plan.NATTraversal.Equal(state.NATTraversal) && !plan.NATTraversal.IsUnknown() {
 		body["nat-traversal"] = client.FormatBool(plan.NATTraversal.ValueBool())
 	}
-	if !plan.Ppk.Equal(state.Ppk) {
+	if !plan.Ppk.Equal(state.Ppk) && !plan.Ppk.IsUnknown() {
 		body["ppk"] = plan.Ppk.ValueString()
 	}
-	if !plan.ProposalCheck.Equal(state.ProposalCheck) {
+	if !plan.ProposalCheck.Equal(state.ProposalCheck) && !plan.ProposalCheck.IsUnknown() {
 		body["proposal-check"] = plan.ProposalCheck.ValueString()
 	}
 	if !plan.PrfAlgorithm.Equal(state.PrfAlgorithm) && !plan.PrfAlgorithm.IsUnknown() {
@@ -307,6 +308,7 @@ func (r *IPIpsecProfileResource) Update(ctx context.Context, req resource.Update
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

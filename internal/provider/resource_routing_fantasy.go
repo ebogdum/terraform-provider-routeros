@@ -29,24 +29,24 @@ type RoutingFantasyResource struct {
 }
 
 type RoutingFantasyModel struct {
-	ID           types.String `tfsdk:"id"`
-	UseHold      types.String `tfsdk:"use_hold"`
-	Seed         types.String `tfsdk:"seed"`
-	PrivSize     types.String `tfsdk:"priv_size"`
-	PrivOffs     types.String `tfsdk:"priv_offs"`
-	PrefixLength types.String `tfsdk:"prefix_length"`
-	Offset       types.String `tfsdk:"offset"`
-	InstanceId   types.String `tfsdk:"instance_id"`
-	DealerId     types.String `tfsdk:"dealer_id"`
-	Count        types.String `tfsdk:"route_count"`
-	Comment      types.String `tfsdk:"comment"`
-	Disabled     types.Bool   `tfsdk:"disabled"`
-	DstAddress   types.String `tfsdk:"dst_address"`
-	Gateway      types.String `tfsdk:"gateway"`
-	Name         types.String `tfsdk:"name"`
-	Scope        types.String `tfsdk:"scope"`
-	TargetScope  types.String `tfsdk:"target_scope"`
-	Router       types.String `tfsdk:"router"`
+	ID           types.String    `tfsdk:"id"`
+	UseHold      boolStringValue `tfsdk:"use_hold"`
+	Seed         types.String    `tfsdk:"seed"`
+	PrivSize     types.String    `tfsdk:"priv_size"`
+	PrivOffs     types.String    `tfsdk:"priv_offs"`
+	PrefixLength types.String    `tfsdk:"prefix_length"`
+	Offset       types.String    `tfsdk:"offset"`
+	InstanceId   types.String    `tfsdk:"instance_id"`
+	DealerId     types.String    `tfsdk:"dealer_id"`
+	Count        types.String    `tfsdk:"route_count"`
+	Comment      types.String    `tfsdk:"comment"`
+	Disabled     types.Bool      `tfsdk:"disabled"`
+	DstAddress   types.String    `tfsdk:"dst_address"`
+	Gateway      types.String    `tfsdk:"gateway"`
+	Name         types.String    `tfsdk:"name"`
+	Scope        types.String    `tfsdk:"scope"`
+	TargetScope  types.String    `tfsdk:"target_scope"`
+	Router       types.String    `tfsdk:"router"`
 }
 
 func NewRoutingFantasyResource() resource.Resource { return &RoutingFantasyResource{} }
@@ -73,6 +73,7 @@ func (r *RoutingFantasyResource) Schema(_ context.Context, _ resource.SchemaRequ
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"use_hold": schema.StringAttribute{
+				CustomType:  boolStringType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "RouterOS `use-hold`.",
@@ -225,6 +226,7 @@ func (r *RoutingFantasyResource) Create(ctx context.Context, req resource.Create
 		return
 	}
 	routingFantasyApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -266,25 +268,25 @@ func (r *RoutingFantasyResource) Update(ctx context.Context, req resource.Update
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.DstAddress.Equal(state.DstAddress) {
+	if !plan.DstAddress.Equal(state.DstAddress) && !plan.DstAddress.IsUnknown() {
 		body["dst-address"] = plan.DstAddress.ValueString()
 	}
-	if !plan.Gateway.Equal(state.Gateway) {
+	if !plan.Gateway.Equal(state.Gateway) && !plan.Gateway.IsUnknown() {
 		body["gateway"] = plan.Gateway.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Scope.Equal(state.Scope) {
+	if !plan.Scope.Equal(state.Scope) && !plan.Scope.IsUnknown() {
 		body["scope"] = plan.Scope.ValueString()
 	}
-	if !plan.TargetScope.Equal(state.TargetScope) {
+	if !plan.TargetScope.Equal(state.TargetScope) && !plan.TargetScope.IsUnknown() {
 		body["target-scope"] = plan.TargetScope.ValueString()
 	}
 	if !plan.Count.Equal(state.Count) && !plan.Count.IsUnknown() {
@@ -324,6 +326,7 @@ func (r *RoutingFantasyResource) Update(ctx context.Context, req resource.Update
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -381,9 +384,9 @@ func routingFantasyApply(ctx context.Context, obj client.Object, m *RoutingFanta
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["use-hold"]; ok && v != "" {
-		m.UseHold = types.StringValue(v)
+		m.UseHold = newBoolStringValue(v)
 	} else {
-		m.UseHold = types.StringNull()
+		m.UseHold = newBoolStringNull()
 	}
 	if v, ok := obj["seed"]; ok && v != "" {
 		m.Seed = types.StringValue(v)

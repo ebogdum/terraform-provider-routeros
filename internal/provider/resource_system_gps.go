@@ -153,6 +153,7 @@ func (r *SystemGpsResource) Create(ctx context.Context, req resource.CreateReque
 		return
 	}
 	systemGpsApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -194,28 +195,28 @@ func (r *SystemGpsResource) Update(ctx context.Context, req resource.UpdateReque
 		return
 	}
 	body := client.Object{}
-	if !plan.Channel.Equal(state.Channel) {
+	if !plan.Channel.Equal(state.Channel) && !plan.Channel.IsUnknown() {
 		body["channel"] = plan.Channel.ValueString()
 	}
-	if !plan.CoordinateFormat.Equal(state.CoordinateFormat) {
+	if !plan.CoordinateFormat.Equal(state.CoordinateFormat) && !plan.CoordinateFormat.IsUnknown() {
 		body["coordinate-format"] = plan.CoordinateFormat.ValueString()
 	}
-	if !plan.Enabled.Equal(state.Enabled) {
+	if !plan.Enabled.Equal(state.Enabled) && !plan.Enabled.IsUnknown() {
 		body["enabled"] = plan.Enabled.ValueString()
 	}
-	if !plan.GpsAntennaSelect.Equal(state.GpsAntennaSelect) {
+	if !plan.GpsAntennaSelect.Equal(state.GpsAntennaSelect) && !plan.GpsAntennaSelect.IsUnknown() {
 		body["gps-antenna-select"] = plan.GpsAntennaSelect.ValueString()
 	}
-	if !plan.InitChannel.Equal(state.InitChannel) {
+	if !plan.InitChannel.Equal(state.InitChannel) && !plan.InitChannel.IsUnknown() {
 		body["init-channel"] = plan.InitChannel.ValueString()
 	}
-	if !plan.InitString.Equal(state.InitString) {
+	if !plan.InitString.Equal(state.InitString) && !plan.InitString.IsUnknown() {
 		body["init-string"] = plan.InitString.ValueString()
 	}
-	if !plan.Port.Equal(state.Port) {
+	if !plan.Port.Equal(state.Port) && !plan.Port.IsUnknown() {
 		body["port"] = plan.Port.ValueString()
 	}
-	if !plan.SetSystemTime.Equal(state.SetSystemTime) {
+	if !plan.SetSystemTime.Equal(state.SetSystemTime) && !plan.SetSystemTime.IsUnknown() {
 		body["set-system-time"] = plan.SetSystemTime.ValueString()
 	}
 	if len(body) > 0 {
@@ -228,6 +229,7 @@ func (r *SystemGpsResource) Update(ctx context.Context, req resource.UpdateReque
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

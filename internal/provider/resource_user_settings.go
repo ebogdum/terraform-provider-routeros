@@ -74,10 +74,11 @@ func (r *UserSettingsResource) Create(ctx context.Context, req resource.CreateRe
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	userSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	userSettingsUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -87,10 +88,16 @@ func (r *UserSettingsResource) Update(ctx context.Context, req resource.UpdateRe
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	userSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state UserSettingsModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	userSettingsUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -128,16 +135,16 @@ func (r *UserSettingsResource) ImportState(ctx context.Context, req resource.Imp
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/user/settings", types.StringValue(routerName))))...)
 }
 
-func userSettingsUpsert(ctx context.Context, reg *client.Registry, plan *UserSettingsModel, diags *diagBuf) {
+func userSettingsUpsert(ctx context.Context, reg *client.Registry, plan, state *UserSettingsModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.MinimumCategories.IsNull() || plan.MinimumCategories.IsUnknown()) {
+	if !(plan.MinimumCategories.IsNull() || plan.MinimumCategories.IsUnknown()) && (state == nil || !plan.MinimumCategories.Equal(state.MinimumCategories)) {
 		body["minimum-categories"] = client.FormatInt64(plan.MinimumCategories.ValueInt64())
 	}
-	if !(plan.MinimumPasswordLength.IsNull() || plan.MinimumPasswordLength.IsUnknown()) {
+	if !(plan.MinimumPasswordLength.IsNull() || plan.MinimumPasswordLength.IsUnknown()) && (state == nil || !plan.MinimumPasswordLength.Equal(state.MinimumPasswordLength)) {
 		body["minimum-password-length"] = client.FormatInt64(plan.MinimumPasswordLength.ValueInt64())
 	}
 	obj, err := c.SetSingleton(ctx, "/user/settings", body)

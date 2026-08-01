@@ -31,20 +31,20 @@ type InterfaceIpipResource struct {
 }
 
 type InterfaceIpipModel struct {
-	ID            types.String `tfsdk:"id"`
-	AllowFastPath types.String `tfsdk:"allow_fast_path"`
-	ClampTCPMss   types.Bool   `tfsdk:"clamp_tcp_mss"`
-	Comment       types.String `tfsdk:"comment"`
-	Disabled      types.Bool   `tfsdk:"disabled"`
-	DontFragment  types.String `tfsdk:"dont_fragment"`
-	Dscp          types.String `tfsdk:"dscp"`
-	IpsecSecret   types.String `tfsdk:"ipsec_secret"`
-	Keepalive     types.String `tfsdk:"keepalive"`
-	LocalAddress  types.String `tfsdk:"local_address"`
-	MTU           types.String `tfsdk:"mtu"`
-	Name          types.String `tfsdk:"name"`
-	RemoteAddress types.String `tfsdk:"remote_address"`
-	Router        types.String `tfsdk:"router"`
+	ID            types.String    `tfsdk:"id"`
+	AllowFastPath boolStringValue `tfsdk:"allow_fast_path"`
+	ClampTCPMss   types.Bool      `tfsdk:"clamp_tcp_mss"`
+	Comment       types.String    `tfsdk:"comment"`
+	Disabled      types.Bool      `tfsdk:"disabled"`
+	DontFragment  types.String    `tfsdk:"dont_fragment"`
+	Dscp          types.String    `tfsdk:"dscp"`
+	IpsecSecret   types.String    `tfsdk:"ipsec_secret"`
+	Keepalive     types.String    `tfsdk:"keepalive"`
+	LocalAddress  types.String    `tfsdk:"local_address"`
+	MTU           types.String    `tfsdk:"mtu"`
+	Name          types.String    `tfsdk:"name"`
+	RemoteAddress types.String    `tfsdk:"remote_address"`
+	Router        types.String    `tfsdk:"router"`
 }
 
 func NewInterfaceIpipResource() resource.Resource { return &InterfaceIpipResource{} }
@@ -71,6 +71,7 @@ func (r *InterfaceIpipResource) Schema(_ context.Context, _ resource.SchemaReque
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"allow_fast_path": schema.StringAttribute{
+				CustomType:  boolStringType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "RouterOS `allow-fast-path`.",
@@ -195,6 +196,7 @@ func (r *InterfaceIpipResource) Create(ctx context.Context, req resource.CreateR
 		return
 	}
 	interfaceIpipApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -236,37 +238,37 @@ func (r *InterfaceIpipResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 	body := client.Object{}
-	if !plan.ClampTCPMss.Equal(state.ClampTCPMss) {
+	if !plan.ClampTCPMss.Equal(state.ClampTCPMss) && !plan.ClampTCPMss.IsUnknown() {
 		body["clamp-tcp-mss"] = client.FormatBool(plan.ClampTCPMss.ValueBool())
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.DontFragment.Equal(state.DontFragment) {
+	if !plan.DontFragment.Equal(state.DontFragment) && !plan.DontFragment.IsUnknown() {
 		body["dont-fragment"] = plan.DontFragment.ValueString()
 	}
-	if !plan.Dscp.Equal(state.Dscp) {
+	if !plan.Dscp.Equal(state.Dscp) && !plan.Dscp.IsUnknown() {
 		body["dscp"] = plan.Dscp.ValueString()
 	}
-	if !plan.IpsecSecret.Equal(state.IpsecSecret) {
+	if !plan.IpsecSecret.Equal(state.IpsecSecret) && !plan.IpsecSecret.IsUnknown() {
 		body["ipsec-secret"] = plan.IpsecSecret.ValueString()
 	}
-	if !plan.Keepalive.Equal(state.Keepalive) {
+	if !plan.Keepalive.Equal(state.Keepalive) && !plan.Keepalive.IsUnknown() {
 		body["keepalive"] = plan.Keepalive.ValueString()
 	}
-	if !plan.LocalAddress.Equal(state.LocalAddress) {
+	if !plan.LocalAddress.Equal(state.LocalAddress) && !plan.LocalAddress.IsUnknown() {
 		body["local-address"] = plan.LocalAddress.ValueString()
 	}
-	if !plan.MTU.Equal(state.MTU) {
+	if !plan.MTU.Equal(state.MTU) && !plan.MTU.IsUnknown() {
 		body["mtu"] = plan.MTU.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.RemoteAddress.Equal(state.RemoteAddress) {
+	if !plan.RemoteAddress.Equal(state.RemoteAddress) && !plan.RemoteAddress.IsUnknown() {
 		body["remote-address"] = plan.RemoteAddress.ValueString()
 	}
 	if !plan.AllowFastPath.Equal(state.AllowFastPath) && !plan.AllowFastPath.IsUnknown() {
@@ -282,6 +284,7 @@ func (r *InterfaceIpipResource) Update(ctx context.Context, req resource.UpdateR
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -339,9 +342,9 @@ func interfaceIpipApply(ctx context.Context, obj client.Object, m *InterfaceIpip
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["allow-fast-path"]; ok && v != "" {
-		m.AllowFastPath = types.StringValue(v)
+		m.AllowFastPath = newBoolStringValue(v)
 	} else {
-		m.AllowFastPath = types.StringNull()
+		m.AllowFastPath = newBoolStringNull()
 	}
 	if v, ok := obj["clamp-tcp-mss"]; ok {
 		_ = v

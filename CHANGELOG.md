@@ -7,6 +7,117 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.0] - 2026-08-01
+
+### Fixed
+
+Defects found by an exhaustive conformance campaign against a live RouterOS
+7.23.2 hAP: a non-mutating audit of every writable attribute (4277 keys across
+308 menus) plus create/apply/destroy of ~200 resources — all 63 applicable
+singletons and ~135 collections spanning every value type, including the
+privileged firewall/address/route/user menus and multi-resource IPsec, OSPF
+and IS-IS chains. Every fix below was
+reproduced against the device and re-verified:
+
+- **Fresh creates no longer fail with "invalid result object after apply."** A
+  Computed attribute the device never returns (e.g. `/ip/cloud dns_name`) was
+  left at the plan's Unknown on create; the result is now swept so every
+  unresolved attribute is null. Affects every resource.
+- **`/tool/mac-server`** applied with `allowed-interface-list` unset no longer
+  trips the lockout guard (the field is only guarded when actually written).
+- **`routeros_routing_table`** `fib`, **`routeros_ip_route`** and
+  **`routeros_ipv6_route`** `blackhole` round-trip: RouterOS returns these as
+  valueless presence flags, so a row created with the flag set no longer reads
+  back as null.
+- **`routeros_ipv6_firewall_address_list`** accepts a bare host address: a
+  config `2001:db8::1` and the `2001:db8::1/128` RouterOS stores now compare
+  equal (semantic equality), ending the spurious diff / inconsistent result.
+- **`routeros_queue_simple` / `routeros_queue_tree`** rate fields round-trip
+  regardless of `k`/`M`/`G` suffix: `10M/10M` and `10000000/10000000` are
+  equal.
+- **`routeros_user_group` / `routeros_system_script`** `policy` round-trips.
+  RouterOS returns a group's policy as the full permission set with everything
+  not granted negated (`read,winbox,!ftp,!telnet,...`) in its own order, so the
+  list a user wrote never matched what came back. `policy` is now an
+  order-insensitive set of the granted permissions.
+- **`routeros_ip_socks_users`** `rate_limit` (k/M/G suffix) and
+  **`routeros_tool_graphing_resource`** `allow_address` (bare host `/32`) now
+  round-trip.
+- **`routeros_ip_socks_users` `rate_limit`** now round-trips a single rate: a
+  single value is symmetric (`10M` = `10M/10M`), so the rate semantic type
+  normalises a bare rate to its rx/tx pair. **`routeros_ip_socksify` `comment`**
+  removed (the /ip/socks menu has no comment field; it was silently dropped).
+- **`routeros_radius` `timeout`** was typed as an integer but RouterOS stores it
+  as a duration (`1s`), so any value read back null. Retyped to a duration string.
+- **`routeros_interface` `type`, `routeros_interface_bridge_port` `role`/`status`**
+  were typed as integers but hold strings (`ether`, `designated-port`,
+  `in-bridge`), so they always read back null. Retyped to (read-only) strings.
+- **Full bool-string class swept from live-device data** — every string-typed
+  attribute RouterOS reports as `true`/`false` now uses the semantic type and
+  keeps its configured value when the device omits the default: `bridge.dhcpv6_snooping`,
+  `bridge_port.hw`/`trusted_dhcpv6`, `interface_vlan.use_service_tag`/`mvrp`,
+  `ip_neighbor_discovery_settings.add_dns_entries`/`lldp_med`,
+  `system_routerboard_settings.auto_upgrade`/`silent_boot`/`force_backup_booter`, and more.
+- **Boolean-valued string attributes now round-trip regardless of `yes`/`no`
+  vs `true`/`false`.** RouterOS accepts `yes`/`no` on input but reads these
+  fields back as `true`/`false`; a config of `no` never matched. A semantic
+  type now compares them as booleans, fixing e.g. `interface_gre6`/`ipipv6`
+  `clamp_tcp_mss`, `interface_ipip` `allow_fast_path`, `ip_socks_users`
+  `only_one`, `mpls_ldp_interface` `accept_dynamic_neighbors`,
+  `tool_graphing_resource` `store_on_disk`.
+- **`routeros_tool_bandwidth_server`** `allowed_addresses4` / `allowed_addresses6`
+  accept a bare host (stored `/32` / `/128`), and **`routeros_tool_traffic_generator`**
+  / **`routeros_tool_sniffer`** `running` is read-only runtime state, no longer
+  settable.
+- **`routeros_ip_address`** `network` is read-only (derived from `address`);
+  it was settable, so a config value conflicted with the computed one.
+- **`routeros_ppp_secret`** `limit_bytes_in` / `limit_bytes_out` round-trip
+  regardless of `k`/`M`/`G` suffix, and `remote_ipv6_prefix` accepts a bare
+  IPv6 host (stored as `/128`).
+- **`routeros_ppp_l2tp_secret`** `address` accepts a bare IPv4 host: the device
+  stores it as `/32`, so `192.0.2.10` and `192.0.2.10/32` now compare equal
+  (the host-address semantic type now covers IPv4 `/32` as well as IPv6 `/128`).
+- **`routeros_ip_hotspot_ip_binding`** `address` is validated as a single host
+  IP, not a CIDR, matching what RouterOS stores.
+- **`routeros_interface_ethernet_switch_port`** applied cleanly again: it wrote
+  its `name`/`switch` identifiers into the Set body, which the device rejects as
+  unknown parameters, so every apply failed. The identifiers now only select
+  the row to adopt.
+- **Fixed-row menus that reject Add now adopt an existing row.**
+  `routeros_interface_ethernet_switch_port_isolation`,
+  `routeros_system_resource_irq_rps` and `routeros_system_resource_irq` had a
+  Computed-only key, so Create always failed against the device's fixed rows.
+  Their key (`name`, or `irq`) is now settable and the matching row is adopted
+  and configured; Delete drops it from state.
+
+### Removed
+
+- **`routeros_tool_graphing_interface` / `_queue` / `_resource`** `comment` —
+  the graphing menus silently accept but never store a comment, so it never
+  round-tripped. Removed.
+- **`routeros_interface_ethernet_poe`** `export`, `monitor`, `duration` — these
+  are RouterOS CLI actions, not settable attributes; the device rejected them as
+  unknown parameters. Removed.
+- **Phantom attributes that mapped to non-existent RouterOS keys.** A generator
+  quirk split acronyms/compounds with a stray dash, producing duplicate
+  attributes whose device key the router rejects as an "unknown parameter".
+  Each was already non-functional (always read null; the writable ones failed
+  apply if set). Removed, keeping the correct sibling attribute:
+  `l2_mtu` (→ `l2mtu`) on `interface`, `interface_ethernet`,
+  `interface_wireguard`; `do_h_servers` (→ `doh_servers`) and
+  `verify_do_h_certificate` (→ `verify_doh_cert`) on `ip_dns_forwarders`;
+  `qo_s_classifier` (→ `qos_classifier`) and `ft_preserve_vlan_id`
+  (→ `ft_preserve_vlanid`) on the `interface_wifi*` resources.
+- **`routeros_system_backup`, `routeros_tool_sniffer_stop`,
+  `routeros_tool_profile_cpu`** (resources) — these map to RouterOS action
+  endpoints (`/system/backup`, `/tool/sniffer/stop`, `/tool/profile/cpu`), not
+  manageable state; the device returns 400/500 on any read or add, so they could
+  never apply. Removed (the matching action data sources were already dropped).
+- **`routeros_system_resource_hardware`** (resource) — the device exposes
+  `/system/resource/hardware` as read-only inventory that accepts neither Add
+  nor Set, so the resource could never apply. Use the
+  `routeros_system_resource_hardware` **data source**, which is unchanged.
+
 ## [2.0.2] - 2026-07-31
 
 ### Changed

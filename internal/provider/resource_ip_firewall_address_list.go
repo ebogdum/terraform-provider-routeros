@@ -139,6 +139,7 @@ func (r *IPFirewallAddressListResource) Create(ctx context.Context, req resource
 		return
 	}
 	iPFirewallAddressListApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -180,19 +181,19 @@ func (r *IPFirewallAddressListResource) Update(ctx context.Context, req resource
 		return
 	}
 	body := client.Object{}
-	if !plan.Address.Equal(state.Address) {
+	if !plan.Address.Equal(state.Address) && !plan.Address.IsUnknown() {
 		body["address"] = plan.Address.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.List.Equal(state.List) {
+	if !plan.List.Equal(state.List) && !plan.List.IsUnknown() {
 		body["list"] = plan.List.ValueString()
 	}
-	if !plan.Timeout.Equal(state.Timeout) {
+	if !plan.Timeout.Equal(state.Timeout) && !plan.Timeout.IsUnknown() {
 		body["timeout"] = plan.Timeout.ValueString()
 	}
 	if len(body) > 0 {
@@ -205,6 +206,7 @@ func (r *IPFirewallAddressListResource) Update(ctx context.Context, req resource
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

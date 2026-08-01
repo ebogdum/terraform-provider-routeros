@@ -29,14 +29,14 @@ type MPLSLdpAcceptFilterResource struct {
 }
 
 type MPLSLdpAcceptFilterModel struct {
-	ID       types.String `tfsdk:"id"`
-	Neighbor types.String `tfsdk:"neighbor"`
-	Accept   types.String `tfsdk:"accept"`
-	Comment  types.String `tfsdk:"comment"`
-	Disabled types.Bool   `tfsdk:"disabled"`
-	Prefix   types.String `tfsdk:"prefix"`
-	Vrf      types.String `tfsdk:"vrf"`
-	Router   types.String `tfsdk:"router"`
+	ID       types.String    `tfsdk:"id"`
+	Neighbor types.String    `tfsdk:"neighbor"`
+	Accept   boolStringValue `tfsdk:"accept"`
+	Comment  types.String    `tfsdk:"comment"`
+	Disabled types.Bool      `tfsdk:"disabled"`
+	Prefix   types.String    `tfsdk:"prefix"`
+	Vrf      types.String    `tfsdk:"vrf"`
+	Router   types.String    `tfsdk:"router"`
 }
 
 func NewMPLSLdpAcceptFilterResource() resource.Resource { return &MPLSLdpAcceptFilterResource{} }
@@ -68,6 +68,7 @@ func (r *MPLSLdpAcceptFilterResource) Schema(_ context.Context, _ resource.Schem
 				Description: "RouterOS `neighbor`.",
 			},
 			"accept": schema.StringAttribute{
+				CustomType:  boolStringType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "RouterOS `accept`.",
@@ -135,6 +136,7 @@ func (r *MPLSLdpAcceptFilterResource) Create(ctx context.Context, req resource.C
 		return
 	}
 	mPLSLdpAcceptFilterApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -176,16 +178,16 @@ func (r *MPLSLdpAcceptFilterResource) Update(ctx context.Context, req resource.U
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Prefix.Equal(state.Prefix) {
+	if !plan.Prefix.Equal(state.Prefix) && !plan.Prefix.IsUnknown() {
 		body["prefix"] = plan.Prefix.ValueString()
 	}
-	if !plan.Vrf.Equal(state.Vrf) {
+	if !plan.Vrf.Equal(state.Vrf) && !plan.Vrf.IsUnknown() {
 		body["vrf"] = plan.Vrf.ValueString()
 	}
 	if !plan.Accept.Equal(state.Accept) && !plan.Accept.IsUnknown() {
@@ -204,6 +206,7 @@ func (r *MPLSLdpAcceptFilterResource) Update(ctx context.Context, req resource.U
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -266,9 +269,9 @@ func mPLSLdpAcceptFilterApply(ctx context.Context, obj client.Object, m *MPLSLdp
 		m.Neighbor = types.StringNull()
 	}
 	if v, ok := obj["accept"]; ok && v != "" {
-		m.Accept = types.StringValue(v)
+		m.Accept = newBoolStringValue(v)
 	} else {
-		m.Accept = types.StringNull()
+		m.Accept = newBoolStringNull()
 	}
 	if v, ok := obj["comment"]; ok {
 		_ = v

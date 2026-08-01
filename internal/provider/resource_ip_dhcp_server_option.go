@@ -128,6 +128,7 @@ func (r *IPDHCPServerOptionResource) Create(ctx context.Context, req resource.Cr
 		return
 	}
 	iPDHCPServerOptionApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -169,19 +170,19 @@ func (r *IPDHCPServerOptionResource) Update(ctx context.Context, req resource.Up
 		return
 	}
 	body := client.Object{}
-	if !plan.Code.Equal(state.Code) {
+	if !plan.Code.Equal(state.Code) && !plan.Code.IsUnknown() {
 		body["code"] = client.FormatInt64(plan.Code.ValueInt64())
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Force.Equal(state.Force) {
+	if !plan.Force.Equal(state.Force) && !plan.Force.IsUnknown() {
 		body["force"] = client.FormatBool(plan.Force.ValueBool())
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Value.Equal(state.Value) {
+	if !plan.Value.Equal(state.Value) && !plan.Value.IsUnknown() {
 		body["value"] = plan.Value.ValueString()
 	}
 	if len(body) > 0 {
@@ -194,6 +195,7 @@ func (r *IPDHCPServerOptionResource) Update(ctx context.Context, req resource.Up
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

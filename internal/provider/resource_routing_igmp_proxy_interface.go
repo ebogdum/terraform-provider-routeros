@@ -180,6 +180,7 @@ func (r *RoutingIgmpProxyInterfaceResource) Create(ctx context.Context, req reso
 		return
 	}
 	routingIgmpProxyInterfaceApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -221,22 +222,22 @@ func (r *RoutingIgmpProxyInterfaceResource) Update(ctx context.Context, req reso
 		return
 	}
 	body := client.Object{}
-	if !plan.AlternativeSubnets.Equal(state.AlternativeSubnets) {
+	if !plan.AlternativeSubnets.Equal(state.AlternativeSubnets) && !plan.AlternativeSubnets.IsUnknown() {
 		body["alternative-subnets"] = plan.AlternativeSubnets.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.Threshold.Equal(state.Threshold) {
+	if !plan.Threshold.Equal(state.Threshold) && !plan.Threshold.IsUnknown() {
 		body["threshold"] = client.FormatInt64(plan.Threshold.ValueInt64())
 	}
-	if !plan.Upstream.Equal(state.Upstream) {
+	if !plan.Upstream.Equal(state.Upstream) && !plan.Upstream.IsUnknown() {
 		body["upstream"] = client.FormatBool(plan.Upstream.ValueBool())
 	}
 	if len(body) > 0 {
@@ -249,6 +250,7 @@ func (r *RoutingIgmpProxyInterfaceResource) Update(ctx context.Context, req reso
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

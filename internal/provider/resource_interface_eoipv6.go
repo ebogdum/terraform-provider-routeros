@@ -241,6 +241,7 @@ func (r *InterfaceEoipv6Resource) Create(ctx context.Context, req resource.Creat
 		return
 	}
 	interfaceEoipv6Apply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -282,37 +283,37 @@ func (r *InterfaceEoipv6Resource) Update(ctx context.Context, req resource.Updat
 		return
 	}
 	body := client.Object{}
-	if !plan.ARP.Equal(state.ARP) {
+	if !plan.ARP.Equal(state.ARP) && !plan.ARP.IsUnknown() {
 		body["arp"] = plan.ARP.ValueString()
 	}
-	if !plan.ARPTimeout.Equal(state.ARPTimeout) {
+	if !plan.ARPTimeout.Equal(state.ARPTimeout) && !plan.ARPTimeout.IsUnknown() {
 		body["arp-timeout"] = plan.ARPTimeout.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.IpsecSecret.Equal(state.IpsecSecret) {
+	if !plan.IpsecSecret.Equal(state.IpsecSecret) && !plan.IpsecSecret.IsUnknown() {
 		body["ipsec-secret"] = plan.IpsecSecret.ValueString()
 	}
-	if !plan.LocalAddress.Equal(state.LocalAddress) {
+	if !plan.LocalAddress.Equal(state.LocalAddress) && !plan.LocalAddress.IsUnknown() {
 		body["local-address"] = plan.LocalAddress.ValueString()
 	}
-	if !plan.MACAddress.Equal(state.MACAddress) {
+	if !plan.MACAddress.Equal(state.MACAddress) && !plan.MACAddress.IsUnknown() {
 		body["mac-address"] = plan.MACAddress.ValueString()
 	}
-	if !plan.MTU.Equal(state.MTU) {
+	if !plan.MTU.Equal(state.MTU) && !plan.MTU.IsUnknown() {
 		body["mtu"] = plan.MTU.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.RemoteAddress.Equal(state.RemoteAddress) {
+	if !plan.RemoteAddress.Equal(state.RemoteAddress) && !plan.RemoteAddress.IsUnknown() {
 		body["remote-address"] = plan.RemoteAddress.ValueString()
 	}
-	if !plan.TunnelID.Equal(state.TunnelID) {
+	if !plan.TunnelID.Equal(state.TunnelID) && !plan.TunnelID.IsUnknown() {
 		body["tunnel-id"] = plan.TunnelID.ValueString()
 	}
 	if !plan.ClampTcpMss.Equal(state.ClampTcpMss) && !plan.ClampTcpMss.IsUnknown() {
@@ -346,6 +347,7 @@ func (r *InterfaceEoipv6Resource) Update(ctx context.Context, req resource.Updat
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

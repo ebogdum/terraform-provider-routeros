@@ -195,6 +195,7 @@ func (r *SNMPCommunityResource) Create(ctx context.Context, req resource.CreateR
 		return
 	}
 	sNMPCommunityApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -236,37 +237,37 @@ func (r *SNMPCommunityResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 	body := client.Object{}
-	if !plan.Addresses.Equal(state.Addresses) {
+	if !plan.Addresses.Equal(state.Addresses) && !plan.Addresses.IsUnknown() {
 		body["addresses"] = plan.Addresses.ValueString()
 	}
-	if !plan.AuthenticationPassword.Equal(state.AuthenticationPassword) {
+	if !plan.AuthenticationPassword.Equal(state.AuthenticationPassword) && !plan.AuthenticationPassword.IsUnknown() {
 		body["authentication-password"] = plan.AuthenticationPassword.ValueString()
 	}
-	if !plan.AuthenticationProtocol.Equal(state.AuthenticationProtocol) {
+	if !plan.AuthenticationProtocol.Equal(state.AuthenticationProtocol) && !plan.AuthenticationProtocol.IsUnknown() {
 		body["authentication-protocol"] = plan.AuthenticationProtocol.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.EncryptionPassword.Equal(state.EncryptionPassword) {
+	if !plan.EncryptionPassword.Equal(state.EncryptionPassword) && !plan.EncryptionPassword.IsUnknown() {
 		body["encryption-password"] = plan.EncryptionPassword.ValueString()
 	}
-	if !plan.EncryptionProtocol.Equal(state.EncryptionProtocol) {
+	if !plan.EncryptionProtocol.Equal(state.EncryptionProtocol) && !plan.EncryptionProtocol.IsUnknown() {
 		body["encryption-protocol"] = plan.EncryptionProtocol.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.ReadAccess.Equal(state.ReadAccess) {
+	if !plan.ReadAccess.Equal(state.ReadAccess) && !plan.ReadAccess.IsUnknown() {
 		body["read-access"] = client.FormatBool(plan.ReadAccess.ValueBool())
 	}
-	if !plan.Security.Equal(state.Security) {
+	if !plan.Security.Equal(state.Security) && !plan.Security.IsUnknown() {
 		body["security"] = plan.Security.ValueString()
 	}
-	if !plan.WriteAccess.Equal(state.WriteAccess) {
+	if !plan.WriteAccess.Equal(state.WriteAccess) && !plan.WriteAccess.IsUnknown() {
 		body["write-access"] = client.FormatBool(plan.WriteAccess.ValueBool())
 	}
 	if len(body) > 0 {
@@ -279,6 +280,7 @@ func (r *SNMPCommunityResource) Update(ctx context.Context, req resource.UpdateR
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

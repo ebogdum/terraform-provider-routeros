@@ -32,22 +32,22 @@ type QueueSimpleModel struct {
 	ID                  types.String `tfsdk:"id"`
 	TotalQueue          types.String `tfsdk:"total_queue"`
 	TotalPriority       types.String `tfsdk:"total_priority"`
-	TotalMaxLimit       types.String `tfsdk:"total_max_limit"`
-	TotalLimitAt        types.String `tfsdk:"total_limit_at"`
+	TotalMaxLimit       rosRateValue `tfsdk:"total_max_limit"`
+	TotalLimitAt        rosRateValue `tfsdk:"total_limit_at"`
 	TotalBurstTime      types.String `tfsdk:"total_burst_time"`
-	TotalBurstThreshold types.String `tfsdk:"total_burst_threshold"`
-	TotalBurstLimit     types.String `tfsdk:"total_burst_limit"`
+	TotalBurstThreshold rosRateValue `tfsdk:"total_burst_threshold"`
+	TotalBurstLimit     rosRateValue `tfsdk:"total_burst_limit"`
 	TotalBucketSize     types.String `tfsdk:"total_bucket_size"`
 	Time                types.String `tfsdk:"time"`
 	Dst                 types.String `tfsdk:"dst"`
 	BucketSize          types.String `tfsdk:"bucket_size"`
-	BurstLimit          types.String `tfsdk:"burst_limit"`
-	BurstThreshold      types.String `tfsdk:"burst_threshold"`
+	BurstLimit          rosRateValue `tfsdk:"burst_limit"`
+	BurstThreshold      rosRateValue `tfsdk:"burst_threshold"`
 	BurstTime           types.String `tfsdk:"burst_time"`
 	Comment             types.String `tfsdk:"comment"`
 	Disabled            types.Bool   `tfsdk:"disabled"`
-	LimitAt             types.String `tfsdk:"limit_at"`
-	MaxLimit            types.String `tfsdk:"max_limit"`
+	LimitAt             rosRateValue `tfsdk:"limit_at"`
+	MaxLimit            rosRateValue `tfsdk:"max_limit"`
 	Name                types.String `tfsdk:"name"`
 	PacketMarks         types.String `tfsdk:"packet_marks"`
 	Parent              types.String `tfsdk:"parent"`
@@ -93,11 +93,13 @@ func (r *QueueSimpleResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Description: "RouterOS `total-priority`.",
 			},
 			"total_max_limit": schema.StringAttribute{
+				CustomType:  rosRateType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "RouterOS `total-max-limit`.",
 			},
 			"total_limit_at": schema.StringAttribute{
+				CustomType:  rosRateType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "RouterOS `total-limit-at`.",
@@ -108,11 +110,13 @@ func (r *QueueSimpleResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Description: "RouterOS `total-burst-time`.",
 			},
 			"total_burst_threshold": schema.StringAttribute{
+				CustomType:  rosRateType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "RouterOS `total-burst-threshold`.",
 			},
 			"total_burst_limit": schema.StringAttribute{
+				CustomType:  rosRateType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "RouterOS `total-burst-limit`.",
@@ -138,11 +142,13 @@ func (r *QueueSimpleResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Description: "RouterOS `bucket-size`.",
 			},
 			"burst_limit": schema.StringAttribute{
+				CustomType:  rosRateType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"burst_threshold": schema.StringAttribute{
+				CustomType:  rosRateType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -163,11 +169,13 @@ func (r *QueueSimpleResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Description: "Whether the entry is disabled.",
 			},
 			"limit_at": schema.StringAttribute{
+				CustomType:  rosRateType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"max_limit": schema.StringAttribute{
+				CustomType:  rosRateType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -317,6 +325,7 @@ func (r *QueueSimpleResource) Create(ctx context.Context, req resource.CreateReq
 		}
 	}
 	queueSimpleApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -358,43 +367,43 @@ func (r *QueueSimpleResource) Update(ctx context.Context, req resource.UpdateReq
 		return
 	}
 	body := client.Object{}
-	if !plan.BurstLimit.Equal(state.BurstLimit) {
+	if !plan.BurstLimit.Equal(state.BurstLimit) && !plan.BurstLimit.IsUnknown() {
 		body["burst-limit"] = plan.BurstLimit.ValueString()
 	}
-	if !plan.BurstThreshold.Equal(state.BurstThreshold) {
+	if !plan.BurstThreshold.Equal(state.BurstThreshold) && !plan.BurstThreshold.IsUnknown() {
 		body["burst-threshold"] = plan.BurstThreshold.ValueString()
 	}
-	if !plan.BurstTime.Equal(state.BurstTime) {
+	if !plan.BurstTime.Equal(state.BurstTime) && !plan.BurstTime.IsUnknown() {
 		body["burst-time"] = plan.BurstTime.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.LimitAt.Equal(state.LimitAt) {
+	if !plan.LimitAt.Equal(state.LimitAt) && !plan.LimitAt.IsUnknown() {
 		body["limit-at"] = plan.LimitAt.ValueString()
 	}
-	if !plan.MaxLimit.Equal(state.MaxLimit) {
+	if !plan.MaxLimit.Equal(state.MaxLimit) && !plan.MaxLimit.IsUnknown() {
 		body["max-limit"] = plan.MaxLimit.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.PacketMarks.Equal(state.PacketMarks) {
+	if !plan.PacketMarks.Equal(state.PacketMarks) && !plan.PacketMarks.IsUnknown() {
 		body["packet-marks"] = plan.PacketMarks.ValueString()
 	}
-	if !plan.Parent.Equal(state.Parent) {
+	if !plan.Parent.Equal(state.Parent) && !plan.Parent.IsUnknown() {
 		body["parent"] = plan.Parent.ValueString()
 	}
-	if !plan.Priority.Equal(state.Priority) {
+	if !plan.Priority.Equal(state.Priority) && !plan.Priority.IsUnknown() {
 		body["priority"] = plan.Priority.ValueString()
 	}
-	if !plan.Queue.Equal(state.Queue) {
+	if !plan.Queue.Equal(state.Queue) && !plan.Queue.IsUnknown() {
 		body["queue"] = plan.Queue.ValueString()
 	}
-	if !plan.Target.Equal(state.Target) {
+	if !plan.Target.Equal(state.Target) && !plan.Target.IsUnknown() {
 		body["target"] = plan.Target.ValueString()
 	}
 	if !plan.BucketSize.Equal(state.BucketSize) && !plan.BucketSize.IsUnknown() {
@@ -446,6 +455,7 @@ func (r *QueueSimpleResource) Update(ctx context.Context, req resource.UpdateReq
 			return
 		}
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -513,14 +523,14 @@ func queueSimpleApply(ctx context.Context, obj client.Object, m *QueueSimpleMode
 		m.TotalPriority = types.StringNull()
 	}
 	if v, ok := obj["total-max-limit"]; ok && v != "" {
-		m.TotalMaxLimit = types.StringValue(v)
+		m.TotalMaxLimit = newRosRateValue(v)
 	} else {
-		m.TotalMaxLimit = types.StringNull()
+		m.TotalMaxLimit = newRosRateNull()
 	}
 	if v, ok := obj["total-limit-at"]; ok && v != "" {
-		m.TotalLimitAt = types.StringValue(v)
+		m.TotalLimitAt = newRosRateValue(v)
 	} else {
-		m.TotalLimitAt = types.StringNull()
+		m.TotalLimitAt = newRosRateNull()
 	}
 	if v, ok := obj["total-burst-time"]; ok && v != "" {
 		m.TotalBurstTime = types.StringValue(v)
@@ -528,14 +538,14 @@ func queueSimpleApply(ctx context.Context, obj client.Object, m *QueueSimpleMode
 		m.TotalBurstTime = types.StringNull()
 	}
 	if v, ok := obj["total-burst-threshold"]; ok && v != "" {
-		m.TotalBurstThreshold = types.StringValue(v)
+		m.TotalBurstThreshold = newRosRateValue(v)
 	} else {
-		m.TotalBurstThreshold = types.StringNull()
+		m.TotalBurstThreshold = newRosRateNull()
 	}
 	if v, ok := obj["total-burst-limit"]; ok && v != "" {
-		m.TotalBurstLimit = types.StringValue(v)
+		m.TotalBurstLimit = newRosRateValue(v)
 	} else {
-		m.TotalBurstLimit = types.StringNull()
+		m.TotalBurstLimit = newRosRateNull()
 	}
 	if v, ok := obj["total-bucket-size"]; ok && v != "" {
 		m.TotalBucketSize = types.StringValue(v)
@@ -560,22 +570,22 @@ func queueSimpleApply(ctx context.Context, obj client.Object, m *QueueSimpleMode
 	if v, ok := obj["burst-limit"]; ok {
 		_ = v
 		if v != "" {
-			m.BurstLimit = types.StringValue(v)
+			m.BurstLimit = newRosRateValue(v)
 		} else {
-			m.BurstLimit = types.StringNull()
+			m.BurstLimit = newRosRateNull()
 		}
 	} else {
-		m.BurstLimit = types.StringNull()
+		m.BurstLimit = newRosRateNull()
 	}
 	if v, ok := obj["burst-threshold"]; ok {
 		_ = v
 		if v != "" {
-			m.BurstThreshold = types.StringValue(v)
+			m.BurstThreshold = newRosRateValue(v)
 		} else {
-			m.BurstThreshold = types.StringNull()
+			m.BurstThreshold = newRosRateNull()
 		}
 	} else {
-		m.BurstThreshold = types.StringNull()
+		m.BurstThreshold = newRosRateNull()
 	}
 	if v, ok := obj["burst-time"]; ok {
 		_ = v
@@ -610,22 +620,22 @@ func queueSimpleApply(ctx context.Context, obj client.Object, m *QueueSimpleMode
 	if v, ok := obj["limit-at"]; ok {
 		_ = v
 		if v != "" {
-			m.LimitAt = types.StringValue(v)
+			m.LimitAt = newRosRateValue(v)
 		} else {
-			m.LimitAt = types.StringNull()
+			m.LimitAt = newRosRateNull()
 		}
 	} else {
-		m.LimitAt = types.StringNull()
+		m.LimitAt = newRosRateNull()
 	}
 	if v, ok := obj["max-limit"]; ok {
 		_ = v
 		if v != "" {
-			m.MaxLimit = types.StringValue(v)
+			m.MaxLimit = newRosRateValue(v)
 		} else {
-			m.MaxLimit = types.StringNull()
+			m.MaxLimit = newRosRateNull()
 		}
 	} else {
-		m.MaxLimit = types.StringNull()
+		m.MaxLimit = newRosRateNull()
 	}
 	if v, ok := obj["name"]; ok {
 		_ = v

@@ -128,6 +128,7 @@ func (r *UserManagerProfileLimitationResource) Create(ctx context.Context, req r
 		return
 	}
 	userManagerProfileLimitationApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -179,6 +180,7 @@ func (r *UserManagerProfileLimitationResource) Update(ctx context.Context, req r
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

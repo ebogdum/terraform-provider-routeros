@@ -75,10 +75,11 @@ func (r *ToolMACServerResource) Create(ctx context.Context, req resource.CreateR
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	toolMACServerUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	toolMACServerUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -88,10 +89,16 @@ func (r *ToolMACServerResource) Update(ctx context.Context, req resource.UpdateR
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	toolMACServerUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state ToolMACServerModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	toolMACServerUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -129,13 +136,13 @@ func (r *ToolMACServerResource) ImportState(ctx context.Context, req resource.Im
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/tool/mac-server", types.StringValue(routerName))))...)
 }
 
-func toolMACServerUpsert(ctx context.Context, reg *client.Registry, plan *ToolMACServerModel, diags *diagBuf) {
+func toolMACServerUpsert(ctx context.Context, reg *client.Registry, plan, state *ToolMACServerModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.AllowedInterfaceList.IsNull() || plan.AllowedInterfaceList.IsUnknown()) {
+	if !(plan.AllowedInterfaceList.IsNull() || plan.AllowedInterfaceList.IsUnknown()) && (state == nil || !plan.AllowedInterfaceList.Equal(state.AllowedInterfaceList)) {
 		body["allowed-interface-list"] = plan.AllowedInterfaceList.ValueString()
 	}
 	if err := schemautil.CheckMACServerLockout("/tool/mac-server", body, !plan.LockoutAck.IsNull() && plan.LockoutAck.ValueBool()); err != nil {

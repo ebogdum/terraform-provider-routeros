@@ -30,7 +30,6 @@ type ToolGraphingInterfaceResource struct {
 
 type ToolGraphingInterfaceModel struct {
 	ID       types.String `tfsdk:"id"`
-	Comment  types.String `tfsdk:"comment"`
 	Disabled types.Bool   `tfsdk:"disabled"`
 	Router   types.String `tfsdk:"router"`
 }
@@ -58,11 +57,6 @@ func (r *ToolGraphingInterfaceResource) Schema(_ context.Context, _ resource.Sch
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
-			"comment": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "Free-form comment.",
-			},
 			"disabled": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -87,9 +81,6 @@ func (r *ToolGraphingInterfaceResource) Create(ctx context.Context, req resource
 		return
 	}
 	body := client.Object{}
-	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
-		body["comment"] = plan.Comment.ValueString()
-	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
@@ -99,6 +90,7 @@ func (r *ToolGraphingInterfaceResource) Create(ctx context.Context, req resource
 		return
 	}
 	toolGraphingInterfaceApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -140,10 +132,7 @@ func (r *ToolGraphingInterfaceResource) Update(ctx context.Context, req resource
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
-		body["comment"] = plan.Comment.ValueString()
-	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
 	if len(body) > 0 {
@@ -156,6 +145,7 @@ func (r *ToolGraphingInterfaceResource) Update(ctx context.Context, req resource
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -212,16 +202,6 @@ func toolGraphingInterfaceLookupByNaturalKey(ctx context.Context, c *client.Clie
 func toolGraphingInterfaceApply(ctx context.Context, obj client.Object, m *ToolGraphingInterfaceModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
-	if v, ok := obj["comment"]; ok {
-		_ = v
-		if v != "" {
-			m.Comment = types.StringValue(v)
-		} else {
-			m.Comment = types.StringNull()
-		}
-	} else {
-		m.Comment = types.StringNull()
-	}
 	if v, ok := obj["disabled"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {

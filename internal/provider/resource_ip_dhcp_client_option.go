@@ -127,6 +127,7 @@ func (r *IPDHCPClientOptionResource) Create(ctx context.Context, req resource.Cr
 		return
 	}
 	iPDHCPClientOptionApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -168,16 +169,16 @@ func (r *IPDHCPClientOptionResource) Update(ctx context.Context, req resource.Up
 		return
 	}
 	body := client.Object{}
-	if !plan.Code.Equal(state.Code) {
+	if !plan.Code.Equal(state.Code) && !plan.Code.IsUnknown() {
 		body["code"] = plan.Code.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Value.Equal(state.Value) {
+	if !plan.Value.Equal(state.Value) && !plan.Value.IsUnknown() {
 		body["value"] = plan.Value.ValueString()
 	}
 	if len(body) > 0 {
@@ -190,6 +191,7 @@ func (r *IPDHCPClientOptionResource) Update(ctx context.Context, req resource.Up
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

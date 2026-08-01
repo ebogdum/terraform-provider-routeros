@@ -125,6 +125,7 @@ func (r *CapsManChannelResource) Create(ctx context.Context, req resource.Create
 		return
 	}
 	capsManChannelApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -166,19 +167,19 @@ func (r *CapsManChannelResource) Update(ctx context.Context, req resource.Update
 		return
 	}
 	body := client.Object{}
-	if !plan.Band.Equal(state.Band) {
+	if !plan.Band.Equal(state.Band) && !plan.Band.IsUnknown() {
 		body["band"] = plan.Band.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Frequency.Equal(state.Frequency) {
+	if !plan.Frequency.Equal(state.Frequency) && !plan.Frequency.IsUnknown() {
 		body["frequency"] = plan.Frequency.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.TxPower.Equal(state.TxPower) {
+	if !plan.TxPower.Equal(state.TxPower) && !plan.TxPower.IsUnknown() {
 		body["tx-power"] = plan.TxPower.ValueString()
 	}
 	if len(body) > 0 {
@@ -191,6 +192,7 @@ func (r *CapsManChannelResource) Update(ctx context.Context, req resource.Update
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

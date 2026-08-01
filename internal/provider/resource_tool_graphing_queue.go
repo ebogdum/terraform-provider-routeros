@@ -30,7 +30,6 @@ type ToolGraphingQueueResource struct {
 
 type ToolGraphingQueueModel struct {
 	ID       types.String `tfsdk:"id"`
-	Comment  types.String `tfsdk:"comment"`
 	Disabled types.Bool   `tfsdk:"disabled"`
 	Router   types.String `tfsdk:"router"`
 }
@@ -58,11 +57,6 @@ func (r *ToolGraphingQueueResource) Schema(_ context.Context, _ resource.SchemaR
 				Description:   "RouterOS internal .id.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
-			"comment": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "Free-form comment.",
-			},
 			"disabled": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -87,9 +81,6 @@ func (r *ToolGraphingQueueResource) Create(ctx context.Context, req resource.Cre
 		return
 	}
 	body := client.Object{}
-	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
-		body["comment"] = plan.Comment.ValueString()
-	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
@@ -99,6 +90,7 @@ func (r *ToolGraphingQueueResource) Create(ctx context.Context, req resource.Cre
 		return
 	}
 	toolGraphingQueueApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -140,10 +132,7 @@ func (r *ToolGraphingQueueResource) Update(ctx context.Context, req resource.Upd
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
-		body["comment"] = plan.Comment.ValueString()
-	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
 	if len(body) > 0 {
@@ -156,6 +145,7 @@ func (r *ToolGraphingQueueResource) Update(ctx context.Context, req resource.Upd
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -212,16 +202,6 @@ func toolGraphingQueueLookupByNaturalKey(ctx context.Context, c *client.Client, 
 func toolGraphingQueueApply(ctx context.Context, obj client.Object, m *ToolGraphingQueueModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
-	if v, ok := obj["comment"]; ok {
-		_ = v
-		if v != "" {
-			m.Comment = types.StringValue(v)
-		} else {
-			m.Comment = types.StringNull()
-		}
-	} else {
-		m.Comment = types.StringNull()
-	}
 	if v, ok := obj["disabled"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {

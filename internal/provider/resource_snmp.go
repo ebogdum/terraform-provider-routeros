@@ -117,10 +117,11 @@ func (r *SNMPResource) Create(ctx context.Context, req resource.CreateRequest, r
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	sNMPUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	sNMPUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -130,10 +131,16 @@ func (r *SNMPResource) Update(ctx context.Context, req resource.UpdateRequest, r
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	sNMPUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state SNMPModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	sNMPUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -171,43 +178,43 @@ func (r *SNMPResource) ImportState(ctx context.Context, req resource.ImportState
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/snmp", types.StringValue(routerName))))...)
 }
 
-func sNMPUpsert(ctx context.Context, reg *client.Registry, plan *SNMPModel, diags *diagBuf) {
+func sNMPUpsert(ctx context.Context, reg *client.Registry, plan, state *SNMPModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.Contact.IsNull() || plan.Contact.IsUnknown()) {
+	if !(plan.Contact.IsNull() || plan.Contact.IsUnknown()) && (state == nil || !plan.Contact.Equal(state.Contact)) {
 		body["contact"] = plan.Contact.ValueString()
 	}
-	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) {
+	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) && (state == nil || !plan.Enabled.Equal(state.Enabled)) {
 		body["enabled"] = client.FormatBool(plan.Enabled.ValueBool())
 	}
-	if !(plan.EngineIDSuffix.IsNull() || plan.EngineIDSuffix.IsUnknown()) {
+	if !(plan.EngineIDSuffix.IsNull() || plan.EngineIDSuffix.IsUnknown()) && (state == nil || !plan.EngineIDSuffix.Equal(state.EngineIDSuffix)) {
 		body["engine-id-suffix"] = plan.EngineIDSuffix.ValueString()
 	}
-	if !(plan.Location.IsNull() || plan.Location.IsUnknown()) {
+	if !(plan.Location.IsNull() || plan.Location.IsUnknown()) && (state == nil || !plan.Location.Equal(state.Location)) {
 		body["location"] = plan.Location.ValueString()
 	}
-	if !(plan.SrcAddress.IsNull() || plan.SrcAddress.IsUnknown()) {
+	if !(plan.SrcAddress.IsNull() || plan.SrcAddress.IsUnknown()) && (state == nil || !plan.SrcAddress.Equal(state.SrcAddress)) {
 		body["src-address"] = plan.SrcAddress.ValueString()
 	}
-	if !(plan.TrapCommunity.IsNull() || plan.TrapCommunity.IsUnknown()) {
+	if !(plan.TrapCommunity.IsNull() || plan.TrapCommunity.IsUnknown()) && (state == nil || !plan.TrapCommunity.Equal(state.TrapCommunity)) {
 		body["trap-community"] = plan.TrapCommunity.ValueString()
 	}
-	if !(plan.TrapGenerators.IsNull() || plan.TrapGenerators.IsUnknown()) {
+	if !(plan.TrapGenerators.IsNull() || plan.TrapGenerators.IsUnknown()) && (state == nil || !plan.TrapGenerators.Equal(state.TrapGenerators)) {
 		body["trap-generators"] = plan.TrapGenerators.ValueString()
 	}
-	if !(plan.TrapInterfaces.IsNull() || plan.TrapInterfaces.IsUnknown()) {
+	if !(plan.TrapInterfaces.IsNull() || plan.TrapInterfaces.IsUnknown()) && (state == nil || !plan.TrapInterfaces.Equal(state.TrapInterfaces)) {
 		body["trap-interfaces"] = plan.TrapInterfaces.ValueString()
 	}
-	if !(plan.TrapTarget.IsNull() || plan.TrapTarget.IsUnknown()) {
+	if !(plan.TrapTarget.IsNull() || plan.TrapTarget.IsUnknown()) && (state == nil || !plan.TrapTarget.Equal(state.TrapTarget)) {
 		body["trap-target"] = plan.TrapTarget.ValueString()
 	}
-	if !(plan.TrapVersion.IsNull() || plan.TrapVersion.IsUnknown()) {
+	if !(plan.TrapVersion.IsNull() || plan.TrapVersion.IsUnknown()) && (state == nil || !plan.TrapVersion.Equal(state.TrapVersion)) {
 		body["trap-version"] = client.FormatInt64(plan.TrapVersion.ValueInt64())
 	}
-	if !(plan.Vrf.IsNull() || plan.Vrf.IsUnknown()) {
+	if !(plan.Vrf.IsNull() || plan.Vrf.IsUnknown()) && (state == nil || !plan.Vrf.Equal(state.Vrf)) {
 		body["vrf"] = plan.Vrf.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/snmp", body)

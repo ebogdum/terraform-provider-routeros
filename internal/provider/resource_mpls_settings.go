@@ -86,10 +86,11 @@ func (r *MPLSSettingsResource) Create(ctx context.Context, req resource.CreateRe
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	mPLSSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	mPLSSettingsUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -99,10 +100,16 @@ func (r *MPLSSettingsResource) Update(ctx context.Context, req resource.UpdateRe
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	mPLSSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state MPLSSettingsModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	mPLSSettingsUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -140,19 +147,19 @@ func (r *MPLSSettingsResource) ImportState(ctx context.Context, req resource.Imp
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/mpls/settings", types.StringValue(routerName))))...)
 }
 
-func mPLSSettingsUpsert(ctx context.Context, reg *client.Registry, plan *MPLSSettingsModel, diags *diagBuf) {
+func mPLSSettingsUpsert(ctx context.Context, reg *client.Registry, plan, state *MPLSSettingsModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.AllowFastPath.IsNull() || plan.AllowFastPath.IsUnknown()) {
+	if !(plan.AllowFastPath.IsNull() || plan.AllowFastPath.IsUnknown()) && (state == nil || !plan.AllowFastPath.Equal(state.AllowFastPath)) {
 		body["allow-fast-path"] = client.FormatBool(plan.AllowFastPath.ValueBool())
 	}
-	if !(plan.DynamicLabelRange.IsNull() || plan.DynamicLabelRange.IsUnknown()) {
+	if !(plan.DynamicLabelRange.IsNull() || plan.DynamicLabelRange.IsUnknown()) && (state == nil || !plan.DynamicLabelRange.Equal(state.DynamicLabelRange)) {
 		body["dynamic-label-range"] = plan.DynamicLabelRange.ValueString()
 	}
-	if !(plan.PropagateTtl.IsNull() || plan.PropagateTtl.IsUnknown()) {
+	if !(plan.PropagateTtl.IsNull() || plan.PropagateTtl.IsUnknown()) && (state == nil || !plan.PropagateTtl.Equal(state.PropagateTtl)) {
 		body["propagate-ttl"] = client.FormatBool(plan.PropagateTtl.ValueBool())
 	}
 	obj, err := c.SetSingleton(ctx, "/mpls/settings", body)

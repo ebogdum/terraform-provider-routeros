@@ -289,6 +289,7 @@ func (r *RoutingOSPFInterfaceTemplateResource) Create(ctx context.Context, req r
 		return
 	}
 	routingOSPFInterfaceTemplateApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -330,55 +331,55 @@ func (r *RoutingOSPFInterfaceTemplateResource) Update(ctx context.Context, req r
 		return
 	}
 	body := client.Object{}
-	if !plan.Area.Equal(state.Area) {
+	if !plan.Area.Equal(state.Area) && !plan.Area.IsUnknown() {
 		body["area"] = plan.Area.ValueString()
 	}
-	if !plan.AuthID.Equal(state.AuthID) {
+	if !plan.AuthID.Equal(state.AuthID) && !plan.AuthID.IsUnknown() {
 		body["auth-id"] = plan.AuthID.ValueString()
 	}
-	if !plan.AuthKey.Equal(state.AuthKey) {
+	if !plan.AuthKey.Equal(state.AuthKey) && !plan.AuthKey.IsUnknown() {
 		body["auth-key"] = plan.AuthKey.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Cost.Equal(state.Cost) {
+	if !plan.Cost.Equal(state.Cost) && !plan.Cost.IsUnknown() {
 		body["cost"] = client.FormatInt64(plan.Cost.ValueInt64())
 	}
-	if !plan.DeadInterval.Equal(state.DeadInterval) {
+	if !plan.DeadInterval.Equal(state.DeadInterval) && !plan.DeadInterval.IsUnknown() {
 		body["dead-interval"] = plan.DeadInterval.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.HelloInterval.Equal(state.HelloInterval) {
+	if !plan.HelloInterval.Equal(state.HelloInterval) && !plan.HelloInterval.IsUnknown() {
 		body["hello-interval"] = plan.HelloInterval.ValueString()
 	}
-	if !plan.InstanceID.Equal(state.InstanceID) {
+	if !plan.InstanceID.Equal(state.InstanceID) && !plan.InstanceID.IsUnknown() {
 		body["instance-id"] = client.FormatInt64(plan.InstanceID.ValueInt64())
 	}
-	if !plan.Interfaces.Equal(state.Interfaces) {
+	if !plan.Interfaces.Equal(state.Interfaces) && !plan.Interfaces.IsUnknown() {
 		body["interfaces"] = plan.Interfaces.ValueString()
 	}
-	if !plan.Networks.Equal(state.Networks) {
+	if !plan.Networks.Equal(state.Networks) && !plan.Networks.IsUnknown() {
 		body["networks"] = plan.Networks.ValueString()
 	}
-	if !plan.Passive.Equal(state.Passive) {
+	if !plan.Passive.Equal(state.Passive) && !plan.Passive.IsUnknown() {
 		body["passive"] = client.FormatBool(plan.Passive.ValueBool())
 	}
-	if !plan.PrefixList.Equal(state.PrefixList) {
+	if !plan.PrefixList.Equal(state.PrefixList) && !plan.PrefixList.IsUnknown() {
 		body["prefix-list"] = plan.PrefixList.ValueString()
 	}
-	if !plan.Priority.Equal(state.Priority) {
+	if !plan.Priority.Equal(state.Priority) && !plan.Priority.IsUnknown() {
 		body["priority"] = client.FormatInt64(plan.Priority.ValueInt64())
 	}
-	if !plan.RetransmitInterval.Equal(state.RetransmitInterval) {
+	if !plan.RetransmitInterval.Equal(state.RetransmitInterval) && !plan.RetransmitInterval.IsUnknown() {
 		body["retransmit-interval"] = plan.RetransmitInterval.ValueString()
 	}
-	if !plan.TransmitDelay.Equal(state.TransmitDelay) {
+	if !plan.TransmitDelay.Equal(state.TransmitDelay) && !plan.TransmitDelay.IsUnknown() {
 		body["transmit-delay"] = client.FormatInt64(plan.TransmitDelay.ValueInt64())
 	}
-	if !plan.UseBfd.Equal(state.UseBfd) {
+	if !plan.UseBfd.Equal(state.UseBfd) && !plan.UseBfd.IsUnknown() {
 		body["use-bfd"] = plan.UseBfd.ValueString()
 	}
 	if !plan.Auth.Equal(state.Auth) && !plan.Auth.IsUnknown() {
@@ -397,6 +398,7 @@ func (r *RoutingOSPFInterfaceTemplateResource) Update(ctx context.Context, req r
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

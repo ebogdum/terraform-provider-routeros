@@ -90,10 +90,11 @@ func (r *IPSmbResource) Create(ctx context.Context, req resource.CreateRequest, 
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPSmbUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	iPSmbUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -103,10 +104,16 @@ func (r *IPSmbResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPSmbUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state IPSmbModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	iPSmbUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -144,22 +151,22 @@ func (r *IPSmbResource) ImportState(ctx context.Context, req resource.ImportStat
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/ip/smb", types.StringValue(routerName))))...)
 }
 
-func iPSmbUpsert(ctx context.Context, reg *client.Registry, plan *IPSmbModel, diags *diagBuf) {
+func iPSmbUpsert(ctx context.Context, reg *client.Registry, plan, state *IPSmbModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
+	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) && (state == nil || !plan.Comment.Equal(state.Comment)) {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !(plan.Domain.IsNull() || plan.Domain.IsUnknown()) {
+	if !(plan.Domain.IsNull() || plan.Domain.IsUnknown()) && (state == nil || !plan.Domain.Equal(state.Domain)) {
 		body["domain"] = plan.Domain.ValueString()
 	}
-	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) {
+	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) && (state == nil || !plan.Enabled.Equal(state.Enabled)) {
 		body["enabled"] = plan.Enabled.ValueString()
 	}
-	if !(plan.Interfaces.IsNull() || plan.Interfaces.IsUnknown()) {
+	if !(plan.Interfaces.IsNull() || plan.Interfaces.IsUnknown()) && (state == nil || !plan.Interfaces.Equal(state.Interfaces)) {
 		body["interfaces"] = plan.Interfaces.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/ip/smb", body)

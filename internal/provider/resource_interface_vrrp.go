@@ -287,6 +287,7 @@ func (r *InterfaceVRRPResource) Create(ctx context.Context, req resource.CreateR
 		return
 	}
 	interfaceVRRPApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -328,37 +329,37 @@ func (r *InterfaceVRRPResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 	body := client.Object{}
-	if !plan.ARP.Equal(state.ARP) {
+	if !plan.ARP.Equal(state.ARP) && !plan.ARP.IsUnknown() {
 		body["arp"] = plan.ARP.ValueString()
 	}
-	if !plan.ARPTimeout.Equal(state.ARPTimeout) {
+	if !plan.ARPTimeout.Equal(state.ARPTimeout) && !plan.ARPTimeout.IsUnknown() {
 		body["arp-timeout"] = plan.ARPTimeout.ValueString()
 	}
-	if !plan.Authentication.Equal(state.Authentication) {
+	if !plan.Authentication.Equal(state.Authentication) && !plan.Authentication.IsUnknown() {
 		body["authentication"] = plan.Authentication.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.Interval.Equal(state.Interval) {
+	if !plan.Interval.Equal(state.Interval) && !plan.Interval.IsUnknown() {
 		body["interval"] = plan.Interval.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Password.Equal(state.Password) {
+	if !plan.Password.Equal(state.Password) && !plan.Password.IsUnknown() {
 		body["password"] = plan.Password.ValueString()
 	}
-	if !plan.Priority.Equal(state.Priority) {
+	if !plan.Priority.Equal(state.Priority) && !plan.Priority.IsUnknown() {
 		body["priority"] = plan.Priority.ValueString()
 	}
-	if !plan.RemoteAddress.Equal(state.RemoteAddress) {
+	if !plan.RemoteAddress.Equal(state.RemoteAddress) && !plan.RemoteAddress.IsUnknown() {
 		body["remote-address"] = plan.RemoteAddress.ValueString()
 	}
 	if !plan.ConnectionTrackingMode.Equal(state.ConnectionTrackingMode) && !plan.ConnectionTrackingMode.IsUnknown() {
@@ -407,6 +408,7 @@ func (r *InterfaceVRRPResource) Update(ctx context.Context, req resource.UpdateR
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

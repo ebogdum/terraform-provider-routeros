@@ -123,6 +123,7 @@ func (r *IPHotspotServicePortResource) Create(ctx context.Context, req resource.
 	}
 	iPHotspotServicePortApply(ctx, obj, &plan)
 	plan.ID = types.StringValue(id)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -187,6 +188,7 @@ func (r *IPHotspotServicePortResource) Update(ctx context.Context, req resource.
 	}
 	iPHotspotServicePortApply(ctx, obj, &plan)
 	plan.ID = state.ID
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

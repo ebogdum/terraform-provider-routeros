@@ -175,6 +175,7 @@ func (r *IPHotspotUserProfileResource) Create(ctx context.Context, req resource.
 		return
 	}
 	iPHotspotUserProfileApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -216,31 +217,31 @@ func (r *IPHotspotUserProfileResource) Update(ctx context.Context, req resource.
 		return
 	}
 	body := client.Object{}
-	if !plan.AddMACCookie.Equal(state.AddMACCookie) {
+	if !plan.AddMACCookie.Equal(state.AddMACCookie) && !plan.AddMACCookie.IsUnknown() {
 		body["add-mac-cookie"] = client.FormatBool(plan.AddMACCookie.ValueBool())
 	}
-	if !plan.AddressList.Equal(state.AddressList) {
+	if !plan.AddressList.Equal(state.AddressList) && !plan.AddressList.IsUnknown() {
 		body["address-list"] = plan.AddressList.ValueString()
 	}
-	if !plan.IdleTimeout.Equal(state.IdleTimeout) {
+	if !plan.IdleTimeout.Equal(state.IdleTimeout) && !plan.IdleTimeout.IsUnknown() {
 		body["idle-timeout"] = plan.IdleTimeout.ValueString()
 	}
-	if !plan.KeepaliveTimeout.Equal(state.KeepaliveTimeout) {
+	if !plan.KeepaliveTimeout.Equal(state.KeepaliveTimeout) && !plan.KeepaliveTimeout.IsUnknown() {
 		body["keepalive-timeout"] = plan.KeepaliveTimeout.ValueString()
 	}
-	if !plan.MACCookieTimeout.Equal(state.MACCookieTimeout) {
+	if !plan.MACCookieTimeout.Equal(state.MACCookieTimeout) && !plan.MACCookieTimeout.IsUnknown() {
 		body["mac-cookie-timeout"] = plan.MACCookieTimeout.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.SharedUsers.Equal(state.SharedUsers) {
+	if !plan.SharedUsers.Equal(state.SharedUsers) && !plan.SharedUsers.IsUnknown() {
 		body["shared-users"] = plan.SharedUsers.ValueString()
 	}
-	if !plan.StatusAutorefresh.Equal(state.StatusAutorefresh) {
+	if !plan.StatusAutorefresh.Equal(state.StatusAutorefresh) && !plan.StatusAutorefresh.IsUnknown() {
 		body["status-autorefresh"] = plan.StatusAutorefresh.ValueString()
 	}
-	if !plan.TransparentProxy.Equal(state.TransparentProxy) {
+	if !plan.TransparentProxy.Equal(state.TransparentProxy) && !plan.TransparentProxy.IsUnknown() {
 		body["transparent-proxy"] = client.FormatBool(plan.TransparentProxy.ValueBool())
 	}
 	if len(body) > 0 {
@@ -253,6 +254,7 @@ func (r *IPHotspotUserProfileResource) Update(ctx context.Context, req resource.
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

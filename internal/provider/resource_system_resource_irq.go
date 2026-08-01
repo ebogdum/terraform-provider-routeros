@@ -63,8 +63,9 @@ func (r *SystemResourceIRQResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "RouterOS `cpu`.",
 			},
 			"irq": schema.StringAttribute{
+				Optional:    true,
 				Computed:    true,
-				Description: "RouterOS `irq`.",
+				Description: "IRQ number of the fixed row to adopt (sets its CPU affinity).",
 			},
 			"router": schema.StringAttribute{
 				Optional:    true,
@@ -84,16 +85,42 @@ func (r *SystemResourceIRQResource) Create(ctx context.Context, req resource.Cre
 	if c == nil {
 		return
 	}
+	// Fixed device menu: one row per hardware IRQ; it rejects Add. Adopt the
+	// row whose irq number matches and set its CPU affinity.
+	want := plan.IRQ.ValueString()
+	if want == "" {
+		resp.Diagnostics.AddError("irq is required",
+			"/system/resource/irq has fixed rows; set `irq` to the IRQ number to manage")
+		return
+	}
+	rows, err := c.List(ctx, "/system/resource/irq")
+	if err != nil {
+		resp.Diagnostics.AddError("List /system/resource/irq failed", err.Error())
+		return
+	}
+	var id string
+	for _, row := range rows {
+		if row["irq"] == want {
+			id = row[".id"]
+			break
+		}
+	}
+	if id == "" {
+		resp.Diagnostics.AddError("Unknown irq row "+want,
+			fmt.Sprintf("no /system/resource/irq row with irq=%q on the device", want))
+		return
+	}
 	body := client.Object{}
 	if !(plan.CPU.IsNull() || plan.CPU.IsUnknown()) {
 		body["cpu"] = plan.CPU.ValueString()
 	}
-	obj, err := c.Add(ctx, "/system/resource/irq", body)
+	obj, err := c.Set(ctx, "/system/resource/irq", id, body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /system/resource/irq failed", err.Error())
 		return
 	}
 	systemResourceIRQApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -155,6 +182,7 @@ func (r *SystemResourceIRQResource) Update(ctx context.Context, req resource.Upd
 	}
 	systemResourceIRQApply(ctx, obj, &plan)
 	plan.ID = state.ID
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -168,9 +196,10 @@ func (r *SystemResourceIRQResource) Delete(ctx context.Context, req resource.Del
 	if c == nil {
 		return
 	}
-	if err := c.Remove(ctx, "/system/resource/irq", state.ID.ValueString()); err != nil {
-		resp.Diagnostics.AddError("Delete /system/resource/irq failed", err.Error())
-	}
+	// Fixed device row: it cannot be removed, only reconfigured. Drop it from
+	// Terraform state and leave the row in place.
+	_ = c
+	resp.State.RemoveResource(ctx)
 }
 
 func (r *SystemResourceIRQResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {

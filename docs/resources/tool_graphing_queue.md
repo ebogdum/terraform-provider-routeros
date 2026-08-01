@@ -24,7 +24,6 @@ resource "routeros_tool_graphing_queue" "queue_example" {
 This resource supports the following arguments:
 
 * `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
-* `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
 
 ## Attribute Reference

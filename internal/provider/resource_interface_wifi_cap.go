@@ -121,10 +121,11 @@ func (r *InterfaceWifiCapResource) Create(ctx context.Context, req resource.Crea
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	interfaceWifiCapUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	interfaceWifiCapUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -134,10 +135,16 @@ func (r *InterfaceWifiCapResource) Update(ctx context.Context, req resource.Upda
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	interfaceWifiCapUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state InterfaceWifiCapModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	interfaceWifiCapUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -175,43 +182,43 @@ func (r *InterfaceWifiCapResource) ImportState(ctx context.Context, req resource
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/interface/wifi/cap", types.StringValue(routerName))))...)
 }
 
-func interfaceWifiCapUpsert(ctx context.Context, reg *client.Registry, plan *InterfaceWifiCapModel, diags *diagBuf) {
+func interfaceWifiCapUpsert(ctx context.Context, reg *client.Registry, plan, state *InterfaceWifiCapModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) {
+	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) && (state == nil || !plan.Enabled.Equal(state.Enabled)) {
 		body["enabled"] = client.FormatBool(plan.Enabled.ValueBool())
 	}
-	if !(plan.CapsManAddresses.IsNull() || plan.CapsManAddresses.IsUnknown()) {
+	if !(plan.CapsManAddresses.IsNull() || plan.CapsManAddresses.IsUnknown()) && (state == nil || !plan.CapsManAddresses.Equal(state.CapsManAddresses)) {
 		body["caps-man-addresses"] = plan.CapsManAddresses.ValueString()
 	}
-	if !(plan.CapsManNames.IsNull() || plan.CapsManNames.IsUnknown()) {
+	if !(plan.CapsManNames.IsNull() || plan.CapsManNames.IsUnknown()) && (state == nil || !plan.CapsManNames.Equal(state.CapsManNames)) {
 		body["caps-man-names"] = plan.CapsManNames.ValueString()
 	}
-	if !(plan.CapsManCertificateCommonNames.IsNull() || plan.CapsManCertificateCommonNames.IsUnknown()) {
+	if !(plan.CapsManCertificateCommonNames.IsNull() || plan.CapsManCertificateCommonNames.IsUnknown()) && (state == nil || !plan.CapsManCertificateCommonNames.Equal(state.CapsManCertificateCommonNames)) {
 		body["caps-man-certificate-common-names"] = plan.CapsManCertificateCommonNames.ValueString()
 	}
-	if !(plan.DiscoveryInterfaces.IsNull() || plan.DiscoveryInterfaces.IsUnknown()) {
+	if !(plan.DiscoveryInterfaces.IsNull() || plan.DiscoveryInterfaces.IsUnknown()) && (state == nil || !plan.DiscoveryInterfaces.Equal(state.DiscoveryInterfaces)) {
 		body["discovery-interfaces"] = plan.DiscoveryInterfaces.ValueString()
 	}
-	if !(plan.Certificate.IsNull() || plan.Certificate.IsUnknown()) {
+	if !(plan.Certificate.IsNull() || plan.Certificate.IsUnknown()) && (state == nil || !plan.Certificate.Equal(state.Certificate)) {
 		body["certificate"] = plan.Certificate.ValueString()
 	}
-	if !(plan.LockToCapsMan.IsNull() || plan.LockToCapsMan.IsUnknown()) {
+	if !(plan.LockToCapsMan.IsNull() || plan.LockToCapsMan.IsUnknown()) && (state == nil || !plan.LockToCapsMan.Equal(state.LockToCapsMan)) {
 		body["lock-to-caps-man"] = client.FormatBool(plan.LockToCapsMan.ValueBool())
 	}
-	if !(plan.SlavesStatic.IsNull() || plan.SlavesStatic.IsUnknown()) {
+	if !(plan.SlavesStatic.IsNull() || plan.SlavesStatic.IsUnknown()) && (state == nil || !plan.SlavesStatic.Equal(state.SlavesStatic)) {
 		body["slaves-static"] = client.FormatBool(plan.SlavesStatic.ValueBool())
 	}
-	if !(plan.MldDatapath.IsNull() || plan.MldDatapath.IsUnknown()) {
+	if !(plan.MldDatapath.IsNull() || plan.MldDatapath.IsUnknown()) && (state == nil || !plan.MldDatapath.Equal(state.MldDatapath)) {
 		body["mld-datapath"] = plan.MldDatapath.ValueString()
 	}
-	if !(plan.MldStatic.IsNull() || plan.MldStatic.IsUnknown()) {
+	if !(plan.MldStatic.IsNull() || plan.MldStatic.IsUnknown()) && (state == nil || !plan.MldStatic.Equal(state.MldStatic)) {
 		body["mld-static"] = plan.MldStatic.ValueString()
 	}
-	if !(plan.SlavesDatapath.IsNull() || plan.SlavesDatapath.IsUnknown()) {
+	if !(plan.SlavesDatapath.IsNull() || plan.SlavesDatapath.IsUnknown()) && (state == nil || !plan.SlavesDatapath.Equal(state.SlavesDatapath)) {
 		body["slaves-datapath"] = plan.SlavesDatapath.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/interface/wifi/cap", body)

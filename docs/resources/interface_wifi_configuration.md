@@ -64,7 +64,6 @@ resource "routeros_interface_wifi_configuration" "configuration_example" {
   # ft_mobility_domain = "replace-me"
   # ft_nas_identifier = "replace-me"
   # ft_over_ds = "replace-me"
-  # ft_preserve_vlan_id = "replace-me"
   # ft_r0_key_lifetime = "replace-me"
   # ft_reassoc_deadline = "replace-me"
   # group_encryption = "replace-me"
@@ -99,7 +98,6 @@ resource "routeros_interface_wifi_configuration" "configuration_example" {
   # owe_transition_interface = "replace-me"
   # passphrase = "replace-me"
   # password_format = "replace-me"
-  # qo_s_classifier = "replace-me"
   # realms = "replace-me"
   # realms_raw = "replace-me"
   # reselect_interval = "replace-me"
@@ -204,7 +202,6 @@ This resource supports the following arguments:
 * `ft_mobility_domain` - (Optional) Type: `string`.
 * `ft_nas_identifier` - (Optional) Type: `string`.
 * `ft_over_ds` - (Optional) Type: `string`.
-* `ft_preserve_vlan_id` - (Optional) Type: `string`.
 * `ft_r0_key_lifetime` - (Optional) Type: `string`.
 * `ft_reassoc_deadline` - (Optional) Type: `string`.
 * `group_encryption` - (Optional) Type: `string`.
@@ -240,7 +237,6 @@ This resource supports the following arguments:
 * `owe_transition_interface` - (Optional) Type: `string`.
 * `passphrase` - (Optional) Type: `string`. **Sensitive.**
 * `password_format` - (Optional) Type: `string`.
-* `qo_s_classifier` - (Optional) Type: `string`.
 * `qos_classifier` - (Optional) Type: `string`. RouterOS `qos-classifier`.
 * `realms` - (Optional) Type: `string`.
 * `realms_raw` - (Optional) Type: `string`.

@@ -76,7 +76,7 @@ func (r *ToolTrafficGeneratorResource) Schema(_ context.Context, _ resource.Sche
 			"measure_out_of_order": schema.BoolAttribute{Optional: true, Computed: true,
 				Description: "",
 			},
-			"running": schema.BoolAttribute{Optional: true, Computed: true,
+			"running": schema.BoolAttribute{Computed: true,
 				Description: "",
 			},
 			"stats_samples_to_keep": schema.Int64Attribute{Optional: true, Computed: true,
@@ -98,10 +98,11 @@ func (r *ToolTrafficGeneratorResource) Create(ctx context.Context, req resource.
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	toolTrafficGeneratorUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	toolTrafficGeneratorUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -111,10 +112,16 @@ func (r *ToolTrafficGeneratorResource) Update(ctx context.Context, req resource.
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	toolTrafficGeneratorUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state ToolTrafficGeneratorModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	toolTrafficGeneratorUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -152,22 +159,22 @@ func (r *ToolTrafficGeneratorResource) ImportState(ctx context.Context, req reso
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/tool/traffic-generator", types.StringValue(routerName))))...)
 }
 
-func toolTrafficGeneratorUpsert(ctx context.Context, reg *client.Registry, plan *ToolTrafficGeneratorModel, diags *diagBuf) {
+func toolTrafficGeneratorUpsert(ctx context.Context, reg *client.Registry, plan, state *ToolTrafficGeneratorModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.LatencyDistributionMax.IsNull() || plan.LatencyDistributionMax.IsUnknown()) {
+	if !(plan.LatencyDistributionMax.IsNull() || plan.LatencyDistributionMax.IsUnknown()) && (state == nil || !plan.LatencyDistributionMax.Equal(state.LatencyDistributionMax)) {
 		body["latency-distribution-max"] = plan.LatencyDistributionMax.ValueString()
 	}
-	if !(plan.MeasureOutOfOrder.IsNull() || plan.MeasureOutOfOrder.IsUnknown()) {
+	if !(plan.MeasureOutOfOrder.IsNull() || plan.MeasureOutOfOrder.IsUnknown()) && (state == nil || !plan.MeasureOutOfOrder.Equal(state.MeasureOutOfOrder)) {
 		body["measure-out-of-order"] = client.FormatBool(plan.MeasureOutOfOrder.ValueBool())
 	}
-	if !(plan.StatsSamplesToKeep.IsNull() || plan.StatsSamplesToKeep.IsUnknown()) {
+	if !(plan.StatsSamplesToKeep.IsNull() || plan.StatsSamplesToKeep.IsUnknown()) && (state == nil || !plan.StatsSamplesToKeep.Equal(state.StatsSamplesToKeep)) {
 		body["stats-samples-to-keep"] = client.FormatInt64(plan.StatsSamplesToKeep.ValueInt64())
 	}
-	if !(plan.TestID.IsNull() || plan.TestID.IsUnknown()) {
+	if !(plan.TestID.IsNull() || plan.TestID.IsUnknown()) && (state == nil || !plan.TestID.Equal(state.TestID)) {
 		body["test-id"] = client.FormatInt64(plan.TestID.ValueInt64())
 	}
 	obj, err := c.SetSingleton(ctx, "/tool/traffic-generator", body)

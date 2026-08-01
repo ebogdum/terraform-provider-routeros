@@ -38,7 +38,6 @@ resource "routeros_interface_wifi_security" "security_example" {
   # ft_mobility_domain = "replace-me"
   # ft_nas_identifier = "replace-me"
   # ft_over_ds = "replace-me"
-  # ft_preserve_vlan_id = "replace-me"
   # ft_r0_key_lifetime = "replace-me"
   # ft_reassoc_deadline = "replace-me"
   # group_encryption = "replace-me"
@@ -83,7 +82,6 @@ This resource supports the following arguments:
 * `ft_mobility_domain` - (Optional) Type: `string`.
 * `ft_nas_identifier` - (Optional) Type: `string`.
 * `ft_over_ds` - (Optional) Type: `string`.
-* `ft_preserve_vlan_id` - (Optional) Type: `string`.
 * `ft_preserve_vlanid` - (Optional) Type: `string`. RouterOS `ft-preserve-vlanid`.
 * `ft_r0_key_lifetime` - (Optional) Type: `string`.
 * `ft_reassoc_deadline` - (Optional) Type: `string`.

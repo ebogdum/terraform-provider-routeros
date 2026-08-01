@@ -16,8 +16,6 @@ resource "routeros_interface_ethernet_poe" "poe_example" {
   # router = "my-router"  # which router to target; omit for the default
 
   # Optional attributes (uncomment as needed):
-  # export = "replace-me"
-  # monitor = "replace-me"
   # power_cycle = "replace-me"
   # print = "replace-me"
 }
@@ -28,13 +26,10 @@ resource "routeros_interface_ethernet_poe" "poe_example" {
 This resource supports the following arguments:
 
 * `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
-* `duration` - (Optional) Type: `string`. RouterOS `duration`.
 * `ether1_poe_in_long_cable` - (Optional) Type: `string`. RouterOS `ether1-poe-in-long-cable`.
-* `export` - (Optional) Type: `string`. export is displayed under /interface ethernet menu.
 * `jack1_max_power` - (Optional) Type: `string`. RouterOS `jack1-max-power`.
 * `jack2_max_power` - (Optional) Type: `string`. RouterOS `jack2-max-power`.
 * `jack_max_power` - (Optional) Type: `string`. RouterOS `jack-max-power`.
-* `monitor` - (Optional) Type: `string`. Shows poe-out-status of a specified port, or all ports with /interface ethernet poe monitor [find] command.
 * `name` - (Optional) Type: `string`. RouterOS `name`.
 * `poe_in_max_power` - (Optional) Type: `string`. RouterOS `poe-in-max-power`.
 * `poe_out` - (Optional) Type: `string`. RouterOS `poe-out`.

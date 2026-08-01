@@ -281,6 +281,7 @@ func (r *IPIpsecIdentityResource) Create(ctx context.Context, req resource.Creat
 		return
 	}
 	iPIpsecIdentityApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -322,28 +323,28 @@ func (r *IPIpsecIdentityResource) Update(ctx context.Context, req resource.Updat
 		return
 	}
 	body := client.Object{}
-	if !plan.AuthMethod.Equal(state.AuthMethod) {
+	if !plan.AuthMethod.Equal(state.AuthMethod) && !plan.AuthMethod.IsUnknown() {
 		body["auth-method"] = plan.AuthMethod.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.GeneratePolicy.Equal(state.GeneratePolicy) {
+	if !plan.GeneratePolicy.Equal(state.GeneratePolicy) && !plan.GeneratePolicy.IsUnknown() {
 		body["generate-policy"] = plan.GeneratePolicy.ValueString()
 	}
-	if !plan.MatchBy.Equal(state.MatchBy) {
+	if !plan.MatchBy.Equal(state.MatchBy) && !plan.MatchBy.IsUnknown() {
 		body["match-by"] = plan.MatchBy.ValueString()
 	}
-	if !plan.NotrackChain.Equal(state.NotrackChain) {
+	if !plan.NotrackChain.Equal(state.NotrackChain) && !plan.NotrackChain.IsUnknown() {
 		body["notrack-chain"] = plan.NotrackChain.ValueString()
 	}
-	if !plan.Peer.Equal(state.Peer) {
+	if !plan.Peer.Equal(state.Peer) && !plan.Peer.IsUnknown() {
 		body["peer"] = plan.Peer.ValueString()
 	}
-	if !plan.PolicyTemplateGroup.Equal(state.PolicyTemplateGroup) {
+	if !plan.PolicyTemplateGroup.Equal(state.PolicyTemplateGroup) && !plan.PolicyTemplateGroup.IsUnknown() {
 		body["policy-template-group"] = plan.PolicyTemplateGroup.ValueString()
 	}
 	if !plan.Certificate.Equal(state.Certificate) && !plan.Certificate.IsUnknown() {
@@ -389,6 +390,7 @@ func (r *IPIpsecIdentityResource) Update(ctx context.Context, req resource.Updat
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

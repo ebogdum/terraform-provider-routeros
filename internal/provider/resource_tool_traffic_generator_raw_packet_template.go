@@ -241,6 +241,7 @@ func (r *ToolTrafficGeneratorRawPacketTemplateResource) Create(ctx context.Conte
 		return
 	}
 	toolTrafficGeneratorRawPacketTemplateApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -282,40 +283,40 @@ func (r *ToolTrafficGeneratorRawPacketTemplateResource) Update(ctx context.Conte
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Data.Equal(state.Data) {
+	if !plan.Data.Equal(state.Data) && !plan.Data.IsUnknown() {
 		body["data"] = plan.Data.ValueString()
 	}
-	if !plan.DataByte.Equal(state.DataByte) {
+	if !plan.DataByte.Equal(state.DataByte) && !plan.DataByte.IsUnknown() {
 		body["data-byte"] = client.FormatInt64(plan.DataByte.ValueInt64())
 	}
-	if !plan.Header.Equal(state.Header) {
+	if !plan.Header.Equal(state.Header) && !plan.Header.IsUnknown() {
 		body["header"] = plan.Header.ValueString()
 	}
-	if !plan.IPHeaderOffset.Equal(state.IPHeaderOffset) {
+	if !plan.IPHeaderOffset.Equal(state.IPHeaderOffset) && !plan.IPHeaderOffset.IsUnknown() {
 		body["ip-header-offset"] = plan.IPHeaderOffset.ValueString()
 	}
-	if !plan.IPV6HeaderOffset.Equal(state.IPV6HeaderOffset) {
+	if !plan.IPV6HeaderOffset.Equal(state.IPV6HeaderOffset) && !plan.IPV6HeaderOffset.IsUnknown() {
 		body["ipv6-header-offset"] = plan.IPV6HeaderOffset.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Port.Equal(state.Port) {
+	if !plan.Port.Equal(state.Port) && !plan.Port.IsUnknown() {
 		body["port"] = plan.Port.ValueString()
 	}
-	if !plan.RandomByteOffsetsAndMasks.Equal(state.RandomByteOffsetsAndMasks) {
+	if !plan.RandomByteOffsetsAndMasks.Equal(state.RandomByteOffsetsAndMasks) && !plan.RandomByteOffsetsAndMasks.IsUnknown() {
 		body["random-byte-offsets-and-masks"] = plan.RandomByteOffsetsAndMasks.ValueString()
 	}
-	if !plan.RandomRanges.Equal(state.RandomRanges) {
+	if !plan.RandomRanges.Equal(state.RandomRanges) && !plan.RandomRanges.IsUnknown() {
 		body["random-ranges"] = plan.RandomRanges.ValueString()
 	}
-	if !plan.SpecialFooter.Equal(state.SpecialFooter) {
+	if !plan.SpecialFooter.Equal(state.SpecialFooter) && !plan.SpecialFooter.IsUnknown() {
 		body["special-footer"] = client.FormatBool(plan.SpecialFooter.ValueBool())
 	}
-	if !plan.UDPHeaderOffset.Equal(state.UDPHeaderOffset) {
+	if !plan.UDPHeaderOffset.Equal(state.UDPHeaderOffset) && !plan.UDPHeaderOffset.IsUnknown() {
 		body["udp-header-offset"] = plan.UDPHeaderOffset.ValueString()
 	}
 	if !plan.ComputeChecksumFromOffset.Equal(state.ComputeChecksumFromOffset) && !plan.ComputeChecksumFromOffset.IsUnknown() {
@@ -337,6 +338,7 @@ func (r *ToolTrafficGeneratorRawPacketTemplateResource) Update(ctx context.Conte
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

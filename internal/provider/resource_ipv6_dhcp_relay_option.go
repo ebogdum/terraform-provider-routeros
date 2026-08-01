@@ -116,6 +116,7 @@ func (r *IPv6DHCPRelayOptionResource) Create(ctx context.Context, req resource.C
 		return
 	}
 	iPv6DHCPRelayOptionApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -186,6 +187,7 @@ func (r *IPv6DHCPRelayOptionResource) Update(ctx context.Context, req resource.U
 	}
 	iPv6DHCPRelayOptionApply(ctx, obj, &plan)
 	plan.ID = state.ID
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

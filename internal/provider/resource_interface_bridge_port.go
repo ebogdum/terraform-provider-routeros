@@ -31,47 +31,47 @@ type InterfaceBridgePortResource struct {
 }
 
 type InterfaceBridgePortModel struct {
-	ID                    types.String `tfsdk:"id"`
-	TrustedDhcpv6         types.String `tfsdk:"trusted_dhcpv6"`
-	AutoIsolate           types.Bool   `tfsdk:"auto_isolate"`
-	BpduGuard             types.Bool   `tfsdk:"bpdu_guard"`
-	Bridge                types.String `tfsdk:"bridge"`
-	BroadcastFlood        types.Bool   `tfsdk:"broadcast_flood"`
-	Comment               types.String `tfsdk:"comment"`
-	Disabled              types.Bool   `tfsdk:"disabled"`
-	Dynamic               types.Bool   `tfsdk:"dynamic"`
-	Edge                  types.String `tfsdk:"edge"`
-	FastLeave             types.Bool   `tfsdk:"fast_leave"`
-	FrameTypes            types.String `tfsdk:"frame_types"`
-	HardwareOffload       types.Bool   `tfsdk:"hardware_offload"`
-	Horizon               types.String `tfsdk:"horizon"`
-	Hw                    types.String `tfsdk:"hw"`
-	HwOffload             types.Bool   `tfsdk:"hw_offload"`
-	HwOffloadGroup        types.String `tfsdk:"hw_offload_group"`
-	Inactive              types.Bool   `tfsdk:"inactive"`
-	IngressFiltering      types.Bool   `tfsdk:"ingress_filtering"`
-	Interface             types.String `tfsdk:"interface"`
-	InternalPathCost      types.String `tfsdk:"internal_path_cost"`
-	Learn                 types.String `tfsdk:"learn"`
-	MulticastRouter       types.String `tfsdk:"multicast_router"`
-	MvrpApplicantState    types.String `tfsdk:"mvrp_applicant_state"`
-	MvrpRegistrarState    types.String `tfsdk:"mvrp_registrar_state"`
-	Parent                types.Int64  `tfsdk:"parent"`
-	PathCost              types.String `tfsdk:"path_cost"`
-	PointToPoint          types.String `tfsdk:"point_to_point"`
-	PortStatus            types.String `tfsdk:"port_status"`
-	Priority              types.Int64  `tfsdk:"priority"`
-	Pvid                  types.Int64  `tfsdk:"pvid"`
-	RestrictedRole        types.Bool   `tfsdk:"restricted_role"`
-	RestrictedTcn         types.Bool   `tfsdk:"restricted_tcn"`
-	Role                  types.Int64  `tfsdk:"role"`
-	Status                types.Int64  `tfsdk:"status"`
-	TagStacking           types.Bool   `tfsdk:"tag_stacking"`
-	Trusted               types.Bool   `tfsdk:"trusted"`
-	TrustedRa             types.Bool   `tfsdk:"trusted_ra"`
-	UnknownMulticastFlood types.Bool   `tfsdk:"unknown_multicast_flood"`
-	UnknownUnicastFlood   types.Bool   `tfsdk:"unknown_unicast_flood"`
-	Router                types.String `tfsdk:"router"`
+	ID                    types.String    `tfsdk:"id"`
+	TrustedDhcpv6         boolStringValue `tfsdk:"trusted_dhcpv6"`
+	AutoIsolate           types.Bool      `tfsdk:"auto_isolate"`
+	BpduGuard             types.Bool      `tfsdk:"bpdu_guard"`
+	Bridge                types.String    `tfsdk:"bridge"`
+	BroadcastFlood        types.Bool      `tfsdk:"broadcast_flood"`
+	Comment               types.String    `tfsdk:"comment"`
+	Disabled              types.Bool      `tfsdk:"disabled"`
+	Dynamic               types.Bool      `tfsdk:"dynamic"`
+	Edge                  types.String    `tfsdk:"edge"`
+	FastLeave             types.Bool      `tfsdk:"fast_leave"`
+	FrameTypes            types.String    `tfsdk:"frame_types"`
+	HardwareOffload       types.Bool      `tfsdk:"hardware_offload"`
+	Horizon               types.String    `tfsdk:"horizon"`
+	Hw                    boolStringValue `tfsdk:"hw"`
+	HwOffload             types.Bool      `tfsdk:"hw_offload"`
+	HwOffloadGroup        types.String    `tfsdk:"hw_offload_group"`
+	Inactive              types.Bool      `tfsdk:"inactive"`
+	IngressFiltering      types.Bool      `tfsdk:"ingress_filtering"`
+	Interface             types.String    `tfsdk:"interface"`
+	InternalPathCost      types.String    `tfsdk:"internal_path_cost"`
+	Learn                 types.String    `tfsdk:"learn"`
+	MulticastRouter       types.String    `tfsdk:"multicast_router"`
+	MvrpApplicantState    types.String    `tfsdk:"mvrp_applicant_state"`
+	MvrpRegistrarState    types.String    `tfsdk:"mvrp_registrar_state"`
+	Parent                types.Int64     `tfsdk:"parent"`
+	PathCost              types.String    `tfsdk:"path_cost"`
+	PointToPoint          types.String    `tfsdk:"point_to_point"`
+	PortStatus            types.String    `tfsdk:"port_status"`
+	Priority              types.Int64     `tfsdk:"priority"`
+	Pvid                  types.Int64     `tfsdk:"pvid"`
+	RestrictedRole        types.Bool      `tfsdk:"restricted_role"`
+	RestrictedTcn         types.Bool      `tfsdk:"restricted_tcn"`
+	Role                  types.String    `tfsdk:"role"`
+	Status                types.String    `tfsdk:"status"`
+	TagStacking           types.Bool      `tfsdk:"tag_stacking"`
+	Trusted               types.Bool      `tfsdk:"trusted"`
+	TrustedRa             types.Bool      `tfsdk:"trusted_ra"`
+	UnknownMulticastFlood types.Bool      `tfsdk:"unknown_multicast_flood"`
+	UnknownUnicastFlood   types.Bool      `tfsdk:"unknown_unicast_flood"`
+	Router                types.String    `tfsdk:"router"`
 }
 
 func NewInterfaceBridgePortResource() resource.Resource { return &InterfaceBridgePortResource{} }
@@ -98,6 +98,7 @@ func (r *InterfaceBridgePortResource) Schema(_ context.Context, _ resource.Schem
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"trusted_dhcpv6": schema.StringAttribute{
+				CustomType:  boolStringType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "RouterOS `trusted-dhcpv6`.",
@@ -163,6 +164,7 @@ func (r *InterfaceBridgePortResource) Schema(_ context.Context, _ resource.Schem
 				Description: "Split-horizon group used to isolate ports. A number, or `none` (the default).",
 			},
 			"hw": schema.StringAttribute{
+				CustomType:  boolStringType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -258,11 +260,11 @@ func (r *InterfaceBridgePortResource) Schema(_ context.Context, _ resource.Schem
 				Computed:    true,
 				Description: "",
 			},
-			"role": schema.Int64Attribute{
+			"role": schema.StringAttribute{
 				Computed:    true,
 				Description: "",
 			},
-			"status": schema.Int64Attribute{
+			"status": schema.StringAttribute{
 				Computed:    true,
 				Description: "",
 			},
@@ -406,6 +408,7 @@ func (r *InterfaceBridgePortResource) Create(ctx context.Context, req resource.C
 		return
 	}
 	interfaceBridgePortApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -447,91 +450,91 @@ func (r *InterfaceBridgePortResource) Update(ctx context.Context, req resource.U
 		return
 	}
 	body := client.Object{}
-	if !plan.AutoIsolate.Equal(state.AutoIsolate) {
+	if !plan.AutoIsolate.Equal(state.AutoIsolate) && !plan.AutoIsolate.IsUnknown() {
 		body["auto-isolate"] = client.FormatBool(plan.AutoIsolate.ValueBool())
 	}
-	if !plan.BpduGuard.Equal(state.BpduGuard) {
+	if !plan.BpduGuard.Equal(state.BpduGuard) && !plan.BpduGuard.IsUnknown() {
 		body["bpdu-guard"] = client.FormatBool(plan.BpduGuard.ValueBool())
 	}
-	if !plan.Bridge.Equal(state.Bridge) {
+	if !plan.Bridge.Equal(state.Bridge) && !plan.Bridge.IsUnknown() {
 		body["bridge"] = plan.Bridge.ValueString()
 	}
-	if !plan.BroadcastFlood.Equal(state.BroadcastFlood) {
+	if !plan.BroadcastFlood.Equal(state.BroadcastFlood) && !plan.BroadcastFlood.IsUnknown() {
 		body["broadcast-flood"] = client.FormatBool(plan.BroadcastFlood.ValueBool())
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Edge.Equal(state.Edge) {
+	if !plan.Edge.Equal(state.Edge) && !plan.Edge.IsUnknown() {
 		body["edge"] = plan.Edge.ValueString()
 	}
-	if !plan.FastLeave.Equal(state.FastLeave) {
+	if !plan.FastLeave.Equal(state.FastLeave) && !plan.FastLeave.IsUnknown() {
 		body["fast-leave"] = client.FormatBool(plan.FastLeave.ValueBool())
 	}
-	if !plan.FrameTypes.Equal(state.FrameTypes) {
+	if !plan.FrameTypes.Equal(state.FrameTypes) && !plan.FrameTypes.IsUnknown() {
 		body["frame-types"] = plan.FrameTypes.ValueString()
 	}
-	if !plan.Horizon.Equal(state.Horizon) {
+	if !plan.Horizon.Equal(state.Horizon) && !plan.Horizon.IsUnknown() {
 		body["horizon"] = plan.Horizon.ValueString()
 	}
-	if !plan.Hw.Equal(state.Hw) {
+	if !plan.Hw.Equal(state.Hw) && !plan.Hw.IsUnknown() {
 		body["hw"] = plan.Hw.ValueString()
 	}
-	if !plan.IngressFiltering.Equal(state.IngressFiltering) {
+	if !plan.IngressFiltering.Equal(state.IngressFiltering) && !plan.IngressFiltering.IsUnknown() {
 		body["ingress-filtering"] = client.FormatBool(plan.IngressFiltering.ValueBool())
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.InternalPathCost.Equal(state.InternalPathCost) {
+	if !plan.InternalPathCost.Equal(state.InternalPathCost) && !plan.InternalPathCost.IsUnknown() {
 		body["internal-path-cost"] = plan.InternalPathCost.ValueString()
 	}
-	if !plan.Learn.Equal(state.Learn) {
+	if !plan.Learn.Equal(state.Learn) && !plan.Learn.IsUnknown() {
 		body["learn"] = plan.Learn.ValueString()
 	}
-	if !plan.MulticastRouter.Equal(state.MulticastRouter) {
+	if !plan.MulticastRouter.Equal(state.MulticastRouter) && !plan.MulticastRouter.IsUnknown() {
 		body["multicast-router"] = plan.MulticastRouter.ValueString()
 	}
-	if !plan.MvrpApplicantState.Equal(state.MvrpApplicantState) {
+	if !plan.MvrpApplicantState.Equal(state.MvrpApplicantState) && !plan.MvrpApplicantState.IsUnknown() {
 		body["mvrp-applicant-state"] = plan.MvrpApplicantState.ValueString()
 	}
-	if !plan.MvrpRegistrarState.Equal(state.MvrpRegistrarState) {
+	if !plan.MvrpRegistrarState.Equal(state.MvrpRegistrarState) && !plan.MvrpRegistrarState.IsUnknown() {
 		body["mvrp-registrar-state"] = plan.MvrpRegistrarState.ValueString()
 	}
-	if !plan.PathCost.Equal(state.PathCost) {
+	if !plan.PathCost.Equal(state.PathCost) && !plan.PathCost.IsUnknown() {
 		body["path-cost"] = plan.PathCost.ValueString()
 	}
-	if !plan.PointToPoint.Equal(state.PointToPoint) {
+	if !plan.PointToPoint.Equal(state.PointToPoint) && !plan.PointToPoint.IsUnknown() {
 		body["point-to-point"] = plan.PointToPoint.ValueString()
 	}
-	if !plan.Priority.Equal(state.Priority) {
+	if !plan.Priority.Equal(state.Priority) && !plan.Priority.IsUnknown() {
 		body["priority"] = client.FormatInt64(plan.Priority.ValueInt64())
 	}
-	if !plan.Pvid.Equal(state.Pvid) {
+	if !plan.Pvid.Equal(state.Pvid) && !plan.Pvid.IsUnknown() {
 		body["pvid"] = client.FormatInt64(plan.Pvid.ValueInt64())
 	}
-	if !plan.RestrictedRole.Equal(state.RestrictedRole) {
+	if !plan.RestrictedRole.Equal(state.RestrictedRole) && !plan.RestrictedRole.IsUnknown() {
 		body["restricted-role"] = client.FormatBool(plan.RestrictedRole.ValueBool())
 	}
-	if !plan.RestrictedTcn.Equal(state.RestrictedTcn) {
+	if !plan.RestrictedTcn.Equal(state.RestrictedTcn) && !plan.RestrictedTcn.IsUnknown() {
 		body["restricted-tcn"] = client.FormatBool(plan.RestrictedTcn.ValueBool())
 	}
-	if !plan.TagStacking.Equal(state.TagStacking) {
+	if !plan.TagStacking.Equal(state.TagStacking) && !plan.TagStacking.IsUnknown() {
 		body["tag-stacking"] = client.FormatBool(plan.TagStacking.ValueBool())
 	}
-	if !plan.Trusted.Equal(state.Trusted) {
+	if !plan.Trusted.Equal(state.Trusted) && !plan.Trusted.IsUnknown() {
 		body["trusted"] = client.FormatBool(plan.Trusted.ValueBool())
 	}
-	if !plan.TrustedRa.Equal(state.TrustedRa) {
+	if !plan.TrustedRa.Equal(state.TrustedRa) && !plan.TrustedRa.IsUnknown() {
 		body["trusted-ra"] = client.FormatBool(plan.TrustedRa.ValueBool())
 	}
-	if !plan.UnknownMulticastFlood.Equal(state.UnknownMulticastFlood) {
+	if !plan.UnknownMulticastFlood.Equal(state.UnknownMulticastFlood) && !plan.UnknownMulticastFlood.IsUnknown() {
 		body["unknown-multicast-flood"] = client.FormatBool(plan.UnknownMulticastFlood.ValueBool())
 	}
-	if !plan.UnknownUnicastFlood.Equal(state.UnknownUnicastFlood) {
+	if !plan.UnknownUnicastFlood.Equal(state.UnknownUnicastFlood) && !plan.UnknownUnicastFlood.IsUnknown() {
 		body["unknown-unicast-flood"] = client.FormatBool(plan.UnknownUnicastFlood.ValueBool())
 	}
 	if !plan.TrustedDhcpv6.Equal(state.TrustedDhcpv6) && !plan.TrustedDhcpv6.IsUnknown() {
@@ -547,6 +550,7 @@ func (r *InterfaceBridgePortResource) Update(ctx context.Context, req resource.U
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -604,9 +608,7 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["trusted-dhcpv6"]; ok && v != "" {
-		m.TrustedDhcpv6 = types.StringValue(v)
-	} else {
-		m.TrustedDhcpv6 = types.StringNull()
+		m.TrustedDhcpv6 = newBoolStringValue(v)
 	}
 	if v, ok := obj["auto-isolate"]; ok {
 		_ = v
@@ -731,12 +733,8 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 	if v, ok := obj["hw"]; ok {
 		_ = v
 		if v != "" {
-			m.Hw = types.StringValue(v)
-		} else {
-			m.Hw = types.StringNull()
+			m.Hw = newBoolStringValue(v)
 		}
-	} else {
-		m.Hw = types.StringNull()
 	}
 	if v, ok := obj["hw-offload"]; ok {
 		_ = v
@@ -918,25 +916,15 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 	} else {
 		m.RestrictedTcn = types.BoolNull()
 	}
-	if v, ok := obj["role"]; ok {
-		_ = v
-		if n, err := client.ParseInt64(v); err == nil {
-			m.Role = types.Int64Value(n)
-		} else {
-			m.Role = types.Int64Null()
-		}
+	if v, ok := obj["role"]; ok && v != "" {
+		m.Role = types.StringValue(v)
 	} else {
-		m.Role = types.Int64Null()
+		m.Role = types.StringNull()
 	}
-	if v, ok := obj["status"]; ok {
-		_ = v
-		if n, err := client.ParseInt64(v); err == nil {
-			m.Status = types.Int64Value(n)
-		} else {
-			m.Status = types.Int64Null()
-		}
+	if v, ok := obj["status"]; ok && v != "" {
+		m.Status = types.StringValue(v)
 	} else {
-		m.Status = types.Int64Null()
+		m.Status = types.StringNull()
 	}
 	if v, ok := obj["tag-stacking"]; ok {
 		_ = v

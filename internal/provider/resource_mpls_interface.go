@@ -29,14 +29,14 @@ type MPLSInterfaceResource struct {
 }
 
 type MPLSInterfaceModel struct {
-	ID        types.String `tfsdk:"id"`
-	Builtin   types.Bool   `tfsdk:"builtin"`
-	Comment   types.String `tfsdk:"comment"`
-	Disabled  types.Bool   `tfsdk:"disabled"`
-	Input     types.String `tfsdk:"input"`
-	Interface types.String `tfsdk:"interface"`
-	MPLSMTU   types.String `tfsdk:"mpls_mtu"`
-	Router    types.String `tfsdk:"router"`
+	ID        types.String    `tfsdk:"id"`
+	Builtin   types.Bool      `tfsdk:"builtin"`
+	Comment   types.String    `tfsdk:"comment"`
+	Disabled  types.Bool      `tfsdk:"disabled"`
+	Input     boolStringValue `tfsdk:"input"`
+	Interface types.String    `tfsdk:"interface"`
+	MPLSMTU   types.String    `tfsdk:"mpls_mtu"`
+	Router    types.String    `tfsdk:"router"`
 }
 
 func NewMPLSInterfaceResource() resource.Resource { return &MPLSInterfaceResource{} }
@@ -77,6 +77,7 @@ func (r *MPLSInterfaceResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "Whether the entry is disabled.",
 			},
 			"input": schema.StringAttribute{
+				CustomType:  boolStringType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -130,6 +131,7 @@ func (r *MPLSInterfaceResource) Create(ctx context.Context, req resource.CreateR
 		return
 	}
 	mPLSInterfaceApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -171,19 +173,19 @@ func (r *MPLSInterfaceResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Input.Equal(state.Input) {
+	if !plan.Input.Equal(state.Input) && !plan.Input.IsUnknown() {
 		body["input"] = plan.Input.ValueString()
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.MPLSMTU.Equal(state.MPLSMTU) {
+	if !plan.MPLSMTU.Equal(state.MPLSMTU) && !plan.MPLSMTU.IsUnknown() {
 		body["mpls-mtu"] = plan.MPLSMTU.ValueString()
 	}
 	if len(body) > 0 {
@@ -196,6 +198,7 @@ func (r *MPLSInterfaceResource) Update(ctx context.Context, req resource.UpdateR
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -285,12 +288,12 @@ func mPLSInterfaceApply(ctx context.Context, obj client.Object, m *MPLSInterface
 	if v, ok := obj["input"]; ok {
 		_ = v
 		if v != "" {
-			m.Input = types.StringValue(v)
+			m.Input = newBoolStringValue(v)
 		} else {
-			m.Input = types.StringNull()
+			m.Input = newBoolStringNull()
 		}
 	} else {
-		m.Input = types.StringNull()
+		m.Input = newBoolStringNull()
 	}
 	if v, ok := obj["interface"]; ok {
 		_ = v

@@ -84,10 +84,11 @@ func (r *RoutingIgmpProxyResource) Create(ctx context.Context, req resource.Crea
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	routingIgmpProxyUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	routingIgmpProxyUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -97,10 +98,16 @@ func (r *RoutingIgmpProxyResource) Update(ctx context.Context, req resource.Upda
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	routingIgmpProxyUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state RoutingIgmpProxyModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	routingIgmpProxyUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -138,19 +145,19 @@ func (r *RoutingIgmpProxyResource) ImportState(ctx context.Context, req resource
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/routing/igmp-proxy", types.StringValue(routerName))))...)
 }
 
-func routingIgmpProxyUpsert(ctx context.Context, reg *client.Registry, plan *RoutingIgmpProxyModel, diags *diagBuf) {
+func routingIgmpProxyUpsert(ctx context.Context, reg *client.Registry, plan, state *RoutingIgmpProxyModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.QueryInterval.IsNull() || plan.QueryInterval.IsUnknown()) {
+	if !(plan.QueryInterval.IsNull() || plan.QueryInterval.IsUnknown()) && (state == nil || !plan.QueryInterval.Equal(state.QueryInterval)) {
 		body["query-interval"] = plan.QueryInterval.ValueString()
 	}
-	if !(plan.QueryResponseInterval.IsNull() || plan.QueryResponseInterval.IsUnknown()) {
+	if !(plan.QueryResponseInterval.IsNull() || plan.QueryResponseInterval.IsUnknown()) && (state == nil || !plan.QueryResponseInterval.Equal(state.QueryResponseInterval)) {
 		body["query-response-interval"] = plan.QueryResponseInterval.ValueString()
 	}
-	if !(plan.QuickLeave.IsNull() || plan.QuickLeave.IsUnknown()) {
+	if !(plan.QuickLeave.IsNull() || plan.QuickLeave.IsUnknown()) && (state == nil || !plan.QuickLeave.Equal(state.QuickLeave)) {
 		body["quick-leave"] = client.FormatBool(plan.QuickLeave.ValueBool())
 	}
 	obj, err := c.SetSingleton(ctx, "/routing/igmp-proxy", body)

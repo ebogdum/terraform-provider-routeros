@@ -221,6 +221,7 @@ func (r *IPCloudBackToHomeUserResource) Create(ctx context.Context, req resource
 		return
 	}
 	iPCloudBackToHomeUserApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -262,25 +263,25 @@ func (r *IPCloudBackToHomeUserResource) Update(ctx context.Context, req resource
 		return
 	}
 	body := client.Object{}
-	if !plan.AllowLan.Equal(state.AllowLan) {
+	if !plan.AllowLan.Equal(state.AllowLan) && !plan.AllowLan.IsUnknown() {
 		body["allow-lan"] = client.FormatBool(plan.AllowLan.ValueBool())
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Expires.Equal(state.Expires) {
+	if !plan.Expires.Equal(state.Expires) && !plan.Expires.IsUnknown() {
 		body["expires"] = plan.Expires.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.PrivateKey.Equal(state.PrivateKey) {
+	if !plan.PrivateKey.Equal(state.PrivateKey) && !plan.PrivateKey.IsUnknown() {
 		body["private-key"] = plan.PrivateKey.ValueString()
 	}
-	if !plan.PublicKey.Equal(state.PublicKey) {
+	if !plan.PublicKey.Equal(state.PublicKey) && !plan.PublicKey.IsUnknown() {
 		body["public-key"] = plan.PublicKey.ValueString()
 	}
 	if !plan.FileAccess.Equal(state.FileAccess) && !plan.FileAccess.IsUnknown() {
@@ -299,6 +300,7 @@ func (r *IPCloudBackToHomeUserResource) Update(ctx context.Context, req resource
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

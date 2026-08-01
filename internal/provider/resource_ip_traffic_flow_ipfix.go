@@ -285,10 +285,11 @@ func (r *IPTrafficFlowIPFIXResource) Create(ctx context.Context, req resource.Cr
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPTrafficFlowIPFIXUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	iPTrafficFlowIPFIXUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -298,10 +299,16 @@ func (r *IPTrafficFlowIPFIXResource) Update(ctx context.Context, req resource.Up
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPTrafficFlowIPFIXUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state IPTrafficFlowIPFIXModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	iPTrafficFlowIPFIXUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -339,118 +346,118 @@ func (r *IPTrafficFlowIPFIXResource) ImportState(ctx context.Context, req resour
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/ip/traffic-flow/ipfix", types.StringValue(routerName))))...)
 }
 
-func iPTrafficFlowIPFIXUpsert(ctx context.Context, reg *client.Registry, plan *IPTrafficFlowIPFIXModel, diags *diagBuf) {
+func iPTrafficFlowIPFIXUpsert(ctx context.Context, reg *client.Registry, plan, state *IPTrafficFlowIPFIXModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.Bytes.IsNull() || plan.Bytes.IsUnknown()) {
+	if !(plan.Bytes.IsNull() || plan.Bytes.IsUnknown()) && (state == nil || !plan.Bytes.Equal(state.Bytes)) {
 		body["bytes"] = client.FormatBool(plan.Bytes.ValueBool())
 	}
-	if !(plan.DstAddress.IsNull() || plan.DstAddress.IsUnknown()) {
+	if !(plan.DstAddress.IsNull() || plan.DstAddress.IsUnknown()) && (state == nil || !plan.DstAddress.Equal(state.DstAddress)) {
 		body["dst-address"] = client.FormatBool(plan.DstAddress.ValueBool())
 	}
-	if !(plan.DstAddressMask.IsNull() || plan.DstAddressMask.IsUnknown()) {
+	if !(plan.DstAddressMask.IsNull() || plan.DstAddressMask.IsUnknown()) && (state == nil || !plan.DstAddressMask.Equal(state.DstAddressMask)) {
 		body["dst-address-mask"] = client.FormatBool(plan.DstAddressMask.ValueBool())
 	}
-	if !(plan.DstMACAddress.IsNull() || plan.DstMACAddress.IsUnknown()) {
+	if !(plan.DstMACAddress.IsNull() || plan.DstMACAddress.IsUnknown()) && (state == nil || !plan.DstMACAddress.Equal(state.DstMACAddress)) {
 		body["dst-mac-address"] = client.FormatBool(plan.DstMACAddress.ValueBool())
 	}
-	if !(plan.DstPort.IsNull() || plan.DstPort.IsUnknown()) {
+	if !(plan.DstPort.IsNull() || plan.DstPort.IsUnknown()) && (state == nil || !plan.DstPort.Equal(state.DstPort)) {
 		body["dst-port"] = client.FormatBool(plan.DstPort.ValueBool())
 	}
-	if !(plan.FirstForwarded.IsNull() || plan.FirstForwarded.IsUnknown()) {
+	if !(plan.FirstForwarded.IsNull() || plan.FirstForwarded.IsUnknown()) && (state == nil || !plan.FirstForwarded.Equal(state.FirstForwarded)) {
 		body["first-forwarded"] = client.FormatBool(plan.FirstForwarded.ValueBool())
 	}
-	if !(plan.Gateway.IsNull() || plan.Gateway.IsUnknown()) {
+	if !(plan.Gateway.IsNull() || plan.Gateway.IsUnknown()) && (state == nil || !plan.Gateway.Equal(state.Gateway)) {
 		body["gateway"] = client.FormatBool(plan.Gateway.ValueBool())
 	}
-	if !(plan.IcmpCode.IsNull() || plan.IcmpCode.IsUnknown()) {
+	if !(plan.IcmpCode.IsNull() || plan.IcmpCode.IsUnknown()) && (state == nil || !plan.IcmpCode.Equal(state.IcmpCode)) {
 		body["icmp-code"] = client.FormatBool(plan.IcmpCode.ValueBool())
 	}
-	if !(plan.IcmpType.IsNull() || plan.IcmpType.IsUnknown()) {
+	if !(plan.IcmpType.IsNull() || plan.IcmpType.IsUnknown()) && (state == nil || !plan.IcmpType.Equal(state.IcmpType)) {
 		body["icmp-type"] = client.FormatBool(plan.IcmpType.ValueBool())
 	}
-	if !(plan.IgmpType.IsNull() || plan.IgmpType.IsUnknown()) {
+	if !(plan.IgmpType.IsNull() || plan.IgmpType.IsUnknown()) && (state == nil || !plan.IgmpType.Equal(state.IgmpType)) {
 		body["igmp-type"] = client.FormatBool(plan.IgmpType.ValueBool())
 	}
-	if !(plan.InInterface.IsNull() || plan.InInterface.IsUnknown()) {
+	if !(plan.InInterface.IsNull() || plan.InInterface.IsUnknown()) && (state == nil || !plan.InInterface.Equal(state.InInterface)) {
 		body["in-interface"] = client.FormatBool(plan.InInterface.ValueBool())
 	}
-	if !(plan.IPHeaderLength.IsNull() || plan.IPHeaderLength.IsUnknown()) {
+	if !(plan.IPHeaderLength.IsNull() || plan.IPHeaderLength.IsUnknown()) && (state == nil || !plan.IPHeaderLength.Equal(state.IPHeaderLength)) {
 		body["ip-header-length"] = client.FormatBool(plan.IPHeaderLength.ValueBool())
 	}
-	if !(plan.IPTotalLength.IsNull() || plan.IPTotalLength.IsUnknown()) {
+	if !(plan.IPTotalLength.IsNull() || plan.IPTotalLength.IsUnknown()) && (state == nil || !plan.IPTotalLength.Equal(state.IPTotalLength)) {
 		body["ip-total-length"] = client.FormatBool(plan.IPTotalLength.ValueBool())
 	}
-	if !(plan.IPv6FlowLabel.IsNull() || plan.IPv6FlowLabel.IsUnknown()) {
+	if !(plan.IPv6FlowLabel.IsNull() || plan.IPv6FlowLabel.IsUnknown()) && (state == nil || !plan.IPv6FlowLabel.Equal(state.IPv6FlowLabel)) {
 		body["ipv6-flow-label"] = client.FormatBool(plan.IPv6FlowLabel.ValueBool())
 	}
-	if !(plan.IsMulticast.IsNull() || plan.IsMulticast.IsUnknown()) {
+	if !(plan.IsMulticast.IsNull() || plan.IsMulticast.IsUnknown()) && (state == nil || !plan.IsMulticast.Equal(state.IsMulticast)) {
 		body["is-multicast"] = client.FormatBool(plan.IsMulticast.ValueBool())
 	}
-	if !(plan.LastForwarded.IsNull() || plan.LastForwarded.IsUnknown()) {
+	if !(plan.LastForwarded.IsNull() || plan.LastForwarded.IsUnknown()) && (state == nil || !plan.LastForwarded.Equal(state.LastForwarded)) {
 		body["last-forwarded"] = client.FormatBool(plan.LastForwarded.ValueBool())
 	}
-	if !(plan.NatDstAddress.IsNull() || plan.NatDstAddress.IsUnknown()) {
+	if !(plan.NatDstAddress.IsNull() || plan.NatDstAddress.IsUnknown()) && (state == nil || !plan.NatDstAddress.Equal(state.NatDstAddress)) {
 		body["nat-dst-address"] = client.FormatBool(plan.NatDstAddress.ValueBool())
 	}
-	if !(plan.NatDstPort.IsNull() || plan.NatDstPort.IsUnknown()) {
+	if !(plan.NatDstPort.IsNull() || plan.NatDstPort.IsUnknown()) && (state == nil || !plan.NatDstPort.Equal(state.NatDstPort)) {
 		body["nat-dst-port"] = client.FormatBool(plan.NatDstPort.ValueBool())
 	}
-	if !(plan.NatEvents.IsNull() || plan.NatEvents.IsUnknown()) {
+	if !(plan.NatEvents.IsNull() || plan.NatEvents.IsUnknown()) && (state == nil || !plan.NatEvents.Equal(state.NatEvents)) {
 		body["nat-events"] = client.FormatBool(plan.NatEvents.ValueBool())
 	}
-	if !(plan.NatSrcAddress.IsNull() || plan.NatSrcAddress.IsUnknown()) {
+	if !(plan.NatSrcAddress.IsNull() || plan.NatSrcAddress.IsUnknown()) && (state == nil || !plan.NatSrcAddress.Equal(state.NatSrcAddress)) {
 		body["nat-src-address"] = client.FormatBool(plan.NatSrcAddress.ValueBool())
 	}
-	if !(plan.NatSrcPort.IsNull() || plan.NatSrcPort.IsUnknown()) {
+	if !(plan.NatSrcPort.IsNull() || plan.NatSrcPort.IsUnknown()) && (state == nil || !plan.NatSrcPort.Equal(state.NatSrcPort)) {
 		body["nat-src-port"] = client.FormatBool(plan.NatSrcPort.ValueBool())
 	}
-	if !(plan.OutInterface.IsNull() || plan.OutInterface.IsUnknown()) {
+	if !(plan.OutInterface.IsNull() || plan.OutInterface.IsUnknown()) && (state == nil || !plan.OutInterface.Equal(state.OutInterface)) {
 		body["out-interface"] = client.FormatBool(plan.OutInterface.ValueBool())
 	}
-	if !(plan.Packets.IsNull() || plan.Packets.IsUnknown()) {
+	if !(plan.Packets.IsNull() || plan.Packets.IsUnknown()) && (state == nil || !plan.Packets.Equal(state.Packets)) {
 		body["packets"] = client.FormatBool(plan.Packets.ValueBool())
 	}
-	if !(plan.Protocol.IsNull() || plan.Protocol.IsUnknown()) {
+	if !(plan.Protocol.IsNull() || plan.Protocol.IsUnknown()) && (state == nil || !plan.Protocol.Equal(state.Protocol)) {
 		body["protocol"] = client.FormatBool(plan.Protocol.ValueBool())
 	}
-	if !(plan.SrcAddress.IsNull() || plan.SrcAddress.IsUnknown()) {
+	if !(plan.SrcAddress.IsNull() || plan.SrcAddress.IsUnknown()) && (state == nil || !plan.SrcAddress.Equal(state.SrcAddress)) {
 		body["src-address"] = client.FormatBool(plan.SrcAddress.ValueBool())
 	}
-	if !(plan.SrcAddressMask.IsNull() || plan.SrcAddressMask.IsUnknown()) {
+	if !(plan.SrcAddressMask.IsNull() || plan.SrcAddressMask.IsUnknown()) && (state == nil || !plan.SrcAddressMask.Equal(state.SrcAddressMask)) {
 		body["src-address-mask"] = client.FormatBool(plan.SrcAddressMask.ValueBool())
 	}
-	if !(plan.SrcMACAddress.IsNull() || plan.SrcMACAddress.IsUnknown()) {
+	if !(plan.SrcMACAddress.IsNull() || plan.SrcMACAddress.IsUnknown()) && (state == nil || !plan.SrcMACAddress.Equal(state.SrcMACAddress)) {
 		body["src-mac-address"] = client.FormatBool(plan.SrcMACAddress.ValueBool())
 	}
-	if !(plan.SrcPort.IsNull() || plan.SrcPort.IsUnknown()) {
+	if !(plan.SrcPort.IsNull() || plan.SrcPort.IsUnknown()) && (state == nil || !plan.SrcPort.Equal(state.SrcPort)) {
 		body["src-port"] = client.FormatBool(plan.SrcPort.ValueBool())
 	}
-	if !(plan.SysInitTime.IsNull() || plan.SysInitTime.IsUnknown()) {
+	if !(plan.SysInitTime.IsNull() || plan.SysInitTime.IsUnknown()) && (state == nil || !plan.SysInitTime.Equal(state.SysInitTime)) {
 		body["sys-init-time"] = client.FormatBool(plan.SysInitTime.ValueBool())
 	}
-	if !(plan.TCPAckNum.IsNull() || plan.TCPAckNum.IsUnknown()) {
+	if !(plan.TCPAckNum.IsNull() || plan.TCPAckNum.IsUnknown()) && (state == nil || !plan.TCPAckNum.Equal(state.TCPAckNum)) {
 		body["tcp-ack-num"] = client.FormatBool(plan.TCPAckNum.ValueBool())
 	}
-	if !(plan.TCPFlags.IsNull() || plan.TCPFlags.IsUnknown()) {
+	if !(plan.TCPFlags.IsNull() || plan.TCPFlags.IsUnknown()) && (state == nil || !plan.TCPFlags.Equal(state.TCPFlags)) {
 		body["tcp-flags"] = client.FormatBool(plan.TCPFlags.ValueBool())
 	}
-	if !(plan.TCPSeqNum.IsNull() || plan.TCPSeqNum.IsUnknown()) {
+	if !(plan.TCPSeqNum.IsNull() || plan.TCPSeqNum.IsUnknown()) && (state == nil || !plan.TCPSeqNum.Equal(state.TCPSeqNum)) {
 		body["tcp-seq-num"] = client.FormatBool(plan.TCPSeqNum.ValueBool())
 	}
-	if !(plan.TCPWindowSize.IsNull() || plan.TCPWindowSize.IsUnknown()) {
+	if !(plan.TCPWindowSize.IsNull() || plan.TCPWindowSize.IsUnknown()) && (state == nil || !plan.TCPWindowSize.Equal(state.TCPWindowSize)) {
 		body["tcp-window-size"] = client.FormatBool(plan.TCPWindowSize.ValueBool())
 	}
-	if !(plan.Tos.IsNull() || plan.Tos.IsUnknown()) {
+	if !(plan.Tos.IsNull() || plan.Tos.IsUnknown()) && (state == nil || !plan.Tos.Equal(state.Tos)) {
 		body["tos"] = client.FormatBool(plan.Tos.ValueBool())
 	}
-	if !(plan.Ttl.IsNull() || plan.Ttl.IsUnknown()) {
+	if !(plan.Ttl.IsNull() || plan.Ttl.IsUnknown()) && (state == nil || !plan.Ttl.Equal(state.Ttl)) {
 		body["ttl"] = client.FormatBool(plan.Ttl.ValueBool())
 	}
-	if !(plan.UDPLength.IsNull() || plan.UDPLength.IsUnknown()) {
+	if !(plan.UDPLength.IsNull() || plan.UDPLength.IsUnknown()) && (state == nil || !plan.UDPLength.Equal(state.UDPLength)) {
 		body["udp-length"] = client.FormatBool(plan.UDPLength.ValueBool())
 	}
 	obj, err := c.SetSingleton(ctx, "/ip/traffic-flow/ipfix", body)

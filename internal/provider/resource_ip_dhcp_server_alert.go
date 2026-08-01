@@ -153,6 +153,7 @@ func (r *IPDHCPServerAlertResource) Create(ctx context.Context, req resource.Cre
 		return
 	}
 	iPDHCPServerAlertApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -194,19 +195,19 @@ func (r *IPDHCPServerAlertResource) Update(ctx context.Context, req resource.Upd
 		return
 	}
 	body := client.Object{}
-	if !plan.AlertTimeout.Equal(state.AlertTimeout) {
+	if !plan.AlertTimeout.Equal(state.AlertTimeout) && !plan.AlertTimeout.IsUnknown() {
 		body["alert-timeout"] = plan.AlertTimeout.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.OnAlert.Equal(state.OnAlert) {
+	if !plan.OnAlert.Equal(state.OnAlert) && !plan.OnAlert.IsUnknown() {
 		body["on-alert"] = plan.OnAlert.ValueString()
 	}
 	if !plan.ValidServer.Equal(state.ValidServer) && !plan.ValidServer.IsUnknown() {
@@ -222,6 +223,7 @@ func (r *IPDHCPServerAlertResource) Update(ctx context.Context, req resource.Upd
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

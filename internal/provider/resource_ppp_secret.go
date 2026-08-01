@@ -31,26 +31,26 @@ type PPPSecretResource struct {
 }
 
 type PPPSecretModel struct {
-	ID                   types.String `tfsdk:"id"`
-	CallerID             types.String `tfsdk:"caller_id"`
-	Comment              types.String `tfsdk:"comment"`
-	Disabled             types.Bool   `tfsdk:"disabled"`
-	IPV6                 types.String `tfsdk:"ipv6"`
-	IPV6Routes           types.String `tfsdk:"ipv6_routes"`
-	LastCallerID         types.String `tfsdk:"last_caller_id"`
-	LastDisconnectReason types.String `tfsdk:"last_disconnect_reason"`
-	LastLoggedOut        types.String `tfsdk:"last_logged_out"`
-	LimitBytesIn         types.String `tfsdk:"limit_bytes_in"`
-	LimitBytesOut        types.String `tfsdk:"limit_bytes_out"`
-	LocalAddress         types.String `tfsdk:"local_address"`
-	Name                 types.String `tfsdk:"name"`
-	Password             types.String `tfsdk:"password"`
-	Profile              types.String `tfsdk:"profile"`
-	RemoteAddress        types.String `tfsdk:"remote_address"`
-	RemoteIPV6Prefix     types.String `tfsdk:"remote_ipv6_prefix"`
-	Routes               types.String `tfsdk:"routes"`
-	Service              types.String `tfsdk:"service"`
-	Router               types.String `tfsdk:"router"`
+	ID                   types.String  `tfsdk:"id"`
+	CallerID             types.String  `tfsdk:"caller_id"`
+	Comment              types.String  `tfsdk:"comment"`
+	Disabled             types.Bool    `tfsdk:"disabled"`
+	IPV6                 types.String  `tfsdk:"ipv6"`
+	IPV6Routes           types.String  `tfsdk:"ipv6_routes"`
+	LastCallerID         types.String  `tfsdk:"last_caller_id"`
+	LastDisconnectReason types.String  `tfsdk:"last_disconnect_reason"`
+	LastLoggedOut        types.String  `tfsdk:"last_logged_out"`
+	LimitBytesIn         rosRateValue  `tfsdk:"limit_bytes_in"`
+	LimitBytesOut        rosRateValue  `tfsdk:"limit_bytes_out"`
+	LocalAddress         types.String  `tfsdk:"local_address"`
+	Name                 types.String  `tfsdk:"name"`
+	Password             types.String  `tfsdk:"password"`
+	Profile              types.String  `tfsdk:"profile"`
+	RemoteAddress        types.String  `tfsdk:"remote_address"`
+	RemoteIPV6Prefix     hostAddrValue `tfsdk:"remote_ipv6_prefix"`
+	Routes               types.String  `tfsdk:"routes"`
+	Service              types.String  `tfsdk:"service"`
+	Router               types.String  `tfsdk:"router"`
 }
 
 func NewPPPSecretResource() resource.Resource { return &PPPSecretResource{} }
@@ -114,11 +114,13 @@ func (r *PPPSecretResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Description: "",
 			},
 			"limit_bytes_in": schema.StringAttribute{
+				CustomType:  rosRateType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"limit_bytes_out": schema.StringAttribute{
+				CustomType:  rosRateType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -149,6 +151,7 @@ func (r *PPPSecretResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Description: "",
 			},
 			"remote_ipv6_prefix": schema.StringAttribute{
+				CustomType:  hostAddrType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -231,6 +234,7 @@ func (r *PPPSecretResource) Create(ctx context.Context, req resource.CreateReque
 		return
 	}
 	pPPSecretApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -272,46 +276,46 @@ func (r *PPPSecretResource) Update(ctx context.Context, req resource.UpdateReque
 		return
 	}
 	body := client.Object{}
-	if !plan.CallerID.Equal(state.CallerID) {
+	if !plan.CallerID.Equal(state.CallerID) && !plan.CallerID.IsUnknown() {
 		body["caller-id"] = plan.CallerID.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.IPV6Routes.Equal(state.IPV6Routes) {
+	if !plan.IPV6Routes.Equal(state.IPV6Routes) && !plan.IPV6Routes.IsUnknown() {
 		body["ipv6-routes"] = plan.IPV6Routes.ValueString()
 	}
-	if !plan.LimitBytesIn.Equal(state.LimitBytesIn) {
+	if !plan.LimitBytesIn.Equal(state.LimitBytesIn) && !plan.LimitBytesIn.IsUnknown() {
 		body["limit-bytes-in"] = plan.LimitBytesIn.ValueString()
 	}
-	if !plan.LimitBytesOut.Equal(state.LimitBytesOut) {
+	if !plan.LimitBytesOut.Equal(state.LimitBytesOut) && !plan.LimitBytesOut.IsUnknown() {
 		body["limit-bytes-out"] = plan.LimitBytesOut.ValueString()
 	}
-	if !plan.LocalAddress.Equal(state.LocalAddress) {
+	if !plan.LocalAddress.Equal(state.LocalAddress) && !plan.LocalAddress.IsUnknown() {
 		body["local-address"] = plan.LocalAddress.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Password.Equal(state.Password) {
+	if !plan.Password.Equal(state.Password) && !plan.Password.IsUnknown() {
 		body["password"] = plan.Password.ValueString()
 	}
-	if !plan.Profile.Equal(state.Profile) {
+	if !plan.Profile.Equal(state.Profile) && !plan.Profile.IsUnknown() {
 		body["profile"] = plan.Profile.ValueString()
 	}
-	if !plan.RemoteAddress.Equal(state.RemoteAddress) {
+	if !plan.RemoteAddress.Equal(state.RemoteAddress) && !plan.RemoteAddress.IsUnknown() {
 		body["remote-address"] = plan.RemoteAddress.ValueString()
 	}
-	if !plan.RemoteIPV6Prefix.Equal(state.RemoteIPV6Prefix) {
+	if !plan.RemoteIPV6Prefix.Equal(state.RemoteIPV6Prefix) && !plan.RemoteIPV6Prefix.IsUnknown() {
 		body["remote-ipv6-prefix"] = plan.RemoteIPV6Prefix.ValueString()
 	}
-	if !plan.Routes.Equal(state.Routes) {
+	if !plan.Routes.Equal(state.Routes) && !plan.Routes.IsUnknown() {
 		body["routes"] = plan.Routes.ValueString()
 	}
-	if !plan.Service.Equal(state.Service) {
+	if !plan.Service.Equal(state.Service) && !plan.Service.IsUnknown() {
 		body["service"] = plan.Service.ValueString()
 	}
 	if len(body) > 0 {
@@ -324,6 +328,7 @@ func (r *PPPSecretResource) Update(ctx context.Context, req resource.UpdateReque
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -463,22 +468,22 @@ func pPPSecretApply(ctx context.Context, obj client.Object, m *PPPSecretModel) {
 	if v, ok := obj["limit-bytes-in"]; ok {
 		_ = v
 		if v != "" {
-			m.LimitBytesIn = types.StringValue(v)
+			m.LimitBytesIn = newRosRateValue(v)
 		} else {
-			m.LimitBytesIn = types.StringNull()
+			m.LimitBytesIn = newRosRateNull()
 		}
 	} else {
-		m.LimitBytesIn = types.StringNull()
+		m.LimitBytesIn = newRosRateNull()
 	}
 	if v, ok := obj["limit-bytes-out"]; ok {
 		_ = v
 		if v != "" {
-			m.LimitBytesOut = types.StringValue(v)
+			m.LimitBytesOut = newRosRateValue(v)
 		} else {
-			m.LimitBytesOut = types.StringNull()
+			m.LimitBytesOut = newRosRateNull()
 		}
 	} else {
-		m.LimitBytesOut = types.StringNull()
+		m.LimitBytesOut = newRosRateNull()
 	}
 	if v, ok := obj["local-address"]; ok {
 		_ = v
@@ -537,12 +542,12 @@ func pPPSecretApply(ctx context.Context, obj client.Object, m *PPPSecretModel) {
 	if v, ok := obj["remote-ipv6-prefix"]; ok {
 		_ = v
 		if v != "" {
-			m.RemoteIPV6Prefix = types.StringValue(v)
+			m.RemoteIPV6Prefix = newHostAddrValue(v)
 		} else {
-			m.RemoteIPV6Prefix = types.StringNull()
+			m.RemoteIPV6Prefix = newHostAddrNull()
 		}
 	} else {
-		m.RemoteIPV6Prefix = types.StringNull()
+		m.RemoteIPV6Prefix = newHostAddrNull()
 	}
 	if v, ok := obj["routes"]; ok {
 		_ = v

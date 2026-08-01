@@ -142,10 +142,11 @@ func (r *IPV6SettingsResource) Create(ctx context.Context, req resource.CreateRe
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPV6SettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	iPV6SettingsUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -155,10 +156,16 @@ func (r *IPV6SettingsResource) Update(ctx context.Context, req resource.UpdateRe
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPV6SettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state IPV6SettingsModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	iPV6SettingsUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -196,49 +203,49 @@ func (r *IPV6SettingsResource) ImportState(ctx context.Context, req resource.Imp
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/ipv6/settings", types.StringValue(routerName))))...)
 }
 
-func iPV6SettingsUpsert(ctx context.Context, reg *client.Registry, plan *IPV6SettingsModel, diags *diagBuf) {
+func iPV6SettingsUpsert(ctx context.Context, reg *client.Registry, plan, state *IPV6SettingsModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.AcceptRedirects.IsNull() || plan.AcceptRedirects.IsUnknown()) {
+	if !(plan.AcceptRedirects.IsNull() || plan.AcceptRedirects.IsUnknown()) && (state == nil || !plan.AcceptRedirects.Equal(state.AcceptRedirects)) {
 		body["accept-redirects"] = plan.AcceptRedirects.ValueString()
 	}
-	if !(plan.AcceptRouterAdvertisements.IsNull() || plan.AcceptRouterAdvertisements.IsUnknown()) {
+	if !(plan.AcceptRouterAdvertisements.IsNull() || plan.AcceptRouterAdvertisements.IsUnknown()) && (state == nil || !plan.AcceptRouterAdvertisements.Equal(state.AcceptRouterAdvertisements)) {
 		body["accept-router-advertisements"] = plan.AcceptRouterAdvertisements.ValueString()
 	}
-	if !(plan.AcceptRouterAdvertisementsOn.IsNull() || plan.AcceptRouterAdvertisementsOn.IsUnknown()) {
+	if !(plan.AcceptRouterAdvertisementsOn.IsNull() || plan.AcceptRouterAdvertisementsOn.IsUnknown()) && (state == nil || !plan.AcceptRouterAdvertisementsOn.Equal(state.AcceptRouterAdvertisementsOn)) {
 		body["accept-router-advertisements-on"] = plan.AcceptRouterAdvertisementsOn.ValueString()
 	}
-	if !(plan.AllowFastPath.IsNull() || plan.AllowFastPath.IsUnknown()) {
+	if !(plan.AllowFastPath.IsNull() || plan.AllowFastPath.IsUnknown()) && (state == nil || !plan.AllowFastPath.Equal(state.AllowFastPath)) {
 		body["allow-fast-path"] = client.FormatBool(plan.AllowFastPath.ValueBool())
 	}
-	if !(plan.DisableIPV6.IsNull() || plan.DisableIPV6.IsUnknown()) {
+	if !(plan.DisableIPV6.IsNull() || plan.DisableIPV6.IsUnknown()) && (state == nil || !plan.DisableIPV6.Equal(state.DisableIPV6)) {
 		body["disable-ipv6"] = client.FormatBool(plan.DisableIPV6.ValueBool())
 	}
-	if !(plan.DisableLinkLocalAddress.IsNull() || plan.DisableLinkLocalAddress.IsUnknown()) {
+	if !(plan.DisableLinkLocalAddress.IsNull() || plan.DisableLinkLocalAddress.IsUnknown()) && (state == nil || !plan.DisableLinkLocalAddress.Equal(state.DisableLinkLocalAddress)) {
 		body["disable-link-local-address"] = client.FormatBool(plan.DisableLinkLocalAddress.ValueBool())
 	}
-	if !(plan.Forward.IsNull() || plan.Forward.IsUnknown()) {
+	if !(plan.Forward.IsNull() || plan.Forward.IsUnknown()) && (state == nil || !plan.Forward.Equal(state.Forward)) {
 		body["forward"] = client.FormatBool(plan.Forward.ValueBool())
 	}
-	if !(plan.MaxNeighborEntries.IsNull() || plan.MaxNeighborEntries.IsUnknown()) {
+	if !(plan.MaxNeighborEntries.IsNull() || plan.MaxNeighborEntries.IsUnknown()) && (state == nil || !plan.MaxNeighborEntries.Equal(state.MaxNeighborEntries)) {
 		body["max-neighbor-entries"] = client.FormatInt64(plan.MaxNeighborEntries.ValueInt64())
 	}
-	if !(plan.MinNeighborEntries.IsNull() || plan.MinNeighborEntries.IsUnknown()) {
+	if !(plan.MinNeighborEntries.IsNull() || plan.MinNeighborEntries.IsUnknown()) && (state == nil || !plan.MinNeighborEntries.Equal(state.MinNeighborEntries)) {
 		body["min-neighbor-entries"] = client.FormatInt64(plan.MinNeighborEntries.ValueInt64())
 	}
-	if !(plan.MultipathHashPolicy.IsNull() || plan.MultipathHashPolicy.IsUnknown()) {
+	if !(plan.MultipathHashPolicy.IsNull() || plan.MultipathHashPolicy.IsUnknown()) && (state == nil || !plan.MultipathHashPolicy.Equal(state.MultipathHashPolicy)) {
 		body["multipath-hash-policy"] = plan.MultipathHashPolicy.ValueString()
 	}
-	if !(plan.SoftMaxNeighborEntries.IsNull() || plan.SoftMaxNeighborEntries.IsUnknown()) {
+	if !(plan.SoftMaxNeighborEntries.IsNull() || plan.SoftMaxNeighborEntries.IsUnknown()) && (state == nil || !plan.SoftMaxNeighborEntries.Equal(state.SoftMaxNeighborEntries)) {
 		body["soft-max-neighbor-entries"] = client.FormatInt64(plan.SoftMaxNeighborEntries.ValueInt64())
 	}
-	if !(plan.StaleNeighborDetectInterval.IsNull() || plan.StaleNeighborDetectInterval.IsUnknown()) {
+	if !(plan.StaleNeighborDetectInterval.IsNull() || plan.StaleNeighborDetectInterval.IsUnknown()) && (state == nil || !plan.StaleNeighborDetectInterval.Equal(state.StaleNeighborDetectInterval)) {
 		body["stale-neighbor-detect-interval"] = client.FormatInt64(plan.StaleNeighborDetectInterval.ValueInt64())
 	}
-	if !(plan.StaleNeighborTimeout.IsNull() || plan.StaleNeighborTimeout.IsUnknown()) {
+	if !(plan.StaleNeighborTimeout.IsNull() || plan.StaleNeighborTimeout.IsUnknown()) && (state == nil || !plan.StaleNeighborTimeout.Equal(state.StaleNeighborTimeout)) {
 		body["stale-neighbor-timeout"] = client.FormatInt64(plan.StaleNeighborTimeout.ValueInt64())
 	}
 	obj, err := c.SetSingleton(ctx, "/ipv6/settings", body)

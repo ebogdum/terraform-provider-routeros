@@ -147,6 +147,7 @@ func (r *SystemConsoleResource) Create(ctx context.Context, req resource.CreateR
 		return
 	}
 	systemConsoleApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -188,16 +189,16 @@ func (r *SystemConsoleResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 	body := client.Object{}
-	if !plan.Channel.Equal(state.Channel) {
+	if !plan.Channel.Equal(state.Channel) && !plan.Channel.IsUnknown() {
 		body["channel"] = client.FormatInt64(plan.Channel.ValueInt64())
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Port.Equal(state.Port) {
+	if !plan.Port.Equal(state.Port) && !plan.Port.IsUnknown() {
 		body["port"] = plan.Port.ValueString()
 	}
-	if !plan.Term.Equal(state.Term) {
+	if !plan.Term.Equal(state.Term) && !plan.Term.IsUnknown() {
 		body["term"] = plan.Term.ValueString()
 	}
 	if len(body) > 0 {
@@ -210,6 +211,7 @@ func (r *SystemConsoleResource) Update(ctx context.Context, req resource.UpdateR
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

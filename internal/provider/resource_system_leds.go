@@ -135,6 +135,7 @@ func (r *SystemLedsResource) Create(ctx context.Context, req resource.CreateRequ
 		return
 	}
 	systemLedsApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -176,16 +177,16 @@ func (r *SystemLedsResource) Update(ctx context.Context, req resource.UpdateRequ
 		return
 	}
 	body := client.Object{}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.Leds.Equal(state.Leds) {
+	if !plan.Leds.Equal(state.Leds) && !plan.Leds.IsUnknown() {
 		body["leds"] = plan.Leds.ValueString()
 	}
-	if !plan.Type.Equal(state.Type) {
+	if !plan.Type.Equal(state.Type) && !plan.Type.IsUnknown() {
 		body["type"] = plan.Type.ValueString()
 	}
 	if !plan.Color.Equal(state.Color) && !plan.Color.IsUnknown() {
@@ -204,6 +205,7 @@ func (r *SystemLedsResource) Update(ctx context.Context, req resource.UpdateRequ
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

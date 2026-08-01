@@ -250,6 +250,7 @@ func (r *IPDNSStaticResource) Create(ctx context.Context, req resource.CreateReq
 		return
 	}
 	iPDNSStaticApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -291,61 +292,61 @@ func (r *IPDNSStaticResource) Update(ctx context.Context, req resource.UpdateReq
 		return
 	}
 	body := client.Object{}
-	if !plan.Address.Equal(state.Address) {
+	if !plan.Address.Equal(state.Address) && !plan.Address.IsUnknown() {
 		body["address"] = plan.Address.ValueString()
 	}
-	if !plan.AddressList.Equal(state.AddressList) {
+	if !plan.AddressList.Equal(state.AddressList) && !plan.AddressList.IsUnknown() {
 		body["address-list"] = plan.AddressList.ValueString()
 	}
-	if !plan.Cname.Equal(state.Cname) {
+	if !plan.Cname.Equal(state.Cname) && !plan.Cname.IsUnknown() {
 		body["cname"] = plan.Cname.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.ForwardTo.Equal(state.ForwardTo) {
+	if !plan.ForwardTo.Equal(state.ForwardTo) && !plan.ForwardTo.IsUnknown() {
 		body["forward-to"] = plan.ForwardTo.ValueString()
 	}
-	if !plan.MatchSubdomain.Equal(state.MatchSubdomain) {
+	if !plan.MatchSubdomain.Equal(state.MatchSubdomain) && !plan.MatchSubdomain.IsUnknown() {
 		body["match-subdomain"] = plan.MatchSubdomain.ValueString()
 	}
-	if !plan.MxExchange.Equal(state.MxExchange) {
+	if !plan.MxExchange.Equal(state.MxExchange) && !plan.MxExchange.IsUnknown() {
 		body["mx-exchange"] = plan.MxExchange.ValueString()
 	}
-	if !plan.MxPreference.Equal(state.MxPreference) {
+	if !plan.MxPreference.Equal(state.MxPreference) && !plan.MxPreference.IsUnknown() {
 		body["mx-preference"] = plan.MxPreference.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.Ns.Equal(state.Ns) {
+	if !plan.Ns.Equal(state.Ns) && !plan.Ns.IsUnknown() {
 		body["ns"] = plan.Ns.ValueString()
 	}
-	if !plan.Regexp.Equal(state.Regexp) {
+	if !plan.Regexp.Equal(state.Regexp) && !plan.Regexp.IsUnknown() {
 		body["regexp"] = plan.Regexp.ValueString()
 	}
-	if !plan.SrvPort.Equal(state.SrvPort) {
+	if !plan.SrvPort.Equal(state.SrvPort) && !plan.SrvPort.IsUnknown() {
 		body["srv-port"] = plan.SrvPort.ValueString()
 	}
-	if !plan.SrvPriority.Equal(state.SrvPriority) {
+	if !plan.SrvPriority.Equal(state.SrvPriority) && !plan.SrvPriority.IsUnknown() {
 		body["srv-priority"] = plan.SrvPriority.ValueString()
 	}
-	if !plan.SrvTarget.Equal(state.SrvTarget) {
+	if !plan.SrvTarget.Equal(state.SrvTarget) && !plan.SrvTarget.IsUnknown() {
 		body["srv-target"] = plan.SrvTarget.ValueString()
 	}
-	if !plan.SrvWeight.Equal(state.SrvWeight) {
+	if !plan.SrvWeight.Equal(state.SrvWeight) && !plan.SrvWeight.IsUnknown() {
 		body["srv-weight"] = plan.SrvWeight.ValueString()
 	}
-	if !plan.Text.Equal(state.Text) {
+	if !plan.Text.Equal(state.Text) && !plan.Text.IsUnknown() {
 		body["text"] = plan.Text.ValueString()
 	}
-	if !plan.Ttl.Equal(state.Ttl) {
+	if !plan.Ttl.Equal(state.Ttl) && !plan.Ttl.IsUnknown() {
 		body["ttl"] = plan.Ttl.ValueString()
 	}
-	if !plan.Type.Equal(state.Type) {
+	if !plan.Type.Equal(state.Type) && !plan.Type.IsUnknown() {
 		body["type"] = plan.Type.ValueString()
 	}
 	if len(body) > 0 {
@@ -358,6 +359,7 @@ func (r *IPDNSStaticResource) Update(ctx context.Context, req resource.UpdateReq
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

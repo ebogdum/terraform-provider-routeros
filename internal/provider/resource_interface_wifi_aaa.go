@@ -171,6 +171,7 @@ func (r *InterfaceWifiAaaResource) Create(ctx context.Context, req resource.Crea
 		return
 	}
 	interfaceWifiAaaApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -212,34 +213,34 @@ func (r *InterfaceWifiAaaResource) Update(ctx context.Context, req resource.Upda
 		return
 	}
 	body := client.Object{}
-	if !plan.CalledFormat.Equal(state.CalledFormat) {
+	if !plan.CalledFormat.Equal(state.CalledFormat) && !plan.CalledFormat.IsUnknown() {
 		body["called-format"] = plan.CalledFormat.ValueString()
 	}
-	if !plan.CallingFormat.Equal(state.CallingFormat) {
+	if !plan.CallingFormat.Equal(state.CallingFormat) && !plan.CallingFormat.IsUnknown() {
 		body["calling-format"] = plan.CallingFormat.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.InterimUpdate.Equal(state.InterimUpdate) {
+	if !plan.InterimUpdate.Equal(state.InterimUpdate) && !plan.InterimUpdate.IsUnknown() {
 		body["interim-update"] = plan.InterimUpdate.ValueString()
 	}
-	if !plan.MACCaching.Equal(state.MACCaching) {
+	if !plan.MACCaching.Equal(state.MACCaching) && !plan.MACCaching.IsUnknown() {
 		body["mac-caching"] = plan.MACCaching.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.NasIdentifier.Equal(state.NasIdentifier) {
+	if !plan.NasIdentifier.Equal(state.NasIdentifier) && !plan.NasIdentifier.IsUnknown() {
 		body["nas-identifier"] = plan.NasIdentifier.ValueString()
 	}
-	if !plan.PasswordFormat.Equal(state.PasswordFormat) {
+	if !plan.PasswordFormat.Equal(state.PasswordFormat) && !plan.PasswordFormat.IsUnknown() {
 		body["password-format"] = plan.PasswordFormat.ValueString()
 	}
-	if !plan.UsernameFormat.Equal(state.UsernameFormat) {
+	if !plan.UsernameFormat.Equal(state.UsernameFormat) && !plan.UsernameFormat.IsUnknown() {
 		body["username-format"] = plan.UsernameFormat.ValueString()
 	}
 	if len(body) > 0 {
@@ -252,6 +253,7 @@ func (r *InterfaceWifiAaaResource) Update(ctx context.Context, req resource.Upda
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

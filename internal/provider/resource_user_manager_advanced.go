@@ -100,10 +100,11 @@ func (r *UserManagerAdvancedResource) Create(ctx context.Context, req resource.C
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	userManagerAdvancedUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	userManagerAdvancedUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -113,10 +114,16 @@ func (r *UserManagerAdvancedResource) Update(ctx context.Context, req resource.U
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	userManagerAdvancedUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state UserManagerAdvancedModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	userManagerAdvancedUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -154,34 +161,34 @@ func (r *UserManagerAdvancedResource) ImportState(ctx context.Context, req resou
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/user-manager/advanced", types.StringValue(routerName))))...)
 }
 
-func userManagerAdvancedUpsert(ctx context.Context, reg *client.Registry, plan *UserManagerAdvancedModel, diags *diagBuf) {
+func userManagerAdvancedUpsert(ctx context.Context, reg *client.Registry, plan, state *UserManagerAdvancedModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.PaypalAllow.IsNull() || plan.PaypalAllow.IsUnknown()) {
+	if !(plan.PaypalAllow.IsNull() || plan.PaypalAllow.IsUnknown()) && (state == nil || !plan.PaypalAllow.Equal(state.PaypalAllow)) {
 		body["paypal-allow"] = plan.PaypalAllow.ValueString()
 	}
-	if !(plan.PaypalCurrency.IsNull() || plan.PaypalCurrency.IsUnknown()) {
+	if !(plan.PaypalCurrency.IsNull() || plan.PaypalCurrency.IsUnknown()) && (state == nil || !plan.PaypalCurrency.Equal(state.PaypalCurrency)) {
 		body["paypal-currency"] = plan.PaypalCurrency.ValueString()
 	}
-	if !(plan.PaypalPassword.IsNull() || plan.PaypalPassword.IsUnknown()) {
+	if !(plan.PaypalPassword.IsNull() || plan.PaypalPassword.IsUnknown()) && (state == nil || !plan.PaypalPassword.Equal(state.PaypalPassword)) {
 		body["paypal-password"] = plan.PaypalPassword.ValueString()
 	}
-	if !(plan.PaypalSignature.IsNull() || plan.PaypalSignature.IsUnknown()) {
+	if !(plan.PaypalSignature.IsNull() || plan.PaypalSignature.IsUnknown()) && (state == nil || !plan.PaypalSignature.Equal(state.PaypalSignature)) {
 		body["paypal-signature"] = plan.PaypalSignature.ValueString()
 	}
-	if !(plan.PaypalUseSandbox.IsNull() || plan.PaypalUseSandbox.IsUnknown()) {
+	if !(plan.PaypalUseSandbox.IsNull() || plan.PaypalUseSandbox.IsUnknown()) && (state == nil || !plan.PaypalUseSandbox.Equal(state.PaypalUseSandbox)) {
 		body["paypal-use-sandbox"] = plan.PaypalUseSandbox.ValueString()
 	}
-	if !(plan.PaypalUser.IsNull() || plan.PaypalUser.IsUnknown()) {
+	if !(plan.PaypalUser.IsNull() || plan.PaypalUser.IsUnknown()) && (state == nil || !plan.PaypalUser.Equal(state.PaypalUser)) {
 		body["paypal-user"] = plan.PaypalUser.ValueString()
 	}
-	if !(plan.WebPrivatePassword.IsNull() || plan.WebPrivatePassword.IsUnknown()) {
+	if !(plan.WebPrivatePassword.IsNull() || plan.WebPrivatePassword.IsUnknown()) && (state == nil || !plan.WebPrivatePassword.Equal(state.WebPrivatePassword)) {
 		body["web-private-password"] = plan.WebPrivatePassword.ValueString()
 	}
-	if !(plan.WebPrivateUsername.IsNull() || plan.WebPrivateUsername.IsUnknown()) {
+	if !(plan.WebPrivateUsername.IsNull() || plan.WebPrivateUsername.IsUnknown()) && (state == nil || !plan.WebPrivateUsername.Equal(state.WebPrivateUsername)) {
 		body["web-private-username"] = plan.WebPrivateUsername.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/user-manager/advanced", body)

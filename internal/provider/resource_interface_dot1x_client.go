@@ -159,6 +159,7 @@ func (r *InterfaceDot1xClientResource) Create(ctx context.Context, req resource.
 		return
 	}
 	interfaceDot1xClientApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -200,28 +201,28 @@ func (r *InterfaceDot1xClientResource) Update(ctx context.Context, req resource.
 		return
 	}
 	body := client.Object{}
-	if !plan.AnonIdentity.Equal(state.AnonIdentity) {
+	if !plan.AnonIdentity.Equal(state.AnonIdentity) && !plan.AnonIdentity.IsUnknown() {
 		body["anon-identity"] = plan.AnonIdentity.ValueString()
 	}
-	if !plan.Certificate.Equal(state.Certificate) {
+	if !plan.Certificate.Equal(state.Certificate) && !plan.Certificate.IsUnknown() {
 		body["certificate"] = plan.Certificate.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.EAPMethods.Equal(state.EAPMethods) {
+	if !plan.EAPMethods.Equal(state.EAPMethods) && !plan.EAPMethods.IsUnknown() {
 		body["eap-methods"] = plan.EAPMethods.ValueString()
 	}
-	if !plan.Identity.Equal(state.Identity) {
+	if !plan.Identity.Equal(state.Identity) && !plan.Identity.IsUnknown() {
 		body["identity"] = plan.Identity.ValueString()
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.Password.Equal(state.Password) {
+	if !plan.Password.Equal(state.Password) && !plan.Password.IsUnknown() {
 		body["password"] = plan.Password.ValueString()
 	}
 	if len(body) > 0 {
@@ -234,6 +235,7 @@ func (r *InterfaceDot1xClientResource) Update(ctx context.Context, req resource.
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

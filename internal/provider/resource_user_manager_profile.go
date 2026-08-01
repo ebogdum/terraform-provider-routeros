@@ -135,6 +135,7 @@ func (r *UserManagerProfileResource) Create(ctx context.Context, req resource.Cr
 		return
 	}
 	userManagerProfileApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -186,6 +187,7 @@ func (r *UserManagerProfileResource) Update(ctx context.Context, req resource.Up
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

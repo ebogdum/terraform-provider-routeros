@@ -2,6 +2,7 @@ package provider
 
 import (
 	"context"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -9,6 +10,37 @@ import (
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
 )
+
+// encodeStringSet renders a set of strings as a RouterOS comma list.
+func encodeStringSet(ctx context.Context, s types.Set, diags *diag.Diagnostics) string {
+	if s.IsNull() || s.IsUnknown() {
+		return ""
+	}
+	var items []string
+	if d := s.ElementsAs(ctx, &items, false); d.HasError() {
+		diags.Append(d...)
+		return ""
+	}
+	return client.FormatList(items)
+}
+
+// decodePolicySet parses a RouterOS /user/group or /system/script policy value.
+// RouterOS returns the full permission list with everything not granted negated
+// ("read,write,!ftp,!telnet,..."), in its own order. Only the granted
+// permissions are kept, as an order-insensitive Set, so the value round-trips
+// regardless of order or the negated remainder.
+func decodePolicySet(_ context.Context, wire string) types.Set {
+	items := client.ParseList(wire)
+	vals := make([]attr.Value, 0, len(items))
+	for _, v := range items {
+		if strings.HasPrefix(strings.TrimSpace(v), "!") {
+			continue
+		}
+		vals = append(vals, types.StringValue(v))
+	}
+	s, _ := types.SetValue(types.StringType, vals)
+	return s
+}
 
 func encodeStringList(ctx context.Context, l types.List, diags *diag.Diagnostics) string {
 	if l.IsNull() || l.IsUnknown() {

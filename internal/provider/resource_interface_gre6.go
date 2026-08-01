@@ -29,19 +29,19 @@ type InterfaceGre6Resource struct {
 }
 
 type InterfaceGre6Model struct {
-	ID            types.String `tfsdk:"id"`
-	Keepalive     types.String `tfsdk:"keepalive"`
-	Dscp          types.String `tfsdk:"dscp"`
-	DontFragment  types.String `tfsdk:"dont_fragment"`
-	ClampTcpMss   types.String `tfsdk:"clamp_tcp_mss"`
-	Comment       types.String `tfsdk:"comment"`
-	Disabled      types.Bool   `tfsdk:"disabled"`
-	IpsecSecret   types.String `tfsdk:"ipsec_secret"`
-	LocalAddress  types.String `tfsdk:"local_address"`
-	MTU           types.String `tfsdk:"mtu"`
-	Name          types.String `tfsdk:"name"`
-	RemoteAddress types.String `tfsdk:"remote_address"`
-	Router        types.String `tfsdk:"router"`
+	ID            types.String    `tfsdk:"id"`
+	Keepalive     types.String    `tfsdk:"keepalive"`
+	Dscp          types.String    `tfsdk:"dscp"`
+	DontFragment  types.String    `tfsdk:"dont_fragment"`
+	ClampTcpMss   boolStringValue `tfsdk:"clamp_tcp_mss"`
+	Comment       types.String    `tfsdk:"comment"`
+	Disabled      types.Bool      `tfsdk:"disabled"`
+	IpsecSecret   types.String    `tfsdk:"ipsec_secret"`
+	LocalAddress  types.String    `tfsdk:"local_address"`
+	MTU           types.String    `tfsdk:"mtu"`
+	Name          types.String    `tfsdk:"name"`
+	RemoteAddress types.String    `tfsdk:"remote_address"`
+	Router        types.String    `tfsdk:"router"`
 }
 
 func NewInterfaceGre6Resource() resource.Resource { return &InterfaceGre6Resource{} }
@@ -83,6 +83,7 @@ func (r *InterfaceGre6Resource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "RouterOS `dont-fragment`.",
 			},
 			"clamp_tcp_mss": schema.StringAttribute{
+				CustomType:  boolStringType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "RouterOS `clamp-tcp-mss`.",
@@ -181,6 +182,7 @@ func (r *InterfaceGre6Resource) Create(ctx context.Context, req resource.CreateR
 		return
 	}
 	interfaceGre6Apply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -222,25 +224,25 @@ func (r *InterfaceGre6Resource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.IpsecSecret.Equal(state.IpsecSecret) {
+	if !plan.IpsecSecret.Equal(state.IpsecSecret) && !plan.IpsecSecret.IsUnknown() {
 		body["ipsec-secret"] = plan.IpsecSecret.ValueString()
 	}
-	if !plan.LocalAddress.Equal(state.LocalAddress) {
+	if !plan.LocalAddress.Equal(state.LocalAddress) && !plan.LocalAddress.IsUnknown() {
 		body["local-address"] = plan.LocalAddress.ValueString()
 	}
-	if !plan.MTU.Equal(state.MTU) {
+	if !plan.MTU.Equal(state.MTU) && !plan.MTU.IsUnknown() {
 		body["mtu"] = plan.MTU.ValueString()
 	}
-	if !plan.Name.Equal(state.Name) {
+	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
 	}
-	if !plan.RemoteAddress.Equal(state.RemoteAddress) {
+	if !plan.RemoteAddress.Equal(state.RemoteAddress) && !plan.RemoteAddress.IsUnknown() {
 		body["remote-address"] = plan.RemoteAddress.ValueString()
 	}
 	if !plan.ClampTcpMss.Equal(state.ClampTcpMss) && !plan.ClampTcpMss.IsUnknown() {
@@ -265,6 +267,7 @@ func (r *InterfaceGre6Resource) Update(ctx context.Context, req resource.UpdateR
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -337,9 +340,9 @@ func interfaceGre6Apply(ctx context.Context, obj client.Object, m *InterfaceGre6
 		m.DontFragment = types.StringNull()
 	}
 	if v, ok := obj["clamp-tcp-mss"]; ok && v != "" {
-		m.ClampTcpMss = types.StringValue(v)
+		m.ClampTcpMss = newBoolStringValue(v)
 	} else {
-		m.ClampTcpMss = types.StringNull()
+		m.ClampTcpMss = newBoolStringNull()
 	}
 	if v, ok := obj["comment"]; ok {
 		_ = v

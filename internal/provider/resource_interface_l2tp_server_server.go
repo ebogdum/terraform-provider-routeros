@@ -186,10 +186,11 @@ func (r *InterfaceL2TPServerServerResource) Create(ctx context.Context, req reso
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	interfaceL2TPServerServerUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	interfaceL2TPServerServerUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -199,10 +200,16 @@ func (r *InterfaceL2TPServerServerResource) Update(ctx context.Context, req reso
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	interfaceL2TPServerServerUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state InterfaceL2TPServerServerModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	interfaceL2TPServerServerUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -240,67 +247,67 @@ func (r *InterfaceL2TPServerServerResource) ImportState(ctx context.Context, req
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/interface/l2tp-server/server", types.StringValue(routerName))))...)
 }
 
-func interfaceL2TPServerServerUpsert(ctx context.Context, reg *client.Registry, plan *InterfaceL2TPServerServerModel, diags *diagBuf) {
+func interfaceL2TPServerServerUpsert(ctx context.Context, reg *client.Registry, plan, state *InterfaceL2TPServerServerModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.AcceptProtoVersion.IsNull() || plan.AcceptProtoVersion.IsUnknown()) {
+	if !(plan.AcceptProtoVersion.IsNull() || plan.AcceptProtoVersion.IsUnknown()) && (state == nil || !plan.AcceptProtoVersion.Equal(state.AcceptProtoVersion)) {
 		body["accept-proto-version"] = plan.AcceptProtoVersion.ValueString()
 	}
-	if !(plan.AcceptPseudowireType.IsNull() || plan.AcceptPseudowireType.IsUnknown()) {
+	if !(plan.AcceptPseudowireType.IsNull() || plan.AcceptPseudowireType.IsUnknown()) && (state == nil || !plan.AcceptPseudowireType.Equal(state.AcceptPseudowireType)) {
 		body["accept-pseudowire-type"] = plan.AcceptPseudowireType.ValueString()
 	}
-	if !(plan.AllowFastPath.IsNull() || plan.AllowFastPath.IsUnknown()) {
+	if !(plan.AllowFastPath.IsNull() || plan.AllowFastPath.IsUnknown()) && (state == nil || !plan.AllowFastPath.Equal(state.AllowFastPath)) {
 		body["allow-fast-path"] = client.FormatBool(plan.AllowFastPath.ValueBool())
 	}
-	if !(plan.Authentication.IsNull() || plan.Authentication.IsUnknown()) {
+	if !(plan.Authentication.IsNull() || plan.Authentication.IsUnknown()) && (state == nil || !plan.Authentication.Equal(state.Authentication)) {
 		body["authentication"] = plan.Authentication.ValueString()
 	}
-	if !(plan.CallerIDType.IsNull() || plan.CallerIDType.IsUnknown()) {
+	if !(plan.CallerIDType.IsNull() || plan.CallerIDType.IsUnknown()) && (state == nil || !plan.CallerIDType.Equal(state.CallerIDType)) {
 		body["caller-id-type"] = plan.CallerIDType.ValueString()
 	}
-	if !(plan.DefaultProfile.IsNull() || plan.DefaultProfile.IsUnknown()) {
+	if !(plan.DefaultProfile.IsNull() || plan.DefaultProfile.IsUnknown()) && (state == nil || !plan.DefaultProfile.Equal(state.DefaultProfile)) {
 		body["default-profile"] = plan.DefaultProfile.ValueString()
 	}
-	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) {
+	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) && (state == nil || !plan.Enabled.Equal(state.Enabled)) {
 		body["enabled"] = client.FormatBool(plan.Enabled.ValueBool())
 	}
-	if !(plan.IPsecSecret.IsNull() || plan.IPsecSecret.IsUnknown()) {
+	if !(plan.IPsecSecret.IsNull() || plan.IPsecSecret.IsUnknown()) && (state == nil || !plan.IPsecSecret.Equal(state.IPsecSecret)) {
 		body["ipsec-secret"] = plan.IPsecSecret.ValueString()
 	}
-	if !(plan.KeepaliveTimeout.IsNull() || plan.KeepaliveTimeout.IsUnknown()) {
+	if !(plan.KeepaliveTimeout.IsNull() || plan.KeepaliveTimeout.IsUnknown()) && (state == nil || !plan.KeepaliveTimeout.Equal(state.KeepaliveTimeout)) {
 		body["keepalive-timeout"] = client.FormatInt64(plan.KeepaliveTimeout.ValueInt64())
 	}
-	if !(plan.L2tpv3CircuitID.IsNull() || plan.L2tpv3CircuitID.IsUnknown()) {
+	if !(plan.L2tpv3CircuitID.IsNull() || plan.L2tpv3CircuitID.IsUnknown()) && (state == nil || !plan.L2tpv3CircuitID.Equal(state.L2tpv3CircuitID)) {
 		body["l2tpv3-circuit-id"] = plan.L2tpv3CircuitID.ValueString()
 	}
-	if !(plan.L2tpv3CookieLength.IsNull() || plan.L2tpv3CookieLength.IsUnknown()) {
+	if !(plan.L2tpv3CookieLength.IsNull() || plan.L2tpv3CookieLength.IsUnknown()) && (state == nil || !plan.L2tpv3CookieLength.Equal(state.L2tpv3CookieLength)) {
 		body["l2tpv3-cookie-length"] = client.FormatInt64(plan.L2tpv3CookieLength.ValueInt64())
 	}
-	if !(plan.L2tpv3DigestHash.IsNull() || plan.L2tpv3DigestHash.IsUnknown()) {
+	if !(plan.L2tpv3DigestHash.IsNull() || plan.L2tpv3DigestHash.IsUnknown()) && (state == nil || !plan.L2tpv3DigestHash.Equal(state.L2tpv3DigestHash)) {
 		body["l2tpv3-digest-hash"] = plan.L2tpv3DigestHash.ValueString()
 	}
-	if !(plan.MaxMru.IsNull() || plan.MaxMru.IsUnknown()) {
+	if !(plan.MaxMru.IsNull() || plan.MaxMru.IsUnknown()) && (state == nil || !plan.MaxMru.Equal(state.MaxMru)) {
 		body["max-mru"] = client.FormatInt64(plan.MaxMru.ValueInt64())
 	}
-	if !(plan.MaxMtu.IsNull() || plan.MaxMtu.IsUnknown()) {
+	if !(plan.MaxMtu.IsNull() || plan.MaxMtu.IsUnknown()) && (state == nil || !plan.MaxMtu.Equal(state.MaxMtu)) {
 		body["max-mtu"] = client.FormatInt64(plan.MaxMtu.ValueInt64())
 	}
-	if !(plan.MaxSessions.IsNull() || plan.MaxSessions.IsUnknown()) {
+	if !(plan.MaxSessions.IsNull() || plan.MaxSessions.IsUnknown()) && (state == nil || !plan.MaxSessions.Equal(state.MaxSessions)) {
 		body["max-sessions"] = plan.MaxSessions.ValueString()
 	}
-	if !(plan.Mrru.IsNull() || plan.Mrru.IsUnknown()) {
+	if !(plan.Mrru.IsNull() || plan.Mrru.IsUnknown()) && (state == nil || !plan.Mrru.Equal(state.Mrru)) {
 		body["mrru"] = plan.Mrru.ValueString()
 	}
-	if !(plan.OneSessionPerHost.IsNull() || plan.OneSessionPerHost.IsUnknown()) {
+	if !(plan.OneSessionPerHost.IsNull() || plan.OneSessionPerHost.IsUnknown()) && (state == nil || !plan.OneSessionPerHost.Equal(state.OneSessionPerHost)) {
 		body["one-session-per-host"] = client.FormatBool(plan.OneSessionPerHost.ValueBool())
 	}
-	if !(plan.UseIPsec.IsNull() || plan.UseIPsec.IsUnknown()) {
+	if !(plan.UseIPsec.IsNull() || plan.UseIPsec.IsUnknown()) && (state == nil || !plan.UseIPsec.Equal(state.UseIPsec)) {
 		body["use-ipsec"] = client.FormatBool(plan.UseIPsec.ValueBool())
 	}
-	if !(plan.L2tpv3EtherInterfaceList.IsNull() || plan.L2tpv3EtherInterfaceList.IsUnknown()) {
+	if !(plan.L2tpv3EtherInterfaceList.IsNull() || plan.L2tpv3EtherInterfaceList.IsUnknown()) && (state == nil || !plan.L2tpv3EtherInterfaceList.Equal(state.L2tpv3EtherInterfaceList)) {
 		body["l2tpv3-ether-interface-list"] = plan.L2tpv3EtherInterfaceList.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/interface/l2tp-server/server", body)

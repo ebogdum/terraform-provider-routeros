@@ -26,29 +26,29 @@ type SystemRouterboardSettingsResource struct {
 }
 
 type SystemRouterboardSettingsModel struct {
-	ID                     types.String `tfsdk:"id"`
-	PreferredArchitecture  types.String `tfsdk:"preferred_architecture"`
-	InitDelay              types.String `tfsdk:"init_delay"`
-	GpioFunction           types.String `tfsdk:"gpio_function"`
-	EtherbootPort          types.String `tfsdk:"etherboot_port"`
-	EnterSetupOn           types.String `tfsdk:"enter_setup_on"`
-	EnableJumperReset      types.String `tfsdk:"enable_jumper_reset"`
-	DisablePci             types.String `tfsdk:"disable_pci"`
-	BootOs                 types.String `tfsdk:"boot_os"`
-	BootDelay              types.String `tfsdk:"boot_delay"`
-	BaudRate               types.String `tfsdk:"baud_rate"`
-	AutoUpgrade            types.String `tfsdk:"auto_upgrade"`
-	BootDevice             types.String `tfsdk:"boot_device"`
-	BootProtocol           types.String `tfsdk:"boot_protocol"`
-	CpuFrequency           types.String `tfsdk:"cpu_frequency"`
-	ForceBackupBooter      types.String `tfsdk:"force_backup_booter"`
-	PrebootEtherboot       types.String `tfsdk:"preboot_etherboot"`
-	PrebootEtherbootServer types.String `tfsdk:"preboot_etherboot_server"`
-	ProtectedRouterboot    types.String `tfsdk:"protected_routerboot"`
-	ReformatHoldButton     types.String `tfsdk:"reformat_hold_button"`
-	ReformatHoldButtonMax  types.String `tfsdk:"reformat_hold_button_max"`
-	SilentBoot             types.String `tfsdk:"silent_boot"`
-	Router                 types.String `tfsdk:"router"`
+	ID                     types.String    `tfsdk:"id"`
+	PreferredArchitecture  types.String    `tfsdk:"preferred_architecture"`
+	InitDelay              types.String    `tfsdk:"init_delay"`
+	GpioFunction           types.String    `tfsdk:"gpio_function"`
+	EtherbootPort          types.String    `tfsdk:"etherboot_port"`
+	EnterSetupOn           types.String    `tfsdk:"enter_setup_on"`
+	EnableJumperReset      types.String    `tfsdk:"enable_jumper_reset"`
+	DisablePci             types.String    `tfsdk:"disable_pci"`
+	BootOs                 types.String    `tfsdk:"boot_os"`
+	BootDelay              types.String    `tfsdk:"boot_delay"`
+	BaudRate               types.String    `tfsdk:"baud_rate"`
+	AutoUpgrade            boolStringValue `tfsdk:"auto_upgrade"`
+	BootDevice             types.String    `tfsdk:"boot_device"`
+	BootProtocol           types.String    `tfsdk:"boot_protocol"`
+	CpuFrequency           types.String    `tfsdk:"cpu_frequency"`
+	ForceBackupBooter      boolStringValue `tfsdk:"force_backup_booter"`
+	PrebootEtherboot       types.String    `tfsdk:"preboot_etherboot"`
+	PrebootEtherbootServer types.String    `tfsdk:"preboot_etherboot_server"`
+	ProtectedRouterboot    types.String    `tfsdk:"protected_routerboot"`
+	ReformatHoldButton     types.String    `tfsdk:"reformat_hold_button"`
+	ReformatHoldButtonMax  types.String    `tfsdk:"reformat_hold_button_max"`
+	SilentBoot             boolStringValue `tfsdk:"silent_boot"`
+	Router                 types.String    `tfsdk:"router"`
 }
 
 func NewSystemRouterboardSettingsResource() resource.Resource {
@@ -126,7 +126,8 @@ func (r *SystemRouterboardSettingsResource) Schema(_ context.Context, _ resource
 				Computed:    true,
 				Description: "RouterOS `baud-rate`.",
 			},
-			"auto_upgrade": schema.StringAttribute{Optional: true, Computed: true,
+			"auto_upgrade": schema.StringAttribute{
+				CustomType: boolStringType{}, Optional: true, Computed: true,
 				Description: "",
 			},
 			"boot_device": schema.StringAttribute{Optional: true, Computed: true,
@@ -138,7 +139,8 @@ func (r *SystemRouterboardSettingsResource) Schema(_ context.Context, _ resource
 			"cpu_frequency": schema.StringAttribute{Optional: true, Computed: true,
 				Description: "",
 			},
-			"force_backup_booter": schema.StringAttribute{Optional: true, Computed: true,
+			"force_backup_booter": schema.StringAttribute{
+				CustomType: boolStringType{}, Optional: true, Computed: true,
 				Description: "",
 			},
 			"preboot_etherboot": schema.StringAttribute{Optional: true, Computed: true,
@@ -156,7 +158,8 @@ func (r *SystemRouterboardSettingsResource) Schema(_ context.Context, _ resource
 			"reformat_hold_button_max": schema.StringAttribute{Optional: true, Computed: true,
 				Description: "",
 			},
-			"silent_boot": schema.StringAttribute{Optional: true, Computed: true,
+			"silent_boot": schema.StringAttribute{
+				CustomType: boolStringType{}, Optional: true, Computed: true,
 				Description: "",
 			},
 			"router": schema.StringAttribute{Optional: true,
@@ -172,10 +175,11 @@ func (r *SystemRouterboardSettingsResource) Create(ctx context.Context, req reso
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	systemRouterboardSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	systemRouterboardSettingsUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -185,10 +189,16 @@ func (r *SystemRouterboardSettingsResource) Update(ctx context.Context, req reso
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	systemRouterboardSettingsUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state SystemRouterboardSettingsModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	systemRouterboardSettingsUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -226,73 +236,73 @@ func (r *SystemRouterboardSettingsResource) ImportState(ctx context.Context, req
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/system/routerboard/settings", types.StringValue(routerName))))...)
 }
 
-func systemRouterboardSettingsUpsert(ctx context.Context, reg *client.Registry, plan *SystemRouterboardSettingsModel, diags *diagBuf) {
+func systemRouterboardSettingsUpsert(ctx context.Context, reg *client.Registry, plan, state *SystemRouterboardSettingsModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.AutoUpgrade.IsNull() || plan.AutoUpgrade.IsUnknown()) {
+	if !(plan.AutoUpgrade.IsNull() || plan.AutoUpgrade.IsUnknown()) && (state == nil || !plan.AutoUpgrade.Equal(state.AutoUpgrade)) {
 		body["auto-upgrade"] = plan.AutoUpgrade.ValueString()
 	}
-	if !(plan.BootDevice.IsNull() || plan.BootDevice.IsUnknown()) {
+	if !(plan.BootDevice.IsNull() || plan.BootDevice.IsUnknown()) && (state == nil || !plan.BootDevice.Equal(state.BootDevice)) {
 		body["boot-device"] = plan.BootDevice.ValueString()
 	}
-	if !(plan.BootProtocol.IsNull() || plan.BootProtocol.IsUnknown()) {
+	if !(plan.BootProtocol.IsNull() || plan.BootProtocol.IsUnknown()) && (state == nil || !plan.BootProtocol.Equal(state.BootProtocol)) {
 		body["boot-protocol"] = plan.BootProtocol.ValueString()
 	}
-	if !(plan.CpuFrequency.IsNull() || plan.CpuFrequency.IsUnknown()) {
+	if !(plan.CpuFrequency.IsNull() || plan.CpuFrequency.IsUnknown()) && (state == nil || !plan.CpuFrequency.Equal(state.CpuFrequency)) {
 		body["cpu-frequency"] = plan.CpuFrequency.ValueString()
 	}
-	if !(plan.ForceBackupBooter.IsNull() || plan.ForceBackupBooter.IsUnknown()) {
+	if !(plan.ForceBackupBooter.IsNull() || plan.ForceBackupBooter.IsUnknown()) && (state == nil || !plan.ForceBackupBooter.Equal(state.ForceBackupBooter)) {
 		body["force-backup-booter"] = plan.ForceBackupBooter.ValueString()
 	}
-	if !(plan.PrebootEtherboot.IsNull() || plan.PrebootEtherboot.IsUnknown()) {
+	if !(plan.PrebootEtherboot.IsNull() || plan.PrebootEtherboot.IsUnknown()) && (state == nil || !plan.PrebootEtherboot.Equal(state.PrebootEtherboot)) {
 		body["preboot-etherboot"] = plan.PrebootEtherboot.ValueString()
 	}
-	if !(plan.PrebootEtherbootServer.IsNull() || plan.PrebootEtherbootServer.IsUnknown()) {
+	if !(plan.PrebootEtherbootServer.IsNull() || plan.PrebootEtherbootServer.IsUnknown()) && (state == nil || !plan.PrebootEtherbootServer.Equal(state.PrebootEtherbootServer)) {
 		body["preboot-etherboot-server"] = plan.PrebootEtherbootServer.ValueString()
 	}
-	if !(plan.ProtectedRouterboot.IsNull() || plan.ProtectedRouterboot.IsUnknown()) {
+	if !(plan.ProtectedRouterboot.IsNull() || plan.ProtectedRouterboot.IsUnknown()) && (state == nil || !plan.ProtectedRouterboot.Equal(state.ProtectedRouterboot)) {
 		body["protected-routerboot"] = plan.ProtectedRouterboot.ValueString()
 	}
-	if !(plan.ReformatHoldButton.IsNull() || plan.ReformatHoldButton.IsUnknown()) {
+	if !(plan.ReformatHoldButton.IsNull() || plan.ReformatHoldButton.IsUnknown()) && (state == nil || !plan.ReformatHoldButton.Equal(state.ReformatHoldButton)) {
 		body["reformat-hold-button"] = plan.ReformatHoldButton.ValueString()
 	}
-	if !(plan.ReformatHoldButtonMax.IsNull() || plan.ReformatHoldButtonMax.IsUnknown()) {
+	if !(plan.ReformatHoldButtonMax.IsNull() || plan.ReformatHoldButtonMax.IsUnknown()) && (state == nil || !plan.ReformatHoldButtonMax.Equal(state.ReformatHoldButtonMax)) {
 		body["reformat-hold-button-max"] = plan.ReformatHoldButtonMax.ValueString()
 	}
-	if !(plan.SilentBoot.IsNull() || plan.SilentBoot.IsUnknown()) {
+	if !(plan.SilentBoot.IsNull() || plan.SilentBoot.IsUnknown()) && (state == nil || !plan.SilentBoot.Equal(state.SilentBoot)) {
 		body["silent-boot"] = plan.SilentBoot.ValueString()
 	}
-	if !(plan.BaudRate.IsNull() || plan.BaudRate.IsUnknown()) {
+	if !(plan.BaudRate.IsNull() || plan.BaudRate.IsUnknown()) && (state == nil || !plan.BaudRate.Equal(state.BaudRate)) {
 		body["baud-rate"] = plan.BaudRate.ValueString()
 	}
-	if !(plan.BootDelay.IsNull() || plan.BootDelay.IsUnknown()) {
+	if !(plan.BootDelay.IsNull() || plan.BootDelay.IsUnknown()) && (state == nil || !plan.BootDelay.Equal(state.BootDelay)) {
 		body["boot-delay"] = plan.BootDelay.ValueString()
 	}
-	if !(plan.BootOs.IsNull() || plan.BootOs.IsUnknown()) {
+	if !(plan.BootOs.IsNull() || plan.BootOs.IsUnknown()) && (state == nil || !plan.BootOs.Equal(state.BootOs)) {
 		body["boot-os"] = plan.BootOs.ValueString()
 	}
-	if !(plan.DisablePci.IsNull() || plan.DisablePci.IsUnknown()) {
+	if !(plan.DisablePci.IsNull() || plan.DisablePci.IsUnknown()) && (state == nil || !plan.DisablePci.Equal(state.DisablePci)) {
 		body["disable-pci"] = plan.DisablePci.ValueString()
 	}
-	if !(plan.EnableJumperReset.IsNull() || plan.EnableJumperReset.IsUnknown()) {
+	if !(plan.EnableJumperReset.IsNull() || plan.EnableJumperReset.IsUnknown()) && (state == nil || !plan.EnableJumperReset.Equal(state.EnableJumperReset)) {
 		body["enable-jumper-reset"] = plan.EnableJumperReset.ValueString()
 	}
-	if !(plan.EnterSetupOn.IsNull() || plan.EnterSetupOn.IsUnknown()) {
+	if !(plan.EnterSetupOn.IsNull() || plan.EnterSetupOn.IsUnknown()) && (state == nil || !plan.EnterSetupOn.Equal(state.EnterSetupOn)) {
 		body["enter-setup-on"] = plan.EnterSetupOn.ValueString()
 	}
-	if !(plan.EtherbootPort.IsNull() || plan.EtherbootPort.IsUnknown()) {
+	if !(plan.EtherbootPort.IsNull() || plan.EtherbootPort.IsUnknown()) && (state == nil || !plan.EtherbootPort.Equal(state.EtherbootPort)) {
 		body["etherboot-port"] = plan.EtherbootPort.ValueString()
 	}
-	if !(plan.GpioFunction.IsNull() || plan.GpioFunction.IsUnknown()) {
+	if !(plan.GpioFunction.IsNull() || plan.GpioFunction.IsUnknown()) && (state == nil || !plan.GpioFunction.Equal(state.GpioFunction)) {
 		body["gpio-function"] = plan.GpioFunction.ValueString()
 	}
-	if !(plan.InitDelay.IsNull() || plan.InitDelay.IsUnknown()) {
+	if !(plan.InitDelay.IsNull() || plan.InitDelay.IsUnknown()) && (state == nil || !plan.InitDelay.Equal(state.InitDelay)) {
 		body["init-delay"] = plan.InitDelay.ValueString()
 	}
-	if !(plan.PreferredArchitecture.IsNull() || plan.PreferredArchitecture.IsUnknown()) {
+	if !(plan.PreferredArchitecture.IsNull() || plan.PreferredArchitecture.IsUnknown()) && (state == nil || !plan.PreferredArchitecture.Equal(state.PreferredArchitecture)) {
 		body["preferred-architecture"] = plan.PreferredArchitecture.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/system/routerboard/settings", body)
@@ -359,9 +369,7 @@ func systemRouterboardSettingsApply(ctx context.Context, obj client.Object, m *S
 	if v, ok := obj["auto-upgrade"]; ok {
 		_ = v
 		if v != "" {
-			m.AutoUpgrade = types.StringValue(v)
-		} else {
-			m.AutoUpgrade = types.StringNull()
+			m.AutoUpgrade = newBoolStringValue(v)
 		}
 	}
 	if v, ok := obj["boot-device"]; ok {
@@ -391,9 +399,7 @@ func systemRouterboardSettingsApply(ctx context.Context, obj client.Object, m *S
 	if v, ok := obj["force-backup-booter"]; ok {
 		_ = v
 		if v != "" {
-			m.ForceBackupBooter = types.StringValue(v)
-		} else {
-			m.ForceBackupBooter = types.StringNull()
+			m.ForceBackupBooter = newBoolStringValue(v)
 		}
 	}
 	if v, ok := obj["preboot-etherboot"]; ok {
@@ -439,9 +445,7 @@ func systemRouterboardSettingsApply(ctx context.Context, obj client.Object, m *S
 	if v, ok := obj["silent-boot"]; ok {
 		_ = v
 		if v != "" {
-			m.SilentBoot = types.StringValue(v)
-		} else {
-			m.SilentBoot = types.StringNull()
+			m.SilentBoot = newBoolStringValue(v)
 		}
 	}
 }

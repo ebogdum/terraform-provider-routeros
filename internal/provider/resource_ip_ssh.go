@@ -94,10 +94,11 @@ func (r *IPSSHResource) Create(ctx context.Context, req resource.CreateRequest, 
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPSSHUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	iPSSHUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -107,10 +108,16 @@ func (r *IPSSHResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPSSHUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state IPSSHModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	iPSSHUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -148,31 +155,31 @@ func (r *IPSSHResource) ImportState(ctx context.Context, req resource.ImportStat
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/ip/ssh", types.StringValue(routerName))))...)
 }
 
-func iPSSHUpsert(ctx context.Context, reg *client.Registry, plan *IPSSHModel, diags *diagBuf) {
+func iPSSHUpsert(ctx context.Context, reg *client.Registry, plan, state *IPSSHModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.Ciphers.IsNull() || plan.Ciphers.IsUnknown()) {
+	if !(plan.Ciphers.IsNull() || plan.Ciphers.IsUnknown()) && (state == nil || !plan.Ciphers.Equal(state.Ciphers)) {
 		body["ciphers"] = plan.Ciphers.ValueString()
 	}
-	if !(plan.ForwardingEnabled.IsNull() || plan.ForwardingEnabled.IsUnknown()) {
+	if !(plan.ForwardingEnabled.IsNull() || plan.ForwardingEnabled.IsUnknown()) && (state == nil || !plan.ForwardingEnabled.Equal(state.ForwardingEnabled)) {
 		body["forwarding-enabled"] = client.FormatBool(plan.ForwardingEnabled.ValueBool())
 	}
-	if !(plan.HostKeySize.IsNull() || plan.HostKeySize.IsUnknown()) {
+	if !(plan.HostKeySize.IsNull() || plan.HostKeySize.IsUnknown()) && (state == nil || !plan.HostKeySize.Equal(state.HostKeySize)) {
 		body["host-key-size"] = client.FormatInt64(plan.HostKeySize.ValueInt64())
 	}
-	if !(plan.HostKeyType.IsNull() || plan.HostKeyType.IsUnknown()) {
+	if !(plan.HostKeyType.IsNull() || plan.HostKeyType.IsUnknown()) && (state == nil || !plan.HostKeyType.Equal(state.HostKeyType)) {
 		body["host-key-type"] = plan.HostKeyType.ValueString()
 	}
-	if !(plan.PasswordAuthentication.IsNull() || plan.PasswordAuthentication.IsUnknown()) {
+	if !(plan.PasswordAuthentication.IsNull() || plan.PasswordAuthentication.IsUnknown()) && (state == nil || !plan.PasswordAuthentication.Equal(state.PasswordAuthentication)) {
 		body["password-authentication"] = plan.PasswordAuthentication.ValueString()
 	}
-	if !(plan.PublickeyAuthenticationOptions.IsNull() || plan.PublickeyAuthenticationOptions.IsUnknown()) {
+	if !(plan.PublickeyAuthenticationOptions.IsNull() || plan.PublickeyAuthenticationOptions.IsUnknown()) && (state == nil || !plan.PublickeyAuthenticationOptions.Equal(state.PublickeyAuthenticationOptions)) {
 		body["publickey-authentication-options"] = plan.PublickeyAuthenticationOptions.ValueString()
 	}
-	if !(plan.StrongCrypto.IsNull() || plan.StrongCrypto.IsUnknown()) {
+	if !(plan.StrongCrypto.IsNull() || plan.StrongCrypto.IsUnknown()) && (state == nil || !plan.StrongCrypto.Equal(state.StrongCrypto)) {
 		body["strong-crypto"] = client.FormatBool(plan.StrongCrypto.ValueBool())
 	}
 	obj, err := c.SetSingleton(ctx, "/ip/ssh", body)

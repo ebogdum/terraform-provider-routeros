@@ -29,11 +29,11 @@ type PPPL2TPSecretResource struct {
 }
 
 type PPPL2TPSecretModel struct {
-	ID      types.String `tfsdk:"id"`
-	Address types.String `tfsdk:"address"`
-	Comment types.String `tfsdk:"comment"`
-	Secret  types.String `tfsdk:"secret"`
-	Router  types.String `tfsdk:"router"`
+	ID      types.String  `tfsdk:"id"`
+	Address hostAddrValue `tfsdk:"address"`
+	Comment types.String  `tfsdk:"comment"`
+	Secret  types.String  `tfsdk:"secret"`
+	Router  types.String  `tfsdk:"router"`
 }
 
 func NewPPPL2TPSecretResource() resource.Resource { return &PPPL2TPSecretResource{} }
@@ -60,6 +60,7 @@ func (r *PPPL2TPSecretResource) Schema(_ context.Context, _ resource.SchemaReque
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"address": schema.StringAttribute{
+				CustomType:  hostAddrType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -109,6 +110,7 @@ func (r *PPPL2TPSecretResource) Create(ctx context.Context, req resource.CreateR
 		return
 	}
 	pPPL2TPSecretApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -150,13 +152,13 @@ func (r *PPPL2TPSecretResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 	body := client.Object{}
-	if !plan.Address.Equal(state.Address) {
+	if !plan.Address.Equal(state.Address) && !plan.Address.IsUnknown() {
 		body["address"] = plan.Address.ValueString()
 	}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Secret.Equal(state.Secret) {
+	if !plan.Secret.Equal(state.Secret) && !plan.Secret.IsUnknown() {
 		body["secret"] = plan.Secret.ValueString()
 	}
 	if len(body) > 0 {
@@ -169,6 +171,7 @@ func (r *PPPL2TPSecretResource) Update(ctx context.Context, req resource.UpdateR
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -228,12 +231,12 @@ func pPPL2TPSecretApply(ctx context.Context, obj client.Object, m *PPPL2TPSecret
 	if v, ok := obj["address"]; ok {
 		_ = v
 		if v != "" {
-			m.Address = types.StringValue(v)
+			m.Address = newHostAddrValue(v)
 		} else {
-			m.Address = types.StringNull()
+			m.Address = newHostAddrNull()
 		}
 	} else {
-		m.Address = types.StringNull()
+		m.Address = newHostAddrNull()
 	}
 	if v, ok := obj["comment"]; ok {
 		_ = v

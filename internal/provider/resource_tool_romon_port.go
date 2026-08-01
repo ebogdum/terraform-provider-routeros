@@ -146,6 +146,7 @@ func (r *ToolRomonPortResource) Create(ctx context.Context, req resource.CreateR
 		return
 	}
 	toolRomonPortApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -187,22 +188,22 @@ func (r *ToolRomonPortResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Cost.Equal(state.Cost) {
+	if !plan.Cost.Equal(state.Cost) && !plan.Cost.IsUnknown() {
 		body["cost"] = client.FormatInt64(plan.Cost.ValueInt64())
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.Forbid.Equal(state.Forbid) {
+	if !plan.Forbid.Equal(state.Forbid) && !plan.Forbid.IsUnknown() {
 		body["forbid"] = client.FormatBool(plan.Forbid.ValueBool())
 	}
-	if !plan.Interface.Equal(state.Interface) {
+	if !plan.Interface.Equal(state.Interface) && !plan.Interface.IsUnknown() {
 		body["interface"] = plan.Interface.ValueString()
 	}
-	if !plan.Secrets.Equal(state.Secrets) {
+	if !plan.Secrets.Equal(state.Secrets) && !plan.Secrets.IsUnknown() {
 		body["secrets"] = plan.Secrets.ValueString()
 	}
 	if len(body) > 0 {
@@ -215,6 +216,7 @@ func (r *ToolRomonPortResource) Update(ctx context.Context, req resource.UpdateR
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

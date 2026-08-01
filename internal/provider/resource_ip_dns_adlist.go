@@ -160,6 +160,7 @@ func (r *IPDNSAdlistResource) Create(ctx context.Context, req resource.CreateReq
 		return
 	}
 	iPDNSAdlistApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -231,6 +232,7 @@ func (r *IPDNSAdlistResource) Update(ctx context.Context, req resource.UpdateReq
 		}
 		iPDNSAdlistApply(ctx, obj, &plan)
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

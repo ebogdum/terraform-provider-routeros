@@ -207,6 +207,7 @@ func (r *IPServiceResource) Create(ctx context.Context, req resource.CreateReque
 	}
 	ipServiceApply(ctx, obj, &plan)
 	plan.ID = types.StringValue(id)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -299,6 +300,7 @@ func (r *IPServiceResource) Update(ctx context.Context, req resource.UpdateReque
 	}
 	ipServiceApply(ctx, obj, &plan)
 	plan.ID = types.StringValue(id)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

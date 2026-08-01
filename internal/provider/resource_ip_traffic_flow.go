@@ -104,10 +104,11 @@ func (r *IPTrafficFlowResource) Create(ctx context.Context, req resource.CreateR
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPTrafficFlowUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	iPTrafficFlowUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -117,10 +118,16 @@ func (r *IPTrafficFlowResource) Update(ctx context.Context, req resource.UpdateR
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPTrafficFlowUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state IPTrafficFlowModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	iPTrafficFlowUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -158,34 +165,34 @@ func (r *IPTrafficFlowResource) ImportState(ctx context.Context, req resource.Im
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/ip/traffic-flow", types.StringValue(routerName))))...)
 }
 
-func iPTrafficFlowUpsert(ctx context.Context, reg *client.Registry, plan *IPTrafficFlowModel, diags *diagBuf) {
+func iPTrafficFlowUpsert(ctx context.Context, reg *client.Registry, plan, state *IPTrafficFlowModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.ActiveFlowTimeout.IsNull() || plan.ActiveFlowTimeout.IsUnknown()) {
+	if !(plan.ActiveFlowTimeout.IsNull() || plan.ActiveFlowTimeout.IsUnknown()) && (state == nil || !plan.ActiveFlowTimeout.Equal(state.ActiveFlowTimeout)) {
 		body["active-flow-timeout"] = plan.ActiveFlowTimeout.ValueString()
 	}
-	if !(plan.CacheEntries.IsNull() || plan.CacheEntries.IsUnknown()) {
+	if !(plan.CacheEntries.IsNull() || plan.CacheEntries.IsUnknown()) && (state == nil || !plan.CacheEntries.Equal(state.CacheEntries)) {
 		body["cache-entries"] = plan.CacheEntries.ValueString()
 	}
-	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) {
+	if !(plan.Enabled.IsNull() || plan.Enabled.IsUnknown()) && (state == nil || !plan.Enabled.Equal(state.Enabled)) {
 		body["enabled"] = client.FormatBool(plan.Enabled.ValueBool())
 	}
-	if !(plan.InactiveFlowTimeout.IsNull() || plan.InactiveFlowTimeout.IsUnknown()) {
+	if !(plan.InactiveFlowTimeout.IsNull() || plan.InactiveFlowTimeout.IsUnknown()) && (state == nil || !plan.InactiveFlowTimeout.Equal(state.InactiveFlowTimeout)) {
 		body["inactive-flow-timeout"] = plan.InactiveFlowTimeout.ValueString()
 	}
-	if !(plan.Interfaces.IsNull() || plan.Interfaces.IsUnknown()) {
+	if !(plan.Interfaces.IsNull() || plan.Interfaces.IsUnknown()) && (state == nil || !plan.Interfaces.Equal(state.Interfaces)) {
 		body["interfaces"] = plan.Interfaces.ValueString()
 	}
-	if !(plan.PacketSampling.IsNull() || plan.PacketSampling.IsUnknown()) {
+	if !(plan.PacketSampling.IsNull() || plan.PacketSampling.IsUnknown()) && (state == nil || !plan.PacketSampling.Equal(state.PacketSampling)) {
 		body["packet-sampling"] = client.FormatBool(plan.PacketSampling.ValueBool())
 	}
-	if !(plan.SamplingInterval.IsNull() || plan.SamplingInterval.IsUnknown()) {
+	if !(plan.SamplingInterval.IsNull() || plan.SamplingInterval.IsUnknown()) && (state == nil || !plan.SamplingInterval.Equal(state.SamplingInterval)) {
 		body["sampling-interval"] = client.FormatInt64(plan.SamplingInterval.ValueInt64())
 	}
-	if !(plan.SamplingSpace.IsNull() || plan.SamplingSpace.IsUnknown()) {
+	if !(plan.SamplingSpace.IsNull() || plan.SamplingSpace.IsUnknown()) && (state == nil || !plan.SamplingSpace.Equal(state.SamplingSpace)) {
 		body["sampling-space"] = client.FormatInt64(plan.SamplingSpace.ValueInt64())
 	}
 	obj, err := c.SetSingleton(ctx, "/ip/traffic-flow", body)

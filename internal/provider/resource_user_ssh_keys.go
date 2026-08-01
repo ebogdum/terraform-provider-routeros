@@ -164,6 +164,7 @@ func (r *UserSSHKeysResource) Create(ctx context.Context, req resource.CreateReq
 		return
 	}
 	userSSHKeysApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -205,22 +206,22 @@ func (r *UserSSHKeysResource) Update(ctx context.Context, req resource.UpdateReq
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
-	if !plan.Disabled.Equal(state.Disabled) {
+	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
-	if !plan.ImportSSHKey.Equal(state.ImportSSHKey) {
+	if !plan.ImportSSHKey.Equal(state.ImportSSHKey) && !plan.ImportSSHKey.IsUnknown() {
 		body["import-ssh-key"] = plan.ImportSSHKey.ValueString()
 	}
-	if !plan.Key.Equal(state.Key) {
+	if !plan.Key.Equal(state.Key) && !plan.Key.IsUnknown() {
 		body["key"] = plan.Key.ValueString()
 	}
-	if !plan.Newk.Equal(state.Newk) {
+	if !plan.Newk.Equal(state.Newk) && !plan.Newk.IsUnknown() {
 		body["newk"] = plan.Newk.ValueString()
 	}
-	if !plan.Oldk.Equal(state.Oldk) {
+	if !plan.Oldk.Equal(state.Oldk) && !plan.Oldk.IsUnknown() {
 		body["oldk"] = plan.Oldk.ValueString()
 	}
 	if len(body) > 0 {
@@ -233,6 +234,7 @@ func (r *UserSSHKeysResource) Update(ctx context.Context, req resource.UpdateReq
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

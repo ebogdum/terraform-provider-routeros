@@ -158,6 +158,7 @@ func (r *RoutingRpkiSessionResource) Create(ctx context.Context, req resource.Cr
 		return
 	}
 	routingRpkiSessionApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -199,28 +200,28 @@ func (r *RoutingRpkiSessionResource) Update(ctx context.Context, req resource.Up
 		return
 	}
 	body := client.Object{}
-	if !plan.Address.Equal(state.Address) {
+	if !plan.Address.Equal(state.Address) && !plan.Address.IsUnknown() {
 		body["address"] = plan.Address.ValueString()
 	}
-	if !plan.Expires.Equal(state.Expires) {
+	if !plan.Expires.Equal(state.Expires) && !plan.Expires.IsUnknown() {
 		body["expires"] = plan.Expires.ValueString()
 	}
-	if !plan.Group.Equal(state.Group) {
+	if !plan.Group.Equal(state.Group) && !plan.Group.IsUnknown() {
 		body["group"] = plan.Group.ValueString()
 	}
-	if !plan.Port.Equal(state.Port) {
+	if !plan.Port.Equal(state.Port) && !plan.Port.IsUnknown() {
 		body["port"] = client.FormatInt64(plan.Port.ValueInt64())
 	}
-	if !plan.Serial.Equal(state.Serial) {
+	if !plan.Serial.Equal(state.Serial) && !plan.Serial.IsUnknown() {
 		body["serial"] = client.FormatInt64(plan.Serial.ValueInt64())
 	}
-	if !plan.Session.Equal(state.Session) {
+	if !plan.Session.Equal(state.Session) && !plan.Session.IsUnknown() {
 		body["session"] = client.FormatInt64(plan.Session.ValueInt64())
 	}
-	if !plan.State.Equal(state.State) {
+	if !plan.State.Equal(state.State) && !plan.State.IsUnknown() {
 		body["state"] = plan.State.ValueString()
 	}
-	if !plan.Version.Equal(state.Version) {
+	if !plan.Version.Equal(state.Version) && !plan.Version.IsUnknown() {
 		body["version"] = client.FormatInt64(plan.Version.ValueInt64())
 	}
 	if len(body) > 0 {
@@ -233,6 +234,7 @@ func (r *RoutingRpkiSessionResource) Update(ctx context.Context, req resource.Up
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

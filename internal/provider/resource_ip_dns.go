@@ -155,10 +155,11 @@ func (r *IPDNSResource) Create(ctx context.Context, req resource.CreateRequest, 
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPDNSUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	iPDNSUpsert(ctx, r.reg, &plan, nil, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -168,10 +169,16 @@ func (r *IPDNSResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		resp.Diagnostics.Append(d...)
 		return
 	}
-	iPDNSUpsert(ctx, r.reg, &plan, &resp.Diagnostics)
+	var state IPDNSModel
+	if d := req.State.Get(ctx, &state); d.HasError() {
+		resp.Diagnostics.Append(d...)
+		return
+	}
+	iPDNSUpsert(ctx, r.reg, &plan, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -209,61 +216,61 @@ func (r *IPDNSResource) ImportState(ctx context.Context, req resource.ImportStat
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(stateIDFor("/ip/dns", types.StringValue(routerName))))...)
 }
 
-func iPDNSUpsert(ctx context.Context, reg *client.Registry, plan *IPDNSModel, diags *diagBuf) {
+func iPDNSUpsert(ctx context.Context, reg *client.Registry, plan, state *IPDNSModel, diags *diagBuf) {
 	c := pickClient(reg, plan.Router, diags)
 	if c == nil {
 		return
 	}
 	body := client.Object{}
-	if !(plan.AddressListExtraTime.IsNull() || plan.AddressListExtraTime.IsUnknown()) {
+	if !(plan.AddressListExtraTime.IsNull() || plan.AddressListExtraTime.IsUnknown()) && (state == nil || !plan.AddressListExtraTime.Equal(state.AddressListExtraTime)) {
 		body["address-list-extra-time"] = plan.AddressListExtraTime.ValueString()
 	}
-	if !(plan.AllowRemoteRequests.IsNull() || plan.AllowRemoteRequests.IsUnknown()) {
+	if !(plan.AllowRemoteRequests.IsNull() || plan.AllowRemoteRequests.IsUnknown()) && (state == nil || !plan.AllowRemoteRequests.Equal(state.AllowRemoteRequests)) {
 		body["allow-remote-requests"] = client.FormatBool(plan.AllowRemoteRequests.ValueBool())
 	}
-	if !(plan.CacheMaxTtl.IsNull() || plan.CacheMaxTtl.IsUnknown()) {
+	if !(plan.CacheMaxTtl.IsNull() || plan.CacheMaxTtl.IsUnknown()) && (state == nil || !plan.CacheMaxTtl.Equal(state.CacheMaxTtl)) {
 		body["cache-max-ttl"] = plan.CacheMaxTtl.ValueString()
 	}
-	if !(plan.CacheSize.IsNull() || plan.CacheSize.IsUnknown()) {
+	if !(plan.CacheSize.IsNull() || plan.CacheSize.IsUnknown()) && (state == nil || !plan.CacheSize.Equal(state.CacheSize)) {
 		body["cache-size"] = client.FormatInt64(plan.CacheSize.ValueInt64())
 	}
-	if !(plan.DohMaxConcurrentQueries.IsNull() || plan.DohMaxConcurrentQueries.IsUnknown()) {
+	if !(plan.DohMaxConcurrentQueries.IsNull() || plan.DohMaxConcurrentQueries.IsUnknown()) && (state == nil || !plan.DohMaxConcurrentQueries.Equal(state.DohMaxConcurrentQueries)) {
 		body["doh-max-concurrent-queries"] = client.FormatInt64(plan.DohMaxConcurrentQueries.ValueInt64())
 	}
-	if !(plan.DohMaxServerConnections.IsNull() || plan.DohMaxServerConnections.IsUnknown()) {
+	if !(plan.DohMaxServerConnections.IsNull() || plan.DohMaxServerConnections.IsUnknown()) && (state == nil || !plan.DohMaxServerConnections.Equal(state.DohMaxServerConnections)) {
 		body["doh-max-server-connections"] = client.FormatInt64(plan.DohMaxServerConnections.ValueInt64())
 	}
-	if !(plan.DohTimeout.IsNull() || plan.DohTimeout.IsUnknown()) {
+	if !(plan.DohTimeout.IsNull() || plan.DohTimeout.IsUnknown()) && (state == nil || !plan.DohTimeout.Equal(state.DohTimeout)) {
 		body["doh-timeout"] = plan.DohTimeout.ValueString()
 	}
-	if !(plan.MaxConcurrentQueries.IsNull() || plan.MaxConcurrentQueries.IsUnknown()) {
+	if !(plan.MaxConcurrentQueries.IsNull() || plan.MaxConcurrentQueries.IsUnknown()) && (state == nil || !plan.MaxConcurrentQueries.Equal(state.MaxConcurrentQueries)) {
 		body["max-concurrent-queries"] = client.FormatInt64(plan.MaxConcurrentQueries.ValueInt64())
 	}
-	if !(plan.MaxConcurrentTCPSessions.IsNull() || plan.MaxConcurrentTCPSessions.IsUnknown()) {
+	if !(plan.MaxConcurrentTCPSessions.IsNull() || plan.MaxConcurrentTCPSessions.IsUnknown()) && (state == nil || !plan.MaxConcurrentTCPSessions.Equal(state.MaxConcurrentTCPSessions)) {
 		body["max-concurrent-tcp-sessions"] = client.FormatInt64(plan.MaxConcurrentTCPSessions.ValueInt64())
 	}
-	if !(plan.MaxUDPPacketSize.IsNull() || plan.MaxUDPPacketSize.IsUnknown()) {
+	if !(plan.MaxUDPPacketSize.IsNull() || plan.MaxUDPPacketSize.IsUnknown()) && (state == nil || !plan.MaxUDPPacketSize.Equal(state.MaxUDPPacketSize)) {
 		body["max-udp-packet-size"] = client.FormatInt64(plan.MaxUDPPacketSize.ValueInt64())
 	}
-	if !(plan.MdnsRepeatIfaces.IsNull() || plan.MdnsRepeatIfaces.IsUnknown()) {
+	if !(plan.MdnsRepeatIfaces.IsNull() || plan.MdnsRepeatIfaces.IsUnknown()) && (state == nil || !plan.MdnsRepeatIfaces.Equal(state.MdnsRepeatIfaces)) {
 		body["mdns-repeat-ifaces"] = plan.MdnsRepeatIfaces.ValueString()
 	}
-	if !(plan.QueryServerTimeout.IsNull() || plan.QueryServerTimeout.IsUnknown()) {
+	if !(plan.QueryServerTimeout.IsNull() || plan.QueryServerTimeout.IsUnknown()) && (state == nil || !plan.QueryServerTimeout.Equal(state.QueryServerTimeout)) {
 		body["query-server-timeout"] = plan.QueryServerTimeout.ValueString()
 	}
-	if !(plan.QueryTotalTimeout.IsNull() || plan.QueryTotalTimeout.IsUnknown()) {
+	if !(plan.QueryTotalTimeout.IsNull() || plan.QueryTotalTimeout.IsUnknown()) && (state == nil || !plan.QueryTotalTimeout.Equal(state.QueryTotalTimeout)) {
 		body["query-total-timeout"] = plan.QueryTotalTimeout.ValueString()
 	}
-	if !(plan.Servers.IsNull() || plan.Servers.IsUnknown()) {
+	if !(plan.Servers.IsNull() || plan.Servers.IsUnknown()) && (state == nil || !plan.Servers.Equal(state.Servers)) {
 		body["servers"] = plan.Servers.ValueString()
 	}
-	if !(plan.UseDohServer.IsNull() || plan.UseDohServer.IsUnknown()) {
+	if !(plan.UseDohServer.IsNull() || plan.UseDohServer.IsUnknown()) && (state == nil || !plan.UseDohServer.Equal(state.UseDohServer)) {
 		body["use-doh-server"] = plan.UseDohServer.ValueString()
 	}
-	if !(plan.VerifyDohCert.IsNull() || plan.VerifyDohCert.IsUnknown()) {
+	if !(plan.VerifyDohCert.IsNull() || plan.VerifyDohCert.IsUnknown()) && (state == nil || !plan.VerifyDohCert.Equal(state.VerifyDohCert)) {
 		body["verify-doh-cert"] = client.FormatBool(plan.VerifyDohCert.ValueBool())
 	}
-	if !(plan.Vrf.IsNull() || plan.Vrf.IsUnknown()) {
+	if !(plan.Vrf.IsNull() || plan.Vrf.IsUnknown()) && (state == nil || !plan.Vrf.Equal(state.Vrf)) {
 		body["vrf"] = plan.Vrf.ValueString()
 	}
 	obj, err := c.SetSingleton(ctx, "/ip/dns", body)

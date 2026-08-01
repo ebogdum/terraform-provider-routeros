@@ -110,6 +110,7 @@ func (r *IPFirewallLayer7ProtocolResource) Create(ctx context.Context, req resou
 		return
 	}
 	iPFirewallLayer7ProtocolApply(ctx, obj, &plan)
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -151,7 +152,7 @@ func (r *IPFirewallLayer7ProtocolResource) Update(ctx context.Context, req resou
 		return
 	}
 	body := client.Object{}
-	if !plan.Comment.Equal(state.Comment) {
+	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
 	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
@@ -170,6 +171,7 @@ func (r *IPFirewallLayer7ProtocolResource) Update(ctx context.Context, req resou
 	} else {
 		plan.ID = state.ID
 	}
+	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
