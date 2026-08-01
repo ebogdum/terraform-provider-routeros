@@ -816,9 +816,6 @@ func (r *InterfaceWifiConfigurationResource) Create(ctx context.Context, req res
 		return
 	}
 	body := client.Object{}
-	if !(plan.X2gProbeDelay.IsNull() || plan.X2gProbeDelay.IsUnknown()) {
-		body["2g-probe-delay"] = plan.X2gProbeDelay.ValueString()
-	}
 	if !(plan.X3gppInfo.IsNull() || plan.X3gppInfo.IsUnknown()) {
 		body["3gpp-info"] = plan.X3gppInfo.ValueString()
 	}
@@ -1232,9 +1229,6 @@ func (r *InterfaceWifiConfigurationResource) Update(ctx context.Context, req res
 		return
 	}
 	body := client.Object{}
-	if !plan.X2gProbeDelay.Equal(state.X2gProbeDelay) && !plan.X2gProbeDelay.IsUnknown() {
-		body["2g-probe-delay"] = plan.X2gProbeDelay.ValueString()
-	}
 	if !plan.X3gppInfo.Equal(state.X3gppInfo) && !plan.X3gppInfo.IsUnknown() {
 		body["3gpp-info"] = plan.X3gppInfo.ValueString()
 	}

@@ -743,9 +743,6 @@ func (r *DiskResource) Create(ctx context.Context, req resource.CreateRequest, r
 		return
 	}
 	body := client.Object{}
-	if !(plan.Acquired.IsNull() || plan.Acquired.IsUnknown()) {
-		body["acquired"] = client.FormatBool(plan.Acquired.ValueBool())
-	}
 	if !(plan.BlockDevice.IsNull() || plan.BlockDevice.IsUnknown()) {
 		body["block-device"] = client.FormatBool(plan.BlockDevice.ValueBool())
 	}
@@ -976,9 +973,6 @@ func (r *DiskResource) Update(ctx context.Context, req resource.UpdateRequest, r
 		return
 	}
 	body := client.Object{}
-	if !plan.Acquired.Equal(state.Acquired) && !plan.Acquired.IsUnknown() {
-		body["acquired"] = client.FormatBool(plan.Acquired.ValueBool())
-	}
 	if !plan.BlockDevice.Equal(state.BlockDevice) && !plan.BlockDevice.IsUnknown() {
 		body["block-device"] = client.FormatBool(plan.BlockDevice.ValueBool())
 	}

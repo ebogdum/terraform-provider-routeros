@@ -32,7 +32,7 @@ type IPCloudModel struct {
 	DdnsUpdateInterval             types.String `tfsdk:"ddns_update_interval"`
 	DNSName                        types.String `tfsdk:"dns_name"`
 	PublicAddress                  types.String `tfsdk:"public_address"`
-	PublicAddressIvp6              types.String `tfsdk:"public_address_ivp6"`
+	PublicAddressIPv6              types.String `tfsdk:"public_address_ipv6"`
 	Status                         types.String `tfsdk:"status"`
 	UpdateTime                     types.Bool   `tfsdk:"update_time"`
 	VPNDNSName                     types.String `tfsdk:"vpn_dns_name"`
@@ -91,10 +91,10 @@ func (r *IPCloudResource) Schema(_ context.Context, _ resource.SchemaRequest, re
 			"dns_name": schema.StringAttribute{Optional: true, Computed: true,
 				Description: "Shows the DNS name assigned to the device. Name consists of 12 characters serial number appended by . sn.mynetname.net . This field is visible only after at least one ddns-request is successfully completed.",
 			},
-			"public_address": schema.StringAttribute{Optional: true, Computed: true,
+			"public_address": schema.StringAttribute{Computed: true,
 				Description: "Shows the device's IPv4 address that was sent to the cloud server. This field is visible only after at least one IP Cloud request was successfully completed.",
 			},
-			"public_address_ivp6": schema.StringAttribute{Optional: true, Computed: true,
+			"public_address_ipv6": schema.StringAttribute{Computed: true,
 				Description: "Shows the device's IPv6 address that was sent to the cloud server. This field is visible only after at least one IP Cloud request was successfully completed.",
 			},
 			"status": schema.StringAttribute{Optional: true, Computed: true,
@@ -303,12 +303,12 @@ func iPCloudApply(ctx context.Context, obj client.Object, m *IPCloudModel) {
 			m.PublicAddress = types.StringNull()
 		}
 	}
-	if v, ok := obj["public-address-ivp6"]; ok {
+	if v, ok := obj["public-address-ipv6"]; ok {
 		_ = v
 		if v != "" {
-			m.PublicAddressIvp6 = types.StringValue(v)
+			m.PublicAddressIPv6 = types.StringValue(v)
 		} else {
-			m.PublicAddressIvp6 = types.StringNull()
+			m.PublicAddressIPv6 = types.StringNull()
 		}
 	}
 	if v, ok := obj["status"]; ok {

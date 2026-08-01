@@ -158,9 +158,6 @@ func (r *InterfaceWifiChannelResource) Create(ctx context.Context, req resource.
 	if !(plan.Band.IsNull() || plan.Band.IsUnknown()) {
 		body["band"] = plan.Band.ValueString()
 	}
-	if !(plan.ChannelWidth.IsNull() || plan.ChannelWidth.IsUnknown()) {
-		body["channel-width"] = plan.ChannelWidth.ValueString()
-	}
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
 	}
@@ -243,9 +240,6 @@ func (r *InterfaceWifiChannelResource) Update(ctx context.Context, req resource.
 	body := client.Object{}
 	if !plan.Band.Equal(state.Band) && !plan.Band.IsUnknown() {
 		body["band"] = plan.Band.ValueString()
-	}
-	if !plan.ChannelWidth.Equal(state.ChannelWidth) && !plan.ChannelWidth.IsUnknown() {
-		body["channel-width"] = plan.ChannelWidth.ValueString()
 	}
 	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()

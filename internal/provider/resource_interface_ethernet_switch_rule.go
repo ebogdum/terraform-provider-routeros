@@ -83,9 +83,6 @@ func (r *InterfaceEthernetSwitchRuleResource) Create(ctx context.Context, req re
 		return
 	}
 	body := client.Object{}
-	if !(plan.QosHwOffloading.IsNull() || plan.QosHwOffloading.IsUnknown()) {
-		body["qos-hw-offloading"] = plan.QosHwOffloading.ValueString()
-	}
 	obj, err := c.Add(ctx, "/interface/ethernet/switch/rule", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Create /interface/ethernet/switch/rule failed", err.Error())
@@ -133,9 +130,6 @@ func (r *InterfaceEthernetSwitchRuleResource) Update(ctx context.Context, req re
 		return
 	}
 	body := client.Object{}
-	if !plan.QosHwOffloading.Equal(state.QosHwOffloading) && !plan.QosHwOffloading.IsUnknown() {
-		body["qos-hw-offloading"] = plan.QosHwOffloading.ValueString()
-	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/ethernet/switch/rule", state.ID.ValueString(), body)
 		if err != nil {
