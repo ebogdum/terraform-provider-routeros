@@ -247,63 +247,45 @@ func toolTrafficGeneratorPortApply(ctx context.Context, obj client.Object, m *To
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["first-header"]; ok {
-		_ = v
 		if v != "" {
 			m.FirstHeader = types.StringValue(v)
 		} else {
 			m.FirstHeader = types.StringNull()
 		}
-	} else {
-		m.FirstHeader = types.StringNull()
 	}
 	if v, ok := obj["interface"]; ok {
-		_ = v
 		if v != "" {
 			m.Interface = types.StringValue(v)
 		} else {
 			m.Interface = types.StringNull()
 		}
-	} else {
-		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 }

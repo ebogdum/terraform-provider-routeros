@@ -273,84 +273,60 @@ func iPV6PoolApply(ctx context.Context, obj client.Object, m *IPV6PoolModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["actual-prefix"]; ok {
-		_ = v
 		if v != "" {
 			m.ActualPrefix = types.StringValue(v)
 		} else {
 			m.ActualPrefix = types.StringNull()
 		}
-	} else {
-		m.ActualPrefix = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["from-pool"]; ok {
-		_ = v
 		if v != "" {
 			m.FromPool = types.StringValue(v)
 		} else {
 			m.FromPool = types.StringNull()
 		}
-	} else {
-		m.FromPool = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["preferred-lifetime"]; ok {
-		_ = v
 		if v != "" {
 			m.PreferredLifetime = types.StringValue(v)
 		} else {
 			m.PreferredLifetime = types.StringNull()
 		}
-	} else {
-		m.PreferredLifetime = types.StringNull()
 	}
 	if v, ok := obj["prefix"]; ok {
-		_ = v
 		if v != "" {
 			m.Prefix = types.StringValue(v)
 		} else {
 			m.Prefix = types.StringNull()
 		}
-	} else {
-		m.Prefix = types.StringNull()
 	}
 	if v, ok := obj["prefix-length"]; ok {
 		_ = v
@@ -363,13 +339,10 @@ func iPV6PoolApply(ctx context.Context, obj client.Object, m *IPV6PoolModel) {
 		m.PrefixLength = types.Int64Null()
 	}
 	if v, ok := obj["valid-lifetime"]; ok {
-		_ = v
 		if v != "" {
 			m.ValidLifetime = types.StringValue(v)
 		} else {
 			m.ValidLifetime = types.StringNull()
 		}
-	} else {
-		m.ValidLifetime = types.StringNull()
 	}
 }

@@ -274,14 +274,11 @@ func toolRomonPortApply(ctx context.Context, obj client.Object, m *ToolRomonPort
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["cost"]; ok {
 		_ = v
@@ -294,54 +291,39 @@ func toolRomonPortApply(ctx context.Context, obj client.Object, m *ToolRomonPort
 		m.Cost = types.Int64Null()
 	}
 	if v, ok := obj["default"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
 		} else {
 			m.Default = types.BoolNull()
 		}
-	} else {
-		m.Default = types.BoolNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["forbid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Forbid = types.BoolValue(b)
 		} else {
 			m.Forbid = types.BoolNull()
 		}
-	} else {
-		m.Forbid = types.BoolNull()
 	}
 	if v, ok := obj["interface"]; ok {
-		_ = v
 		if v != "" {
 			m.Interface = types.StringValue(v)
 		} else {
 			m.Interface = types.StringNull()
 		}
-	} else {
-		m.Interface = types.StringNull()
 	}
 	// Sensitive: RouterOS scrubs the value on read. If the server returned
 	// a value, decode it. Otherwise the plan value (user input) is what's

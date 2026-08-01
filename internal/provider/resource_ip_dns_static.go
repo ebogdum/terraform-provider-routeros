@@ -420,190 +420,132 @@ func iPDNSStaticApply(ctx context.Context, obj client.Object, m *IPDNSStaticMode
 		_ = v
 		if v != "" {
 			m.Address = types.StringValue(v)
-		} else {
-			m.Address = types.StringNull()
 		}
-	} else {
-		m.Address = types.StringNull()
 	}
 	if v, ok := obj["address-list"]; ok {
-		_ = v
 		if v != "" {
 			m.AddressList = types.StringValue(v)
 		} else {
 			m.AddressList = types.StringNull()
 		}
-	} else {
-		m.AddressList = types.StringNull()
 	}
 	if v, ok := obj["cname"]; ok {
-		_ = v
 		if v != "" {
 			m.Cname = types.StringValue(v)
 		} else {
 			m.Cname = types.StringNull()
 		}
-	} else {
-		m.Cname = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["forward-to"]; ok {
-		_ = v
 		if v != "" {
 			m.ForwardTo = types.StringValue(v)
 		} else {
 			m.ForwardTo = types.StringNull()
 		}
-	} else {
-		m.ForwardTo = types.StringNull()
 	}
 	if v, ok := obj["match-subdomain"]; ok {
-		_ = v
 		if v != "" {
 			m.MatchSubdomain = types.StringValue(v)
 		} else {
 			m.MatchSubdomain = types.StringNull()
 		}
-	} else {
-		m.MatchSubdomain = types.StringNull()
 	}
 	if v, ok := obj["mx-exchange"]; ok {
-		_ = v
 		if v != "" {
 			m.MxExchange = types.StringValue(v)
 		} else {
 			m.MxExchange = types.StringNull()
 		}
-	} else {
-		m.MxExchange = types.StringNull()
 	}
 	if v, ok := obj["mx-preference"]; ok {
-		_ = v
 		if v != "" {
 			m.MxPreference = types.StringValue(v)
 		} else {
 			m.MxPreference = types.StringNull()
 		}
-	} else {
-		m.MxPreference = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["ns"]; ok {
-		_ = v
 		if v != "" {
 			m.Ns = types.StringValue(v)
 		} else {
 			m.Ns = types.StringNull()
 		}
-	} else {
-		m.Ns = types.StringNull()
 	}
 	if v, ok := obj["regexp"]; ok {
-		_ = v
 		if v != "" {
 			m.Regexp = types.StringValue(v)
 		} else {
 			m.Regexp = types.StringNull()
 		}
-	} else {
-		m.Regexp = types.StringNull()
 	}
 	if v, ok := obj["srv-port"]; ok {
-		_ = v
 		if v != "" {
 			m.SrvPort = types.StringValue(v)
 		} else {
 			m.SrvPort = types.StringNull()
 		}
-	} else {
-		m.SrvPort = types.StringNull()
 	}
 	if v, ok := obj["srv-priority"]; ok {
-		_ = v
 		if v != "" {
 			m.SrvPriority = types.StringValue(v)
 		} else {
 			m.SrvPriority = types.StringNull()
 		}
-	} else {
-		m.SrvPriority = types.StringNull()
 	}
 	if v, ok := obj["srv-target"]; ok {
-		_ = v
 		if v != "" {
 			m.SrvTarget = types.StringValue(v)
 		} else {
 			m.SrvTarget = types.StringNull()
 		}
-	} else {
-		m.SrvTarget = types.StringNull()
 	}
 	if v, ok := obj["srv-weight"]; ok {
-		_ = v
 		if v != "" {
 			m.SrvWeight = types.StringValue(v)
 		} else {
 			m.SrvWeight = types.StringNull()
 		}
-	} else {
-		m.SrvWeight = types.StringNull()
 	}
 	if v, ok := obj["text"]; ok {
-		_ = v
 		if v != "" {
 			m.Text = types.StringValue(v)
 		} else {
 			m.Text = types.StringNull()
 		}
-	} else {
-		m.Text = types.StringNull()
 	}
 	if v, ok := obj["ttl"]; ok {
-		_ = v
 		if v != "" {
 			m.Ttl = types.StringValue(v)
 		} else {
 			m.Ttl = types.StringNull()
 		}
-	} else {
-		m.Ttl = types.StringNull()
 	}
 	if v, ok := obj["type"]; ok {
-		_ = v
 		if v != "" {
 			m.Type = types.StringValue(v)
 		} else {
 			m.Type = types.StringNull()
 		}
-	} else {
-		m.Type = types.StringNull()
 	}
 }

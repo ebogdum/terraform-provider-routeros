@@ -482,63 +482,45 @@ func iPV6DHCPServerApply(ctx context.Context, obj client.Object, m *IPV6DHCPServ
 		m.AddressLists = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["dhcp-option"]; ok {
-		_ = v
 		if v != "" {
 			m.DHCPOption = types.StringValue(v)
 		} else {
 			m.DHCPOption = types.StringNull()
 		}
-	} else {
-		m.DHCPOption = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["interface"]; ok {
-		_ = v
 		if v != "" {
 			m.Interface = types.StringValue(v)
 		} else {
 			m.Interface = types.StringNull()
 		}
-	} else {
-		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["lease-time"]; ok {
-		_ = v
 		if v != "" {
 			m.LeaseTime = types.StringValue(v)
 		} else {
 			m.LeaseTime = types.StringNull()
 		}
-	} else {
-		m.LeaseTime = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 }

@@ -289,83 +289,59 @@ func toolTrafficMonitorApply(ctx context.Context, obj client.Object, m *ToolTraf
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["interface"]; ok {
-		_ = v
 		if v != "" {
 			m.Interface = types.StringValue(v)
 		} else {
 			m.Interface = types.StringNull()
 		}
-	} else {
-		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["on-event"]; ok {
-		_ = v
 		if v != "" {
 			m.OnEvent = types.StringValue(v)
 		} else {
 			m.OnEvent = types.StringNull()
 		}
-	} else {
-		m.OnEvent = types.StringNull()
 	}
 	if v, ok := obj["threshold"]; ok {
-		_ = v
 		if v != "" {
 			m.Threshold = types.StringValue(v)
 		} else {
 			m.Threshold = types.StringNull()
 		}
-	} else {
-		m.Threshold = types.StringNull()
 	}
 	if v, ok := obj["traffic"]; ok {
-		_ = v
 		if v != "" {
 			m.Traffic = types.StringValue(v)
 		} else {
 			m.Traffic = types.StringNull()
 		}
-	} else {
-		m.Traffic = types.StringNull()
 	}
 	if v, ok := obj["trigger"]; ok {
-		_ = v
 		if v != "" {
 			m.Trigger = types.StringValue(v)
 		} else {
 			m.Trigger = types.StringNull()
 		}
-	} else {
-		m.Trigger = types.StringNull()
 	}
 }

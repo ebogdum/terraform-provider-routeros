@@ -934,254 +934,179 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 		m.DhcpAgentCircuitId = types.StringNull()
 	}
 	if v, ok := obj["active-role"]; ok {
-		_ = v
 		if v != "" {
 			m.ActiveRole = types.StringValue(v)
 		} else {
 			m.ActiveRole = types.StringNull()
 		}
-	} else {
-		m.ActiveRole = types.StringNull()
 	}
 	if v, ok := obj["add-dhcp-option-82"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AddDHCPOption82 = types.BoolValue(b)
 		} else {
 			m.AddDHCPOption82 = types.BoolNull()
 		}
-	} else {
-		m.AddDHCPOption82 = types.BoolNull()
 	}
 	if v, ok := obj["admin-mac"]; ok {
-		_ = v
 		if v != "" {
 			m.AdminMAC = types.StringValue(v)
 		} else {
 			m.AdminMAC = types.StringNull()
 		}
-	} else {
-		m.AdminMAC = types.StringNull()
 	}
 	if v, ok := obj["admin-mac-address"]; ok {
-		_ = v
 		if v != "" {
 			m.AdminMACAddress = types.StringValue(v)
 		} else {
 			m.AdminMACAddress = types.StringNull()
 		}
-	} else {
-		m.AdminMACAddress = types.StringNull()
 	}
 	if v, ok := obj["ageing-time"]; ok {
-		_ = v
 		if v != "" {
 			m.AgeingTime = types.StringValue(v)
 		} else {
 			m.AgeingTime = types.StringNull()
 		}
-	} else {
-		m.AgeingTime = types.StringNull()
 	}
 	if v, ok := obj["arp"]; ok {
-		_ = v
 		if v != "" {
 			m.ARP = types.StringValue(v)
 		} else {
 			m.ARP = types.StringNull()
 		}
-	} else {
-		m.ARP = types.StringNull()
 	}
 	if v, ok := obj["arp-timeout"]; ok {
-		_ = v
 		if v != "" {
 			m.ARPTimeout = types.StringValue(v)
 		} else {
 			m.ARPTimeout = types.StringNull()
 		}
-	} else {
-		m.ARPTimeout = types.StringNull()
 	}
 	if v, ok := obj["auto-mac"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AutoMAC = types.BoolValue(b)
 		} else {
 			m.AutoMAC = types.BoolNull()
 		}
-	} else {
-		m.AutoMAC = types.BoolNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["dhcp-snooping"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.DHCPSnooping = types.BoolValue(b)
 		} else {
 			m.DHCPSnooping = types.BoolNull()
 		}
-	} else {
-		m.DHCPSnooping = types.BoolNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dumb"]; ok {
-		_ = v
 		if v != "" {
 			m.Dumb = types.StringValue(v)
 		} else {
 			m.Dumb = types.StringNull()
 		}
-	} else {
-		m.Dumb = types.StringNull()
 	}
 	if v, ok := obj["ether-type"]; ok {
-		_ = v
 		if v != "" {
 			m.EtherType = types.StringValue(v)
 		} else {
 			m.EtherType = types.StringNull()
 		}
-	} else {
-		m.EtherType = types.StringNull()
 	}
 	if v, ok := obj["fast-forward"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.FastForward = types.BoolValue(b)
 		} else {
 			m.FastForward = types.BoolNull()
 		}
-	} else {
-		m.FastForward = types.BoolNull()
 	}
 	if v, ok := obj["forward-delay"]; ok {
-		_ = v
 		if v != "" {
 			m.ForwardDelay = types.StringValue(v)
 		} else {
 			m.ForwardDelay = types.StringNull()
 		}
-	} else {
-		m.ForwardDelay = types.StringNull()
 	}
 	if v, ok := obj["forward-reserved"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.ForwardReserved = types.BoolValue(b)
 		} else {
 			m.ForwardReserved = types.BoolNull()
 		}
-	} else {
-		m.ForwardReserved = types.BoolNull()
 	}
 	if v, ok := obj["fp-tx-rx-packet-rate"]; ok {
-		_ = v
 		if v != "" {
 			m.FpTxRxPacketRate = types.StringValue(v)
 		} else {
 			m.FpTxRxPacketRate = types.StringNull()
 		}
-	} else {
-		m.FpTxRxPacketRate = types.StringNull()
 	}
 	if v, ok := obj["fp-tx-rx-rate"]; ok {
-		_ = v
 		if v != "" {
 			m.FpTxRxRate = types.StringValue(v)
 		} else {
 			m.FpTxRxRate = types.StringNull()
 		}
-	} else {
-		m.FpTxRxRate = types.StringNull()
 	}
 	if v, ok := obj["frame-types"]; ok {
-		_ = v
 		if v != "" {
 			m.FrameTypes = types.StringValue(v)
 		} else {
 			m.FrameTypes = types.StringNull()
 		}
-	} else {
-		m.FrameTypes = types.StringNull()
 	}
 	if v, ok := obj["heartbeat"]; ok {
-		_ = v
 		if v != "" {
 			m.Heartbeat = types.StringValue(v)
 		} else {
 			m.Heartbeat = types.StringNull()
 		}
-	} else {
-		m.Heartbeat = types.StringNull()
 	}
 	if v, ok := obj["igmp"]; ok {
-		_ = v
 		if v != "" {
 			m.Igmp = types.StringValue(v)
 		} else {
 			m.Igmp = types.StringNull()
 		}
-	} else {
-		m.Igmp = types.StringNull()
 	}
 	if v, ok := obj["igmp-snooping"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.IgmpSnooping = types.BoolValue(b)
 		} else {
 			m.IgmpSnooping = types.BoolNull()
 		}
-	} else {
-		m.IgmpSnooping = types.BoolNull()
 	}
 	if v, ok := obj["igmp-version"]; ok {
-		_ = v
 		if v != "" {
 			m.IgmpVersion = types.StringValue(v)
 		} else {
 			m.IgmpVersion = types.StringNull()
 		}
-	} else {
-		m.IgmpVersion = types.StringNull()
 	}
 	if v, ok := obj["ingress-filtering"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.IngressFiltering = types.BoolValue(b)
 		} else {
 			m.IngressFiltering = types.BoolNull()
 		}
-	} else {
-		m.IngressFiltering = types.BoolNull()
 	}
 	if v, ok := obj["last-member-interval"]; ok {
-		_ = v
 		if v != "" {
 			m.LastMemberInterval = types.StringValue(v)
 		} else {
 			m.LastMemberInterval = types.StringNull()
 		}
-	} else {
-		m.LastMemberInterval = types.StringNull()
 	}
 	if v, ok := obj["last-member-query-count"]; ok {
 		_ = v
@@ -1194,14 +1119,11 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 		m.LastMemberQueryCount = types.Int64Null()
 	}
 	if v, ok := obj["mac-address"]; ok {
-		_ = v
 		if v != "" {
 			m.MACAddress = types.StringValue(v)
 		} else {
 			m.MACAddress = types.StringNull()
 		}
-	} else {
-		m.MACAddress = types.StringNull()
 	}
 	if v, ok := obj["max-hops"]; ok {
 		_ = v
@@ -1214,54 +1136,39 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 		m.MaxHops = types.Int64Null()
 	}
 	if v, ok := obj["max-learned-entries"]; ok {
-		_ = v
 		if v != "" {
 			m.MaxLearnedEntries = types.StringValue(v)
 		} else {
 			m.MaxLearnedEntries = types.StringNull()
 		}
-	} else {
-		m.MaxLearnedEntries = types.StringNull()
 	}
 	if v, ok := obj["max-message-age"]; ok {
-		_ = v
 		if v != "" {
 			m.MaxMessageAge = types.StringValue(v)
 		} else {
 			m.MaxMessageAge = types.StringNull()
 		}
-	} else {
-		m.MaxMessageAge = types.StringNull()
 	}
 	if v, ok := obj["membership-interval"]; ok {
-		_ = v
 		if v != "" {
 			m.MembershipInterval = types.StringValue(v)
 		} else {
 			m.MembershipInterval = types.StringNull()
 		}
-	} else {
-		m.MembershipInterval = types.StringNull()
 	}
 	if v, ok := obj["mlag-heartbeat"]; ok {
-		_ = v
 		if v != "" {
 			m.MlagHeartbeat = types.StringValue(v)
 		} else {
 			m.MlagHeartbeat = types.StringNull()
 		}
-	} else {
-		m.MlagHeartbeat = types.StringNull()
 	}
 	if v, ok := obj["mlag-peer-port"]; ok {
-		_ = v
 		if v != "" {
 			m.MlagPeerPort = types.StringValue(v)
 		} else {
 			m.MlagPeerPort = types.StringNull()
 		}
-	} else {
-		m.MlagPeerPort = types.StringNull()
 	}
 	if v, ok := obj["mlag-priority"]; ok {
 		_ = v
@@ -1274,94 +1181,67 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 		m.MlagPriority = types.Int64Null()
 	}
 	if v, ok := obj["mld-version"]; ok {
-		_ = v
 		if v != "" {
 			m.MldVersion = types.StringValue(v)
 		} else {
 			m.MldVersion = types.StringNull()
 		}
-	} else {
-		m.MldVersion = types.StringNull()
 	}
 	if v, ok := obj["mstp"]; ok {
-		_ = v
 		if v != "" {
 			m.Mstp = types.StringValue(v)
 		} else {
 			m.Mstp = types.StringNull()
 		}
-	} else {
-		m.Mstp = types.StringNull()
 	}
 	if v, ok := obj["mtu"]; ok {
-		_ = v
 		if v != "" {
 			m.MTU = types.StringValue(v)
 		} else {
 			m.MTU = types.StringNull()
 		}
-	} else {
-		m.MTU = types.StringNull()
 	}
 	if v, ok := obj["multicast-querier"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.MulticastQuerier = types.BoolValue(b)
 		} else {
 			m.MulticastQuerier = types.BoolNull()
 		}
-	} else {
-		m.MulticastQuerier = types.BoolNull()
 	}
 	if v, ok := obj["multicast-router"]; ok {
-		_ = v
 		if v != "" {
 			m.MulticastRouter = types.StringValue(v)
 		} else {
 			m.MulticastRouter = types.StringNull()
 		}
-	} else {
-		m.MulticastRouter = types.StringNull()
 	}
 	if v, ok := obj["mvrp"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Mvrp = types.BoolValue(b)
 		} else {
 			m.Mvrp = types.BoolNull()
 		}
-	} else {
-		m.Mvrp = types.BoolNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["peer-port"]; ok {
-		_ = v
 		if v != "" {
 			m.PeerPort = types.StringValue(v)
 		} else {
 			m.PeerPort = types.StringNull()
 		}
-	} else {
-		m.PeerPort = types.StringNull()
 	}
 	if v, ok := obj["port-cost-mode"]; ok {
-		_ = v
 		if v != "" {
 			m.PortCostMode = types.StringValue(v)
 		} else {
 			m.PortCostMode = types.StringNull()
 		}
-	} else {
-		m.PortCostMode = types.StringNull()
 	}
 	if v, ok := obj["priority"]; ok {
 		_ = v
@@ -1374,14 +1254,11 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 		m.Priority = types.Int64Null()
 	}
 	if v, ok := obj["protocol-mode"]; ok {
-		_ = v
 		if v != "" {
 			m.ProtocolMode = types.StringValue(v)
 		} else {
 			m.ProtocolMode = types.StringNull()
 		}
-	} else {
-		m.ProtocolMode = types.StringNull()
 	}
 	if v, ok := obj["pvid"]; ok {
 		_ = v
@@ -1394,54 +1271,39 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 		m.Pvid = types.Int64Null()
 	}
 	if v, ok := obj["querier-interval"]; ok {
-		_ = v
 		if v != "" {
 			m.QuerierInterval = types.StringValue(v)
 		} else {
 			m.QuerierInterval = types.StringNull()
 		}
-	} else {
-		m.QuerierInterval = types.StringNull()
 	}
 	if v, ok := obj["query-interval"]; ok {
-		_ = v
 		if v != "" {
 			m.QueryInterval = types.StringValue(v)
 		} else {
 			m.QueryInterval = types.StringNull()
 		}
-	} else {
-		m.QueryInterval = types.StringNull()
 	}
 	if v, ok := obj["query-response-interval"]; ok {
-		_ = v
 		if v != "" {
 			m.QueryResponseInterval = types.StringValue(v)
 		} else {
 			m.QueryResponseInterval = types.StringNull()
 		}
-	} else {
-		m.QueryResponseInterval = types.StringNull()
 	}
 	if v, ok := obj["ra-guard"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.RaGuard = types.BoolValue(b)
 		} else {
 			m.RaGuard = types.BoolNull()
 		}
-	} else {
-		m.RaGuard = types.BoolNull()
 	}
 	if v, ok := obj["region-name"]; ok {
-		_ = v
 		if v != "" {
 			m.RegionName = types.StringValue(v)
 		} else {
 			m.RegionName = types.StringNull()
 		}
-	} else {
-		m.RegionName = types.StringNull()
 	}
 	if v, ok := obj["region-revision"]; ok {
 		_ = v
@@ -1464,24 +1326,18 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 		m.StartupQueryCount = types.Int64Null()
 	}
 	if v, ok := obj["startup-query-interval"]; ok {
-		_ = v
 		if v != "" {
 			m.StartupQueryInterval = types.StringValue(v)
 		} else {
 			m.StartupQueryInterval = types.StringNull()
 		}
-	} else {
-		m.StartupQueryInterval = types.StringNull()
 	}
 	if v, ok := obj["state"]; ok {
-		_ = v
 		if v != "" {
 			m.State = types.StringValue(v)
 		} else {
 			m.State = types.StringNull()
 		}
-	} else {
-		m.State = types.StringNull()
 	}
 	if v, ok := obj["status"]; ok {
 		_ = v
@@ -1504,53 +1360,38 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 		m.TransmitHoldCount = types.Int64Null()
 	}
 	if v, ok := obj["tx-rx-packet-rate"]; ok {
-		_ = v
 		if v != "" {
 			m.TxRxPacketRate = types.StringValue(v)
 		} else {
 			m.TxRxPacketRate = types.StringNull()
 		}
-	} else {
-		m.TxRxPacketRate = types.StringNull()
 	}
 	if v, ok := obj["tx-rx-rate"]; ok {
-		_ = v
 		if v != "" {
 			m.TxRxRate = types.StringValue(v)
 		} else {
 			m.TxRxRate = types.StringNull()
 		}
-	} else {
-		m.TxRxRate = types.StringNull()
 	}
 	if v, ok := obj["type"]; ok {
-		_ = v
 		if v != "" {
 			m.Type = types.StringValue(v)
 		} else {
 			m.Type = types.StringNull()
 		}
-	} else {
-		m.Type = types.StringNull()
 	}
 	if v, ok := obj["vlan"]; ok {
-		_ = v
 		if v != "" {
 			m.VLAN = types.StringValue(v)
 		} else {
 			m.VLAN = types.StringNull()
 		}
-	} else {
-		m.VLAN = types.StringNull()
 	}
 	if v, ok := obj["vlan-filtering"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.VLANFiltering = types.BoolValue(b)
 		} else {
 			m.VLANFiltering = types.BoolNull()
 		}
-	} else {
-		m.VLANFiltering = types.BoolNull()
 	}
 }

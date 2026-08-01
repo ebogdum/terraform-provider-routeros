@@ -680,403 +680,283 @@ func pPPProfileApply(ctx context.Context, obj client.Object, m *PPPProfileModel)
 		m.QueueType = types.StringNull()
 	}
 	if v, ok := obj["address-list"]; ok {
-		_ = v
 		if v != "" {
 			m.AddressList = types.StringValue(v)
 		} else {
 			m.AddressList = types.StringNull()
 		}
-	} else {
-		m.AddressList = types.StringNull()
 	}
 	if v, ok := obj["bridge"]; ok {
-		_ = v
 		if v != "" {
 			m.Bridge = types.StringValue(v)
 		} else {
 			m.Bridge = types.StringNull()
 		}
-	} else {
-		m.Bridge = types.StringNull()
 	}
 	if v, ok := obj["bridge-horizon"]; ok {
-		_ = v
 		if v != "" {
 			m.BridgeHorizon = types.StringValue(v)
 		} else {
 			m.BridgeHorizon = types.StringNull()
 		}
-	} else {
-		m.BridgeHorizon = types.StringNull()
 	}
 	if v, ok := obj["bridge-learning"]; ok {
-		_ = v
 		if v != "" {
 			m.BridgeLearning = types.StringValue(v)
 		} else {
 			m.BridgeLearning = types.StringNull()
 		}
-	} else {
-		m.BridgeLearning = types.StringNull()
 	}
 	if v, ok := obj["bridge-path-cost"]; ok {
-		_ = v
 		if v != "" {
 			m.BridgePathCost = types.StringValue(v)
 		} else {
 			m.BridgePathCost = types.StringNull()
 		}
-	} else {
-		m.BridgePathCost = types.StringNull()
 	}
 	if v, ok := obj["bridge-port-priority"]; ok {
-		_ = v
 		if v != "" {
 			m.BridgePortPriority = types.StringValue(v)
 		} else {
 			m.BridgePortPriority = types.StringNull()
 		}
-	} else {
-		m.BridgePortPriority = types.StringNull()
 	}
 	if v, ok := obj["bridge-port-trusted"]; ok {
-		_ = v
 		if v != "" {
 			m.BridgePortTrusted = types.StringValue(v)
 		} else {
 			m.BridgePortTrusted = types.StringNull()
 		}
-	} else {
-		m.BridgePortTrusted = types.StringNull()
 	}
 	if v, ok := obj["bridge-port-vid"]; ok {
-		_ = v
 		if v != "" {
 			m.BridgePortVid = types.StringValue(v)
 		} else {
 			m.BridgePortVid = types.StringNull()
 		}
-	} else {
-		m.BridgePortVid = types.StringNull()
 	}
 	if v, ok := obj["change-tcp-mss"]; ok {
-		_ = v
 		if v != "" {
 			m.ChangeTCPMss = types.StringValue(v)
 		} else {
 			m.ChangeTCPMss = types.StringNull()
 		}
-	} else {
-		m.ChangeTCPMss = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["def"]; ok {
-		_ = v
 		if v != "" {
 			m.Def = types.StringValue(v)
 		} else {
 			m.Def = types.StringNull()
 		}
-	} else {
-		m.Def = types.StringNull()
 	}
 	if v, ok := obj["default"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
 		} else {
 			m.Default = types.BoolNull()
 		}
-	} else {
-		m.Default = types.BoolNull()
 	}
 	if v, ok := obj["dhcpv6-lease-time"]; ok {
-		_ = v
 		if v != "" {
 			m.Dhcpv6LeaseTime = types.StringValue(v)
 		} else {
 			m.Dhcpv6LeaseTime = types.StringNull()
 		}
-	} else {
-		m.Dhcpv6LeaseTime = types.StringNull()
 	}
 	if v, ok := obj["dhcpv6-pd-pool"]; ok {
-		_ = v
 		if v != "" {
 			m.Dhcpv6PdPool = types.StringValue(v)
 		} else {
 			m.Dhcpv6PdPool = types.StringNull()
 		}
-	} else {
-		m.Dhcpv6PdPool = types.StringNull()
 	}
 	if v, ok := obj["dhcpv6-use-radius"]; ok {
-		_ = v
 		if v != "" {
 			m.Dhcpv6UseRADIUS = types.StringValue(v)
 		} else {
 			m.Dhcpv6UseRADIUS = types.StringNull()
 		}
-	} else {
-		m.Dhcpv6UseRADIUS = types.StringNull()
 	}
 	if v, ok := obj["dns-server"]; ok {
-		_ = v
 		if v != "" {
 			m.DNSServer = types.StringValue(v)
 		} else {
 			m.DNSServer = types.StringNull()
 		}
-	} else {
-		m.DNSServer = types.StringNull()
 	}
 	if v, ok := obj["idle-timeout"]; ok {
-		_ = v
 		if v != "" {
 			m.IdleTimeout = types.StringValue(v)
 		} else {
 			m.IdleTimeout = types.StringNull()
 		}
-	} else {
-		m.IdleTimeout = types.StringNull()
 	}
 	if v, ok := obj["incoming-filter"]; ok {
-		_ = v
 		if v != "" {
 			m.IncomingFilter = types.StringValue(v)
 		} else {
 			m.IncomingFilter = types.StringNull()
 		}
-	} else {
-		m.IncomingFilter = types.StringNull()
 	}
 	if v, ok := obj["insert-queue-before"]; ok {
-		_ = v
 		if v != "" {
 			m.InsertQueueBefore = types.StringValue(v)
 		} else {
 			m.InsertQueueBefore = types.StringNull()
 		}
-	} else {
-		m.InsertQueueBefore = types.StringNull()
 	}
 	if v, ok := obj["interface-list"]; ok {
-		_ = v
 		if v != "" {
 			m.InterfaceList = types.StringValue(v)
 		} else {
 			m.InterfaceList = types.StringNull()
 		}
-	} else {
-		m.InterfaceList = types.StringNull()
 	}
 	if v, ok := obj["ipv6"]; ok {
-		_ = v
 		if v != "" {
 			m.IPV6 = types.StringValue(v)
 		} else {
 			m.IPV6 = types.StringNull()
 		}
-	} else {
-		m.IPV6 = types.StringNull()
 	}
 	if v, ok := obj["local-address"]; ok {
-		_ = v
 		if v != "" {
 			m.LocalAddress = types.StringValue(v)
 		} else {
 			m.LocalAddress = types.StringNull()
 		}
-	} else {
-		m.LocalAddress = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["on-down"]; ok {
-		_ = v
 		if v != "" {
 			m.OnDown = types.StringValue(v)
 		} else {
 			m.OnDown = types.StringNull()
 		}
-	} else {
-		m.OnDown = types.StringNull()
 	}
 	if v, ok := obj["on-up"]; ok {
-		_ = v
 		if v != "" {
 			m.OnUp = types.StringValue(v)
 		} else {
 			m.OnUp = types.StringNull()
 		}
-	} else {
-		m.OnUp = types.StringNull()
 	}
 	if v, ok := obj["only-one"]; ok {
-		_ = v
 		if v != "" {
 			m.OnlyOne = types.StringValue(v)
 		} else {
 			m.OnlyOne = types.StringNull()
 		}
-	} else {
-		m.OnlyOne = types.StringNull()
 	}
 	if v, ok := obj["outgoing-filter"]; ok {
-		_ = v
 		if v != "" {
 			m.OutgoingFilter = types.StringValue(v)
 		} else {
 			m.OutgoingFilter = types.StringNull()
 		}
-	} else {
-		m.OutgoingFilter = types.StringNull()
 	}
 	if v, ok := obj["parent-queue"]; ok {
-		_ = v
 		if v != "" {
 			m.ParentQueue = types.StringValue(v)
 		} else {
 			m.ParentQueue = types.StringNull()
 		}
-	} else {
-		m.ParentQueue = types.StringNull()
 	}
 	if v, ok := obj["queue-type-rx-tx"]; ok {
-		_ = v
 		if v != "" {
 			m.QueueTypeRxTx = types.StringValue(v)
 		} else {
 			m.QueueTypeRxTx = types.StringNull()
 		}
-	} else {
-		m.QueueTypeRxTx = types.StringNull()
 	}
 	if v, ok := obj["rate-limit-rx-tx"]; ok {
-		_ = v
 		if v != "" {
 			m.RateLimitRxTx = types.StringValue(v)
 		} else {
 			m.RateLimitRxTx = types.StringNull()
 		}
-	} else {
-		m.RateLimitRxTx = types.StringNull()
 	}
 	if v, ok := obj["remote-address"]; ok {
-		_ = v
 		if v != "" {
 			m.RemoteAddress = types.StringValue(v)
 		} else {
 			m.RemoteAddress = types.StringNull()
 		}
-	} else {
-		m.RemoteAddress = types.StringNull()
 	}
 	if v, ok := obj["remote-ipv6-prefix-pool"]; ok {
-		_ = v
 		if v != "" {
 			m.RemoteIPV6PrefixPool = types.StringValue(v)
 		} else {
 			m.RemoteIPV6PrefixPool = types.StringNull()
 		}
-	} else {
-		m.RemoteIPV6PrefixPool = types.StringNull()
 	}
 	if v, ok := obj["remote-ipv6-prefix-reuse"]; ok {
-		_ = v
 		if v != "" {
 			m.RemoteIPV6PrefixReuse = types.StringValue(v)
 		} else {
 			m.RemoteIPV6PrefixReuse = types.StringNull()
 		}
-	} else {
-		m.RemoteIPV6PrefixReuse = types.StringNull()
 	}
 	if v, ok := obj["session-timeout"]; ok {
-		_ = v
 		if v != "" {
 			m.SessionTimeout = types.StringValue(v)
 		} else {
 			m.SessionTimeout = types.StringNull()
 		}
-	} else {
-		m.SessionTimeout = types.StringNull()
 	}
 	if v, ok := obj["use-compression"]; ok {
-		_ = v
 		if v != "" {
 			m.UseCompression = types.StringValue(v)
 		} else {
 			m.UseCompression = types.StringNull()
 		}
-	} else {
-		m.UseCompression = types.StringNull()
 	}
 	if v, ok := obj["use-encryption"]; ok {
-		_ = v
 		if v != "" {
 			m.UseEncryption = types.StringValue(v)
 		} else {
 			m.UseEncryption = types.StringNull()
 		}
-	} else {
-		m.UseEncryption = types.StringNull()
 	}
 	if v, ok := obj["use-ipv6"]; ok {
-		_ = v
 		if v != "" {
 			m.UseIPV6 = types.StringValue(v)
 		} else {
 			m.UseIPV6 = types.StringNull()
 		}
-	} else {
-		m.UseIPV6 = types.StringNull()
 	}
 	if v, ok := obj["use-mpls"]; ok {
-		_ = v
 		if v != "" {
 			m.UseMPLS = types.StringValue(v)
 		} else {
 			m.UseMPLS = types.StringNull()
 		}
-	} else {
-		m.UseMPLS = types.StringNull()
 	}
 	if v, ok := obj["use-upnp"]; ok {
-		_ = v
 		if v != "" {
 			m.UseUpnp = types.StringValue(v)
 		} else {
 			m.UseUpnp = types.StringNull()
 		}
-	} else {
-		m.UseUpnp = types.StringNull()
 	}
 	if v, ok := obj["wins-server"]; ok {
-		_ = v
 		if v != "" {
 			m.WinsServer = types.StringValue(v)
 		} else {
 			m.WinsServer = types.StringNull()
 		}
-	} else {
-		m.WinsServer = types.StringNull()
 	}
 }

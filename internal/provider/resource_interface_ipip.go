@@ -347,54 +347,39 @@ func interfaceIpipApply(ctx context.Context, obj client.Object, m *InterfaceIpip
 		m.AllowFastPath = newBoolStringNull()
 	}
 	if v, ok := obj["clamp-tcp-mss"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.ClampTCPMss = types.BoolValue(b)
 		} else {
 			m.ClampTCPMss = types.BoolNull()
 		}
-	} else {
-		m.ClampTCPMss = types.BoolNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dont-fragment"]; ok {
-		_ = v
 		if v != "" {
 			m.DontFragment = types.StringValue(v)
 		} else {
 			m.DontFragment = types.StringNull()
 		}
-	} else {
-		m.DontFragment = types.StringNull()
 	}
 	if v, ok := obj["dscp"]; ok {
-		_ = v
 		if v != "" {
 			m.Dscp = types.StringValue(v)
 		} else {
 			m.Dscp = types.StringNull()
 		}
-	} else {
-		m.Dscp = types.StringNull()
 	}
 	// Sensitive: RouterOS scrubs the value on read. If the server returned
 	// a value, decode it. Otherwise the plan value (user input) is what's
@@ -411,53 +396,38 @@ func interfaceIpipApply(ctx context.Context, obj client.Object, m *InterfaceIpip
 		m.IpsecSecret = types.StringNull()
 	}
 	if v, ok := obj["keepalive"]; ok {
-		_ = v
 		if v != "" {
 			m.Keepalive = types.StringValue(v)
 		} else {
 			m.Keepalive = types.StringNull()
 		}
-	} else {
-		m.Keepalive = types.StringNull()
 	}
 	if v, ok := obj["local-address"]; ok {
-		_ = v
 		if v != "" {
 			m.LocalAddress = types.StringValue(v)
 		} else {
 			m.LocalAddress = types.StringNull()
 		}
-	} else {
-		m.LocalAddress = types.StringNull()
 	}
 	if v, ok := obj["mtu"]; ok {
-		_ = v
 		if v != "" {
 			m.MTU = types.StringValue(v)
 		} else {
 			m.MTU = types.StringNull()
 		}
-	} else {
-		m.MTU = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["remote-address"]; ok {
-		_ = v
 		if v != "" {
 			m.RemoteAddress = types.StringValue(v)
 		} else {
 			m.RemoteAddress = types.StringNull()
 		}
-	} else {
-		m.RemoteAddress = types.StringNull()
 	}
 }

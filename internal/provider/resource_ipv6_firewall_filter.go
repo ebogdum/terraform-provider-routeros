@@ -88,7 +88,7 @@ type IPV6FirewallFilterModel struct {
 	SrcPort                 types.String `tfsdk:"src_port"`
 	TCPFlags                types.String `tfsdk:"tcp_flags"`
 	TCPMss                  types.String `tfsdk:"tcp_mss"`
-	Time                    types.String `tfsdk:"time"`
+	Time                    csvSetValue  `tfsdk:"time"`
 	TLSHost                 types.String `tfsdk:"tls_host"`
 	Router                  types.String `tfsdk:"router"`
 	Position                types.Int64  `tfsdk:"position"`
@@ -402,6 +402,7 @@ func (r *IPV6FirewallFilterResource) Schema(_ context.Context, _ resource.Schema
 				Description: "",
 			},
 			"time": schema.StringAttribute{
+				CustomType:  csvSetType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "",
@@ -1359,573 +1360,405 @@ func iPV6FirewallFilterApply(ctx context.Context, obj client.Object, m *IPV6Fire
 		m.LockoutAck = types.BoolNull()
 	}
 	if v, ok := obj["action"]; ok {
-		_ = v
 		if v != "" {
 			m.Action = types.StringValue(v)
 		} else {
 			m.Action = types.StringNull()
 		}
-	} else {
-		m.Action = types.StringNull()
 	}
 	if v, ok := obj["address-list"]; ok {
-		_ = v
 		if v != "" {
 			m.AddressList = types.StringValue(v)
 		} else {
 			m.AddressList = types.StringNull()
 		}
-	} else {
-		m.AddressList = types.StringNull()
 	}
 	if v, ok := obj["address-list-timeout"]; ok {
-		_ = v
 		if v != "" {
 			m.AddressListTimeout = types.StringValue(v)
 		} else {
 			m.AddressListTimeout = types.StringNull()
 		}
-	} else {
-		m.AddressListTimeout = types.StringNull()
 	}
 	if v, ok := obj["bytes"]; ok {
-		_ = v
 		if v != "" {
 			m.Bytes = types.StringValue(v)
 		} else {
 			m.Bytes = types.StringNull()
 		}
-	} else {
-		m.Bytes = types.StringNull()
 	}
 	if v, ok := obj["chain"]; ok {
-		_ = v
 		if v != "" {
 			m.Chain = types.StringValue(v)
 		} else {
 			m.Chain = types.StringNull()
 		}
-	} else {
-		m.Chain = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["connection-bytes"]; ok {
-		_ = v
 		if v != "" {
 			m.ConnectionBytes = types.StringValue(v)
 		} else {
 			m.ConnectionBytes = types.StringNull()
 		}
-	} else {
-		m.ConnectionBytes = types.StringNull()
 	}
 	if v, ok := obj["connection-limit"]; ok {
-		_ = v
 		if v != "" {
 			m.ConnectionLimit = types.StringValue(v)
 		} else {
 			m.ConnectionLimit = types.StringNull()
 		}
-	} else {
-		m.ConnectionLimit = types.StringNull()
 	}
 	if v, ok := obj["connection-mark"]; ok {
-		_ = v
 		if v != "" {
 			m.ConnectionMark = types.StringValue(v)
 		} else {
 			m.ConnectionMark = types.StringNull()
 		}
-	} else {
-		m.ConnectionMark = types.StringNull()
 	}
 	if v, ok := obj["connection-nat-state"]; ok {
-		_ = v
 		if v != "" {
 			m.ConnectionNATState = types.StringValue(v)
 		} else {
 			m.ConnectionNATState = types.StringNull()
 		}
-	} else {
-		m.ConnectionNATState = types.StringNull()
 	}
 	if v, ok := obj["connection-rate"]; ok {
-		_ = v
 		if v != "" {
 			m.ConnectionRate = types.StringValue(v)
 		} else {
 			m.ConnectionRate = types.StringNull()
 		}
-	} else {
-		m.ConnectionRate = types.StringNull()
 	}
 	if v, ok := obj["connection-state"]; ok {
-		_ = v
 		if v != "" {
 			m.ConnectionState = types.StringValue(v)
 		} else {
 			m.ConnectionState = types.StringNull()
 		}
-	} else {
-		m.ConnectionState = types.StringNull()
 	}
 	if v, ok := obj["connection-type"]; ok {
-		_ = v
 		if v != "" {
 			m.ConnectionType = types.StringValue(v)
 		} else {
 			m.ConnectionType = types.StringNull()
 		}
-	} else {
-		m.ConnectionType = types.StringNull()
 	}
 	if v, ok := obj["content"]; ok {
-		_ = v
 		if v != "" {
 			m.Content = types.StringValue(v)
 		} else {
 			m.Content = types.StringNull()
 		}
-	} else {
-		m.Content = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dscp"]; ok {
-		_ = v
 		if v != "" {
 			m.Dscp = types.StringValue(v)
 		} else {
 			m.Dscp = types.StringNull()
 		}
-	} else {
-		m.Dscp = types.StringNull()
 	}
 	if v, ok := obj["dst-address"]; ok {
-		_ = v
 		if v != "" {
 			m.DstAddress = types.StringValue(v)
 		} else {
 			m.DstAddress = types.StringNull()
 		}
-	} else {
-		m.DstAddress = types.StringNull()
 	}
 	if v, ok := obj["dst-address-list"]; ok {
-		_ = v
 		if v != "" {
 			m.DstAddressList = types.StringValue(v)
 		} else {
 			m.DstAddressList = types.StringNull()
 		}
-	} else {
-		m.DstAddressList = types.StringNull()
 	}
 	if v, ok := obj["dst-address-type"]; ok {
-		_ = v
 		if v != "" {
 			m.DstAddressType = types.StringValue(v)
 		} else {
 			m.DstAddressType = types.StringNull()
 		}
-	} else {
-		m.DstAddressType = types.StringNull()
 	}
 	if v, ok := obj["dst-limit"]; ok {
-		_ = v
 		if v != "" {
 			m.DstLimit = types.StringValue(v)
 		} else {
 			m.DstLimit = types.StringNull()
 		}
-	} else {
-		m.DstLimit = types.StringNull()
 	}
 	if v, ok := obj["dst-port"]; ok {
-		_ = v
 		if v != "" {
 			m.DstPort = types.StringValue(v)
 		} else {
 			m.DstPort = types.StringNull()
 		}
-	} else {
-		m.DstPort = types.StringNull()
 	}
 	if v, ok := obj["hop-limit"]; ok {
-		_ = v
 		if v != "" {
 			m.HopLimit = types.StringValue(v)
 		} else {
 			m.HopLimit = types.StringNull()
 		}
-	} else {
-		m.HopLimit = types.StringNull()
 	}
 	if v, ok := obj["icmp-options"]; ok {
-		_ = v
 		if v != "" {
 			m.IcmpOptions = types.StringValue(v)
 		} else {
 			m.IcmpOptions = types.StringNull()
 		}
-	} else {
-		m.IcmpOptions = types.StringNull()
 	}
 	if v, ok := obj["in-bridge-port"]; ok {
-		_ = v
 		if v != "" {
 			m.InBridgePort = types.StringValue(v)
 		} else {
 			m.InBridgePort = types.StringNull()
 		}
-	} else {
-		m.InBridgePort = types.StringNull()
 	}
 	if v, ok := obj["in-bridge-port-list"]; ok {
-		_ = v
 		if v != "" {
 			m.InBridgePortList = types.StringValue(v)
 		} else {
 			m.InBridgePortList = types.StringNull()
 		}
-	} else {
-		m.InBridgePortList = types.StringNull()
 	}
 	if v, ok := obj["in-interface"]; ok {
-		_ = v
 		if v != "" {
 			m.InInterface = types.StringValue(v)
 		} else {
 			m.InInterface = types.StringNull()
 		}
-	} else {
-		m.InInterface = types.StringNull()
 	}
 	if v, ok := obj["in-interface-list"]; ok {
-		_ = v
 		if v != "" {
 			m.InInterfaceList = types.StringValue(v)
 		} else {
 			m.InInterfaceList = types.StringNull()
 		}
-	} else {
-		m.InInterfaceList = types.StringNull()
 	}
 	if v, ok := obj["ingress-priority"]; ok {
-		_ = v
 		if v != "" {
 			m.IngressPriority = types.StringValue(v)
 		} else {
 			m.IngressPriority = types.StringNull()
 		}
-	} else {
-		m.IngressPriority = types.StringNull()
 	}
 	if v, ok := obj["ipsec-policy"]; ok {
-		_ = v
 		if v != "" {
 			m.IpsecPolicy = types.StringValue(v)
 		} else {
 			m.IpsecPolicy = types.StringNull()
 		}
-	} else {
-		m.IpsecPolicy = types.StringNull()
 	}
 	if v, ok := obj["jump-target"]; ok {
-		_ = v
 		if v != "" {
 			m.JumpTarget = types.StringValue(v)
 		} else {
 			m.JumpTarget = types.StringNull()
 		}
-	} else {
-		m.JumpTarget = types.StringNull()
 	}
 	if v, ok := obj["limit"]; ok {
-		_ = v
 		if v != "" {
 			m.Limit = types.StringValue(v)
 		} else {
 			m.Limit = types.StringNull()
 		}
-	} else {
-		m.Limit = types.StringNull()
 	}
 	if v, ok := obj["log"]; ok {
-		_ = v
 		if v != "" {
 			m.Log = types.StringValue(v)
 		} else {
 			m.Log = types.StringNull()
 		}
-	} else {
-		m.Log = types.StringNull()
 	}
 	if v, ok := obj["log-prefix"]; ok {
-		_ = v
 		if v != "" {
 			m.LogPrefix = types.StringValue(v)
 		} else {
 			m.LogPrefix = types.StringNull()
 		}
-	} else {
-		m.LogPrefix = types.StringNull()
 	}
 	if v, ok := obj["nth"]; ok {
-		_ = v
 		if v != "" {
 			m.Nth = types.StringValue(v)
 		} else {
 			m.Nth = types.StringNull()
 		}
-	} else {
-		m.Nth = types.StringNull()
 	}
 	if v, ok := obj["out-bridge-port"]; ok {
-		_ = v
 		if v != "" {
 			m.OutBridgePort = types.StringValue(v)
 		} else {
 			m.OutBridgePort = types.StringNull()
 		}
-	} else {
-		m.OutBridgePort = types.StringNull()
 	}
 	if v, ok := obj["out-bridge-port-list"]; ok {
-		_ = v
 		if v != "" {
 			m.OutBridgePortList = types.StringValue(v)
 		} else {
 			m.OutBridgePortList = types.StringNull()
 		}
-	} else {
-		m.OutBridgePortList = types.StringNull()
 	}
 	if v, ok := obj["out-interface"]; ok {
-		_ = v
 		if v != "" {
 			m.OutInterface = types.StringValue(v)
 		} else {
 			m.OutInterface = types.StringNull()
 		}
-	} else {
-		m.OutInterface = types.StringNull()
 	}
 	if v, ok := obj["out-interface-list"]; ok {
-		_ = v
 		if v != "" {
 			m.OutInterfaceList = types.StringValue(v)
 		} else {
 			m.OutInterfaceList = types.StringNull()
 		}
-	} else {
-		m.OutInterfaceList = types.StringNull()
 	}
 	if v, ok := obj["packet-mark"]; ok {
-		_ = v
 		if v != "" {
 			m.PacketMark = types.StringValue(v)
 		} else {
 			m.PacketMark = types.StringNull()
 		}
-	} else {
-		m.PacketMark = types.StringNull()
 	}
 	if v, ok := obj["packet-size"]; ok {
-		_ = v
 		if v != "" {
 			m.PacketSize = types.StringValue(v)
 		} else {
 			m.PacketSize = types.StringNull()
 		}
-	} else {
-		m.PacketSize = types.StringNull()
 	}
 	if v, ok := obj["packets"]; ok {
-		_ = v
 		if v != "" {
 			m.Packets = types.StringValue(v)
 		} else {
 			m.Packets = types.StringNull()
 		}
-	} else {
-		m.Packets = types.StringNull()
 	}
 	if v, ok := obj["per-connection-classifier"]; ok {
-		_ = v
 		if v != "" {
 			m.PerConnectionClassifier = types.StringValue(v)
 		} else {
 			m.PerConnectionClassifier = types.StringNull()
 		}
-	} else {
-		m.PerConnectionClassifier = types.StringNull()
 	}
 	if v, ok := obj["port"]; ok {
-		_ = v
 		if v != "" {
 			m.Port = types.StringValue(v)
 		} else {
 			m.Port = types.StringNull()
 		}
-	} else {
-		m.Port = types.StringNull()
 	}
 	if v, ok := obj["priority"]; ok {
-		_ = v
 		if v != "" {
 			m.Priority = types.StringValue(v)
 		} else {
 			m.Priority = types.StringNull()
 		}
-	} else {
-		m.Priority = types.StringNull()
 	}
 	if v, ok := obj["protocol"]; ok {
-		_ = v
 		if v != "" {
 			m.Protocol = types.StringValue(v)
 		} else {
 			m.Protocol = types.StringNull()
 		}
-	} else {
-		m.Protocol = types.StringNull()
 	}
 	if v, ok := obj["random"]; ok {
-		_ = v
 		if v != "" {
 			m.Random = types.StringValue(v)
 		} else {
 			m.Random = types.StringNull()
 		}
-	} else {
-		m.Random = types.StringNull()
 	}
 	if v, ok := obj["reject-with"]; ok {
-		_ = v
 		if v != "" {
 			m.RejectWith = types.StringValue(v)
 		} else {
 			m.RejectWith = types.StringNull()
 		}
-	} else {
-		m.RejectWith = types.StringNull()
 	}
 	if v, ok := obj["routing-mark"]; ok {
-		_ = v
 		if v != "" {
 			m.RoutingMark = types.StringValue(v)
 		} else {
 			m.RoutingMark = types.StringNull()
 		}
-	} else {
-		m.RoutingMark = types.StringNull()
 	}
 	if v, ok := obj["src-address"]; ok {
-		_ = v
 		if v != "" {
 			m.SrcAddress = types.StringValue(v)
 		} else {
 			m.SrcAddress = types.StringNull()
 		}
-	} else {
-		m.SrcAddress = types.StringNull()
 	}
 	if v, ok := obj["src-address-list"]; ok {
-		_ = v
 		if v != "" {
 			m.SrcAddressList = types.StringValue(v)
 		} else {
 			m.SrcAddressList = types.StringNull()
 		}
-	} else {
-		m.SrcAddressList = types.StringNull()
 	}
 	if v, ok := obj["src-address-type"]; ok {
-		_ = v
 		if v != "" {
 			m.SrcAddressType = types.StringValue(v)
 		} else {
 			m.SrcAddressType = types.StringNull()
 		}
-	} else {
-		m.SrcAddressType = types.StringNull()
 	}
 	if v, ok := obj["src-mac-address"]; ok {
-		_ = v
 		if v != "" {
 			m.SrcMACAddress = types.StringValue(v)
 		} else {
 			m.SrcMACAddress = types.StringNull()
 		}
-	} else {
-		m.SrcMACAddress = types.StringNull()
 	}
 	if v, ok := obj["src-port"]; ok {
-		_ = v
 		if v != "" {
 			m.SrcPort = types.StringValue(v)
 		} else {
 			m.SrcPort = types.StringNull()
 		}
-	} else {
-		m.SrcPort = types.StringNull()
 	}
 	if v, ok := obj["tcp-flags"]; ok {
-		_ = v
 		if v != "" {
 			m.TCPFlags = types.StringValue(v)
 		} else {
 			m.TCPFlags = types.StringNull()
 		}
-	} else {
-		m.TCPFlags = types.StringNull()
 	}
 	if v, ok := obj["tcp-mss"]; ok {
-		_ = v
 		if v != "" {
 			m.TCPMss = types.StringValue(v)
 		} else {
 			m.TCPMss = types.StringNull()
 		}
-	} else {
-		m.TCPMss = types.StringNull()
 	}
 	if v, ok := obj["time"]; ok {
 		_ = v
 		if v != "" {
-			m.Time = types.StringValue(v)
+			m.Time = newCSVSetValue(v)
 		} else {
-			m.Time = types.StringNull()
+			m.Time = newCSVSetNull()
 		}
 	} else {
-		m.Time = types.StringNull()
+		m.Time = newCSVSetNull()
 	}
 	if v, ok := obj["tls-host"]; ok {
-		_ = v
 		if v != "" {
 			m.TLSHost = types.StringValue(v)
 		} else {
 			m.TLSHost = types.StringNull()
 		}
-	} else {
-		m.TLSHost = types.StringNull()
 	}
 }

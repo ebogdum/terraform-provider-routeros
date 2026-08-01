@@ -466,24 +466,18 @@ func routingOSPFInterfaceTemplateApply(ctx context.Context, obj client.Object, m
 		m.Auth = types.StringNull()
 	}
 	if v, ok := obj["area"]; ok {
-		_ = v
 		if v != "" {
 			m.Area = types.StringValue(v)
 		} else {
 			m.Area = types.StringNull()
 		}
-	} else {
-		m.Area = types.StringNull()
 	}
 	if v, ok := obj["auth-id"]; ok {
-		_ = v
 		if v != "" {
 			m.AuthID = types.StringValue(v)
 		} else {
 			m.AuthID = types.StringNull()
 		}
-	} else {
-		m.AuthID = types.StringNull()
 	}
 	// Sensitive: RouterOS scrubs the value on read. If the server returned
 	// a value, decode it. Otherwise the plan value (user input) is what's
@@ -500,24 +494,18 @@ func routingOSPFInterfaceTemplateApply(ctx context.Context, obj client.Object, m
 		m.AuthKey = types.StringNull()
 	}
 	if v, ok := obj["authentication"]; ok {
-		_ = v
 		if v != "" {
 			m.Authentication = types.StringValue(v)
 		} else {
 			m.Authentication = types.StringNull()
 		}
-	} else {
-		m.Authentication = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["cost"]; ok {
 		_ = v
@@ -530,34 +518,25 @@ func routingOSPFInterfaceTemplateApply(ctx context.Context, obj client.Object, m
 		m.Cost = types.Int64Null()
 	}
 	if v, ok := obj["dead-interval"]; ok {
-		_ = v
 		if v != "" {
 			m.DeadInterval = types.StringValue(v)
 		} else {
 			m.DeadInterval = types.StringNull()
 		}
-	} else {
-		m.DeadInterval = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["hello-interval"]; ok {
-		_ = v
 		if v != "" {
 			m.HelloInterval = types.StringValue(v)
 		} else {
 			m.HelloInterval = types.StringNull()
 		}
-	} else {
-		m.HelloInterval = types.StringNull()
 	}
 	if v, ok := obj["instance-id"]; ok {
 		_ = v
@@ -570,64 +549,45 @@ func routingOSPFInterfaceTemplateApply(ctx context.Context, obj client.Object, m
 		m.InstanceID = types.Int64Null()
 	}
 	if v, ok := obj["interfaces"]; ok {
-		_ = v
 		if v != "" {
 			m.Interfaces = types.StringValue(v)
 		} else {
 			m.Interfaces = types.StringNull()
 		}
-	} else {
-		m.Interfaces = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["network-type"]; ok {
-		_ = v
 		if v != "" {
 			m.NetworkType = types.StringValue(v)
 		} else {
 			m.NetworkType = types.StringNull()
 		}
-	} else {
-		m.NetworkType = types.StringNull()
 	}
 	if v, ok := obj["networks"]; ok {
-		_ = v
 		if v != "" {
 			m.Networks = types.StringValue(v)
 		} else {
 			m.Networks = types.StringNull()
 		}
-	} else {
-		m.Networks = types.StringNull()
 	}
 	if v, ok := obj["passive"]; ok {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Passive = types.BoolValue(b)
-		} else {
-			m.Passive = types.BoolNull()
 		}
-	} else {
-		m.Passive = types.BoolNull()
 	}
 	if v, ok := obj["prefix-list"]; ok {
-		_ = v
 		if v != "" {
 			m.PrefixList = types.StringValue(v)
 		} else {
 			m.PrefixList = types.StringNull()
 		}
-	} else {
-		m.PrefixList = types.StringNull()
 	}
 	if v, ok := obj["priority"]; ok {
 		_ = v
@@ -640,14 +600,11 @@ func routingOSPFInterfaceTemplateApply(ctx context.Context, obj client.Object, m
 		m.Priority = types.Int64Null()
 	}
 	if v, ok := obj["retransmit-interval"]; ok {
-		_ = v
 		if v != "" {
 			m.RetransmitInterval = types.StringValue(v)
 		} else {
 			m.RetransmitInterval = types.StringNull()
 		}
-	} else {
-		m.RetransmitInterval = types.StringNull()
 	}
 	if v, ok := obj["transmit-delay"]; ok {
 		_ = v
@@ -660,33 +617,24 @@ func routingOSPFInterfaceTemplateApply(ctx context.Context, obj client.Object, m
 		m.TransmitDelay = types.Int64Null()
 	}
 	if v, ok := obj["use-bfd"]; ok {
-		_ = v
 		if v != "" {
 			m.UseBfd = types.StringValue(v)
 		} else {
 			m.UseBfd = types.StringNull()
 		}
-	} else {
-		m.UseBfd = types.StringNull()
 	}
 	if v, ok := obj["vlink-neighbor-id"]; ok {
-		_ = v
 		if v != "" {
 			m.VlinkNeighborID = types.StringValue(v)
 		} else {
 			m.VlinkNeighborID = types.StringNull()
 		}
-	} else {
-		m.VlinkNeighborID = types.StringNull()
 	}
 	if v, ok := obj["vlink-transit-area"]; ok {
-		_ = v
 		if v != "" {
 			m.VlinkTransitArea = types.StringValue(v)
 		} else {
 			m.VlinkTransitArea = types.StringNull()
 		}
-	} else {
-		m.VlinkTransitArea = types.StringNull()
 	}
 }

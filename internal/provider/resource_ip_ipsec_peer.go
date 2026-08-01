@@ -342,84 +342,60 @@ func iPIpsecPeerApply(ctx context.Context, obj client.Object, m *IPIpsecPeerMode
 		m.PpkSecret = types.StringNull()
 	}
 	if v, ok := obj["address"]; ok {
-		_ = v
 		if v != "" {
 			m.Address = types.StringValue(v)
 		} else {
 			m.Address = types.StringNull()
 		}
-	} else {
-		m.Address = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["exchange-mode"]; ok {
-		_ = v
 		if v != "" {
 			m.ExchangeMode = types.StringValue(v)
 		} else {
 			m.ExchangeMode = types.StringNull()
 		}
-	} else {
-		m.ExchangeMode = types.StringNull()
 	}
 	if v, ok := obj["local-address"]; ok {
-		_ = v
 		if v != "" {
 			m.LocalAddress = types.StringValue(v)
 		} else {
 			m.LocalAddress = types.StringNull()
 		}
-	} else {
-		m.LocalAddress = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["passive"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Passive = types.BoolValue(b)
 		} else {
 			m.Passive = types.BoolNull()
 		}
-	} else {
-		m.Passive = types.BoolNull()
 	}
 	if v, ok := obj["port"]; ok {
 		_ = v
@@ -432,33 +408,24 @@ func iPIpsecPeerApply(ctx context.Context, obj client.Object, m *IPIpsecPeerMode
 		m.Port = types.Int64Null()
 	}
 	if v, ok := obj["profile"]; ok {
-		_ = v
 		if v != "" {
 			m.Profile = types.StringValue(v)
 		} else {
 			m.Profile = types.StringNull()
 		}
-	} else {
-		m.Profile = types.StringNull()
 	}
 	if v, ok := obj["responder"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Responder = types.BoolValue(b)
 		} else {
 			m.Responder = types.BoolNull()
 		}
-	} else {
-		m.Responder = types.BoolNull()
 	}
 	if v, ok := obj["send-initial-contact"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.SendInitialContact = types.BoolValue(b)
 		} else {
 			m.SendInitialContact = types.BoolNull()
 		}
-	} else {
-		m.SendInitialContact = types.BoolNull()
 	}
 }

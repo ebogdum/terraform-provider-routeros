@@ -41,7 +41,7 @@ type IPDHCPClientModel struct {
 	Comment                  types.String `tfsdk:"comment"`
 	DefaultRouteDistance     types.Int64  `tfsdk:"default_route_distance"`
 	DefaultRouteTables       types.String `tfsdk:"default_route_tables"`
-	DHCPOptions              types.List   `tfsdk:"dhcp_options"`
+	DHCPOptions              types.Set    `tfsdk:"dhcp_options"`
 	DHCPServer               types.String `tfsdk:"dhcp_server"`
 	Disabled                 types.Bool   `tfsdk:"disabled"`
 	Dscp                     types.Int64  `tfsdk:"dscp"`
@@ -140,7 +140,7 @@ func (r *IPDHCPClientResource) Schema(_ context.Context, _ resource.SchemaReques
 				Computed:    true,
 				Description: "",
 			},
-			"dhcp_options": schema.ListAttribute{
+			"dhcp_options": schema.SetAttribute{
 				Optional:    true,
 				Computed:    true,
 				ElementType: types.StringType,
@@ -308,7 +308,7 @@ func (r *IPDHCPClientResource) Create(ctx context.Context, req resource.CreateRe
 		body["default-route-tables"] = plan.DefaultRouteTables.ValueString()
 	}
 	if !(plan.DHCPOptions.IsNull() || plan.DHCPOptions.IsUnknown()) {
-		body["dhcp-options"] = encodeStringList(ctx, plan.DHCPOptions, &resp.Diagnostics)
+		body["dhcp-options"] = encodeStringSet(ctx, plan.DHCPOptions, &resp.Diagnostics)
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
@@ -404,7 +404,7 @@ func (r *IPDHCPClientResource) Update(ctx context.Context, req resource.UpdateRe
 		body["default-route-tables"] = plan.DefaultRouteTables.ValueString()
 	}
 	if !plan.DHCPOptions.Equal(state.DHCPOptions) && !plan.DHCPOptions.IsUnknown() {
-		body["dhcp-options"] = encodeStringList(ctx, plan.DHCPOptions, &resp.Diagnostics)
+		body["dhcp-options"] = encodeStringSet(ctx, plan.DHCPOptions, &resp.Diagnostics)
 	}
 	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
@@ -501,74 +501,53 @@ func iPDHCPClientApply(ctx context.Context, obj client.Object, m *IPDHCPClientMo
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["add-default-route"]; ok {
-		_ = v
 		if v != "" {
 			m.AddDefaultRoute = types.StringValue(v)
 		} else {
 			m.AddDefaultRoute = types.StringNull()
 		}
-	} else {
-		m.AddDefaultRoute = types.StringNull()
 	}
 	if v, ok := obj["address"]; ok {
-		_ = v
 		if v != "" {
 			m.Address = types.StringValue(v)
 		} else {
 			m.Address = types.StringNull()
 		}
-	} else {
-		m.Address = types.StringNull()
 	}
 	if v, ok := obj["allow-reconfigure"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AllowReconfigure = types.BoolValue(b)
 		} else {
 			m.AllowReconfigure = types.BoolNull()
 		}
-	} else {
-		m.AllowReconfigure = types.BoolNull()
 	}
 	if v, ok := obj["allow-reconfigure-messages"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AllowReconfigureMessages = types.BoolValue(b)
 		} else {
 			m.AllowReconfigureMessages = types.BoolNull()
 		}
-	} else {
-		m.AllowReconfigureMessages = types.BoolNull()
 	}
 	if v, ok := obj["caps-managers"]; ok {
-		_ = v
 		if v != "" {
 			m.CapsManagers = types.StringValue(v)
 		} else {
 			m.CapsManagers = types.StringNull()
 		}
-	} else {
-		m.CapsManagers = types.StringNull()
 	}
 	if v, ok := obj["check-gateway"]; ok {
-		_ = v
 		if v != "" {
 			m.CheckGateway = types.StringValue(v)
 		} else {
 			m.CheckGateway = types.StringNull()
 		}
-	} else {
-		m.CheckGateway = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["default-route-distance"]; ok {
 		_ = v
@@ -581,40 +560,31 @@ func iPDHCPClientApply(ctx context.Context, obj client.Object, m *IPDHCPClientMo
 		m.DefaultRouteDistance = types.Int64Null()
 	}
 	if v, ok := obj["default-route-tables"]; ok {
-		_ = v
 		if v != "" {
 			m.DefaultRouteTables = types.StringValue(v)
 		} else {
 			m.DefaultRouteTables = types.StringNull()
 		}
-	} else {
-		m.DefaultRouteTables = types.StringNull()
 	}
 	if v, ok := obj["dhcp-options"]; ok {
 		_ = v
-		m.DHCPOptions = decodeStringList(ctx, v)
+		m.DHCPOptions = decodeStringSet(ctx, v)
 	} else {
-		m.DHCPOptions = types.ListNull(types.StringType)
+		m.DHCPOptions = types.SetNull(types.StringType)
 	}
 	if v, ok := obj["dhcp-server"]; ok {
-		_ = v
 		if v != "" {
 			m.DHCPServer = types.StringValue(v)
 		} else {
 			m.DHCPServer = types.StringNull()
 		}
-	} else {
-		m.DHCPServer = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dscp"]; ok {
 		_ = v
@@ -627,224 +597,158 @@ func iPDHCPClientApply(ctx context.Context, obj client.Object, m *IPDHCPClientMo
 		m.Dscp = types.Int64Null()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["expires-after"]; ok {
-		_ = v
 		if v != "" {
 			m.ExpiresAfter = types.StringValue(v)
 		} else {
 			m.ExpiresAfter = types.StringNull()
 		}
-	} else {
-		m.ExpiresAfter = types.StringNull()
 	}
 	if v, ok := obj["gateway"]; ok {
-		_ = v
 		if v != "" {
 			m.Gateway = types.StringValue(v)
 		} else {
 			m.Gateway = types.StringNull()
 		}
-	} else {
-		m.Gateway = types.StringNull()
 	}
 	if v, ok := obj["interface"]; ok {
-		_ = v
 		if v != "" {
 			m.Interface = types.StringValue(v)
 		} else {
 			m.Interface = types.StringNull()
 		}
-	} else {
-		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["ip-address"]; ok {
-		_ = v
 		if v != "" {
 			m.IPAddress = types.StringValue(v)
 		} else {
 			m.IPAddress = types.StringNull()
 		}
-	} else {
-		m.IPAddress = types.StringNull()
 	}
 	if v, ok := obj["last-received-counter"]; ok {
-		_ = v
 		if v != "" {
 			m.LastReceivedCounter = types.StringValue(v)
 		} else {
 			m.LastReceivedCounter = types.StringNull()
 		}
-	} else {
-		m.LastReceivedCounter = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["primary-dns"]; ok {
-		_ = v
 		if v != "" {
 			m.PrimaryDNS = types.StringValue(v)
 		} else {
 			m.PrimaryDNS = types.StringNull()
 		}
-	} else {
-		m.PrimaryDNS = types.StringNull()
 	}
 	if v, ok := obj["primary-ntp"]; ok {
-		_ = v
 		if v != "" {
 			m.PrimaryNTP = types.StringValue(v)
 		} else {
 			m.PrimaryNTP = types.StringNull()
 		}
-	} else {
-		m.PrimaryNTP = types.StringNull()
 	}
 	if v, ok := obj["reconfigure-key"]; ok {
-		_ = v
 		if v != "" {
 			m.ReconfigureKey = types.StringValue(v)
 		} else {
 			m.ReconfigureKey = types.StringNull()
 		}
-	} else {
-		m.ReconfigureKey = types.StringNull()
 	}
 	if v, ok := obj["release"]; ok {
-		_ = v
 		if v != "" {
 			m.Release = types.StringValue(v)
 		} else {
 			m.Release = types.StringNull()
 		}
-	} else {
-		m.Release = types.StringNull()
 	}
 	if v, ok := obj["renew"]; ok {
-		_ = v
 		if v != "" {
 			m.Renew = types.StringValue(v)
 		} else {
 			m.Renew = types.StringNull()
 		}
-	} else {
-		m.Renew = types.StringNull()
 	}
 	if v, ok := obj["route"]; ok {
-		_ = v
 		if v != "" {
 			m.Route = types.StringValue(v)
 		} else {
 			m.Route = types.StringNull()
 		}
-	} else {
-		m.Route = types.StringNull()
 	}
 	if v, ok := obj["routing-tables"]; ok {
-		_ = v
 		if v != "" {
 			m.RoutingTables = types.StringValue(v)
 		} else {
 			m.RoutingTables = types.StringNull()
 		}
-	} else {
-		m.RoutingTables = types.StringNull()
 	}
 	if v, ok := obj["script"]; ok {
-		_ = v
 		if v != "" {
 			m.Script = types.StringValue(v)
 		} else {
 			m.Script = types.StringNull()
 		}
-	} else {
-		m.Script = types.StringNull()
 	}
 	if v, ok := obj["secondary-dns"]; ok {
-		_ = v
 		if v != "" {
 			m.SecondaryDNS = types.StringValue(v)
 		} else {
 			m.SecondaryDNS = types.StringNull()
 		}
-	} else {
-		m.SecondaryDNS = types.StringNull()
 	}
 	if v, ok := obj["secondary-ntp"]; ok {
-		_ = v
 		if v != "" {
 			m.SecondaryNTP = types.StringValue(v)
 		} else {
 			m.SecondaryNTP = types.StringNull()
 		}
-	} else {
-		m.SecondaryNTP = types.StringNull()
 	}
 	if v, ok := obj["status"]; ok {
-		_ = v
 		if v != "" {
 			m.Status = types.StringValue(v)
 		} else {
 			m.Status = types.StringNull()
 		}
-	} else {
-		m.Status = types.StringNull()
 	}
 	if v, ok := obj["use-broadcast"]; ok {
-		_ = v
 		if v != "" {
 			m.UseBroadcast = types.StringValue(v)
 		} else {
 			m.UseBroadcast = types.StringNull()
 		}
-	} else {
-		m.UseBroadcast = types.StringNull()
 	}
 	if v, ok := obj["use-peer-dns"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.UsePeerDNS = types.BoolValue(b)
 		} else {
 			m.UsePeerDNS = types.BoolNull()
 		}
-	} else {
-		m.UsePeerDNS = types.BoolNull()
 	}
 	if v, ok := obj["use-peer-ntp"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.UsePeerNTP = types.BoolValue(b)
 		} else {
 			m.UsePeerNTP = types.BoolNull()
 		}
-	} else {
-		m.UsePeerNTP = types.BoolNull()
 	}
 	if v, ok := obj["vlan-priority"]; ok {
 		_ = v

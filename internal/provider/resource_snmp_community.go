@@ -338,14 +338,11 @@ func sNMPCommunityApply(ctx context.Context, obj client.Object, m *SNMPCommunity
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["addresses"]; ok {
-		_ = v
 		if v != "" {
 			m.Addresses = types.StringValue(v)
 		} else {
 			m.Addresses = types.StringNull()
 		}
-	} else {
-		m.Addresses = types.StringNull()
 	}
 	// Sensitive: RouterOS scrubs the value on read. If the server returned
 	// a value, decode it. Otherwise the plan value (user input) is what's
@@ -362,44 +359,32 @@ func sNMPCommunityApply(ctx context.Context, obj client.Object, m *SNMPCommunity
 		m.AuthenticationPassword = types.StringNull()
 	}
 	if v, ok := obj["authentication-protocol"]; ok {
-		_ = v
 		if v != "" {
 			m.AuthenticationProtocol = types.StringValue(v)
 		} else {
 			m.AuthenticationProtocol = types.StringNull()
 		}
-	} else {
-		m.AuthenticationProtocol = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["default"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
 		} else {
 			m.Default = types.BoolNull()
 		}
-	} else {
-		m.Default = types.BoolNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	// Sensitive: RouterOS scrubs the value on read. If the server returned
 	// a value, decode it. Otherwise the plan value (user input) is what's
@@ -416,53 +401,38 @@ func sNMPCommunityApply(ctx context.Context, obj client.Object, m *SNMPCommunity
 		m.EncryptionPassword = types.StringNull()
 	}
 	if v, ok := obj["encryption-protocol"]; ok {
-		_ = v
 		if v != "" {
 			m.EncryptionProtocol = types.StringValue(v)
 		} else {
 			m.EncryptionProtocol = types.StringNull()
 		}
-	} else {
-		m.EncryptionProtocol = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["read-access"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.ReadAccess = types.BoolValue(b)
 		} else {
 			m.ReadAccess = types.BoolNull()
 		}
-	} else {
-		m.ReadAccess = types.BoolNull()
 	}
 	if v, ok := obj["security"]; ok {
-		_ = v
 		if v != "" {
 			m.Security = types.StringValue(v)
 		} else {
 			m.Security = types.StringNull()
 		}
-	} else {
-		m.Security = types.StringNull()
 	}
 	if v, ok := obj["write-access"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.WriteAccess = types.BoolValue(b)
 		} else {
 			m.WriteAccess = types.BoolNull()
 		}
-	} else {
-		m.WriteAccess = types.BoolNull()
 	}
 }

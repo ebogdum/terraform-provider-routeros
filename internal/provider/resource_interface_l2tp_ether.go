@@ -531,73 +531,52 @@ func interfaceL2TPEtherApply(ctx context.Context, obj client.Object, m *Interfac
 		m.AllowFastPath = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["ipsec-secret"]; ok {
-		_ = v
 		if v != "" {
 			m.IpsecSecret = types.StringValue(v)
 		} else {
 			m.IpsecSecret = types.StringNull()
 		}
-	} else {
-		m.IpsecSecret = types.StringNull()
 	}
 	if v, ok := obj["local-address"]; ok {
-		_ = v
 		if v != "" {
 			m.LocalAddress = types.StringValue(v)
 		} else {
 			m.LocalAddress = types.StringNull()
 		}
-	} else {
-		m.LocalAddress = types.StringNull()
 	}
 	if v, ok := obj["mac-address"]; ok {
-		_ = v
 		if v != "" {
 			m.MACAddress = types.StringValue(v)
 		} else {
 			m.MACAddress = types.StringNull()
 		}
-	} else {
-		m.MACAddress = types.StringNull()
 	}
 	if v, ok := obj["mtu"]; ok {
-		_ = v
 		if v != "" {
 			m.MTU = types.StringValue(v)
 		} else {
 			m.MTU = types.StringNull()
 		}
-	} else {
-		m.MTU = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 }

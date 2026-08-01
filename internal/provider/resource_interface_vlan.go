@@ -346,94 +346,67 @@ func interfaceVLANApply(ctx context.Context, obj client.Object, m *InterfaceVLAN
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["arp"]; ok {
-		_ = v
 		if v != "" {
 			m.ARP = types.StringValue(v)
 		} else {
 			m.ARP = types.StringNull()
 		}
-	} else {
-		m.ARP = types.StringNull()
 	}
 	if v, ok := obj["arp-timeout"]; ok {
-		_ = v
 		if v != "" {
 			m.ARPTimeout = types.StringValue(v)
 		} else {
 			m.ARPTimeout = types.StringNull()
 		}
-	} else {
-		m.ARPTimeout = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["interface"]; ok {
-		_ = v
 		if v != "" {
 			m.Interface = types.StringValue(v)
 		} else {
 			m.Interface = types.StringNull()
 		}
-	} else {
-		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["loop-protect"]; ok {
-		_ = v
 		if v != "" {
 			m.LoopProtect = types.StringValue(v)
 		} else {
 			m.LoopProtect = types.StringNull()
 		}
-	} else {
-		m.LoopProtect = types.StringNull()
 	}
 	if v, ok := obj["loop-protect-disable-time"]; ok {
-		_ = v
 		if v != "" {
 			m.LoopProtectDisableTime = types.StringValue(v)
 		} else {
 			m.LoopProtectDisableTime = types.StringNull()
 		}
-	} else {
-		m.LoopProtectDisableTime = types.StringNull()
 	}
 	if v, ok := obj["loop-protect-send-interval"]; ok {
-		_ = v
 		if v != "" {
 			m.LoopProtectSendInterval = types.StringValue(v)
 		} else {
 			m.LoopProtectSendInterval = types.StringNull()
 		}
-	} else {
-		m.LoopProtectSendInterval = types.StringNull()
 	}
 	if v, ok := obj["mtu"]; ok {
-		_ = v
 		if v != "" {
 			m.MTU = types.StringValue(v)
 		} else {
 			m.MTU = types.StringNull()
 		}
-	} else {
-		m.MTU = types.StringNull()
 	}
 	if v, ok := obj["mvrp"]; ok {
 		_ = v
@@ -442,14 +415,11 @@ func interfaceVLANApply(ctx context.Context, obj client.Object, m *InterfaceVLAN
 		}
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["use-service-tag"]; ok {
 		_ = v
@@ -458,13 +428,10 @@ func interfaceVLANApply(ctx context.Context, obj client.Object, m *InterfaceVLAN
 		}
 	}
 	if v, ok := obj["vlan-id"]; ok {
-		_ = v
 		if v != "" {
 			m.VLANID = types.StringValue(v)
 		} else {
 			m.VLANID = types.StringNull()
 		}
-	} else {
-		m.VLANID = types.StringNull()
 	}
 }

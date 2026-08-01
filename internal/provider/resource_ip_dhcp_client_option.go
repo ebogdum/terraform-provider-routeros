@@ -249,63 +249,45 @@ func iPDHCPClientOptionApply(ctx context.Context, obj client.Object, m *IPDHCPCl
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["code"]; ok {
-		_ = v
 		if v != "" {
 			m.Code = types.StringValue(v)
 		} else {
 			m.Code = types.StringNull()
 		}
-	} else {
-		m.Code = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["default"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
 		} else {
 			m.Default = types.BoolNull()
 		}
-	} else {
-		m.Default = types.BoolNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["raw-value"]; ok {
-		_ = v
 		if v != "" {
 			m.RawValue = types.StringValue(v)
 		} else {
 			m.RawValue = types.StringNull()
 		}
-	} else {
-		m.RawValue = types.StringNull()
 	}
 	if v, ok := obj["value"]; ok {
-		_ = v
 		if v != "" {
 			m.Value = types.StringValue(v)
 		} else {
 			m.Value = types.StringNull()
 		}
-	} else {
-		m.Value = types.StringNull()
 	}
 }

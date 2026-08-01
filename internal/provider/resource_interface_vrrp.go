@@ -526,113 +526,80 @@ func interfaceVRRPApply(ctx context.Context, obj client.Object, m *InterfaceVRRP
 		m.ConnectionTrackingMode = types.StringNull()
 	}
 	if v, ok := obj["arp"]; ok {
-		_ = v
 		if v != "" {
 			m.ARP = types.StringValue(v)
 		} else {
 			m.ARP = types.StringNull()
 		}
-	} else {
-		m.ARP = types.StringNull()
 	}
 	if v, ok := obj["arp-timeout"]; ok {
-		_ = v
 		if v != "" {
 			m.ARPTimeout = types.StringValue(v)
 		} else {
 			m.ARPTimeout = types.StringNull()
 		}
-	} else {
-		m.ARPTimeout = types.StringNull()
 	}
 	if v, ok := obj["authentication"]; ok {
-		_ = v
 		if v != "" {
 			m.Authentication = types.StringValue(v)
 		} else {
 			m.Authentication = types.StringNull()
 		}
-	} else {
-		m.Authentication = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["interface"]; ok {
-		_ = v
 		if v != "" {
 			m.Interface = types.StringValue(v)
 		} else {
 			m.Interface = types.StringNull()
 		}
-	} else {
-		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["interval"]; ok {
-		_ = v
 		if v != "" {
 			m.Interval = types.StringValue(v)
 		} else {
 			m.Interval = types.StringNull()
 		}
-	} else {
-		m.Interval = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["password"]; ok {
-		_ = v
 		if v != "" {
 			m.Password = types.StringValue(v)
 		} else {
 			m.Password = types.StringNull()
 		}
-	} else {
-		m.Password = types.StringNull()
 	}
 	if v, ok := obj["priority"]; ok {
-		_ = v
 		if v != "" {
 			m.Priority = types.StringValue(v)
 		} else {
 			m.Priority = types.StringNull()
 		}
-	} else {
-		m.Priority = types.StringNull()
 	}
 	if v, ok := obj["remote-address"]; ok {
-		_ = v
 		if v != "" {
 			m.RemoteAddress = types.StringValue(v)
 		} else {
 			m.RemoteAddress = types.StringNull()
 		}
-	} else {
-		m.RemoteAddress = types.StringNull()
 	}
 }

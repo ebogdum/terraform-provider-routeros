@@ -386,84 +386,60 @@ func pPPSecretApply(ctx context.Context, obj client.Object, m *PPPSecretModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["caller-id"]; ok {
-		_ = v
 		if v != "" {
 			m.CallerID = types.StringValue(v)
 		} else {
 			m.CallerID = types.StringNull()
 		}
-	} else {
-		m.CallerID = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["ipv6"]; ok {
-		_ = v
 		if v != "" {
 			m.IPV6 = types.StringValue(v)
 		} else {
 			m.IPV6 = types.StringNull()
 		}
-	} else {
-		m.IPV6 = types.StringNull()
 	}
 	if v, ok := obj["ipv6-routes"]; ok {
-		_ = v
 		if v != "" {
 			m.IPV6Routes = types.StringValue(v)
 		} else {
 			m.IPV6Routes = types.StringNull()
 		}
-	} else {
-		m.IPV6Routes = types.StringNull()
 	}
 	if v, ok := obj["last-caller-id"]; ok {
-		_ = v
 		if v != "" {
 			m.LastCallerID = types.StringValue(v)
 		} else {
 			m.LastCallerID = types.StringNull()
 		}
-	} else {
-		m.LastCallerID = types.StringNull()
 	}
 	if v, ok := obj["last-disconnect-reason"]; ok {
-		_ = v
 		if v != "" {
 			m.LastDisconnectReason = types.StringValue(v)
 		} else {
 			m.LastDisconnectReason = types.StringNull()
 		}
-	} else {
-		m.LastDisconnectReason = types.StringNull()
 	}
 	if v, ok := obj["last-logged-out"]; ok {
-		_ = v
 		if v != "" {
 			m.LastLoggedOut = types.StringValue(v)
 		} else {
 			m.LastLoggedOut = types.StringNull()
 		}
-	} else {
-		m.LastLoggedOut = types.StringNull()
 	}
 	if v, ok := obj["limit-bytes-in"]; ok {
 		_ = v
@@ -486,24 +462,18 @@ func pPPSecretApply(ctx context.Context, obj client.Object, m *PPPSecretModel) {
 		m.LimitBytesOut = newRosRateNull()
 	}
 	if v, ok := obj["local-address"]; ok {
-		_ = v
 		if v != "" {
 			m.LocalAddress = types.StringValue(v)
 		} else {
 			m.LocalAddress = types.StringNull()
 		}
-	} else {
-		m.LocalAddress = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	// Sensitive: RouterOS scrubs the value on read. If the server returned
 	// a value, decode it. Otherwise the plan value (user input) is what's
@@ -520,24 +490,18 @@ func pPPSecretApply(ctx context.Context, obj client.Object, m *PPPSecretModel) {
 		m.Password = types.StringNull()
 	}
 	if v, ok := obj["profile"]; ok {
-		_ = v
 		if v != "" {
 			m.Profile = types.StringValue(v)
 		} else {
 			m.Profile = types.StringNull()
 		}
-	} else {
-		m.Profile = types.StringNull()
 	}
 	if v, ok := obj["remote-address"]; ok {
-		_ = v
 		if v != "" {
 			m.RemoteAddress = types.StringValue(v)
 		} else {
 			m.RemoteAddress = types.StringNull()
 		}
-	} else {
-		m.RemoteAddress = types.StringNull()
 	}
 	if v, ok := obj["remote-ipv6-prefix"]; ok {
 		_ = v
@@ -550,23 +514,17 @@ func pPPSecretApply(ctx context.Context, obj client.Object, m *PPPSecretModel) {
 		m.RemoteIPV6Prefix = newHostAddrNull()
 	}
 	if v, ok := obj["routes"]; ok {
-		_ = v
 		if v != "" {
 			m.Routes = types.StringValue(v)
 		} else {
 			m.Routes = types.StringNull()
 		}
-	} else {
-		m.Routes = types.StringNull()
 	}
 	if v, ok := obj["service"]; ok {
-		_ = v
 		if v != "" {
 			m.Service = types.StringValue(v)
 		} else {
 			m.Service = types.StringNull()
 		}
-	} else {
-		m.Service = types.StringNull()
 	}
 }

@@ -593,323 +593,227 @@ func interfaceWifiInterworkingApply(ctx context.Context, obj client.Object, m *I
 		m.Hotspot20Dgaf = types.StringNull()
 	}
 	if v, ok := obj["3gpp-info"]; ok {
-		_ = v
 		if v != "" {
 			m.X3gppInfo = types.StringValue(v)
 		} else {
 			m.X3gppInfo = types.StringNull()
 		}
-	} else {
-		m.X3gppInfo = types.StringNull()
 	}
 	if v, ok := obj["3gpp-info-raw"]; ok {
-		_ = v
 		if v != "" {
 			m.X3gppInfoRaw = types.StringValue(v)
 		} else {
 			m.X3gppInfoRaw = types.StringNull()
 		}
-	} else {
-		m.X3gppInfoRaw = types.StringNull()
 	}
 	if v, ok := obj["authentication-types"]; ok {
-		_ = v
 		if v != "" {
 			m.AuthenticationTypes = types.StringValue(v)
 		} else {
 			m.AuthenticationTypes = types.StringNull()
 		}
-	} else {
-		m.AuthenticationTypes = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["connection-capabilities"]; ok {
-		_ = v
 		if v != "" {
 			m.ConnectionCapabilities = types.StringValue(v)
 		} else {
 			m.ConnectionCapabilities = types.StringNull()
 		}
-	} else {
-		m.ConnectionCapabilities = types.StringNull()
 	}
 	if v, ok := obj["dgaf"]; ok {
-		_ = v
 		if v != "" {
 			m.Dgaf = types.StringValue(v)
 		} else {
 			m.Dgaf = types.StringNull()
 		}
-	} else {
-		m.Dgaf = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["domain-names"]; ok {
-		_ = v
 		if v != "" {
 			m.DomainNames = types.StringValue(v)
 		} else {
 			m.DomainNames = types.StringNull()
 		}
-	} else {
-		m.DomainNames = types.StringNull()
 	}
 	if v, ok := obj["esr"]; ok {
-		_ = v
 		if v != "" {
 			m.Esr = types.StringValue(v)
 		} else {
 			m.Esr = types.StringNull()
 		}
-	} else {
-		m.Esr = types.StringNull()
 	}
 	if v, ok := obj["hessid"]; ok {
-		_ = v
 		if v != "" {
 			m.Hessid = types.StringValue(v)
 		} else {
 			m.Hessid = types.StringNull()
 		}
-	} else {
-		m.Hessid = types.StringNull()
 	}
 	if v, ok := obj["hotspot20"]; ok {
-		_ = v
 		if v != "" {
 			m.Hotspot20 = types.StringValue(v)
 		} else {
 			m.Hotspot20 = types.StringNull()
 		}
-	} else {
-		m.Hotspot20 = types.StringNull()
 	}
 	if v, ok := obj["internet"]; ok {
-		_ = v
 		if v != "" {
 			m.Internet = types.StringValue(v)
 		} else {
 			m.Internet = types.StringNull()
 		}
-	} else {
-		m.Internet = types.StringNull()
 	}
 	if v, ok := obj["ipv4-availability"]; ok {
-		_ = v
 		if v != "" {
 			m.Ipv4Availability = types.StringValue(v)
 		} else {
 			m.Ipv4Availability = types.StringNull()
 		}
-	} else {
-		m.Ipv4Availability = types.StringNull()
 	}
 	if v, ok := obj["ipv6-availability"]; ok {
-		_ = v
 		if v != "" {
 			m.IPV6Availability = types.StringValue(v)
 		} else {
 			m.IPV6Availability = types.StringNull()
 		}
-	} else {
-		m.IPV6Availability = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["network-type"]; ok {
-		_ = v
 		if v != "" {
 			m.NetworkType = types.StringValue(v)
 		} else {
 			m.NetworkType = types.StringNull()
 		}
-	} else {
-		m.NetworkType = types.StringNull()
 	}
 	if v, ok := obj["operational-classes"]; ok {
-		_ = v
 		if v != "" {
 			m.OperationalClasses = types.StringValue(v)
 		} else {
 			m.OperationalClasses = types.StringNull()
 		}
-	} else {
-		m.OperationalClasses = types.StringNull()
 	}
 	if v, ok := obj["operator-names"]; ok {
-		_ = v
 		if v != "" {
 			m.OperatorNames = types.StringValue(v)
 		} else {
 			m.OperatorNames = types.StringNull()
 		}
-	} else {
-		m.OperatorNames = types.StringNull()
 	}
 	if v, ok := obj["realms"]; ok {
-		_ = v
 		if v != "" {
 			m.Realms = types.StringValue(v)
 		} else {
 			m.Realms = types.StringNull()
 		}
-	} else {
-		m.Realms = types.StringNull()
 	}
 	if v, ok := obj["realms-raw"]; ok {
-		_ = v
 		if v != "" {
 			m.RealmsRaw = types.StringValue(v)
 		} else {
 			m.RealmsRaw = types.StringNull()
 		}
-	} else {
-		m.RealmsRaw = types.StringNull()
 	}
 	if v, ok := obj["roaming-ois"]; ok {
-		_ = v
 		if v != "" {
 			m.RoamingOis = types.StringValue(v)
 		} else {
 			m.RoamingOis = types.StringNull()
 		}
-	} else {
-		m.RoamingOis = types.StringNull()
 	}
 	if v, ok := obj["uesa"]; ok {
-		_ = v
 		if v != "" {
 			m.Uesa = types.StringValue(v)
 		} else {
 			m.Uesa = types.StringNull()
 		}
-	} else {
-		m.Uesa = types.StringNull()
 	}
 	if v, ok := obj["venue"]; ok {
-		_ = v
 		if v != "" {
 			m.Venue = types.StringValue(v)
 		} else {
 			m.Venue = types.StringNull()
 		}
-	} else {
-		m.Venue = types.StringNull()
 	}
 	if v, ok := obj["venue-names"]; ok {
-		_ = v
 		if v != "" {
 			m.VenueNames = types.StringValue(v)
 		} else {
 			m.VenueNames = types.StringNull()
 		}
-	} else {
-		m.VenueNames = types.StringNull()
 	}
 	if v, ok := obj["wan-at-capacity"]; ok {
-		_ = v
 		if v != "" {
 			m.WanAtCapacity = types.StringValue(v)
 		} else {
 			m.WanAtCapacity = types.StringNull()
 		}
-	} else {
-		m.WanAtCapacity = types.StringNull()
 	}
 	if v, ok := obj["wan-downlink"]; ok {
-		_ = v
 		if v != "" {
 			m.WanDownlink = types.StringValue(v)
 		} else {
 			m.WanDownlink = types.StringNull()
 		}
-	} else {
-		m.WanDownlink = types.StringNull()
 	}
 	if v, ok := obj["wan-downlink-load"]; ok {
-		_ = v
 		if v != "" {
 			m.WanDownlinkLoad = types.StringValue(v)
 		} else {
 			m.WanDownlinkLoad = types.StringNull()
 		}
-	} else {
-		m.WanDownlinkLoad = types.StringNull()
 	}
 	if v, ok := obj["wan-measurement-duration"]; ok {
-		_ = v
 		if v != "" {
 			m.WanMeasurementDuration = types.StringValue(v)
 		} else {
 			m.WanMeasurementDuration = types.StringNull()
 		}
-	} else {
-		m.WanMeasurementDuration = types.StringNull()
 	}
 	if v, ok := obj["wan-status"]; ok {
-		_ = v
 		if v != "" {
 			m.WanStatus = types.StringValue(v)
 		} else {
 			m.WanStatus = types.StringNull()
 		}
-	} else {
-		m.WanStatus = types.StringNull()
 	}
 	if v, ok := obj["wan-symmetric"]; ok {
-		_ = v
 		if v != "" {
 			m.WanSymmetric = types.StringValue(v)
 		} else {
 			m.WanSymmetric = types.StringNull()
 		}
-	} else {
-		m.WanSymmetric = types.StringNull()
 	}
 	if v, ok := obj["wan-uplink"]; ok {
-		_ = v
 		if v != "" {
 			m.WanUplink = types.StringValue(v)
 		} else {
 			m.WanUplink = types.StringNull()
 		}
-	} else {
-		m.WanUplink = types.StringNull()
 	}
 	if v, ok := obj["wan-uplink-load"]; ok {
-		_ = v
 		if v != "" {
 			m.WanUplinkLoad = types.StringValue(v)
 		} else {
 			m.WanUplinkLoad = types.StringNull()
 		}
-	} else {
-		m.WanUplinkLoad = types.StringNull()
 	}
 }

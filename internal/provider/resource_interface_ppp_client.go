@@ -564,143 +564,101 @@ func interfacePPPClientApply(ctx context.Context, obj client.Object, m *Interfac
 		m.AddDefaultRoute = types.StringNull()
 	}
 	if v, ok := obj["allow"]; ok {
-		_ = v
 		if v != "" {
 			m.Allow = types.StringValue(v)
 		} else {
 			m.Allow = types.StringNull()
 		}
-	} else {
-		m.Allow = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["default-route-distance"]; ok {
-		_ = v
 		if v != "" {
 			m.DefaultRouteDistance = types.StringValue(v)
 		} else {
 			m.DefaultRouteDistance = types.StringNull()
 		}
-	} else {
-		m.DefaultRouteDistance = types.StringNull()
 	}
 	if v, ok := obj["dial-on-demand"]; ok {
-		_ = v
 		if v != "" {
 			m.DialOnDemand = types.StringValue(v)
 		} else {
 			m.DialOnDemand = types.StringNull()
 		}
-	} else {
-		m.DialOnDemand = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["keepalive-timeout"]; ok {
-		_ = v
 		if v != "" {
 			m.KeepaliveTimeout = types.StringValue(v)
 		} else {
 			m.KeepaliveTimeout = types.StringNull()
 		}
-	} else {
-		m.KeepaliveTimeout = types.StringNull()
 	}
 	if v, ok := obj["max-mru"]; ok {
-		_ = v
 		if v != "" {
 			m.MaxMru = types.StringValue(v)
 		} else {
 			m.MaxMru = types.StringNull()
 		}
-	} else {
-		m.MaxMru = types.StringNull()
 	}
 	if v, ok := obj["max-mtu"]; ok {
-		_ = v
 		if v != "" {
 			m.MaxMTU = types.StringValue(v)
 		} else {
 			m.MaxMTU = types.StringNull()
 		}
-	} else {
-		m.MaxMTU = types.StringNull()
 	}
 	if v, ok := obj["mrru"]; ok {
-		_ = v
 		if v != "" {
 			m.Mrru = types.StringValue(v)
 		} else {
 			m.Mrru = types.StringNull()
 		}
-	} else {
-		m.Mrru = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["password"]; ok {
-		_ = v
 		if v != "" {
 			m.Password = types.StringValue(v)
 		} else {
 			m.Password = types.StringNull()
 		}
-	} else {
-		m.Password = types.StringNull()
 	}
 	if v, ok := obj["profile"]; ok {
-		_ = v
 		if v != "" {
 			m.Profile = types.StringValue(v)
 		} else {
 			m.Profile = types.StringNull()
 		}
-	} else {
-		m.Profile = types.StringNull()
 	}
 	if v, ok := obj["remote-address"]; ok {
-		_ = v
 		if v != "" {
 			m.RemoteAddress = types.StringValue(v)
 		} else {
 			m.RemoteAddress = types.StringNull()
 		}
-	} else {
-		m.RemoteAddress = types.StringNull()
 	}
 	if v, ok := obj["user"]; ok {
-		_ = v
 		if v != "" {
 			m.User = types.StringValue(v)
 		} else {
 			m.User = types.StringNull()
 		}
-	} else {
-		m.User = types.StringNull()
 	}
 }

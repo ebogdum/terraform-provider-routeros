@@ -264,63 +264,45 @@ func userManagerRouterApply(ctx context.Context, obj client.Object, m *UserManag
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["address"]; ok {
-		_ = v
 		if v != "" {
 			m.Address = types.StringValue(v)
 		} else {
 			m.Address = types.StringNull()
 		}
-	} else {
-		m.Address = types.StringNull()
 	}
 	if v, ok := obj["coa-port"]; ok {
-		_ = v
 		if v != "" {
 			m.CoaPort = types.StringValue(v)
 		} else {
 			m.CoaPort = types.StringNull()
 		}
-	} else {
-		m.CoaPort = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if v != "" {
 			m.Disabled = types.StringValue(v)
 		} else {
 			m.Disabled = types.StringNull()
 		}
-	} else {
-		m.Disabled = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["protocol"]; ok {
-		_ = v
 		if v != "" {
 			m.Protocol = types.StringValue(v)
 		} else {
 			m.Protocol = types.StringNull()
 		}
-	} else {
-		m.Protocol = types.StringNull()
 	}
 	if v, ok := obj["shared-secret"]; ok {
-		_ = v
 		if v != "" {
 			m.SharedSecret = types.StringValue(v)
 		} else {
 			m.SharedSecret = types.StringNull()
 		}
-	} else {
-		m.SharedSecret = types.StringNull()
 	}
 }

@@ -275,64 +275,46 @@ func systemScriptApply(ctx context.Context, obj client.Object, m *SystemScriptMo
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["dont-require-permissions"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.DonTRequirePermissions = types.BoolValue(b)
 		} else {
 			m.DonTRequirePermissions = types.BoolNull()
 		}
-	} else {
-		m.DonTRequirePermissions = types.BoolNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["last-time-started"]; ok {
-		_ = v
 		if v != "" {
 			m.LastTimeStarted = types.StringValue(v)
 		} else {
 			m.LastTimeStarted = types.StringNull()
 		}
-	} else {
-		m.LastTimeStarted = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["owner"]; ok {
-		_ = v
 		if v != "" {
 			m.Owner = types.StringValue(v)
 		} else {
 			m.Owner = types.StringNull()
 		}
-	} else {
-		m.Owner = types.StringNull()
 	}
 	if v, ok := obj["policy"]; ok {
 		_ = v
@@ -351,23 +333,17 @@ func systemScriptApply(ctx context.Context, obj client.Object, m *SystemScriptMo
 		m.RunCount = types.Int64Null()
 	}
 	if v, ok := obj["run-script"]; ok {
-		_ = v
 		if v != "" {
 			m.RunScript = types.StringValue(v)
 		} else {
 			m.RunScript = types.StringNull()
 		}
-	} else {
-		m.RunScript = types.StringNull()
 	}
 	if v, ok := obj["source"]; ok {
-		_ = v
 		if v != "" {
 			m.Source = types.StringValue(v)
 		} else {
 			m.Source = types.StringNull()
 		}
-	} else {
-		m.Source = types.StringNull()
 	}
 }

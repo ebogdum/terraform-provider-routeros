@@ -257,83 +257,59 @@ func iPPoolApply(ctx context.Context, obj client.Object, m *IPPoolModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["addresses"]; ok {
-		_ = v
 		if v != "" {
 			m.Addresses = types.StringValue(v)
 		} else {
 			m.Addresses = types.StringNull()
 		}
-	} else {
-		m.Addresses = types.StringNull()
 	}
 	if v, ok := obj["available"]; ok {
-		_ = v
 		if v != "" {
 			m.Available = types.StringValue(v)
 		} else {
 			m.Available = types.StringNull()
 		}
-	} else {
-		m.Available = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["next-pool"]; ok {
-		_ = v
 		if v != "" {
 			m.NextPool = types.StringValue(v)
 		} else {
 			m.NextPool = types.StringNull()
 		}
-	} else {
-		m.NextPool = types.StringNull()
 	}
 	if v, ok := obj["ranges"]; ok {
-		_ = v
 		if v != "" {
 			m.Ranges = types.StringValue(v)
 		} else {
 			m.Ranges = types.StringNull()
 		}
-	} else {
-		m.Ranges = types.StringNull()
 	}
 	if v, ok := obj["total"]; ok {
-		_ = v
 		if v != "" {
 			m.Total = types.StringValue(v)
 		} else {
 			m.Total = types.StringNull()
 		}
-	} else {
-		m.Total = types.StringNull()
 	}
 	if v, ok := obj["used"]; ok {
-		_ = v
 		if v != "" {
 			m.Used = types.StringValue(v)
 		} else {
 			m.Used = types.StringNull()
 		}
-	} else {
-		m.Used = types.StringNull()
 	}
 }

@@ -325,73 +325,52 @@ func capsManConfigurationApply(ctx context.Context, obj client.Object, m *CapsMa
 		m.Rates = types.StringNull()
 	}
 	if v, ok := obj["channel"]; ok {
-		_ = v
 		if v != "" {
 			m.Channel = types.StringValue(v)
 		} else {
 			m.Channel = types.StringNull()
 		}
-	} else {
-		m.Channel = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["country"]; ok {
-		_ = v
 		if v != "" {
 			m.Country = types.StringValue(v)
 		} else {
 			m.Country = types.StringNull()
 		}
-	} else {
-		m.Country = types.StringNull()
 	}
 	if v, ok := obj["distance"]; ok {
-		_ = v
 		if v != "" {
 			m.Distance = types.StringValue(v)
 		} else {
 			m.Distance = types.StringNull()
 		}
-	} else {
-		m.Distance = types.StringNull()
 	}
 	if v, ok := obj["mode"]; ok {
-		_ = v
 		if v != "" {
 			m.Mode = types.StringValue(v)
 		} else {
 			m.Mode = types.StringNull()
 		}
-	} else {
-		m.Mode = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["ssid"]; ok {
-		_ = v
 		if v != "" {
 			m.Ssid = types.StringValue(v)
 		} else {
 			m.Ssid = types.StringNull()
 		}
-	} else {
-		m.Ssid = types.StringNull()
 	}
 }

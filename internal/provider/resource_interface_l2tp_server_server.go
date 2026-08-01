@@ -33,7 +33,7 @@ type InterfaceL2TPServerServerModel struct {
 	AcceptProtoVersion       types.String `tfsdk:"accept_proto_version"`
 	AcceptPseudowireType     types.String `tfsdk:"accept_pseudowire_type"`
 	AllowFastPath            types.Bool   `tfsdk:"allow_fast_path"`
-	Authentication           types.String `tfsdk:"authentication"`
+	Authentication           csvSetValue  `tfsdk:"authentication"`
 	CallerIDType             types.String `tfsdk:"caller_id_type"`
 	DefaultProfile           types.String `tfsdk:"default_profile"`
 	Enabled                  types.Bool   `tfsdk:"enabled"`
@@ -97,6 +97,7 @@ func (r *InterfaceL2TPServerServerResource) Schema(_ context.Context, _ resource
 				Description: "RouterOS `allow-fast-path`.",
 			},
 			"authentication": schema.StringAttribute{
+				CustomType:  csvSetType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "RouterOS `authentication`.",
@@ -346,9 +347,9 @@ func interfaceL2TPServerServerApply(ctx context.Context, obj client.Object, m *I
 		m.AllowFastPath = types.BoolNull()
 	}
 	if v, ok := obj["authentication"]; ok && v != "" {
-		m.Authentication = types.StringValue(v)
+		m.Authentication = newCSVSetValue(v)
 	} else {
-		m.Authentication = types.StringNull()
+		m.Authentication = newCSVSetNull()
 	}
 	if v, ok := obj["caller-id-type"]; ok && v != "" {
 		m.CallerIDType = types.StringValue(v)

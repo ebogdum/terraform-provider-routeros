@@ -287,83 +287,59 @@ func userManagerAttributeApply(ctx context.Context, obj client.Object, m *UserMa
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["default"]; ok {
-		_ = v
 		if v != "" {
 			m.Default = types.StringValue(v)
 		} else {
 			m.Default = types.StringNull()
 		}
-	} else {
-		m.Default = types.StringNull()
 	}
 	if v, ok := obj["default-name"]; ok {
-		_ = v
 		if v != "" {
 			m.DefaultName = types.StringValue(v)
 		} else {
 			m.DefaultName = types.StringNull()
 		}
-	} else {
-		m.DefaultName = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["packet-types"]; ok {
-		_ = v
 		if v != "" {
 			m.PacketTypes = types.StringValue(v)
 		} else {
 			m.PacketTypes = types.StringNull()
 		}
-	} else {
-		m.PacketTypes = types.StringNull()
 	}
 	if v, ok := obj["standard-name"]; ok {
-		_ = v
 		if v != "" {
 			m.StandardName = types.StringValue(v)
 		} else {
 			m.StandardName = types.StringNull()
 		}
-	} else {
-		m.StandardName = types.StringNull()
 	}
 	if v, ok := obj["type-id"]; ok {
-		_ = v
 		if v != "" {
 			m.TypeID = types.StringValue(v)
 		} else {
 			m.TypeID = types.StringNull()
 		}
-	} else {
-		m.TypeID = types.StringNull()
 	}
 	if v, ok := obj["value-type"]; ok {
-		_ = v
 		if v != "" {
 			m.ValueType = types.StringValue(v)
 		} else {
 			m.ValueType = types.StringNull()
 		}
-	} else {
-		m.ValueType = types.StringNull()
 	}
 	if v, ok := obj["vendor-id"]; ok {
-		_ = v
 		if v != "" {
 			m.VendorID = types.StringValue(v)
 		} else {
 			m.VendorID = types.StringNull()
 		}
-	} else {
-		m.VendorID = types.StringNull()
 	}
 }

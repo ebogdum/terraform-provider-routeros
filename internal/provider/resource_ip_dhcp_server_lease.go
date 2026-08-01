@@ -608,473 +608,332 @@ func iPDHCPServerLeaseApply(ctx context.Context, obj client.Object, m *IPDHCPSer
 		m.AddressLists = types.StringNull()
 	}
 	if v, ok := obj["active-address"]; ok {
-		_ = v
 		if v != "" {
 			m.ActiveAddress = types.StringValue(v)
 		} else {
 			m.ActiveAddress = types.StringNull()
 		}
-	} else {
-		m.ActiveAddress = types.StringNull()
 	}
 	if v, ok := obj["active-agent-circuit-id"]; ok {
-		_ = v
 		if v != "" {
 			m.ActiveAgentCircuitID = types.StringValue(v)
 		} else {
 			m.ActiveAgentCircuitID = types.StringNull()
 		}
-	} else {
-		m.ActiveAgentCircuitID = types.StringNull()
 	}
 	if v, ok := obj["active-agent-remote-id"]; ok {
-		_ = v
 		if v != "" {
 			m.ActiveAgentRemoteID = types.StringValue(v)
 		} else {
 			m.ActiveAgentRemoteID = types.StringNull()
 		}
-	} else {
-		m.ActiveAgentRemoteID = types.StringNull()
 	}
 	if v, ok := obj["active-class-id"]; ok {
-		_ = v
 		if v != "" {
 			m.ActiveClassID = types.StringValue(v)
 		} else {
 			m.ActiveClassID = types.StringNull()
 		}
-	} else {
-		m.ActiveClassID = types.StringNull()
 	}
 	if v, ok := obj["active-client-id"]; ok {
-		_ = v
 		if v != "" {
 			m.ActiveClientID = types.StringValue(v)
 		} else {
 			m.ActiveClientID = types.StringNull()
 		}
-	} else {
-		m.ActiveClientID = types.StringNull()
 	}
 	if v, ok := obj["active-host-name"]; ok {
-		_ = v
 		if v != "" {
 			m.ActiveHostName = types.StringValue(v)
 		} else {
 			m.ActiveHostName = types.StringNull()
 		}
-	} else {
-		m.ActiveHostName = types.StringNull()
 	}
 	if v, ok := obj["active-mac-address"]; ok {
-		_ = v
 		if v != "" {
 			m.ActiveMACAddress = types.StringValue(v)
 		} else {
 			m.ActiveMACAddress = types.StringNull()
 		}
-	} else {
-		m.ActiveMACAddress = types.StringNull()
 	}
 	if v, ok := obj["active-server"]; ok {
-		_ = v
 		if v != "" {
 			m.ActiveServer = types.StringValue(v)
 		} else {
 			m.ActiveServer = types.StringNull()
 		}
-	} else {
-		m.ActiveServer = types.StringNull()
 	}
 	if v, ok := obj["address"]; ok {
-		_ = v
 		if v != "" {
 			m.Address = types.StringValue(v)
 		} else {
 			m.Address = types.StringNull()
 		}
-	} else {
-		m.Address = types.StringNull()
 	}
 	if v, ok := obj["address-list"]; ok {
-		_ = v
 		if v != "" {
 			m.AddressList = types.StringValue(v)
 		} else {
 			m.AddressList = types.StringNull()
 		}
-	} else {
-		m.AddressList = types.StringNull()
 	}
 	if v, ok := obj["age"]; ok {
-		_ = v
 		if v != "" {
 			m.Age = types.StringValue(v)
 		} else {
 			m.Age = types.StringNull()
 		}
-	} else {
-		m.Age = types.StringNull()
 	}
 	if v, ok := obj["agent-circuit-id"]; ok {
-		_ = v
 		if v != "" {
 			m.AgentCircuitID = types.StringValue(v)
 		} else {
 			m.AgentCircuitID = types.StringNull()
 		}
-	} else {
-		m.AgentCircuitID = types.StringNull()
 	}
 	if v, ok := obj["agent-remote-id"]; ok {
-		_ = v
 		if v != "" {
 			m.AgentRemoteID = types.StringValue(v)
 		} else {
 			m.AgentRemoteID = types.StringNull()
 		}
-	} else {
-		m.AgentRemoteID = types.StringNull()
 	}
 	if v, ok := obj["allow-dual-stack-queue"]; ok {
-		_ = v
 		if v != "" {
 			m.AllowDualStackQueue = types.StringValue(v)
 		} else {
 			m.AllowDualStackQueue = types.StringNull()
 		}
-	} else {
-		m.AllowDualStackQueue = types.StringNull()
 	}
 	if v, ok := obj["always-broadcast"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AlwaysBroadcast = types.BoolValue(b)
 		} else {
 			m.AlwaysBroadcast = types.BoolNull()
 		}
-	} else {
-		m.AlwaysBroadcast = types.BoolNull()
 	}
 	if v, ok := obj["block-access"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.BlockAccess = types.BoolValue(b)
 		} else {
 			m.BlockAccess = types.BoolNull()
 		}
-	} else {
-		m.BlockAccess = types.BoolNull()
 	}
 	if v, ok := obj["blocked"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Blocked = types.BoolValue(b)
 		} else {
 			m.Blocked = types.BoolNull()
 		}
-	} else {
-		m.Blocked = types.BoolNull()
 	}
 	if v, ok := obj["bridge-port"]; ok {
-		_ = v
 		if v != "" {
 			m.BridgePort = types.StringValue(v)
 		} else {
 			m.BridgePort = types.StringNull()
 		}
-	} else {
-		m.BridgePort = types.StringNull()
 	}
 	if v, ok := obj["check-status"]; ok {
-		_ = v
 		if v != "" {
 			m.CheckStatus = types.StringValue(v)
 		} else {
 			m.CheckStatus = types.StringNull()
 		}
-	} else {
-		m.CheckStatus = types.StringNull()
 	}
 	if v, ok := obj["client-id"]; ok {
-		_ = v
 		if v != "" {
 			m.ClientID = types.StringValue(v)
 		} else {
 			m.ClientID = types.StringNull()
 		}
-	} else {
-		m.ClientID = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["dhcp-option-set"]; ok {
-		_ = v
 		if v != "" {
 			m.DHCPOptionSet = types.StringValue(v)
 		} else {
 			m.DHCPOptionSet = types.StringNull()
 		}
-	} else {
-		m.DHCPOptionSet = types.StringNull()
 	}
 	if v, ok := obj["dhcp-options"]; ok {
-		_ = v
 		if v != "" {
 			m.DHCPOptions = types.StringValue(v)
 		} else {
 			m.DHCPOptions = types.StringNull()
 		}
-	} else {
-		m.DHCPOptions = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dyn"]; ok {
-		_ = v
 		if v != "" {
 			m.Dyn = types.StringValue(v)
 		} else {
 			m.Dyn = types.StringNull()
 		}
-	} else {
-		m.Dyn = types.StringNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["expires-after"]; ok {
-		_ = v
 		if v != "" {
 			m.ExpiresAfter = types.StringValue(v)
 		} else {
 			m.ExpiresAfter = types.StringNull()
 		}
-	} else {
-		m.ExpiresAfter = types.StringNull()
 	}
 	if v, ok := obj["insert-queue-before"]; ok {
-		_ = v
 		if v != "" {
 			m.InsertQueueBefore = types.StringValue(v)
 		} else {
 			m.InsertQueueBefore = types.StringNull()
 		}
-	} else {
-		m.InsertQueueBefore = types.StringNull()
 	}
 	if v, ok := obj["last-seen"]; ok {
-		_ = v
 		if v != "" {
 			m.LastSeen = types.StringValue(v)
 		} else {
 			m.LastSeen = types.StringNull()
 		}
-	} else {
-		m.LastSeen = types.StringNull()
 	}
 	if v, ok := obj["last-sent-counter"]; ok {
-		_ = v
 		if v != "" {
 			m.LastSentCounter = types.StringValue(v)
 		} else {
 			m.LastSentCounter = types.StringNull()
 		}
-	} else {
-		m.LastSentCounter = types.StringNull()
 	}
 	if v, ok := obj["lease-time"]; ok {
-		_ = v
 		if v != "" {
 			m.LeaseTime = types.StringValue(v)
 		} else {
 			m.LeaseTime = types.StringNull()
 		}
-	} else {
-		m.LeaseTime = types.StringNull()
 	}
 	if v, ok := obj["mac-address"]; ok {
-		_ = v
 		if v != "" {
 			m.MACAddress = types.StringValue(v)
 		} else {
 			m.MACAddress = types.StringNull()
 		}
-	} else {
-		m.MACAddress = types.StringNull()
 	}
 	if v, ok := obj["make-static"]; ok {
-		_ = v
 		if v != "" {
 			m.MakeStatic = types.StringValue(v)
 		} else {
 			m.MakeStatic = types.StringNull()
 		}
-	} else {
-		m.MakeStatic = types.StringNull()
 	}
 	if v, ok := obj["parent-queue"]; ok {
-		_ = v
 		if v != "" {
 			m.ParentQueue = types.StringValue(v)
 		} else {
 			m.ParentQueue = types.StringNull()
 		}
-	} else {
-		m.ParentQueue = types.StringNull()
 	}
 	if v, ok := obj["ping"]; ok {
-		_ = v
 		if v != "" {
 			m.Ping = types.StringValue(v)
 		} else {
 			m.Ping = types.StringNull()
 		}
-	} else {
-		m.Ping = types.StringNull()
 	}
 	if v, ok := obj["queue-type"]; ok {
-		_ = v
 		if v != "" {
 			m.QueueType = types.StringValue(v)
 		} else {
 			m.QueueType = types.StringNull()
 		}
-	} else {
-		m.QueueType = types.StringNull()
 	}
 	if v, ok := obj["radius"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.RADIUS = types.BoolValue(b)
 		} else {
 			m.RADIUS = types.BoolNull()
 		}
-	} else {
-		m.RADIUS = types.BoolNull()
 	}
 	if v, ok := obj["rate-limit"]; ok {
-		_ = v
 		if v != "" {
 			m.RateLimit = types.StringValue(v)
 		} else {
 			m.RateLimit = types.StringNull()
 		}
-	} else {
-		m.RateLimit = types.StringNull()
 	}
 	if v, ok := obj["reconfigure-key"]; ok {
-		_ = v
 		if v != "" {
 			m.ReconfigureKey = types.StringValue(v)
 		} else {
 			m.ReconfigureKey = types.StringNull()
 		}
-	} else {
-		m.ReconfigureKey = types.StringNull()
 	}
 	if v, ok := obj["reconfigure-status"]; ok {
-		_ = v
 		if v != "" {
 			m.ReconfigureStatus = types.StringValue(v)
 		} else {
 			m.ReconfigureStatus = types.StringNull()
 		}
-	} else {
-		m.ReconfigureStatus = types.StringNull()
 	}
 	if v, ok := obj["rostat"]; ok {
-		_ = v
 		if v != "" {
 			m.Rostat = types.StringValue(v)
 		} else {
 			m.Rostat = types.StringNull()
 		}
-	} else {
-		m.Rostat = types.StringNull()
 	}
 	if v, ok := obj["routes"]; ok {
-		_ = v
 		if v != "" {
 			m.Routes = types.StringValue(v)
 		} else {
 			m.Routes = types.StringNull()
 		}
-	} else {
-		m.Routes = types.StringNull()
 	}
 	if v, ok := obj["send-reconfigure"]; ok {
-		_ = v
 		if v != "" {
 			m.SendReconfigure = types.StringValue(v)
 		} else {
 			m.SendReconfigure = types.StringNull()
 		}
-	} else {
-		m.SendReconfigure = types.StringNull()
 	}
 	if v, ok := obj["server"]; ok {
-		_ = v
 		if v != "" {
 			m.Server = types.StringValue(v)
 		} else {
 			m.Server = types.StringNull()
 		}
-	} else {
-		m.Server = types.StringNull()
 	}
 	if v, ok := obj["src-mac-address"]; ok {
-		_ = v
 		if v != "" {
 			m.SrcMACAddress = types.StringValue(v)
 		} else {
 			m.SrcMACAddress = types.StringNull()
 		}
-	} else {
-		m.SrcMACAddress = types.StringNull()
 	}
 	if v, ok := obj["stat"]; ok {
-		_ = v
 		if v != "" {
 			m.Stat = types.StringValue(v)
 		} else {
 			m.Stat = types.StringNull()
 		}
-	} else {
-		m.Stat = types.StringNull()
 	}
 	if v, ok := obj["use-src-mac-address"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.UseSrcMACAddress = types.BoolValue(b)
 		} else {
 			m.UseSrcMACAddress = types.BoolNull()
 		}
-	} else {
-		m.UseSrcMACAddress = types.BoolNull()
 	}
 }

@@ -274,73 +274,52 @@ func capsManDatapathApply(ctx context.Context, obj client.Object, m *CapsManData
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["arp"]; ok {
-		_ = v
 		if v != "" {
 			m.ARP = types.StringValue(v)
 		} else {
 			m.ARP = types.StringNull()
 		}
-	} else {
-		m.ARP = types.StringNull()
 	}
 	if v, ok := obj["bridge"]; ok {
-		_ = v
 		if v != "" {
 			m.Bridge = types.StringValue(v)
 		} else {
 			m.Bridge = types.StringNull()
 		}
-	} else {
-		m.Bridge = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["l2mtu"]; ok {
-		_ = v
 		if v != "" {
 			m.L2mtu = types.StringValue(v)
 		} else {
 			m.L2mtu = types.StringNull()
 		}
-	} else {
-		m.L2mtu = types.StringNull()
 	}
 	if v, ok := obj["mtu"]; ok {
-		_ = v
 		if v != "" {
 			m.MTU = types.StringValue(v)
 		} else {
 			m.MTU = types.StringNull()
 		}
-	} else {
-		m.MTU = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["vlan-id"]; ok {
-		_ = v
 		if v != "" {
 			m.VLANID = types.StringValue(v)
 		} else {
 			m.VLANID = types.StringNull()
 		}
-	} else {
-		m.VLANID = types.StringNull()
 	}
 }

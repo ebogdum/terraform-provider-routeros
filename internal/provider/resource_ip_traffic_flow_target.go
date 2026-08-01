@@ -303,24 +303,18 @@ func iPTrafficFlowTargetApply(ctx context.Context, obj client.Object, m *IPTraff
 		m.V9TemplateRefresh = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dst-address"]; ok {
-		_ = v
 		if v != "" {
 			m.DstAddress = types.StringValue(v)
 		} else {
 			m.DstAddress = types.StringNull()
 		}
-	} else {
-		m.DstAddress = types.StringNull()
 	}
 	if v, ok := obj["port"]; ok {
 		_ = v
@@ -333,24 +327,18 @@ func iPTrafficFlowTargetApply(ctx context.Context, obj client.Object, m *IPTraff
 		m.Port = types.Int64Null()
 	}
 	if v, ok := obj["src-address"]; ok {
-		_ = v
 		if v != "" {
 			m.SrcAddress = types.StringValue(v)
 		} else {
 			m.SrcAddress = types.StringNull()
 		}
-	} else {
-		m.SrcAddress = types.StringNull()
 	}
 	if v, ok := obj["v9"]; ok {
-		_ = v
 		if v != "" {
 			m.V9 = types.StringValue(v)
 		} else {
 			m.V9 = types.StringNull()
 		}
-	} else {
-		m.V9 = types.StringNull()
 	}
 	if v, ok := obj["v9-ipfix-template-refresh"]; ok {
 		_ = v
@@ -373,13 +361,10 @@ func iPTrafficFlowTargetApply(ctx context.Context, obj client.Object, m *IPTraff
 		m.V9IpfixTemplateTimeout = types.Int64Null()
 	}
 	if v, ok := obj["version"]; ok {
-		_ = v
 		if v != "" {
 			m.Version = types.StringValue(v)
 		} else {
 			m.Version = types.StringNull()
 		}
-	} else {
-		m.Version = types.StringNull()
 	}
 }

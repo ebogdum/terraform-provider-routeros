@@ -292,34 +292,25 @@ func routingRpkiSessionApply(ctx context.Context, obj client.Object, m *RoutingR
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["address"]; ok {
-		_ = v
 		if v != "" {
 			m.Address = types.StringValue(v)
 		} else {
 			m.Address = types.StringNull()
 		}
-	} else {
-		m.Address = types.StringNull()
 	}
 	if v, ok := obj["expires"]; ok {
-		_ = v
 		if v != "" {
 			m.Expires = types.StringValue(v)
 		} else {
 			m.Expires = types.StringNull()
 		}
-	} else {
-		m.Expires = types.StringNull()
 	}
 	if v, ok := obj["group"]; ok {
-		_ = v
 		if v != "" {
 			m.Group = types.StringValue(v)
 		} else {
 			m.Group = types.StringNull()
 		}
-	} else {
-		m.Group = types.StringNull()
 	}
 	if v, ok := obj["port"]; ok {
 		_ = v
@@ -352,14 +343,11 @@ func routingRpkiSessionApply(ctx context.Context, obj client.Object, m *RoutingR
 		m.Session = types.Int64Null()
 	}
 	if v, ok := obj["state"]; ok {
-		_ = v
 		if v != "" {
 			m.State = types.StringValue(v)
 		} else {
 			m.State = types.StringNull()
 		}
-	} else {
-		m.State = types.StringNull()
 	}
 	if v, ok := obj["version"]; ok {
 		_ = v

@@ -375,163 +375,115 @@ func interfaceDot1xServerApply(ctx context.Context, obj client.Object, m *Interf
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["accounting"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Accounting = types.BoolValue(b)
 		} else {
 			m.Accounting = types.BoolNull()
 		}
-	} else {
-		m.Accounting = types.BoolNull()
 	}
 	if v, ok := obj["auth-timeout"]; ok {
-		_ = v
 		if v != "" {
 			m.AuthTimeout = types.StringValue(v)
 		} else {
 			m.AuthTimeout = types.StringNull()
 		}
-	} else {
-		m.AuthTimeout = types.StringNull()
 	}
 	if v, ok := obj["auth-types"]; ok {
-		_ = v
 		if v != "" {
 			m.AuthTypes = types.StringValue(v)
 		} else {
 			m.AuthTypes = types.StringNull()
 		}
-	} else {
-		m.AuthTypes = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["guest-vlan-id"]; ok {
-		_ = v
 		if v != "" {
 			m.GuestVLANID = types.StringValue(v)
 		} else {
 			m.GuestVLANID = types.StringNull()
 		}
-	} else {
-		m.GuestVLANID = types.StringNull()
 	}
 	if v, ok := obj["interface"]; ok {
-		_ = v
 		if v != "" {
 			m.Interface = types.StringValue(v)
 		} else {
 			m.Interface = types.StringNull()
 		}
-	} else {
-		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["interim-update"]; ok {
-		_ = v
 		if v != "" {
 			m.InterimUpdate = types.StringValue(v)
 		} else {
 			m.InterimUpdate = types.StringNull()
 		}
-	} else {
-		m.InterimUpdate = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["mac"]; ok {
-		_ = v
 		if v != "" {
 			m.MAC = types.StringValue(v)
 		} else {
 			m.MAC = types.StringNull()
 		}
-	} else {
-		m.MAC = types.StringNull()
 	}
 	if v, ok := obj["mac-auth-mode"]; ok {
-		_ = v
 		if v != "" {
 			m.MACAuthMode = types.StringValue(v)
 		} else {
 			m.MACAuthMode = types.StringNull()
 		}
-	} else {
-		m.MACAuthMode = types.StringNull()
 	}
 	if v, ok := obj["radius-mac-format"]; ok {
-		_ = v
 		if v != "" {
 			m.RADIUSMACFormat = types.StringValue(v)
 		} else {
 			m.RADIUSMACFormat = types.StringNull()
 		}
-	} else {
-		m.RADIUSMACFormat = types.StringNull()
 	}
 	if v, ok := obj["reauth-timeout"]; ok {
-		_ = v
 		if v != "" {
 			m.ReauthTimeout = types.StringValue(v)
 		} else {
 			m.ReauthTimeout = types.StringNull()
 		}
-	} else {
-		m.ReauthTimeout = types.StringNull()
 	}
 	if v, ok := obj["reject-vlan-id"]; ok {
-		_ = v
 		if v != "" {
 			m.RejectVLANID = types.StringValue(v)
 		} else {
 			m.RejectVLANID = types.StringNull()
 		}
-	} else {
-		m.RejectVLANID = types.StringNull()
 	}
 	if v, ok := obj["retrans-timeout"]; ok {
-		_ = v
 		if v != "" {
 			m.RetransTimeout = types.StringValue(v)
 		} else {
 			m.RetransTimeout = types.StringNull()
 		}
-	} else {
-		m.RetransTimeout = types.StringNull()
 	}
 	if v, ok := obj["server-fail-vlan-id"]; ok {
-		_ = v
 		if v != "" {
 			m.ServerFailVLANID = types.StringValue(v)
 		} else {
 			m.ServerFailVLANID = types.StringNull()
 		}
-	} else {
-		m.ServerFailVLANID = types.StringNull()
 	}
 }

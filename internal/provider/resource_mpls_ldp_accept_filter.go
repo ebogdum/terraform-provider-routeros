@@ -274,43 +274,31 @@ func mPLSLdpAcceptFilterApply(ctx context.Context, obj client.Object, m *MPLSLdp
 		m.Accept = newBoolStringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["prefix"]; ok {
-		_ = v
 		if v != "" {
 			m.Prefix = types.StringValue(v)
 		} else {
 			m.Prefix = types.StringNull()
 		}
-	} else {
-		m.Prefix = types.StringNull()
 	}
 	if v, ok := obj["vrf"]; ok {
-		_ = v
 		if v != "" {
 			m.Vrf = types.StringValue(v)
 		} else {
 			m.Vrf = types.StringNull()
 		}
-	} else {
-		m.Vrf = types.StringNull()
 	}
 }

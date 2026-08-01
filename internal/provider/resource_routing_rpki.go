@@ -311,103 +311,73 @@ func routingRpkiApply(ctx context.Context, obj client.Object, m *RoutingRpkiMode
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["address"]; ok {
-		_ = v
 		if v != "" {
 			m.Address = types.StringValue(v)
 		} else {
 			m.Address = types.StringNull()
 		}
-	} else {
-		m.Address = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["expire-interval"]; ok {
-		_ = v
 		if v != "" {
 			m.ExpireInterval = types.StringValue(v)
 		} else {
 			m.ExpireInterval = types.StringNull()
 		}
-	} else {
-		m.ExpireInterval = types.StringNull()
 	}
 	if v, ok := obj["group"]; ok {
-		_ = v
 		if v != "" {
 			m.Group = types.StringValue(v)
 		} else {
 			m.Group = types.StringNull()
 		}
-	} else {
-		m.Group = types.StringNull()
 	}
 	if v, ok := obj["port"]; ok {
-		_ = v
 		if v != "" {
 			m.Port = types.StringValue(v)
 		} else {
 			m.Port = types.StringNull()
 		}
-	} else {
-		m.Port = types.StringNull()
 	}
 	if v, ok := obj["preference"]; ok {
-		_ = v
 		if v != "" {
 			m.Preference = types.StringValue(v)
 		} else {
 			m.Preference = types.StringNull()
 		}
-	} else {
-		m.Preference = types.StringNull()
 	}
 	if v, ok := obj["refresh-interval"]; ok {
-		_ = v
 		if v != "" {
 			m.RefreshInterval = types.StringValue(v)
 		} else {
 			m.RefreshInterval = types.StringNull()
 		}
-	} else {
-		m.RefreshInterval = types.StringNull()
 	}
 	if v, ok := obj["retry-interval"]; ok {
-		_ = v
 		if v != "" {
 			m.RetryInterval = types.StringValue(v)
 		} else {
 			m.RetryInterval = types.StringNull()
 		}
-	} else {
-		m.RetryInterval = types.StringNull()
 	}
 	if v, ok := obj["vrf"]; ok {
-		_ = v
 		if v != "" {
 			m.Vrf = types.StringValue(v)
 		} else {
 			m.Vrf = types.StringNull()
 		}
-	} else {
-		m.Vrf = types.StringNull()
 	}
 }

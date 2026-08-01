@@ -279,123 +279,87 @@ func iPKidControlDeviceApply(ctx context.Context, obj client.Object, m *IPKidCon
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["activity"]; ok {
-		_ = v
 		if v != "" {
 			m.Activity = types.StringValue(v)
 		} else {
 			m.Activity = types.StringNull()
 		}
-	} else {
-		m.Activity = types.StringNull()
 	}
 	if v, ok := obj["blocked"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Blocked = types.BoolValue(b)
 		} else {
 			m.Blocked = types.BoolNull()
 		}
-	} else {
-		m.Blocked = types.BoolNull()
 	}
 	if v, ok := obj["bytes"]; ok {
-		_ = v
 		if v != "" {
 			m.Bytes = types.StringValue(v)
 		} else {
 			m.Bytes = types.StringNull()
 		}
-	} else {
-		m.Bytes = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["ip-address"]; ok {
-		_ = v
 		if v != "" {
 			m.IPAddress = types.StringValue(v)
 		} else {
 			m.IPAddress = types.StringNull()
 		}
-	} else {
-		m.IPAddress = types.StringNull()
 	}
 	if v, ok := obj["mac-address"]; ok {
-		_ = v
 		if v != "" {
 			m.MACAddress = types.StringValue(v)
 		} else {
 			m.MACAddress = types.StringNull()
 		}
-	} else {
-		m.MACAddress = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["rate-limited"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.RateLimited = types.BoolValue(b)
 		} else {
 			m.RateLimited = types.BoolNull()
 		}
-	} else {
-		m.RateLimited = types.BoolNull()
 	}
 	if v, ok := obj["rate-up-down"]; ok {
-		_ = v
 		if v != "" {
 			m.RateUpDown = types.StringValue(v)
 		} else {
 			m.RateUpDown = types.StringNull()
 		}
-	} else {
-		m.RateUpDown = types.StringNull()
 	}
 	if v, ok := obj["reset-counters"]; ok {
-		_ = v
 		if v != "" {
 			m.ResetCounters = types.StringValue(v)
 		} else {
 			m.ResetCounters = types.StringNull()
 		}
-	} else {
-		m.ResetCounters = types.StringNull()
 	}
 	if v, ok := obj["user"]; ok {
-		_ = v
 		if v != "" {
 			m.User = types.StringValue(v)
 		} else {
 			m.User = types.StringNull()
 		}
-	} else {
-		m.User = types.StringNull()
 	}
 }

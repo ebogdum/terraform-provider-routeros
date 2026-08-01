@@ -36,7 +36,7 @@ type InterfaceEthernetModel struct {
 	SfpIgnoreRxLos            types.String `tfsdk:"sfp_ignore_rx_los"`
 	MdixEnable                types.String `tfsdk:"mdix_enable"`
 	L2mtu                     types.String `tfsdk:"l2mtu"`
-	Advertise                 types.List   `tfsdk:"advertise"`
+	Advertise                 types.Set    `tfsdk:"advertise"`
 	Advertising               types.String `tfsdk:"advertising"`
 	ARP                       types.String `tfsdk:"arp"`
 	ARPTimeout                types.String `tfsdk:"arp_timeout"`
@@ -238,7 +238,7 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Computed:    true,
 				Description: "RouterOS `l2mtu`.",
 			},
-			"advertise": schema.ListAttribute{
+			"advertise": schema.SetAttribute{
 				Optional:    true,
 				Computed:    true,
 				ElementType: types.StringType,
@@ -962,7 +962,7 @@ func (r *InterfaceEthernetResource) Create(ctx context.Context, req resource.Cre
 	}
 	body := client.Object{}
 	if !(plan.Advertise.IsNull() || plan.Advertise.IsUnknown()) {
-		body["advertise"] = encodeStringList(ctx, plan.Advertise, &resp.Diagnostics)
+		body["advertise"] = encodeStringSet(ctx, plan.Advertise, &resp.Diagnostics)
 	}
 	if !(plan.ARP.IsNull() || plan.ARP.IsUnknown()) {
 		body["arp"] = plan.ARP.ValueString()
@@ -1152,7 +1152,7 @@ func (r *InterfaceEthernetResource) Update(ctx context.Context, req resource.Upd
 	}
 	body := client.Object{}
 	if !plan.Advertise.Equal(state.Advertise) && !plan.Advertise.IsUnknown() {
-		body["advertise"] = encodeStringList(ctx, plan.Advertise, &resp.Diagnostics)
+		body["advertise"] = encodeStringSet(ctx, plan.Advertise, &resp.Diagnostics)
 	}
 	if !plan.ARP.Equal(state.ARP) && !plan.ARP.IsUnknown() {
 		body["arp"] = plan.ARP.ValueString()
@@ -1357,39 +1357,30 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	}
 	if v, ok := obj["advertise"]; ok {
 		_ = v
-		m.Advertise = decodeStringList(ctx, v)
+		m.Advertise = decodeStringSet(ctx, v)
 	} else {
-		m.Advertise = types.ListNull(types.StringType)
+		m.Advertise = types.SetNull(types.StringType)
 	}
 	if v, ok := obj["advertising"]; ok {
-		_ = v
 		if v != "" {
 			m.Advertising = types.StringValue(v)
 		} else {
 			m.Advertising = types.StringNull()
 		}
-	} else {
-		m.Advertising = types.StringNull()
 	}
 	if v, ok := obj["arp"]; ok {
-		_ = v
 		if v != "" {
 			m.ARP = types.StringValue(v)
 		} else {
 			m.ARP = types.StringNull()
 		}
-	} else {
-		m.ARP = types.StringNull()
 	}
 	if v, ok := obj["arp-timeout"]; ok {
-		_ = v
 		if v != "" {
 			m.ARPTimeout = types.StringValue(v)
 		} else {
 			m.ARPTimeout = types.StringNull()
 		}
-	} else {
-		m.ARPTimeout = types.StringNull()
 	}
 	if v, ok := obj["auto-negotiation"]; ok {
 		_ = v
@@ -1404,84 +1395,60 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.AutoNegotiation = types.BoolNull()
 	}
 	if v, ok := obj["autoneg"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Autoneg = types.BoolValue(b)
 		} else {
 			m.Autoneg = types.BoolNull()
 		}
-	} else {
-		m.Autoneg = types.BoolNull()
 	}
 	if v, ok := obj["blink"]; ok {
-		_ = v
 		if v != "" {
 			m.Blink = types.StringValue(v)
 		} else {
 			m.Blink = types.StringNull()
 		}
-	} else {
-		m.Blink = types.StringNull()
 	}
 	if v, ok := obj["cable-assembly-link-length"]; ok {
-		_ = v
 		if v != "" {
 			m.CableAssemblyLinkLength = types.StringValue(v)
 		} else {
 			m.CableAssemblyLinkLength = types.StringNull()
 		}
-	} else {
-		m.CableAssemblyLinkLength = types.StringNull()
 	}
 	if v, ok := obj["bandwidth"]; ok {
-		_ = v
 		if v != "" {
 			m.Bandwidth = types.StringValue(v)
 		} else {
 			m.Bandwidth = types.StringNull()
 		}
-	} else {
-		m.Bandwidth = types.StringNull()
 	}
 	if v, ok := obj["cable-settings"]; ok {
-		_ = v
 		if v != "" {
 			m.CableSettings = types.StringValue(v)
 		} else {
 			m.CableSettings = types.StringNull()
 		}
-	} else {
-		m.CableSettings = types.StringNull()
 	}
 	if v, ok := obj["cable-test"]; ok {
-		_ = v
 		if v != "" {
 			m.CableTest = types.StringValue(v)
 		} else {
 			m.CableTest = types.StringNull()
 		}
-	} else {
-		m.CableTest = types.StringNull()
 	}
 	if v, ok := obj["cmis-module-state"]; ok {
-		_ = v
 		if v != "" {
 			m.CmisModuleState = types.StringValue(v)
 		} else {
 			m.CmisModuleState = types.StringNull()
 		}
-	} else {
-		m.CmisModuleState = types.StringNull()
 	}
 	if v, ok := obj["cmis-revision"]; ok {
-		_ = v
 		if v != "" {
 			m.CmisRevision = types.StringValue(v)
 		} else {
 			m.CmisRevision = types.StringNull()
 		}
-	} else {
-		m.CmisRevision = types.StringNull()
 	}
 	if v, ok := obj["combo"]; ok {
 		_ = v
@@ -1494,34 +1461,25 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.Combo = types.Int64Null()
 	}
 	if v, ok := obj["combo-mode"]; ok {
-		_ = v
 		if v != "" {
 			m.ComboMode = types.StringValue(v)
 		} else {
 			m.ComboMode = types.StringNull()
 		}
-	} else {
-		m.ComboMode = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["connector-type"]; ok {
-		_ = v
 		if v != "" {
 			m.ConnectorType = types.StringValue(v)
 		} else {
 			m.ConnectorType = types.StringNull()
 		}
-	} else {
-		m.ConnectorType = types.StringNull()
 	}
 	if v, ok := obj["copper-active-om4-link-length"]; ok {
 		_ = v
@@ -1534,64 +1492,46 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.CopperActiveOm4LinkLength = types.Int64Null()
 	}
 	if v, ok := obj["default-name"]; ok {
-		_ = v
 		if v != "" {
 			m.DefaultName = types.StringValue(v)
 		} else {
 			m.DefaultName = types.StringNull()
 		}
-	} else {
-		m.DefaultName = types.StringNull()
 	}
 	if v, ok := obj["disable-running-check"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.DisableRunningCheck = types.BoolValue(b)
 		} else {
 			m.DisableRunningCheck = types.BoolNull()
 		}
-	} else {
-		m.DisableRunningCheck = types.BoolNull()
 	}
 	if v, ok := obj["disable-time"]; ok {
-		_ = v
 		if v != "" {
 			m.DisableTime = types.StringValue(v)
 		} else {
 			m.DisableTime = types.StringNull()
 		}
-	} else {
-		m.DisableTime = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["encoding"]; ok {
-		_ = v
 		if v != "" {
 			m.Encoding = types.StringValue(v)
 		} else {
 			m.Encoding = types.StringNull()
 		}
-	} else {
-		m.Encoding = types.StringNull()
 	}
 	if v, ok := obj["extrastats"]; ok {
-		_ = v
 		if v != "" {
 			m.Extrastats = types.StringValue(v)
 		} else {
 			m.Extrastats = types.StringNull()
 		}
-	} else {
-		m.Extrastats = types.StringNull()
 	}
 	if v, ok := obj["fec"]; ok {
 		_ = v
@@ -1604,24 +1544,18 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.Fec = types.Int64Null()
 	}
 	if v, ok := obj["fec-mode"]; ok {
-		_ = v
 		if v != "" {
 			m.FecMode = types.StringValue(v)
 		} else {
 			m.FecMode = types.StringNull()
 		}
-	} else {
-		m.FecMode = types.StringNull()
 	}
 	if v, ok := obj["flowcntrl"]; ok {
-		_ = v
 		if v != "" {
 			m.Flowcntrl = types.StringValue(v)
 		} else {
 			m.Flowcntrl = types.StringNull()
 		}
-	} else {
-		m.Flowcntrl = types.StringNull()
 	}
 	if v, ok := obj["flowcontrol"]; ok {
 		_ = v
@@ -1634,104 +1568,74 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.Flowcontrol = types.Int64Null()
 	}
 	if v, ok := obj["full-duplex"]; ok {
-		_ = v
 		if v != "" {
 			m.FullDuplex = types.StringValue(v)
 		} else {
 			m.FullDuplex = types.StringNull()
 		}
-	} else {
-		m.FullDuplex = types.StringNull()
 	}
 	if v, ok := obj["hastxqueuestats"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Hastxqueuestats = types.BoolValue(b)
 		} else {
 			m.Hastxqueuestats = types.BoolNull()
 		}
-	} else {
-		m.Hastxqueuestats = types.BoolNull()
 	}
 	if v, ok := obj["ignore-rx-los"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.IgnoreRxLos = types.BoolValue(b)
 		} else {
 			m.IgnoreRxLos = types.BoolNull()
 		}
-	} else {
-		m.IgnoreRxLos = types.BoolNull()
 	}
 	if v, ok := obj["link-partner-advertising"]; ok {
-		_ = v
 		if v != "" {
 			m.LinkPartnerAdvertising = types.StringValue(v)
 		} else {
 			m.LinkPartnerAdvertising = types.StringNull()
 		}
-	} else {
-		m.LinkPartnerAdvertising = types.StringNull()
 	}
 	if v, ok := obj["loop-protect"]; ok {
-		_ = v
 		if v != "" {
 			m.LoopProtect = types.StringValue(v)
 		} else {
 			m.LoopProtect = types.StringNull()
 		}
-	} else {
-		m.LoopProtect = types.StringNull()
 	}
 	if v, ok := obj["loop-protect-disable-time"]; ok {
-		_ = v
 		if v != "" {
 			m.LoopProtectDisableTime = types.StringValue(v)
 		} else {
 			m.LoopProtectDisableTime = types.StringNull()
 		}
-	} else {
-		m.LoopProtectDisableTime = types.StringNull()
 	}
 	if v, ok := obj["loop-protect-send-interval"]; ok {
-		_ = v
 		if v != "" {
 			m.LoopProtectSendInterval = types.StringValue(v)
 		} else {
 			m.LoopProtectSendInterval = types.StringNull()
 		}
-	} else {
-		m.LoopProtectSendInterval = types.StringNull()
 	}
 	if v, ok := obj["loop-protect-status"]; ok {
-		_ = v
 		if v != "" {
 			m.LoopProtectStatus = types.StringValue(v)
 		} else {
 			m.LoopProtectStatus = types.StringNull()
 		}
-	} else {
-		m.LoopProtectStatus = types.StringNull()
 	}
 	if v, ok := obj["mac-address"]; ok {
-		_ = v
 		if v != "" {
 			m.MACAddress = types.StringValue(v)
 		} else {
 			m.MACAddress = types.StringNull()
 		}
-	} else {
-		m.MACAddress = types.StringNull()
 	}
 	if v, ok := obj["manufacturing-date"]; ok {
-		_ = v
 		if v != "" {
 			m.ManufacturingDate = types.StringValue(v)
 		} else {
 			m.ManufacturingDate = types.StringNull()
 		}
-	} else {
-		m.ManufacturingDate = types.StringNull()
 	}
 	if v, ok := obj["max-l2-mtu"]; ok {
 		_ = v
@@ -1744,24 +1648,18 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.MaxL2MTU = types.Int64Null()
 	}
 	if v, ok := obj["max-power"]; ok {
-		_ = v
 		if v != "" {
 			m.MaxPower = types.StringValue(v)
 		} else {
 			m.MaxPower = types.StringNull()
 		}
-	} else {
-		m.MaxPower = types.StringNull()
 	}
 	if v, ok := obj["module-present"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.ModulePresent = types.BoolValue(b)
 		} else {
 			m.ModulePresent = types.BoolNull()
 		}
-	} else {
-		m.ModulePresent = types.BoolNull()
 	}
 	if v, ok := obj["mtu"]; ok {
 		_ = v
@@ -1774,34 +1672,25 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.MTU = types.Int64Null()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["noautoneg"]; ok {
-		_ = v
 		if v != "" {
 			m.Noautoneg = types.StringValue(v)
 		} else {
 			m.Noautoneg = types.StringNull()
 		}
-	} else {
-		m.Noautoneg = types.StringNull()
 	}
 	if v, ok := obj["non-mgmt"]; ok {
-		_ = v
 		if v != "" {
 			m.NonMgmt = types.StringValue(v)
 		} else {
 			m.NonMgmt = types.StringNull()
 		}
-	} else {
-		m.NonMgmt = types.StringNull()
 	}
 	if v, ok := obj["om1-link-length"]; ok {
 		_ = v
@@ -1854,24 +1743,18 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.Om5LinkLength = types.Int64Null()
 	}
 	if v, ok := obj["orig-mac-address"]; ok {
-		_ = v
 		if v != "" {
 			m.OrigMACAddress = types.StringValue(v)
 		} else {
 			m.OrigMACAddress = types.StringNull()
 		}
-	} else {
-		m.OrigMACAddress = types.StringNull()
 	}
 	if v, ok := obj["passthrough-interface"]; ok {
-		_ = v
 		if v != "" {
 			m.PassthroughInterface = types.StringValue(v)
 		} else {
 			m.PassthroughInterface = types.StringNull()
 		}
-	} else {
-		m.PassthroughInterface = types.StringNull()
 	}
 	if v, ok := obj["pcie-passthrough"]; ok {
 		_ = v
@@ -1884,14 +1767,11 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.PciePassthrough = types.Int64Null()
 	}
 	if v, ok := obj["poe-out"]; ok {
-		_ = v
 		if v != "" {
 			m.PoEOut = types.StringValue(v)
 		} else {
 			m.PoEOut = types.StringNull()
 		}
-	} else {
-		m.PoEOut = types.StringNull()
 	}
 	if v, ok := obj["poe-out-current"]; ok {
 		_ = v
@@ -1904,34 +1784,25 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.PoEOutCurrent = types.Int64Null()
 	}
 	if v, ok := obj["poe-out-power"]; ok {
-		_ = v
 		if v != "" {
 			m.PoEOutPower = types.StringValue(v)
 		} else {
 			m.PoEOutPower = types.StringNull()
 		}
-	} else {
-		m.PoEOutPower = types.StringNull()
 	}
 	if v, ok := obj["poe-out-status"]; ok {
-		_ = v
 		if v != "" {
 			m.PoEOutStatus = types.StringValue(v)
 		} else {
 			m.PoEOutStatus = types.StringNull()
 		}
-	} else {
-		m.PoEOutStatus = types.StringNull()
 	}
 	if v, ok := obj["poe-out-voltage"]; ok {
-		_ = v
 		if v != "" {
 			m.PoEOutVoltage = types.StringValue(v)
 		} else {
 			m.PoEOutVoltage = types.StringNull()
 		}
-	} else {
-		m.PoEOutVoltage = types.StringNull()
 	}
 	if v, ok := obj["poe-priority"]; ok {
 		_ = v
@@ -1944,34 +1815,25 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.PoEPriority = types.Int64Null()
 	}
 	if v, ok := obj["poe-voltage"]; ok {
-		_ = v
 		if v != "" {
 			m.PoEVoltage = types.StringValue(v)
 		} else {
 			m.PoEVoltage = types.StringNull()
 		}
-	} else {
-		m.PoEVoltage = types.StringNull()
 	}
 	if v, ok := obj["poe"]; ok {
-		_ = v
 		if v != "" {
 			m.Poe = types.StringValue(v)
 		} else {
 			m.Poe = types.StringNull()
 		}
-	} else {
-		m.Poe = types.StringNull()
 	}
 	if v, ok := obj["poe-v"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.PoeV = types.BoolValue(b)
 		} else {
 			m.PoeV = types.BoolNull()
 		}
-	} else {
-		m.PoeV = types.BoolNull()
 	}
 	if v, ok := obj["poecurr"]; ok {
 		_ = v
@@ -1984,14 +1846,11 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.Poecurr = types.Int64Null()
 	}
 	if v, ok := obj["poeping"]; ok {
-		_ = v
 		if v != "" {
 			m.Poeping = types.StringValue(v)
 		} else {
 			m.Poeping = types.StringNull()
 		}
-	} else {
-		m.Poeping = types.StringNull()
 	}
 	if v, ok := obj["poepower"]; ok {
 		_ = v
@@ -2024,144 +1883,102 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.PowerClass = types.Int64Null()
 	}
 	if v, ok := obj["power-cycle"]; ok {
-		_ = v
 		if v != "" {
 			m.PowerCycle = types.StringValue(v)
 		} else {
 			m.PowerCycle = types.StringNull()
 		}
-	} else {
-		m.PowerCycle = types.StringNull()
 	}
 	if v, ok := obj["power-cycle-after"]; ok {
-		_ = v
 		if v != "" {
 			m.PowerCycleAfter = types.StringValue(v)
 		} else {
 			m.PowerCycleAfter = types.StringNull()
 		}
-	} else {
-		m.PowerCycleAfter = types.StringNull()
 	}
 	if v, ok := obj["power-cycle-host-alive"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.PowerCycleHostAlive = types.BoolValue(b)
 		} else {
 			m.PowerCycleHostAlive = types.BoolNull()
 		}
-	} else {
-		m.PowerCycleHostAlive = types.BoolNull()
 	}
 	if v, ok := obj["power-cycle-interval"]; ok {
-		_ = v
 		if v != "" {
 			m.PowerCycleInterval = types.StringValue(v)
 		} else {
 			m.PowerCycleInterval = types.StringNull()
 		}
-	} else {
-		m.PowerCycleInterval = types.StringNull()
 	}
 	if v, ok := obj["power-cycle-ping-address"]; ok {
-		_ = v
 		if v != "" {
 			m.PowerCyclePingAddress = types.StringValue(v)
 		} else {
 			m.PowerCyclePingAddress = types.StringNull()
 		}
-	} else {
-		m.PowerCyclePingAddress = types.StringNull()
 	}
 	if v, ok := obj["power-cycle-ping-enabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.PowerCyclePingEnabled = types.BoolValue(b)
 		} else {
 			m.PowerCyclePingEnabled = types.BoolNull()
 		}
-	} else {
-		m.PowerCyclePingEnabled = types.BoolNull()
 	}
 	if v, ok := obj["power-cycle-ping-timeout"]; ok {
-		_ = v
 		if v != "" {
 			m.PowerCyclePingTimeout = types.StringValue(v)
 		} else {
 			m.PowerCyclePingTimeout = types.StringNull()
 		}
-	} else {
-		m.PowerCyclePingTimeout = types.StringNull()
 	}
 	if v, ok := obj["qstats"]; ok {
-		_ = v
 		if v != "" {
 			m.Qstats = types.StringValue(v)
 		} else {
 			m.Qstats = types.StringNull()
 		}
-	} else {
-		m.Qstats = types.StringNull()
 	}
 	if v, ok := obj["rate"]; ok {
-		_ = v
 		if v != "" {
 			m.Rate = types.StringValue(v)
 		} else {
 			m.Rate = types.StringNull()
 		}
-	} else {
-		m.Rate = types.StringNull()
 	}
 	if v, ok := obj["rate-select"]; ok {
-		_ = v
 		if v != "" {
 			m.RateSelect = types.StringValue(v)
 		} else {
 			m.RateSelect = types.StringNull()
 		}
-	} else {
-		m.RateSelect = types.StringNull()
 	}
 	if v, ok := obj["reset-counters"]; ok {
-		_ = v
 		if v != "" {
 			m.ResetCounters = types.StringValue(v)
 		} else {
 			m.ResetCounters = types.StringNull()
 		}
-	} else {
-		m.ResetCounters = types.StringNull()
 	}
 	if v, ok := obj["reset-mac-address"]; ok {
-		_ = v
 		if v != "" {
 			m.ResetMACAddress = types.StringValue(v)
 		} else {
 			m.ResetMACAddress = types.StringNull()
 		}
-	} else {
-		m.ResetMACAddress = types.StringNull()
 	}
 	if v, ok := obj["running"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Running = types.BoolValue(b)
 		} else {
 			m.Running = types.BoolNull()
 		}
-	} else {
-		m.Running = types.BoolNull()
 	}
 	if v, ok := obj["rx-align-error"]; ok {
-		_ = v
 		if v != "" {
 			m.RxAlignError = types.StringValue(v)
 		} else {
 			m.RxAlignError = types.StringNull()
 		}
-	} else {
-		m.RxAlignError = types.StringNull()
 	}
 	if v, ok := obj["rx-broadcast"]; ok {
 		_ = v
@@ -2184,114 +2001,81 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.RxBytes = types.Int64Null()
 	}
 	if v, ok := obj["rx-carrier-error"]; ok {
-		_ = v
 		if v != "" {
 			m.RxCarrierError = types.StringValue(v)
 		} else {
 			m.RxCarrierError = types.StringNull()
 		}
-	} else {
-		m.RxCarrierError = types.StringNull()
 	}
 	if v, ok := obj["rx-code-error"]; ok {
-		_ = v
 		if v != "" {
 			m.RxCodeError = types.StringValue(v)
 		} else {
 			m.RxCodeError = types.StringNull()
 		}
-	} else {
-		m.RxCodeError = types.StringNull()
 	}
 	if v, ok := obj["rx-control"]; ok {
-		_ = v
 		if v != "" {
 			m.RxControl = types.StringValue(v)
 		} else {
 			m.RxControl = types.StringNull()
 		}
-	} else {
-		m.RxControl = types.StringNull()
 	}
 	if v, ok := obj["rx-drop"]; ok {
-		_ = v
 		if v != "" {
 			m.RxDrop = types.StringValue(v)
 		} else {
 			m.RxDrop = types.StringNull()
 		}
-	} else {
-		m.RxDrop = types.StringNull()
 	}
 	if v, ok := obj["rx-error-events"]; ok {
-		_ = v
 		if v != "" {
 			m.RxErrorEvents = types.StringValue(v)
 		} else {
 			m.RxErrorEvents = types.StringNull()
 		}
-	} else {
-		m.RxErrorEvents = types.StringNull()
 	}
 	if v, ok := obj["rx-fcs-error"]; ok {
-		_ = v
 		if v != "" {
 			m.RxFcsError = types.StringValue(v)
 		} else {
 			m.RxFcsError = types.StringNull()
 		}
-	} else {
-		m.RxFcsError = types.StringNull()
 	}
 	if v, ok := obj["rx-flow-control"]; ok {
-		_ = v
 		if v != "" {
 			m.RxFlowControl = types.StringValue(v)
 		} else {
 			m.RxFlowControl = types.StringNull()
 		}
-	} else {
-		m.RxFlowControl = types.StringNull()
 	}
 	if v, ok := obj["rx-fragment"]; ok {
-		_ = v
 		if v != "" {
 			m.RxFragment = types.StringValue(v)
 		} else {
 			m.RxFragment = types.StringNull()
 		}
-	} else {
-		m.RxFragment = types.StringNull()
 	}
 	if v, ok := obj["rx-jabber"]; ok {
-		_ = v
 		if v != "" {
 			m.RxJabber = types.StringValue(v)
 		} else {
 			m.RxJabber = types.StringNull()
 		}
-	} else {
-		m.RxJabber = types.StringNull()
 	}
 	if v, ok := obj["rx-length-error"]; ok {
-		_ = v
 		if v != "" {
 			m.RxLengthError = types.StringValue(v)
 		} else {
 			m.RxLengthError = types.StringNull()
 		}
-	} else {
-		m.RxLengthError = types.StringNull()
 	}
 	if v, ok := obj["rx-loss"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.RxLoss = types.BoolValue(b)
 		} else {
 			m.RxLoss = types.BoolNull()
 		}
-	} else {
-		m.RxLoss = types.BoolNull()
 	}
 	if v, ok := obj["rx-multicast"]; ok {
 		_ = v
@@ -2304,14 +2088,11 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.RxMulticast = types.Int64Null()
 	}
 	if v, ok := obj["rx-overflow"]; ok {
-		_ = v
 		if v != "" {
 			m.RxOverflow = types.StringValue(v)
 		} else {
 			m.RxOverflow = types.StringNull()
 		}
-	} else {
-		m.RxOverflow = types.StringNull()
 	}
 	if v, ok := obj["rx-packet"]; ok {
 		_ = v
@@ -2324,84 +2105,60 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.RxPacket = types.Int64Null()
 	}
 	if v, ok := obj["rx-pause"]; ok {
-		_ = v
 		if v != "" {
 			m.RxPause = types.StringValue(v)
 		} else {
 			m.RxPause = types.StringNull()
 		}
-	} else {
-		m.RxPause = types.StringNull()
 	}
 	if v, ok := obj["rx-power"]; ok {
-		_ = v
 		if v != "" {
 			m.RxPower = types.StringValue(v)
 		} else {
 			m.RxPower = types.StringNull()
 		}
-	} else {
-		m.RxPower = types.StringNull()
 	}
 	if v, ok := obj["rx-too-long"]; ok {
-		_ = v
 		if v != "" {
 			m.RxTooLong = types.StringValue(v)
 		} else {
 			m.RxTooLong = types.StringNull()
 		}
-	} else {
-		m.RxTooLong = types.StringNull()
 	}
 	if v, ok := obj["rx-too-short"]; ok {
-		_ = v
 		if v != "" {
 			m.RxTooShort = types.StringValue(v)
 		} else {
 			m.RxTooShort = types.StringNull()
 		}
-	} else {
-		m.RxTooShort = types.StringNull()
 	}
 	if v, ok := obj["rx-unicast"]; ok {
-		_ = v
 		if v != "" {
 			m.RxUnicast = types.StringValue(v)
 		} else {
 			m.RxUnicast = types.StringNull()
 		}
-	} else {
-		m.RxUnicast = types.StringNull()
 	}
 	if v, ok := obj["rx-unknown-op"]; ok {
-		_ = v
 		if v != "" {
 			m.RxUnknownOp = types.StringValue(v)
 		} else {
 			m.RxUnknownOp = types.StringNull()
 		}
-	} else {
-		m.RxUnknownOp = types.StringNull()
 	}
 	if v, ok := obj["send-interval"]; ok {
-		_ = v
 		if v != "" {
 			m.SendInterval = types.StringValue(v)
 		} else {
 			m.SendInterval = types.StringNull()
 		}
-	} else {
-		m.SendInterval = types.StringNull()
 	}
 	if v, ok := obj["sfp"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Sfp = types.BoolValue(b)
 		} else {
 			m.Sfp = types.BoolNull()
 		}
-	} else {
-		m.Sfp = types.BoolNull()
 	}
 	if v, ok := obj["sfp-shutdown-temperature"]; ok {
 		_ = v
@@ -2414,14 +2171,11 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.SfpShutdownTemperature = types.Int64Null()
 	}
 	if v, ok := obj["sfp-supported"]; ok {
-		_ = v
 		if v != "" {
 			m.SfpSupported = types.StringValue(v)
 		} else {
 			m.SfpSupported = types.StringNull()
 		}
-	} else {
-		m.SfpSupported = types.StringNull()
 	}
 	if v, ok := obj["sfprate"]; ok {
 		_ = v
@@ -2434,74 +2188,53 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.Sfprate = types.Int64Null()
 	}
 	if v, ok := obj["sfpshutdown"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Sfpshutdown = types.BoolValue(b)
 		} else {
 			m.Sfpshutdown = types.BoolNull()
 		}
-	} else {
-		m.Sfpshutdown = types.BoolNull()
 	}
 	if v, ok := obj["sm-link-length"]; ok {
-		_ = v
 		if v != "" {
 			m.SmLinkLength = types.StringValue(v)
 		} else {
 			m.SmLinkLength = types.StringNull()
 		}
-	} else {
-		m.SmLinkLength = types.StringNull()
 	}
 	if v, ok := obj["speed"]; ok {
-		_ = v
 		if v != "" {
 			m.Speed = types.StringValue(v)
 		} else {
 			m.Speed = types.StringNull()
 		}
-	} else {
-		m.Speed = types.StringNull()
 	}
 	if v, ok := obj["status"]; ok {
-		_ = v
 		if v != "" {
 			m.Status = types.StringValue(v)
 		} else {
 			m.Status = types.StringNull()
 		}
-	} else {
-		m.Status = types.StringNull()
 	}
 	if v, ok := obj["supply-voltage"]; ok {
-		_ = v
 		if v != "" {
 			m.SupplyVoltage = types.StringValue(v)
 		} else {
 			m.SupplyVoltage = types.StringNull()
 		}
-	} else {
-		m.SupplyVoltage = types.StringNull()
 	}
 	if v, ok := obj["supported"]; ok {
-		_ = v
 		if v != "" {
 			m.Supported = types.StringValue(v)
 		} else {
 			m.Supported = types.StringNull()
 		}
-	} else {
-		m.Supported = types.StringNull()
 	}
 	if v, ok := obj["temperature"]; ok {
-		_ = v
 		if v != "" {
 			m.Temperature = types.StringValue(v)
 		} else {
 			m.Temperature = types.StringNull()
 		}
-	} else {
-		m.Temperature = types.StringNull()
 	}
 	if v, ok := obj["tx-bias-current"]; ok {
 		_ = v
@@ -2534,124 +2267,88 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.TxBytes = types.Int64Null()
 	}
 	if v, ok := obj["tx-collision"]; ok {
-		_ = v
 		if v != "" {
 			m.TxCollision = types.StringValue(v)
 		} else {
 			m.TxCollision = types.StringNull()
 		}
-	} else {
-		m.TxCollision = types.StringNull()
 	}
 	if v, ok := obj["tx-control"]; ok {
-		_ = v
 		if v != "" {
 			m.TxControl = types.StringValue(v)
 		} else {
 			m.TxControl = types.StringNull()
 		}
-	} else {
-		m.TxControl = types.StringNull()
 	}
 	if v, ok := obj["tx-deferred"]; ok {
-		_ = v
 		if v != "" {
 			m.TxDeferred = types.StringValue(v)
 		} else {
 			m.TxDeferred = types.StringNull()
 		}
-	} else {
-		m.TxDeferred = types.StringNull()
 	}
 	if v, ok := obj["tx-drop"]; ok {
-		_ = v
 		if v != "" {
 			m.TxDrop = types.StringValue(v)
 		} else {
 			m.TxDrop = types.StringNull()
 		}
-	} else {
-		m.TxDrop = types.StringNull()
 	}
 	if v, ok := obj["tx-excessive-collision"]; ok {
-		_ = v
 		if v != "" {
 			m.TxExcessiveCollision = types.StringValue(v)
 		} else {
 			m.TxExcessiveCollision = types.StringNull()
 		}
-	} else {
-		m.TxExcessiveCollision = types.StringNull()
 	}
 	if v, ok := obj["tx-excessive-deferred"]; ok {
-		_ = v
 		if v != "" {
 			m.TxExcessiveDeferred = types.StringValue(v)
 		} else {
 			m.TxExcessiveDeferred = types.StringNull()
 		}
-	} else {
-		m.TxExcessiveDeferred = types.StringNull()
 	}
 	if v, ok := obj["tx-fault"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.TxFault = types.BoolValue(b)
 		} else {
 			m.TxFault = types.BoolNull()
 		}
-	} else {
-		m.TxFault = types.BoolNull()
 	}
 	if v, ok := obj["tx-fcs-error"]; ok {
-		_ = v
 		if v != "" {
 			m.TxFcsError = types.StringValue(v)
 		} else {
 			m.TxFcsError = types.StringNull()
 		}
-	} else {
-		m.TxFcsError = types.StringNull()
 	}
 	if v, ok := obj["tx-flow-control"]; ok {
-		_ = v
 		if v != "" {
 			m.TxFlowControl = types.StringValue(v)
 		} else {
 			m.TxFlowControl = types.StringNull()
 		}
-	} else {
-		m.TxFlowControl = types.StringNull()
 	}
 	if v, ok := obj["tx-fragment"]; ok {
-		_ = v
 		if v != "" {
 			m.TxFragment = types.StringValue(v)
 		} else {
 			m.TxFragment = types.StringNull()
 		}
-	} else {
-		m.TxFragment = types.StringNull()
 	}
 	if v, ok := obj["tx-jabber"]; ok {
-		_ = v
 		if v != "" {
 			m.TxJabber = types.StringValue(v)
 		} else {
 			m.TxJabber = types.StringNull()
 		}
-	} else {
-		m.TxJabber = types.StringNull()
 	}
 	if v, ok := obj["tx-late-collision"]; ok {
-		_ = v
 		if v != "" {
 			m.TxLateCollision = types.StringValue(v)
 		} else {
 			m.TxLateCollision = types.StringNull()
 		}
-	} else {
-		m.TxLateCollision = types.StringNull()
 	}
 	if v, ok := obj["tx-multicast"]; ok {
 		_ = v
@@ -2664,14 +2361,11 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.TxMulticast = types.Int64Null()
 	}
 	if v, ok := obj["tx-multiple-collision"]; ok {
-		_ = v
 		if v != "" {
 			m.TxMultipleCollision = types.StringValue(v)
 		} else {
 			m.TxMultipleCollision = types.StringNull()
 		}
-	} else {
-		m.TxMultipleCollision = types.StringNull()
 	}
 	if v, ok := obj["tx-packet"]; ok {
 		_ = v
@@ -2684,233 +2378,164 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		m.TxPacket = types.Int64Null()
 	}
 	if v, ok := obj["tx-pause"]; ok {
-		_ = v
 		if v != "" {
 			m.TxPause = types.StringValue(v)
 		} else {
 			m.TxPause = types.StringNull()
 		}
-	} else {
-		m.TxPause = types.StringNull()
 	}
 	if v, ok := obj["tx-pause-honorred"]; ok {
-		_ = v
 		if v != "" {
 			m.TxPauseHonorred = types.StringValue(v)
 		} else {
 			m.TxPauseHonorred = types.StringNull()
 		}
-	} else {
-		m.TxPauseHonorred = types.StringNull()
 	}
 	if v, ok := obj["tx-power"]; ok {
-		_ = v
 		if v != "" {
 			m.TxPower = types.StringValue(v)
 		} else {
 			m.TxPower = types.StringNull()
 		}
-	} else {
-		m.TxPower = types.StringNull()
 	}
 	if v, ok := obj["tx-rx-1024-1518"]; ok {
-		_ = v
 		if v != "" {
 			m.TxRx10241518 = types.StringValue(v)
 		} else {
 			m.TxRx10241518 = types.StringNull()
 		}
-	} else {
-		m.TxRx10241518 = types.StringNull()
 	}
 	if v, ok := obj["tx-rx-1024-max"]; ok {
-		_ = v
 		if v != "" {
 			m.TxRx1024Max = types.StringValue(v)
 		} else {
 			m.TxRx1024Max = types.StringNull()
 		}
-	} else {
-		m.TxRx1024Max = types.StringNull()
 	}
 	if v, ok := obj["tx-rx-128-255"]; ok {
-		_ = v
 		if v != "" {
 			m.TxRx128255 = types.StringValue(v)
 		} else {
 			m.TxRx128255 = types.StringNull()
 		}
-	} else {
-		m.TxRx128255 = types.StringNull()
 	}
 	if v, ok := obj["tx-rx-1519-max"]; ok {
-		_ = v
 		if v != "" {
 			m.TxRx1519Max = types.StringValue(v)
 		} else {
 			m.TxRx1519Max = types.StringNull()
 		}
-	} else {
-		m.TxRx1519Max = types.StringNull()
 	}
 	if v, ok := obj["tx-rx-256-511"]; ok {
-		_ = v
 		if v != "" {
 			m.TxRx256511 = types.StringValue(v)
 		} else {
 			m.TxRx256511 = types.StringNull()
 		}
-	} else {
-		m.TxRx256511 = types.StringNull()
 	}
 	if v, ok := obj["tx-rx-512-1023"]; ok {
-		_ = v
 		if v != "" {
 			m.TxRx5121023 = types.StringValue(v)
 		} else {
 			m.TxRx5121023 = types.StringNull()
 		}
-	} else {
-		m.TxRx5121023 = types.StringNull()
 	}
 	if v, ok := obj["tx-rx-64"]; ok {
-		_ = v
 		if v != "" {
 			m.TxRx64 = types.StringValue(v)
 		} else {
 			m.TxRx64 = types.StringNull()
 		}
-	} else {
-		m.TxRx64 = types.StringNull()
 	}
 	if v, ok := obj["tx-rx-65-127"]; ok {
-		_ = v
 		if v != "" {
 			m.TxRx65127 = types.StringValue(v)
 		} else {
 			m.TxRx65127 = types.StringNull()
 		}
-	} else {
-		m.TxRx65127 = types.StringNull()
 	}
 	if v, ok := obj["tx-rx-bytes"]; ok {
-		_ = v
 		if v != "" {
 			m.TxRxBytes = types.StringValue(v)
 		} else {
 			m.TxRxBytes = types.StringNull()
 		}
-	} else {
-		m.TxRxBytes = types.StringNull()
 	}
 	if v, ok := obj["tx-rx-packets"]; ok {
-		_ = v
 		if v != "" {
 			m.TxRxPackets = types.StringValue(v)
 		} else {
 			m.TxRxPackets = types.StringNull()
 		}
-	} else {
-		m.TxRxPackets = types.StringNull()
 	}
 	if v, ok := obj["tx-single-collision"]; ok {
-		_ = v
 		if v != "" {
 			m.TxSingleCollision = types.StringValue(v)
 		} else {
 			m.TxSingleCollision = types.StringNull()
 		}
-	} else {
-		m.TxSingleCollision = types.StringNull()
 	}
 	if v, ok := obj["tx-too-short"]; ok {
-		_ = v
 		if v != "" {
 			m.TxTooShort = types.StringValue(v)
 		} else {
 			m.TxTooShort = types.StringNull()
 		}
-	} else {
-		m.TxTooShort = types.StringNull()
 	}
 	if v, ok := obj["tx-total-collision"]; ok {
-		_ = v
 		if v != "" {
 			m.TxTotalCollision = types.StringValue(v)
 		} else {
 			m.TxTotalCollision = types.StringNull()
 		}
-	} else {
-		m.TxTotalCollision = types.StringNull()
 	}
 	if v, ok := obj["tx-underrun"]; ok {
-		_ = v
 		if v != "" {
 			m.TxUnderrun = types.StringValue(v)
 		} else {
 			m.TxUnderrun = types.StringNull()
 		}
-	} else {
-		m.TxUnderrun = types.StringNull()
 	}
 	if v, ok := obj["tx-unicast"]; ok {
-		_ = v
 		if v != "" {
 			m.TxUnicast = types.StringValue(v)
 		} else {
 			m.TxUnicast = types.StringNull()
 		}
-	} else {
-		m.TxUnicast = types.StringNull()
 	}
 	if v, ok := obj["vendor-name"]; ok {
-		_ = v
 		if v != "" {
 			m.VendorName = types.StringValue(v)
 		} else {
 			m.VendorName = types.StringNull()
 		}
-	} else {
-		m.VendorName = types.StringNull()
 	}
 	if v, ok := obj["vendor-part-number"]; ok {
-		_ = v
 		if v != "" {
 			m.VendorPartNumber = types.StringValue(v)
 		} else {
 			m.VendorPartNumber = types.StringNull()
 		}
-	} else {
-		m.VendorPartNumber = types.StringNull()
 	}
 	if v, ok := obj["vendor-revision"]; ok {
-		_ = v
 		if v != "" {
 			m.VendorRevision = types.StringValue(v)
 		} else {
 			m.VendorRevision = types.StringNull()
 		}
-	} else {
-		m.VendorRevision = types.StringNull()
 	}
 	if v, ok := obj["vendor-serial"]; ok {
-		_ = v
 		if v != "" {
 			m.VendorSerial = types.StringValue(v)
 		} else {
 			m.VendorSerial = types.StringNull()
 		}
-	} else {
-		m.VendorSerial = types.StringNull()
 	}
 	if v, ok := obj["wavelength"]; ok {
-		_ = v
 		if v != "" {
 			m.Wavelength = types.StringValue(v)
 		} else {
 			m.Wavelength = types.StringNull()
 		}
-	} else {
-		m.Wavelength = types.StringNull()
 	}
 }

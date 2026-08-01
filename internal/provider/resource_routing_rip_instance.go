@@ -377,133 +377,94 @@ func routingRipInstanceApply(ctx context.Context, obj client.Object, m *RoutingR
 		m.InFilterChain = types.StringNull()
 	}
 	if v, ok := obj["afi"]; ok {
-		_ = v
 		if v != "" {
 			m.Afi = types.StringValue(v)
 		} else {
 			m.Afi = types.StringNull()
 		}
-	} else {
-		m.Afi = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["input-filter"]; ok {
-		_ = v
 		if v != "" {
 			m.InputFilter = types.StringValue(v)
 		} else {
 			m.InputFilter = types.StringNull()
 		}
-	} else {
-		m.InputFilter = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["originate-default"]; ok {
-		_ = v
 		if v != "" {
 			m.OriginateDefault = types.StringValue(v)
 		} else {
 			m.OriginateDefault = types.StringNull()
 		}
-	} else {
-		m.OriginateDefault = types.StringNull()
 	}
 	if v, ok := obj["output-filter"]; ok {
-		_ = v
 		if v != "" {
 			m.OutputFilter = types.StringValue(v)
 		} else {
 			m.OutputFilter = types.StringNull()
 		}
-	} else {
-		m.OutputFilter = types.StringNull()
 	}
 	if v, ok := obj["redistribute"]; ok {
-		_ = v
 		if v != "" {
 			m.Redistribute = types.StringValue(v)
 		} else {
 			m.Redistribute = types.StringNull()
 		}
-	} else {
-		m.Redistribute = types.StringNull()
 	}
 	if v, ok := obj["route-gc-timeout"]; ok {
-		_ = v
 		if v != "" {
 			m.RouteGcTimeout = types.StringValue(v)
 		} else {
 			m.RouteGcTimeout = types.StringNull()
 		}
-	} else {
-		m.RouteGcTimeout = types.StringNull()
 	}
 	if v, ok := obj["route-timeout"]; ok {
-		_ = v
 		if v != "" {
 			m.RouteTimeout = types.StringValue(v)
 		} else {
 			m.RouteTimeout = types.StringNull()
 		}
-	} else {
-		m.RouteTimeout = types.StringNull()
 	}
 	if v, ok := obj["routing-table"]; ok {
-		_ = v
 		if v != "" {
 			m.RoutingTable = types.StringValue(v)
 		} else {
 			m.RoutingTable = types.StringNull()
 		}
-	} else {
-		m.RoutingTable = types.StringNull()
 	}
 	if v, ok := obj["select-output-filter"]; ok {
-		_ = v
 		if v != "" {
 			m.SelectOutputFilter = types.StringValue(v)
 		} else {
 			m.SelectOutputFilter = types.StringNull()
 		}
-	} else {
-		m.SelectOutputFilter = types.StringNull()
 	}
 	if v, ok := obj["update-interval"]; ok {
-		_ = v
 		if v != "" {
 			m.UpdateInterval = types.StringValue(v)
 		} else {
 			m.UpdateInterval = types.StringNull()
 		}
-	} else {
-		m.UpdateInterval = types.StringNull()
 	}
 	if v, ok := obj["vrf"]; ok {
-		_ = v
 		if v != "" {
 			m.Vrf = types.StringValue(v)
 		} else {
 			m.Vrf = types.StringNull()
 		}
-	} else {
-		m.Vrf = types.StringNull()
 	}
 }

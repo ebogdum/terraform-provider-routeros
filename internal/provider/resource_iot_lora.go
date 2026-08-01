@@ -432,133 +432,94 @@ func iotLoraApply(ctx context.Context, obj client.Object, m *IotLoraModel) {
 		m.Alt = types.StringNull()
 	}
 	if v, ok := obj["antenna-gain"]; ok {
-		_ = v
 		if v != "" {
 			m.AntennaGain = types.StringValue(v)
 		} else {
 			m.AntennaGain = types.StringNull()
 		}
-	} else {
-		m.AntennaGain = types.StringNull()
 	}
 	if v, ok := obj["channel-plan"]; ok {
-		_ = v
 		if v != "" {
 			m.ChannelPlan = types.StringValue(v)
 		} else {
 			m.ChannelPlan = types.StringNull()
 		}
-	} else {
-		m.ChannelPlan = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if v != "" {
 			m.Disabled = types.StringValue(v)
 		} else {
 			m.Disabled = types.StringNull()
 		}
-	} else {
-		m.Disabled = types.StringNull()
 	}
 	if v, ok := obj["forward"]; ok {
-		_ = v
 		if v != "" {
 			m.Forward = types.StringValue(v)
 		} else {
 			m.Forward = types.StringNull()
 		}
-	} else {
-		m.Forward = types.StringNull()
 	}
 	if v, ok := obj["gateway-id"]; ok {
-		_ = v
 		if v != "" {
 			m.GatewayID = types.StringValue(v)
 		} else {
 			m.GatewayID = types.StringNull()
 		}
-	} else {
-		m.GatewayID = types.StringNull()
 	}
 	if v, ok := obj["lbt-enabled"]; ok {
-		_ = v
 		if v != "" {
 			m.LbtEnabled = types.StringValue(v)
 		} else {
 			m.LbtEnabled = types.StringNull()
 		}
-	} else {
-		m.LbtEnabled = types.StringNull()
 	}
 	if v, ok := obj["listen-time"]; ok {
-		_ = v
 		if v != "" {
 			m.ListenTime = types.StringValue(v)
 		} else {
 			m.ListenTime = types.StringNull()
 		}
-	} else {
-		m.ListenTime = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["network"]; ok {
-		_ = v
 		if v != "" {
 			m.Network = types.StringValue(v)
 		} else {
 			m.Network = types.StringNull()
 		}
-	} else {
-		m.Network = types.StringNull()
 	}
 	if v, ok := obj["rssi-threshold"]; ok {
-		_ = v
 		if v != "" {
 			m.RssiThreshold = types.StringValue(v)
 		} else {
 			m.RssiThreshold = types.StringNull()
 		}
-	} else {
-		m.RssiThreshold = types.StringNull()
 	}
 	if v, ok := obj["servers"]; ok {
-		_ = v
 		if v != "" {
 			m.Servers = types.StringValue(v)
 		} else {
 			m.Servers = types.StringNull()
 		}
-	} else {
-		m.Servers = types.StringNull()
 	}
 	if v, ok := obj["spoof-gps"]; ok {
-		_ = v
 		if v != "" {
 			m.SpoofGps = types.StringValue(v)
 		} else {
 			m.SpoofGps = types.StringNull()
 		}
-	} else {
-		m.SpoofGps = types.StringNull()
 	}
 	if v, ok := obj["src-address"]; ok {
-		_ = v
 		if v != "" {
 			m.SrcAddress = types.StringValue(v)
 		} else {
 			m.SrcAddress = types.StringNull()
 		}
-	} else {
-		m.SrcAddress = types.StringNull()
 	}
 }

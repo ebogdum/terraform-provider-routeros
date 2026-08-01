@@ -367,24 +367,18 @@ func iPIpsecModeConfigApply(ctx context.Context, obj client.Object, m *IPIpsecMo
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["address"]; ok {
-		_ = v
 		if v != "" {
 			m.Address = types.StringValue(v)
 		} else {
 			m.Address = types.StringNull()
 		}
-	} else {
-		m.Address = types.StringNull()
 	}
 	if v, ok := obj["address-pool"]; ok {
-		_ = v
 		if v != "" {
 			m.AddressPool = types.StringValue(v)
 		} else {
 			m.AddressPool = types.StringNull()
 		}
-	} else {
-		m.AddressPool = types.StringNull()
 	}
 	if v, ok := obj["address-prefix-length"]; ok {
 		_ = v
@@ -397,143 +391,101 @@ func iPIpsecModeConfigApply(ctx context.Context, obj client.Object, m *IPIpsecMo
 		m.AddressPrefixLength = types.Int64Null()
 	}
 	if v, ok := obj["connection-mark"]; ok {
-		_ = v
 		if v != "" {
 			m.ConnectionMark = types.StringValue(v)
 		} else {
 			m.ConnectionMark = types.StringNull()
 		}
-	} else {
-		m.ConnectionMark = types.StringNull()
 	}
 	if v, ok := obj["default"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
 		} else {
 			m.Default = types.BoolNull()
 		}
-	} else {
-		m.Default = types.BoolNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["nonresp"]; ok {
-		_ = v
 		if v != "" {
 			m.Nonresp = types.StringValue(v)
 		} else {
 			m.Nonresp = types.StringNull()
 		}
-	} else {
-		m.Nonresp = types.StringNull()
 	}
 	if v, ok := obj["pool"]; ok {
-		_ = v
 		if v != "" {
 			m.Pool = types.StringValue(v)
 		} else {
 			m.Pool = types.StringNull()
 		}
-	} else {
-		m.Pool = types.StringNull()
 	}
 	if v, ok := obj["resp"]; ok {
-		_ = v
 		if v != "" {
 			m.Resp = types.StringValue(v)
 		} else {
 			m.Resp = types.StringNull()
 		}
-	} else {
-		m.Resp = types.StringNull()
 	}
 	if v, ok := obj["responder"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Responder = types.BoolValue(b)
 		} else {
 			m.Responder = types.BoolNull()
 		}
-	} else {
-		m.Responder = types.BoolNull()
 	}
 	if v, ok := obj["sdns"]; ok {
-		_ = v
 		if v != "" {
 			m.Sdns = types.StringValue(v)
 		} else {
 			m.Sdns = types.StringNull()
 		}
-	} else {
-		m.Sdns = types.StringNull()
 	}
 	if v, ok := obj["split-dns"]; ok {
-		_ = v
 		if v != "" {
 			m.SplitDNS = types.StringValue(v)
 		} else {
 			m.SplitDNS = types.StringNull()
 		}
-	} else {
-		m.SplitDNS = types.StringNull()
 	}
 	if v, ok := obj["split-include"]; ok {
-		_ = v
 		if v != "" {
 			m.SplitInclude = types.StringValue(v)
 		} else {
 			m.SplitInclude = types.StringNull()
 		}
-	} else {
-		m.SplitInclude = types.StringNull()
 	}
 	if v, ok := obj["src-address-list"]; ok {
-		_ = v
 		if v != "" {
 			m.SrcAddressList = types.StringValue(v)
 		} else {
 			m.SrcAddressList = types.StringNull()
 		}
-	} else {
-		m.SrcAddressList = types.StringNull()
 	}
 	if v, ok := obj["static-dns"]; ok {
-		_ = v
 		if v != "" {
 			m.StaticDNS = types.StringValue(v)
 		} else {
 			m.StaticDNS = types.StringNull()
 		}
-	} else {
-		m.StaticDNS = types.StringNull()
 	}
 	if v, ok := obj["system-dns"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.SystemDNS = types.BoolValue(b)
 		} else {
 			m.SystemDNS = types.BoolNull()
 		}
-	} else {
-		m.SystemDNS = types.BoolNull()
 	}
 	if v, ok := obj["use-responder-dns"]; ok {
-		_ = v
 		if v != "" {
 			m.UseResponderDNS = types.StringValue(v)
 		} else {
 			m.UseResponderDNS = types.StringNull()
 		}
-	} else {
-		m.UseResponderDNS = types.StringNull()
 	}
 }

@@ -309,73 +309,52 @@ func iPHotspotWalledGardenApply(ctx context.Context, obj client.Object, m *IPHot
 		m.DstHost = types.StringNull()
 	}
 	if v, ok := obj["action"]; ok {
-		_ = v
 		if v != "" {
 			m.Action = types.StringValue(v)
 		} else {
 			m.Action = types.StringNull()
 		}
-	} else {
-		m.Action = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dst-port"]; ok {
-		_ = v
 		if v != "" {
 			m.DstPort = types.StringValue(v)
 		} else {
 			m.DstPort = types.StringNull()
 		}
-	} else {
-		m.DstPort = types.StringNull()
 	}
 	if v, ok := obj["path"]; ok {
-		_ = v
 		if v != "" {
 			m.Path = types.StringValue(v)
 		} else {
 			m.Path = types.StringNull()
 		}
-	} else {
-		m.Path = types.StringNull()
 	}
 	if v, ok := obj["server"]; ok {
-		_ = v
 		if v != "" {
 			m.Server = types.StringValue(v)
 		} else {
 			m.Server = types.StringNull()
 		}
-	} else {
-		m.Server = types.StringNull()
 	}
 	if v, ok := obj["src-address"]; ok {
-		_ = v
 		if v != "" {
 			m.SrcAddress = types.StringValue(v)
 		} else {
 			m.SrcAddress = types.StringNull()
 		}
-	} else {
-		m.SrcAddress = types.StringNull()
 	}
 }

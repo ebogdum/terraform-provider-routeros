@@ -330,123 +330,87 @@ func routingPimsmInterfaceTemplateApply(ctx context.Context, obj client.Object, 
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["hello-delay"]; ok {
-		_ = v
 		if v != "" {
 			m.HelloDelay = types.StringValue(v)
 		} else {
 			m.HelloDelay = types.StringNull()
 		}
-	} else {
-		m.HelloDelay = types.StringNull()
 	}
 	if v, ok := obj["hello-period"]; ok {
-		_ = v
 		if v != "" {
 			m.HelloPeriod = types.StringValue(v)
 		} else {
 			m.HelloPeriod = types.StringNull()
 		}
-	} else {
-		m.HelloPeriod = types.StringNull()
 	}
 	if v, ok := obj["instance"]; ok {
-		_ = v
 		if v != "" {
 			m.Instance = types.StringValue(v)
 		} else {
 			m.Instance = types.StringNull()
 		}
-	} else {
-		m.Instance = types.StringNull()
 	}
 	if v, ok := obj["interfaces"]; ok {
-		_ = v
 		if v != "" {
 			m.Interfaces = types.StringValue(v)
 		} else {
 			m.Interfaces = types.StringNull()
 		}
-	} else {
-		m.Interfaces = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["join-prune-period"]; ok {
-		_ = v
 		if v != "" {
 			m.JoinPrunePeriod = types.StringValue(v)
 		} else {
 			m.JoinPrunePeriod = types.StringNull()
 		}
-	} else {
-		m.JoinPrunePeriod = types.StringNull()
 	}
 	if v, ok := obj["join-tracking-support"]; ok {
-		_ = v
 		if v != "" {
 			m.JoinTrackingSupport = types.StringValue(v)
 		} else {
 			m.JoinTrackingSupport = types.StringNull()
 		}
-	} else {
-		m.JoinTrackingSupport = types.StringNull()
 	}
 	if v, ok := obj["override-interval"]; ok {
-		_ = v
 		if v != "" {
 			m.OverrideInterval = types.StringValue(v)
 		} else {
 			m.OverrideInterval = types.StringNull()
 		}
-	} else {
-		m.OverrideInterval = types.StringNull()
 	}
 	if v, ok := obj["priority"]; ok {
-		_ = v
 		if v != "" {
 			m.Priority = types.StringValue(v)
 		} else {
 			m.Priority = types.StringNull()
 		}
-	} else {
-		m.Priority = types.StringNull()
 	}
 	if v, ok := obj["propagation-delay"]; ok {
-		_ = v
 		if v != "" {
 			m.PropagationDelay = types.StringValue(v)
 		} else {
 			m.PropagationDelay = types.StringNull()
 		}
-	} else {
-		m.PropagationDelay = types.StringNull()
 	}
 	if v, ok := obj["source-addresses"]; ok {
-		_ = v
 		if v != "" {
 			m.SourceAddresses = types.StringValue(v)
 		} else {
 			m.SourceAddresses = types.StringNull()
 		}
-	} else {
-		m.SourceAddresses = types.StringNull()
 	}
 }

@@ -291,24 +291,18 @@ func interfaceWireguardApply(ctx context.Context, obj client.Object, m *Interfac
 		m.Vrf = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["listen-port"]; ok {
 		_ = v
@@ -321,24 +315,18 @@ func interfaceWireguardApply(ctx context.Context, obj client.Object, m *Interfac
 		m.ListenPort = types.Int64Null()
 	}
 	if v, ok := obj["mtu"]; ok {
-		_ = v
 		if v != "" {
 			m.MTU = types.StringValue(v)
 		} else {
 			m.MTU = types.StringNull()
 		}
-	} else {
-		m.MTU = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	// Sensitive: RouterOS scrubs the value on read. If the server returned
 	// a value, decode it. Otherwise the plan value (user input) is what's
@@ -355,23 +343,17 @@ func interfaceWireguardApply(ctx context.Context, obj client.Object, m *Interfac
 		m.PrivateKey = types.StringNull()
 	}
 	if v, ok := obj["public-key"]; ok {
-		_ = v
 		if v != "" {
 			m.PublicKey = types.StringValue(v)
 		} else {
 			m.PublicKey = types.StringNull()
 		}
-	} else {
-		m.PublicKey = types.StringNull()
 	}
 	if v, ok := obj["wg-export"]; ok {
-		_ = v
 		if v != "" {
 			m.WgExport = types.StringValue(v)
 		} else {
 			m.WgExport = types.StringNull()
 		}
-	} else {
-		m.WgExport = types.StringNull()
 	}
 }

@@ -443,14 +443,11 @@ func iPHotspotUserApply(ctx context.Context, obj client.Object, m *IPHotspotUser
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["address"]; ok {
-		_ = v
 		if v != "" {
 			m.Address = types.StringValue(v)
 		} else {
 			m.Address = types.StringNull()
 		}
-	} else {
-		m.Address = types.StringNull()
 	}
 	if v, ok := obj["bytes-in"]; ok {
 		_ = v
@@ -473,144 +470,102 @@ func iPHotspotUserApply(ctx context.Context, obj client.Object, m *IPHotspotUser
 		m.BytesOut = types.Int64Null()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["def"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Def = types.BoolValue(b)
 		} else {
 			m.Def = types.BoolNull()
 		}
-	} else {
-		m.Def = types.BoolNull()
 	}
 	if v, ok := obj["default"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
 		} else {
 			m.Default = types.BoolNull()
 		}
-	} else {
-		m.Default = types.BoolNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["email"]; ok {
-		_ = v
 		if v != "" {
 			m.Email = types.StringValue(v)
 		} else {
 			m.Email = types.StringNull()
 		}
-	} else {
-		m.Email = types.StringNull()
 	}
 	if v, ok := obj["limit-bytes-in"]; ok {
-		_ = v
 		if v != "" {
 			m.LimitBytesIn = types.StringValue(v)
 		} else {
 			m.LimitBytesIn = types.StringNull()
 		}
-	} else {
-		m.LimitBytesIn = types.StringNull()
 	}
 	if v, ok := obj["limit-bytes-out"]; ok {
-		_ = v
 		if v != "" {
 			m.LimitBytesOut = types.StringValue(v)
 		} else {
 			m.LimitBytesOut = types.StringNull()
 		}
-	} else {
-		m.LimitBytesOut = types.StringNull()
 	}
 	if v, ok := obj["limit-bytes-total"]; ok {
-		_ = v
 		if v != "" {
 			m.LimitBytesTotal = types.StringValue(v)
 		} else {
 			m.LimitBytesTotal = types.StringNull()
 		}
-	} else {
-		m.LimitBytesTotal = types.StringNull()
 	}
 	if v, ok := obj["limit-uptime"]; ok {
-		_ = v
 		if v != "" {
 			m.LimitUptime = types.StringValue(v)
 		} else {
 			m.LimitUptime = types.StringNull()
 		}
-	} else {
-		m.LimitUptime = types.StringNull()
 	}
 	if v, ok := obj["mac-address"]; ok {
-		_ = v
 		if v != "" {
 			m.MACAddress = types.StringValue(v)
 		} else {
 			m.MACAddress = types.StringNull()
 		}
-	} else {
-		m.MACAddress = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["nondef"]; ok {
-		_ = v
 		if v != "" {
 			m.Nondef = types.StringValue(v)
 		} else {
 			m.Nondef = types.StringNull()
 		}
-	} else {
-		m.Nondef = types.StringNull()
 	}
 	if v, ok := obj["nondefro"]; ok {
-		_ = v
 		if v != "" {
 			m.Nondefro = types.StringValue(v)
 		} else {
 			m.Nondefro = types.StringNull()
 		}
-	} else {
-		m.Nondefro = types.StringNull()
 	}
 	// Sensitive: RouterOS scrubs the value on read. If the server returned
 	// a value, decode it. Otherwise the plan value (user input) is what's
@@ -661,63 +616,45 @@ func iPHotspotUserApply(ctx context.Context, obj client.Object, m *IPHotspotUser
 		m.Password = types.StringNull()
 	}
 	if v, ok := obj["profile"]; ok {
-		_ = v
 		if v != "" {
 			m.Profile = types.StringValue(v)
 		} else {
 			m.Profile = types.StringNull()
 		}
-	} else {
-		m.Profile = types.StringNull()
 	}
 	if v, ok := obj["reset-all-counters"]; ok {
-		_ = v
 		if v != "" {
 			m.ResetAllCounters = types.StringValue(v)
 		} else {
 			m.ResetAllCounters = types.StringNull()
 		}
-	} else {
-		m.ResetAllCounters = types.StringNull()
 	}
 	if v, ok := obj["reset-counters"]; ok {
-		_ = v
 		if v != "" {
 			m.ResetCounters = types.StringValue(v)
 		} else {
 			m.ResetCounters = types.StringNull()
 		}
-	} else {
-		m.ResetCounters = types.StringNull()
 	}
 	if v, ok := obj["routes"]; ok {
-		_ = v
 		if v != "" {
 			m.Routes = types.StringValue(v)
 		} else {
 			m.Routes = types.StringNull()
 		}
-	} else {
-		m.Routes = types.StringNull()
 	}
 	if v, ok := obj["server"]; ok {
-		_ = v
 		if v != "" {
 			m.Server = types.StringValue(v)
 		} else {
 			m.Server = types.StringNull()
 		}
-	} else {
-		m.Server = types.StringNull()
 	}
 	if v, ok := obj["uptime"]; ok {
-		_ = v
 		if v != "" {
 			m.Uptime = types.StringValue(v)
 		} else {
 			m.Uptime = types.StringNull()
 		}
-	} else {
-		m.Uptime = types.StringNull()
 	}
 }

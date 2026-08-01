@@ -363,143 +363,101 @@ func interfaceWifiProvisioningApply(ctx context.Context, obj client.Object, m *I
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["action"]; ok {
-		_ = v
 		if v != "" {
 			m.Action = types.StringValue(v)
 		} else {
 			m.Action = types.StringNull()
 		}
-	} else {
-		m.Action = types.StringNull()
 	}
 	if v, ok := obj["address-ranges"]; ok {
-		_ = v
 		if v != "" {
 			m.AddressRanges = types.StringValue(v)
 		} else {
 			m.AddressRanges = types.StringNull()
 		}
-	} else {
-		m.AddressRanges = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["common-name-regexp"]; ok {
-		_ = v
 		if v != "" {
 			m.CommonNameRegexp = types.StringValue(v)
 		} else {
 			m.CommonNameRegexp = types.StringNull()
 		}
-	} else {
-		m.CommonNameRegexp = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["identity-regexp"]; ok {
-		_ = v
 		if v != "" {
 			m.IdentityRegexp = types.StringValue(v)
 		} else {
 			m.IdentityRegexp = types.StringNull()
 		}
-	} else {
-		m.IdentityRegexp = types.StringNull()
 	}
 	if v, ok := obj["master-configuration"]; ok {
-		_ = v
 		if v != "" {
 			m.MasterConfiguration = types.StringValue(v)
 		} else {
 			m.MasterConfiguration = types.StringNull()
 		}
-	} else {
-		m.MasterConfiguration = types.StringNull()
 	}
 	if v, ok := obj["multi-link-mode"]; ok {
-		_ = v
 		if v != "" {
 			m.MultiLinkMode = types.StringValue(v)
 		} else {
 			m.MultiLinkMode = types.StringNull()
 		}
-	} else {
-		m.MultiLinkMode = types.StringNull()
 	}
 	if v, ok := obj["name-format"]; ok {
-		_ = v
 		if v != "" {
 			m.NameFormat = types.StringValue(v)
 		} else {
 			m.NameFormat = types.StringNull()
 		}
-	} else {
-		m.NameFormat = types.StringNull()
 	}
 	if v, ok := obj["radio-mac"]; ok {
-		_ = v
 		if v != "" {
 			m.RadioMAC = types.StringValue(v)
 		} else {
 			m.RadioMAC = types.StringNull()
 		}
-	} else {
-		m.RadioMAC = types.StringNull()
 	}
 	if v, ok := obj["slave-configurations"]; ok {
-		_ = v
 		if v != "" {
 			m.SlaveConfigurations = types.StringValue(v)
 		} else {
 			m.SlaveConfigurations = types.StringNull()
 		}
-	} else {
-		m.SlaveConfigurations = types.StringNull()
 	}
 	if v, ok := obj["slave-name-format"]; ok {
-		_ = v
 		if v != "" {
 			m.SlaveNameFormat = types.StringValue(v)
 		} else {
 			m.SlaveNameFormat = types.StringNull()
 		}
-	} else {
-		m.SlaveNameFormat = types.StringNull()
 	}
 	if v, ok := obj["supported-bands"]; ok {
-		_ = v
 		if v != "" {
 			m.SupportedBands = types.StringValue(v)
 		} else {
 			m.SupportedBands = types.StringNull()
 		}
-	} else {
-		m.SupportedBands = types.StringNull()
 	}
 	if v, ok := obj["supported-hw-caps"]; ok {
-		_ = v
 		if v != "" {
 			m.SupportedHwCaps = types.StringValue(v)
 		} else {
 			m.SupportedHwCaps = types.StringNull()
 		}
-	} else {
-		m.SupportedHwCaps = types.StringNull()
 	}
 }

@@ -250,53 +250,38 @@ func capsManChannelApply(ctx context.Context, obj client.Object, m *CapsManChann
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["band"]; ok {
-		_ = v
 		if v != "" {
 			m.Band = types.StringValue(v)
 		} else {
 			m.Band = types.StringNull()
 		}
-	} else {
-		m.Band = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["frequency"]; ok {
-		_ = v
 		if v != "" {
 			m.Frequency = types.StringValue(v)
 		} else {
 			m.Frequency = types.StringNull()
 		}
-	} else {
-		m.Frequency = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["tx-power"]; ok {
-		_ = v
 		if v != "" {
 			m.TxPower = types.StringValue(v)
 		} else {
 			m.TxPower = types.StringNull()
 		}
-	} else {
-		m.TxPower = types.StringNull()
 	}
 }

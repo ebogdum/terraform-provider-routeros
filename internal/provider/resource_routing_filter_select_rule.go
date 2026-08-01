@@ -366,63 +366,45 @@ func routingFilterSelectRuleApply(ctx context.Context, obj client.Object, m *Rou
 		m.DoGroupNum = types.StringNull()
 	}
 	if v, ok := obj["chain"]; ok {
-		_ = v
 		if v != "" {
 			m.Chain = types.StringValue(v)
 		} else {
 			m.Chain = types.StringNull()
 		}
-	} else {
-		m.Chain = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["do"]; ok {
-		_ = v
 		if v != "" {
 			m.Do = types.StringValue(v)
 		} else {
 			m.Do = types.StringNull()
 		}
-	} else {
-		m.Do = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["type"]; ok {
-		_ = v
 		if v != "" {
 			m.Type = types.StringValue(v)
 		} else {
 			m.Type = types.StringNull()
 		}
-	} else {
-		m.Type = types.StringNull()
 	}
 }

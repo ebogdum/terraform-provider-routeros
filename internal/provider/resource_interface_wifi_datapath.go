@@ -334,123 +334,87 @@ func interfaceWifiDatapathApply(ctx context.Context, obj client.Object, m *Inter
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["bridge"]; ok {
-		_ = v
 		if v != "" {
 			m.Bridge = types.StringValue(v)
 		} else {
 			m.Bridge = types.StringNull()
 		}
-	} else {
-		m.Bridge = types.StringNull()
 	}
 	if v, ok := obj["bridge-cost"]; ok {
-		_ = v
 		if v != "" {
 			m.BridgeCost = types.StringValue(v)
 		} else {
 			m.BridgeCost = types.StringNull()
 		}
-	} else {
-		m.BridgeCost = types.StringNull()
 	}
 	if v, ok := obj["bridge-horizon"]; ok {
-		_ = v
 		if v != "" {
 			m.BridgeHorizon = types.StringValue(v)
 		} else {
 			m.BridgeHorizon = types.StringNull()
 		}
-	} else {
-		m.BridgeHorizon = types.StringNull()
 	}
 	if v, ok := obj["client-isolation"]; ok {
-		_ = v
 		if v != "" {
 			m.ClientIsolation = types.StringValue(v)
 		} else {
 			m.ClientIsolation = types.StringNull()
 		}
-	} else {
-		m.ClientIsolation = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["interface-list"]; ok {
-		_ = v
 		if v != "" {
 			m.InterfaceList = types.StringValue(v)
 		} else {
 			m.InterfaceList = types.StringNull()
 		}
-	} else {
-		m.InterfaceList = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["open-flow-switch"]; ok {
-		_ = v
 		if v != "" {
 			m.OpenFlowSwitch = types.StringValue(v)
 		} else {
 			m.OpenFlowSwitch = types.StringNull()
 		}
-	} else {
-		m.OpenFlowSwitch = types.StringNull()
 	}
 	if v, ok := obj["openflow"]; ok {
-		_ = v
 		if v != "" {
 			m.Openflow = types.StringValue(v)
 		} else {
 			m.Openflow = types.StringNull()
 		}
-	} else {
-		m.Openflow = types.StringNull()
 	}
 	if v, ok := obj["traffic-processing"]; ok {
-		_ = v
 		if v != "" {
 			m.TrafficProcessing = types.StringValue(v)
 		} else {
 			m.TrafficProcessing = types.StringNull()
 		}
-	} else {
-		m.TrafficProcessing = types.StringNull()
 	}
 	if v, ok := obj["vlan-id"]; ok {
-		_ = v
 		if v != "" {
 			m.VLANID = types.StringValue(v)
 		} else {
 			m.VLANID = types.StringNull()
 		}
-	} else {
-		m.VLANID = types.StringNull()
 	}
 }

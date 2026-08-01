@@ -368,183 +368,129 @@ func iPCloudBackToHomeUserApply(ctx context.Context, obj client.Object, m *IPClo
 		m.FileAccess = types.StringNull()
 	}
 	if v, ok := obj["active"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Active = types.BoolValue(b)
 		} else {
 			m.Active = types.BoolNull()
 		}
-	} else {
-		m.Active = types.BoolNull()
 	}
 	if v, ok := obj["allow-lan"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AllowLan = types.BoolValue(b)
 		} else {
 			m.AllowLan = types.BoolNull()
 		}
-	} else {
-		m.AllowLan = types.BoolNull()
 	}
 	if v, ok := obj["client-address"]; ok {
-		_ = v
 		if v != "" {
 			m.ClientAddress = types.StringValue(v)
 		} else {
 			m.ClientAddress = types.StringNull()
 		}
-	} else {
-		m.ClientAddress = types.StringNull()
 	}
 	if v, ok := obj["client-config"]; ok {
-		_ = v
 		if v != "" {
 			m.ClientConfig = types.StringValue(v)
 		} else {
 			m.ClientConfig = types.StringNull()
 		}
-	} else {
-		m.ClientConfig = types.StringNull()
 	}
 	if v, ok := obj["client-qr"]; ok {
-		_ = v
 		if v != "" {
 			m.ClientQr = types.StringValue(v)
 		} else {
 			m.ClientQr = types.StringNull()
 		}
-	} else {
-		m.ClientQr = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["expires"]; ok {
-		_ = v
 		if v != "" {
 			m.Expires = types.StringValue(v)
 		} else {
 			m.Expires = types.StringNull()
 		}
-	} else {
-		m.Expires = types.StringNull()
 	}
 	if v, ok := obj["file-access-mode"]; ok {
-		_ = v
 		if v != "" {
 			m.FileAccessMode = types.StringValue(v)
 		} else {
 			m.FileAccessMode = types.StringNull()
 		}
-	} else {
-		m.FileAccessMode = types.StringNull()
 	}
 	if v, ok := obj["file-access-token"]; ok {
-		_ = v
 		if v != "" {
 			m.FileAccessToken = types.StringValue(v)
 		} else {
 			m.FileAccessToken = types.StringNull()
 		}
-	} else {
-		m.FileAccessToken = types.StringNull()
 	}
 	if v, ok := obj["files"]; ok {
-		_ = v
 		if v != "" {
 			m.Files = types.StringValue(v)
 		} else {
 			m.Files = types.StringNull()
 		}
-	} else {
-		m.Files = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["newe"]; ok {
-		_ = v
 		if v != "" {
 			m.Newe = types.StringValue(v)
 		} else {
 			m.Newe = types.StringNull()
 		}
-	} else {
-		m.Newe = types.StringNull()
 	}
 	if v, ok := obj["newfileman"]; ok {
-		_ = v
 		if v != "" {
 			m.Newfileman = types.StringValue(v)
 		} else {
 			m.Newfileman = types.StringNull()
 		}
-	} else {
-		m.Newfileman = types.StringNull()
 	}
 	if v, ok := obj["notnew"]; ok {
-		_ = v
 		if v != "" {
 			m.Notnew = types.StringValue(v)
 		} else {
 			m.Notnew = types.StringNull()
 		}
-	} else {
-		m.Notnew = types.StringNull()
 	}
 	if v, ok := obj["oldfileman"]; ok {
-		_ = v
 		if v != "" {
 			m.Oldfileman = types.StringValue(v)
 		} else {
 			m.Oldfileman = types.StringNull()
 		}
-	} else {
-		m.Oldfileman = types.StringNull()
 	}
 	if v, ok := obj["private-key"]; ok {
-		_ = v
 		if v != "" {
 			m.PrivateKey = types.StringValue(v)
 		} else {
 			m.PrivateKey = types.StringNull()
 		}
-	} else {
-		m.PrivateKey = types.StringNull()
 	}
 	if v, ok := obj["public-key"]; ok {
-		_ = v
 		if v != "" {
 			m.PublicKey = types.StringValue(v)
 		} else {
 			m.PublicKey = types.StringNull()
 		}
-	} else {
-		m.PublicKey = types.StringNull()
 	}
 }

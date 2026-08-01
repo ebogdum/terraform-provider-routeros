@@ -429,73 +429,52 @@ func routingFantasyApply(ctx context.Context, obj client.Object, m *RoutingFanta
 		m.Count = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dst-address"]; ok {
-		_ = v
 		if v != "" {
 			m.DstAddress = types.StringValue(v)
 		} else {
 			m.DstAddress = types.StringNull()
 		}
-	} else {
-		m.DstAddress = types.StringNull()
 	}
 	if v, ok := obj["gateway"]; ok {
-		_ = v
 		if v != "" {
 			m.Gateway = types.StringValue(v)
 		} else {
 			m.Gateway = types.StringNull()
 		}
-	} else {
-		m.Gateway = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["scope"]; ok {
-		_ = v
 		if v != "" {
 			m.Scope = types.StringValue(v)
 		} else {
 			m.Scope = types.StringNull()
 		}
-	} else {
-		m.Scope = types.StringNull()
 	}
 	if v, ok := obj["target-scope"]; ok {
-		_ = v
 		if v != "" {
 			m.TargetScope = types.StringValue(v)
 		} else {
 			m.TargetScope = types.StringNull()
 		}
-	} else {
-		m.TargetScope = types.StringNull()
 	}
 }

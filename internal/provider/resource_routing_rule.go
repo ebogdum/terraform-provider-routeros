@@ -348,123 +348,87 @@ func routingRuleApply(ctx context.Context, obj client.Object, m *RoutingRuleMode
 		m.Table = types.StringNull()
 	}
 	if v, ok := obj["action"]; ok {
-		_ = v
 		if v != "" {
 			m.Action = types.StringValue(v)
 		} else {
 			m.Action = types.StringNull()
 		}
-	} else {
-		m.Action = types.StringNull()
 	}
 	if v, ok := obj["chain"]; ok {
-		_ = v
 		if v != "" {
 			m.Chain = types.StringValue(v)
 		} else {
 			m.Chain = types.StringNull()
 		}
-	} else {
-		m.Chain = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dst-address"]; ok {
-		_ = v
 		if v != "" {
 			m.DstAddress = types.StringValue(v)
 		} else {
 			m.DstAddress = types.StringNull()
 		}
-	} else {
-		m.DstAddress = types.StringNull()
 	}
 	if v, ok := obj["interface"]; ok {
-		_ = v
 		if v != "" {
 			m.Interface = types.StringValue(v)
 		} else {
 			m.Interface = types.StringNull()
 		}
-	} else {
-		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["min-prefix"]; ok {
-		_ = v
 		if v != "" {
 			m.MinPrefix = types.StringValue(v)
 		} else {
 			m.MinPrefix = types.StringNull()
 		}
-	} else {
-		m.MinPrefix = types.StringNull()
 	}
 	if v, ok := obj["realm"]; ok {
-		_ = v
 		if v != "" {
 			m.Realm = types.StringValue(v)
 		} else {
 			m.Realm = types.StringNull()
 		}
-	} else {
-		m.Realm = types.StringNull()
 	}
 	if v, ok := obj["routing-mark"]; ok {
-		_ = v
 		if v != "" {
 			m.RoutingMark = types.StringValue(v)
 		} else {
 			m.RoutingMark = types.StringNull()
 		}
-	} else {
-		m.RoutingMark = types.StringNull()
 	}
 	if v, ok := obj["src-address"]; ok {
-		_ = v
 		if v != "" {
 			m.SrcAddress = types.StringValue(v)
 		} else {
 			m.SrcAddress = types.StringNull()
 		}
-	} else {
-		m.SrcAddress = types.StringNull()
 	}
 	if v, ok := obj["vrf"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Vrf = types.BoolValue(b)
 		} else {
 			m.Vrf = types.BoolNull()
 		}
-	} else {
-		m.Vrf = types.BoolNull()
 	}
 }

@@ -583,133 +583,94 @@ func interfaceVxlanApply(ctx context.Context, obj client.Object, m *InterfaceVxl
 		m.AllowFastPath = types.StringNull()
 	}
 	if v, ok := obj["arp"]; ok {
-		_ = v
 		if v != "" {
 			m.ARP = types.StringValue(v)
 		} else {
 			m.ARP = types.StringNull()
 		}
-	} else {
-		m.ARP = types.StringNull()
 	}
 	if v, ok := obj["arp-timeout"]; ok {
-		_ = v
 		if v != "" {
 			m.ARPTimeout = types.StringValue(v)
 		} else {
 			m.ARPTimeout = types.StringNull()
 		}
-	} else {
-		m.ARPTimeout = types.StringNull()
 	}
 	if v, ok := obj["bridge"]; ok {
-		_ = v
 		if v != "" {
 			m.Bridge = types.StringValue(v)
 		} else {
 			m.Bridge = types.StringNull()
 		}
-	} else {
-		m.Bridge = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["interface"]; ok {
-		_ = v
 		if v != "" {
 			m.Interface = types.StringValue(v)
 		} else {
 			m.Interface = types.StringNull()
 		}
-	} else {
-		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["local-address"]; ok {
-		_ = v
 		if v != "" {
 			m.LocalAddress = types.StringValue(v)
 		} else {
 			m.LocalAddress = types.StringNull()
 		}
-	} else {
-		m.LocalAddress = types.StringNull()
 	}
 	if v, ok := obj["mac-address"]; ok {
-		_ = v
 		if v != "" {
 			m.MACAddress = types.StringValue(v)
 		} else {
 			m.MACAddress = types.StringNull()
 		}
-	} else {
-		m.MACAddress = types.StringNull()
 	}
 	if v, ok := obj["mtu"]; ok {
-		_ = v
 		if v != "" {
 			m.MTU = types.StringValue(v)
 		} else {
 			m.MTU = types.StringNull()
 		}
-	} else {
-		m.MTU = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["port"]; ok {
-		_ = v
 		if v != "" {
 			m.Port = types.StringValue(v)
 		} else {
 			m.Port = types.StringNull()
 		}
-	} else {
-		m.Port = types.StringNull()
 	}
 	if v, ok := obj["ttl"]; ok {
-		_ = v
 		if v != "" {
 			m.Ttl = types.StringValue(v)
 		} else {
 			m.Ttl = types.StringNull()
 		}
-	} else {
-		m.Ttl = types.StringNull()
 	}
 	if v, ok := obj["vni"]; ok {
-		_ = v
 		if v != "" {
 			m.Vni = types.StringValue(v)
 		} else {
 			m.Vni = types.StringNull()
 		}
-	} else {
-		m.Vni = types.StringNull()
 	}
 }

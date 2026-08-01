@@ -461,94 +461,67 @@ func interfaceEoipApply(ctx context.Context, obj client.Object, m *InterfaceEoip
 		m.ActualMTU = types.Int64Null()
 	}
 	if v, ok := obj["allow-fast-path"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AllowFastPath = types.BoolValue(b)
 		} else {
 			m.AllowFastPath = types.BoolNull()
 		}
-	} else {
-		m.AllowFastPath = types.BoolNull()
 	}
 	if v, ok := obj["arp"]; ok {
-		_ = v
 		if v != "" {
 			m.ARP = types.StringValue(v)
 		} else {
 			m.ARP = types.StringNull()
 		}
-	} else {
-		m.ARP = types.StringNull()
 	}
 	if v, ok := obj["arp-timeout"]; ok {
-		_ = v
 		if v != "" {
 			m.ARPTimeout = types.StringValue(v)
 		} else {
 			m.ARPTimeout = types.StringNull()
 		}
-	} else {
-		m.ARPTimeout = types.StringNull()
 	}
 	if v, ok := obj["clamp-tcp-mss"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.ClampTCPMss = types.BoolValue(b)
 		} else {
 			m.ClampTCPMss = types.BoolNull()
 		}
-	} else {
-		m.ClampTCPMss = types.BoolNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disable-time"]; ok {
-		_ = v
 		if v != "" {
 			m.DisableTime = types.StringValue(v)
 		} else {
 			m.DisableTime = types.StringNull()
 		}
-	} else {
-		m.DisableTime = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dont-fragment"]; ok {
-		_ = v
 		if v != "" {
 			m.DontFragment = types.StringValue(v)
 		} else {
 			m.DontFragment = types.StringNull()
 		}
-	} else {
-		m.DontFragment = types.StringNull()
 	}
 	if v, ok := obj["dscp"]; ok {
-		_ = v
 		if v != "" {
 			m.Dscp = types.StringValue(v)
 		} else {
 			m.Dscp = types.StringNull()
 		}
-	} else {
-		m.Dscp = types.StringNull()
 	}
 	// Sensitive: RouterOS scrubs the value on read. If the server returned
 	// a value, decode it. Otherwise the plan value (user input) is what's
@@ -565,114 +538,81 @@ func interfaceEoipApply(ctx context.Context, obj client.Object, m *InterfaceEoip
 		m.IpsecSecret = types.StringNull()
 	}
 	if v, ok := obj["keepalive"]; ok {
-		_ = v
 		if v != "" {
 			m.Keepalive = types.StringValue(v)
 		} else {
 			m.Keepalive = types.StringNull()
 		}
-	} else {
-		m.Keepalive = types.StringNull()
 	}
 	if v, ok := obj["local-address"]; ok {
-		_ = v
 		if v != "" {
 			m.LocalAddress = types.StringValue(v)
 		} else {
 			m.LocalAddress = types.StringNull()
 		}
-	} else {
-		m.LocalAddress = types.StringNull()
 	}
 	if v, ok := obj["loop-protect"]; ok {
-		_ = v
 		if v != "" {
 			m.LoopProtect = types.StringValue(v)
 		} else {
 			m.LoopProtect = types.StringNull()
 		}
-	} else {
-		m.LoopProtect = types.StringNull()
 	}
 	if v, ok := obj["loop-protect-disable-time"]; ok {
-		_ = v
 		if v != "" {
 			m.LoopProtectDisableTime = types.StringValue(v)
 		} else {
 			m.LoopProtectDisableTime = types.StringNull()
 		}
-	} else {
-		m.LoopProtectDisableTime = types.StringNull()
 	}
 	if v, ok := obj["loop-protect-send-interval"]; ok {
-		_ = v
 		if v != "" {
 			m.LoopProtectSendInterval = types.StringValue(v)
 		} else {
 			m.LoopProtectSendInterval = types.StringNull()
 		}
-	} else {
-		m.LoopProtectSendInterval = types.StringNull()
 	}
 	if v, ok := obj["mac-address"]; ok {
-		_ = v
 		if v != "" {
 			m.MACAddress = types.StringValue(v)
 		} else {
 			m.MACAddress = types.StringNull()
 		}
-	} else {
-		m.MACAddress = types.StringNull()
 	}
 	if v, ok := obj["mtu"]; ok {
-		_ = v
 		if v != "" {
 			m.MTU = types.StringValue(v)
 		} else {
 			m.MTU = types.StringNull()
 		}
-	} else {
-		m.MTU = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["remote-address"]; ok {
-		_ = v
 		if v != "" {
 			m.RemoteAddress = types.StringValue(v)
 		} else {
 			m.RemoteAddress = types.StringNull()
 		}
-	} else {
-		m.RemoteAddress = types.StringNull()
 	}
 	if v, ok := obj["send-interval"]; ok {
-		_ = v
 		if v != "" {
 			m.SendInterval = types.StringValue(v)
 		} else {
 			m.SendInterval = types.StringNull()
 		}
-	} else {
-		m.SendInterval = types.StringNull()
 	}
 	if v, ok := obj["status"]; ok {
-		_ = v
 		if v != "" {
 			m.Status = types.StringValue(v)
 		} else {
 			m.Status = types.StringNull()
 		}
-	} else {
-		m.Status = types.StringNull()
 	}
 	if v, ok := obj["tunnel-id"]; ok {
 		_ = v

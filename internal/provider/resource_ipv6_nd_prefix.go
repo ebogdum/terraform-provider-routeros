@@ -330,123 +330,87 @@ func iPV6NdPrefixApply(ctx context.Context, obj client.Object, m *IPV6NdPrefixMo
 		m.Dhcp6PdPreferred = types.StringNull()
 	}
 	if v, ok := obj["6to4-interface"]; ok {
-		_ = v
 		if v != "" {
 			m.X6to4Interface = types.StringValue(v)
 		} else {
 			m.X6to4Interface = types.StringNull()
 		}
-	} else {
-		m.X6to4Interface = types.StringNull()
 	}
 	if v, ok := obj["autonomous"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Autonomous = types.BoolValue(b)
 		} else {
 			m.Autonomous = types.BoolNull()
 		}
-	} else {
-		m.Autonomous = types.BoolNull()
 	}
 	if v, ok := obj["dhcpv6-pd-preferred"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dhcpv6PdPreferred = types.BoolValue(b)
 		} else {
 			m.Dhcpv6PdPreferred = types.BoolNull()
 		}
-	} else {
-		m.Dhcpv6PdPreferred = types.BoolNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["interface"]; ok {
-		_ = v
 		if v != "" {
 			m.Interface = types.StringValue(v)
 		} else {
 			m.Interface = types.StringNull()
 		}
-	} else {
-		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["no6to4"]; ok {
-		_ = v
 		if v != "" {
 			m.No6to4 = types.StringValue(v)
 		} else {
 			m.No6to4 = types.StringNull()
 		}
-	} else {
-		m.No6to4 = types.StringNull()
 	}
 	if v, ok := obj["on-link"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.OnLink = types.BoolValue(b)
 		} else {
 			m.OnLink = types.BoolNull()
 		}
-	} else {
-		m.OnLink = types.BoolNull()
 	}
 	if v, ok := obj["preferred-lifetime"]; ok {
-		_ = v
 		if v != "" {
 			m.PreferredLifetime = types.StringValue(v)
 		} else {
 			m.PreferredLifetime = types.StringNull()
 		}
-	} else {
-		m.PreferredLifetime = types.StringNull()
 	}
 	if v, ok := obj["prefix"]; ok {
-		_ = v
 		if v != "" {
 			m.Prefix = types.StringValue(v)
 		} else {
 			m.Prefix = types.StringNull()
 		}
-	} else {
-		m.Prefix = types.StringNull()
 	}
 	if v, ok := obj["valid-lifetime"]; ok {
-		_ = v
 		if v != "" {
 			m.ValidLifetime = types.StringValue(v)
 		} else {
 			m.ValidLifetime = types.StringNull()
 		}
-	} else {
-		m.ValidLifetime = types.StringNull()
 	}
 }

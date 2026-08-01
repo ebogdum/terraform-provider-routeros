@@ -275,73 +275,52 @@ func lcdApply(ctx context.Context, obj client.Object, m *LcdModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["backlight-timeout"]; ok {
-		_ = v
 		if v != "" {
 			m.BacklightTimeout = types.StringValue(v)
 		} else {
 			m.BacklightTimeout = types.StringNull()
 		}
-	} else {
-		m.BacklightTimeout = types.StringNull()
 	}
 	if v, ok := obj["color-scheme"]; ok {
-		_ = v
 		if v != "" {
 			m.ColorScheme = types.StringValue(v)
 		} else {
 			m.ColorScheme = types.StringNull()
 		}
-	} else {
-		m.ColorScheme = types.StringNull()
 	}
 	if v, ok := obj["default-screen"]; ok {
-		_ = v
 		if v != "" {
 			m.DefaultScreen = types.StringValue(v)
 		} else {
 			m.DefaultScreen = types.StringNull()
 		}
-	} else {
-		m.DefaultScreen = types.StringNull()
 	}
 	if v, ok := obj["enabled"]; ok {
-		_ = v
 		if v != "" {
 			m.Enabled = types.StringValue(v)
 		} else {
 			m.Enabled = types.StringNull()
 		}
-	} else {
-		m.Enabled = types.StringNull()
 	}
 	if v, ok := obj["read-only-mode"]; ok {
-		_ = v
 		if v != "" {
 			m.ReadOnlyMode = types.StringValue(v)
 		} else {
 			m.ReadOnlyMode = types.StringNull()
 		}
-	} else {
-		m.ReadOnlyMode = types.StringNull()
 	}
 	if v, ok := obj["time-interval"]; ok {
-		_ = v
 		if v != "" {
 			m.TimeInterval = types.StringValue(v)
 		} else {
 			m.TimeInterval = types.StringNull()
 		}
-	} else {
-		m.TimeInterval = types.StringNull()
 	}
 	if v, ok := obj["touch-screen"]; ok {
-		_ = v
 		if v != "" {
 			m.TouchScreen = types.StringValue(v)
 		} else {
 			m.TouchScreen = types.StringNull()
 		}
-	} else {
-		m.TouchScreen = types.StringNull()
 	}
 }

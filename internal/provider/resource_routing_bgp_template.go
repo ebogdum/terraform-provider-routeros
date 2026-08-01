@@ -905,134 +905,95 @@ func routingBGPTemplateApply(ctx context.Context, obj client.Object, m *RoutingB
 		m.InputAddPath = types.StringNull()
 	}
 	if v, ok := obj["afi"]; ok {
-		_ = v
 		if v != "" {
 			m.Afi = types.StringValue(v)
 		} else {
 			m.Afi = types.StringNull()
 		}
-	} else {
-		m.Afi = types.StringNull()
 	}
 	if v, ok := obj["allow-as-in"]; ok {
-		_ = v
 		if v != "" {
 			m.AllowAsIn = types.StringValue(v)
 		} else {
 			m.AllowAsIn = types.StringNull()
 		}
-	} else {
-		m.AllowAsIn = types.StringNull()
 	}
 	if v, ok := obj["as"]; ok {
-		_ = v
 		if v != "" {
 			m.As = types.StringValue(v)
 		} else {
 			m.As = types.StringNull()
 		}
-	} else {
-		m.As = types.StringNull()
 	}
 	if v, ok := obj["as-override"]; ok {
-		_ = v
 		if v != "" {
 			m.AsOverride = types.StringValue(v)
 		} else {
 			m.AsOverride = types.StringNull()
 		}
-	} else {
-		m.AsOverride = types.StringNull()
 	}
 	if v, ok := obj["cisco-vpls-nlri-length-format"]; ok {
-		_ = v
 		if v != "" {
 			m.CiscoVplsNlriLengthFormat = types.StringValue(v)
 		} else {
 			m.CiscoVplsNlriLengthFormat = types.StringNull()
 		}
-	} else {
-		m.CiscoVplsNlriLengthFormat = types.StringNull()
 	}
 	if v, ok := obj["cluster-id"]; ok {
-		_ = v
 		if v != "" {
 			m.ClusterID = types.StringValue(v)
 		} else {
 			m.ClusterID = types.StringNull()
 		}
-	} else {
-		m.ClusterID = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["default"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
 		} else {
 			m.Default = types.BoolNull()
 		}
-	} else {
-		m.Default = types.BoolNull()
 	}
 	if v, ok := obj["default-originate"]; ok {
-		_ = v
 		if v != "" {
 			m.DefaultOriginate = types.StringValue(v)
 		} else {
 			m.DefaultOriginate = types.StringNull()
 		}
-	} else {
-		m.DefaultOriginate = types.StringNull()
 	}
 	if v, ok := obj["default-prepend"]; ok {
-		_ = v
 		if v != "" {
 			m.DefaultPrepend = types.StringValue(v)
 		} else {
 			m.DefaultPrepend = types.StringNull()
 		}
-	} else {
-		m.DefaultPrepend = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["hold-time"]; ok {
-		_ = v
 		if v != "" {
 			m.HoldTime = types.StringValue(v)
 		} else {
 			m.HoldTime = types.StringNull()
 		}
-	} else {
-		m.HoldTime = types.StringNull()
 	}
 	if v, ok := obj["ignore-as-path-length"]; ok {
-		_ = v
 		if v != "" {
 			m.IgnoreAsPathLength = types.StringValue(v)
 		} else {
 			m.IgnoreAsPathLength = types.StringNull()
 		}
-	} else {
-		m.IgnoreAsPathLength = types.StringNull()
 	}
 	if v, ok := obj["input.accept-communities"]; ok {
 		_ = v
@@ -1135,84 +1096,60 @@ func routingBGPTemplateApply(ctx context.Context, obj client.Object, m *RoutingB
 		m.InputFilterUnknown = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["keep-sent-attributes"]; ok {
-		_ = v
 		if v != "" {
 			m.KeepSentAttributes = types.StringValue(v)
 		} else {
 			m.KeepSentAttributes = types.StringNull()
 		}
-	} else {
-		m.KeepSentAttributes = types.StringNull()
 	}
 	if v, ok := obj["keepalive-time"]; ok {
-		_ = v
 		if v != "" {
 			m.KeepaliveTime = types.StringValue(v)
 		} else {
 			m.KeepaliveTime = types.StringNull()
 		}
-	} else {
-		m.KeepaliveTime = types.StringNull()
 	}
 	if v, ok := obj["multihop"]; ok {
-		_ = v
 		if v != "" {
 			m.Multihop = types.StringValue(v)
 		} else {
 			m.Multihop = types.StringNull()
 		}
-	} else {
-		m.Multihop = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["nexthop-choice"]; ok {
-		_ = v
 		if v != "" {
 			m.NexthopChoice = types.StringValue(v)
 		} else {
 			m.NexthopChoice = types.StringNull()
 		}
-	} else {
-		m.NexthopChoice = types.StringNull()
 	}
 	if v, ok := obj["no-client-to-client-reflection"]; ok {
-		_ = v
 		if v != "" {
 			m.NoClientToClientReflection = types.StringValue(v)
 		} else {
 			m.NoClientToClientReflection = types.StringNull()
 		}
-	} else {
-		m.NoClientToClientReflection = types.StringNull()
 	}
 	if v, ok := obj["no-early-cut"]; ok {
-		_ = v
 		if v != "" {
 			m.NoEarlyCut = types.StringValue(v)
 		} else {
 			m.NoEarlyCut = types.StringNull()
 		}
-	} else {
-		m.NoEarlyCut = types.StringNull()
 	}
 	if v, ok := obj["output.affinity"]; ok {
 		_ = v
@@ -1225,14 +1162,11 @@ func routingBGPTemplateApply(ctx context.Context, obj client.Object, m *RoutingB
 		m.OutputAffinity = types.StringNull()
 	}
 	if v, ok := obj["output-filter"]; ok {
-		_ = v
 		if v != "" {
 			m.OutputFilter = types.StringValue(v)
 		} else {
 			m.OutputFilter = types.StringNull()
 		}
-	} else {
-		m.OutputFilter = types.StringNull()
 	}
 	if v, ok := obj["output.network"]; ok {
 		_ = v
@@ -1255,73 +1189,52 @@ func routingBGPTemplateApply(ctx context.Context, obj client.Object, m *RoutingB
 		m.OutputRedistribute = types.StringNull()
 	}
 	if v, ok := obj["output-selection-policy"]; ok {
-		_ = v
 		if v != "" {
 			m.OutputSelectionPolicy = types.StringValue(v)
 		} else {
 			m.OutputSelectionPolicy = types.StringNull()
 		}
-	} else {
-		m.OutputSelectionPolicy = types.StringNull()
 	}
 	if v, ok := obj["remove-private-as"]; ok {
-		_ = v
 		if v != "" {
 			m.RemovePrivateAs = types.StringValue(v)
 		} else {
 			m.RemovePrivateAs = types.StringNull()
 		}
-	} else {
-		m.RemovePrivateAs = types.StringNull()
 	}
 	if v, ok := obj["router-id"]; ok {
-		_ = v
 		if v != "" {
 			m.RouterID = types.StringValue(v)
 		} else {
 			m.RouterID = types.StringNull()
 		}
-	} else {
-		m.RouterID = types.StringNull()
 	}
 	if v, ok := obj["routing-table"]; ok {
-		_ = v
 		if v != "" {
 			m.RoutingTable = types.StringValue(v)
 		} else {
 			m.RoutingTable = types.StringNull()
 		}
-	} else {
-		m.RoutingTable = types.StringNull()
 	}
 	if v, ok := obj["templates"]; ok {
-		_ = v
 		if v != "" {
 			m.Templates = types.StringValue(v)
 		} else {
 			m.Templates = types.StringNull()
 		}
-	} else {
-		m.Templates = types.StringNull()
 	}
 	if v, ok := obj["use-bfd"]; ok {
-		_ = v
 		if v != "" {
 			m.UseBfd = types.StringValue(v)
 		} else {
 			m.UseBfd = types.StringNull()
 		}
-	} else {
-		m.UseBfd = types.StringNull()
 	}
 	if v, ok := obj["vrf"]; ok {
-		_ = v
 		if v != "" {
 			m.Vrf = types.StringValue(v)
 		} else {
 			m.Vrf = types.StringNull()
 		}
-	} else {
-		m.Vrf = types.StringNull()
 	}
 }

@@ -287,14 +287,11 @@ func certificateScepServerApply(ctx context.Context, obj client.Object, m *Certi
 		m.CaCert = types.StringNull()
 	}
 	if v, ok := obj["ca-certificate"]; ok {
-		_ = v
 		if v != "" {
 			m.CACertificate = types.StringValue(v)
 		} else {
 			m.CACertificate = types.StringNull()
 		}
-	} else {
-		m.CACertificate = types.StringNull()
 	}
 	if v, ok := obj["days-valid"]; ok {
 		_ = v
@@ -307,43 +304,31 @@ func certificateScepServerApply(ctx context.Context, obj client.Object, m *Certi
 		m.DaysValid = types.Int64Null()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["next-ca-certificate"]; ok {
-		_ = v
 		if v != "" {
 			m.NextCACertificate = types.StringValue(v)
 		} else {
 			m.NextCACertificate = types.StringNull()
 		}
-	} else {
-		m.NextCACertificate = types.StringNull()
 	}
 	if v, ok := obj["path"]; ok {
-		_ = v
 		if v != "" {
 			m.Path = types.StringValue(v)
 		} else {
 			m.Path = types.StringNull()
 		}
-	} else {
-		m.Path = types.StringNull()
 	}
 	if v, ok := obj["request-lifetime"]; ok {
-		_ = v
 		if v != "" {
 			m.RequestLifetime = types.StringValue(v)
 		} else {
 			m.RequestLifetime = types.StringNull()
 		}
-	} else {
-		m.RequestLifetime = types.StringNull()
 	}
 }

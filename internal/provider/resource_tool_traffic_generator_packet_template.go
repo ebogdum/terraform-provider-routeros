@@ -1104,274 +1104,193 @@ func toolTrafficGeneratorPacketTemplateApply(ctx context.Context, obj client.Obj
 		m.ComputeChecksumFromOffset = types.StringNull()
 	}
 	if v, ok := obj["assumed-dscp-ecn"]; ok {
-		_ = v
 		if v != "" {
 			m.AssumedDscpEcn = types.StringValue(v)
 		} else {
 			m.AssumedDscpEcn = types.StringNull()
 		}
-	} else {
-		m.AssumedDscpEcn = types.StringNull()
 	}
 	if v, ok := obj["assumed-dst"]; ok {
-		_ = v
 		if v != "" {
 			m.AssumedDst = types.StringValue(v)
 		} else {
 			m.AssumedDst = types.StringNull()
 		}
-	} else {
-		m.AssumedDst = types.StringNull()
 	}
 	if v, ok := obj["assumed-dst-port"]; ok {
-		_ = v
 		if v != "" {
 			m.AssumedDstPort = types.StringValue(v)
 		} else {
 			m.AssumedDstPort = types.StringNull()
 		}
-	} else {
-		m.AssumedDstPort = types.StringNull()
 	}
 	if v, ok := obj["assumed-flow-label"]; ok {
-		_ = v
 		if v != "" {
 			m.AssumedFlowLabel = types.StringValue(v)
 		} else {
 			m.AssumedFlowLabel = types.StringNull()
 		}
-	} else {
-		m.AssumedFlowLabel = types.StringNull()
 	}
 	if v, ok := obj["assumed-frag-offset"]; ok {
-		_ = v
 		if v != "" {
 			m.AssumedFragOffset = types.StringValue(v)
 		} else {
 			m.AssumedFragOffset = types.StringNull()
 		}
-	} else {
-		m.AssumedFragOffset = types.StringNull()
 	}
 	if v, ok := obj["assumed-header"]; ok {
-		_ = v
 		if v != "" {
 			m.AssumedHeader = types.StringValue(v)
 		} else {
 			m.AssumedHeader = types.StringNull()
 		}
-	} else {
-		m.AssumedHeader = types.StringNull()
 	}
 	if v, ok := obj["assumed-interface"]; ok {
-		_ = v
 		if v != "" {
 			m.AssumedInterface = types.StringValue(v)
 		} else {
 			m.AssumedInterface = types.StringNull()
 		}
-	} else {
-		m.AssumedInterface = types.StringNull()
 	}
 	if v, ok := obj["assumed-ip-id"]; ok {
-		_ = v
 		if v != "" {
 			m.AssumedIPID = types.StringValue(v)
 		} else {
 			m.AssumedIPID = types.StringNull()
 		}
-	} else {
-		m.AssumedIPID = types.StringNull()
 	}
 	if v, ok := obj["assumed-next-header"]; ok {
-		_ = v
 		if v != "" {
 			m.AssumedNextHeader = types.StringValue(v)
 		} else {
 			m.AssumedNextHeader = types.StringNull()
 		}
-	} else {
-		m.AssumedNextHeader = types.StringNull()
 	}
 	if v, ok := obj["assumed-port"]; ok {
-		_ = v
 		if v != "" {
 			m.AssumedPort = types.StringValue(v)
 		} else {
 			m.AssumedPort = types.StringNull()
 		}
-	} else {
-		m.AssumedPort = types.StringNull()
 	}
 	if v, ok := obj["assumed-priority"]; ok {
-		_ = v
 		if v != "" {
 			m.AssumedPriority = types.StringValue(v)
 		} else {
 			m.AssumedPriority = types.StringNull()
 		}
-	} else {
-		m.AssumedPriority = types.StringNull()
 	}
 	if v, ok := obj["assumed-protocol"]; ok {
-		_ = v
 		if v != "" {
 			m.AssumedProtocol = types.StringValue(v)
 		} else {
 			m.AssumedProtocol = types.StringNull()
 		}
-	} else {
-		m.AssumedProtocol = types.StringNull()
 	}
 	if v, ok := obj["assumed-src"]; ok {
-		_ = v
 		if v != "" {
 			m.AssumedSrc = types.StringValue(v)
 		} else {
 			m.AssumedSrc = types.StringNull()
 		}
-	} else {
-		m.AssumedSrc = types.StringNull()
 	}
 	if v, ok := obj["assumed-src-port"]; ok {
-		_ = v
 		if v != "" {
 			m.AssumedSrcPort = types.StringValue(v)
 		} else {
 			m.AssumedSrcPort = types.StringNull()
 		}
-	} else {
-		m.AssumedSrcPort = types.StringNull()
 	}
 	if v, ok := obj["assumed-tcp-ack"]; ok {
-		_ = v
 		if v != "" {
 			m.AssumedTCPAck = types.StringValue(v)
 		} else {
 			m.AssumedTCPAck = types.StringNull()
 		}
-	} else {
-		m.AssumedTCPAck = types.StringNull()
 	}
 	if v, ok := obj["assumed-tcp-data-offset"]; ok {
-		_ = v
 		if v != "" {
 			m.AssumedTCPDataOffset = types.StringValue(v)
 		} else {
 			m.AssumedTCPDataOffset = types.StringNull()
 		}
-	} else {
-		m.AssumedTCPDataOffset = types.StringNull()
 	}
 	if v, ok := obj["assumed-tcp-dst-port"]; ok {
-		_ = v
 		if v != "" {
 			m.AssumedTCPDstPort = types.StringValue(v)
 		} else {
 			m.AssumedTCPDstPort = types.StringNull()
 		}
-	} else {
-		m.AssumedTCPDstPort = types.StringNull()
 	}
 	if v, ok := obj["assumed-tcp-flags"]; ok {
-		_ = v
 		if v != "" {
 			m.AssumedTCPFlags = types.StringValue(v)
 		} else {
 			m.AssumedTCPFlags = types.StringNull()
 		}
-	} else {
-		m.AssumedTCPFlags = types.StringNull()
 	}
 	if v, ok := obj["assumed-tcp-src-port"]; ok {
-		_ = v
 		if v != "" {
 			m.AssumedTCPSrcPort = types.StringValue(v)
 		} else {
 			m.AssumedTCPSrcPort = types.StringNull()
 		}
-	} else {
-		m.AssumedTCPSrcPort = types.StringNull()
 	}
 	if v, ok := obj["assumed-tcp-syn"]; ok {
-		_ = v
 		if v != "" {
 			m.AssumedTCPSyn = types.StringValue(v)
 		} else {
 			m.AssumedTCPSyn = types.StringNull()
 		}
-	} else {
-		m.AssumedTCPSyn = types.StringNull()
 	}
 	if v, ok := obj["assumed-tcp-urgent-pointer"]; ok {
-		_ = v
 		if v != "" {
 			m.AssumedTCPUrgentPointer = types.StringValue(v)
 		} else {
 			m.AssumedTCPUrgentPointer = types.StringNull()
 		}
-	} else {
-		m.AssumedTCPUrgentPointer = types.StringNull()
 	}
 	if v, ok := obj["assumed-tcp-window-size"]; ok {
-		_ = v
 		if v != "" {
 			m.AssumedTCPWindowSize = types.StringValue(v)
 		} else {
 			m.AssumedTCPWindowSize = types.StringNull()
 		}
-	} else {
-		m.AssumedTCPWindowSize = types.StringNull()
 	}
 	if v, ok := obj["assumed-traffic-class"]; ok {
-		_ = v
 		if v != "" {
 			m.AssumedTrafficClass = types.StringValue(v)
 		} else {
 			m.AssumedTrafficClass = types.StringNull()
 		}
-	} else {
-		m.AssumedTrafficClass = types.StringNull()
 	}
 	if v, ok := obj["assumed-ttl"]; ok {
-		_ = v
 		if v != "" {
 			m.AssumedTtl = types.StringValue(v)
 		} else {
 			m.AssumedTtl = types.StringNull()
 		}
-	} else {
-		m.AssumedTtl = types.StringNull()
 	}
 	if v, ok := obj["assumed-vlan-id"]; ok {
-		_ = v
 		if v != "" {
 			m.AssumedVLANID = types.StringValue(v)
 		} else {
 			m.AssumedVLANID = types.StringNull()
 		}
-	} else {
-		m.AssumedVLANID = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["data"]; ok {
-		_ = v
 		if v != "" {
 			m.Data = types.StringValue(v)
 		} else {
 			m.Data = types.StringNull()
 		}
-	} else {
-		m.Data = types.StringNull()
 	}
 	if v, ok := obj["data-byte"]; ok {
 		_ = v
@@ -1384,383 +1303,269 @@ func toolTrafficGeneratorPacketTemplateApply(ctx context.Context, obj client.Obj
 		m.DataByte = types.Int64Null()
 	}
 	if v, ok := obj["dscp-ecn"]; ok {
-		_ = v
 		if v != "" {
 			m.DscpEcn = types.StringValue(v)
 		} else {
 			m.DscpEcn = types.StringNull()
 		}
-	} else {
-		m.DscpEcn = types.StringNull()
 	}
 	if v, ok := obj["dst"]; ok {
-		_ = v
 		if v != "" {
 			m.Dst = types.StringValue(v)
 		} else {
 			m.Dst = types.StringNull()
 		}
-	} else {
-		m.Dst = types.StringNull()
 	}
 	if v, ok := obj["dst-port"]; ok {
-		_ = v
 		if v != "" {
 			m.DstPort = types.StringValue(v)
 		} else {
 			m.DstPort = types.StringNull()
 		}
-	} else {
-		m.DstPort = types.StringNull()
 	}
 	if v, ok := obj["flow-label"]; ok {
-		_ = v
 		if v != "" {
 			m.FlowLabel = types.StringValue(v)
 		} else {
 			m.FlowLabel = types.StringNull()
 		}
-	} else {
-		m.FlowLabel = types.StringNull()
 	}
 	if v, ok := obj["frag-offset"]; ok {
-		_ = v
 		if v != "" {
 			m.FragOffset = types.StringValue(v)
 		} else {
 			m.FragOffset = types.StringNull()
 		}
-	} else {
-		m.FragOffset = types.StringNull()
 	}
 	if v, ok := obj["gateway"]; ok {
-		_ = v
 		if v != "" {
 			m.Gateway = types.StringValue(v)
 		} else {
 			m.Gateway = types.StringNull()
 		}
-	} else {
-		m.Gateway = types.StringNull()
 	}
 	if v, ok := obj["header"]; ok {
-		_ = v
 		if v != "" {
 			m.Header = types.StringValue(v)
 		} else {
 			m.Header = types.StringNull()
 		}
-	} else {
-		m.Header = types.StringNull()
 	}
 	if v, ok := obj["header-stack"]; ok {
-		_ = v
 		if v != "" {
 			m.HeaderStack = types.StringValue(v)
 		} else {
 			m.HeaderStack = types.StringNull()
 		}
-	} else {
-		m.HeaderStack = types.StringNull()
 	}
 	if v, ok := obj["hop-limit"]; ok {
-		_ = v
 		if v != "" {
 			m.HopLimit = types.StringValue(v)
 		} else {
 			m.HopLimit = types.StringNull()
 		}
-	} else {
-		m.HopLimit = types.StringNull()
 	}
 	if v, ok := obj["interface"]; ok {
-		_ = v
 		if v != "" {
 			m.Interface = types.StringValue(v)
 		} else {
 			m.Interface = types.StringNull()
 		}
-	} else {
-		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["ip"]; ok {
-		_ = v
 		if v != "" {
 			m.IP = types.StringValue(v)
 		} else {
 			m.IP = types.StringNull()
 		}
-	} else {
-		m.IP = types.StringNull()
 	}
 	if v, ok := obj["ip-id"]; ok {
-		_ = v
 		if v != "" {
 			m.IPID = types.StringValue(v)
 		} else {
 			m.IPID = types.StringNull()
 		}
-	} else {
-		m.IPID = types.StringNull()
 	}
 	if v, ok := obj["ipv6"]; ok {
-		_ = v
 		if v != "" {
 			m.IPV6 = types.StringValue(v)
 		} else {
 			m.IPV6 = types.StringNull()
 		}
-	} else {
-		m.IPV6 = types.StringNull()
 	}
 	if v, ok := obj["mac"]; ok {
-		_ = v
 		if v != "" {
 			m.MAC = types.StringValue(v)
 		} else {
 			m.MAC = types.StringNull()
 		}
-	} else {
-		m.MAC = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["next-header"]; ok {
-		_ = v
 		if v != "" {
 			m.NextHeader = types.StringValue(v)
 		} else {
 			m.NextHeader = types.StringNull()
 		}
-	} else {
-		m.NextHeader = types.StringNull()
 	}
 	if v, ok := obj["port"]; ok {
-		_ = v
 		if v != "" {
 			m.Port = types.StringValue(v)
 		} else {
 			m.Port = types.StringNull()
 		}
-	} else {
-		m.Port = types.StringNull()
 	}
 	if v, ok := obj["priority"]; ok {
-		_ = v
 		if v != "" {
 			m.Priority = types.StringValue(v)
 		} else {
 			m.Priority = types.StringNull()
 		}
-	} else {
-		m.Priority = types.StringNull()
 	}
 	if v, ok := obj["protocol"]; ok {
-		_ = v
 		if v != "" {
 			m.Protocol = types.StringValue(v)
 		} else {
 			m.Protocol = types.StringNull()
 		}
-	} else {
-		m.Protocol = types.StringNull()
 	}
 	if v, ok := obj["raw"]; ok {
-		_ = v
 		if v != "" {
 			m.Raw = types.StringValue(v)
 		} else {
 			m.Raw = types.StringNull()
 		}
-	} else {
-		m.Raw = types.StringNull()
 	}
 	if v, ok := obj["raw-packet-templates"]; ok {
-		_ = v
 		if v != "" {
 			m.RawPacketTemplates = types.StringValue(v)
 		} else {
 			m.RawPacketTemplates = types.StringNull()
 		}
-	} else {
-		m.RawPacketTemplates = types.StringNull()
 	}
 	if v, ok := obj["specbyte"]; ok {
-		_ = v
 		if v != "" {
 			m.Specbyte = types.StringValue(v)
 		} else {
 			m.Specbyte = types.StringNull()
 		}
-	} else {
-		m.Specbyte = types.StringNull()
 	}
 	if v, ok := obj["src"]; ok {
-		_ = v
 		if v != "" {
 			m.Src = types.StringValue(v)
 		} else {
 			m.Src = types.StringNull()
 		}
-	} else {
-		m.Src = types.StringNull()
 	}
 	if v, ok := obj["src-port"]; ok {
-		_ = v
 		if v != "" {
 			m.SrcPort = types.StringValue(v)
 		} else {
 			m.SrcPort = types.StringNull()
 		}
-	} else {
-		m.SrcPort = types.StringNull()
 	}
 	if v, ok := obj["tcp"]; ok {
-		_ = v
 		if v != "" {
 			m.TCP = types.StringValue(v)
 		} else {
 			m.TCP = types.StringNull()
 		}
-	} else {
-		m.TCP = types.StringNull()
 	}
 	if v, ok := obj["tcp-ack"]; ok {
-		_ = v
 		if v != "" {
 			m.TCPAck = types.StringValue(v)
 		} else {
 			m.TCPAck = types.StringNull()
 		}
-	} else {
-		m.TCPAck = types.StringNull()
 	}
 	if v, ok := obj["tcp-data-offset"]; ok {
-		_ = v
 		if v != "" {
 			m.TCPDataOffset = types.StringValue(v)
 		} else {
 			m.TCPDataOffset = types.StringNull()
 		}
-	} else {
-		m.TCPDataOffset = types.StringNull()
 	}
 	if v, ok := obj["tcp-dst-port"]; ok {
-		_ = v
 		if v != "" {
 			m.TCPDstPort = types.StringValue(v)
 		} else {
 			m.TCPDstPort = types.StringNull()
 		}
-	} else {
-		m.TCPDstPort = types.StringNull()
 	}
 	if v, ok := obj["tcp-flags"]; ok {
-		_ = v
 		if v != "" {
 			m.TCPFlags = types.StringValue(v)
 		} else {
 			m.TCPFlags = types.StringNull()
 		}
-	} else {
-		m.TCPFlags = types.StringNull()
 	}
 	if v, ok := obj["tcp-src-port"]; ok {
-		_ = v
 		if v != "" {
 			m.TCPSrcPort = types.StringValue(v)
 		} else {
 			m.TCPSrcPort = types.StringNull()
 		}
-	} else {
-		m.TCPSrcPort = types.StringNull()
 	}
 	if v, ok := obj["tcp-syn"]; ok {
-		_ = v
 		if v != "" {
 			m.TCPSyn = types.StringValue(v)
 		} else {
 			m.TCPSyn = types.StringNull()
 		}
-	} else {
-		m.TCPSyn = types.StringNull()
 	}
 	if v, ok := obj["tcp-urgent-pointer"]; ok {
-		_ = v
 		if v != "" {
 			m.TCPUrgentPointer = types.StringValue(v)
 		} else {
 			m.TCPUrgentPointer = types.StringNull()
 		}
-	} else {
-		m.TCPUrgentPointer = types.StringNull()
 	}
 	if v, ok := obj["tcp-window-size"]; ok {
-		_ = v
 		if v != "" {
 			m.TCPWindowSize = types.StringValue(v)
 		} else {
 			m.TCPWindowSize = types.StringNull()
 		}
-	} else {
-		m.TCPWindowSize = types.StringNull()
 	}
 	if v, ok := obj["traffic-class"]; ok {
-		_ = v
 		if v != "" {
 			m.TrafficClass = types.StringValue(v)
 		} else {
 			m.TrafficClass = types.StringNull()
 		}
-	} else {
-		m.TrafficClass = types.StringNull()
 	}
 	if v, ok := obj["ttl"]; ok {
-		_ = v
 		if v != "" {
 			m.Ttl = types.StringValue(v)
 		} else {
 			m.Ttl = types.StringNull()
 		}
-	} else {
-		m.Ttl = types.StringNull()
 	}
 	if v, ok := obj["udp"]; ok {
-		_ = v
 		if v != "" {
 			m.UDP = types.StringValue(v)
 		} else {
 			m.UDP = types.StringNull()
 		}
-	} else {
-		m.UDP = types.StringNull()
 	}
 	if v, ok := obj["vlan"]; ok {
-		_ = v
 		if v != "" {
 			m.VLAN = types.StringValue(v)
 		} else {
 			m.VLAN = types.StringNull()
 		}
-	} else {
-		m.VLAN = types.StringNull()
 	}
 	if v, ok := obj["vlan-id"]; ok {
-		_ = v
 		if v != "" {
 			m.VLANID = types.StringValue(v)
 		} else {
 			m.VLANID = types.StringNull()
 		}
-	} else {
-		m.VLANID = types.StringNull()
 	}
 }

@@ -363,133 +363,94 @@ func interfaceWifiSteeringApply(ctx context.Context, obj client.Object, m *Inter
 		m.TransitionRequestPeriod = types.StringNull()
 	}
 	if v, ok := obj["2g-probe-delay"]; ok {
-		_ = v
 		if v != "" {
 			m.X2gProbeDelay = types.StringValue(v)
 		} else {
 			m.X2gProbeDelay = types.StringNull()
 		}
-	} else {
-		m.X2gProbeDelay = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["neighbor-group"]; ok {
-		_ = v
 		if v != "" {
 			m.NeighborGroup = types.StringValue(v)
 		} else {
 			m.NeighborGroup = types.StringNull()
 		}
-	} else {
-		m.NeighborGroup = types.StringNull()
 	}
 	if v, ok := obj["neighbor-groups"]; ok {
-		_ = v
 		if v != "" {
 			m.NeighborGroups = types.StringValue(v)
 		} else {
 			m.NeighborGroups = types.StringNull()
 		}
-	} else {
-		m.NeighborGroups = types.StringNull()
 	}
 	if v, ok := obj["rrm"]; ok {
-		_ = v
 		if v != "" {
 			m.Rrm = types.StringValue(v)
 		} else {
 			m.Rrm = types.StringNull()
 		}
-	} else {
-		m.Rrm = types.StringNull()
 	}
 	if v, ok := obj["transition-request-count"]; ok {
-		_ = v
 		if v != "" {
 			m.TransitionRequestCount = types.StringValue(v)
 		} else {
 			m.TransitionRequestCount = types.StringNull()
 		}
-	} else {
-		m.TransitionRequestCount = types.StringNull()
 	}
 	if v, ok := obj["transition-threshold"]; ok {
-		_ = v
 		if v != "" {
 			m.TransitionThreshold = types.StringValue(v)
 		} else {
 			m.TransitionThreshold = types.StringNull()
 		}
-	} else {
-		m.TransitionThreshold = types.StringNull()
 	}
 	if v, ok := obj["transition-threshold-period"]; ok {
-		_ = v
 		if v != "" {
 			m.TransitionThresholdPeriod = types.StringValue(v)
 		} else {
 			m.TransitionThresholdPeriod = types.StringNull()
 		}
-	} else {
-		m.TransitionThresholdPeriod = types.StringNull()
 	}
 	if v, ok := obj["transition-threshold-time"]; ok {
-		_ = v
 		if v != "" {
 			m.TransitionThresholdTime = types.StringValue(v)
 		} else {
 			m.TransitionThresholdTime = types.StringNull()
 		}
-	} else {
-		m.TransitionThresholdTime = types.StringNull()
 	}
 	if v, ok := obj["transition-time"]; ok {
-		_ = v
 		if v != "" {
 			m.TransitionTime = types.StringValue(v)
 		} else {
 			m.TransitionTime = types.StringNull()
 		}
-	} else {
-		m.TransitionTime = types.StringNull()
 	}
 	if v, ok := obj["wnm"]; ok {
-		_ = v
 		if v != "" {
 			m.Wnm = types.StringValue(v)
 		} else {
 			m.Wnm = types.StringNull()
 		}
-	} else {
-		m.Wnm = types.StringNull()
 	}
 }

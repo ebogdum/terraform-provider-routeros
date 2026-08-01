@@ -248,63 +248,45 @@ func interfaceListApply(ctx context.Context, obj client.Object, m *InterfaceList
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["builtin"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Builtin = types.BoolValue(b)
 		} else {
 			m.Builtin = types.BoolNull()
 		}
-	} else {
-		m.Builtin = types.BoolNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["exclude"]; ok {
-		_ = v
 		if v != "" {
 			m.Exclude = types.StringValue(v)
 		} else {
 			m.Exclude = types.StringNull()
 		}
-	} else {
-		m.Exclude = types.StringNull()
 	}
 	if v, ok := obj["include"]; ok {
-		_ = v
 		if v != "" {
 			m.Include = types.StringValue(v)
 		} else {
 			m.Include = types.StringNull()
 		}
-	} else {
-		m.Include = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 }

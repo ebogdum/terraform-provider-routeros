@@ -263,53 +263,38 @@ func iPDHCPServerOptionApply(ctx context.Context, obj client.Object, m *IPDHCPSe
 		m.Code = types.Int64Null()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["force"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Force = types.BoolValue(b)
 		} else {
 			m.Force = types.BoolNull()
 		}
-	} else {
-		m.Force = types.BoolNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["raw-value"]; ok {
-		_ = v
 		if v != "" {
 			m.RawValue = types.StringValue(v)
 		} else {
 			m.RawValue = types.StringNull()
 		}
-	} else {
-		m.RawValue = types.StringNull()
 	}
 	if v, ok := obj["value"]; ok {
-		_ = v
 		if v != "" {
 			m.Value = types.StringValue(v)
 		} else {
 			m.Value = types.StringNull()
 		}
-	} else {
-		m.Value = types.StringNull()
 	}
 }

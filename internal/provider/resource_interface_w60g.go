@@ -408,124 +408,88 @@ func interfaceW60gApply(ctx context.Context, obj client.Object, m *InterfaceW60g
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["arp"]; ok {
-		_ = v
 		if v != "" {
 			m.ARP = types.StringValue(v)
 		} else {
 			m.ARP = types.StringNull()
 		}
-	} else {
-		m.ARP = types.StringNull()
 	}
 	if v, ok := obj["arp-timeout"]; ok {
-		_ = v
 		if v != "" {
 			m.ARPTimeout = types.StringValue(v)
 		} else {
 			m.ARPTimeout = types.StringNull()
 		}
-	} else {
-		m.ARPTimeout = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if v != "" {
 			m.Disabled = types.StringValue(v)
 		} else {
 			m.Disabled = types.StringNull()
 		}
-	} else {
-		m.Disabled = types.StringNull()
 	}
 	if v, ok := obj["frequency"]; ok {
-		_ = v
 		if v != "" {
 			m.Frequency = types.StringValue(v)
 		} else {
 			m.Frequency = types.StringNull()
 		}
-	} else {
-		m.Frequency = types.StringNull()
 	}
 	if v, ok := obj["isolate-stations"]; ok {
-		_ = v
 		if v != "" {
 			m.IsolateStations = types.StringValue(v)
 		} else {
 			m.IsolateStations = types.StringNull()
 		}
-	} else {
-		m.IsolateStations = types.StringNull()
 	}
 	if v, ok := obj["l2mtu"]; ok {
-		_ = v
 		if v != "" {
 			m.L2mtu = types.StringValue(v)
 		} else {
 			m.L2mtu = types.StringNull()
 		}
-	} else {
-		m.L2mtu = types.StringNull()
 	}
 	if v, ok := obj["mac-address"]; ok {
-		_ = v
 		if v != "" {
 			m.MACAddress = types.StringValue(v)
 		} else {
 			m.MACAddress = types.StringNull()
 		}
-	} else {
-		m.MACAddress = types.StringNull()
 	}
 	if v, ok := obj["mdmg-fix"]; ok {
-		_ = v
 		if v != "" {
 			m.MdmgFix = types.StringValue(v)
 		} else {
 			m.MdmgFix = types.StringNull()
 		}
-	} else {
-		m.MdmgFix = types.StringNull()
 	}
 	if v, ok := obj["mode"]; ok {
-		_ = v
 		if v != "" {
 			m.Mode = types.StringValue(v)
 		} else {
 			m.Mode = types.StringNull()
 		}
-	} else {
-		m.Mode = types.StringNull()
 	}
 	if v, ok := obj["mtu"]; ok {
-		_ = v
 		if v != "" {
 			m.MTU = types.StringValue(v)
 		} else {
 			m.MTU = types.StringNull()
 		}
-	} else {
-		m.MTU = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	// Sensitive: RouterOS scrubs the value on read. If the server returned
 	// a value, decode it. Otherwise the plan value (user input) is what's
@@ -542,53 +506,38 @@ func interfaceW60gApply(ctx context.Context, obj client.Object, m *InterfaceW60g
 		m.Password = types.StringNull()
 	}
 	if v, ok := obj["put-stations-in-bridge"]; ok {
-		_ = v
 		if v != "" {
 			m.PutStationsInBridge = types.StringValue(v)
 		} else {
 			m.PutStationsInBridge = types.StringNull()
 		}
-	} else {
-		m.PutStationsInBridge = types.StringNull()
 	}
 	if v, ok := obj["region"]; ok {
-		_ = v
 		if v != "" {
 			m.Region = types.StringValue(v)
 		} else {
 			m.Region = types.StringNull()
 		}
-	} else {
-		m.Region = types.StringNull()
 	}
 	if v, ok := obj["scan-list"]; ok {
-		_ = v
 		if v != "" {
 			m.ScanList = types.StringValue(v)
 		} else {
 			m.ScanList = types.StringNull()
 		}
-	} else {
-		m.ScanList = types.StringNull()
 	}
 	if v, ok := obj["ssid"]; ok {
-		_ = v
 		if v != "" {
 			m.Ssid = types.StringValue(v)
 		} else {
 			m.Ssid = types.StringNull()
 		}
-	} else {
-		m.Ssid = types.StringNull()
 	}
 	if v, ok := obj["tx-sector"]; ok {
-		_ = v
 		if v != "" {
 			m.TxSector = types.StringValue(v)
 		} else {
 			m.TxSector = types.StringNull()
 		}
-	} else {
-		m.TxSector = types.StringNull()
 	}
 }

@@ -497,23 +497,17 @@ func interfaceEthernetPoeApply(ctx context.Context, obj client.Object, m *Interf
 		m.Ether1PoeInLongCable = types.StringNull()
 	}
 	if v, ok := obj["power-cycle"]; ok {
-		_ = v
 		if v != "" {
 			m.PowerCycle = types.StringValue(v)
 		} else {
 			m.PowerCycle = types.StringNull()
 		}
-	} else {
-		m.PowerCycle = types.StringNull()
 	}
 	if v, ok := obj["print"]; ok {
-		_ = v
 		if v != "" {
 			m.Print = types.StringValue(v)
 		} else {
 			m.Print = types.StringNull()
 		}
-	} else {
-		m.Print = types.StringNull()
 	}
 }

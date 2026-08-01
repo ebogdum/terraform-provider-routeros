@@ -434,233 +434,164 @@ func iPDHCPServerNetworkApply(ctx context.Context, obj client.Object, m *IPDHCPS
 		m.DnsNone = types.StringNull()
 	}
 	if v, ok := obj["address"]; ok {
-		_ = v
 		if v != "" {
 			m.Address = types.StringValue(v)
 		} else {
 			m.Address = types.StringNull()
 		}
-	} else {
-		m.Address = types.StringNull()
 	}
 	if v, ok := obj["boot-file-name"]; ok {
-		_ = v
 		if v != "" {
 			m.BootFileName = types.StringValue(v)
 		} else {
 			m.BootFileName = types.StringNull()
 		}
-	} else {
-		m.BootFileName = types.StringNull()
 	}
 	if v, ok := obj["caps-manager"]; ok {
-		_ = v
 		if v != "" {
 			m.CapsManager = types.StringValue(v)
 		} else {
 			m.CapsManager = types.StringNull()
 		}
-	} else {
-		m.CapsManager = types.StringNull()
 	}
 	if v, ok := obj["caps-managers"]; ok {
-		_ = v
 		if v != "" {
 			m.CapsManagers = types.StringValue(v)
 		} else {
 			m.CapsManagers = types.StringNull()
 		}
-	} else {
-		m.CapsManagers = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["dhcp-option"]; ok {
-		_ = v
 		if v != "" {
 			m.DHCPOption = types.StringValue(v)
 		} else {
 			m.DHCPOption = types.StringNull()
 		}
-	} else {
-		m.DHCPOption = types.StringNull()
 	}
 	if v, ok := obj["dhcp-option-set"]; ok {
-		_ = v
 		if v != "" {
 			m.DHCPOptionSet = types.StringValue(v)
 		} else {
 			m.DHCPOptionSet = types.StringNull()
 		}
-	} else {
-		m.DHCPOptionSet = types.StringNull()
 	}
 	if v, ok := obj["dhcp-options"]; ok {
-		_ = v
 		if v != "" {
 			m.DHCPOptions = types.StringValue(v)
 		} else {
 			m.DHCPOptions = types.StringNull()
 		}
-	} else {
-		m.DHCPOptions = types.StringNull()
 	}
 	if v, ok := obj["dns-server"]; ok {
-		_ = v
 		if v != "" {
 			m.DNSServer = types.StringValue(v)
 		} else {
 			m.DNSServer = types.StringNull()
 		}
-	} else {
-		m.DNSServer = types.StringNull()
 	}
 	if v, ok := obj["dns-servers"]; ok {
-		_ = v
 		if v != "" {
 			m.DNSServers = types.StringValue(v)
 		} else {
 			m.DNSServers = types.StringNull()
 		}
-	} else {
-		m.DNSServers = types.StringNull()
 	}
 	if v, ok := obj["domain"]; ok {
-		_ = v
 		if v != "" {
 			m.Domain = types.StringValue(v)
 		} else {
 			m.Domain = types.StringNull()
 		}
-	} else {
-		m.Domain = types.StringNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if v != "" {
 			m.Dynamic = types.StringValue(v)
 		} else {
 			m.Dynamic = types.StringNull()
 		}
-	} else {
-		m.Dynamic = types.StringNull()
 	}
 	if v, ok := obj["gateway"]; ok {
-		_ = v
 		if v != "" {
 			m.Gateway = types.StringValue(v)
 		} else {
 			m.Gateway = types.StringNull()
 		}
-	} else {
-		m.Gateway = types.StringNull()
 	}
 	if v, ok := obj["netmask"]; ok {
-		_ = v
 		if v != "" {
 			m.Netmask = types.StringValue(v)
 		} else {
 			m.Netmask = types.StringNull()
 		}
-	} else {
-		m.Netmask = types.StringNull()
 	}
 	if v, ok := obj["next-server"]; ok {
-		_ = v
 		if v != "" {
 			m.NextServer = types.StringValue(v)
 		} else {
 			m.NextServer = types.StringNull()
 		}
-	} else {
-		m.NextServer = types.StringNull()
 	}
 	if v, ok := obj["nndns"]; ok {
-		_ = v
 		if v != "" {
 			m.Nndns = types.StringValue(v)
 		} else {
 			m.Nndns = types.StringNull()
 		}
-	} else {
-		m.Nndns = types.StringNull()
 	}
 	if v, ok := obj["nnntp"]; ok {
-		_ = v
 		if v != "" {
 			m.Nnntp = types.StringValue(v)
 		} else {
 			m.Nnntp = types.StringNull()
 		}
-	} else {
-		m.Nnntp = types.StringNull()
 	}
 	if v, ok := obj["no-dns"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.NoDNS = types.BoolValue(b)
 		} else {
 			m.NoDNS = types.BoolNull()
 		}
-	} else {
-		m.NoDNS = types.BoolNull()
 	}
 	if v, ok := obj["no-ntp"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.NoNTP = types.BoolValue(b)
 		} else {
 			m.NoNTP = types.BoolNull()
 		}
-	} else {
-		m.NoNTP = types.BoolNull()
 	}
 	if v, ok := obj["ntp-server"]; ok {
-		_ = v
 		if v != "" {
 			m.NTPServer = types.StringValue(v)
 		} else {
 			m.NTPServer = types.StringNull()
 		}
-	} else {
-		m.NTPServer = types.StringNull()
 	}
 	if v, ok := obj["ntp-servers"]; ok {
-		_ = v
 		if v != "" {
 			m.NTPServers = types.StringValue(v)
 		} else {
 			m.NTPServers = types.StringNull()
 		}
-	} else {
-		m.NTPServers = types.StringNull()
 	}
 	if v, ok := obj["wins-server"]; ok {
-		_ = v
 		if v != "" {
 			m.WinsServer = types.StringValue(v)
 		} else {
 			m.WinsServer = types.StringNull()
 		}
-	} else {
-		m.WinsServer = types.StringNull()
 	}
 	if v, ok := obj["wins-servers"]; ok {
-		_ = v
 		if v != "" {
 			m.WinsServers = types.StringValue(v)
 		} else {
 			m.WinsServers = types.StringNull()
 		}
-	} else {
-		m.WinsServers = types.StringNull()
 	}
 }

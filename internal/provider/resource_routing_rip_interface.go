@@ -336,74 +336,53 @@ func routingRipInterfaceApply(ctx context.Context, obj client.Object, m *Routing
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["cost"]; ok {
-		_ = v
 		if v != "" {
 			m.Cost = types.StringValue(v)
 		} else {
 			m.Cost = types.StringNull()
 		}
-	} else {
-		m.Cost = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["instance"]; ok {
-		_ = v
 		if v != "" {
 			m.Instance = types.StringValue(v)
 		} else {
 			m.Instance = types.StringNull()
 		}
-	} else {
-		m.Instance = types.StringNull()
 	}
 	if v, ok := obj["interfaces"]; ok {
-		_ = v
 		if v != "" {
 			m.Interfaces = types.StringValue(v)
 		} else {
 			m.Interfaces = types.StringNull()
 		}
-	} else {
-		m.Interfaces = types.StringNull()
 	}
 	if v, ok := obj["key-chain"]; ok {
-		_ = v
 		if v != "" {
 			m.KeyChain = types.StringValue(v)
 		} else {
 			m.KeyChain = types.StringNull()
 		}
-	} else {
-		m.KeyChain = types.StringNull()
 	}
 	if v, ok := obj["mode"]; ok {
-		_ = v
 		if v != "" {
 			m.Mode = types.StringValue(v)
 		} else {
 			m.Mode = types.StringNull()
 		}
-	} else {
-		m.Mode = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	// Sensitive: RouterOS scrubs the value on read. If the server returned
 	// a value, decode it. Otherwise the plan value (user input) is what's
@@ -420,43 +399,31 @@ func routingRipInterfaceApply(ctx context.Context, obj client.Object, m *Routing
 		m.Password = types.StringNull()
 	}
 	if v, ok := obj["poison-reverse"]; ok {
-		_ = v
 		if v != "" {
 			m.PoisonReverse = types.StringValue(v)
 		} else {
 			m.PoisonReverse = types.StringNull()
 		}
-	} else {
-		m.PoisonReverse = types.StringNull()
 	}
 	if v, ok := obj["source-addresses"]; ok {
-		_ = v
 		if v != "" {
 			m.SourceAddresses = types.StringValue(v)
 		} else {
 			m.SourceAddresses = types.StringNull()
 		}
-	} else {
-		m.SourceAddresses = types.StringNull()
 	}
 	if v, ok := obj["split-horizon"]; ok {
-		_ = v
 		if v != "" {
 			m.SplitHorizon = types.StringValue(v)
 		} else {
 			m.SplitHorizon = types.StringNull()
 		}
-	} else {
-		m.SplitHorizon = types.StringNull()
 	}
 	if v, ok := obj["use-bfd"]; ok {
-		_ = v
 		if v != "" {
 			m.UseBfd = types.StringValue(v)
 		} else {
 			m.UseBfd = types.StringNull()
 		}
-	} else {
-		m.UseBfd = types.StringNull()
 	}
 }

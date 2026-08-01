@@ -311,103 +311,73 @@ func interfaceWifiAaaApply(ctx context.Context, obj client.Object, m *InterfaceW
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["called-format"]; ok {
-		_ = v
 		if v != "" {
 			m.CalledFormat = types.StringValue(v)
 		} else {
 			m.CalledFormat = types.StringNull()
 		}
-	} else {
-		m.CalledFormat = types.StringNull()
 	}
 	if v, ok := obj["calling-format"]; ok {
-		_ = v
 		if v != "" {
 			m.CallingFormat = types.StringValue(v)
 		} else {
 			m.CallingFormat = types.StringNull()
 		}
-	} else {
-		m.CallingFormat = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["interim-update"]; ok {
-		_ = v
 		if v != "" {
 			m.InterimUpdate = types.StringValue(v)
 		} else {
 			m.InterimUpdate = types.StringNull()
 		}
-	} else {
-		m.InterimUpdate = types.StringNull()
 	}
 	if v, ok := obj["mac-caching"]; ok {
-		_ = v
 		if v != "" {
 			m.MACCaching = types.StringValue(v)
 		} else {
 			m.MACCaching = types.StringNull()
 		}
-	} else {
-		m.MACCaching = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["nas-identifier"]; ok {
-		_ = v
 		if v != "" {
 			m.NasIdentifier = types.StringValue(v)
 		} else {
 			m.NasIdentifier = types.StringNull()
 		}
-	} else {
-		m.NasIdentifier = types.StringNull()
 	}
 	if v, ok := obj["password-format"]; ok {
-		_ = v
 		if v != "" {
 			m.PasswordFormat = types.StringValue(v)
 		} else {
 			m.PasswordFormat = types.StringNull()
 		}
-	} else {
-		m.PasswordFormat = types.StringNull()
 	}
 	if v, ok := obj["username-format"]; ok {
-		_ = v
 		if v != "" {
 			m.UsernameFormat = types.StringValue(v)
 		} else {
 			m.UsernameFormat = types.StringNull()
 		}
-	} else {
-		m.UsernameFormat = types.StringNull()
 	}
 }

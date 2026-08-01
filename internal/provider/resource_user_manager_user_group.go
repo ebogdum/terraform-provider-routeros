@@ -263,63 +263,45 @@ func userManagerUserGroupApply(ctx context.Context, obj client.Object, m *UserMa
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["attributes"]; ok {
-		_ = v
 		if v != "" {
 			m.Attributes = types.StringValue(v)
 		} else {
 			m.Attributes = types.StringNull()
 		}
-	} else {
-		m.Attributes = types.StringNull()
 	}
 	if v, ok := obj["default"]; ok {
-		_ = v
 		if v != "" {
 			m.Default = types.StringValue(v)
 		} else {
 			m.Default = types.StringNull()
 		}
-	} else {
-		m.Default = types.StringNull()
 	}
 	if v, ok := obj["default-name"]; ok {
-		_ = v
 		if v != "" {
 			m.DefaultName = types.StringValue(v)
 		} else {
 			m.DefaultName = types.StringNull()
 		}
-	} else {
-		m.DefaultName = types.StringNull()
 	}
 	if v, ok := obj["inner-auths"]; ok {
-		_ = v
 		if v != "" {
 			m.InnerAuths = types.StringValue(v)
 		} else {
 			m.InnerAuths = types.StringNull()
 		}
-	} else {
-		m.InnerAuths = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["outer-auths"]; ok {
-		_ = v
 		if v != "" {
 			m.OuterAuths = types.StringValue(v)
 		} else {
 			m.OuterAuths = types.StringNull()
 		}
-	} else {
-		m.OuterAuths = types.StringNull()
 	}
 }

@@ -318,123 +318,87 @@ func routingOSPFAreaApply(ctx context.Context, obj client.Object, m *RoutingOSPF
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["area-id"]; ok {
-		_ = v
 		if v != "" {
 			m.AreaID = types.StringValue(v)
 		} else {
 			m.AreaID = types.StringNull()
 		}
-	} else {
-		m.AreaID = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["default-cost"]; ok {
-		_ = v
 		if v != "" {
 			m.DefaultCost = types.StringValue(v)
 		} else {
 			m.DefaultCost = types.StringNull()
 		}
-	} else {
-		m.DefaultCost = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["instance"]; ok {
-		_ = v
 		if v != "" {
 			m.Instance = types.StringValue(v)
 		} else {
 			m.Instance = types.StringNull()
 		}
-	} else {
-		m.Instance = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["no-summaries"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.NoSummaries = types.BoolValue(b)
 		} else {
 			m.NoSummaries = types.BoolNull()
 		}
-	} else {
-		m.NoSummaries = types.BoolNull()
 	}
 	if v, ok := obj["nssa-translator"]; ok {
-		_ = v
 		if v != "" {
 			m.NssaTranslator = types.StringValue(v)
 		} else {
 			m.NssaTranslator = types.StringNull()
 		}
-	} else {
-		m.NssaTranslator = types.StringNull()
 	}
 	if v, ok := obj["transit-capable"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.TransitCapable = types.BoolValue(b)
 		} else {
 			m.TransitCapable = types.BoolNull()
 		}
-	} else {
-		m.TransitCapable = types.BoolNull()
 	}
 	if v, ok := obj["type"]; ok {
-		_ = v
 		if v != "" {
 			m.Type = types.StringValue(v)
 		} else {
 			m.Type = types.StringNull()
 		}
-	} else {
-		m.Type = types.StringNull()
 	}
 }

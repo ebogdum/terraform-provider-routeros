@@ -433,193 +433,136 @@ func iPV6NdApply(ctx context.Context, obj client.Object, m *IPV6NdModel) {
 		m.Dns = types.StringNull()
 	}
 	if v, ok := obj["advertise-dns"]; ok {
-		_ = v
 		if v != "" {
 			m.AdvertiseDNS = types.StringValue(v)
 		} else {
 			m.AdvertiseDNS = types.StringNull()
 		}
-	} else {
-		m.AdvertiseDNS = types.StringNull()
 	}
 	if v, ok := obj["advertise-mac-address"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AdvertiseMACAddress = types.BoolValue(b)
 		} else {
 			m.AdvertiseMACAddress = types.BoolNull()
 		}
-	} else {
-		m.AdvertiseMACAddress = types.BoolNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["default"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
 		} else {
 			m.Default = types.BoolNull()
 		}
-	} else {
-		m.Default = types.BoolNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dns-servers"]; ok {
-		_ = v
 		if v != "" {
 			m.DNSServers = types.StringValue(v)
 		} else {
 			m.DNSServers = types.StringNull()
 		}
-	} else {
-		m.DNSServers = types.StringNull()
 	}
 	if v, ok := obj["hop-limit"]; ok {
-		_ = v
 		if v != "" {
 			m.HopLimit = types.StringValue(v)
 		} else {
 			m.HopLimit = types.StringNull()
 		}
-	} else {
-		m.HopLimit = types.StringNull()
 	}
 	if v, ok := obj["interface"]; ok {
-		_ = v
 		if v != "" {
 			m.Interface = types.StringValue(v)
 		} else {
 			m.Interface = types.StringNull()
 		}
-	} else {
-		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["managed-address-configuration"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.ManagedAddressConfiguration = types.BoolValue(b)
 		} else {
 			m.ManagedAddressConfiguration = types.BoolNull()
 		}
-	} else {
-		m.ManagedAddressConfiguration = types.BoolNull()
 	}
 	if v, ok := obj["mtu"]; ok {
-		_ = v
 		if v != "" {
 			m.MTU = types.StringValue(v)
 		} else {
 			m.MTU = types.StringNull()
 		}
-	} else {
-		m.MTU = types.StringNull()
 	}
 	if v, ok := obj["other-configuration"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.OtherConfiguration = types.BoolValue(b)
 		} else {
 			m.OtherConfiguration = types.BoolNull()
 		}
-	} else {
-		m.OtherConfiguration = types.BoolNull()
 	}
 	if v, ok := obj["pref64-prefixes"]; ok {
-		_ = v
 		if v != "" {
 			m.Pref64Prefixes = types.StringValue(v)
 		} else {
 			m.Pref64Prefixes = types.StringNull()
 		}
-	} else {
-		m.Pref64Prefixes = types.StringNull()
 	}
 	if v, ok := obj["ra-delay"]; ok {
-		_ = v
 		if v != "" {
 			m.RaDelay = types.StringValue(v)
 		} else {
 			m.RaDelay = types.StringNull()
 		}
-	} else {
-		m.RaDelay = types.StringNull()
 	}
 	if v, ok := obj["ra-interval"]; ok {
-		_ = v
 		if v != "" {
 			m.RaInterval = types.StringValue(v)
 		} else {
 			m.RaInterval = types.StringNull()
 		}
-	} else {
-		m.RaInterval = types.StringNull()
 	}
 	if v, ok := obj["ra-lifetime"]; ok {
-		_ = v
 		if v != "" {
 			m.RaLifetime = types.StringValue(v)
 		} else {
 			m.RaLifetime = types.StringNull()
 		}
-	} else {
-		m.RaLifetime = types.StringNull()
 	}
 	if v, ok := obj["ra-preference"]; ok {
-		_ = v
 		if v != "" {
 			m.RaPreference = types.StringValue(v)
 		} else {
 			m.RaPreference = types.StringNull()
 		}
-	} else {
-		m.RaPreference = types.StringNull()
 	}
 	if v, ok := obj["reachable-time"]; ok {
-		_ = v
 		if v != "" {
 			m.ReachableTime = types.StringValue(v)
 		} else {
 			m.ReachableTime = types.StringNull()
 		}
-	} else {
-		m.ReachableTime = types.StringNull()
 	}
 	if v, ok := obj["retransmit-interval"]; ok {
-		_ = v
 		if v != "" {
 			m.RetransmitInterval = types.StringValue(v)
 		} else {
 			m.RetransmitInterval = types.StringNull()
 		}
-	} else {
-		m.RetransmitInterval = types.StringNull()
 	}
 }

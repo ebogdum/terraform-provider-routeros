@@ -29,7 +29,7 @@ type InterfacePPTPServerServerResource struct {
 
 type InterfacePPTPServerServerModel struct {
 	ID               types.String `tfsdk:"id"`
-	Authentication   types.String `tfsdk:"authentication"`
+	Authentication   csvSetValue  `tfsdk:"authentication"`
 	DefaultProfile   types.String `tfsdk:"default_profile"`
 	Enabled          types.Bool   `tfsdk:"enabled"`
 	KeepaliveTimeout types.Int64  `tfsdk:"keepalive_timeout"`
@@ -65,6 +65,7 @@ func (r *InterfacePPTPServerServerResource) Schema(_ context.Context, _ resource
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"authentication": schema.StringAttribute{
+				CustomType:  csvSetType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "RouterOS `authentication`.",
@@ -213,9 +214,9 @@ func interfacePPTPServerServerUpsert(ctx context.Context, reg *client.Registry, 
 func interfacePPTPServerServerApply(ctx context.Context, obj client.Object, m *InterfacePPTPServerServerModel) {
 	_ = ctx
 	if v, ok := obj["authentication"]; ok && v != "" {
-		m.Authentication = types.StringValue(v)
+		m.Authentication = newCSVSetValue(v)
 	} else {
-		m.Authentication = types.StringNull()
+		m.Authentication = newCSVSetNull()
 	}
 	if v, ok := obj["default-profile"]; ok && v != "" {
 		m.DefaultProfile = types.StringValue(v)

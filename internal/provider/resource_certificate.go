@@ -560,144 +560,102 @@ func certificateApply(ctx context.Context, obj client.Object, m *CertificateMode
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["acme"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Acme = types.BoolValue(b)
 		} else {
 			m.Acme = types.BoolNull()
 		}
-	} else {
-		m.Acme = types.BoolNull()
 	}
 	if v, ok := obj["acme-status"]; ok {
-		_ = v
 		if v != "" {
 			m.AcmeStatus = types.StringValue(v)
 		} else {
 			m.AcmeStatus = types.StringNull()
 		}
-	} else {
-		m.AcmeStatus = types.StringNull()
 	}
 	if v, ok := obj["add-acme"]; ok {
-		_ = v
 		if v != "" {
 			m.AddAcme = types.StringValue(v)
 		} else {
 			m.AddAcme = types.StringNull()
 		}
-	} else {
-		m.AddAcme = types.StringNull()
 	}
 	if v, ok := obj["akid"]; ok {
-		_ = v
 		if v != "" {
 			m.Akid = types.StringValue(v)
 		} else {
 			m.Akid = types.StringNull()
 		}
-	} else {
-		m.Akid = types.StringNull()
 	}
 	if v, ok := obj["authority"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Authority = types.BoolValue(b)
 		} else {
 			m.Authority = types.BoolNull()
 		}
-	} else {
-		m.Authority = types.BoolNull()
 	}
 	if v, ok := obj["ca"]; ok {
-		_ = v
 		if v != "" {
 			m.CA = types.StringValue(v)
 		} else {
 			m.CA = types.StringNull()
 		}
-	} else {
-		m.CA = types.StringNull()
 	}
 	if v, ok := obj["ca-crl-host"]; ok {
-		_ = v
 		if v != "" {
 			m.CACrlHost = types.StringValue(v)
 		} else {
 			m.CACrlHost = types.StringNull()
 		}
-	} else {
-		m.CACrlHost = types.StringNull()
 	}
 	if v, ok := obj["ca-fingerprint"]; ok {
-		_ = v
 		if v != "" {
 			m.CAFingerprint = types.StringValue(v)
 		} else {
 			m.CAFingerprint = types.StringNull()
 		}
-	} else {
-		m.CAFingerprint = types.StringNull()
 	}
 	if v, ok := obj["card-reinstall"]; ok {
-		_ = v
 		if v != "" {
 			m.CardReinstall = types.StringValue(v)
 		} else {
 			m.CardReinstall = types.StringNull()
 		}
-	} else {
-		m.CardReinstall = types.StringNull()
 	}
 	if v, ok := obj["card-verify"]; ok {
-		_ = v
 		if v != "" {
 			m.CardVerify = types.StringValue(v)
 		} else {
 			m.CardVerify = types.StringNull()
 		}
-	} else {
-		m.CardVerify = types.StringNull()
 	}
 	if v, ok := obj["common-name"]; ok {
-		_ = v
 		if v != "" {
 			m.CommonName = types.StringValue(v)
 		} else {
 			m.CommonName = types.StringNull()
 		}
-	} else {
-		m.CommonName = types.StringNull()
 	}
 	if v, ok := obj["country"]; ok {
-		_ = v
 		if v != "" {
 			m.Country = types.StringValue(v)
 		} else {
 			m.Country = types.StringNull()
 		}
-	} else {
-		m.Country = types.StringNull()
 	}
 	if v, ok := obj["create-cert-request"]; ok {
-		_ = v
 		if v != "" {
 			m.CreateCertRequest = types.StringValue(v)
 		} else {
 			m.CreateCertRequest = types.StringNull()
 		}
-	} else {
-		m.CreateCertRequest = types.StringNull()
 	}
 	if v, ok := obj["crl"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Crl = types.BoolValue(b)
 		} else {
 			m.Crl = types.BoolNull()
 		}
-	} else {
-		m.Crl = types.BoolNull()
 	}
 	if v, ok := obj["days-valid"]; ok {
 		_ = v
@@ -710,365 +668,257 @@ func certificateApply(ctx context.Context, obj client.Object, m *CertificateMode
 		m.DaysValid = types.Int64Null()
 	}
 	if v, ok := obj["digest-algorithm"]; ok {
-		_ = v
 		if v != "" {
 			m.DigestAlgorithm = types.StringValue(v)
 		} else {
 			m.DigestAlgorithm = types.StringNull()
 		}
-	} else {
-		m.DigestAlgorithm = types.StringNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["expired"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Expired = types.BoolValue(b)
 		} else {
 			m.Expired = types.BoolNull()
 		}
-	} else {
-		m.Expired = types.BoolNull()
 	}
 	if v, ok := obj["expires-after"]; ok {
-		_ = v
 		if v != "" {
 			m.ExpiresAfter = types.StringValue(v)
 		} else {
 			m.ExpiresAfter = types.StringNull()
 		}
-	} else {
-		m.ExpiresAfter = types.StringNull()
 	}
 	if v, ok := obj["export"]; ok {
-		_ = v
 		if v != "" {
 			m.Export = types.StringValue(v)
 		} else {
 			m.Export = types.StringNull()
 		}
-	} else {
-		m.Export = types.StringNull()
 	}
 	if v, ok := obj["fingerprint"]; ok {
-		_ = v
 		if v != "" {
 			m.Fingerprint = types.StringValue(v)
 		} else {
 			m.Fingerprint = types.StringNull()
 		}
-	} else {
-		m.Fingerprint = types.StringNull()
 	}
 	if v, ok := obj["has-acme-status"]; ok {
-		_ = v
 		if v != "" {
 			m.HasAcmeStatus = types.StringValue(v)
 		} else {
 			m.HasAcmeStatus = types.StringNull()
 		}
-	} else {
-		m.HasAcmeStatus = types.StringNull()
 	}
 	if v, ok := obj["import"]; ok {
-		_ = v
 		if v != "" {
 			m.Import = types.StringValue(v)
 		} else {
 			m.Import = types.StringNull()
 		}
-	} else {
-		m.Import = types.StringNull()
 	}
 	if v, ok := obj["invalid-after"]; ok {
-		_ = v
 		if v != "" {
 			m.InvalidAfter = types.StringValue(v)
 		} else {
 			m.InvalidAfter = types.StringNull()
 		}
-	} else {
-		m.InvalidAfter = types.StringNull()
 	}
 	if v, ok := obj["invalid-before"]; ok {
-		_ = v
 		if v != "" {
 			m.InvalidBefore = types.StringValue(v)
 		} else {
 			m.InvalidBefore = types.StringNull()
 		}
-	} else {
-		m.InvalidBefore = types.StringNull()
 	}
 	if v, ok := obj["issued"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Issued = types.BoolValue(b)
 		} else {
 			m.Issued = types.BoolNull()
 		}
-	} else {
-		m.Issued = types.BoolNull()
 	}
 	if v, ok := obj["issuer"]; ok {
-		_ = v
 		if v != "" {
 			m.Issuer = types.StringValue(v)
 		} else {
 			m.Issuer = types.StringNull()
 		}
-	} else {
-		m.Issuer = types.StringNull()
 	}
 	if v, ok := obj["key-size"]; ok {
-		_ = v
 		if v != "" {
 			m.KeySize = types.StringValue(v)
 		} else {
 			m.KeySize = types.StringNull()
 		}
-	} else {
-		m.KeySize = types.StringNull()
 	}
 	if v, ok := obj["key-type"]; ok {
-		_ = v
 		if v != "" {
 			m.KeyType = types.StringValue(v)
 		} else {
 			m.KeyType = types.StringNull()
 		}
-	} else {
-		m.KeyType = types.StringNull()
 	}
 	if v, ok := obj["key-usage"]; ok {
-		_ = v
 		if v != "" {
 			m.KeyUsage = types.StringValue(v)
 		} else {
 			m.KeyUsage = types.StringNull()
 		}
-	} else {
-		m.KeyUsage = types.StringNull()
 	}
 	if v, ok := obj["locality"]; ok {
-		_ = v
 		if v != "" {
 			m.Locality = types.StringValue(v)
 		} else {
 			m.Locality = types.StringNull()
 		}
-	} else {
-		m.Locality = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["notsealed"]; ok {
-		_ = v
 		if v != "" {
 			m.Notsealed = types.StringValue(v)
 		} else {
 			m.Notsealed = types.StringNull()
 		}
-	} else {
-		m.Notsealed = types.StringNull()
 	}
 	if v, ok := obj["organization"]; ok {
-		_ = v
 		if v != "" {
 			m.Organization = types.StringValue(v)
 		} else {
 			m.Organization = types.StringNull()
 		}
-	} else {
-		m.Organization = types.StringNull()
 	}
 	if v, ok := obj["private-key"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.PrivateKey = types.BoolValue(b)
 		} else {
 			m.PrivateKey = types.BoolNull()
 		}
-	} else {
-		m.PrivateKey = types.BoolNull()
 	}
 	if v, ok := obj["req-fingerprint"]; ok {
-		_ = v
 		if v != "" {
 			m.ReqFingerprint = types.StringValue(v)
 		} else {
 			m.ReqFingerprint = types.StringNull()
 		}
-	} else {
-		m.ReqFingerprint = types.StringNull()
 	}
 	if v, ok := obj["revoke"]; ok {
-		_ = v
 		if v != "" {
 			m.Revoke = types.StringValue(v)
 		} else {
 			m.Revoke = types.StringNull()
 		}
-	} else {
-		m.Revoke = types.StringNull()
 	}
 	if v, ok := obj["revoked"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Revoked = types.BoolValue(b)
 		} else {
 			m.Revoked = types.BoolNull()
 		}
-	} else {
-		m.Revoked = types.BoolNull()
 	}
 	if v, ok := obj["revoked-time"]; ok {
-		_ = v
 		if v != "" {
 			m.RevokedTime = types.StringValue(v)
 		} else {
 			m.RevokedTime = types.StringNull()
 		}
-	} else {
-		m.RevokedTime = types.StringNull()
 	}
 	if v, ok := obj["scep-url"]; ok {
-		_ = v
 		if v != "" {
 			m.ScepURL = types.StringValue(v)
 		} else {
 			m.ScepURL = types.StringNull()
 		}
-	} else {
-		m.ScepURL = types.StringNull()
 	}
 	if v, ok := obj["sealed"]; ok {
-		_ = v
 		if v != "" {
 			m.Sealed = types.StringValue(v)
 		} else {
 			m.Sealed = types.StringNull()
 		}
-	} else {
-		m.Sealed = types.StringNull()
 	}
 	if v, ok := obj["sealed-and-hide"]; ok {
-		_ = v
 		if v != "" {
 			m.SealedAndHide = types.StringValue(v)
 		} else {
 			m.SealedAndHide = types.StringNull()
 		}
-	} else {
-		m.SealedAndHide = types.StringNull()
 	}
 	if v, ok := obj["serial-number"]; ok {
-		_ = v
 		if v != "" {
 			m.SerialNumber = types.StringValue(v)
 		} else {
 			m.SerialNumber = types.StringNull()
 		}
-	} else {
-		m.SerialNumber = types.StringNull()
 	}
 	if v, ok := obj["sign"]; ok {
-		_ = v
 		if v != "" {
 			m.Sign = types.StringValue(v)
 		} else {
 			m.Sign = types.StringNull()
 		}
-	} else {
-		m.Sign = types.StringNull()
 	}
 	if v, ok := obj["sign-via-scep"]; ok {
-		_ = v
 		if v != "" {
 			m.SignViaScep = types.StringValue(v)
 		} else {
 			m.SignViaScep = types.StringNull()
 		}
-	} else {
-		m.SignViaScep = types.StringNull()
 	}
 	if v, ok := obj["skid"]; ok {
-		_ = v
 		if v != "" {
 			m.Skid = types.StringValue(v)
 		} else {
 			m.Skid = types.StringNull()
 		}
-	} else {
-		m.Skid = types.StringNull()
 	}
 	if v, ok := obj["smart-card-key"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.SmartCardKey = types.BoolValue(b)
 		} else {
 			m.SmartCardKey = types.BoolNull()
 		}
-	} else {
-		m.SmartCardKey = types.BoolNull()
 	}
 	if v, ok := obj["state"]; ok {
-		_ = v
 		if v != "" {
 			m.State = types.StringValue(v)
 		} else {
 			m.State = types.StringNull()
 		}
-	} else {
-		m.State = types.StringNull()
 	}
 	if v, ok := obj["subject-alt-name"]; ok {
-		_ = v
 		if v != "" {
 			m.SubjectAltName = types.StringValue(v)
 		} else {
 			m.SubjectAltName = types.StringNull()
 		}
-	} else {
-		m.SubjectAltName = types.StringNull()
 	}
 	if v, ok := obj["trust-store"]; ok {
-		_ = v
 		if v != "" {
 			m.TrustStore = types.StringValue(v)
 		} else {
 			m.TrustStore = types.StringNull()
 		}
-	} else {
-		m.TrustStore = types.StringNull()
 	}
 	if v, ok := obj["trusted"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Trusted = types.BoolValue(b)
-		} else {
-			m.Trusted = types.BoolNull()
 		}
-	} else {
-		m.Trusted = types.BoolNull()
 	}
+	// keep-on-absent: RouterOS does not echo trusted back, so keep the configured
+	// value rather than nulling it.
 	if v, ok := obj["type"]; ok {
 		_ = v
 		if n, err := client.ParseInt64(v); err == nil {
@@ -1080,13 +930,10 @@ func certificateApply(ctx context.Context, obj client.Object, m *CertificateMode
 		m.Type = types.Int64Null()
 	}
 	if v, ok := obj["unit"]; ok {
-		_ = v
 		if v != "" {
 			m.Unit = types.StringValue(v)
 		} else {
 			m.Unit = types.StringNull()
 		}
-	} else {
-		m.Unit = types.StringNull()
 	}
 }

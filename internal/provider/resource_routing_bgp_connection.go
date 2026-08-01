@@ -1106,134 +1106,95 @@ func routingBGPConnectionApply(ctx context.Context, obj client.Object, m *Routin
 		m.InputAddPath = types.StringNull()
 	}
 	if v, ok := obj["afi"]; ok {
-		_ = v
 		if v != "" {
 			m.Afi = types.StringValue(v)
 		} else {
 			m.Afi = types.StringNull()
 		}
-	} else {
-		m.Afi = types.StringNull()
 	}
 	if v, ok := obj["allow-as-in"]; ok {
-		_ = v
 		if v != "" {
 			m.AllowAsIn = types.StringValue(v)
 		} else {
 			m.AllowAsIn = types.StringNull()
 		}
-	} else {
-		m.AllowAsIn = types.StringNull()
 	}
 	if v, ok := obj["as"]; ok {
-		_ = v
 		if v != "" {
 			m.As = types.StringValue(v)
 		} else {
 			m.As = types.StringNull()
 		}
-	} else {
-		m.As = types.StringNull()
 	}
 	if v, ok := obj["as-override"]; ok {
-		_ = v
 		if v != "" {
 			m.AsOverride = types.StringValue(v)
 		} else {
 			m.AsOverride = types.StringNull()
 		}
-	} else {
-		m.AsOverride = types.StringNull()
 	}
 	if v, ok := obj["cisco-vpls-nlri-length-format"]; ok {
-		_ = v
 		if v != "" {
 			m.CiscoVplsNlriLengthFormat = types.StringValue(v)
 		} else {
 			m.CiscoVplsNlriLengthFormat = types.StringNull()
 		}
-	} else {
-		m.CiscoVplsNlriLengthFormat = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["connect"]; ok {
-		_ = v
 		if v != "" {
 			m.Connect = types.StringValue(v)
 		} else {
 			m.Connect = types.StringNull()
 		}
-	} else {
-		m.Connect = types.StringNull()
 	}
 	if v, ok := obj["default-originate"]; ok {
-		_ = v
 		if v != "" {
 			m.DefaultOriginate = types.StringValue(v)
 		} else {
 			m.DefaultOriginate = types.StringNull()
 		}
-	} else {
-		m.DefaultOriginate = types.StringNull()
 	}
 	if v, ok := obj["default-prepend"]; ok {
-		_ = v
 		if v != "" {
 			m.DefaultPrepend = types.StringValue(v)
 		} else {
 			m.DefaultPrepend = types.StringNull()
 		}
-	} else {
-		m.DefaultPrepend = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["hold-time"]; ok {
-		_ = v
 		if v != "" {
 			m.HoldTime = types.StringValue(v)
 		} else {
 			m.HoldTime = types.StringNull()
 		}
-	} else {
-		m.HoldTime = types.StringNull()
 	}
 	if v, ok := obj["ignore-as-path-length"]; ok {
-		_ = v
 		if v != "" {
 			m.IgnoreAsPathLength = types.StringValue(v)
 		} else {
 			m.IgnoreAsPathLength = types.StringNull()
 		}
-	} else {
-		m.IgnoreAsPathLength = types.StringNull()
 	}
 	if v, ok := obj["input.accept-communities"]; ok {
 		_ = v
@@ -1336,54 +1297,39 @@ func routingBGPConnectionApply(ctx context.Context, obj client.Object, m *Routin
 		m.InputFilterUnknown = types.StringNull()
 	}
 	if v, ok := obj["instance"]; ok {
-		_ = v
 		if v != "" {
 			m.Instance = types.StringValue(v)
 		} else {
 			m.Instance = types.StringNull()
 		}
-	} else {
-		m.Instance = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["keep-sent-attributes"]; ok {
-		_ = v
 		if v != "" {
 			m.KeepSentAttributes = types.StringValue(v)
 		} else {
 			m.KeepSentAttributes = types.StringNull()
 		}
-	} else {
-		m.KeepSentAttributes = types.StringNull()
 	}
 	if v, ok := obj["keepalive-time"]; ok {
-		_ = v
 		if v != "" {
 			m.KeepaliveTime = types.StringValue(v)
 		} else {
 			m.KeepaliveTime = types.StringNull()
 		}
-	} else {
-		m.KeepaliveTime = types.StringNull()
 	}
 	if v, ok := obj["listen"]; ok {
-		_ = v
 		if v != "" {
 			m.Listen = types.StringValue(v)
 		} else {
 			m.Listen = types.StringNull()
 		}
-	} else {
-		m.Listen = types.StringNull()
 	}
 	if v, ok := obj["local.address"]; ok {
 		_ = v
@@ -1416,64 +1362,46 @@ func routingBGPConnectionApply(ctx context.Context, obj client.Object, m *Routin
 		m.LocalRole = types.StringNull()
 	}
 	if v, ok := obj["multihop"]; ok {
-		_ = v
 		if v != "" {
 			m.Multihop = types.StringValue(v)
 		} else {
 			m.Multihop = types.StringNull()
 		}
-	} else {
-		m.Multihop = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["network-blackhole"]; ok {
-		_ = v
 		if v != "" {
 			m.NetworkBlackhole = types.StringValue(v)
 		} else {
 			m.NetworkBlackhole = types.StringNull()
 		}
-	} else {
-		m.NetworkBlackhole = types.StringNull()
 	}
 	if v, ok := obj["nexthop-choice"]; ok {
-		_ = v
 		if v != "" {
 			m.NexthopChoice = types.StringValue(v)
 		} else {
 			m.NexthopChoice = types.StringNull()
 		}
-	} else {
-		m.NexthopChoice = types.StringNull()
 	}
 	if v, ok := obj["no-client-to-client-reflection"]; ok {
-		_ = v
 		if v != "" {
 			m.NoClientToClientReflection = types.StringValue(v)
 		} else {
 			m.NoClientToClientReflection = types.StringNull()
 		}
-	} else {
-		m.NoClientToClientReflection = types.StringNull()
 	}
 	if v, ok := obj["no-early-cut"]; ok {
-		_ = v
 		if v != "" {
 			m.NoEarlyCut = types.StringValue(v)
 		} else {
 			m.NoEarlyCut = types.StringNull()
 		}
-	} else {
-		m.NoEarlyCut = types.StringNull()
 	}
 	if v, ok := obj["output.affinity"]; ok {
 		_ = v
@@ -1486,14 +1414,11 @@ func routingBGPConnectionApply(ctx context.Context, obj client.Object, m *Routin
 		m.OutputAffinity = types.StringNull()
 	}
 	if v, ok := obj["output-filter"]; ok {
-		_ = v
 		if v != "" {
 			m.OutputFilter = types.StringValue(v)
 		} else {
 			m.OutputFilter = types.StringNull()
 		}
-	} else {
-		m.OutputFilter = types.StringNull()
 	}
 	if v, ok := obj["output.network"]; ok {
 		_ = v
@@ -1516,14 +1441,11 @@ func routingBGPConnectionApply(ctx context.Context, obj client.Object, m *Routin
 		m.OutputRedistribute = types.StringNull()
 	}
 	if v, ok := obj["output-selection-policy"]; ok {
-		_ = v
 		if v != "" {
 			m.OutputSelectionPolicy = types.StringValue(v)
 		} else {
 			m.OutputSelectionPolicy = types.StringNull()
 		}
-	} else {
-		m.OutputSelectionPolicy = types.StringNull()
 	}
 	if v, ok := obj["remote.address"]; ok {
 		_ = v
@@ -1536,14 +1458,11 @@ func routingBGPConnectionApply(ctx context.Context, obj client.Object, m *Routin
 		m.RemoteAddress = types.StringNull()
 	}
 	if v, ok := obj["remote-allow-as"]; ok {
-		_ = v
 		if v != "" {
 			m.RemoteAllowAs = types.StringValue(v)
 		} else {
 			m.RemoteAllowAs = types.StringNull()
 		}
-	} else {
-		m.RemoteAllowAs = types.StringNull()
 	}
 	if v, ok := obj["remote.as"]; ok {
 		_ = v
@@ -1566,44 +1485,32 @@ func routingBGPConnectionApply(ctx context.Context, obj client.Object, m *Routin
 		m.RemotePort = types.StringNull()
 	}
 	if v, ok := obj["remove-private-as"]; ok {
-		_ = v
 		if v != "" {
 			m.RemovePrivateAs = types.StringValue(v)
 		} else {
 			m.RemovePrivateAs = types.StringNull()
 		}
-	} else {
-		m.RemovePrivateAs = types.StringNull()
 	}
 	if v, ok := obj["router-id"]; ok {
-		_ = v
 		if v != "" {
 			m.RouterID = types.StringValue(v)
 		} else {
 			m.RouterID = types.StringNull()
 		}
-	} else {
-		m.RouterID = types.StringNull()
 	}
 	if v, ok := obj["routing-table"]; ok {
-		_ = v
 		if v != "" {
 			m.RoutingTable = types.StringValue(v)
 		} else {
 			m.RoutingTable = types.StringNull()
 		}
-	} else {
-		m.RoutingTable = types.StringNull()
 	}
 	if v, ok := obj["rx-min-ttl"]; ok {
-		_ = v
 		if v != "" {
 			m.RxMinTtl = types.StringValue(v)
 		} else {
 			m.RxMinTtl = types.StringNull()
 		}
-	} else {
-		m.RxMinTtl = types.StringNull()
 	}
 	// Sensitive: RouterOS scrubs the value on read. If the server returned
 	// a value, decode it. Otherwise the plan value (user input) is what's
@@ -1620,43 +1527,31 @@ func routingBGPConnectionApply(ctx context.Context, obj client.Object, m *Routin
 		m.TCPMd5Key = types.StringNull()
 	}
 	if v, ok := obj["template"]; ok {
-		_ = v
 		if v != "" {
 			m.Template = types.StringValue(v)
 		} else {
 			m.Template = types.StringNull()
 		}
-	} else {
-		m.Template = types.StringNull()
 	}
 	if v, ok := obj["tx-ttl"]; ok {
-		_ = v
 		if v != "" {
 			m.TxTtl = types.StringValue(v)
 		} else {
 			m.TxTtl = types.StringNull()
 		}
-	} else {
-		m.TxTtl = types.StringNull()
 	}
 	if v, ok := obj["use-bfd"]; ok {
-		_ = v
 		if v != "" {
 			m.UseBfd = types.StringValue(v)
 		} else {
 			m.UseBfd = types.StringNull()
 		}
-	} else {
-		m.UseBfd = types.StringNull()
 	}
 	if v, ok := obj["vrf"]; ok {
-		_ = v
 		if v != "" {
 			m.Vrf = types.StringValue(v)
 		} else {
 			m.Vrf = types.StringNull()
 		}
-	} else {
-		m.Vrf = types.StringNull()
 	}
 }

@@ -944,24 +944,18 @@ func queueTypeApply(ctx context.Context, obj client.Object, m *QueueTypeModel) {
 		m.BfifoLimit = types.StringNull()
 	}
 	if v, ok := obj["default"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
 		} else {
 			m.Default = types.BoolNull()
 		}
-	} else {
-		m.Default = types.BoolNull()
 	}
 	if v, ok := obj["kind"]; ok {
-		_ = v
 		if v != "" {
 			m.Kind = types.StringValue(v)
 		} else {
 			m.Kind = types.StringNull()
 		}
-	} else {
-		m.Kind = types.StringNull()
 	}
 	if v, ok := obj["mq-pfifo-limit"]; ok {
 		_ = v
@@ -974,14 +968,11 @@ func queueTypeApply(ctx context.Context, obj client.Object, m *QueueTypeModel) {
 		m.MqPfifoLimit = types.Int64Null()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["pcq-burst-rate"]; ok {
 		_ = v
@@ -1004,24 +995,18 @@ func queueTypeApply(ctx context.Context, obj client.Object, m *QueueTypeModel) {
 		m.PcqBurstThreshold = types.Int64Null()
 	}
 	if v, ok := obj["pcq-burst-time"]; ok {
-		_ = v
 		if v != "" {
 			m.PcqBurstTime = types.StringValue(v)
 		} else {
 			m.PcqBurstTime = types.StringNull()
 		}
-	} else {
-		m.PcqBurstTime = types.StringNull()
 	}
 	if v, ok := obj["pcq-classifier"]; ok {
-		_ = v
 		if v != "" {
 			m.PcqClassifier = types.StringValue(v)
 		} else {
 			m.PcqClassifier = types.StringNull()
 		}
-	} else {
-		m.PcqClassifier = types.StringNull()
 	}
 	if v, ok := obj["pcq-dst-address-mask"]; ok {
 		_ = v
@@ -1174,13 +1159,10 @@ func queueTypeApply(ctx context.Context, obj client.Object, m *QueueTypeModel) {
 		m.SfqPerturb = types.Int64Null()
 	}
 	if v, ok := obj["type-name"]; ok {
-		_ = v
 		if v != "" {
 			m.TypeName = types.StringValue(v)
 		} else {
 			m.TypeName = types.StringNull()
 		}
-	} else {
-		m.TypeName = types.StringNull()
 	}
 }

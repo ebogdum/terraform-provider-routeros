@@ -468,14 +468,11 @@ func interfaceApply(ctx context.Context, obj client.Object, m *InterfaceModel) {
 		m.ActualMTU = types.Int64Null()
 	}
 	if v, ok := obj["answer-time"]; ok {
-		_ = v
 		if v != "" {
 			m.AnswerTime = types.StringValue(v)
 		} else {
 			m.AnswerTime = types.StringNull()
 		}
-	} else {
-		m.AnswerTime = types.StringNull()
 	}
 	if v, ok := obj["caps"]; ok {
 		_ = v
@@ -488,44 +485,32 @@ func interfaceApply(ctx context.Context, obj client.Object, m *InterfaceModel) {
 		m.Caps = types.Int64Null()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["default-name"]; ok {
-		_ = v
 		if v != "" {
 			m.DefaultName = types.StringValue(v)
 		} else {
 			m.DefaultName = types.StringNull()
 		}
-	} else {
-		m.DefaultName = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["fp-rps-drop"]; ok {
 		_ = v
@@ -578,54 +563,39 @@ func interfaceApply(ctx context.Context, obj client.Object, m *InterfaceModel) {
 		m.FpTxPacket = types.Int64Null()
 	}
 	if v, ok := obj["fp-tx-rx-packet-rate"]; ok {
-		_ = v
 		if v != "" {
 			m.FpTxRxPacketRate = types.StringValue(v)
 		} else {
 			m.FpTxRxPacketRate = types.StringNull()
 		}
-	} else {
-		m.FpTxRxPacketRate = types.StringNull()
 	}
 	if v, ok := obj["fp-tx-rx-rate"]; ok {
-		_ = v
 		if v != "" {
 			m.FpTxRxRate = types.StringValue(v)
 		} else {
 			m.FpTxRxRate = types.StringNull()
 		}
-	} else {
-		m.FpTxRxRate = types.StringNull()
 	}
 	if v, ok := obj["inactive"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Inactive = types.BoolValue(b)
 		} else {
 			m.Inactive = types.BoolNull()
 		}
-	} else {
-		m.Inactive = types.BoolNull()
 	}
 	if v, ok := obj["last-link-down-time"]; ok {
-		_ = v
 		if v != "" {
 			m.LastLinkDownTime = types.StringValue(v)
 		} else {
 			m.LastLinkDownTime = types.StringNull()
 		}
-	} else {
-		m.LastLinkDownTime = types.StringNull()
 	}
 	if v, ok := obj["last-link-up-time"]; ok {
-		_ = v
 		if v != "" {
 			m.LastLinkUpTime = types.StringValue(v)
 		} else {
 			m.LastLinkUpTime = types.StringNull()
 		}
-	} else {
-		m.LastLinkUpTime = types.StringNull()
 	}
 	if v, ok := obj["link"]; ok {
 		_ = v
@@ -648,84 +618,60 @@ func interfaceApply(ctx context.Context, obj client.Object, m *InterfaceModel) {
 		m.LinkDowns = types.Int64Null()
 	}
 	if v, ok := obj["mac-address"]; ok {
-		_ = v
 		if v != "" {
 			m.MACAddress = types.StringValue(v)
 		} else {
 			m.MACAddress = types.StringNull()
 		}
-	} else {
-		m.MACAddress = types.StringNull()
 	}
 	if v, ok := obj["mtu"]; ok {
-		_ = v
 		if v != "" {
 			m.MTU = types.StringValue(v)
 		} else {
 			m.MTU = types.StringNull()
 		}
-	} else {
-		m.MTU = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["nodefname"]; ok {
-		_ = v
 		if v != "" {
 			m.Nodefname = types.StringValue(v)
 		} else {
 			m.Nodefname = types.StringNull()
 		}
-	} else {
-		m.Nodefname = types.StringNull()
 	}
 	if v, ok := obj["notrunning"]; ok {
-		_ = v
 		if v != "" {
 			m.Notrunning = types.StringValue(v)
 		} else {
 			m.Notrunning = types.StringNull()
 		}
-	} else {
-		m.Notrunning = types.StringNull()
 	}
 	if v, ok := obj["passthrough"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Passthrough = types.BoolValue(b)
 		} else {
 			m.Passthrough = types.BoolNull()
 		}
-	} else {
-		m.Passthrough = types.BoolNull()
 	}
 	if v, ok := obj["reset-traffic-counters"]; ok {
-		_ = v
 		if v != "" {
 			m.ResetTrafficCounters = types.StringValue(v)
 		} else {
 			m.ResetTrafficCounters = types.StringNull()
 		}
-	} else {
-		m.ResetTrafficCounters = types.StringNull()
 	}
 	if v, ok := obj["running"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Running = types.BoolValue(b)
 		} else {
 			m.Running = types.BoolNull()
 		}
-	} else {
-		m.Running = types.BoolNull()
 	}
 	if v, ok := obj["rx-byte"]; ok {
 		_ = v
@@ -768,24 +714,18 @@ func interfaceApply(ctx context.Context, obj client.Object, m *InterfaceModel) {
 		m.RxPacket = types.Int64Null()
 	}
 	if v, ok := obj["slave"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Slave = types.BoolValue(b)
 		} else {
 			m.Slave = types.BoolNull()
 		}
-	} else {
-		m.Slave = types.BoolNull()
 	}
 	if v, ok := obj["torch"]; ok {
-		_ = v
 		if v != "" {
 			m.Torch = types.StringValue(v)
 		} else {
 			m.Torch = types.StringNull()
 		}
-	} else {
-		m.Torch = types.StringNull()
 	}
 	if v, ok := obj["tx-byte"]; ok {
 		_ = v
@@ -838,74 +778,53 @@ func interfaceApply(ctx context.Context, obj client.Object, m *InterfaceModel) {
 		m.TxQueueDrop = types.Int64Null()
 	}
 	if v, ok := obj["tx-queue-drops"]; ok {
-		_ = v
 		if v != "" {
 			m.TxQueueDrops = types.StringValue(v)
 		} else {
 			m.TxQueueDrops = types.StringNull()
 		}
-	} else {
-		m.TxQueueDrops = types.StringNull()
 	}
 	if v, ok := obj["tx-rx-bytes"]; ok {
-		_ = v
 		if v != "" {
 			m.TxRxBytes = types.StringValue(v)
 		} else {
 			m.TxRxBytes = types.StringNull()
 		}
-	} else {
-		m.TxRxBytes = types.StringNull()
 	}
 	if v, ok := obj["tx-rx-drops"]; ok {
-		_ = v
 		if v != "" {
 			m.TxRxDrops = types.StringValue(v)
 		} else {
 			m.TxRxDrops = types.StringNull()
 		}
-	} else {
-		m.TxRxDrops = types.StringNull()
 	}
 	if v, ok := obj["tx-rx-errors"]; ok {
-		_ = v
 		if v != "" {
 			m.TxRxErrors = types.StringValue(v)
 		} else {
 			m.TxRxErrors = types.StringNull()
 		}
-	} else {
-		m.TxRxErrors = types.StringNull()
 	}
 	if v, ok := obj["tx-rx-packet-rate"]; ok {
-		_ = v
 		if v != "" {
 			m.TxRxPacketRate = types.StringValue(v)
 		} else {
 			m.TxRxPacketRate = types.StringNull()
 		}
-	} else {
-		m.TxRxPacketRate = types.StringNull()
 	}
 	if v, ok := obj["tx-rx-packets"]; ok {
-		_ = v
 		if v != "" {
 			m.TxRxPackets = types.StringValue(v)
 		} else {
 			m.TxRxPackets = types.StringNull()
 		}
-	} else {
-		m.TxRxPackets = types.StringNull()
 	}
 	if v, ok := obj["tx-rx-rate"]; ok {
-		_ = v
 		if v != "" {
 			m.TxRxRate = types.StringValue(v)
 		} else {
 			m.TxRxRate = types.StringNull()
 		}
-	} else {
-		m.TxRxRate = types.StringNull()
 	}
 	if v, ok := obj["type"]; ok && v != "" {
 		m.Type = types.StringValue(v)
@@ -913,13 +832,10 @@ func interfaceApply(ctx context.Context, obj client.Object, m *InterfaceModel) {
 		m.Type = types.StringNull()
 	}
 	if v, ok := obj["vrf"]; ok {
-		_ = v
 		if v != "" {
 			m.Vrf = types.StringValue(v)
 		} else {
 			m.Vrf = types.StringNull()
 		}
-	} else {
-		m.Vrf = types.StringNull()
 	}
 }

@@ -411,24 +411,18 @@ func toolTrafficGeneratorRawPacketTemplateApply(ctx context.Context, obj client.
 		m.ComputeChecksumFromOffset = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["data"]; ok {
-		_ = v
 		if v != "" {
 			m.Data = types.StringValue(v)
 		} else {
 			m.Data = types.StringNull()
 		}
-	} else {
-		m.Data = types.StringNull()
 	}
 	if v, ok := obj["data-byte"]; ok {
 		_ = v
@@ -441,24 +435,18 @@ func toolTrafficGeneratorRawPacketTemplateApply(ctx context.Context, obj client.
 		m.DataByte = types.Int64Null()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["header"]; ok {
-		_ = v
 		if v != "" {
 			m.Header = types.StringValue(v)
 		} else {
 			m.Header = types.StringNull()
 		}
-	} else {
-		m.Header = types.StringNull()
 	}
 	if v, ok := obj["header-length"]; ok {
 		_ = v
@@ -471,103 +459,73 @@ func toolTrafficGeneratorRawPacketTemplateApply(ctx context.Context, obj client.
 		m.HeaderLength = types.Int64Null()
 	}
 	if v, ok := obj["ip-header-offset"]; ok {
-		_ = v
 		if v != "" {
 			m.IPHeaderOffset = types.StringValue(v)
 		} else {
 			m.IPHeaderOffset = types.StringNull()
 		}
-	} else {
-		m.IPHeaderOffset = types.StringNull()
 	}
 	if v, ok := obj["ipv6-header-offset"]; ok {
-		_ = v
 		if v != "" {
 			m.IPV6HeaderOffset = types.StringValue(v)
 		} else {
 			m.IPV6HeaderOffset = types.StringNull()
 		}
-	} else {
-		m.IPV6HeaderOffset = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["port"]; ok {
-		_ = v
 		if v != "" {
 			m.Port = types.StringValue(v)
 		} else {
 			m.Port = types.StringNull()
 		}
-	} else {
-		m.Port = types.StringNull()
 	}
 	if v, ok := obj["random"]; ok {
-		_ = v
 		if v != "" {
 			m.Random = types.StringValue(v)
 		} else {
 			m.Random = types.StringNull()
 		}
-	} else {
-		m.Random = types.StringNull()
 	}
 	if v, ok := obj["random-byte-offsets-and-masks"]; ok {
-		_ = v
 		if v != "" {
 			m.RandomByteOffsetsAndMasks = types.StringValue(v)
 		} else {
 			m.RandomByteOffsetsAndMasks = types.StringNull()
 		}
-	} else {
-		m.RandomByteOffsetsAndMasks = types.StringNull()
 	}
 	if v, ok := obj["random-ranges"]; ok {
-		_ = v
 		if v != "" {
 			m.RandomRanges = types.StringValue(v)
 		} else {
 			m.RandomRanges = types.StringNull()
 		}
-	} else {
-		m.RandomRanges = types.StringNull()
 	}
 	if v, ok := obj["specbyte"]; ok {
-		_ = v
 		if v != "" {
 			m.Specbyte = types.StringValue(v)
 		} else {
 			m.Specbyte = types.StringNull()
 		}
-	} else {
-		m.Specbyte = types.StringNull()
 	}
 	if v, ok := obj["special-footer"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.SpecialFooter = types.BoolValue(b)
 		} else {
 			m.SpecialFooter = types.BoolNull()
 		}
-	} else {
-		m.SpecialFooter = types.BoolNull()
 	}
 	if v, ok := obj["udp-header-offset"]; ok {
-		_ = v
 		if v != "" {
 			m.UDPHeaderOffset = types.StringValue(v)
 		} else {
 			m.UDPHeaderOffset = types.StringNull()
 		}
-	} else {
-		m.UDPHeaderOffset = types.StringNull()
 	}
 }

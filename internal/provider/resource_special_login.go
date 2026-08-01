@@ -239,43 +239,31 @@ func specialLoginApply(ctx context.Context, obj client.Object, m *SpecialLoginMo
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["channel"]; ok {
-		_ = v
 		if v != "" {
 			m.Channel = types.StringValue(v)
 		} else {
 			m.Channel = types.StringNull()
 		}
-	} else {
-		m.Channel = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["port"]; ok {
-		_ = v
 		if v != "" {
 			m.Port = types.StringValue(v)
 		} else {
 			m.Port = types.StringNull()
 		}
-	} else {
-		m.Port = types.StringNull()
 	}
 	if v, ok := obj["user"]; ok {
-		_ = v
 		if v != "" {
 			m.User = types.StringValue(v)
 		} else {
 			m.User = types.StringNull()
 		}
-	} else {
-		m.User = types.StringNull()
 	}
 }

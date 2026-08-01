@@ -264,64 +264,46 @@ func iPFirewallAddressListApply(ctx context.Context, obj client.Object, m *IPFir
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["address"]; ok {
-		_ = v
 		if v != "" {
 			m.Address = types.StringValue(v)
 		} else {
 			m.Address = types.StringNull()
 		}
-	} else {
-		m.Address = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["creation-time"]; ok {
-		_ = v
 		if v != "" {
 			m.CreationTime = types.StringValue(v)
 		} else {
 			m.CreationTime = types.StringNull()
 		}
-	} else {
-		m.CreationTime = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["list"]; ok {
-		_ = v
 		if v != "" {
 			m.List = types.StringValue(v)
 		} else {
 			m.List = types.StringNull()
 		}
-	} else {
-		m.List = types.StringNull()
 	}
 	if v, ok := obj["parent"]; ok {
 		_ = v
@@ -334,13 +316,10 @@ func iPFirewallAddressListApply(ctx context.Context, obj client.Object, m *IPFir
 		m.Parent = types.Int64Null()
 	}
 	if v, ok := obj["timeout"]; ok {
-		_ = v
 		if v != "" {
 			m.Timeout = types.StringValue(v)
 		} else {
 			m.Timeout = types.StringNull()
 		}
-	} else {
-		m.Timeout = types.StringNull()
 	}
 }

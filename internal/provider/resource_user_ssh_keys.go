@@ -302,103 +302,73 @@ func userSSHKeysApply(ctx context.Context, obj client.Object, m *UserSSHKeysMode
 		m.Bits = types.Int64Null()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["fingerprint"]; ok {
-		_ = v
 		if v != "" {
 			m.Fingerprint = types.StringValue(v)
 		} else {
 			m.Fingerprint = types.StringNull()
 		}
-	} else {
-		m.Fingerprint = types.StringNull()
 	}
 	if v, ok := obj["import-ssh-key"]; ok {
-		_ = v
 		if v != "" {
 			m.ImportSSHKey = types.StringValue(v)
 		} else {
 			m.ImportSSHKey = types.StringNull()
 		}
-	} else {
-		m.ImportSSHKey = types.StringNull()
 	}
 	if v, ok := obj["info"]; ok {
-		_ = v
 		if v != "" {
 			m.Info = types.StringValue(v)
 		} else {
 			m.Info = types.StringNull()
 		}
-	} else {
-		m.Info = types.StringNull()
 	}
 	if v, ok := obj["key"]; ok {
-		_ = v
 		if v != "" {
 			m.Key = types.StringValue(v)
 		} else {
 			m.Key = types.StringNull()
 		}
-	} else {
-		m.Key = types.StringNull()
 	}
 	if v, ok := obj["key-type"]; ok {
-		_ = v
 		if v != "" {
 			m.KeyType = types.StringValue(v)
 		} else {
 			m.KeyType = types.StringNull()
 		}
-	} else {
-		m.KeyType = types.StringNull()
 	}
 	if v, ok := obj["newk"]; ok {
-		_ = v
 		if v != "" {
 			m.Newk = types.StringValue(v)
 		} else {
 			m.Newk = types.StringNull()
 		}
-	} else {
-		m.Newk = types.StringNull()
 	}
 	if v, ok := obj["oldk"]; ok {
-		_ = v
 		if v != "" {
 			m.Oldk = types.StringValue(v)
 		} else {
 			m.Oldk = types.StringNull()
 		}
-	} else {
-		m.Oldk = types.StringNull()
 	}
 	if v, ok := obj["user"]; ok {
-		_ = v
 		if v != "" {
 			m.User = types.StringValue(v)
 		} else {
 			m.User = types.StringNull()
 		}
-	} else {
-		m.User = types.StringNull()
 	}
 }

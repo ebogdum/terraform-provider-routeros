@@ -291,14 +291,11 @@ func systemNTPClientServersApply(ctx context.Context, obj client.Object, m *Syst
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["address"]; ok {
-		_ = v
 		if v != "" {
 			m.Address = types.StringValue(v)
 		} else {
 			m.Address = types.StringNull()
 		}
-	} else {
-		m.Address = types.StringNull()
 	}
 	// Sensitive: RouterOS scrubs the value on read. If the server returned
 	// a value, decode it. Otherwise the plan value (user input) is what's
@@ -315,54 +312,39 @@ func systemNTPClientServersApply(ctx context.Context, obj client.Object, m *Syst
 		m.AuthKey = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["iburst"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Iburst = types.BoolValue(b)
 		} else {
 			m.Iburst = types.BoolNull()
 		}
-	} else {
-		m.Iburst = types.BoolNull()
 	}
 	if v, ok := obj["keys"]; ok {
-		_ = v
 		if v != "" {
 			m.Keys = types.StringValue(v)
 		} else {
 			m.Keys = types.StringNull()
 		}
-	} else {
-		m.Keys = types.StringNull()
 	}
 	if v, ok := obj["max-poll"]; ok {
 		_ = v
@@ -385,13 +367,10 @@ func systemNTPClientServersApply(ctx context.Context, obj client.Object, m *Syst
 		m.MinPoll = types.Int64Null()
 	}
 	if v, ok := obj["resolved-address"]; ok {
-		_ = v
 		if v != "" {
 			m.ResolvedAddress = types.StringValue(v)
 		} else {
 			m.ResolvedAddress = types.StringNull()
 		}
-	} else {
-		m.ResolvedAddress = types.StringNull()
 	}
 }

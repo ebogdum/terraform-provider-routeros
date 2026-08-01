@@ -333,123 +333,87 @@ func iPDHCPRelayApply(ctx context.Context, obj client.Object, m *IPDHCPRelayMode
 		m.LocalAddressAsSrcIp = types.StringNull()
 	}
 	if v, ok := obj["add-relay-info"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AddRelayInfo = types.BoolValue(b)
 		} else {
 			m.AddRelayInfo = types.BoolNull()
 		}
-	} else {
-		m.AddRelayInfo = types.BoolNull()
 	}
 	if v, ok := obj["delay-threshold"]; ok {
-		_ = v
 		if v != "" {
 			m.DelayThreshold = types.StringValue(v)
 		} else {
 			m.DelayThreshold = types.StringNull()
 		}
-	} else {
-		m.DelayThreshold = types.StringNull()
 	}
 	if v, ok := obj["dhcp-server"]; ok {
-		_ = v
 		if v != "" {
 			m.DHCPServer = types.StringValue(v)
 		} else {
 			m.DHCPServer = types.StringNull()
 		}
-	} else {
-		m.DHCPServer = types.StringNull()
 	}
 	if v, ok := obj["dhcp-server-vrf"]; ok {
-		_ = v
 		if v != "" {
 			m.DHCPServerVrf = types.StringValue(v)
 		} else {
 			m.DHCPServerVrf = types.StringNull()
 		}
-	} else {
-		m.DHCPServerVrf = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["interface"]; ok {
-		_ = v
 		if v != "" {
 			m.Interface = types.StringValue(v)
 		} else {
 			m.Interface = types.StringNull()
 		}
-	} else {
-		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["local-address"]; ok {
-		_ = v
 		if v != "" {
 			m.LocalAddress = types.StringValue(v)
 		} else {
 			m.LocalAddress = types.StringNull()
 		}
-	} else {
-		m.LocalAddress = types.StringNull()
 	}
 	if v, ok := obj["local-address-as-source-ip"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.LocalAddressAsSourceIP = types.BoolValue(b)
 		} else {
 			m.LocalAddressAsSourceIP = types.BoolNull()
 		}
-	} else {
-		m.LocalAddressAsSourceIP = types.BoolNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["relay-info-remote-id"]; ok {
-		_ = v
 		if v != "" {
 			m.RelayInfoRemoteID = types.StringValue(v)
 		} else {
 			m.RelayInfoRemoteID = types.StringNull()
 		}
-	} else {
-		m.RelayInfoRemoteID = types.StringNull()
 	}
 	if v, ok := obj["reset-counters"]; ok {
-		_ = v
 		if v != "" {
 			m.ResetCounters = types.StringValue(v)
 		} else {
 			m.ResetCounters = types.StringNull()
 		}
-	} else {
-		m.ResetCounters = types.StringNull()
 	}
 }

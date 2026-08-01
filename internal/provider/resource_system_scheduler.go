@@ -305,84 +305,60 @@ func systemSchedulerApply(ctx context.Context, obj client.Object, m *SystemSched
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["interval"]; ok {
-		_ = v
 		if v != "" {
 			m.Interval = types.StringValue(v)
 		} else {
 			m.Interval = types.StringNull()
 		}
-	} else {
-		m.Interval = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["next-run"]; ok {
-		_ = v
 		if v != "" {
 			m.NextRun = types.StringValue(v)
 		} else {
 			m.NextRun = types.StringNull()
 		}
-	} else {
-		m.NextRun = types.StringNull()
 	}
 	if v, ok := obj["on-event"]; ok {
-		_ = v
 		if v != "" {
 			m.OnEvent = types.StringValue(v)
 		} else {
 			m.OnEvent = types.StringNull()
 		}
-	} else {
-		m.OnEvent = types.StringNull()
 	}
 	if v, ok := obj["owner"]; ok {
-		_ = v
 		if v != "" {
 			m.Owner = types.StringValue(v)
 		} else {
 			m.Owner = types.StringNull()
 		}
-	} else {
-		m.Owner = types.StringNull()
 	}
 	if v, ok := obj["policy"]; ok {
-		_ = v
 		if v != "" {
 			m.Policy = types.StringValue(v)
 		} else {
 			m.Policy = types.StringNull()
 		}
-	} else {
-		m.Policy = types.StringNull()
 	}
 	if v, ok := obj["run-count"]; ok {
 		_ = v
@@ -395,23 +371,17 @@ func systemSchedulerApply(ctx context.Context, obj client.Object, m *SystemSched
 		m.RunCount = types.Int64Null()
 	}
 	if v, ok := obj["start-date"]; ok {
-		_ = v
 		if v != "" {
 			m.StartDate = types.StringValue(v)
 		} else {
 			m.StartDate = types.StringNull()
 		}
-	} else {
-		m.StartDate = types.StringNull()
 	}
 	if v, ok := obj["start-time"]; ok {
-		_ = v
 		if v != "" {
 			m.StartTime = types.StringValue(v)
 		} else {
 			m.StartTime = types.StringNull()
 		}
-	} else {
-		m.StartTime = types.StringNull()
 	}
 }

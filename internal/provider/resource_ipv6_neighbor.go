@@ -316,173 +316,122 @@ func iPV6NeighborApply(ctx context.Context, obj client.Object, m *IPV6NeighborMo
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["address"]; ok {
-		_ = v
 		if v != "" {
 			m.Address = types.StringValue(v)
 		} else {
 			m.Address = types.StringNull()
 		}
-	} else {
-		m.Address = types.StringNull()
 	}
 	if v, ok := obj["bridge-port"]; ok {
-		_ = v
 		if v != "" {
 			m.BridgePort = types.StringValue(v)
 		} else {
 			m.BridgePort = types.StringNull()
 		}
-	} else {
-		m.BridgePort = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["host-name"]; ok {
-		_ = v
 		if v != "" {
 			m.HostName = types.StringValue(v)
 		} else {
 			m.HostName = types.StringNull()
 		}
-	} else {
-		m.HostName = types.StringNull()
 	}
 	if v, ok := obj["interface"]; ok {
-		_ = v
 		if v != "" {
 			m.Interface = types.StringValue(v)
 		} else {
 			m.Interface = types.StringNull()
 		}
-	} else {
-		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["mac-address"]; ok {
-		_ = v
 		if v != "" {
 			m.MACAddress = types.StringValue(v)
 		} else {
 			m.MACAddress = types.StringNull()
 		}
-	} else {
-		m.MACAddress = types.StringNull()
 	}
 	if v, ok := obj["mac-ping"]; ok {
-		_ = v
 		if v != "" {
 			m.MACPing = types.StringValue(v)
 		} else {
 			m.MACPing = types.StringNull()
 		}
-	} else {
-		m.MACPing = types.StringNull()
 	}
 	if v, ok := obj["mac-telnet"]; ok {
-		_ = v
 		if v != "" {
 			m.MACTelnet = types.StringValue(v)
 		} else {
 			m.MACTelnet = types.StringNull()
 		}
-	} else {
-		m.MACTelnet = types.StringNull()
 	}
 	if v, ok := obj["make-static"]; ok {
-		_ = v
 		if v != "" {
 			m.MakeStatic = types.StringValue(v)
 		} else {
 			m.MakeStatic = types.StringNull()
 		}
-	} else {
-		m.MakeStatic = types.StringNull()
 	}
 	if v, ok := obj["ping"]; ok {
-		_ = v
 		if v != "" {
 			m.Ping = types.StringValue(v)
 		} else {
 			m.Ping = types.StringNull()
 		}
-	} else {
-		m.Ping = types.StringNull()
 	}
 	if v, ok := obj["router"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.RouterRos = types.BoolValue(b)
 		} else {
 			m.RouterRos = types.BoolNull()
 		}
-	} else {
-		m.RouterRos = types.BoolNull()
 	}
 	if v, ok := obj["status"]; ok {
-		_ = v
 		if v != "" {
 			m.Status = types.StringValue(v)
 		} else {
 			m.Status = types.StringNull()
 		}
-	} else {
-		m.Status = types.StringNull()
 	}
 	if v, ok := obj["telnet"]; ok {
-		_ = v
 		if v != "" {
 			m.Telnet = types.StringValue(v)
 		} else {
 			m.Telnet = types.StringNull()
 		}
-	} else {
-		m.Telnet = types.StringNull()
 	}
 	if v, ok := obj["torch"]; ok {
-		_ = v
 		if v != "" {
 			m.Torch = types.StringValue(v)
 		} else {
 			m.Torch = types.StringNull()
 		}
-	} else {
-		m.Torch = types.StringNull()
 	}
 	if v, ok := obj["vrf"]; ok {
-		_ = v
 		if v != "" {
 			m.Vrf = types.StringValue(v)
 		} else {
 			m.Vrf = types.StringNull()
 		}
-	} else {
-		m.Vrf = types.StringNull()
 	}
 }

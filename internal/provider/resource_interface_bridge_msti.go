@@ -273,44 +273,32 @@ func interfaceBridgeMstiApply(ctx context.Context, obj client.Object, m *Interfa
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["bridge"]; ok {
-		_ = v
 		if v != "" {
 			m.Bridge = types.StringValue(v)
 		} else {
 			m.Bridge = types.StringNull()
 		}
-	} else {
-		m.Bridge = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["identifier"]; ok {
 		_ = v
@@ -343,13 +331,10 @@ func interfaceBridgeMstiApply(ctx context.Context, obj client.Object, m *Interfa
 		m.Status = types.Int64Null()
 	}
 	if v, ok := obj["vlan-mapping"]; ok {
-		_ = v
 		if v != "" {
 			m.VLANMapping = types.StringValue(v)
 		} else {
 			m.VLANMapping = types.StringNull()
 		}
-	} else {
-		m.VLANMapping = types.StringNull()
 	}
 }

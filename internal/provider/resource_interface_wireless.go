@@ -1392,534 +1392,375 @@ func interfaceWirelessApply(ctx context.Context, obj client.Object, m *Interface
 		m.DfsTestMode = types.StringNull()
 	}
 	if v, ok := obj["adaptive-noise-immunity"]; ok {
-		_ = v
 		if v != "" {
 			m.AdaptiveNoiseImmunity = types.StringValue(v)
 		} else {
 			m.AdaptiveNoiseImmunity = types.StringNull()
 		}
-	} else {
-		m.AdaptiveNoiseImmunity = types.StringNull()
 	}
 	if v, ok := obj["allow-sharedkey"]; ok {
-		_ = v
 		if v != "" {
 			m.AllowSharedkey = types.StringValue(v)
 		} else {
 			m.AllowSharedkey = types.StringNull()
 		}
-	} else {
-		m.AllowSharedkey = types.StringNull()
 	}
 	if v, ok := obj["ampdu-priorities"]; ok {
-		_ = v
 		if v != "" {
 			m.AmpduPriorities = types.StringValue(v)
 		} else {
 			m.AmpduPriorities = types.StringNull()
 		}
-	} else {
-		m.AmpduPriorities = types.StringNull()
 	}
 	if v, ok := obj["amsdu-limit"]; ok {
-		_ = v
 		if v != "" {
 			m.AmsduLimit = types.StringValue(v)
 		} else {
 			m.AmsduLimit = types.StringNull()
 		}
-	} else {
-		m.AmsduLimit = types.StringNull()
 	}
 	if v, ok := obj["amsdu-threshold"]; ok {
-		_ = v
 		if v != "" {
 			m.AmsduThreshold = types.StringValue(v)
 		} else {
 			m.AmsduThreshold = types.StringNull()
 		}
-	} else {
-		m.AmsduThreshold = types.StringNull()
 	}
 	if v, ok := obj["antenna-gain"]; ok {
-		_ = v
 		if v != "" {
 			m.AntennaGain = types.StringValue(v)
 		} else {
 			m.AntennaGain = types.StringNull()
 		}
-	} else {
-		m.AntennaGain = types.StringNull()
 	}
 	if v, ok := obj["antenna-mode"]; ok {
-		_ = v
 		if v != "" {
 			m.AntennaMode = types.StringValue(v)
 		} else {
 			m.AntennaMode = types.StringNull()
 		}
-	} else {
-		m.AntennaMode = types.StringNull()
 	}
 	if v, ok := obj["area"]; ok {
-		_ = v
 		if v != "" {
 			m.Area = types.StringValue(v)
 		} else {
 			m.Area = types.StringNull()
 		}
-	} else {
-		m.Area = types.StringNull()
 	}
 	if v, ok := obj["arp"]; ok {
-		_ = v
 		if v != "" {
 			m.ARP = types.StringValue(v)
 		} else {
 			m.ARP = types.StringNull()
 		}
-	} else {
-		m.ARP = types.StringNull()
 	}
 	if v, ok := obj["arp-timeout"]; ok {
-		_ = v
 		if v != "" {
 			m.ARPTimeout = types.StringValue(v)
 		} else {
 			m.ARPTimeout = types.StringNull()
 		}
-	} else {
-		m.ARPTimeout = types.StringNull()
 	}
 	if v, ok := obj["band"]; ok {
-		_ = v
 		if v != "" {
 			m.Band = types.StringValue(v)
 		} else {
 			m.Band = types.StringNull()
 		}
-	} else {
-		m.Band = types.StringNull()
 	}
 	if v, ok := obj["basic-rates-b"]; ok {
-		_ = v
 		if v != "" {
 			m.BasicRatesB = types.StringValue(v)
 		} else {
 			m.BasicRatesB = types.StringNull()
 		}
-	} else {
-		m.BasicRatesB = types.StringNull()
 	}
 	if v, ok := obj["bridge-mode"]; ok {
-		_ = v
 		if v != "" {
 			m.BridgeMode = types.StringValue(v)
 		} else {
 			m.BridgeMode = types.StringNull()
 		}
-	} else {
-		m.BridgeMode = types.StringNull()
 	}
 	if v, ok := obj["burst-time"]; ok {
-		_ = v
 		if v != "" {
 			m.BurstTime = types.StringValue(v)
 		} else {
 			m.BurstTime = types.StringNull()
 		}
-	} else {
-		m.BurstTime = types.StringNull()
 	}
 	if v, ok := obj["channel-width"]; ok {
-		_ = v
 		if v != "" {
 			m.ChannelWidth = types.StringValue(v)
 		} else {
 			m.ChannelWidth = types.StringNull()
 		}
-	} else {
-		m.ChannelWidth = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["compression"]; ok {
-		_ = v
 		if v != "" {
 			m.Compression = types.StringValue(v)
 		} else {
 			m.Compression = types.StringNull()
 		}
-	} else {
-		m.Compression = types.StringNull()
 	}
 	if v, ok := obj["country"]; ok {
-		_ = v
 		if v != "" {
 			m.Country = types.StringValue(v)
 		} else {
 			m.Country = types.StringNull()
 		}
-	} else {
-		m.Country = types.StringNull()
 	}
 	if v, ok := obj["default-ap-tx-limit"]; ok {
-		_ = v
 		if v != "" {
 			m.DefaultApTxLimit = types.StringValue(v)
 		} else {
 			m.DefaultApTxLimit = types.StringNull()
 		}
-	} else {
-		m.DefaultApTxLimit = types.StringNull()
 	}
 	if v, ok := obj["default-authentication"]; ok {
-		_ = v
 		if v != "" {
 			m.DefaultAuthentication = types.StringValue(v)
 		} else {
 			m.DefaultAuthentication = types.StringNull()
 		}
-	} else {
-		m.DefaultAuthentication = types.StringNull()
 	}
 	if v, ok := obj["default-client-tx-limit"]; ok {
-		_ = v
 		if v != "" {
 			m.DefaultClientTxLimit = types.StringValue(v)
 		} else {
 			m.DefaultClientTxLimit = types.StringNull()
 		}
-	} else {
-		m.DefaultClientTxLimit = types.StringNull()
 	}
 	if v, ok := obj["default-forwarding"]; ok {
-		_ = v
 		if v != "" {
 			m.DefaultForwarding = types.StringValue(v)
 		} else {
 			m.DefaultForwarding = types.StringNull()
 		}
-	} else {
-		m.DefaultForwarding = types.StringNull()
 	}
 	if v, ok := obj["disable-running-check"]; ok {
-		_ = v
 		if v != "" {
 			m.DisableRunningCheck = types.StringValue(v)
 		} else {
 			m.DisableRunningCheck = types.StringNull()
 		}
-	} else {
-		m.DisableRunningCheck = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["disconnect-timeout"]; ok {
-		_ = v
 		if v != "" {
 			m.DisconnectTimeout = types.StringValue(v)
 		} else {
 			m.DisconnectTimeout = types.StringNull()
 		}
-	} else {
-		m.DisconnectTimeout = types.StringNull()
 	}
 	if v, ok := obj["distance"]; ok {
-		_ = v
 		if v != "" {
 			m.Distance = types.StringValue(v)
 		} else {
 			m.Distance = types.StringNull()
 		}
-	} else {
-		m.Distance = types.StringNull()
 	}
 	if v, ok := obj["frame-lifetime"]; ok {
-		_ = v
 		if v != "" {
 			m.FrameLifetime = types.StringValue(v)
 		} else {
 			m.FrameLifetime = types.StringNull()
 		}
-	} else {
-		m.FrameLifetime = types.StringNull()
 	}
 	if v, ok := obj["frequency"]; ok {
-		_ = v
 		if v != "" {
 			m.Frequency = types.StringValue(v)
 		} else {
 			m.Frequency = types.StringNull()
 		}
-	} else {
-		m.Frequency = types.StringNull()
 	}
 	if v, ok := obj["frequency-mode"]; ok {
-		_ = v
 		if v != "" {
 			m.FrequencyMode = types.StringValue(v)
 		} else {
 			m.FrequencyMode = types.StringNull()
 		}
-	} else {
-		m.FrequencyMode = types.StringNull()
 	}
 	if v, ok := obj["frequency-offset"]; ok {
-		_ = v
 		if v != "" {
 			m.FrequencyOffset = types.StringValue(v)
 		} else {
 			m.FrequencyOffset = types.StringNull()
 		}
-	} else {
-		m.FrequencyOffset = types.StringNull()
 	}
 	if v, ok := obj["guard-interval"]; ok {
-		_ = v
 		if v != "" {
 			m.GuardInterval = types.StringValue(v)
 		} else {
 			m.GuardInterval = types.StringNull()
 		}
-	} else {
-		m.GuardInterval = types.StringNull()
 	}
 	if v, ok := obj["hide-ssid"]; ok {
-		_ = v
 		if v != "" {
 			m.HideSsid = types.StringValue(v)
 		} else {
 			m.HideSsid = types.StringNull()
 		}
-	} else {
-		m.HideSsid = types.StringNull()
 	}
 	if v, ok := obj["ht-basic-mcs"]; ok {
-		_ = v
 		if v != "" {
 			m.HtBasicMcs = types.StringValue(v)
 		} else {
 			m.HtBasicMcs = types.StringNull()
 		}
-	} else {
-		m.HtBasicMcs = types.StringNull()
 	}
 	if v, ok := obj["ht-supported-mcs"]; ok {
-		_ = v
 		if v != "" {
 			m.HtSupportedMcs = types.StringValue(v)
 		} else {
 			m.HtSupportedMcs = types.StringNull()
 		}
-	} else {
-		m.HtSupportedMcs = types.StringNull()
 	}
 	if v, ok := obj["hw-fragmentation-threshold"]; ok {
-		_ = v
 		if v != "" {
 			m.HwFragmentationThreshold = types.StringValue(v)
 		} else {
 			m.HwFragmentationThreshold = types.StringNull()
 		}
-	} else {
-		m.HwFragmentationThreshold = types.StringNull()
 	}
 	if v, ok := obj["hw-protection-mode"]; ok {
-		_ = v
 		if v != "" {
 			m.HwProtectionMode = types.StringValue(v)
 		} else {
 			m.HwProtectionMode = types.StringNull()
 		}
-	} else {
-		m.HwProtectionMode = types.StringNull()
 	}
 	if v, ok := obj["hw-protection-threshold"]; ok {
-		_ = v
 		if v != "" {
 			m.HwProtectionThreshold = types.StringValue(v)
 		} else {
 			m.HwProtectionThreshold = types.StringNull()
 		}
-	} else {
-		m.HwProtectionThreshold = types.StringNull()
 	}
 	if v, ok := obj["hw-retries"]; ok {
-		_ = v
 		if v != "" {
 			m.HwRetries = types.StringValue(v)
 		} else {
 			m.HwRetries = types.StringNull()
 		}
-	} else {
-		m.HwRetries = types.StringNull()
 	}
 	if v, ok := obj["installation"]; ok {
-		_ = v
 		if v != "" {
 			m.Installation = types.StringValue(v)
 		} else {
 			m.Installation = types.StringNull()
 		}
-	} else {
-		m.Installation = types.StringNull()
 	}
 	if v, ok := obj["interworking-profile"]; ok {
-		_ = v
 		if v != "" {
 			m.InterworkingProfile = types.StringValue(v)
 		} else {
 			m.InterworkingProfile = types.StringNull()
 		}
-	} else {
-		m.InterworkingProfile = types.StringNull()
 	}
 	if v, ok := obj["keepalive-frames"]; ok {
-		_ = v
 		if v != "" {
 			m.KeepaliveFrames = types.StringValue(v)
 		} else {
 			m.KeepaliveFrames = types.StringNull()
 		}
-	} else {
-		m.KeepaliveFrames = types.StringNull()
 	}
 	if v, ok := obj["l2mtu"]; ok {
-		_ = v
 		if v != "" {
 			m.L2mtu = types.StringValue(v)
 		} else {
 			m.L2mtu = types.StringNull()
 		}
-	} else {
-		m.L2mtu = types.StringNull()
 	}
 	if v, ok := obj["mac-address"]; ok {
-		_ = v
 		if v != "" {
 			m.MACAddress = types.StringValue(v)
 		} else {
 			m.MACAddress = types.StringNull()
 		}
-	} else {
-		m.MACAddress = types.StringNull()
 	}
 	if v, ok := obj["master-interface"]; ok {
-		_ = v
 		if v != "" {
 			m.MasterInterface = types.StringValue(v)
 		} else {
 			m.MasterInterface = types.StringNull()
 		}
-	} else {
-		m.MasterInterface = types.StringNull()
 	}
 	if v, ok := obj["max-station-count"]; ok {
-		_ = v
 		if v != "" {
 			m.MaxStationCount = types.StringValue(v)
 		} else {
 			m.MaxStationCount = types.StringNull()
 		}
-	} else {
-		m.MaxStationCount = types.StringNull()
 	}
 	if v, ok := obj["mode"]; ok {
-		_ = v
 		if v != "" {
 			m.Mode = types.StringValue(v)
 		} else {
 			m.Mode = types.StringNull()
 		}
-	} else {
-		m.Mode = types.StringNull()
 	}
 	if v, ok := obj["mtu"]; ok {
-		_ = v
 		if v != "" {
 			m.MTU = types.StringValue(v)
 		} else {
 			m.MTU = types.StringNull()
 		}
-	} else {
-		m.MTU = types.StringNull()
 	}
 	if v, ok := obj["multicast-buffering"]; ok {
-		_ = v
 		if v != "" {
 			m.MulticastBuffering = types.StringValue(v)
 		} else {
 			m.MulticastBuffering = types.StringNull()
 		}
-	} else {
-		m.MulticastBuffering = types.StringNull()
 	}
 	if v, ok := obj["multicast-helper"]; ok {
-		_ = v
 		if v != "" {
 			m.MulticastHelper = types.StringValue(v)
 		} else {
 			m.MulticastHelper = types.StringNull()
 		}
-	} else {
-		m.MulticastHelper = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["noise-floor-threshold"]; ok {
-		_ = v
 		if v != "" {
 			m.NoiseFloorThreshold = types.StringValue(v)
 		} else {
 			m.NoiseFloorThreshold = types.StringNull()
 		}
-	} else {
-		m.NoiseFloorThreshold = types.StringNull()
 	}
 	if v, ok := obj["nv2-cell-radius"]; ok {
-		_ = v
 		if v != "" {
 			m.Nv2CellRADIUS = types.StringValue(v)
 		} else {
 			m.Nv2CellRADIUS = types.StringNull()
 		}
-	} else {
-		m.Nv2CellRADIUS = types.StringNull()
 	}
 	if v, ok := obj["nv2-noise-floor-offset"]; ok {
-		_ = v
 		if v != "" {
 			m.Nv2NoiseFloorOffset = types.StringValue(v)
 		} else {
 			m.Nv2NoiseFloorOffset = types.StringNull()
 		}
-	} else {
-		m.Nv2NoiseFloorOffset = types.StringNull()
 	}
 	// Sensitive: RouterOS scrubs the value on read. If the server returned
 	// a value, decode it. Otherwise the plan value (user input) is what's
@@ -1936,363 +1777,255 @@ func interfaceWirelessApply(ctx context.Context, obj client.Object, m *Interface
 		m.Nv2PresharedKey = types.StringNull()
 	}
 	if v, ok := obj["nv2-qos"]; ok {
-		_ = v
 		if v != "" {
 			m.Nv2Qos = types.StringValue(v)
 		} else {
 			m.Nv2Qos = types.StringNull()
 		}
-	} else {
-		m.Nv2Qos = types.StringNull()
 	}
 	if v, ok := obj["nv2-queue-count"]; ok {
-		_ = v
 		if v != "" {
 			m.Nv2QueueCount = types.StringValue(v)
 		} else {
 			m.Nv2QueueCount = types.StringNull()
 		}
-	} else {
-		m.Nv2QueueCount = types.StringNull()
 	}
 	if v, ok := obj["nv2-security"]; ok {
-		_ = v
 		if v != "" {
 			m.Nv2Security = types.StringValue(v)
 		} else {
 			m.Nv2Security = types.StringNull()
 		}
-	} else {
-		m.Nv2Security = types.StringNull()
 	}
 	if v, ok := obj["on-fail-retry-time"]; ok {
-		_ = v
 		if v != "" {
 			m.OnFailRetryTime = types.StringValue(v)
 		} else {
 			m.OnFailRetryTime = types.StringNull()
 		}
-	} else {
-		m.OnFailRetryTime = types.StringNull()
 	}
 	if v, ok := obj["preamble-mode"]; ok {
-		_ = v
 		if v != "" {
 			m.PreambleMode = types.StringValue(v)
 		} else {
 			m.PreambleMode = types.StringNull()
 		}
-	} else {
-		m.PreambleMode = types.StringNull()
 	}
 	if v, ok := obj["prism-cardtype"]; ok {
-		_ = v
 		if v != "" {
 			m.PrismCardtype = types.StringValue(v)
 		} else {
 			m.PrismCardtype = types.StringNull()
 		}
-	} else {
-		m.PrismCardtype = types.StringNull()
 	}
 	if v, ok := obj["radio-name"]; ok {
-		_ = v
 		if v != "" {
 			m.RadioName = types.StringValue(v)
 		} else {
 			m.RadioName = types.StringNull()
 		}
-	} else {
-		m.RadioName = types.StringNull()
 	}
 	if v, ok := obj["rate-selection"]; ok {
-		_ = v
 		if v != "" {
 			m.RateSelection = types.StringValue(v)
 		} else {
 			m.RateSelection = types.StringNull()
 		}
-	} else {
-		m.RateSelection = types.StringNull()
 	}
 	if v, ok := obj["rate-set"]; ok {
-		_ = v
 		if v != "" {
 			m.RateSet = types.StringValue(v)
 		} else {
 			m.RateSet = types.StringNull()
 		}
-	} else {
-		m.RateSet = types.StringNull()
 	}
 	if v, ok := obj["rx-chains"]; ok {
-		_ = v
 		if v != "" {
 			m.RxChains = types.StringValue(v)
 		} else {
 			m.RxChains = types.StringNull()
 		}
-	} else {
-		m.RxChains = types.StringNull()
 	}
 	if v, ok := obj["rx-ht-chain-names"]; ok {
-		_ = v
 		if v != "" {
 			m.RxHtChainNames = types.StringValue(v)
 		} else {
 			m.RxHtChainNames = types.StringNull()
 		}
-	} else {
-		m.RxHtChainNames = types.StringNull()
 	}
 	if v, ok := obj["rx-ht-chains"]; ok {
-		_ = v
 		if v != "" {
 			m.RxHtChains = types.StringValue(v)
 		} else {
 			m.RxHtChains = types.StringNull()
 		}
-	} else {
-		m.RxHtChains = types.StringNull()
 	}
 	if v, ok := obj["scan-list"]; ok {
-		_ = v
 		if v != "" {
 			m.ScanList = types.StringValue(v)
 		} else {
 			m.ScanList = types.StringNull()
 		}
-	} else {
-		m.ScanList = types.StringNull()
 	}
 	if v, ok := obj["security-profile"]; ok {
-		_ = v
 		if v != "" {
 			m.SecurityProfile = types.StringValue(v)
 		} else {
 			m.SecurityProfile = types.StringNull()
 		}
-	} else {
-		m.SecurityProfile = types.StringNull()
 	}
 	if v, ok := obj["skip-dfs-channels"]; ok {
-		_ = v
 		if v != "" {
 			m.SkipDfsChannels = types.StringValue(v)
 		} else {
 			m.SkipDfsChannels = types.StringNull()
 		}
-	} else {
-		m.SkipDfsChannels = types.StringNull()
 	}
 	if v, ok := obj["ssid"]; ok {
-		_ = v
 		if v != "" {
 			m.Ssid = types.StringValue(v)
 		} else {
 			m.Ssid = types.StringNull()
 		}
-	} else {
-		m.Ssid = types.StringNull()
 	}
 	if v, ok := obj["station-bridge-clone-mac"]; ok {
-		_ = v
 		if v != "" {
 			m.StationBridgeCloneMAC = types.StringValue(v)
 		} else {
 			m.StationBridgeCloneMAC = types.StringNull()
 		}
-	} else {
-		m.StationBridgeCloneMAC = types.StringNull()
 	}
 	if v, ok := obj["station-roaming"]; ok {
-		_ = v
 		if v != "" {
 			m.StationRoaming = types.StringValue(v)
 		} else {
 			m.StationRoaming = types.StringNull()
 		}
-	} else {
-		m.StationRoaming = types.StringNull()
 	}
 	if v, ok := obj["supported-rates-b"]; ok {
-		_ = v
 		if v != "" {
 			m.SupportedRatesB = types.StringValue(v)
 		} else {
 			m.SupportedRatesB = types.StringNull()
 		}
-	} else {
-		m.SupportedRatesB = types.StringNull()
 	}
 	if v, ok := obj["tdma-period-size"]; ok {
-		_ = v
 		if v != "" {
 			m.TdmaPeriodSize = types.StringValue(v)
 		} else {
 			m.TdmaPeriodSize = types.StringNull()
 		}
-	} else {
-		m.TdmaPeriodSize = types.StringNull()
 	}
 	if v, ok := obj["tx-chains"]; ok {
-		_ = v
 		if v != "" {
 			m.TxChains = types.StringValue(v)
 		} else {
 			m.TxChains = types.StringNull()
 		}
-	} else {
-		m.TxChains = types.StringNull()
 	}
 	if v, ok := obj["tx-ht-chain-names"]; ok {
-		_ = v
 		if v != "" {
 			m.TxHtChainNames = types.StringValue(v)
 		} else {
 			m.TxHtChainNames = types.StringNull()
 		}
-	} else {
-		m.TxHtChainNames = types.StringNull()
 	}
 	if v, ok := obj["tx-ht-chains"]; ok {
-		_ = v
 		if v != "" {
 			m.TxHtChains = types.StringValue(v)
 		} else {
 			m.TxHtChains = types.StringNull()
 		}
-	} else {
-		m.TxHtChains = types.StringNull()
 	}
 	if v, ok := obj["tx-power"]; ok {
-		_ = v
 		if v != "" {
 			m.TxPower = types.StringValue(v)
 		} else {
 			m.TxPower = types.StringNull()
 		}
-	} else {
-		m.TxPower = types.StringNull()
 	}
 	if v, ok := obj["tx-power-mode"]; ok {
-		_ = v
 		if v != "" {
 			m.TxPowerMode = types.StringValue(v)
 		} else {
 			m.TxPowerMode = types.StringNull()
 		}
-	} else {
-		m.TxPowerMode = types.StringNull()
 	}
 	if v, ok := obj["update-stats-interval"]; ok {
-		_ = v
 		if v != "" {
 			m.UpdateStatsInterval = types.StringValue(v)
 		} else {
 			m.UpdateStatsInterval = types.StringNull()
 		}
-	} else {
-		m.UpdateStatsInterval = types.StringNull()
 	}
 	if v, ok := obj["vht-basic-mcs"]; ok {
-		_ = v
 		if v != "" {
 			m.VhtBasicMcs = types.StringValue(v)
 		} else {
 			m.VhtBasicMcs = types.StringNull()
 		}
-	} else {
-		m.VhtBasicMcs = types.StringNull()
 	}
 	if v, ok := obj["vht-supported-mcs"]; ok {
-		_ = v
 		if v != "" {
 			m.VhtSupportedMcs = types.StringValue(v)
 		} else {
 			m.VhtSupportedMcs = types.StringNull()
 		}
-	} else {
-		m.VhtSupportedMcs = types.StringNull()
 	}
 	if v, ok := obj["wds-cost-range"]; ok {
-		_ = v
 		if v != "" {
 			m.WdsCostRange = types.StringValue(v)
 		} else {
 			m.WdsCostRange = types.StringNull()
 		}
-	} else {
-		m.WdsCostRange = types.StringNull()
 	}
 	if v, ok := obj["wds-default-bridge"]; ok {
-		_ = v
 		if v != "" {
 			m.WdsDefaultBridge = types.StringValue(v)
 		} else {
 			m.WdsDefaultBridge = types.StringNull()
 		}
-	} else {
-		m.WdsDefaultBridge = types.StringNull()
 	}
 	if v, ok := obj["wds-default-cost"]; ok {
-		_ = v
 		if v != "" {
 			m.WdsDefaultCost = types.StringValue(v)
 		} else {
 			m.WdsDefaultCost = types.StringNull()
 		}
-	} else {
-		m.WdsDefaultCost = types.StringNull()
 	}
 	if v, ok := obj["wds-ignore-ssid"]; ok {
-		_ = v
 		if v != "" {
 			m.WdsIgnoreSsid = types.StringValue(v)
 		} else {
 			m.WdsIgnoreSsid = types.StringNull()
 		}
-	} else {
-		m.WdsIgnoreSsid = types.StringNull()
 	}
 	if v, ok := obj["wds-mode"]; ok {
-		_ = v
 		if v != "" {
 			m.WdsMode = types.StringValue(v)
 		} else {
 			m.WdsMode = types.StringNull()
 		}
-	} else {
-		m.WdsMode = types.StringNull()
 	}
 	if v, ok := obj["wireless-protocol"]; ok {
-		_ = v
 		if v != "" {
 			m.WirelessProtocol = types.StringValue(v)
 		} else {
 			m.WirelessProtocol = types.StringNull()
 		}
-	} else {
-		m.WirelessProtocol = types.StringNull()
 	}
 	if v, ok := obj["wmm-support"]; ok {
-		_ = v
 		if v != "" {
 			m.WmmSupport = types.StringValue(v)
 		} else {
 			m.WmmSupport = types.StringNull()
 		}
-	} else {
-		m.WmmSupport = types.StringNull()
 	}
 	if v, ok := obj["wps-mode"]; ok {
-		_ = v
 		if v != "" {
 			m.WpsMode = types.StringValue(v)
 		} else {
 			m.WpsMode = types.StringNull()
 		}
-	} else {
-		m.WpsMode = types.StringNull()
 	}
 }

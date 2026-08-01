@@ -275,93 +275,66 @@ func routingIDApply(ctx context.Context, obj client.Object, m *RoutingIDModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["dynamic-id"]; ok {
-		_ = v
 		if v != "" {
 			m.DynamicID = types.StringValue(v)
 		} else {
 			m.DynamicID = types.StringNull()
 		}
-	} else {
-		m.DynamicID = types.StringNull()
 	}
 	if v, ok := obj["inactive"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Inactive = types.BoolValue(b)
 		} else {
 			m.Inactive = types.BoolNull()
 		}
-	} else {
-		m.Inactive = types.BoolNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["select-dynamic-id"]; ok {
-		_ = v
 		if v != "" {
 			m.SelectDynamicID = types.StringValue(v)
 		} else {
 			m.SelectDynamicID = types.StringNull()
 		}
-	} else {
-		m.SelectDynamicID = types.StringNull()
 	}
 	if v, ok := obj["select-from-vrf"]; ok {
-		_ = v
 		if v != "" {
 			m.SelectFromVrf = types.StringValue(v)
 		} else {
 			m.SelectFromVrf = types.StringNull()
 		}
-	} else {
-		m.SelectFromVrf = types.StringNull()
 	}
 }

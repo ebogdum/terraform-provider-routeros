@@ -418,14 +418,11 @@ func rADIUSApply(ctx context.Context, obj client.Object, m *RADIUSModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["accounting-backup"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AccountingBackup = types.BoolValue(b)
 		} else {
 			m.AccountingBackup = types.BoolNull()
 		}
-	} else {
-		m.AccountingBackup = types.BoolNull()
 	}
 	if v, ok := obj["accounting-port"]; ok {
 		_ = v
@@ -438,14 +435,11 @@ func rADIUSApply(ctx context.Context, obj client.Object, m *RADIUSModel) {
 		m.AccountingPort = types.Int64Null()
 	}
 	if v, ok := obj["address"]; ok {
-		_ = v
 		if v != "" {
 			m.Address = types.StringValue(v)
 		} else {
 			m.Address = types.StringNull()
 		}
-	} else {
-		m.Address = types.StringNull()
 	}
 	if v, ok := obj["authentication-port"]; ok {
 		_ = v
@@ -458,114 +452,81 @@ func rADIUSApply(ctx context.Context, obj client.Object, m *RADIUSModel) {
 		m.AuthenticationPort = types.Int64Null()
 	}
 	if v, ok := obj["called-id"]; ok {
-		_ = v
 		if v != "" {
 			m.CalledID = types.StringValue(v)
 		} else {
 			m.CalledID = types.StringNull()
 		}
-	} else {
-		m.CalledID = types.StringNull()
 	}
 	if v, ok := obj["certificate"]; ok {
-		_ = v
 		if v != "" {
 			m.Certificate = types.StringValue(v)
 		} else {
 			m.Certificate = types.StringNull()
 		}
-	} else {
-		m.Certificate = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["domain"]; ok {
-		_ = v
 		if v != "" {
 			m.Domain = types.StringValue(v)
 		} else {
 			m.Domain = types.StringNull()
 		}
-	} else {
-		m.Domain = types.StringNull()
 	}
 	if v, ok := obj["protocol"]; ok {
-		_ = v
 		if v != "" {
 			m.Protocol = types.StringValue(v)
 		} else {
 			m.Protocol = types.StringNull()
 		}
-	} else {
-		m.Protocol = types.StringNull()
 	}
 	if v, ok := obj["radsec"]; ok {
-		_ = v
 		if v != "" {
 			m.Radsec = types.StringValue(v)
 		} else {
 			m.Radsec = types.StringNull()
 		}
-	} else {
-		m.Radsec = types.StringNull()
 	}
 	if v, ok := obj["radsec-timeout"]; ok {
-		_ = v
 		if v != "" {
 			m.RadsecTimeout = types.StringValue(v)
 		} else {
 			m.RadsecTimeout = types.StringNull()
 		}
-	} else {
-		m.RadsecTimeout = types.StringNull()
 	}
 	if v, ok := obj["realm"]; ok {
-		_ = v
 		if v != "" {
 			m.Realm = types.StringValue(v)
 		} else {
 			m.Realm = types.StringNull()
 		}
-	} else {
-		m.Realm = types.StringNull()
 	}
 	if v, ok := obj["require-message-auth"]; ok {
-		_ = v
 		if v != "" {
 			m.RequireMessageAuth = types.StringValue(v)
 		} else {
 			m.RequireMessageAuth = types.StringNull()
 		}
-	} else {
-		m.RequireMessageAuth = types.StringNull()
 	}
 	if v, ok := obj["reset-status"]; ok {
-		_ = v
 		if v != "" {
 			m.ResetStatus = types.StringValue(v)
 		} else {
 			m.ResetStatus = types.StringNull()
 		}
-	} else {
-		m.ResetStatus = types.StringNull()
 	}
 	// Sensitive: RouterOS scrubs the value on read. If the server returned
 	// a value, decode it. Otherwise the plan value (user input) is what's
@@ -582,24 +543,18 @@ func rADIUSApply(ctx context.Context, obj client.Object, m *RADIUSModel) {
 		m.Secret = types.StringNull()
 	}
 	if v, ok := obj["service"]; ok {
-		_ = v
 		if v != "" {
 			m.Service = types.StringValue(v)
 		} else {
 			m.Service = types.StringNull()
 		}
-	} else {
-		m.Service = types.StringNull()
 	}
 	if v, ok := obj["src-address"]; ok {
-		_ = v
 		if v != "" {
 			m.SrcAddress = types.StringValue(v)
 		} else {
 			m.SrcAddress = types.StringNull()
 		}
-	} else {
-		m.SrcAddress = types.StringNull()
 	}
 	if v, ok := obj["timeout"]; ok && v != "" {
 		m.Timeout = types.StringValue(v)
@@ -607,13 +562,10 @@ func rADIUSApply(ctx context.Context, obj client.Object, m *RADIUSModel) {
 		m.Timeout = types.StringNull()
 	}
 	if v, ok := obj["udp"]; ok {
-		_ = v
 		if v != "" {
 			m.UDP = types.StringValue(v)
 		} else {
 			m.UDP = types.StringNull()
 		}
-	} else {
-		m.UDP = types.StringNull()
 	}
 }

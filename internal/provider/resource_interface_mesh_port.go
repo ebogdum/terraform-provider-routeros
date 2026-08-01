@@ -293,44 +293,32 @@ func interfaceMeshPortApply(ctx context.Context, obj client.Object, m *Interface
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dr-address"]; ok {
-		_ = v
 		if v != "" {
 			m.DrAddress = types.StringValue(v)
 		} else {
 			m.DrAddress = types.StringNull()
 		}
-	} else {
-		m.DrAddress = types.StringNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["hello-interval"]; ok {
 		_ = v
@@ -343,34 +331,25 @@ func interfaceMeshPortApply(ctx context.Context, obj client.Object, m *Interface
 		m.HelloInterval = types.Int64Null()
 	}
 	if v, ok := obj["inactive"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Inactive = types.BoolValue(b)
 		} else {
 			m.Inactive = types.BoolNull()
 		}
-	} else {
-		m.Inactive = types.BoolNull()
 	}
 	if v, ok := obj["interface"]; ok {
-		_ = v
 		if v != "" {
 			m.Interface = types.StringValue(v)
 		} else {
 			m.Interface = types.StringNull()
 		}
-	} else {
-		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["mesh"]; ok {
-		_ = v
 		if v != "" {
 			m.Mesh = types.StringValue(v)
 		} else {
 			m.Mesh = types.StringNull()
 		}
-	} else {
-		m.Mesh = types.StringNull()
 	}
 	if v, ok := obj["path-cost"]; ok {
 		_ = v
@@ -383,13 +362,10 @@ func interfaceMeshPortApply(ctx context.Context, obj client.Object, m *Interface
 		m.PathCost = types.Int64Null()
 	}
 	if v, ok := obj["port-type"]; ok {
-		_ = v
 		if v != "" {
 			m.PortType = types.StringValue(v)
 		} else {
 			m.PortType = types.StringNull()
 		}
-	} else {
-		m.PortType = types.StringNull()
 	}
 }

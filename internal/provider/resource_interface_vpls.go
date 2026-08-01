@@ -477,134 +477,95 @@ func interfaceVplsApply(ctx context.Context, obj client.Object, m *InterfaceVpls
 		m.DisableRunningCheck = types.StringNull()
 	}
 	if v, ok := obj["arp"]; ok {
-		_ = v
 		if v != "" {
 			m.ARP = types.StringValue(v)
 		} else {
 			m.ARP = types.StringNull()
 		}
-	} else {
-		m.ARP = types.StringNull()
 	}
 	if v, ok := obj["arp-timeout"]; ok {
-		_ = v
 		if v != "" {
 			m.ARPTimeout = types.StringValue(v)
 		} else {
 			m.ARPTimeout = types.StringNull()
 		}
-	} else {
-		m.ARPTimeout = types.StringNull()
 	}
 	if v, ok := obj["bgp-signaled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.BGPSignaled = types.BoolValue(b)
 		} else {
 			m.BGPSignaled = types.BoolNull()
 		}
-	} else {
-		m.BGPSignaled = types.BoolNull()
 	}
 	if v, ok := obj["bgp-vpls"]; ok {
-		_ = v
 		if v != "" {
 			m.BGPVpls = types.StringValue(v)
 		} else {
 			m.BGPVpls = types.StringNull()
 		}
-	} else {
-		m.BGPVpls = types.StringNull()
 	}
 	if v, ok := obj["bgp-vpls-prefix"]; ok {
-		_ = v
 		if v != "" {
 			m.BGPVplsPrefix = types.StringValue(v)
 		} else {
 			m.BGPVplsPrefix = types.StringNull()
 		}
-	} else {
-		m.BGPVplsPrefix = types.StringNull()
 	}
 	if v, ok := obj["bridge"]; ok {
-		_ = v
 		if v != "" {
 			m.Bridge = types.StringValue(v)
 		} else {
 			m.Bridge = types.StringNull()
 		}
-	} else {
-		m.Bridge = types.StringNull()
 	}
 	if v, ok := obj["bridge-cost"]; ok {
-		_ = v
 		if v != "" {
 			m.BridgeCost = types.StringValue(v)
 		} else {
 			m.BridgeCost = types.StringNull()
 		}
-	} else {
-		m.BridgeCost = types.StringNull()
 	}
 	if v, ok := obj["bridge-horizon"]; ok {
-		_ = v
 		if v != "" {
 			m.BridgeHorizon = types.StringValue(v)
 		} else {
 			m.BridgeHorizon = types.StringNull()
 		}
-	} else {
-		m.BridgeHorizon = types.StringNull()
 	}
 	if v, ok := obj["bridge-pvid"]; ok {
-		_ = v
 		if v != "" {
 			m.BridgePvid = types.StringValue(v)
 		} else {
 			m.BridgePvid = types.StringNull()
 		}
-	} else {
-		m.BridgePvid = types.StringNull()
 	}
 	if v, ok := obj["cisco-bgp-signaled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.CiscoBGPSignaled = types.BoolValue(b)
 		} else {
 			m.CiscoBGPSignaled = types.BoolNull()
 		}
-	} else {
-		m.CiscoBGPSignaled = types.BoolNull()
 	}
 	if v, ok := obj["cisco-static-id"]; ok {
-		_ = v
 		if v != "" {
 			m.CiscoStaticID = types.StringValue(v)
 		} else {
 			m.CiscoStaticID = types.StringNull()
 		}
-	} else {
-		m.CiscoStaticID = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["local-label"]; ok {
 		_ = v
@@ -617,14 +578,11 @@ func interfaceVplsApply(ctx context.Context, obj client.Object, m *InterfaceVpls
 		m.LocalLabel = types.Int64Null()
 	}
 	if v, ok := obj["mac-address"]; ok {
-		_ = v
 		if v != "" {
 			m.MACAddress = types.StringValue(v)
 		} else {
 			m.MACAddress = types.StringNull()
 		}
-	} else {
-		m.MACAddress = types.StringNull()
 	}
 	if v, ok := obj["mtu"]; ok {
 		_ = v
@@ -637,34 +595,25 @@ func interfaceVplsApply(ctx context.Context, obj client.Object, m *InterfaceVpls
 		m.MTU = types.Int64Null()
 	}
 	if v, ok := obj["pw-control-word"]; ok {
-		_ = v
 		if v != "" {
 			m.PwControlWord = types.StringValue(v)
 		} else {
 			m.PwControlWord = types.StringNull()
 		}
-	} else {
-		m.PwControlWord = types.StringNull()
 	}
 	if v, ok := obj["pw-l2mtu"]; ok {
-		_ = v
 		if v != "" {
 			m.PwL2mtu = types.StringValue(v)
 		} else {
 			m.PwL2mtu = types.StringNull()
 		}
-	} else {
-		m.PwL2mtu = types.StringNull()
 	}
 	if v, ok := obj["pw-type"]; ok {
-		_ = v
 		if v != "" {
 			m.PwType = types.StringValue(v)
 		} else {
 			m.PwType = types.StringNull()
 		}
-	} else {
-		m.PwType = types.StringNull()
 	}
 	if v, ok := obj["remote-group"]; ok {
 		_ = v
@@ -687,24 +636,18 @@ func interfaceVplsApply(ctx context.Context, obj client.Object, m *InterfaceVpls
 		m.RemoteLabel = types.Int64Null()
 	}
 	if v, ok := obj["remote-peer"]; ok {
-		_ = v
 		if v != "" {
 			m.RemotePeer = types.StringValue(v)
 		} else {
 			m.RemotePeer = types.StringNull()
 		}
-	} else {
-		m.RemotePeer = types.StringNull()
 	}
 	if v, ok := obj["remote-status"]; ok {
-		_ = v
 		if v != "" {
 			m.RemoteStatus = types.StringValue(v)
 		} else {
 			m.RemoteStatus = types.StringNull()
 		}
-	} else {
-		m.RemoteStatus = types.StringNull()
 	}
 	if v, ok := obj["te-tunnel"]; ok {
 		_ = v
@@ -717,13 +660,10 @@ func interfaceVplsApply(ctx context.Context, obj client.Object, m *InterfaceVpls
 		m.TeTunnel = types.Int64Null()
 	}
 	if v, ok := obj["vpls-id"]; ok {
-		_ = v
 		if v != "" {
 			m.VplsID = types.StringValue(v)
 		} else {
 			m.VplsID = types.StringNull()
 		}
-	} else {
-		m.VplsID = types.StringNull()
 	}
 }

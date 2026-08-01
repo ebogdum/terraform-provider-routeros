@@ -24,7 +24,21 @@ func encodeStringSet(ctx context.Context, s types.Set, diags *diag.Diagnostics) 
 	return client.FormatList(items)
 }
 
-// decodePolicySet parses a RouterOS /user/group or /system/script policy value.
+// decodeStringSet parses a RouterOS comma list into an order-insensitive Set.
+// RouterOS returns many list-valued attributes (dh-group, enc-algorithms,
+// login-by, ...) in its own order, so modelling them as a Set makes them
+// round-trip regardless of the order the device echoes back.
+func decodeStringSet(_ context.Context, wire string) types.Set {
+	items := client.ParseList(wire)
+	vals := make([]attr.Value, 0, len(items))
+	for _, v := range items {
+		vals = append(vals, types.StringValue(v))
+	}
+	s, _ := types.SetValue(types.StringType, vals)
+	return s
+}
+
+// decodePolicySet parses a /user/group or /system/script policy value.
 // RouterOS returns the full permission list with everything not granted negated
 // ("read,write,!ftp,!telnet,..."), in its own order. Only the granted
 // permissions are kept, as an order-insensitive Set, so the value round-trips

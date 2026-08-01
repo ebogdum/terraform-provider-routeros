@@ -41,7 +41,7 @@ type CertificateBuiltinModel struct {
 	InvalidBefore  types.String `tfsdk:"invalid_before"`
 	Issuer         types.String `tfsdk:"issuer"`
 	KeyType        types.String `tfsdk:"key_type"`
-	KeyUsage       types.List   `tfsdk:"key_usage"`
+	KeyUsage       types.Set    `tfsdk:"key_usage"`
 	Locality       types.String `tfsdk:"locality"`
 	Organization   types.String `tfsdk:"organization"`
 	SerialNumber   types.String `tfsdk:"serial_number"`
@@ -130,7 +130,7 @@ func (r *CertificateBuiltinResource) Schema(_ context.Context, _ resource.Schema
 				Computed:    true,
 				Description: "",
 			},
-			"key_usage": schema.ListAttribute{
+			"key_usage": schema.SetAttribute{
 				Optional:    true,
 				Computed:    true,
 				ElementType: types.StringType,
@@ -221,7 +221,7 @@ func (r *CertificateBuiltinResource) Create(ctx context.Context, req resource.Cr
 		body["key-type"] = plan.KeyType.ValueString()
 	}
 	if !(plan.KeyUsage.IsNull() || plan.KeyUsage.IsUnknown()) {
-		body["key-usage"] = encodeStringList(ctx, plan.KeyUsage, &resp.Diagnostics)
+		body["key-usage"] = encodeStringSet(ctx, plan.KeyUsage, &resp.Diagnostics)
 	}
 	if !(plan.Locality.IsNull() || plan.Locality.IsUnknown()) {
 		body["locality"] = plan.Locality.ValueString()
@@ -326,7 +326,7 @@ func (r *CertificateBuiltinResource) Update(ctx context.Context, req resource.Up
 		body["key-type"] = plan.KeyType.ValueString()
 	}
 	if !plan.KeyUsage.Equal(state.KeyUsage) && !plan.KeyUsage.IsUnknown() {
-		body["key-usage"] = encodeStringList(ctx, plan.KeyUsage, &resp.Diagnostics)
+		body["key-usage"] = encodeStringSet(ctx, plan.KeyUsage, &resp.Diagnostics)
 	}
 	if !plan.Locality.Equal(state.Locality) && !plan.Locality.IsUnknown() {
 		body["locality"] = plan.Locality.ValueString()
@@ -425,44 +425,32 @@ func certificateBuiltinApply(ctx context.Context, obj client.Object, m *Certific
 		m.KeySize = types.StringNull()
 	}
 	if v, ok := obj["akid"]; ok {
-		_ = v
 		if v != "" {
 			m.Akid = types.StringValue(v)
 		} else {
 			m.Akid = types.StringNull()
 		}
-	} else {
-		m.Akid = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["common-name"]; ok {
-		_ = v
 		if v != "" {
 			m.CommonName = types.StringValue(v)
 		} else {
 			m.CommonName = types.StringNull()
 		}
-	} else {
-		m.CommonName = types.StringNull()
 	}
 	if v, ok := obj["country"]; ok {
-		_ = v
 		if v != "" {
 			m.Country = types.StringValue(v)
 		} else {
 			m.Country = types.StringNull()
 		}
-	} else {
-		m.Country = types.StringNull()
 	}
 	if v, ok := obj["days-valid"]; ok {
 		_ = v
@@ -475,129 +463,93 @@ func certificateBuiltinApply(ctx context.Context, obj client.Object, m *Certific
 		m.DaysValid = types.Int64Null()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["invalid-after"]; ok {
-		_ = v
 		if v != "" {
 			m.InvalidAfter = types.StringValue(v)
 		} else {
 			m.InvalidAfter = types.StringNull()
 		}
-	} else {
-		m.InvalidAfter = types.StringNull()
 	}
 	if v, ok := obj["invalid-before"]; ok {
-		_ = v
 		if v != "" {
 			m.InvalidBefore = types.StringValue(v)
 		} else {
 			m.InvalidBefore = types.StringNull()
 		}
-	} else {
-		m.InvalidBefore = types.StringNull()
 	}
 	if v, ok := obj["issuer"]; ok {
-		_ = v
 		if v != "" {
 			m.Issuer = types.StringValue(v)
 		} else {
 			m.Issuer = types.StringNull()
 		}
-	} else {
-		m.Issuer = types.StringNull()
 	}
 	if v, ok := obj["key-type"]; ok {
-		_ = v
 		if v != "" {
 			m.KeyType = types.StringValue(v)
 		} else {
 			m.KeyType = types.StringNull()
 		}
-	} else {
-		m.KeyType = types.StringNull()
 	}
 	if v, ok := obj["key-usage"]; ok {
 		_ = v
-		m.KeyUsage = decodeStringList(ctx, v)
+		m.KeyUsage = decodeStringSet(ctx, v)
 	} else {
-		m.KeyUsage = types.ListNull(types.StringType)
+		m.KeyUsage = types.SetNull(types.StringType)
 	}
 	if v, ok := obj["locality"]; ok {
-		_ = v
 		if v != "" {
 			m.Locality = types.StringValue(v)
 		} else {
 			m.Locality = types.StringNull()
 		}
-	} else {
-		m.Locality = types.StringNull()
 	}
 	if v, ok := obj["organization"]; ok {
-		_ = v
 		if v != "" {
 			m.Organization = types.StringValue(v)
 		} else {
 			m.Organization = types.StringNull()
 		}
-	} else {
-		m.Organization = types.StringNull()
 	}
 	if v, ok := obj["serial-number"]; ok {
-		_ = v
 		if v != "" {
 			m.SerialNumber = types.StringValue(v)
 		} else {
 			m.SerialNumber = types.StringNull()
 		}
-	} else {
-		m.SerialNumber = types.StringNull()
 	}
 	if v, ok := obj["skid"]; ok {
-		_ = v
 		if v != "" {
 			m.Skid = types.StringValue(v)
 		} else {
 			m.Skid = types.StringNull()
 		}
-	} else {
-		m.Skid = types.StringNull()
 	}
 	if v, ok := obj["state"]; ok {
-		_ = v
 		if v != "" {
 			m.State = types.StringValue(v)
 		} else {
 			m.State = types.StringNull()
 		}
-	} else {
-		m.State = types.StringNull()
 	}
 	if v, ok := obj["subject-alt-name"]; ok {
-		_ = v
 		if v != "" {
 			m.SubjectAltName = types.StringValue(v)
 		} else {
 			m.SubjectAltName = types.StringNull()
 		}
-	} else {
-		m.SubjectAltName = types.StringNull()
 	}
 	if v, ok := obj["unit"]; ok {
-		_ = v
 		if v != "" {
 			m.Unit = types.StringValue(v)
 		} else {
 			m.Unit = types.StringNull()
 		}
-	} else {
-		m.Unit = types.StringNull()
 	}
 }

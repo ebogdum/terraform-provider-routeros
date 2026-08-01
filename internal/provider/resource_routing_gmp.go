@@ -261,53 +261,38 @@ func routingGmpApply(ctx context.Context, obj client.Object, m *RoutingGmpModel)
 		m.Groups = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["exclude"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Exclude = types.BoolValue(b)
 		} else {
 			m.Exclude = types.BoolNull()
 		}
-	} else {
-		m.Exclude = types.BoolNull()
 	}
 	if v, ok := obj["group"]; ok {
-		_ = v
 		if v != "" {
 			m.Group = types.StringValue(v)
 		} else {
 			m.Group = types.StringNull()
 		}
-	} else {
-		m.Group = types.StringNull()
 	}
 	if v, ok := obj["interfaces"]; ok {
-		_ = v
 		if v != "" {
 			m.Interfaces = types.StringValue(v)
 		} else {
 			m.Interfaces = types.StringNull()
 		}
-	} else {
-		m.Interfaces = types.StringNull()
 	}
 	if v, ok := obj["sources"]; ok {
-		_ = v
 		if v != "" {
 			m.Sources = types.StringValue(v)
 		} else {
 			m.Sources = types.StringNull()
 		}
-	} else {
-		m.Sources = types.StringNull()
 	}
 }

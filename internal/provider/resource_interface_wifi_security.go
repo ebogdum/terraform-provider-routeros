@@ -680,353 +680,248 @@ func interfaceWifiSecurityApply(ctx context.Context, obj client.Object, m *Inter
 		m.AuthenticationTypes = types.StringNull()
 	}
 	if v, ok := obj["beacon-protection"]; ok {
-		_ = v
 		if v != "" {
 			m.BeaconProtection = types.StringValue(v)
 		} else {
 			m.BeaconProtection = types.StringNull()
 		}
-	} else {
-		m.BeaconProtection = types.StringNull()
 	}
 	if v, ok := obj["ciphers"]; ok {
-		_ = v
 		if v != "" {
 			m.Ciphers = types.StringValue(v)
 		} else {
 			m.Ciphers = types.StringNull()
 		}
-	} else {
-		m.Ciphers = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["connect-group"]; ok {
-		_ = v
 		if v != "" {
 			m.ConnectGroup = types.StringValue(v)
 		} else {
 			m.ConnectGroup = types.StringNull()
 		}
-	} else {
-		m.ConnectGroup = types.StringNull()
 	}
 	if v, ok := obj["connect-priority"]; ok {
-		_ = v
 		if v != "" {
 			m.ConnectPriority = types.StringValue(v)
 		} else {
 			m.ConnectPriority = types.StringNull()
 		}
-	} else {
-		m.ConnectPriority = types.StringNull()
 	}
 	if v, ok := obj["dh-groups"]; ok {
-		_ = v
 		if v != "" {
 			m.DhGroups = types.StringValue(v)
 		} else {
 			m.DhGroups = types.StringNull()
 		}
-	} else {
-		m.DhGroups = types.StringNull()
 	}
 	if v, ok := obj["disable-pmkid"]; ok {
-		_ = v
 		if v != "" {
 			m.DisablePmkid = types.StringValue(v)
 		} else {
 			m.DisablePmkid = types.StringNull()
 		}
-	} else {
-		m.DisablePmkid = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["eap-accounting"]; ok {
-		_ = v
 		if v != "" {
 			m.EAPAccounting = types.StringValue(v)
 		} else {
 			m.EAPAccounting = types.StringNull()
 		}
-	} else {
-		m.EAPAccounting = types.StringNull()
 	}
 	if v, ok := obj["eap-anonymous-identity"]; ok {
-		_ = v
 		if v != "" {
 			m.EAPAnonymousIdentity = types.StringValue(v)
 		} else {
 			m.EAPAnonymousIdentity = types.StringNull()
 		}
-	} else {
-		m.EAPAnonymousIdentity = types.StringNull()
 	}
 	if v, ok := obj["eap-certificate-mode"]; ok {
-		_ = v
 		if v != "" {
 			m.EAPCertificateMode = types.StringValue(v)
 		} else {
 			m.EAPCertificateMode = types.StringNull()
 		}
-	} else {
-		m.EAPCertificateMode = types.StringNull()
 	}
 	if v, ok := obj["eap-methods"]; ok {
-		_ = v
 		if v != "" {
 			m.EAPMethods = types.StringValue(v)
 		} else {
 			m.EAPMethods = types.StringNull()
 		}
-	} else {
-		m.EAPMethods = types.StringNull()
 	}
 	if v, ok := obj["eap-password"]; ok {
-		_ = v
 		if v != "" {
 			m.EAPPassword = types.StringValue(v)
 		} else {
 			m.EAPPassword = types.StringNull()
 		}
-	} else {
-		m.EAPPassword = types.StringNull()
 	}
 	if v, ok := obj["eap-tls-certificate"]; ok {
-		_ = v
 		if v != "" {
 			m.EAPTLSCertificate = types.StringValue(v)
 		} else {
 			m.EAPTLSCertificate = types.StringNull()
 		}
-	} else {
-		m.EAPTLSCertificate = types.StringNull()
 	}
 	if v, ok := obj["eap-username"]; ok {
-		_ = v
 		if v != "" {
 			m.EAPUsername = types.StringValue(v)
 		} else {
 			m.EAPUsername = types.StringNull()
 		}
-	} else {
-		m.EAPUsername = types.StringNull()
 	}
 	if v, ok := obj["encryption"]; ok {
-		_ = v
 		if v != "" {
 			m.Encryption = types.StringValue(v)
 		} else {
 			m.Encryption = types.StringNull()
 		}
-	} else {
-		m.Encryption = types.StringNull()
 	}
 	if v, ok := obj["ft-enabled"]; ok {
-		_ = v
 		if v != "" {
 			m.FtEnabled = types.StringValue(v)
 		} else {
 			m.FtEnabled = types.StringNull()
 		}
-	} else {
-		m.FtEnabled = types.StringNull()
 	}
 	if v, ok := obj["ft-mobility-domain"]; ok {
-		_ = v
 		if v != "" {
 			m.FtMobilityDomain = types.StringValue(v)
 		} else {
 			m.FtMobilityDomain = types.StringNull()
 		}
-	} else {
-		m.FtMobilityDomain = types.StringNull()
 	}
 	if v, ok := obj["ft-nas-identifier"]; ok {
-		_ = v
 		if v != "" {
 			m.FtNasIdentifier = types.StringValue(v)
 		} else {
 			m.FtNasIdentifier = types.StringNull()
 		}
-	} else {
-		m.FtNasIdentifier = types.StringNull()
 	}
 	if v, ok := obj["ft-over-ds"]; ok {
-		_ = v
 		if v != "" {
 			m.FtOverDs = types.StringValue(v)
 		} else {
 			m.FtOverDs = types.StringNull()
 		}
-	} else {
-		m.FtOverDs = types.StringNull()
 	}
 	if v, ok := obj["ft-r0-key-lifetime"]; ok {
-		_ = v
 		if v != "" {
 			m.FtR0KeyLifetime = types.StringValue(v)
 		} else {
 			m.FtR0KeyLifetime = types.StringNull()
 		}
-	} else {
-		m.FtR0KeyLifetime = types.StringNull()
 	}
 	if v, ok := obj["ft-reassoc-deadline"]; ok {
-		_ = v
 		if v != "" {
 			m.FtReassocDeadline = types.StringValue(v)
 		} else {
 			m.FtReassocDeadline = types.StringNull()
 		}
-	} else {
-		m.FtReassocDeadline = types.StringNull()
 	}
 	if v, ok := obj["group-encryption"]; ok {
-		_ = v
 		if v != "" {
 			m.GroupEncryption = types.StringValue(v)
 		} else {
 			m.GroupEncryption = types.StringNull()
 		}
-	} else {
-		m.GroupEncryption = types.StringNull()
 	}
 	if v, ok := obj["group-key-update"]; ok {
-		_ = v
 		if v != "" {
 			m.GroupKeyUpdate = types.StringValue(v)
 		} else {
 			m.GroupKeyUpdate = types.StringNull()
 		}
-	} else {
-		m.GroupKeyUpdate = types.StringNull()
 	}
 	if v, ok := obj["management-encryption"]; ok {
-		_ = v
 		if v != "" {
 			m.ManagementEncryption = types.StringValue(v)
 		} else {
 			m.ManagementEncryption = types.StringNull()
 		}
-	} else {
-		m.ManagementEncryption = types.StringNull()
 	}
 	if v, ok := obj["management-protection"]; ok {
-		_ = v
 		if v != "" {
 			m.ManagementProtection = types.StringValue(v)
 		} else {
 			m.ManagementProtection = types.StringNull()
 		}
-	} else {
-		m.ManagementProtection = types.StringNull()
 	}
 	if v, ok := obj["multi-passphrase-group"]; ok {
-		_ = v
 		if v != "" {
 			m.MultiPassphraseGroup = types.StringValue(v)
 		} else {
 			m.MultiPassphraseGroup = types.StringNull()
 		}
-	} else {
-		m.MultiPassphraseGroup = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["owe-transition-interface"]; ok {
-		_ = v
 		if v != "" {
 			m.OweTransitionInterface = types.StringValue(v)
 		} else {
 			m.OweTransitionInterface = types.StringNull()
 		}
-	} else {
-		m.OweTransitionInterface = types.StringNull()
 	}
 	if v, ok := obj["passphrase"]; ok {
-		_ = v
 		if v != "" {
 			m.Passphrase = types.StringValue(v)
 		} else {
 			m.Passphrase = types.StringNull()
 		}
-	} else {
-		m.Passphrase = types.StringNull()
 	}
 	if v, ok := obj["sae-anti-clogging-threshold"]; ok {
-		_ = v
 		if v != "" {
 			m.SaeAntiCloggingThreshold = types.StringValue(v)
 		} else {
 			m.SaeAntiCloggingThreshold = types.StringNull()
 		}
-	} else {
-		m.SaeAntiCloggingThreshold = types.StringNull()
 	}
 	if v, ok := obj["sae-max-failure-rate"]; ok {
-		_ = v
 		if v != "" {
 			m.SaeMaxFailureRate = types.StringValue(v)
 		} else {
 			m.SaeMaxFailureRate = types.StringNull()
 		}
-	} else {
-		m.SaeMaxFailureRate = types.StringNull()
 	}
 	if v, ok := obj["sae-pwe"]; ok {
-		_ = v
 		if v != "" {
 			m.SaePwe = types.StringValue(v)
 		} else {
 			m.SaePwe = types.StringNull()
 		}
-	} else {
-		m.SaePwe = types.StringNull()
 	}
 	if v, ok := obj["types"]; ok {
-		_ = v
 		if v != "" {
 			m.Types = types.StringValue(v)
 		} else {
 			m.Types = types.StringNull()
 		}
-	} else {
-		m.Types = types.StringNull()
 	}
 	if v, ok := obj["wps"]; ok {
-		_ = v
 		if v != "" {
 			m.Wps = types.StringValue(v)
 		} else {
 			m.Wps = types.StringNull()
 		}
-	} else {
-		m.Wps = types.StringNull()
 	}
 }

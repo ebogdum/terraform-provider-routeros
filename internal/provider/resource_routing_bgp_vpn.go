@@ -400,34 +400,25 @@ func routingBGPVPNApply(ctx context.Context, obj client.Object, m *RoutingBGPVPN
 		m.ExportFilterChain = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["export-filter"]; ok {
-		_ = v
 		if v != "" {
 			m.ExportFilter = types.StringValue(v)
 		} else {
 			m.ExportFilter = types.StringNull()
 		}
-	} else {
-		m.ExportFilter = types.StringNull()
 	}
 	if v, ok := obj["export.route-targets"]; ok {
 		_ = v
@@ -440,24 +431,18 @@ func routingBGPVPNApply(ctx context.Context, obj client.Object, m *RoutingBGPVPN
 		m.ExportRouteTargets = types.StringNull()
 	}
 	if v, ok := obj["export-select"]; ok {
-		_ = v
 		if v != "" {
 			m.ExportSelect = types.StringValue(v)
 		} else {
 			m.ExportSelect = types.StringNull()
 		}
-	} else {
-		m.ExportSelect = types.StringNull()
 	}
 	if v, ok := obj["import-filter"]; ok {
-		_ = v
 		if v != "" {
 			m.ImportFilter = types.StringValue(v)
 		} else {
 			m.ImportFilter = types.StringNull()
 		}
-	} else {
-		m.ImportFilter = types.StringNull()
 	}
 	if v, ok := obj["import.route-targets"]; ok {
 		_ = v
@@ -470,63 +455,45 @@ func routingBGPVPNApply(ctx context.Context, obj client.Object, m *RoutingBGPVPN
 		m.ImportRouteTargets = types.StringNull()
 	}
 	if v, ok := obj["instance"]; ok {
-		_ = v
 		if v != "" {
 			m.Instance = types.StringValue(v)
 		} else {
 			m.Instance = types.StringNull()
 		}
-	} else {
-		m.Instance = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["label-allocation-policy"]; ok {
-		_ = v
 		if v != "" {
 			m.LabelAllocationPolicy = types.StringValue(v)
 		} else {
 			m.LabelAllocationPolicy = types.StringNull()
 		}
-	} else {
-		m.LabelAllocationPolicy = types.StringNull()
 	}
 	if v, ok := obj["redistribute"]; ok {
-		_ = v
 		if v != "" {
 			m.Redistribute = types.StringValue(v)
 		} else {
 			m.Redistribute = types.StringNull()
 		}
-	} else {
-		m.Redistribute = types.StringNull()
 	}
 	if v, ok := obj["route-distinguisher"]; ok {
-		_ = v
 		if v != "" {
 			m.RouteDistinguisher = types.StringValue(v)
 		} else {
 			m.RouteDistinguisher = types.StringNull()
 		}
-	} else {
-		m.RouteDistinguisher = types.StringNull()
 	}
 	if v, ok := obj["vrf"]; ok {
-		_ = v
 		if v != "" {
 			m.Vrf = types.StringValue(v)
 		} else {
 			m.Vrf = types.StringNull()
 		}
-	} else {
-		m.Vrf = types.StringNull()
 	}
 }

@@ -317,83 +317,59 @@ func interfaceEthernetSwitchApply(ctx context.Context, obj client.Object, m *Int
 		m.SwitchAllPorts = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["mirror-source"]; ok {
-		_ = v
 		if v != "" {
 			m.MirrorSource = types.StringValue(v)
 		} else {
 			m.MirrorSource = types.StringNull()
 		}
-	} else {
-		m.MirrorSource = types.StringNull()
 	}
 	if v, ok := obj["mirror-target"]; ok {
-		_ = v
 		if v != "" {
 			m.MirrorTarget = types.StringValue(v)
 		} else {
 			m.MirrorTarget = types.StringNull()
 		}
-	} else {
-		m.MirrorTarget = types.StringNull()
 	}
 	if v, ok := obj["cpu-flow-control"]; ok {
-		_ = v
 		if v != "" {
 			m.CPUFlowControl = types.StringValue(v)
 		} else {
 			m.CPUFlowControl = types.StringNull()
 		}
-	} else {
-		m.CPUFlowControl = types.StringNull()
 	}
 	if v, ok := obj["autorestart"]; ok {
-		_ = v
 		if v != "" {
 			m.Autorestart = types.StringValue(v)
 		} else {
 			m.Autorestart = types.StringNull()
 		}
-	} else {
-		m.Autorestart = types.StringNull()
 	}
 	if v, ok := obj["fasttrack-hw"]; ok {
-		_ = v
 		if v != "" {
 			m.FasttrackHw = types.StringValue(v)
 		} else {
 			m.FasttrackHw = types.StringNull()
 		}
-	} else {
-		m.FasttrackHw = types.StringNull()
 	}
 	if v, ok := obj["icmp-reply-on-error"]; ok {
-		_ = v
 		if v != "" {
 			m.IcmpReplyOnError = types.StringValue(v)
 		} else {
 			m.IcmpReplyOnError = types.StringNull()
 		}
-	} else {
-		m.IcmpReplyOnError = types.StringNull()
 	}
 	if v, ok := obj["ipv6-hw"]; ok {
-		_ = v
 		if v != "" {
 			m.IPV6Hw = types.StringValue(v)
 		} else {
 			m.IPV6Hw = types.StringNull()
 		}
-	} else {
-		m.IPV6Hw = types.StringNull()
 	}
 }

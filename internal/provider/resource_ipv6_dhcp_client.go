@@ -555,53 +555,38 @@ func iPV6DHCPClientApply(ctx context.Context, obj client.Object, m *IPV6DHCPClie
 		m.AcceptPrefixWithoutAddress = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["default-route-distance"]; ok {
-		_ = v
 		if v != "" {
 			m.DefaultRouteDistance = types.StringValue(v)
 		} else {
 			m.DefaultRouteDistance = types.StringNull()
 		}
-	} else {
-		m.DefaultRouteDistance = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["interface"]; ok {
-		_ = v
 		if v != "" {
 			m.Interface = types.StringValue(v)
 		} else {
 			m.Interface = types.StringNull()
 		}
-	} else {
-		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["request"]; ok {
-		_ = v
 		if v != "" {
 			m.Request = types.StringValue(v)
 		} else {
 			m.Request = types.StringNull()
 		}
-	} else {
-		m.Request = types.StringNull()
 	}
 }

@@ -274,44 +274,32 @@ func routingOSPFStaticNeighborApply(ctx context.Context, obj client.Object, m *R
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["address"]; ok {
-		_ = v
 		if v != "" {
 			m.Address = types.StringValue(v)
 		} else {
 			m.Address = types.StringNull()
 		}
-	} else {
-		m.Address = types.StringNull()
 	}
 	if v, ok := obj["area"]; ok {
-		_ = v
 		if v != "" {
 			m.Area = types.StringValue(v)
 		} else {
 			m.Area = types.StringNull()
 		}
-	} else {
-		m.Area = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["instance-id"]; ok {
 		_ = v
@@ -324,23 +312,17 @@ func routingOSPFStaticNeighborApply(ctx context.Context, obj client.Object, m *R
 		m.InstanceID = types.Int64Null()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["poll-interval"]; ok {
-		_ = v
 		if v != "" {
 			m.PollInterval = types.StringValue(v)
 		} else {
 			m.PollInterval = types.StringNull()
 		}
-	} else {
-		m.PollInterval = types.StringNull()
 	}
 }

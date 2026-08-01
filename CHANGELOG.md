@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.1] - 2026-08-01
+
+### Fixed
+
+A second-device functional lab (RouterOS 7.22.3) confirmed that v3.0.0 fixed
+individual fields but not the whole class behind them. This release fixes the
+classes:
+
+- **Set-ordering.** RouterOS stores several attributes as sets and returns them
+  in its own order, so a positional list comparison diffed forever. Seven list
+  attributes are now `Set` (`ip_ipsec_profile` `dh_group`/`enc_algorithm`/
+  `enc_algorithms`, `ip_hotspot_profile` `login_by`, `ip_dhcp_client`
+  `dhcp_options`, `interface_ethernet` `advertise`, `certificate_builtin`
+  `key_usage`), and 13 comma-string set attributes (`authentication` on the
+  ppp/l2tp/pptp/sstp servers, `time` on every ip/ipv6 firewall chain + calea)
+  compare order-insensitively.
+- **Default-omission.** RouterOS omits an attribute left at its default, which
+  the provider read back as `null` and reported as a perpetual diff. Every
+  boolean Apply (488) and every standard string Apply (2699) now keeps the
+  configured value when the device omits the key instead of nulling it. This
+  covers `routing_ospf_interface_template.passive`, `ip_dhcp_server`
+  `authoritative`, `certificate.trusted`, `ip_hotspot_profile.rate_limit`,
+  `ip_dns_static.address`, and the rest of the class.
+
+Not addressed (each has a real obstacle, none is a round-trip defect):
+`/interface/ovpn-server/server` (the menu exposes no fields to model against),
+certificate signing (a `/certificate/sign` action), and `/routing/rip`
+(absent on RouterOS 7.2x firmware).
+
 ## [3.0.0] - 2026-08-01
 
 ### Fixed

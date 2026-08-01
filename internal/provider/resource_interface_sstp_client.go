@@ -534,163 +534,115 @@ func interfaceSSTPClientApply(ctx context.Context, obj client.Object, m *Interfa
 		m.AddDefaultRoute = types.StringNull()
 	}
 	if v, ok := obj["authentication"]; ok {
-		_ = v
 		if v != "" {
 			m.Authentication = types.StringValue(v)
 		} else {
 			m.Authentication = types.StringNull()
 		}
-	} else {
-		m.Authentication = types.StringNull()
 	}
 	if v, ok := obj["certificate"]; ok {
-		_ = v
 		if v != "" {
 			m.Certificate = types.StringValue(v)
 		} else {
 			m.Certificate = types.StringNull()
 		}
-	} else {
-		m.Certificate = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["connect-to"]; ok {
-		_ = v
 		if v != "" {
 			m.ConnectTo = types.StringValue(v)
 		} else {
 			m.ConnectTo = types.StringNull()
 		}
-	} else {
-		m.ConnectTo = types.StringNull()
 	}
 	if v, ok := obj["default-route-distance"]; ok {
-		_ = v
 		if v != "" {
 			m.DefaultRouteDistance = types.StringValue(v)
 		} else {
 			m.DefaultRouteDistance = types.StringNull()
 		}
-	} else {
-		m.DefaultRouteDistance = types.StringNull()
 	}
 	if v, ok := obj["dial-on-demand"]; ok {
-		_ = v
 		if v != "" {
 			m.DialOnDemand = types.StringValue(v)
 		} else {
 			m.DialOnDemand = types.StringNull()
 		}
-	} else {
-		m.DialOnDemand = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["keepalive-timeout"]; ok {
-		_ = v
 		if v != "" {
 			m.KeepaliveTimeout = types.StringValue(v)
 		} else {
 			m.KeepaliveTimeout = types.StringNull()
 		}
-	} else {
-		m.KeepaliveTimeout = types.StringNull()
 	}
 	if v, ok := obj["max-mru"]; ok {
-		_ = v
 		if v != "" {
 			m.MaxMru = types.StringValue(v)
 		} else {
 			m.MaxMru = types.StringNull()
 		}
-	} else {
-		m.MaxMru = types.StringNull()
 	}
 	if v, ok := obj["max-mtu"]; ok {
-		_ = v
 		if v != "" {
 			m.MaxMTU = types.StringValue(v)
 		} else {
 			m.MaxMTU = types.StringNull()
 		}
-	} else {
-		m.MaxMTU = types.StringNull()
 	}
 	if v, ok := obj["mrru"]; ok {
-		_ = v
 		if v != "" {
 			m.Mrru = types.StringValue(v)
 		} else {
 			m.Mrru = types.StringNull()
 		}
-	} else {
-		m.Mrru = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["password"]; ok {
-		_ = v
 		if v != "" {
 			m.Password = types.StringValue(v)
 		} else {
 			m.Password = types.StringNull()
 		}
-	} else {
-		m.Password = types.StringNull()
 	}
 	if v, ok := obj["profile"]; ok {
-		_ = v
 		if v != "" {
 			m.Profile = types.StringValue(v)
 		} else {
 			m.Profile = types.StringNull()
 		}
-	} else {
-		m.Profile = types.StringNull()
 	}
 	if v, ok := obj["user"]; ok {
-		_ = v
 		if v != "" {
 			m.User = types.StringValue(v)
 		} else {
 			m.User = types.StringNull()
 		}
-	} else {
-		m.User = types.StringNull()
 	}
 	if v, ok := obj["verify-server-certificate"]; ok {
-		_ = v
 		if v != "" {
 			m.VerifyServerCertificate = types.StringValue(v)
 		} else {
 			m.VerifyServerCertificate = types.StringNull()
 		}
-	} else {
-		m.VerifyServerCertificate = types.StringNull()
 	}
 }

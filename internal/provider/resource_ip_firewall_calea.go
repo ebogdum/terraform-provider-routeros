@@ -33,7 +33,7 @@ type IPFirewallCaleaModel struct {
 	Ttl                     types.String `tfsdk:"ttl"`
 	Tos                     types.String `tfsdk:"tos"`
 	TlsHost                 types.String `tfsdk:"tls_host"`
-	Time                    types.String `tfsdk:"time"`
+	Time                    csvSetValue  `tfsdk:"time"`
 	TcpMss                  types.String `tfsdk:"tcp_mss"`
 	SrcPort                 types.String `tfsdk:"src_port"`
 	SrcMacAddress           types.String `tfsdk:"src_mac_address"`
@@ -132,6 +132,7 @@ func (r *IPFirewallCaleaResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "RouterOS `tls-host`.",
 			},
 			"time": schema.StringAttribute{
+				CustomType:  csvSetType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "RouterOS `time`.",
@@ -926,9 +927,9 @@ func iPFirewallCaleaApply(ctx context.Context, obj client.Object, m *IPFirewallC
 		m.TlsHost = types.StringNull()
 	}
 	if v, ok := obj["time"]; ok && v != "" {
-		m.Time = types.StringValue(v)
+		m.Time = newCSVSetValue(v)
 	} else {
-		m.Time = types.StringNull()
+		m.Time = newCSVSetNull()
 	}
 	if v, ok := obj["tcp-mss"]; ok && v != "" {
 		m.TcpMss = types.StringValue(v)
@@ -1201,23 +1202,17 @@ func iPFirewallCaleaApply(ctx context.Context, obj client.Object, m *IPFirewallC
 		m.Action = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 }

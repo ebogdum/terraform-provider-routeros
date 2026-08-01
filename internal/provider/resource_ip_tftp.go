@@ -331,34 +331,25 @@ func iPTftpApply(ctx context.Context, obj client.Object, m *IPTftpModel) {
 		m.AllowOverwrite = types.StringNull()
 	}
 	if v, ok := obj["allow"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Allow = types.BoolValue(b)
 		} else {
 			m.Allow = types.BoolNull()
 		}
-	} else {
-		m.Allow = types.BoolNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["hits"]; ok {
 		_ = v
@@ -371,43 +362,31 @@ func iPTftpApply(ctx context.Context, obj client.Object, m *IPTftpModel) {
 		m.Hits = types.Int64Null()
 	}
 	if v, ok := obj["ip-addresses"]; ok {
-		_ = v
 		if v != "" {
 			m.IPAddresses = types.StringValue(v)
 		} else {
 			m.IPAddresses = types.StringNull()
 		}
-	} else {
-		m.IPAddresses = types.StringNull()
 	}
 	if v, ok := obj["read-only"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.ReadOnly = types.BoolValue(b)
 		} else {
 			m.ReadOnly = types.BoolNull()
 		}
-	} else {
-		m.ReadOnly = types.BoolNull()
 	}
 	if v, ok := obj["real-filename"]; ok {
-		_ = v
 		if v != "" {
 			m.RealFilename = types.StringValue(v)
 		} else {
 			m.RealFilename = types.StringNull()
 		}
-	} else {
-		m.RealFilename = types.StringNull()
 	}
 	if v, ok := obj["req-filename"]; ok {
-		_ = v
 		if v != "" {
 			m.ReqFilename = types.StringValue(v)
 		} else {
 			m.ReqFilename = types.StringNull()
 		}
-	} else {
-		m.ReqFilename = types.StringNull()
 	}
 }

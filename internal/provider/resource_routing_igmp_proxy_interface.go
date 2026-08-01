@@ -308,104 +308,74 @@ func routingIgmpProxyInterfaceApply(ctx context.Context, obj client.Object, m *R
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["alternative-subnets"]; ok {
-		_ = v
 		if v != "" {
 			m.AlternativeSubnets = types.StringValue(v)
 		} else {
 			m.AlternativeSubnets = types.StringNull()
 		}
-	} else {
-		m.AlternativeSubnets = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["inactive"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Inactive = types.BoolValue(b)
 		} else {
 			m.Inactive = types.BoolNull()
 		}
-	} else {
-		m.Inactive = types.BoolNull()
 	}
 	if v, ok := obj["interface"]; ok {
-		_ = v
 		if v != "" {
 			m.Interface = types.StringValue(v)
 		} else {
 			m.Interface = types.StringNull()
 		}
-	} else {
-		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["querier"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Querier = types.BoolValue(b)
 		} else {
 			m.Querier = types.BoolNull()
 		}
-	} else {
-		m.Querier = types.BoolNull()
 	}
 	if v, ok := obj["rx-bytes"]; ok {
-		_ = v
 		if v != "" {
 			m.RxBytes = types.StringValue(v)
 		} else {
 			m.RxBytes = types.StringNull()
 		}
-	} else {
-		m.RxBytes = types.StringNull()
 	}
 	if v, ok := obj["rx-packets"]; ok {
-		_ = v
 		if v != "" {
 			m.RxPackets = types.StringValue(v)
 		} else {
 			m.RxPackets = types.StringNull()
 		}
-	} else {
-		m.RxPackets = types.StringNull()
 	}
 	if v, ok := obj["source-ip-address"]; ok {
-		_ = v
 		if v != "" {
 			m.SourceIPAddress = types.StringValue(v)
 		} else {
 			m.SourceIPAddress = types.StringNull()
 		}
-	} else {
-		m.SourceIPAddress = types.StringNull()
 	}
 	if v, ok := obj["threshold"]; ok {
 		_ = v
@@ -418,33 +388,24 @@ func routingIgmpProxyInterfaceApply(ctx context.Context, obj client.Object, m *R
 		m.Threshold = types.Int64Null()
 	}
 	if v, ok := obj["tx-bytes"]; ok {
-		_ = v
 		if v != "" {
 			m.TxBytes = types.StringValue(v)
 		} else {
 			m.TxBytes = types.StringNull()
 		}
-	} else {
-		m.TxBytes = types.StringNull()
 	}
 	if v, ok := obj["tx-packets"]; ok {
-		_ = v
 		if v != "" {
 			m.TxPackets = types.StringValue(v)
 		} else {
 			m.TxPackets = types.StringNull()
 		}
-	} else {
-		m.TxPackets = types.StringNull()
 	}
 	if v, ok := obj["upstream"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Upstream = types.BoolValue(b)
 		} else {
 			m.Upstream = types.BoolNull()
 		}
-	} else {
-		m.Upstream = types.BoolNull()
 	}
 }

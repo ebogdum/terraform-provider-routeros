@@ -434,64 +434,46 @@ func iPIpsecPolicyApply(ctx context.Context, obj client.Object, m *IPIpsecPolicy
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["action"]; ok {
-		_ = v
 		if v != "" {
 			m.Action = types.StringValue(v)
 		} else {
 			m.Action = types.StringNull()
 		}
-	} else {
-		m.Action = types.StringNull()
 	}
 	if v, ok := obj["active"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Active = types.BoolValue(b)
 		} else {
 			m.Active = types.BoolNull()
 		}
-	} else {
-		m.Active = types.BoolNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["default"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
 		} else {
 			m.Default = types.BoolNull()
 		}
-	} else {
-		m.Default = types.BoolNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dst-address"]; ok {
-		_ = v
 		if v != "" {
 			m.DstAddress = types.StringValue(v)
 		} else {
 			m.DstAddress = types.StringNull()
 		}
-	} else {
-		m.DstAddress = types.StringNull()
 	}
 	if v, ok := obj["dst-port"]; ok {
 		_ = v
@@ -504,84 +486,60 @@ func iPIpsecPolicyApply(ctx context.Context, obj client.Object, m *IPIpsecPolicy
 		m.DstPort = types.Int64Null()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["group"]; ok {
-		_ = v
 		if v != "" {
 			m.Group = types.StringValue(v)
 		} else {
 			m.Group = types.StringNull()
 		}
-	} else {
-		m.Group = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["ipsec-protocols"]; ok {
-		_ = v
 		if v != "" {
 			m.IpsecProtocols = types.StringValue(v)
 		} else {
 			m.IpsecProtocols = types.StringNull()
 		}
-	} else {
-		m.IpsecProtocols = types.StringNull()
 	}
 	if v, ok := obj["level"]; ok {
-		_ = v
 		if v != "" {
 			m.Level = types.StringValue(v)
 		} else {
 			m.Level = types.StringNull()
 		}
-	} else {
-		m.Level = types.StringNull()
 	}
 	if v, ok := obj["nopeer"]; ok {
-		_ = v
 		if v != "" {
 			m.Nopeer = types.StringValue(v)
 		} else {
 			m.Nopeer = types.StringNull()
 		}
-	} else {
-		m.Nopeer = types.StringNull()
 	}
 	if v, ok := obj["notemplate"]; ok {
-		_ = v
 		if v != "" {
 			m.Notemplate = types.StringValue(v)
 		} else {
 			m.Notemplate = types.StringNull()
 		}
-	} else {
-		m.Notemplate = types.StringNull()
 	}
 	if v, ok := obj["peer"]; ok {
-		_ = v
 		if v != "" {
 			m.Peer = types.StringValue(v)
 		} else {
 			m.Peer = types.StringNull()
 		}
-	} else {
-		m.Peer = types.StringNull()
 	}
 	if v, ok := obj["ph2-count"]; ok {
 		_ = v
@@ -594,64 +552,46 @@ func iPIpsecPolicyApply(ctx context.Context, obj client.Object, m *IPIpsecPolicy
 		m.Ph2Count = types.Int64Null()
 	}
 	if v, ok := obj["ph2-state"]; ok {
-		_ = v
 		if v != "" {
 			m.Ph2State = types.StringValue(v)
 		} else {
 			m.Ph2State = types.StringNull()
 		}
-	} else {
-		m.Ph2State = types.StringNull()
 	}
 	if v, ok := obj["proposal"]; ok {
-		_ = v
 		if v != "" {
 			m.Proposal = types.StringValue(v)
 		} else {
 			m.Proposal = types.StringNull()
 		}
-	} else {
-		m.Proposal = types.StringNull()
 	}
 	if v, ok := obj["protocol"]; ok {
-		_ = v
 		if v != "" {
 			m.Protocol = types.StringValue(v)
 		} else {
 			m.Protocol = types.StringNull()
 		}
-	} else {
-		m.Protocol = types.StringNull()
 	}
 	if v, ok := obj["sa-dst-address"]; ok {
-		_ = v
 		if v != "" {
 			m.SaDstAddress = types.StringValue(v)
 		} else {
 			m.SaDstAddress = types.StringNull()
 		}
-	} else {
-		m.SaDstAddress = types.StringNull()
 	}
 	if v, ok := obj["sa-src-address"]; ok {
-		_ = v
 		if v != "" {
 			m.SaSrcAddress = types.StringValue(v)
 		} else {
 			m.SaSrcAddress = types.StringNull()
 		}
-	} else {
-		m.SaSrcAddress = types.StringNull()
 	}
 	if v, ok := obj["src-address"]; ok {
-		_ = v
 		if v != "" {
 			m.SrcAddress = types.StringValue(v)
 		} else {
 			m.SrcAddress = types.StringNull()
 		}
-	} else {
-		m.SrcAddress = types.StringNull()
 	}
 	if v, ok := obj["src-port"]; ok {
 		_ = v
@@ -664,23 +604,17 @@ func iPIpsecPolicyApply(ctx context.Context, obj client.Object, m *IPIpsecPolicy
 		m.SrcPort = types.Int64Null()
 	}
 	if v, ok := obj["template"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Template = types.BoolValue(b)
 		} else {
 			m.Template = types.BoolNull()
 		}
-	} else {
-		m.Template = types.BoolNull()
 	}
 	if v, ok := obj["tunnel"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Tunnel = types.BoolValue(b)
 		} else {
 			m.Tunnel = types.BoolNull()
 		}
-	} else {
-		m.Tunnel = types.BoolNull()
 	}
 }

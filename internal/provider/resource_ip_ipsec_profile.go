@@ -34,10 +34,10 @@ type IPIpsecProfileModel struct {
 	ID                  types.String `tfsdk:"id"`
 	PrfAlgorithm        types.String `tfsdk:"prf_algorithm"`
 	Default             types.Bool   `tfsdk:"default"`
-	DhGroup             types.List   `tfsdk:"dh_group"`
+	DhGroup             types.Set    `tfsdk:"dh_group"`
 	DpdInterval         types.String `tfsdk:"dpd_interval"`
 	DpdMaximumFailures  types.Int64  `tfsdk:"dpd_maximum_failures"`
-	EncAlgorithm        types.List   `tfsdk:"enc_algorithm"`
+	EncAlgorithm        types.Set    `tfsdk:"enc_algorithm"`
 	EncryptionAlgorithm types.String `tfsdk:"encryption_algorithm"`
 	HashAlgorithm       types.String `tfsdk:"hash_algorithm"`
 	HashAlgorithms      types.String `tfsdk:"hash_algorithms"`
@@ -83,7 +83,7 @@ func (r *IPIpsecProfileResource) Schema(_ context.Context, _ resource.SchemaRequ
 				Computed:    true,
 				Description: "",
 			},
-			"dh_group": schema.ListAttribute{
+			"dh_group": schema.SetAttribute{
 				Optional:    true,
 				Computed:    true,
 				ElementType: types.StringType,
@@ -101,7 +101,7 @@ func (r *IPIpsecProfileResource) Schema(_ context.Context, _ resource.SchemaRequ
 				Computed:    true,
 				Description: "",
 			},
-			"enc_algorithm": schema.ListAttribute{
+			"enc_algorithm": schema.SetAttribute{
 				Optional:    true,
 				Computed:    true,
 				ElementType: types.StringType,
@@ -179,7 +179,7 @@ func (r *IPIpsecProfileResource) Create(ctx context.Context, req resource.Create
 	}
 	body := client.Object{}
 	if !(plan.DhGroup.IsNull() || plan.DhGroup.IsUnknown()) {
-		body["dh-group"] = encodeStringList(ctx, plan.DhGroup, &resp.Diagnostics)
+		body["dh-group"] = encodeStringSet(ctx, plan.DhGroup, &resp.Diagnostics)
 	}
 	if !(plan.DpdInterval.IsNull() || plan.DpdInterval.IsUnknown()) {
 		body["dpd-interval"] = plan.DpdInterval.ValueString()
@@ -188,7 +188,7 @@ func (r *IPIpsecProfileResource) Create(ctx context.Context, req resource.Create
 		body["dpd-maximum-failures"] = client.FormatInt64(plan.DpdMaximumFailures.ValueInt64())
 	}
 	if !(plan.EncAlgorithm.IsNull() || plan.EncAlgorithm.IsUnknown()) {
-		body["enc-algorithm"] = encodeStringList(ctx, plan.EncAlgorithm, &resp.Diagnostics)
+		body["enc-algorithm"] = encodeStringSet(ctx, plan.EncAlgorithm, &resp.Diagnostics)
 	}
 	if !(plan.HashAlgorithm.IsNull() || plan.HashAlgorithm.IsUnknown()) {
 		body["hash-algorithm"] = plan.HashAlgorithm.ValueString()
@@ -263,7 +263,7 @@ func (r *IPIpsecProfileResource) Update(ctx context.Context, req resource.Update
 	}
 	body := client.Object{}
 	if !plan.DhGroup.Equal(state.DhGroup) && !plan.DhGroup.IsUnknown() {
-		body["dh-group"] = encodeStringList(ctx, plan.DhGroup, &resp.Diagnostics)
+		body["dh-group"] = encodeStringSet(ctx, plan.DhGroup, &resp.Diagnostics)
 	}
 	if !plan.DpdInterval.Equal(state.DpdInterval) && !plan.DpdInterval.IsUnknown() {
 		body["dpd-interval"] = plan.DpdInterval.ValueString()
@@ -272,7 +272,7 @@ func (r *IPIpsecProfileResource) Update(ctx context.Context, req resource.Update
 		body["dpd-maximum-failures"] = client.FormatInt64(plan.DpdMaximumFailures.ValueInt64())
 	}
 	if !plan.EncAlgorithm.Equal(state.EncAlgorithm) && !plan.EncAlgorithm.IsUnknown() {
-		body["enc-algorithm"] = encodeStringList(ctx, plan.EncAlgorithm, &resp.Diagnostics)
+		body["enc-algorithm"] = encodeStringSet(ctx, plan.EncAlgorithm, &resp.Diagnostics)
 	}
 	if !plan.HashAlgorithm.Equal(state.HashAlgorithm) && !plan.HashAlgorithm.IsUnknown() {
 		body["hash-algorithm"] = plan.HashAlgorithm.ValueString()
@@ -371,30 +371,24 @@ func iPIpsecProfileApply(ctx context.Context, obj client.Object, m *IPIpsecProfi
 		m.PrfAlgorithm = types.StringNull()
 	}
 	if v, ok := obj["default"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
 		} else {
 			m.Default = types.BoolNull()
 		}
-	} else {
-		m.Default = types.BoolNull()
 	}
 	if v, ok := obj["dh-group"]; ok {
 		_ = v
-		m.DhGroup = decodeStringList(ctx, v)
+		m.DhGroup = decodeStringSet(ctx, v)
 	} else {
-		m.DhGroup = types.ListNull(types.StringType)
+		m.DhGroup = types.SetNull(types.StringType)
 	}
 	if v, ok := obj["dpd-interval"]; ok {
-		_ = v
 		if v != "" {
 			m.DpdInterval = types.StringValue(v)
 		} else {
 			m.DpdInterval = types.StringNull()
 		}
-	} else {
-		m.DpdInterval = types.StringNull()
 	}
 	if v, ok := obj["dpd-maximum-failures"]; ok {
 		_ = v
@@ -408,39 +402,30 @@ func iPIpsecProfileApply(ctx context.Context, obj client.Object, m *IPIpsecProfi
 	}
 	if v, ok := obj["enc-algorithm"]; ok {
 		_ = v
-		m.EncAlgorithm = decodeStringList(ctx, v)
+		m.EncAlgorithm = decodeStringSet(ctx, v)
 	} else {
-		m.EncAlgorithm = types.ListNull(types.StringType)
+		m.EncAlgorithm = types.SetNull(types.StringType)
 	}
 	if v, ok := obj["encryption-algorithm"]; ok {
-		_ = v
 		if v != "" {
 			m.EncryptionAlgorithm = types.StringValue(v)
 		} else {
 			m.EncryptionAlgorithm = types.StringNull()
 		}
-	} else {
-		m.EncryptionAlgorithm = types.StringNull()
 	}
 	if v, ok := obj["hash-algorithm"]; ok {
-		_ = v
 		if v != "" {
 			m.HashAlgorithm = types.StringValue(v)
 		} else {
 			m.HashAlgorithm = types.StringNull()
 		}
-	} else {
-		m.HashAlgorithm = types.StringNull()
 	}
 	if v, ok := obj["hash-algorithms"]; ok {
-		_ = v
 		if v != "" {
 			m.HashAlgorithms = types.StringValue(v)
 		} else {
 			m.HashAlgorithms = types.StringNull()
 		}
-	} else {
-		m.HashAlgorithms = types.StringNull()
 	}
 	if v, ok := obj["lifebytes"]; ok {
 		_ = v
@@ -453,63 +438,45 @@ func iPIpsecProfileApply(ctx context.Context, obj client.Object, m *IPIpsecProfi
 		m.Lifebytes = types.Int64Null()
 	}
 	if v, ok := obj["lifetime"]; ok {
-		_ = v
 		if v != "" {
 			m.Lifetime = types.StringValue(v)
 		} else {
 			m.Lifetime = types.StringNull()
 		}
-	} else {
-		m.Lifetime = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["nat-traversal"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.NATTraversal = types.BoolValue(b)
 		} else {
 			m.NATTraversal = types.BoolNull()
 		}
-	} else {
-		m.NATTraversal = types.BoolNull()
 	}
 	if v, ok := obj["ppk"]; ok {
-		_ = v
 		if v != "" {
 			m.Ppk = types.StringValue(v)
 		} else {
 			m.Ppk = types.StringNull()
 		}
-	} else {
-		m.Ppk = types.StringNull()
 	}
 	if v, ok := obj["prf-algorithms"]; ok {
-		_ = v
 		if v != "" {
 			m.PrfAlgorithms = types.StringValue(v)
 		} else {
 			m.PrfAlgorithms = types.StringNull()
 		}
-	} else {
-		m.PrfAlgorithms = types.StringNull()
 	}
 	if v, ok := obj["proposal-check"]; ok {
-		_ = v
 		if v != "" {
 			m.ProposalCheck = types.StringValue(v)
 		} else {
 			m.ProposalCheck = types.StringNull()
 		}
-	} else {
-		m.ProposalCheck = types.StringNull()
 	}
 }

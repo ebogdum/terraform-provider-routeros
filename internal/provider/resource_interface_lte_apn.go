@@ -405,54 +405,39 @@ func interfaceLteApnApply(ctx context.Context, obj client.Object, m *InterfaceLt
 		m.Ipv6Interface = types.StringNull()
 	}
 	if v, ok := obj["add-default-route"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AddDefaultRoute = types.BoolValue(b)
 		} else {
 			m.AddDefaultRoute = types.BoolNull()
 		}
-	} else {
-		m.AddDefaultRoute = types.BoolNull()
 	}
 	if v, ok := obj["apn"]; ok {
-		_ = v
 		if v != "" {
 			m.Apn = types.StringValue(v)
 		} else {
 			m.Apn = types.StringNull()
 		}
-	} else {
-		m.Apn = types.StringNull()
 	}
 	if v, ok := obj["authentication"]; ok {
-		_ = v
 		if v != "" {
 			m.Authentication = types.StringValue(v)
 		} else {
 			m.Authentication = types.StringNull()
 		}
-	} else {
-		m.Authentication = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["default"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
 		} else {
 			m.Default = types.BoolNull()
 		}
-	} else {
-		m.Default = types.BoolNull()
 	}
 	if v, ok := obj["default-route-distance"]; ok {
 		_ = v
@@ -465,43 +450,31 @@ func interfaceLteApnApply(ctx context.Context, obj client.Object, m *InterfaceLt
 		m.DefaultRouteDistance = types.Int64Null()
 	}
 	if v, ok := obj["ip-type"]; ok {
-		_ = v
 		if v != "" {
 			m.IPType = types.StringValue(v)
 		} else {
 			m.IPType = types.StringNull()
 		}
-	} else {
-		m.IPType = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["use-network-apn"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.UseNetworkApn = types.BoolValue(b)
 		} else {
 			m.UseNetworkApn = types.BoolNull()
 		}
-	} else {
-		m.UseNetworkApn = types.BoolNull()
 	}
 	if v, ok := obj["use-peer-dns"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.UsePeerDNS = types.BoolValue(b)
 		} else {
 			m.UsePeerDNS = types.BoolNull()
 		}
-	} else {
-		m.UsePeerDNS = types.BoolNull()
 	}
 }

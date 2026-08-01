@@ -288,103 +288,73 @@ func mPLSMangleApply(ctx context.Context, obj client.Object, m *MPLSMangleModel)
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["builtin"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Builtin = types.BoolValue(b)
 		} else {
 			m.Builtin = types.BoolNull()
 		}
-	} else {
-		m.Builtin = types.BoolNull()
 	}
 	if v, ok := obj["chain"]; ok {
-		_ = v
 		if v != "" {
 			m.Chain = types.StringValue(v)
 		} else {
 			m.Chain = types.StringNull()
 		}
-	} else {
-		m.Chain = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["exp"]; ok {
-		_ = v
 		if v != "" {
 			m.Exp = types.StringValue(v)
 		} else {
 			m.Exp = types.StringNull()
 		}
-	} else {
-		m.Exp = types.StringNull()
 	}
 	if v, ok := obj["packets"]; ok {
-		_ = v
 		if v != "" {
 			m.Packets = types.StringValue(v)
 		} else {
 			m.Packets = types.StringNull()
 		}
-	} else {
-		m.Packets = types.StringNull()
 	}
 	if v, ok := obj["reset-counters"]; ok {
-		_ = v
 		if v != "" {
 			m.ResetCounters = types.StringValue(v)
 		} else {
 			m.ResetCounters = types.StringNull()
 		}
-	} else {
-		m.ResetCounters = types.StringNull()
 	}
 	if v, ok := obj["reset-counters-all"]; ok {
-		_ = v
 		if v != "" {
 			m.ResetCountersAll = types.StringValue(v)
 		} else {
 			m.ResetCountersAll = types.StringNull()
 		}
-	} else {
-		m.ResetCountersAll = types.StringNull()
 	}
 	if v, ok := obj["set-exp"]; ok {
-		_ = v
 		if v != "" {
 			m.SetExp = types.StringValue(v)
 		} else {
 			m.SetExp = types.StringNull()
 		}
-	} else {
-		m.SetExp = types.StringNull()
 	}
 	if v, ok := obj["set-mark"]; ok {
-		_ = v
 		if v != "" {
 			m.SetMark = types.StringValue(v)
 		} else {
 			m.SetMark = types.StringNull()
 		}
-	} else {
-		m.SetMark = types.StringNull()
 	}
 }

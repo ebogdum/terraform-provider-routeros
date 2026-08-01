@@ -319,93 +319,66 @@ func routingBGPInstanceApply(ctx context.Context, obj client.Object, m *RoutingB
 		m.IgnoreAsPathLen = types.StringNull()
 	}
 	if v, ok := obj["as"]; ok {
-		_ = v
 		if v != "" {
 			m.As = types.StringValue(v)
 		} else {
 			m.As = types.StringNull()
 		}
-	} else {
-		m.As = types.StringNull()
 	}
 	if v, ok := obj["cluster-id"]; ok {
-		_ = v
 		if v != "" {
 			m.ClusterID = types.StringValue(v)
 		} else {
 			m.ClusterID = types.StringNull()
 		}
-	} else {
-		m.ClusterID = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["ignore-as-path"]; ok {
-		_ = v
 		if v != "" {
 			m.IgnoreAsPath = types.StringValue(v)
 		} else {
 			m.IgnoreAsPath = types.StringNull()
 		}
-	} else {
-		m.IgnoreAsPath = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["router-id"]; ok {
-		_ = v
 		if v != "" {
 			m.RouterID = types.StringValue(v)
 		} else {
 			m.RouterID = types.StringNull()
 		}
-	} else {
-		m.RouterID = types.StringNull()
 	}
 	if v, ok := obj["routing-table"]; ok {
-		_ = v
 		if v != "" {
 			m.RoutingTable = types.StringValue(v)
 		} else {
 			m.RoutingTable = types.StringNull()
 		}
-	} else {
-		m.RoutingTable = types.StringNull()
 	}
 	if v, ok := obj["vrf"]; ok {
-		_ = v
 		if v != "" {
 			m.Vrf = types.StringValue(v)
 		} else {
 			m.Vrf = types.StringNull()
 		}
-	} else {
-		m.Vrf = types.StringNull()
 	}
 }

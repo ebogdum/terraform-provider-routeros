@@ -1645,54 +1645,39 @@ func interfaceWifiConfigurationApply(ctx context.Context, obj client.Object, m *
 		m.QosClassifier = types.StringNull()
 	}
 	if v, ok := obj["2g-probe-delay"]; ok {
-		_ = v
 		if v != "" {
 			m.X2gProbeDelay = types.StringValue(v)
 		} else {
 			m.X2gProbeDelay = types.StringNull()
 		}
-	} else {
-		m.X2gProbeDelay = types.StringNull()
 	}
 	if v, ok := obj["3gpp-info"]; ok {
-		_ = v
 		if v != "" {
 			m.X3gppInfo = types.StringValue(v)
 		} else {
 			m.X3gppInfo = types.StringNull()
 		}
-	} else {
-		m.X3gppInfo = types.StringNull()
 	}
 	if v, ok := obj["3gpp-info-raw"]; ok {
-		_ = v
 		if v != "" {
 			m.X3gppInfoRaw = types.StringValue(v)
 		} else {
 			m.X3gppInfoRaw = types.StringNull()
 		}
-	} else {
-		m.X3gppInfoRaw = types.StringNull()
 	}
 	if v, ok := obj["aaa"]; ok {
-		_ = v
 		if v != "" {
 			m.Aaa = types.StringValue(v)
 		} else {
 			m.Aaa = types.StringNull()
 		}
-	} else {
-		m.Aaa = types.StringNull()
 	}
 	if v, ok := obj["antenna-gain"]; ok {
-		_ = v
 		if v != "" {
 			m.AntennaGain = types.StringValue(v)
 		} else {
 			m.AntennaGain = types.StringNull()
 		}
-	} else {
-		m.AntennaGain = types.StringNull()
 	}
 	if v, ok := obj["security.authentication-types"]; ok {
 		_ = v
@@ -1715,24 +1700,18 @@ func interfaceWifiConfigurationApply(ctx context.Context, obj client.Object, m *
 		m.Band = types.StringNull()
 	}
 	if v, ok := obj["beacon-interval"]; ok {
-		_ = v
 		if v != "" {
 			m.BeaconInterval = types.StringValue(v)
 		} else {
 			m.BeaconInterval = types.StringNull()
 		}
-	} else {
-		m.BeaconInterval = types.StringNull()
 	}
 	if v, ok := obj["beacon-protection"]; ok {
-		_ = v
 		if v != "" {
 			m.BeaconProtection = types.StringValue(v)
 		} else {
 			m.BeaconProtection = types.StringNull()
 		}
-	} else {
-		m.BeaconProtection = types.StringNull()
 	}
 	if v, ok := obj["datapath.bridge"]; ok {
 		_ = v
@@ -1785,44 +1764,32 @@ func interfaceWifiConfigurationApply(ctx context.Context, obj client.Object, m *
 		m.CallingFormat = types.StringNull()
 	}
 	if v, ok := obj["chains"]; ok {
-		_ = v
 		if v != "" {
 			m.Chains = types.StringValue(v)
 		} else {
 			m.Chains = types.StringNull()
 		}
-	} else {
-		m.Chains = types.StringNull()
 	}
 	if v, ok := obj["channel"]; ok {
-		_ = v
 		if v != "" {
 			m.Channel = types.StringValue(v)
 		} else {
 			m.Channel = types.StringNull()
 		}
-	} else {
-		m.Channel = types.StringNull()
 	}
 	if v, ok := obj["channel-width"]; ok {
-		_ = v
 		if v != "" {
 			m.ChannelWidth = types.StringValue(v)
 		} else {
 			m.ChannelWidth = types.StringNull()
 		}
-	} else {
-		m.ChannelWidth = types.StringNull()
 	}
 	if v, ok := obj["ciphers"]; ok {
-		_ = v
 		if v != "" {
 			m.Ciphers = types.StringValue(v)
 		} else {
 			m.Ciphers = types.StringNull()
 		}
-	} else {
-		m.Ciphers = types.StringNull()
 	}
 	if v, ok := obj["datapath.client-isolation"]; ok {
 		_ = v
@@ -1835,24 +1802,18 @@ func interfaceWifiConfigurationApply(ctx context.Context, obj client.Object, m *
 		m.ClientIsolation = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["connect-group"]; ok {
-		_ = v
 		if v != "" {
 			m.ConnectGroup = types.StringValue(v)
 		} else {
 			m.ConnectGroup = types.StringNull()
 		}
-	} else {
-		m.ConnectGroup = types.StringNull()
 	}
 	if v, ok := obj["security.connect-priority"]; ok {
 		_ = v
@@ -1865,54 +1826,39 @@ func interfaceWifiConfigurationApply(ctx context.Context, obj client.Object, m *
 		m.ConnectPriority = types.StringNull()
 	}
 	if v, ok := obj["connection-capabilities"]; ok {
-		_ = v
 		if v != "" {
 			m.ConnectionCapabilities = types.StringValue(v)
 		} else {
 			m.ConnectionCapabilities = types.StringNull()
 		}
-	} else {
-		m.ConnectionCapabilities = types.StringNull()
 	}
 	if v, ok := obj["country"]; ok {
-		_ = v
 		if v != "" {
 			m.Country = types.StringValue(v)
 		} else {
 			m.Country = types.StringNull()
 		}
-	} else {
-		m.Country = types.StringNull()
 	}
 	if v, ok := obj["datapath"]; ok {
-		_ = v
 		if v != "" {
 			m.Datapath = types.StringValue(v)
 		} else {
 			m.Datapath = types.StringNull()
 		}
-	} else {
-		m.Datapath = types.StringNull()
 	}
 	if v, ok := obj["deprioritize-unii-3-4"]; ok {
-		_ = v
 		if v != "" {
 			m.DeprioritizeUnii34 = types.StringValue(v)
 		} else {
 			m.DeprioritizeUnii34 = types.StringNull()
 		}
-	} else {
-		m.DeprioritizeUnii34 = types.StringNull()
 	}
 	if v, ok := obj["dgaf"]; ok {
-		_ = v
 		if v != "" {
 			m.Dgaf = types.StringValue(v)
 		} else {
 			m.Dgaf = types.StringNull()
 		}
-	} else {
-		m.Dgaf = types.StringNull()
 	}
 	if v, ok := obj["security.dh-groups"]; ok {
 		_ = v
@@ -1935,44 +1881,32 @@ func interfaceWifiConfigurationApply(ctx context.Context, obj client.Object, m *
 		m.DisablePmkid = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["distance"]; ok {
-		_ = v
 		if v != "" {
 			m.Distance = types.StringValue(v)
 		} else {
 			m.Distance = types.StringNull()
 		}
-	} else {
-		m.Distance = types.StringNull()
 	}
 	if v, ok := obj["domain-names"]; ok {
-		_ = v
 		if v != "" {
 			m.DomainNames = types.StringValue(v)
 		} else {
 			m.DomainNames = types.StringNull()
 		}
-	} else {
-		m.DomainNames = types.StringNull()
 	}
 	if v, ok := obj["dtim-period"]; ok {
-		_ = v
 		if v != "" {
 			m.DtimPeriod = types.StringValue(v)
 		} else {
 			m.DtimPeriod = types.StringNull()
 		}
-	} else {
-		m.DtimPeriod = types.StringNull()
 	}
 	if v, ok := obj["security.eap-accounting"]; ok {
 		_ = v
@@ -2025,14 +1959,11 @@ func interfaceWifiConfigurationApply(ctx context.Context, obj client.Object, m *
 		m.EAPPassword = types.StringNull()
 	}
 	if v, ok := obj["eap-tls-certificate"]; ok {
-		_ = v
 		if v != "" {
 			m.EAPTLSCertificate = types.StringValue(v)
 		} else {
 			m.EAPTLSCertificate = types.StringNull()
 		}
-	} else {
-		m.EAPTLSCertificate = types.StringNull()
 	}
 	if v, ok := obj["security.eap-username"]; ok {
 		_ = v
@@ -2045,14 +1976,11 @@ func interfaceWifiConfigurationApply(ctx context.Context, obj client.Object, m *
 		m.EAPUsername = types.StringNull()
 	}
 	if v, ok := obj["esr"]; ok {
-		_ = v
 		if v != "" {
 			m.Esr = types.StringValue(v)
 		} else {
 			m.Esr = types.StringNull()
 		}
-	} else {
-		m.Esr = types.StringNull()
 	}
 	if v, ok := obj["channel.frequency"]; ok {
 		_ = v
@@ -2065,34 +1993,25 @@ func interfaceWifiConfigurationApply(ctx context.Context, obj client.Object, m *
 		m.Frequency = types.StringNull()
 	}
 	if v, ok := obj["ft-enabled"]; ok {
-		_ = v
 		if v != "" {
 			m.FtEnabled = types.StringValue(v)
 		} else {
 			m.FtEnabled = types.StringNull()
 		}
-	} else {
-		m.FtEnabled = types.StringNull()
 	}
 	if v, ok := obj["ft-mobility-domain"]; ok {
-		_ = v
 		if v != "" {
 			m.FtMobilityDomain = types.StringValue(v)
 		} else {
 			m.FtMobilityDomain = types.StringNull()
 		}
-	} else {
-		m.FtMobilityDomain = types.StringNull()
 	}
 	if v, ok := obj["ft-nas-identifier"]; ok {
-		_ = v
 		if v != "" {
 			m.FtNasIdentifier = types.StringValue(v)
 		} else {
 			m.FtNasIdentifier = types.StringNull()
 		}
-	} else {
-		m.FtNasIdentifier = types.StringNull()
 	}
 	if v, ok := obj["security.ft-over-ds"]; ok {
 		_ = v
@@ -2105,24 +2024,18 @@ func interfaceWifiConfigurationApply(ctx context.Context, obj client.Object, m *
 		m.FtOverDs = types.StringNull()
 	}
 	if v, ok := obj["ft-r0-key-lifetime"]; ok {
-		_ = v
 		if v != "" {
 			m.FtR0KeyLifetime = types.StringValue(v)
 		} else {
 			m.FtR0KeyLifetime = types.StringNull()
 		}
-	} else {
-		m.FtR0KeyLifetime = types.StringNull()
 	}
 	if v, ok := obj["ft-reassoc-deadline"]; ok {
-		_ = v
 		if v != "" {
 			m.FtReassocDeadline = types.StringValue(v)
 		} else {
 			m.FtReassocDeadline = types.StringNull()
 		}
-	} else {
-		m.FtReassocDeadline = types.StringNull()
 	}
 	if v, ok := obj["security.group-encryption"]; ok {
 		_ = v
@@ -2145,54 +2058,39 @@ func interfaceWifiConfigurationApply(ctx context.Context, obj client.Object, m *
 		m.GroupKeyUpdate = types.StringNull()
 	}
 	if v, ok := obj["hessid"]; ok {
-		_ = v
 		if v != "" {
 			m.Hessid = types.StringValue(v)
 		} else {
 			m.Hessid = types.StringNull()
 		}
-	} else {
-		m.Hessid = types.StringNull()
 	}
 	if v, ok := obj["hide-ssid"]; ok {
-		_ = v
 		if v != "" {
 			m.HideSsid = types.StringValue(v)
 		} else {
 			m.HideSsid = types.StringNull()
 		}
-	} else {
-		m.HideSsid = types.StringNull()
 	}
 	if v, ok := obj["hotspot-2-0"]; ok {
-		_ = v
 		if v != "" {
 			m.Hotspot20 = types.StringValue(v)
 		} else {
 			m.Hotspot20 = types.StringNull()
 		}
-	} else {
-		m.Hotspot20 = types.StringNull()
 	}
 	if v, ok := obj["hw-protection-mode"]; ok {
-		_ = v
 		if v != "" {
 			m.HwProtectionMode = types.StringValue(v)
 		} else {
 			m.HwProtectionMode = types.StringNull()
 		}
-	} else {
-		m.HwProtectionMode = types.StringNull()
 	}
 	if v, ok := obj["installation"]; ok {
-		_ = v
 		if v != "" {
 			m.Installation = types.StringValue(v)
 		} else {
 			m.Installation = types.StringNull()
 		}
-	} else {
-		m.Installation = types.StringNull()
 	}
 	if v, ok := obj["datapath.interface-list"]; ok {
 		_ = v
@@ -2215,44 +2113,32 @@ func interfaceWifiConfigurationApply(ctx context.Context, obj client.Object, m *
 		m.InterimUpdate = types.StringNull()
 	}
 	if v, ok := obj["internet"]; ok {
-		_ = v
 		if v != "" {
 			m.Internet = types.StringValue(v)
 		} else {
 			m.Internet = types.StringNull()
 		}
-	} else {
-		m.Internet = types.StringNull()
 	}
 	if v, ok := obj["interworking"]; ok {
-		_ = v
 		if v != "" {
 			m.Interworking = types.StringValue(v)
 		} else {
 			m.Interworking = types.StringNull()
 		}
-	} else {
-		m.Interworking = types.StringNull()
 	}
 	if v, ok := obj["ipv4-availability"]; ok {
-		_ = v
 		if v != "" {
 			m.Ipv4Availability = types.StringValue(v)
 		} else {
 			m.Ipv4Availability = types.StringNull()
 		}
-	} else {
-		m.Ipv4Availability = types.StringNull()
 	}
 	if v, ok := obj["ipv6-availability"]; ok {
-		_ = v
 		if v != "" {
 			m.IPV6Availability = types.StringValue(v)
 		} else {
 			m.IPV6Availability = types.StringNull()
 		}
-	} else {
-		m.IPV6Availability = types.StringNull()
 	}
 	if v, ok := obj["aaa.mac-caching"]; ok {
 		_ = v
@@ -2265,14 +2151,11 @@ func interfaceWifiConfigurationApply(ctx context.Context, obj client.Object, m *
 		m.MACCaching = types.StringNull()
 	}
 	if v, ok := obj["management-encryption"]; ok {
-		_ = v
 		if v != "" {
 			m.ManagementEncryption = types.StringValue(v)
 		} else {
 			m.ManagementEncryption = types.StringNull()
 		}
-	} else {
-		m.ManagementEncryption = types.StringNull()
 	}
 	if v, ok := obj["security.management-protection"]; ok {
 		_ = v
@@ -2285,74 +2168,53 @@ func interfaceWifiConfigurationApply(ctx context.Context, obj client.Object, m *
 		m.ManagementProtection = types.StringNull()
 	}
 	if v, ok := obj["manager"]; ok {
-		_ = v
 		if v != "" {
 			m.Manager = types.StringValue(v)
 		} else {
 			m.Manager = types.StringNull()
 		}
-	} else {
-		m.Manager = types.StringNull()
 	}
 	if v, ok := obj["max-clients"]; ok {
-		_ = v
 		if v != "" {
 			m.MaxClients = types.StringValue(v)
 		} else {
 			m.MaxClients = types.StringNull()
 		}
-	} else {
-		m.MaxClients = types.StringNull()
 	}
 	if v, ok := obj["max-tx-power"]; ok {
-		_ = v
 		if v != "" {
 			m.MaxTxPower = types.StringValue(v)
 		} else {
 			m.MaxTxPower = types.StringNull()
 		}
-	} else {
-		m.MaxTxPower = types.StringNull()
 	}
 	if v, ok := obj["mode"]; ok {
-		_ = v
 		if v != "" {
 			m.Mode = types.StringValue(v)
 		} else {
 			m.Mode = types.StringNull()
 		}
-	} else {
-		m.Mode = types.StringNull()
 	}
 	if v, ok := obj["multi-passphrase-group"]; ok {
-		_ = v
 		if v != "" {
 			m.MultiPassphraseGroup = types.StringValue(v)
 		} else {
 			m.MultiPassphraseGroup = types.StringNull()
 		}
-	} else {
-		m.MultiPassphraseGroup = types.StringNull()
 	}
 	if v, ok := obj["multicast-enhance"]; ok {
-		_ = v
 		if v != "" {
 			m.MulticastEnhance = types.StringValue(v)
 		} else {
 			m.MulticastEnhance = types.StringNull()
 		}
-	} else {
-		m.MulticastEnhance = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["aaa.nas-identifier"]; ok {
 		_ = v
@@ -2375,54 +2237,39 @@ func interfaceWifiConfigurationApply(ctx context.Context, obj client.Object, m *
 		m.NeighborGroup = types.StringNull()
 	}
 	if v, ok := obj["network-type"]; ok {
-		_ = v
 		if v != "" {
 			m.NetworkType = types.StringValue(v)
 		} else {
 			m.NetworkType = types.StringNull()
 		}
-	} else {
-		m.NetworkType = types.StringNull()
 	}
 	if v, ok := obj["open-flow-switch"]; ok {
-		_ = v
 		if v != "" {
 			m.OpenFlowSwitch = types.StringValue(v)
 		} else {
 			m.OpenFlowSwitch = types.StringNull()
 		}
-	} else {
-		m.OpenFlowSwitch = types.StringNull()
 	}
 	if v, ok := obj["openflow"]; ok {
-		_ = v
 		if v != "" {
 			m.Openflow = types.StringValue(v)
 		} else {
 			m.Openflow = types.StringNull()
 		}
-	} else {
-		m.Openflow = types.StringNull()
 	}
 	if v, ok := obj["operational-classes"]; ok {
-		_ = v
 		if v != "" {
 			m.OperationalClasses = types.StringValue(v)
 		} else {
 			m.OperationalClasses = types.StringNull()
 		}
-	} else {
-		m.OperationalClasses = types.StringNull()
 	}
 	if v, ok := obj["operator-names"]; ok {
-		_ = v
 		if v != "" {
 			m.OperatorNames = types.StringValue(v)
 		} else {
 			m.OperatorNames = types.StringNull()
 		}
-	} else {
-		m.OperatorNames = types.StringNull()
 	}
 	if v, ok := obj["security.owe-transition-interface"]; ok {
 		_ = v
@@ -2455,24 +2302,18 @@ func interfaceWifiConfigurationApply(ctx context.Context, obj client.Object, m *
 		m.PasswordFormat = types.StringNull()
 	}
 	if v, ok := obj["realms"]; ok {
-		_ = v
 		if v != "" {
 			m.Realms = types.StringValue(v)
 		} else {
 			m.Realms = types.StringNull()
 		}
-	} else {
-		m.Realms = types.StringNull()
 	}
 	if v, ok := obj["realms-raw"]; ok {
-		_ = v
 		if v != "" {
 			m.RealmsRaw = types.StringValue(v)
 		} else {
 			m.RealmsRaw = types.StringNull()
 		}
-	} else {
-		m.RealmsRaw = types.StringNull()
 	}
 	if v, ok := obj["channel.reselect-interval"]; ok {
 		_ = v
@@ -2495,14 +2336,11 @@ func interfaceWifiConfigurationApply(ctx context.Context, obj client.Object, m *
 		m.ReselectTime = types.StringNull()
 	}
 	if v, ok := obj["roaming-ois"]; ok {
-		_ = v
 		if v != "" {
 			m.RoamingOis = types.StringValue(v)
 		} else {
 			m.RoamingOis = types.StringNull()
 		}
-	} else {
-		m.RoamingOis = types.StringNull()
 	}
 	if v, ok := obj["steering.rrm"]; ok {
 		_ = v
@@ -2515,14 +2353,11 @@ func interfaceWifiConfigurationApply(ctx context.Context, obj client.Object, m *
 		m.Rrm = types.StringNull()
 	}
 	if v, ok := obj["sae-anti-clogging-threshold"]; ok {
-		_ = v
 		if v != "" {
 			m.SaeAntiCloggingThreshold = types.StringValue(v)
 		} else {
 			m.SaeAntiCloggingThreshold = types.StringNull()
 		}
-	} else {
-		m.SaeAntiCloggingThreshold = types.StringNull()
 	}
 	if v, ok := obj["security.sae-max-failure-rate"]; ok {
 		_ = v
@@ -2555,14 +2390,11 @@ func interfaceWifiConfigurationApply(ctx context.Context, obj client.Object, m *
 		m.SecondaryFrequency = types.StringNull()
 	}
 	if v, ok := obj["security"]; ok {
-		_ = v
 		if v != "" {
 			m.Security = types.StringValue(v)
 		} else {
 			m.Security = types.StringNull()
 		}
-	} else {
-		m.Security = types.StringNull()
 	}
 	if v, ok := obj["channel.skip-dfs-channels"]; ok {
 		_ = v
@@ -2575,34 +2407,25 @@ func interfaceWifiConfigurationApply(ctx context.Context, obj client.Object, m *
 		m.SkipDfsChannels = types.StringNull()
 	}
 	if v, ok := obj["ssid"]; ok {
-		_ = v
 		if v != "" {
 			m.Ssid = types.StringValue(v)
 		} else {
 			m.Ssid = types.StringNull()
 		}
-	} else {
-		m.Ssid = types.StringNull()
 	}
 	if v, ok := obj["station-roaming"]; ok {
-		_ = v
 		if v != "" {
 			m.StationRoaming = types.StringValue(v)
 		} else {
 			m.StationRoaming = types.StringNull()
 		}
-	} else {
-		m.StationRoaming = types.StringNull()
 	}
 	if v, ok := obj["steering"]; ok {
-		_ = v
 		if v != "" {
 			m.Steering = types.StringValue(v)
 		} else {
 			m.Steering = types.StringNull()
 		}
-	} else {
-		m.Steering = types.StringNull()
 	}
 	if v, ok := obj["datapath.traffic-processing"]; ok {
 		_ = v
@@ -2615,94 +2438,67 @@ func interfaceWifiConfigurationApply(ctx context.Context, obj client.Object, m *
 		m.TrafficProcessing = types.StringNull()
 	}
 	if v, ok := obj["transition-request-count"]; ok {
-		_ = v
 		if v != "" {
 			m.TransitionRequestCount = types.StringValue(v)
 		} else {
 			m.TransitionRequestCount = types.StringNull()
 		}
-	} else {
-		m.TransitionRequestCount = types.StringNull()
 	}
 	if v, ok := obj["transition-threshold"]; ok {
-		_ = v
 		if v != "" {
 			m.TransitionThreshold = types.StringValue(v)
 		} else {
 			m.TransitionThreshold = types.StringNull()
 		}
-	} else {
-		m.TransitionThreshold = types.StringNull()
 	}
 	if v, ok := obj["transition-threshold-period"]; ok {
-		_ = v
 		if v != "" {
 			m.TransitionThresholdPeriod = types.StringValue(v)
 		} else {
 			m.TransitionThresholdPeriod = types.StringNull()
 		}
-	} else {
-		m.TransitionThresholdPeriod = types.StringNull()
 	}
 	if v, ok := obj["transition-threshold-time"]; ok {
-		_ = v
 		if v != "" {
 			m.TransitionThresholdTime = types.StringValue(v)
 		} else {
 			m.TransitionThresholdTime = types.StringNull()
 		}
-	} else {
-		m.TransitionThresholdTime = types.StringNull()
 	}
 	if v, ok := obj["transition-time"]; ok {
-		_ = v
 		if v != "" {
 			m.TransitionTime = types.StringValue(v)
 		} else {
 			m.TransitionTime = types.StringNull()
 		}
-	} else {
-		m.TransitionTime = types.StringNull()
 	}
 	if v, ok := obj["tx-chains"]; ok {
-		_ = v
 		if v != "" {
 			m.TxChains = types.StringValue(v)
 		} else {
 			m.TxChains = types.StringNull()
 		}
-	} else {
-		m.TxChains = types.StringNull()
 	}
 	if v, ok := obj["tx-power"]; ok {
-		_ = v
 		if v != "" {
 			m.TxPower = types.StringValue(v)
 		} else {
 			m.TxPower = types.StringNull()
 		}
-	} else {
-		m.TxPower = types.StringNull()
 	}
 	if v, ok := obj["types"]; ok {
-		_ = v
 		if v != "" {
 			m.Types = types.StringValue(v)
 		} else {
 			m.Types = types.StringNull()
 		}
-	} else {
-		m.Types = types.StringNull()
 	}
 	if v, ok := obj["uesa"]; ok {
-		_ = v
 		if v != "" {
 			m.Uesa = types.StringValue(v)
 		} else {
 			m.Uesa = types.StringNull()
 		}
-	} else {
-		m.Uesa = types.StringNull()
 	}
 	if v, ok := obj["aaa.username-format"]; ok {
 		_ = v
@@ -2715,24 +2511,18 @@ func interfaceWifiConfigurationApply(ctx context.Context, obj client.Object, m *
 		m.UsernameFormat = types.StringNull()
 	}
 	if v, ok := obj["venue"]; ok {
-		_ = v
 		if v != "" {
 			m.Venue = types.StringValue(v)
 		} else {
 			m.Venue = types.StringNull()
 		}
-	} else {
-		m.Venue = types.StringNull()
 	}
 	if v, ok := obj["venue-names"]; ok {
-		_ = v
 		if v != "" {
 			m.VenueNames = types.StringValue(v)
 		} else {
 			m.VenueNames = types.StringNull()
 		}
-	} else {
-		m.VenueNames = types.StringNull()
 	}
 	if v, ok := obj["datapath.vlan-id"]; ok {
 		_ = v
@@ -2745,84 +2535,60 @@ func interfaceWifiConfigurationApply(ctx context.Context, obj client.Object, m *
 		m.VLANID = types.StringNull()
 	}
 	if v, ok := obj["wan-at-capacity"]; ok {
-		_ = v
 		if v != "" {
 			m.WanAtCapacity = types.StringValue(v)
 		} else {
 			m.WanAtCapacity = types.StringNull()
 		}
-	} else {
-		m.WanAtCapacity = types.StringNull()
 	}
 	if v, ok := obj["wan-downlink"]; ok {
-		_ = v
 		if v != "" {
 			m.WanDownlink = types.StringValue(v)
 		} else {
 			m.WanDownlink = types.StringNull()
 		}
-	} else {
-		m.WanDownlink = types.StringNull()
 	}
 	if v, ok := obj["wan-downlink-load"]; ok {
-		_ = v
 		if v != "" {
 			m.WanDownlinkLoad = types.StringValue(v)
 		} else {
 			m.WanDownlinkLoad = types.StringNull()
 		}
-	} else {
-		m.WanDownlinkLoad = types.StringNull()
 	}
 	if v, ok := obj["wan-measurement-duration"]; ok {
-		_ = v
 		if v != "" {
 			m.WanMeasurementDuration = types.StringValue(v)
 		} else {
 			m.WanMeasurementDuration = types.StringNull()
 		}
-	} else {
-		m.WanMeasurementDuration = types.StringNull()
 	}
 	if v, ok := obj["wan-status"]; ok {
-		_ = v
 		if v != "" {
 			m.WanStatus = types.StringValue(v)
 		} else {
 			m.WanStatus = types.StringNull()
 		}
-	} else {
-		m.WanStatus = types.StringNull()
 	}
 	if v, ok := obj["wan-symmetric"]; ok {
-		_ = v
 		if v != "" {
 			m.WanSymmetric = types.StringValue(v)
 		} else {
 			m.WanSymmetric = types.StringNull()
 		}
-	} else {
-		m.WanSymmetric = types.StringNull()
 	}
 	if v, ok := obj["wan-uplink"]; ok {
-		_ = v
 		if v != "" {
 			m.WanUplink = types.StringValue(v)
 		} else {
 			m.WanUplink = types.StringNull()
 		}
-	} else {
-		m.WanUplink = types.StringNull()
 	}
 	if v, ok := obj["wan-uplink-load"]; ok {
-		_ = v
 		if v != "" {
 			m.WanUplinkLoad = types.StringValue(v)
 		} else {
 			m.WanUplinkLoad = types.StringNull()
 		}
-	} else {
-		m.WanUplinkLoad = types.StringNull()
 	}
 	if v, ok := obj["steering.wnm"]; ok {
 		_ = v

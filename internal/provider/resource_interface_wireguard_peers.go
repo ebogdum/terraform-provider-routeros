@@ -464,74 +464,53 @@ func interfaceWireguardPeersApply(ctx context.Context, obj client.Object, m *Int
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["allowed-address"]; ok {
-		_ = v
 		if v != "" {
 			m.AllowedAddress = types.StringValue(v)
 		} else {
 			m.AllowedAddress = types.StringNull()
 		}
-	} else {
-		m.AllowedAddress = types.StringNull()
 	}
 	if v, ok := obj["client-address"]; ok {
-		_ = v
 		if v != "" {
 			m.ClientAddress = types.StringValue(v)
 		} else {
 			m.ClientAddress = types.StringNull()
 		}
-	} else {
-		m.ClientAddress = types.StringNull()
 	}
 	if v, ok := obj["client-allowed-address"]; ok {
-		_ = v
 		if v != "" {
 			m.ClientAllowedAddress = types.StringValue(v)
 		} else {
 			m.ClientAllowedAddress = types.StringNull()
 		}
-	} else {
-		m.ClientAllowedAddress = types.StringNull()
 	}
 	if v, ok := obj["client-config"]; ok {
-		_ = v
 		if v != "" {
 			m.ClientConfig = types.StringValue(v)
 		} else {
 			m.ClientConfig = types.StringNull()
 		}
-	} else {
-		m.ClientConfig = types.StringNull()
 	}
 	if v, ok := obj["client-dns"]; ok {
-		_ = v
 		if v != "" {
 			m.ClientDNS = types.StringValue(v)
 		} else {
 			m.ClientDNS = types.StringNull()
 		}
-	} else {
-		m.ClientDNS = types.StringNull()
 	}
 	if v, ok := obj["client-endpoint"]; ok {
-		_ = v
 		if v != "" {
 			m.ClientEndpoint = types.StringValue(v)
 		} else {
 			m.ClientEndpoint = types.StringNull()
 		}
-	} else {
-		m.ClientEndpoint = types.StringNull()
 	}
 	if v, ok := obj["client-keepalive"]; ok {
-		_ = v
 		if v != "" {
 			m.ClientKeepalive = types.StringValue(v)
 		} else {
 			m.ClientKeepalive = types.StringNull()
 		}
-	} else {
-		m.ClientKeepalive = types.StringNull()
 	}
 	if v, ok := obj["client-listen-port"]; ok {
 		_ = v
@@ -544,34 +523,25 @@ func interfaceWireguardPeersApply(ctx context.Context, obj client.Object, m *Int
 		m.ClientListenPort = types.Int64Null()
 	}
 	if v, ok := obj["client-qr"]; ok {
-		_ = v
 		if v != "" {
 			m.ClientQr = types.StringValue(v)
 		} else {
 			m.ClientQr = types.StringNull()
 		}
-	} else {
-		m.ClientQr = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["current-endpoint-address"]; ok {
-		_ = v
 		if v != "" {
 			m.CurrentEndpointAddress = types.StringValue(v)
 		} else {
 			m.CurrentEndpointAddress = types.StringNull()
 		}
-	} else {
-		m.CurrentEndpointAddress = types.StringNull()
 	}
 	if v, ok := obj["current-endpoint-port"]; ok {
 		_ = v
@@ -584,44 +554,32 @@ func interfaceWireguardPeersApply(ctx context.Context, obj client.Object, m *Int
 		m.CurrentEndpointPort = types.Int64Null()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["endpoint"]; ok {
-		_ = v
 		if v != "" {
 			m.Endpoint = types.StringValue(v)
 		} else {
 			m.Endpoint = types.StringNull()
 		}
-	} else {
-		m.Endpoint = types.StringNull()
 	}
 	if v, ok := obj["endpoint-address"]; ok {
-		_ = v
 		if v != "" {
 			m.EndpointAddress = types.StringValue(v)
 		} else {
 			m.EndpointAddress = types.StringNull()
 		}
-	} else {
-		m.EndpointAddress = types.StringNull()
 	}
 	if v, ok := obj["endpoint-port"]; ok {
 		_ = v
@@ -634,44 +592,32 @@ func interfaceWireguardPeersApply(ctx context.Context, obj client.Object, m *Int
 		m.EndpointPort = types.Int64Null()
 	}
 	if v, ok := obj["interface"]; ok {
-		_ = v
 		if v != "" {
 			m.Interface = types.StringValue(v)
 		} else {
 			m.Interface = types.StringNull()
 		}
-	} else {
-		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["last-handshake"]; ok {
-		_ = v
 		if v != "" {
 			m.LastHandshake = types.StringValue(v)
 		} else {
 			m.LastHandshake = types.StringNull()
 		}
-	} else {
-		m.LastHandshake = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["persistent-keepalive"]; ok {
-		_ = v
 		if v != "" {
 			m.PersistentKeepalive = types.StringValue(v)
 		} else {
 			m.PersistentKeepalive = types.StringNull()
 		}
-	} else {
-		m.PersistentKeepalive = types.StringNull()
 	}
 	// Sensitive: RouterOS scrubs the value on read. If the server returned
 	// a value, decode it. Otherwise the plan value (user input) is what's
@@ -702,43 +648,31 @@ func interfaceWireguardPeersApply(ctx context.Context, obj client.Object, m *Int
 		m.PrivateKey = types.StringNull()
 	}
 	if v, ok := obj["public-key"]; ok {
-		_ = v
 		if v != "" {
 			m.PublicKey = types.StringValue(v)
 		} else {
 			m.PublicKey = types.StringNull()
 		}
-	} else {
-		m.PublicKey = types.StringNull()
 	}
 	if v, ok := obj["responder"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Responder = types.BoolValue(b)
 		} else {
 			m.Responder = types.BoolNull()
 		}
-	} else {
-		m.Responder = types.BoolNull()
 	}
 	if v, ok := obj["rx"]; ok {
-		_ = v
 		if v != "" {
 			m.Rx = types.StringValue(v)
 		} else {
 			m.Rx = types.StringNull()
 		}
-	} else {
-		m.Rx = types.StringNull()
 	}
 	if v, ok := obj["tx"]; ok {
-		_ = v
 		if v != "" {
 			m.Tx = types.StringValue(v)
 		} else {
 			m.Tx = types.StringNull()
 		}
-	} else {
-		m.Tx = types.StringNull()
 	}
 }

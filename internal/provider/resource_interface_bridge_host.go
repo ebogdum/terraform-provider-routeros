@@ -298,133 +298,94 @@ func interfaceBridgeHostApply(ctx context.Context, obj client.Object, m *Interfa
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["aged"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Aged = types.BoolValue(b)
 		} else {
 			m.Aged = types.BoolNull()
 		}
-	} else {
-		m.Aged = types.BoolNull()
 	}
 	if v, ok := obj["aged-on-peer"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AgedOnPeer = types.BoolValue(b)
 		} else {
 			m.AgedOnPeer = types.BoolNull()
 		}
-	} else {
-		m.AgedOnPeer = types.BoolNull()
 	}
 	if v, ok := obj["bridge"]; ok {
-		_ = v
 		if v != "" {
 			m.Bridge = types.StringValue(v)
 		} else {
 			m.Bridge = types.StringNull()
 		}
-	} else {
-		m.Bridge = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["external-fdb"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.ExternalFdb = types.BoolValue(b)
 		} else {
 			m.ExternalFdb = types.BoolNull()
 		}
-	} else {
-		m.ExternalFdb = types.BoolNull()
 	}
 	if v, ok := obj["interface"]; ok {
-		_ = v
 		if v != "" {
 			m.Interface = types.StringValue(v)
 		} else {
 			m.Interface = types.StringNull()
 		}
-	} else {
-		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["local"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Local = types.BoolValue(b)
 		} else {
 			m.Local = types.BoolNull()
 		}
-	} else {
-		m.Local = types.BoolNull()
 	}
 	if v, ok := obj["mac-address"]; ok {
-		_ = v
 		if v != "" {
 			m.MACAddress = types.StringValue(v)
 		} else {
 			m.MACAddress = types.StringNull()
 		}
-	} else {
-		m.MACAddress = types.StringNull()
 	}
 	if v, ok := obj["on-interface"]; ok {
-		_ = v
 		if v != "" {
 			m.OnInterface = types.StringValue(v)
 		} else {
 			m.OnInterface = types.StringNull()
 		}
-	} else {
-		m.OnInterface = types.StringNull()
 	}
 	if v, ok := obj["remote-ip"]; ok {
-		_ = v
 		if v != "" {
 			m.RemoteIP = types.StringValue(v)
 		} else {
 			m.RemoteIP = types.StringNull()
 		}
-	} else {
-		m.RemoteIP = types.StringNull()
 	}
 	if v, ok := obj["vid"]; ok {
-		_ = v
 		if v != "" {
 			m.Vid = types.StringValue(v)
 		} else {
 			m.Vid = types.StringNull()
 		}
-	} else {
-		m.Vid = types.StringNull()
 	}
 }

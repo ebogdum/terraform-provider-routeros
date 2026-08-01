@@ -275,73 +275,52 @@ func iPSocksAccessApply(ctx context.Context, obj client.Object, m *IPSocksAccess
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["action"]; ok {
-		_ = v
 		if v != "" {
 			m.Action = types.StringValue(v)
 		} else {
 			m.Action = types.StringNull()
 		}
-	} else {
-		m.Action = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dst-address"]; ok {
-		_ = v
 		if v != "" {
 			m.DstAddress = types.StringValue(v)
 		} else {
 			m.DstAddress = types.StringNull()
 		}
-	} else {
-		m.DstAddress = types.StringNull()
 	}
 	if v, ok := obj["dst-port"]; ok {
-		_ = v
 		if v != "" {
 			m.DstPort = types.StringValue(v)
 		} else {
 			m.DstPort = types.StringNull()
 		}
-	} else {
-		m.DstPort = types.StringNull()
 	}
 	if v, ok := obj["src-address"]; ok {
-		_ = v
 		if v != "" {
 			m.SrcAddress = types.StringValue(v)
 		} else {
 			m.SrcAddress = types.StringNull()
 		}
-	} else {
-		m.SrcAddress = types.StringNull()
 	}
 	if v, ok := obj["src-port"]; ok {
-		_ = v
 		if v != "" {
 			m.SrcPort = types.StringValue(v)
 		} else {
 			m.SrcPort = types.StringNull()
 		}
-	} else {
-		m.SrcPort = types.StringNull()
 	}
 }

@@ -503,123 +503,87 @@ func iPIpsecIdentityApply(ctx context.Context, obj client.Object, m *IPIpsecIden
 		m.Certificate = types.StringNull()
 	}
 	if v, ok := obj["auth-method"]; ok {
-		_ = v
 		if v != "" {
 			m.AuthMethod = types.StringValue(v)
 		} else {
 			m.AuthMethod = types.StringNull()
 		}
-	} else {
-		m.AuthMethod = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["generate-policy"]; ok {
-		_ = v
 		if v != "" {
 			m.GeneratePolicy = types.StringValue(v)
 		} else {
 			m.GeneratePolicy = types.StringNull()
 		}
-	} else {
-		m.GeneratePolicy = types.StringNull()
 	}
 	if v, ok := obj["match-by"]; ok {
-		_ = v
 		if v != "" {
 			m.MatchBy = types.StringValue(v)
 		} else {
 			m.MatchBy = types.StringNull()
 		}
-	} else {
-		m.MatchBy = types.StringNull()
 	}
 	if v, ok := obj["mode-configuration"]; ok {
-		_ = v
 		if v != "" {
 			m.ModeConfiguration = types.StringValue(v)
 		} else {
 			m.ModeConfiguration = types.StringNull()
 		}
-	} else {
-		m.ModeConfiguration = types.StringNull()
 	}
 	if v, ok := obj["my-id-type"]; ok {
-		_ = v
 		if v != "" {
 			m.MyIDType = types.StringValue(v)
 		} else {
 			m.MyIDType = types.StringNull()
 		}
-	} else {
-		m.MyIDType = types.StringNull()
 	}
 	if v, ok := obj["notrack-chain"]; ok {
-		_ = v
 		if v != "" {
 			m.NotrackChain = types.StringValue(v)
 		} else {
 			m.NotrackChain = types.StringNull()
 		}
-	} else {
-		m.NotrackChain = types.StringNull()
 	}
 	if v, ok := obj["peer"]; ok {
-		_ = v
 		if v != "" {
 			m.Peer = types.StringValue(v)
 		} else {
 			m.Peer = types.StringNull()
 		}
-	} else {
-		m.Peer = types.StringNull()
 	}
 	if v, ok := obj["policy-template-group"]; ok {
-		_ = v
 		if v != "" {
 			m.PolicyTemplateGroup = types.StringValue(v)
 		} else {
 			m.PolicyTemplateGroup = types.StringNull()
 		}
-	} else {
-		m.PolicyTemplateGroup = types.StringNull()
 	}
 	if v, ok := obj["remote-id-type"]; ok {
-		_ = v
 		if v != "" {
 			m.RemoteIDType = types.StringValue(v)
 		} else {
 			m.RemoteIDType = types.StringNull()
 		}
-	} else {
-		m.RemoteIDType = types.StringNull()
 	}
 }

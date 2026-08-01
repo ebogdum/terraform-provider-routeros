@@ -550,44 +550,32 @@ func interfaceMeshApply(ctx context.Context, obj client.Object, m *InterfaceMesh
 		m.AdminMac = types.StringNull()
 	}
 	if v, ok := obj["admin-mac-address"]; ok {
-		_ = v
 		if v != "" {
 			m.AdminMACAddress = types.StringValue(v)
 		} else {
 			m.AdminMACAddress = types.StringNull()
 		}
-	} else {
-		m.AdminMACAddress = types.StringNull()
 	}
 	if v, ok := obj["arp"]; ok {
-		_ = v
 		if v != "" {
 			m.ARP = types.StringValue(v)
 		} else {
 			m.ARP = types.StringNull()
 		}
-	} else {
-		m.ARP = types.StringNull()
 	}
 	if v, ok := obj["arp-timeout"]; ok {
-		_ = v
 		if v != "" {
 			m.ARPTimeout = types.StringValue(v)
 		} else {
 			m.ARPTimeout = types.StringNull()
 		}
-	} else {
-		m.ARPTimeout = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["default-hoplimit"]; ok {
 		_ = v
@@ -600,44 +588,32 @@ func interfaceMeshApply(ctx context.Context, obj client.Object, m *InterfaceMesh
 		m.DefaultHoplimit = types.Int64Null()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["mac-address"]; ok {
-		_ = v
 		if v != "" {
 			m.MACAddress = types.StringValue(v)
 		} else {
 			m.MACAddress = types.StringNull()
 		}
-	} else {
-		m.MACAddress = types.StringNull()
 	}
 	if v, ok := obj["mesh-portal"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.MeshPortal = types.BoolValue(b)
 		} else {
 			m.MeshPortal = types.BoolNull()
 		}
-	} else {
-		m.MeshPortal = types.BoolNull()
 	}
 	if v, ok := obj["mesh-traceroute"]; ok {
-		_ = v
 		if v != "" {
 			m.MeshTraceroute = types.StringValue(v)
 		} else {
 			m.MeshTraceroute = types.StringNull()
 		}
-	} else {
-		m.MeshTraceroute = types.StringNull()
 	}
 	if v, ok := obj["mtu"]; ok {
 		_ = v
@@ -650,34 +626,25 @@ func interfaceMeshApply(ctx context.Context, obj client.Object, m *InterfaceMesh
 		m.MTU = types.Int64Null()
 	}
 	if v, ok := obj["prep-lifetime"]; ok {
-		_ = v
 		if v != "" {
 			m.PrepLifetime = types.StringValue(v)
 		} else {
 			m.PrepLifetime = types.StringNull()
 		}
-	} else {
-		m.PrepLifetime = types.StringNull()
 	}
 	if v, ok := obj["preq-destination-only"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.PreqDestinationOnly = types.BoolValue(b)
 		} else {
 			m.PreqDestinationOnly = types.BoolNull()
 		}
-	} else {
-		m.PreqDestinationOnly = types.BoolNull()
 	}
 	if v, ok := obj["preq-reply-and-forward"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.PreqReplyAndForward = types.BoolValue(b)
 		} else {
 			m.PreqReplyAndForward = types.BoolNull()
 		}
-	} else {
-		m.PreqReplyAndForward = types.BoolNull()
 	}
 	if v, ok := obj["preq-retries"]; ok {
 		_ = v
@@ -700,24 +667,18 @@ func interfaceMeshApply(ctx context.Context, obj client.Object, m *InterfaceMesh
 		m.PreqWaitingTime = types.Int64Null()
 	}
 	if v, ok := obj["rann-interval"]; ok {
-		_ = v
 		if v != "" {
 			m.RannInterval = types.StringValue(v)
 		} else {
 			m.RannInterval = types.StringNull()
 		}
-	} else {
-		m.RannInterval = types.StringNull()
 	}
 	if v, ok := obj["rann-lifetime"]; ok {
-		_ = v
 		if v != "" {
 			m.RannLifetime = types.StringValue(v)
 		} else {
 			m.RannLifetime = types.StringNull()
 		}
-	} else {
-		m.RannLifetime = types.StringNull()
 	}
 	if v, ok := obj["rann-propagation-delay"]; ok {
 		_ = v
@@ -730,13 +691,10 @@ func interfaceMeshApply(ctx context.Context, obj client.Object, m *InterfaceMesh
 		m.RannPropagationDelay = types.Int64Null()
 	}
 	if v, ok := obj["reoptimize-paths"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.ReoptimizePaths = types.BoolValue(b)
 		} else {
 			m.ReoptimizePaths = types.BoolNull()
 		}
-	} else {
-		m.ReoptimizePaths = types.BoolNull()
 	}
 }

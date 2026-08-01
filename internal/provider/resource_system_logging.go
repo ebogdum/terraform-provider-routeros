@@ -278,93 +278,66 @@ func systemLoggingApply(ctx context.Context, obj client.Object, m *SystemLogging
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["action"]; ok {
-		_ = v
 		if v != "" {
 			m.Action = types.StringValue(v)
 		} else {
 			m.Action = types.StringNull()
 		}
-	} else {
-		m.Action = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["default"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
 		} else {
 			m.Default = types.BoolNull()
 		}
-	} else {
-		m.Default = types.BoolNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["prefix"]; ok {
-		_ = v
 		if v != "" {
 			m.Prefix = types.StringValue(v)
 		} else {
 			m.Prefix = types.StringNull()
 		}
-	} else {
-		m.Prefix = types.StringNull()
 	}
 	if v, ok := obj["regex"]; ok {
-		_ = v
 		if v != "" {
 			m.Regex = types.StringValue(v)
 		} else {
 			m.Regex = types.StringNull()
 		}
-	} else {
-		m.Regex = types.StringNull()
 	}
 	if v, ok := obj["topics"]; ok {
-		_ = v
 		if v != "" {
 			m.Topics = types.StringValue(v)
 		} else {
 			m.Topics = types.StringNull()
 		}
-	} else {
-		m.Topics = types.StringNull()
 	}
 }

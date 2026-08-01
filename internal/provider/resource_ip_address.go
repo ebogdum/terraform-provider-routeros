@@ -306,103 +306,73 @@ func iPAddressApply(ctx context.Context, obj client.Object, m *IPAddressModel) {
 		m.Broadcast = types.StringNull()
 	}
 	if v, ok := obj["actual-interface"]; ok {
-		_ = v
 		if v != "" {
 			m.ActualInterface = types.StringValue(v)
 		} else {
 			m.ActualInterface = types.StringNull()
 		}
-	} else {
-		m.ActualInterface = types.StringNull()
 	}
 	if v, ok := obj["address"]; ok {
-		_ = v
 		if v != "" {
 			m.Address = types.StringValue(v)
 		} else {
 			m.Address = types.StringNull()
 		}
-	} else {
-		m.Address = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["interface"]; ok {
-		_ = v
 		if v != "" {
 			m.Interface = types.StringValue(v)
 		} else {
 			m.Interface = types.StringNull()
 		}
-	} else {
-		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["network"]; ok {
-		_ = v
 		if v != "" {
 			m.Network = types.StringValue(v)
 		} else {
 			m.Network = types.StringNull()
 		}
-	} else {
-		m.Network = types.StringNull()
 	}
 	if v, ok := obj["slave"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Slave = types.BoolValue(b)
 		} else {
 			m.Slave = types.BoolNull()
 		}
-	} else {
-		m.Slave = types.BoolNull()
 	}
 	if v, ok := obj["vrf"]; ok {
-		_ = v
 		if v != "" {
 			m.Vrf = types.StringValue(v)
 		} else {
 			m.Vrf = types.StringNull()
 		}
-	} else {
-		m.Vrf = types.StringNull()
 	}
 }

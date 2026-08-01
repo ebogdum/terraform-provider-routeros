@@ -199,13 +199,10 @@ func interfaceEthernetSwitchRuleApply(ctx context.Context, obj client.Object, m 
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["qos-hw-offloading"]; ok {
-		_ = v
 		if v != "" {
 			m.QosHwOffloading = types.StringValue(v)
 		} else {
 			m.QosHwOffloading = types.StringNull()
 		}
-	} else {
-		m.QosHwOffloading = types.StringNull()
 	}
 }

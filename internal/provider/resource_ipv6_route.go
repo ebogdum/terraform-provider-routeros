@@ -390,44 +390,32 @@ func iPV6RouteApply(ctx context.Context, obj client.Object, m *IPV6RouteModel) {
 		m.Blackhole = types.StringValue("false")
 	}
 	if v, ok := obj["active"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Active = types.BoolValue(b)
 		} else {
 			m.Active = types.BoolNull()
 		}
-	} else {
-		m.Active = types.BoolNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["connect"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Connect = types.BoolValue(b)
 		} else {
 			m.Connect = types.BoolNull()
 		}
-	} else {
-		m.Connect = types.BoolNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["distance"]; ok {
 		_ = v
@@ -440,64 +428,46 @@ func iPV6RouteApply(ctx context.Context, obj client.Object, m *IPV6RouteModel) {
 		m.Distance = types.Int64Null()
 	}
 	if v, ok := obj["dst-address"]; ok {
-		_ = v
 		if v != "" {
 			m.DstAddress = types.StringValue(v)
 		} else {
 			m.DstAddress = types.StringNull()
 		}
-	} else {
-		m.DstAddress = types.StringNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["gateway"]; ok {
-		_ = v
 		if v != "" {
 			m.Gateway = types.StringValue(v)
 		} else {
 			m.Gateway = types.StringNull()
 		}
-	} else {
-		m.Gateway = types.StringNull()
 	}
 	if v, ok := obj["immediate-gw"]; ok {
-		_ = v
 		if v != "" {
 			m.ImmediateGw = types.StringValue(v)
 		} else {
 			m.ImmediateGw = types.StringNull()
 		}
-	} else {
-		m.ImmediateGw = types.StringNull()
 	}
 	if v, ok := obj["inactive"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Inactive = types.BoolValue(b)
 		} else {
 			m.Inactive = types.BoolNull()
 		}
-	} else {
-		m.Inactive = types.BoolNull()
 	}
 	if v, ok := obj["routing-table"]; ok {
-		_ = v
 		if v != "" {
 			m.RoutingTable = types.StringValue(v)
 		} else {
 			m.RoutingTable = types.StringNull()
 		}
-	} else {
-		m.RoutingTable = types.StringNull()
 	}
 	if v, ok := obj["scope"]; ok {
 		_ = v

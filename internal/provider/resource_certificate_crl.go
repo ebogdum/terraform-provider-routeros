@@ -262,94 +262,67 @@ func certificateCrlApply(ctx context.Context, obj client.Object, m *CertificateC
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["akid"]; ok {
-		_ = v
 		if v != "" {
 			m.Akid = types.StringValue(v)
 		} else {
 			m.Akid = types.StringNull()
 		}
-	} else {
-		m.Akid = types.StringNull()
 	}
 	if v, ok := obj["certificate"]; ok {
-		_ = v
 		if v != "" {
 			m.Certificate = types.StringValue(v)
 		} else {
 			m.Certificate = types.StringNull()
 		}
-	} else {
-		m.Certificate = types.StringNull()
 	}
 	if v, ok := obj["download"]; ok {
-		_ = v
 		if v != "" {
 			m.Download = types.StringValue(v)
 		} else {
 			m.Download = types.StringNull()
 		}
-	} else {
-		m.Download = types.StringNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["expired"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Expired = types.BoolValue(b)
 		} else {
 			m.Expired = types.BoolNull()
 		}
-	} else {
-		m.Expired = types.BoolNull()
 	}
 	if v, ok := obj["flush"]; ok {
-		_ = v
 		if v != "" {
 			m.Flush = types.StringValue(v)
 		} else {
 			m.Flush = types.StringNull()
 		}
-	} else {
-		m.Flush = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["last-update"]; ok {
-		_ = v
 		if v != "" {
 			m.LastUpdate = types.StringValue(v)
 		} else {
 			m.LastUpdate = types.StringNull()
 		}
-	} else {
-		m.LastUpdate = types.StringNull()
 	}
 	if v, ok := obj["next-update"]; ok {
-		_ = v
 		if v != "" {
 			m.NextUpdate = types.StringValue(v)
 		} else {
 			m.NextUpdate = types.StringNull()
 		}
-	} else {
-		m.NextUpdate = types.StringNull()
 	}
 	if v, ok := obj["num"]; ok {
 		_ = v
@@ -372,23 +345,17 @@ func certificateCrlApply(ctx context.Context, obj client.Object, m *CertificateC
 		m.Revoked = types.Int64Null()
 	}
 	if v, ok := obj["signature"]; ok {
-		_ = v
 		if v != "" {
 			m.Signature = types.StringValue(v)
 		} else {
 			m.Signature = types.StringNull()
 		}
-	} else {
-		m.Signature = types.StringNull()
 	}
 	if v, ok := obj["url"]; ok {
-		_ = v
 		if v != "" {
 			m.URL = types.StringValue(v)
 		} else {
 			m.URL = types.StringNull()
 		}
-	} else {
-		m.URL = types.StringNull()
 	}
 }

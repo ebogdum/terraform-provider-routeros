@@ -1225,24 +1225,18 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["acquired"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Acquired = types.BoolValue(b)
 		} else {
 			m.Acquired = types.BoolNull()
 		}
-	} else {
-		m.Acquired = types.BoolNull()
 	}
 	if v, ok := obj["active-time"]; ok {
-		_ = v
 		if v != "" {
 			m.ActiveTime = types.StringValue(v)
 		} else {
 			m.ActiveTime = types.StringNull()
 		}
-	} else {
-		m.ActiveTime = types.StringNull()
 	}
 	if v, ok := obj["available-spare"]; ok {
 		_ = v
@@ -1265,44 +1259,32 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 		m.AvailableSpareThreshold = types.Int64Null()
 	}
 	if v, ok := obj["block-device"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.BlockDevice = types.BoolValue(b)
 		} else {
 			m.BlockDevice = types.BoolNull()
 		}
-	} else {
-		m.BlockDevice = types.BoolNull()
 	}
 	if v, ok := obj["btrfs"]; ok {
-		_ = v
 		if v != "" {
 			m.Btrfs = types.StringValue(v)
 		} else {
 			m.Btrfs = types.StringNull()
 		}
-	} else {
-		m.Btrfs = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["controller-burst-time"]; ok {
-		_ = v
 		if v != "" {
 			m.ControllerBurstTime = types.StringValue(v)
 		} else {
 			m.ControllerBurstTime = types.StringNull()
 		}
-	} else {
-		m.ControllerBurstTime = types.StringNull()
 	}
 	if v, ok := obj["critical-temperature"]; ok {
 		_ = v
@@ -1315,244 +1297,172 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 		m.CriticalTemperature = types.Int64Null()
 	}
 	if v, ok := obj["critical-temperature-time"]; ok {
-		_ = v
 		if v != "" {
 			m.CriticalTemperatureTime = types.StringValue(v)
 		} else {
 			m.CriticalTemperatureTime = types.StringNull()
 		}
-	} else {
-		m.CriticalTemperatureTime = types.StringNull()
 	}
 	if v, ok := obj["critical-warning"]; ok {
-		_ = v
 		if v != "" {
 			m.CriticalWarning = types.StringValue(v)
 		} else {
 			m.CriticalWarning = types.StringNull()
 		}
-	} else {
-		m.CriticalWarning = types.StringNull()
 	}
 	if v, ok := obj["default-slot"]; ok {
-		_ = v
 		if v != "" {
 			m.DefaultSlot = types.StringValue(v)
 		} else {
 			m.DefaultSlot = types.StringNull()
 		}
-	} else {
-		m.DefaultSlot = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["discard-bytes"]; ok {
-		_ = v
 		if v != "" {
 			m.DiscardBytes = types.StringValue(v)
 		} else {
 			m.DiscardBytes = types.StringNull()
 		}
-	} else {
-		m.DiscardBytes = types.StringNull()
 	}
 	if v, ok := obj["discard-merges"]; ok {
-		_ = v
 		if v != "" {
 			m.DiscardMerges = types.StringValue(v)
 		} else {
 			m.DiscardMerges = types.StringNull()
 		}
-	} else {
-		m.DiscardMerges = types.StringNull()
 	}
 	if v, ok := obj["discard-ops"]; ok {
-		_ = v
 		if v != "" {
 			m.DiscardOps = types.StringValue(v)
 		} else {
 			m.DiscardOps = types.StringNull()
 		}
-	} else {
-		m.DiscardOps = types.StringNull()
 	}
 	if v, ok := obj["discard-time"]; ok {
-		_ = v
 		if v != "" {
 			m.DiscardTime = types.StringValue(v)
 		} else {
 			m.DiscardTime = types.StringNull()
 		}
-	} else {
-		m.DiscardTime = types.StringNull()
 	}
 	if v, ok := obj["eject-drive"]; ok {
-		_ = v
 		if v != "" {
 			m.EjectDrive = types.StringValue(v)
 		} else {
 			m.EjectDrive = types.StringNull()
 		}
-	} else {
-		m.EjectDrive = types.StringNull()
 	}
 	if v, ok := obj["empty"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Empty = types.BoolValue(b)
 		} else {
 			m.Empty = types.BoolNull()
 		}
-	} else {
-		m.Empty = types.BoolNull()
 	}
 	if v, ok := obj["encrypted"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Encrypted = types.BoolValue(b)
 		} else {
 			m.Encrypted = types.BoolNull()
 		}
-	} else {
-		m.Encrypted = types.BoolNull()
 	}
 	if v, ok := obj["flush-ops"]; ok {
-		_ = v
 		if v != "" {
 			m.FlushOps = types.StringValue(v)
 		} else {
 			m.FlushOps = types.StringNull()
 		}
-	} else {
-		m.FlushOps = types.StringNull()
 	}
 	if v, ok := obj["flush-time"]; ok {
-		_ = v
 		if v != "" {
 			m.FlushTime = types.StringValue(v)
 		} else {
 			m.FlushTime = types.StringNull()
 		}
-	} else {
-		m.FlushTime = types.StringNull()
 	}
 	if v, ok := obj["formatting"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Formatting = types.BoolValue(b)
 		} else {
 			m.Formatting = types.BoolNull()
 		}
-	} else {
-		m.Formatting = types.BoolNull()
 	}
 	if v, ok := obj["free"]; ok {
-		_ = v
 		if v != "" {
 			m.Free = types.StringValue(v)
 		} else {
 			m.Free = types.StringNull()
 		}
-	} else {
-		m.Free = types.StringNull()
 	}
 	if v, ok := obj["fs"]; ok {
-		_ = v
 		if v != "" {
 			m.Fs = types.StringValue(v)
 		} else {
 			m.Fs = types.StringNull()
 		}
-	} else {
-		m.Fs = types.StringNull()
 	}
 	if v, ok := obj["fw-version"]; ok {
-		_ = v
 		if v != "" {
 			m.FwVersion = types.StringValue(v)
 		} else {
 			m.FwVersion = types.StringNull()
 		}
-	} else {
-		m.FwVersion = types.StringNull()
 	}
 	if v, ok := obj["guid-partition-table"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.GuidPartitionTable = types.BoolValue(b)
 		} else {
 			m.GuidPartitionTable = types.BoolNull()
 		}
-	} else {
-		m.GuidPartitionTable = types.BoolNull()
 	}
 	if v, ok := obj["host-read-bytes"]; ok {
-		_ = v
 		if v != "" {
 			m.HostReadBytes = types.StringValue(v)
 		} else {
 			m.HostReadBytes = types.StringNull()
 		}
-	} else {
-		m.HostReadBytes = types.StringNull()
 	}
 	if v, ok := obj["host-read-commands"]; ok {
-		_ = v
 		if v != "" {
 			m.HostReadCommands = types.StringValue(v)
 		} else {
 			m.HostReadCommands = types.StringNull()
 		}
-	} else {
-		m.HostReadCommands = types.StringNull()
 	}
 	if v, ok := obj["host-write-bytes"]; ok {
-		_ = v
 		if v != "" {
 			m.HostWriteBytes = types.StringValue(v)
 		} else {
 			m.HostWriteBytes = types.StringNull()
 		}
-	} else {
-		m.HostWriteBytes = types.StringNull()
 	}
 	if v, ok := obj["host-write-commands"]; ok {
-		_ = v
 		if v != "" {
 			m.HostWriteCommands = types.StringValue(v)
 		} else {
 			m.HostWriteCommands = types.StringNull()
 		}
-	} else {
-		m.HostWriteCommands = types.StringNull()
 	}
 	if v, ok := obj["i-scsi-export"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.IScsiExport = types.BoolValue(b)
 		} else {
 			m.IScsiExport = types.BoolNull()
 		}
-	} else {
-		m.IScsiExport = types.BoolNull()
 	}
 	if v, ok := obj["i-scsi-server-iqn"]; ok {
-		_ = v
 		if v != "" {
 			m.IScsiServerIqn = types.StringValue(v)
 		} else {
 			m.IScsiServerIqn = types.StringNull()
 		}
-	} else {
-		m.IScsiServerIqn = types.StringNull()
 	}
 	if v, ok := obj["i-scsi-server-port"]; ok {
 		_ = v
@@ -1565,214 +1475,151 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 		m.IScsiServerPort = types.Int64Null()
 	}
 	if v, ok := obj["in-flight-ops"]; ok {
-		_ = v
 		if v != "" {
 			m.InFlightOps = types.StringValue(v)
 		} else {
 			m.InFlightOps = types.StringNull()
 		}
-	} else {
-		m.InFlightOps = types.StringNull()
 	}
 	if v, ok := obj["interface"]; ok {
-		_ = v
 		if v != "" {
 			m.Interface = types.StringValue(v)
 		} else {
 			m.Interface = types.StringNull()
 		}
-	} else {
-		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["interface-speed"]; ok {
-		_ = v
 		if v != "" {
 			m.InterfaceSpeed = types.StringValue(v)
 		} else {
 			m.InterfaceSpeed = types.StringNull()
 		}
-	} else {
-		m.InterfaceSpeed = types.StringNull()
 	}
 	if v, ok := obj["iscsi-sharing"]; ok {
-		_ = v
 		if v != "" {
 			m.IscsiSharing = types.StringValue(v)
 		} else {
 			m.IscsiSharing = types.StringNull()
 		}
-	} else {
-		m.IscsiSharing = types.StringNull()
 	}
 	if v, ok := obj["label"]; ok {
-		_ = v
 		if v != "" {
 			m.Label = types.StringValue(v)
 		} else {
 			m.Label = types.StringNull()
 		}
-	} else {
-		m.Label = types.StringNull()
 	}
 	if v, ok := obj["media-interface"]; ok {
-		_ = v
 		if v != "" {
 			m.MediaInterface = types.StringValue(v)
 		} else {
 			m.MediaInterface = types.StringNull()
 		}
-	} else {
-		m.MediaInterface = types.StringNull()
 	}
 	if v, ok := obj["media-sharing"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.MediaSharing = types.BoolValue(b)
 		} else {
 			m.MediaSharing = types.BoolNull()
 		}
-	} else {
-		m.MediaSharing = types.BoolNull()
 	}
 	if v, ok := obj["model"]; ok {
-		_ = v
 		if v != "" {
 			m.Model = types.StringValue(v)
 		} else {
 			m.Model = types.StringNull()
 		}
-	} else {
-		m.Model = types.StringNull()
 	}
 	if v, ok := obj["mount-compress"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.MountCompress = types.BoolValue(b)
 		} else {
 			m.MountCompress = types.BoolNull()
 		}
-	} else {
-		m.MountCompress = types.BoolNull()
 	}
 	if v, ok := obj["mount-filesystem"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.MountFilesystem = types.BoolValue(b)
 		} else {
 			m.MountFilesystem = types.BoolNull()
 		}
-	} else {
-		m.MountFilesystem = types.BoolNull()
 	}
 	if v, ok := obj["mount-point"]; ok {
-		_ = v
 		if v != "" {
 			m.MountPoint = types.StringValue(v)
 		} else {
 			m.MountPoint = types.StringNull()
 		}
-	} else {
-		m.MountPoint = types.StringNull()
 	}
 	if v, ok := obj["mount-point-template"]; ok {
-		_ = v
 		if v != "" {
 			m.MountPointTemplate = types.StringValue(v)
 		} else {
 			m.MountPointTemplate = types.StringNull()
 		}
-	} else {
-		m.MountPointTemplate = types.StringNull()
 	}
 	if v, ok := obj["mount-read-only"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.MountReadOnly = types.BoolValue(b)
 		} else {
 			m.MountReadOnly = types.BoolNull()
 		}
-	} else {
-		m.MountReadOnly = types.BoolNull()
 	}
 	if v, ok := obj["mounted"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Mounted = types.BoolValue(b)
 		} else {
 			m.Mounted = types.BoolNull()
 		}
-	} else {
-		m.Mounted = types.BoolNull()
 	}
 	if v, ok := obj["newfileman"]; ok {
-		_ = v
 		if v != "" {
 			m.Newfileman = types.StringValue(v)
 		} else {
 			m.Newfileman = types.StringNull()
 		}
-	} else {
-		m.Newfileman = types.StringNull()
 	}
 	if v, ok := obj["nfs-sharing"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.NfsSharing = types.BoolValue(b)
 		} else {
 			m.NfsSharing = types.BoolNull()
 		}
-	} else {
-		m.NfsSharing = types.BoolNull()
 	}
 	if v, ok := obj["nvme"]; ok {
-		_ = v
 		if v != "" {
 			m.Nvme = types.StringValue(v)
 		} else {
 			m.Nvme = types.StringNull()
 		}
-	} else {
-		m.Nvme = types.StringNull()
 	}
 	if v, ok := obj["nvme-tcp-export"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.NvmeTCPExport = types.BoolValue(b)
 		} else {
 			m.NvmeTCPExport = types.BoolNull()
 		}
-	} else {
-		m.NvmeTCPExport = types.BoolNull()
 	}
 	if v, ok := obj["nvme-tcp-server-allow-host-name"]; ok {
-		_ = v
 		if v != "" {
 			m.NvmeTCPServerAllowHostName = types.StringValue(v)
 		} else {
 			m.NvmeTCPServerAllowHostName = types.StringNull()
 		}
-	} else {
-		m.NvmeTCPServerAllowHostName = types.StringNull()
 	}
 	if v, ok := obj["nvme-tcp-server-nqn"]; ok {
-		_ = v
 		if v != "" {
 			m.NvmeTCPServerNqn = types.StringValue(v)
 		} else {
 			m.NvmeTCPServerNqn = types.StringNull()
 		}
-	} else {
-		m.NvmeTCPServerNqn = types.StringNull()
 	}
 	if v, ok := obj["nvme-tcp-server-password"]; ok {
-		_ = v
 		if v != "" {
 			m.NvmeTCPServerPassword = types.StringValue(v)
 		} else {
 			m.NvmeTCPServerPassword = types.StringNull()
 		}
-	} else {
-		m.NvmeTCPServerPassword = types.StringNull()
 	}
 	if v, ok := obj["nvme-tcp-server-port"]; ok {
 		_ = v
@@ -1785,54 +1632,39 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 		m.NvmeTCPServerPort = types.Int64Null()
 	}
 	if v, ok := obj["nvme-tcp-server-secret"]; ok {
-		_ = v
 		if v != "" {
 			m.NvmeTCPServerSecret = types.StringValue(v)
 		} else {
 			m.NvmeTCPServerSecret = types.StringNull()
 		}
-	} else {
-		m.NvmeTCPServerSecret = types.StringNull()
 	}
 	if v, ok := obj["oldfileman"]; ok {
-		_ = v
 		if v != "" {
 			m.Oldfileman = types.StringValue(v)
 		} else {
 			m.Oldfileman = types.StringNull()
 		}
-	} else {
-		m.Oldfileman = types.StringNull()
 	}
 	if v, ok := obj["parent"]; ok {
-		_ = v
 		if v != "" {
 			m.Parent = types.StringValue(v)
 		} else {
 			m.Parent = types.StringNull()
 		}
-	} else {
-		m.Parent = types.StringNull()
 	}
 	if v, ok := obj["part"]; ok {
-		_ = v
 		if v != "" {
 			m.Part = types.StringValue(v)
 		} else {
 			m.Part = types.StringNull()
 		}
-	} else {
-		m.Part = types.StringNull()
 	}
 	if v, ok := obj["partition"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Partition = types.BoolValue(b)
 		} else {
 			m.Partition = types.BoolNull()
 		}
-	} else {
-		m.Partition = types.BoolNull()
 	}
 	if v, ok := obj["partition-number"]; ok {
 		_ = v
@@ -1845,24 +1677,18 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 		m.PartitionNumber = types.Int64Null()
 	}
 	if v, ok := obj["partition-offset"]; ok {
-		_ = v
 		if v != "" {
 			m.PartitionOffset = types.StringValue(v)
 		} else {
 			m.PartitionOffset = types.StringNull()
 		}
-	} else {
-		m.PartitionOffset = types.StringNull()
 	}
 	if v, ok := obj["partition-size"]; ok {
-		_ = v
 		if v != "" {
 			m.PartitionSize = types.StringValue(v)
 		} else {
 			m.PartitionSize = types.StringNull()
 		}
-	} else {
-		m.PartitionSize = types.StringNull()
 	}
 	if v, ok := obj["percentage-used"]; ok {
 		_ = v
@@ -1885,274 +1711,193 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 		m.PowerCycles = types.Int64Null()
 	}
 	if v, ok := obj["power-on-time"]; ok {
-		_ = v
 		if v != "" {
 			m.PowerOnTime = types.StringValue(v)
 		} else {
 			m.PowerOnTime = types.StringNull()
 		}
-	} else {
-		m.PowerOnTime = types.StringNull()
 	}
 	if v, ok := obj["raid"]; ok {
-		_ = v
 		if v != "" {
 			m.Raid = types.StringValue(v)
 		} else {
 			m.Raid = types.StringNull()
 		}
-	} else {
-		m.Raid = types.StringNull()
 	}
 	if v, ok := obj["raid-and-master"]; ok {
-		_ = v
 		if v != "" {
 			m.RaidAndMaster = types.StringValue(v)
 		} else {
 			m.RaidAndMaster = types.StringNull()
 		}
-	} else {
-		m.RaidAndMaster = types.StringNull()
 	}
 	if v, ok := obj["raid-and-type"]; ok {
-		_ = v
 		if v != "" {
 			m.RaidAndType = types.StringValue(v)
 		} else {
 			m.RaidAndType = types.StringNull()
 		}
-	} else {
-		m.RaidAndType = types.StringNull()
 	}
 	if v, ok := obj["raid-master"]; ok {
-		_ = v
 		if v != "" {
 			m.RaidMaster = types.StringValue(v)
 		} else {
 			m.RaidMaster = types.StringNull()
 		}
-	} else {
-		m.RaidMaster = types.StringNull()
 	}
 	if v, ok := obj["raid-member"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.RaidMember = types.BoolValue(b)
 		} else {
 			m.RaidMember = types.BoolNull()
 		}
-	} else {
-		m.RaidMember = types.BoolNull()
 	}
 	if v, ok := obj["raid-member-failed"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.RaidMemberFailed = types.BoolValue(b)
 		} else {
 			m.RaidMemberFailed = types.BoolNull()
 		}
-	} else {
-		m.RaidMemberFailed = types.BoolNull()
 	}
 	if v, ok := obj["raid-role"]; ok {
-		_ = v
 		if v != "" {
 			m.RaidRole = types.StringValue(v)
 		} else {
 			m.RaidRole = types.StringNull()
 		}
-	} else {
-		m.RaidRole = types.StringNull()
 	}
 	if v, ok := obj["raid-scrub"]; ok {
-		_ = v
 		if v != "" {
 			m.RaidScrub = types.StringValue(v)
 		} else {
 			m.RaidScrub = types.StringNull()
 		}
-	} else {
-		m.RaidScrub = types.StringNull()
 	}
 	if v, ok := obj["read-bytes"]; ok {
-		_ = v
 		if v != "" {
 			m.ReadBytes = types.StringValue(v)
 		} else {
 			m.ReadBytes = types.StringNull()
 		}
-	} else {
-		m.ReadBytes = types.StringNull()
 	}
 	if v, ok := obj["read-merges"]; ok {
-		_ = v
 		if v != "" {
 			m.ReadMerges = types.StringValue(v)
 		} else {
 			m.ReadMerges = types.StringNull()
 		}
-	} else {
-		m.ReadMerges = types.StringNull()
 	}
 	if v, ok := obj["read-only"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.ReadOnly = types.BoolValue(b)
 		} else {
 			m.ReadOnly = types.BoolNull()
 		}
-	} else {
-		m.ReadOnly = types.BoolNull()
 	}
 	if v, ok := obj["read-ops"]; ok {
-		_ = v
 		if v != "" {
 			m.ReadOps = types.StringValue(v)
 		} else {
 			m.ReadOps = types.StringNull()
 		}
-	} else {
-		m.ReadOps = types.StringNull()
 	}
 	if v, ok := obj["read-ops-per-second"]; ok {
-		_ = v
 		if v != "" {
 			m.ReadOpsPerSecond = types.StringValue(v)
 		} else {
 			m.ReadOpsPerSecond = types.StringNull()
 		}
-	} else {
-		m.ReadOpsPerSecond = types.StringNull()
 	}
 	if v, ok := obj["read-rate"]; ok {
-		_ = v
 		if v != "" {
 			m.ReadRate = types.StringValue(v)
 		} else {
 			m.ReadRate = types.StringNull()
 		}
-	} else {
-		m.ReadRate = types.StringNull()
 	}
 	if v, ok := obj["read-time"]; ok {
-		_ = v
 		if v != "" {
 			m.ReadTime = types.StringValue(v)
 		} else {
 			m.ReadTime = types.StringNull()
 		}
-	} else {
-		m.ReadTime = types.StringNull()
 	}
 	if v, ok := obj["reset-counters"]; ok {
-		_ = v
 		if v != "" {
 			m.ResetCounters = types.StringValue(v)
 		} else {
 			m.ResetCounters = types.StringNull()
 		}
-	} else {
-		m.ResetCounters = types.StringNull()
 	}
 	if v, ok := obj["rose"]; ok {
-		_ = v
 		if v != "" {
 			m.Rose = types.StringValue(v)
 		} else {
 			m.Rose = types.StringNull()
 		}
-	} else {
-		m.Rose = types.StringNull()
 	}
 	if v, ok := obj["scan"]; ok {
-		_ = v
 		if v != "" {
 			m.Scan = types.StringValue(v)
 		} else {
 			m.Scan = types.StringNull()
 		}
-	} else {
-		m.Scan = types.StringNull()
 	}
 	if v, ok := obj["self-encrypted-and-locked"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.SelfEncryptedAndLocked = types.BoolValue(b)
 		} else {
 			m.SelfEncryptedAndLocked = types.BoolNull()
 		}
-	} else {
-		m.SelfEncryptedAndLocked = types.BoolNull()
 	}
 	if v, ok := obj["self-encryption-enabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.SelfEncryptionEnabled = types.BoolValue(b)
 		} else {
 			m.SelfEncryptionEnabled = types.BoolNull()
 		}
-	} else {
-		m.SelfEncryptionEnabled = types.BoolNull()
 	}
 	if v, ok := obj["self-encryption-password"]; ok {
-		_ = v
 		if v != "" {
 			m.SelfEncryptionPassword = types.StringValue(v)
 		} else {
 			m.SelfEncryptionPassword = types.StringNull()
 		}
-	} else {
-		m.SelfEncryptionPassword = types.StringNull()
 	}
 	if v, ok := obj["self-encryption-supported"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.SelfEncryptionSupported = types.BoolValue(b)
 		} else {
 			m.SelfEncryptionSupported = types.BoolNull()
 		}
-	} else {
-		m.SelfEncryptionSupported = types.BoolNull()
 	}
 	if v, ok := obj["serial"]; ok {
-		_ = v
 		if v != "" {
 			m.Serial = types.StringValue(v)
 		} else {
 			m.Serial = types.StringNull()
 		}
-	} else {
-		m.Serial = types.StringNull()
 	}
 	if v, ok := obj["size"]; ok {
-		_ = v
 		if v != "" {
 			m.Size = types.StringValue(v)
 		} else {
 			m.Size = types.StringNull()
 		}
-	} else {
-		m.Size = types.StringNull()
 	}
 	if v, ok := obj["slot"]; ok {
-		_ = v
 		if v != "" {
 			m.Slot = types.StringValue(v)
 		} else {
 			m.Slot = types.StringNull()
 		}
-	} else {
-		m.Slot = types.StringNull()
 	}
 	if v, ok := obj["smb-server-encryption"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.SmbServerEncryption = types.BoolValue(b)
 		} else {
 			m.SmbServerEncryption = types.BoolNull()
 		}
-	} else {
-		m.SmbServerEncryption = types.BoolNull()
 	}
 	// Sensitive: RouterOS scrubs the value on read. If the server returned
 	// a value, decode it. Otherwise the plan value (user input) is what's
@@ -2169,54 +1914,39 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 		m.SmbServerPassword = types.StringNull()
 	}
 	if v, ok := obj["smb-server-user"]; ok {
-		_ = v
 		if v != "" {
 			m.SmbServerUser = types.StringValue(v)
 		} else {
 			m.SmbServerUser = types.StringNull()
 		}
-	} else {
-		m.SmbServerUser = types.StringNull()
 	}
 	if v, ok := obj["smb-sharing"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.SmbSharing = types.BoolValue(b)
 		} else {
 			m.SmbSharing = types.BoolNull()
 		}
-	} else {
-		m.SmbSharing = types.BoolNull()
 	}
 	if v, ok := obj["state"]; ok {
-		_ = v
 		if v != "" {
 			m.State = types.StringValue(v)
 		} else {
 			m.State = types.StringNull()
 		}
-	} else {
-		m.State = types.StringNull()
 	}
 	if v, ok := obj["swap"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Swap = types.BoolValue(b)
 		} else {
 			m.Swap = types.BoolNull()
 		}
-	} else {
-		m.Swap = types.BoolNull()
 	}
 	if v, ok := obj["swap-enabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.SwapEnabled = types.BoolValue(b)
 		} else {
 			m.SwapEnabled = types.BoolNull()
 		}
-	} else {
-		m.SwapEnabled = types.BoolNull()
 	}
 	if v, ok := obj["temperature"]; ok {
 		_ = v
@@ -2229,54 +1959,39 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 		m.Temperature = types.Int64Null()
 	}
 	if v, ok := obj["temperatures"]; ok {
-		_ = v
 		if v != "" {
 			m.Temperatures = types.StringValue(v)
 		} else {
 			m.Temperatures = types.StringNull()
 		}
-	} else {
-		m.Temperatures = types.StringNull()
 	}
 	if v, ok := obj["tmpfs"]; ok {
-		_ = v
 		if v != "" {
 			m.Tmpfs = types.StringValue(v)
 		} else {
 			m.Tmpfs = types.StringNull()
 		}
-	} else {
-		m.Tmpfs = types.StringNull()
 	}
 	if v, ok := obj["tmpfs-max-size"]; ok {
-		_ = v
 		if v != "" {
 			m.TmpfsMaxSize = types.StringValue(v)
 		} else {
 			m.TmpfsMaxSize = types.StringNull()
 		}
-	} else {
-		m.TmpfsMaxSize = types.StringNull()
 	}
 	if v, ok := obj["trim"]; ok {
-		_ = v
 		if v != "" {
 			m.Trim = types.StringValue(v)
 		} else {
 			m.Trim = types.StringNull()
 		}
-	} else {
-		m.Trim = types.StringNull()
 	}
 	if v, ok := obj["type"]; ok {
-		_ = v
 		if v != "" {
 			m.Type = types.StringValue(v)
 		} else {
 			m.Type = types.StringNull()
 		}
-	} else {
-		m.Type = types.StringNull()
 	}
 	if v, ok := obj["unrecovered-integrity-errors"]; ok {
 		_ = v
@@ -2309,24 +2024,18 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 		m.Use = types.Int64Null()
 	}
 	if v, ok := obj["uuid"]; ok {
-		_ = v
 		if v != "" {
 			m.Uuid = types.StringValue(v)
 		} else {
 			m.Uuid = types.StringNull()
 		}
-	} else {
-		m.Uuid = types.StringNull()
 	}
 	if v, ok := obj["wait-time"]; ok {
-		_ = v
 		if v != "" {
 			m.WaitTime = types.StringValue(v)
 		} else {
 			m.WaitTime = types.StringNull()
 		}
-	} else {
-		m.WaitTime = types.StringNull()
 	}
 	if v, ok := obj["warning-temperature"]; ok {
 		_ = v
@@ -2339,73 +2048,52 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 		m.WarningTemperature = types.Int64Null()
 	}
 	if v, ok := obj["warning-temperature-time"]; ok {
-		_ = v
 		if v != "" {
 			m.WarningTemperatureTime = types.StringValue(v)
 		} else {
 			m.WarningTemperatureTime = types.StringNull()
 		}
-	} else {
-		m.WarningTemperatureTime = types.StringNull()
 	}
 	if v, ok := obj["write-bytes"]; ok {
-		_ = v
 		if v != "" {
 			m.WriteBytes = types.StringValue(v)
 		} else {
 			m.WriteBytes = types.StringNull()
 		}
-	} else {
-		m.WriteBytes = types.StringNull()
 	}
 	if v, ok := obj["write-merges"]; ok {
-		_ = v
 		if v != "" {
 			m.WriteMerges = types.StringValue(v)
 		} else {
 			m.WriteMerges = types.StringNull()
 		}
-	} else {
-		m.WriteMerges = types.StringNull()
 	}
 	if v, ok := obj["write-ops"]; ok {
-		_ = v
 		if v != "" {
 			m.WriteOps = types.StringValue(v)
 		} else {
 			m.WriteOps = types.StringNull()
 		}
-	} else {
-		m.WriteOps = types.StringNull()
 	}
 	if v, ok := obj["write-ops-per-second"]; ok {
-		_ = v
 		if v != "" {
 			m.WriteOpsPerSecond = types.StringValue(v)
 		} else {
 			m.WriteOpsPerSecond = types.StringNull()
 		}
-	} else {
-		m.WriteOpsPerSecond = types.StringNull()
 	}
 	if v, ok := obj["write-rate"]; ok {
-		_ = v
 		if v != "" {
 			m.WriteRate = types.StringValue(v)
 		} else {
 			m.WriteRate = types.StringNull()
 		}
-	} else {
-		m.WriteRate = types.StringNull()
 	}
 	if v, ok := obj["write-time"]; ok {
-		_ = v
 		if v != "" {
 			m.WriteTime = types.StringValue(v)
 		} else {
 			m.WriteTime = types.StringNull()
 		}
-	} else {
-		m.WriteTime = types.StringNull()
 	}
 }

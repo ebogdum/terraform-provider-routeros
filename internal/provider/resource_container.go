@@ -455,223 +455,157 @@ func containerApply(ctx context.Context, obj client.Object, m *ContainerModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["auto-restart-interval"]; ok {
-		_ = v
 		if v != "" {
 			m.AutoRestartInterval = types.StringValue(v)
 		} else {
 			m.AutoRestartInterval = types.StringNull()
 		}
-	} else {
-		m.AutoRestartInterval = types.StringNull()
 	}
 	if v, ok := obj["cmd"]; ok {
-		_ = v
 		if v != "" {
 			m.Cmd = types.StringValue(v)
 		} else {
 			m.Cmd = types.StringNull()
 		}
-	} else {
-		m.Cmd = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["cpu-list"]; ok {
-		_ = v
 		if v != "" {
 			m.CpuList = types.StringValue(v)
 		} else {
 			m.CpuList = types.StringNull()
 		}
-	} else {
-		m.CpuList = types.StringNull()
 	}
 	if v, ok := obj["devices"]; ok {
-		_ = v
 		if v != "" {
 			m.Devices = types.StringValue(v)
 		} else {
 			m.Devices = types.StringNull()
 		}
-	} else {
-		m.Devices = types.StringNull()
 	}
 	if v, ok := obj["dns"]; ok {
-		_ = v
 		if v != "" {
 			m.DNS = types.StringValue(v)
 		} else {
 			m.DNS = types.StringNull()
 		}
-	} else {
-		m.DNS = types.StringNull()
 	}
 	if v, ok := obj["domain-name"]; ok {
-		_ = v
 		if v != "" {
 			m.DomainName = types.StringValue(v)
 		} else {
 			m.DomainName = types.StringNull()
 		}
-	} else {
-		m.DomainName = types.StringNull()
 	}
 	if v, ok := obj["entrypoint"]; ok {
-		_ = v
 		if v != "" {
 			m.Entrypoint = types.StringValue(v)
 		} else {
 			m.Entrypoint = types.StringNull()
 		}
-	} else {
-		m.Entrypoint = types.StringNull()
 	}
 	if v, ok := obj["envlist"]; ok {
-		_ = v
 		if v != "" {
 			m.Envlist = types.StringValue(v)
 		} else {
 			m.Envlist = types.StringNull()
 		}
-	} else {
-		m.Envlist = types.StringNull()
 	}
 	if v, ok := obj["hostname"]; ok {
-		_ = v
 		if v != "" {
 			m.Hostname = types.StringValue(v)
 		} else {
 			m.Hostname = types.StringNull()
 		}
-	} else {
-		m.Hostname = types.StringNull()
 	}
 	if v, ok := obj["interface"]; ok {
-		_ = v
 		if v != "" {
 			m.Interface = types.StringValue(v)
 		} else {
 			m.Interface = types.StringNull()
 		}
-	} else {
-		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["logging"]; ok {
-		_ = v
 		if v != "" {
 			m.Logging = types.StringValue(v)
 		} else {
 			m.Logging = types.StringNull()
 		}
-	} else {
-		m.Logging = types.StringNull()
 	}
 	if v, ok := obj["memory-high"]; ok {
-		_ = v
 		if v != "" {
 			m.MemoryHigh = types.StringValue(v)
 		} else {
 			m.MemoryHigh = types.StringNull()
 		}
-	} else {
-		m.MemoryHigh = types.StringNull()
 	}
 	if v, ok := obj["memory-max"]; ok {
-		_ = v
 		if v != "" {
 			m.MemoryMax = types.StringValue(v)
 		} else {
 			m.MemoryMax = types.StringNull()
 		}
-	} else {
-		m.MemoryMax = types.StringNull()
 	}
 	if v, ok := obj["mount"]; ok {
-		_ = v
 		if v != "" {
 			m.Mount = types.StringValue(v)
 		} else {
 			m.Mount = types.StringNull()
 		}
-	} else {
-		m.Mount = types.StringNull()
 	}
 	if v, ok := obj["mountlists"]; ok {
-		_ = v
 		if v != "" {
 			m.Mountlists = types.StringValue(v)
 		} else {
 			m.Mountlists = types.StringNull()
 		}
-	} else {
-		m.Mountlists = types.StringNull()
 	}
 	if v, ok := obj["remote-image"]; ok {
-		_ = v
 		if v != "" {
 			m.RemoteImage = types.StringValue(v)
 		} else {
 			m.RemoteImage = types.StringNull()
 		}
-	} else {
-		m.RemoteImage = types.StringNull()
 	}
 	if v, ok := obj["root-dir"]; ok {
-		_ = v
 		if v != "" {
 			m.RootDir = types.StringValue(v)
 		} else {
 			m.RootDir = types.StringNull()
 		}
-	} else {
-		m.RootDir = types.StringNull()
 	}
 	if v, ok := obj["start-on-boot"]; ok {
-		_ = v
 		if v != "" {
 			m.StartOnBoot = types.StringValue(v)
 		} else {
 			m.StartOnBoot = types.StringNull()
 		}
-	} else {
-		m.StartOnBoot = types.StringNull()
 	}
 	if v, ok := obj["stop-signal"]; ok {
-		_ = v
 		if v != "" {
 			m.StopSignal = types.StringValue(v)
 		} else {
 			m.StopSignal = types.StringNull()
 		}
-	} else {
-		m.StopSignal = types.StringNull()
 	}
 	if v, ok := obj["user"]; ok {
-		_ = v
 		if v != "" {
 			m.User = types.StringValue(v)
 		} else {
 			m.User = types.StringNull()
 		}
-	} else {
-		m.User = types.StringNull()
 	}
 	if v, ok := obj["workdir"]; ok {
-		_ = v
 		if v != "" {
 			m.Workdir = types.StringValue(v)
 		} else {
 			m.Workdir = types.StringNull()
 		}
-	} else {
-		m.Workdir = types.StringNull()
 	}
 }

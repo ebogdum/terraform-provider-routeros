@@ -252,64 +252,46 @@ func partitionApply(ctx context.Context, obj client.Object, m *PartitionModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["activate"]; ok {
-		_ = v
 		if v != "" {
 			m.Activate = types.StringValue(v)
 		} else {
 			m.Activate = types.StringNull()
 		}
-	} else {
-		m.Activate = types.StringNull()
 	}
 	if v, ok := obj["active"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Active = types.BoolValue(b)
 		} else {
 			m.Active = types.BoolNull()
 		}
-	} else {
-		m.Active = types.BoolNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["fallback-to"]; ok {
-		_ = v
 		if v != "" {
 			m.FallbackTo = types.StringValue(v)
 		} else {
 			m.FallbackTo = types.StringNull()
 		}
-	} else {
-		m.FallbackTo = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["running"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Running = types.BoolValue(b)
 		} else {
 			m.Running = types.BoolNull()
 		}
-	} else {
-		m.Running = types.BoolNull()
 	}
 	if v, ok := obj["size"]; ok {
 		_ = v
@@ -322,13 +304,10 @@ func partitionApply(ctx context.Context, obj client.Object, m *PartitionModel) {
 		m.Size = types.Int64Null()
 	}
 	if v, ok := obj["version"]; ok {
-		_ = v
 		if v != "" {
 			m.Version = types.StringValue(v)
 		} else {
 			m.Version = types.StringNull()
 		}
-	} else {
-		m.Version = types.StringNull()
 	}
 }

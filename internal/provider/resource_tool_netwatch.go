@@ -746,123 +746,87 @@ func toolNetwatchApply(ctx context.Context, obj client.Object, m *ToolNetwatchMo
 		m.AcceptIcmpTimeExceeded = types.StringNull()
 	}
 	if v, ok := obj["certificate"]; ok {
-		_ = v
 		if v != "" {
 			m.Certificate = types.StringValue(v)
 		} else {
 			m.Certificate = types.StringNull()
 		}
-	} else {
-		m.Certificate = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dns-server"]; ok {
-		_ = v
 		if v != "" {
 			m.DNSServer = types.StringValue(v)
 		} else {
 			m.DNSServer = types.StringNull()
 		}
-	} else {
-		m.DNSServer = types.StringNull()
 	}
 	if v, ok := obj["host"]; ok {
-		_ = v
 		if v != "" {
 			m.Host = types.StringValue(v)
 		} else {
 			m.Host = types.StringNull()
 		}
-	} else {
-		m.Host = types.StringNull()
 	}
 	if v, ok := obj["interval"]; ok {
-		_ = v
 		if v != "" {
 			m.Interval = types.StringValue(v)
 		} else {
 			m.Interval = types.StringNull()
 		}
-	} else {
-		m.Interval = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["port"]; ok {
-		_ = v
 		if v != "" {
 			m.Port = types.StringValue(v)
 		} else {
 			m.Port = types.StringNull()
 		}
-	} else {
-		m.Port = types.StringNull()
 	}
 	if v, ok := obj["src-address"]; ok {
-		_ = v
 		if v != "" {
 			m.SrcAddress = types.StringValue(v)
 		} else {
 			m.SrcAddress = types.StringNull()
 		}
-	} else {
-		m.SrcAddress = types.StringNull()
 	}
 	if v, ok := obj["timeout"]; ok {
-		_ = v
 		if v != "" {
 			m.Timeout = types.StringValue(v)
 		} else {
 			m.Timeout = types.StringNull()
 		}
-	} else {
-		m.Timeout = types.StringNull()
 	}
 	if v, ok := obj["ttl"]; ok {
-		_ = v
 		if v != "" {
 			m.Ttl = types.StringValue(v)
 		} else {
 			m.Ttl = types.StringNull()
 		}
-	} else {
-		m.Ttl = types.StringNull()
 	}
 	if v, ok := obj["type"]; ok {
-		_ = v
 		if v != "" {
 			m.Type = types.StringValue(v)
 		} else {
 			m.Type = types.StringNull()
 		}
-	} else {
-		m.Type = types.StringNull()
 	}
 }

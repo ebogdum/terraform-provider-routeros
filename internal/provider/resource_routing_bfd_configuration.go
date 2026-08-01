@@ -318,113 +318,80 @@ func routingBfdConfigurationApply(ctx context.Context, obj client.Object, m *Rou
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["address-list"]; ok {
-		_ = v
 		if v != "" {
 			m.AddressList = types.StringValue(v)
 		} else {
 			m.AddressList = types.StringNull()
 		}
-	} else {
-		m.AddressList = types.StringNull()
 	}
 	if v, ok := obj["addresses"]; ok {
-		_ = v
 		if v != "" {
 			m.Addresses = types.StringValue(v)
 		} else {
 			m.Addresses = types.StringNull()
 		}
-	} else {
-		m.Addresses = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["forbid-bfd"]; ok {
-		_ = v
 		if v != "" {
 			m.ForbidBfd = types.StringValue(v)
 		} else {
 			m.ForbidBfd = types.StringNull()
 		}
-	} else {
-		m.ForbidBfd = types.StringNull()
 	}
 	if v, ok := obj["inactive"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Inactive = types.BoolValue(b)
 		} else {
 			m.Inactive = types.BoolNull()
 		}
-	} else {
-		m.Inactive = types.BoolNull()
 	}
 	if v, ok := obj["interfaces"]; ok {
-		_ = v
 		if v != "" {
 			m.Interfaces = types.StringValue(v)
 		} else {
 			m.Interfaces = types.StringNull()
 		}
-	} else {
-		m.Interfaces = types.StringNull()
 	}
 	if v, ok := obj["min-rx"]; ok {
-		_ = v
 		if v != "" {
 			m.MinRx = types.StringValue(v)
 		} else {
 			m.MinRx = types.StringNull()
 		}
-	} else {
-		m.MinRx = types.StringNull()
 	}
 	if v, ok := obj["min-tx"]; ok {
-		_ = v
 		if v != "" {
 			m.MinTx = types.StringValue(v)
 		} else {
 			m.MinTx = types.StringNull()
 		}
-	} else {
-		m.MinTx = types.StringNull()
 	}
 	if v, ok := obj["multiplier"]; ok {
-		_ = v
 		if v != "" {
 			m.Multiplier = types.StringValue(v)
 		} else {
 			m.Multiplier = types.StringNull()
 		}
-	} else {
-		m.Multiplier = types.StringNull()
 	}
 	if v, ok := obj["vrf"]; ok {
-		_ = v
 		if v != "" {
 			m.Vrf = types.StringValue(v)
 		} else {
 			m.Vrf = types.StringNull()
 		}
-	} else {
-		m.Vrf = types.StringNull()
 	}
 }

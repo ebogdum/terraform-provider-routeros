@@ -287,83 +287,59 @@ func systemGpsApply(ctx context.Context, obj client.Object, m *SystemGpsModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["channel"]; ok {
-		_ = v
 		if v != "" {
 			m.Channel = types.StringValue(v)
 		} else {
 			m.Channel = types.StringNull()
 		}
-	} else {
-		m.Channel = types.StringNull()
 	}
 	if v, ok := obj["coordinate-format"]; ok {
-		_ = v
 		if v != "" {
 			m.CoordinateFormat = types.StringValue(v)
 		} else {
 			m.CoordinateFormat = types.StringNull()
 		}
-	} else {
-		m.CoordinateFormat = types.StringNull()
 	}
 	if v, ok := obj["enabled"]; ok {
-		_ = v
 		if v != "" {
 			m.Enabled = types.StringValue(v)
 		} else {
 			m.Enabled = types.StringNull()
 		}
-	} else {
-		m.Enabled = types.StringNull()
 	}
 	if v, ok := obj["gps-antenna-select"]; ok {
-		_ = v
 		if v != "" {
 			m.GpsAntennaSelect = types.StringValue(v)
 		} else {
 			m.GpsAntennaSelect = types.StringNull()
 		}
-	} else {
-		m.GpsAntennaSelect = types.StringNull()
 	}
 	if v, ok := obj["init-channel"]; ok {
-		_ = v
 		if v != "" {
 			m.InitChannel = types.StringValue(v)
 		} else {
 			m.InitChannel = types.StringNull()
 		}
-	} else {
-		m.InitChannel = types.StringNull()
 	}
 	if v, ok := obj["init-string"]; ok {
-		_ = v
 		if v != "" {
 			m.InitString = types.StringValue(v)
 		} else {
 			m.InitString = types.StringNull()
 		}
-	} else {
-		m.InitString = types.StringNull()
 	}
 	if v, ok := obj["port"]; ok {
-		_ = v
 		if v != "" {
 			m.Port = types.StringValue(v)
 		} else {
 			m.Port = types.StringNull()
 		}
-	} else {
-		m.Port = types.StringNull()
 	}
 	if v, ok := obj["set-system-time"]; ok {
-		_ = v
 		if v != "" {
 			m.SetSystemTime = types.StringValue(v)
 		} else {
 			m.SetSystemTime = types.StringNull()
 		}
-	} else {
-		m.SetSystemTime = types.StringNull()
 	}
 }

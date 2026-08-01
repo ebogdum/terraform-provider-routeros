@@ -588,34 +588,25 @@ func queueSimpleApply(ctx context.Context, obj client.Object, m *QueueSimpleMode
 		m.BurstThreshold = newRosRateNull()
 	}
 	if v, ok := obj["burst-time"]; ok {
-		_ = v
 		if v != "" {
 			m.BurstTime = types.StringValue(v)
 		} else {
 			m.BurstTime = types.StringNull()
 		}
-	} else {
-		m.BurstTime = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["limit-at"]; ok {
 		_ = v
@@ -638,73 +629,52 @@ func queueSimpleApply(ctx context.Context, obj client.Object, m *QueueSimpleMode
 		m.MaxLimit = newRosRateNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["packet-marks"]; ok {
-		_ = v
 		if v != "" {
 			m.PacketMarks = types.StringValue(v)
 		} else {
 			m.PacketMarks = types.StringNull()
 		}
-	} else {
-		m.PacketMarks = types.StringNull()
 	}
 	if v, ok := obj["parent"]; ok {
-		_ = v
 		if v != "" {
 			m.Parent = types.StringValue(v)
 		} else {
 			m.Parent = types.StringNull()
 		}
-	} else {
-		m.Parent = types.StringNull()
 	}
 	if v, ok := obj["place_before"]; ok {
-		_ = v
 		if v != "" {
 			m.PlaceBeforeRos = types.StringValue(v)
 		} else {
 			m.PlaceBeforeRos = types.StringNull()
 		}
-	} else {
-		m.PlaceBeforeRos = types.StringNull()
 	}
 	if v, ok := obj["priority"]; ok {
-		_ = v
 		if v != "" {
 			m.Priority = types.StringValue(v)
 		} else {
 			m.Priority = types.StringNull()
 		}
-	} else {
-		m.Priority = types.StringNull()
 	}
 	if v, ok := obj["queue"]; ok {
-		_ = v
 		if v != "" {
 			m.Queue = types.StringValue(v)
 		} else {
 			m.Queue = types.StringNull()
 		}
-	} else {
-		m.Queue = types.StringNull()
 	}
 	if v, ok := obj["target"]; ok {
-		_ = v
 		if v != "" {
 			m.Target = types.StringValue(v)
 		} else {
 			m.Target = types.StringNull()
 		}
-	} else {
-		m.Target = types.StringNull()
 	}
 }

@@ -353,113 +353,80 @@ func interfaceWifiChannelApply(ctx context.Context, obj client.Object, m *Interf
 		m.PreamblePuncturing = types.StringNull()
 	}
 	if v, ok := obj["band"]; ok {
-		_ = v
 		if v != "" {
 			m.Band = types.StringValue(v)
 		} else {
 			m.Band = types.StringNull()
 		}
-	} else {
-		m.Band = types.StringNull()
 	}
 	if v, ok := obj["channel-width"]; ok {
-		_ = v
 		if v != "" {
 			m.ChannelWidth = types.StringValue(v)
 		} else {
 			m.ChannelWidth = types.StringNull()
 		}
-	} else {
-		m.ChannelWidth = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["deprioritize-unii-3-4"]; ok {
-		_ = v
 		if v != "" {
 			m.DeprioritizeUnii34 = types.StringValue(v)
 		} else {
 			m.DeprioritizeUnii34 = types.StringNull()
 		}
-	} else {
-		m.DeprioritizeUnii34 = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["frequency"]; ok {
-		_ = v
 		if v != "" {
 			m.Frequency = types.StringValue(v)
 		} else {
 			m.Frequency = types.StringNull()
 		}
-	} else {
-		m.Frequency = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["reselect-interval"]; ok {
-		_ = v
 		if v != "" {
 			m.ReselectInterval = types.StringValue(v)
 		} else {
 			m.ReselectInterval = types.StringNull()
 		}
-	} else {
-		m.ReselectInterval = types.StringNull()
 	}
 	if v, ok := obj["reselect-time"]; ok {
-		_ = v
 		if v != "" {
 			m.ReselectTime = types.StringValue(v)
 		} else {
 			m.ReselectTime = types.StringNull()
 		}
-	} else {
-		m.ReselectTime = types.StringNull()
 	}
 	if v, ok := obj["secondary-frequency"]; ok {
-		_ = v
 		if v != "" {
 			m.SecondaryFrequency = types.StringValue(v)
 		} else {
 			m.SecondaryFrequency = types.StringNull()
 		}
-	} else {
-		m.SecondaryFrequency = types.StringNull()
 	}
 	if v, ok := obj["skip-dfs-channels"]; ok {
-		_ = v
 		if v != "" {
 			m.SkipDfsChannels = types.StringValue(v)
 		} else {
 			m.SkipDfsChannels = types.StringNull()
 		}
-	} else {
-		m.SkipDfsChannels = types.StringNull()
 	}
 }

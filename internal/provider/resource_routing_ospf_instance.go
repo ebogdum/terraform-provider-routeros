@@ -428,173 +428,122 @@ func routingOSPFInstanceApply(ctx context.Context, obj client.Object, m *Routing
 		m.InFilterChain = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["domain-id"]; ok {
-		_ = v
 		if v != "" {
 			m.DomainID = types.StringValue(v)
 		} else {
 			m.DomainID = types.StringNull()
 		}
-	} else {
-		m.DomainID = types.StringNull()
 	}
 	if v, ok := obj["domain-tag"]; ok {
-		_ = v
 		if v != "" {
 			m.DomainTag = types.StringValue(v)
 		} else {
 			m.DomainTag = types.StringNull()
 		}
-	} else {
-		m.DomainTag = types.StringNull()
 	}
 	if v, ok := obj["in-filter"]; ok {
-		_ = v
 		if v != "" {
 			m.InFilter = types.StringValue(v)
 		} else {
 			m.InFilter = types.StringNull()
 		}
-	} else {
-		m.InFilter = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["mpls-te-address"]; ok {
-		_ = v
 		if v != "" {
 			m.MPLSTeAddress = types.StringValue(v)
 		} else {
 			m.MPLSTeAddress = types.StringNull()
 		}
-	} else {
-		m.MPLSTeAddress = types.StringNull()
 	}
 	if v, ok := obj["mpls-te-area"]; ok {
-		_ = v
 		if v != "" {
 			m.MPLSTeArea = types.StringValue(v)
 		} else {
 			m.MPLSTeArea = types.StringNull()
 		}
-	} else {
-		m.MPLSTeArea = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["originate-default"]; ok {
-		_ = v
 		if v != "" {
 			m.OriginateDefault = types.StringValue(v)
 		} else {
 			m.OriginateDefault = types.StringNull()
 		}
-	} else {
-		m.OriginateDefault = types.StringNull()
 	}
 	if v, ok := obj["out-filter"]; ok {
-		_ = v
 		if v != "" {
 			m.OutFilter = types.StringValue(v)
 		} else {
 			m.OutFilter = types.StringNull()
 		}
-	} else {
-		m.OutFilter = types.StringNull()
 	}
 	if v, ok := obj["out-filter-select"]; ok {
-		_ = v
 		if v != "" {
 			m.OutFilterSelect = types.StringValue(v)
 		} else {
 			m.OutFilterSelect = types.StringNull()
 		}
-	} else {
-		m.OutFilterSelect = types.StringNull()
 	}
 	if v, ok := obj["redistribute"]; ok {
-		_ = v
 		if v != "" {
 			m.Redistribute = types.StringValue(v)
 		} else {
 			m.Redistribute = types.StringNull()
 		}
-	} else {
-		m.Redistribute = types.StringNull()
 	}
 	if v, ok := obj["router-id"]; ok {
-		_ = v
 		if v != "" {
 			m.RouterID = types.StringValue(v)
 		} else {
 			m.RouterID = types.StringNull()
 		}
-	} else {
-		m.RouterID = types.StringNull()
 	}
 	if v, ok := obj["routing-table"]; ok {
-		_ = v
 		if v != "" {
 			m.RoutingTable = types.StringValue(v)
 		} else {
 			m.RoutingTable = types.StringNull()
 		}
-	} else {
-		m.RoutingTable = types.StringNull()
 	}
 	if v, ok := obj["version"]; ok {
-		_ = v
 		if v != "" {
 			m.Version = types.StringValue(v)
 		} else {
 			m.Version = types.StringNull()
 		}
-	} else {
-		m.Version = types.StringNull()
 	}
 	if v, ok := obj["vrf"]; ok {
-		_ = v
 		if v != "" {
 			m.Vrf = types.StringValue(v)
 		} else {
 			m.Vrf = types.StringNull()
 		}
-	} else {
-		m.Vrf = types.StringNull()
 	}
 }

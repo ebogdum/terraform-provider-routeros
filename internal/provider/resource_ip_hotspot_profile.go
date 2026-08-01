@@ -54,7 +54,7 @@ type IPHotspotProfileModel struct {
 	HTTPCookieLifetime    types.String `tfsdk:"http_cookie_lifetime"`
 	HTTPProxy             types.String `tfsdk:"http_proxy"`
 	InstallHotspotQueue   types.Bool   `tfsdk:"install_hotspot_queue"`
-	LoginBy               types.List   `tfsdk:"login_by"`
+	LoginBy               types.Set    `tfsdk:"login_by"`
 	Name                  types.String `tfsdk:"name"`
 	SMTPServer            types.String `tfsdk:"smtp_server"`
 	SplitUserDomain       types.Bool   `tfsdk:"split_user_domain"`
@@ -198,7 +198,7 @@ func (r *IPHotspotProfileResource) Schema(_ context.Context, _ resource.SchemaRe
 				Computed:    true,
 				Description: "",
 			},
-			"login_by": schema.ListAttribute{
+			"login_by": schema.SetAttribute{
 				Optional:    true,
 				Computed:    true,
 				ElementType: types.StringType,
@@ -266,7 +266,7 @@ func (r *IPHotspotProfileResource) Create(ctx context.Context, req resource.Crea
 		body["install-hotspot-queue"] = client.FormatBool(plan.InstallHotspotQueue.ValueBool())
 	}
 	if !(plan.LoginBy.IsNull() || plan.LoginBy.IsUnknown()) {
-		body["login-by"] = encodeStringList(ctx, plan.LoginBy, &resp.Diagnostics)
+		body["login-by"] = encodeStringSet(ctx, plan.LoginBy, &resp.Diagnostics)
 	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
@@ -392,7 +392,7 @@ func (r *IPHotspotProfileResource) Update(ctx context.Context, req resource.Upda
 		body["install-hotspot-queue"] = client.FormatBool(plan.InstallHotspotQueue.ValueBool())
 	}
 	if !plan.LoginBy.Equal(state.LoginBy) && !plan.LoginBy.IsUnknown() {
-		body["login-by"] = encodeStringList(ctx, plan.LoginBy, &resp.Diagnostics)
+		body["login-by"] = encodeStringSet(ctx, plan.LoginBy, &resp.Diagnostics)
 	}
 	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
@@ -537,8 +537,6 @@ func iPHotspotProfileApply(ctx context.Context, obj client.Object, m *IPHotspotP
 	}
 	if v, ok := obj["rate-limit"]; ok && v != "" {
 		m.RateLimit = types.StringValue(v)
-	} else {
-		m.RateLimit = types.StringNull()
 	}
 	if v, ok := obj["radius-mac-format"]; ok && v != "" {
 		m.RadiusMacFormat = types.StringValue(v)
@@ -586,129 +584,93 @@ func iPHotspotProfileApply(ctx context.Context, obj client.Object, m *IPHotspotP
 		m.MacAuthMode = types.StringNull()
 	}
 	if v, ok := obj["default"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
 		} else {
 			m.Default = types.BoolNull()
 		}
-	} else {
-		m.Default = types.BoolNull()
 	}
 	if v, ok := obj["dns-name"]; ok {
-		_ = v
 		if v != "" {
 			m.DNSName = types.StringValue(v)
 		} else {
 			m.DNSName = types.StringNull()
 		}
-	} else {
-		m.DNSName = types.StringNull()
 	}
 	if v, ok := obj["hotspot-address"]; ok {
-		_ = v
 		if v != "" {
 			m.HotspotAddress = types.StringValue(v)
 		} else {
 			m.HotspotAddress = types.StringNull()
 		}
-	} else {
-		m.HotspotAddress = types.StringNull()
 	}
 	if v, ok := obj["html-directory"]; ok {
-		_ = v
 		if v != "" {
 			m.HtmlDirectory = types.StringValue(v)
 		} else {
 			m.HtmlDirectory = types.StringNull()
 		}
-	} else {
-		m.HtmlDirectory = types.StringNull()
 	}
 	if v, ok := obj["html-directory-override"]; ok {
-		_ = v
 		if v != "" {
 			m.HtmlDirectoryOverride = types.StringValue(v)
 		} else {
 			m.HtmlDirectoryOverride = types.StringNull()
 		}
-	} else {
-		m.HtmlDirectoryOverride = types.StringNull()
 	}
 	if v, ok := obj["http-cookie-lifetime"]; ok {
-		_ = v
 		if v != "" {
 			m.HTTPCookieLifetime = types.StringValue(v)
 		} else {
 			m.HTTPCookieLifetime = types.StringNull()
 		}
-	} else {
-		m.HTTPCookieLifetime = types.StringNull()
 	}
 	if v, ok := obj["http-proxy"]; ok {
-		_ = v
 		if v != "" {
 			m.HTTPProxy = types.StringValue(v)
 		} else {
 			m.HTTPProxy = types.StringNull()
 		}
-	} else {
-		m.HTTPProxy = types.StringNull()
 	}
 	if v, ok := obj["install-hotspot-queue"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.InstallHotspotQueue = types.BoolValue(b)
 		} else {
 			m.InstallHotspotQueue = types.BoolNull()
 		}
-	} else {
-		m.InstallHotspotQueue = types.BoolNull()
 	}
 	if v, ok := obj["login-by"]; ok {
 		_ = v
-		m.LoginBy = decodeStringList(ctx, v)
+		m.LoginBy = decodeStringSet(ctx, v)
 	} else {
-		m.LoginBy = types.ListNull(types.StringType)
+		m.LoginBy = types.SetNull(types.StringType)
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["smtp-server"]; ok {
-		_ = v
 		if v != "" {
 			m.SMTPServer = types.StringValue(v)
 		} else {
 			m.SMTPServer = types.StringNull()
 		}
-	} else {
-		m.SMTPServer = types.StringNull()
 	}
 	if v, ok := obj["split-user-domain"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.SplitUserDomain = types.BoolValue(b)
 		} else {
 			m.SplitUserDomain = types.BoolNull()
 		}
-	} else {
-		m.SplitUserDomain = types.BoolNull()
 	}
 	if v, ok := obj["use-radius"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.UseRADIUS = types.BoolValue(b)
 		} else {
 			m.UseRADIUS = types.BoolNull()
 		}
-	} else {
-		m.UseRADIUS = types.BoolNull()
 	}
 }

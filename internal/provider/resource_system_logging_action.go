@@ -561,24 +561,18 @@ func systemLoggingActionApply(ctx context.Context, obj client.Object, m *SystemL
 		m.AddTopicsString = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["default"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
 		} else {
 			m.Default = types.BoolNull()
 		}
-	} else {
-		m.Default = types.BoolNull()
 	}
 	if v, ok := obj["disk-file-count"]; ok {
 		_ = v
@@ -591,14 +585,11 @@ func systemLoggingActionApply(ctx context.Context, obj client.Object, m *SystemL
 		m.DiskFileCount = types.Int64Null()
 	}
 	if v, ok := obj["disk-file-name"]; ok {
-		_ = v
 		if v != "" {
 			m.DiskFileName = types.StringValue(v)
 		} else {
 			m.DiskFileName = types.StringNull()
 		}
-	} else {
-		m.DiskFileName = types.StringNull()
 	}
 	if v, ok := obj["disk-lines-per-file"]; ok {
 		_ = v
@@ -611,14 +602,11 @@ func systemLoggingActionApply(ctx context.Context, obj client.Object, m *SystemL
 		m.DiskLinesPerFile = types.Int64Null()
 	}
 	if v, ok := obj["disk-stop-on-full"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.DiskStopOnFull = types.BoolValue(b)
 		} else {
 			m.DiskStopOnFull = types.BoolNull()
 		}
-	} else {
-		m.DiskStopOnFull = types.BoolNull()
 	}
 	if v, ok := obj["memory-lines"]; ok {
 		_ = v
@@ -631,54 +619,39 @@ func systemLoggingActionApply(ctx context.Context, obj client.Object, m *SystemL
 		m.MemoryLines = types.Int64Null()
 	}
 	if v, ok := obj["memory-stop-on-full"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.MemoryStopOnFull = types.BoolValue(b)
 		} else {
 			m.MemoryStopOnFull = types.BoolNull()
 		}
-	} else {
-		m.MemoryStopOnFull = types.BoolNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["remember"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Remember = types.BoolValue(b)
 		} else {
 			m.Remember = types.BoolNull()
 		}
-	} else {
-		m.Remember = types.BoolNull()
 	}
 	if v, ok := obj["remote"]; ok {
-		_ = v
 		if v != "" {
 			m.Remote = types.StringValue(v)
 		} else {
 			m.Remote = types.StringNull()
 		}
-	} else {
-		m.Remote = types.StringNull()
 	}
 	if v, ok := obj["remote-log-format"]; ok {
-		_ = v
 		if v != "" {
 			m.RemoteLogFormat = types.StringValue(v)
 		} else {
 			m.RemoteLogFormat = types.StringNull()
 		}
-	} else {
-		m.RemoteLogFormat = types.StringNull()
 	}
 	if v, ok := obj["remote-port"]; ok {
 		_ = v
@@ -691,43 +664,31 @@ func systemLoggingActionApply(ctx context.Context, obj client.Object, m *SystemL
 		m.RemotePort = types.Int64Null()
 	}
 	if v, ok := obj["remote-protocol"]; ok {
-		_ = v
 		if v != "" {
 			m.RemoteProtocol = types.StringValue(v)
 		} else {
 			m.RemoteProtocol = types.StringNull()
 		}
-	} else {
-		m.RemoteProtocol = types.StringNull()
 	}
 	if v, ok := obj["src-address"]; ok {
-		_ = v
 		if v != "" {
 			m.SrcAddress = types.StringValue(v)
 		} else {
 			m.SrcAddress = types.StringNull()
 		}
-	} else {
-		m.SrcAddress = types.StringNull()
 	}
 	if v, ok := obj["target"]; ok {
-		_ = v
 		if v != "" {
 			m.Target = types.StringValue(v)
 		} else {
 			m.Target = types.StringNull()
 		}
-	} else {
-		m.Target = types.StringNull()
 	}
 	if v, ok := obj["vrf"]; ok {
-		_ = v
 		if v != "" {
 			m.Vrf = types.StringValue(v)
 		} else {
 			m.Vrf = types.StringNull()
 		}
-	} else {
-		m.Vrf = types.StringNull()
 	}
 }

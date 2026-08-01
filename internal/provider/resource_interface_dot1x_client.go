@@ -293,84 +293,60 @@ func interfaceDot1xClientApply(ctx context.Context, obj client.Object, m *Interf
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["anon-identity"]; ok {
-		_ = v
 		if v != "" {
 			m.AnonIdentity = types.StringValue(v)
 		} else {
 			m.AnonIdentity = types.StringNull()
 		}
-	} else {
-		m.AnonIdentity = types.StringNull()
 	}
 	if v, ok := obj["certificate"]; ok {
-		_ = v
 		if v != "" {
 			m.Certificate = types.StringValue(v)
 		} else {
 			m.Certificate = types.StringNull()
 		}
-	} else {
-		m.Certificate = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["eap-methods"]; ok {
-		_ = v
 		if v != "" {
 			m.EAPMethods = types.StringValue(v)
 		} else {
 			m.EAPMethods = types.StringNull()
 		}
-	} else {
-		m.EAPMethods = types.StringNull()
 	}
 	if v, ok := obj["identity"]; ok {
-		_ = v
 		if v != "" {
 			m.Identity = types.StringValue(v)
 		} else {
 			m.Identity = types.StringNull()
 		}
-	} else {
-		m.Identity = types.StringNull()
 	}
 	if v, ok := obj["interface"]; ok {
-		_ = v
 		if v != "" {
 			m.Interface = types.StringValue(v)
 		} else {
 			m.Interface = types.StringNull()
 		}
-	} else {
-		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	// Sensitive: RouterOS scrubs the value on read. If the server returned
 	// a value, decode it. Otherwise the plan value (user input) is what's

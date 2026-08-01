@@ -310,24 +310,18 @@ func fileApply(ctx context.Context, obj client.Object, m *FileModel) {
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["backup"]; ok {
-		_ = v
 		if v != "" {
 			m.Backup = types.StringValue(v)
 		} else {
 			m.Backup = types.StringNull()
 		}
-	} else {
-		m.Backup = types.StringNull()
 	}
 	if v, ok := obj["basename"]; ok {
-		_ = v
 		if v != "" {
 			m.Basename = types.StringValue(v)
 		} else {
 			m.Basename = types.StringNull()
 		}
-	} else {
-		m.Basename = types.StringNull()
 	}
 	if v, ok := obj["container"]; ok {
 		_ = v
@@ -340,24 +334,18 @@ func fileApply(ctx context.Context, obj client.Object, m *FileModel) {
 		m.Container = types.Int64Null()
 	}
 	if v, ok := obj["contents"]; ok {
-		_ = v
 		if v != "" {
 			m.Contents = types.StringValue(v)
 		} else {
 			m.Contents = types.StringNull()
 		}
-	} else {
-		m.Contents = types.StringNull()
 	}
 	if v, ok := obj["directory"]; ok {
-		_ = v
 		if v != "" {
 			m.Directory = types.StringValue(v)
 		} else {
 			m.Directory = types.StringNull()
 		}
-	} else {
-		m.Directory = types.StringNull()
 	}
 	if v, ok := obj["family"]; ok {
 		_ = v
@@ -370,124 +358,88 @@ func fileApply(ctx context.Context, obj client.Object, m *FileModel) {
 		m.Family = types.Int64Null()
 	}
 	if v, ok := obj["file-name"]; ok {
-		_ = v
 		if v != "" {
 			m.FileName = types.StringValue(v)
 		} else {
 			m.FileName = types.StringNull()
 		}
-	} else {
-		m.FileName = types.StringNull()
 	}
 	if v, ok := obj["file-share-url"]; ok {
-		_ = v
 		if v != "" {
 			m.FileShareURL = types.StringValue(v)
 		} else {
 			m.FileShareURL = types.StringNull()
 		}
-	} else {
-		m.FileShareURL = types.StringNull()
 	}
 	if v, ok := obj["hasvpn"]; ok {
-		_ = v
 		if v != "" {
 			m.Hasvpn = types.StringValue(v)
 		} else {
 			m.Hasvpn = types.StringNull()
 		}
-	} else {
-		m.Hasvpn = types.StringNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if v != "" {
 			m.Invalid = types.StringValue(v)
 		} else {
 			m.Invalid = types.StringNull()
 		}
-	} else {
-		m.Invalid = types.StringNull()
 	}
 	if v, ok := obj["invalidfile"]; ok {
-		_ = v
 		if v != "" {
 			m.Invalidfile = types.StringValue(v)
 		} else {
 			m.Invalidfile = types.StringNull()
 		}
-	} else {
-		m.Invalidfile = types.StringNull()
 	}
 	if v, ok := obj["last-modified"]; ok {
-		_ = v
 		if v != "" {
 			m.LastModified = types.StringValue(v)
 		} else {
 			m.LastModified = types.StringNull()
 		}
-	} else {
-		m.LastModified = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["nondir"]; ok {
-		_ = v
 		if v != "" {
 			m.Nondir = types.StringValue(v)
 		} else {
 			m.Nondir = types.StringNull()
 		}
-	} else {
-		m.Nondir = types.StringNull()
 	}
 	if v, ok := obj["restore"]; ok {
-		_ = v
 		if v != "" {
 			m.Restore = types.StringValue(v)
 		} else {
 			m.Restore = types.StringNull()
 		}
-	} else {
-		m.Restore = types.StringNull()
 	}
 	if v, ok := obj["share"]; ok {
-		_ = v
 		if v != "" {
 			m.Share = types.StringValue(v)
 		} else {
 			m.Share = types.StringNull()
 		}
-	} else {
-		m.Share = types.StringNull()
 	}
 	if v, ok := obj["shared"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Shared = types.BoolValue(b)
 		} else {
 			m.Shared = types.BoolNull()
 		}
-	} else {
-		m.Shared = types.BoolNull()
 	}
 	if v, ok := obj["size"]; ok {
-		_ = v
 		if v != "" {
 			m.Size = types.StringValue(v)
 		} else {
 			m.Size = types.StringNull()
 		}
-	} else {
-		m.Size = types.StringNull()
 	}
 	if v, ok := obj["type"]; ok && v != "" {
 		m.Type = types.StringValue(v)
@@ -495,23 +447,17 @@ func fileApply(ctx context.Context, obj client.Object, m *FileModel) {
 		m.Type = types.StringNull()
 	}
 	if v, ok := obj["unshare"]; ok {
-		_ = v
 		if v != "" {
 			m.Unshare = types.StringValue(v)
 		} else {
 			m.Unshare = types.StringNull()
 		}
-	} else {
-		m.Unshare = types.StringNull()
 	}
 	if v, ok := obj["valid"]; ok {
-		_ = v
 		if v != "" {
 			m.Valid = types.StringValue(v)
 		} else {
 			m.Valid = types.StringNull()
 		}
-	} else {
-		m.Valid = types.StringNull()
 	}
 }

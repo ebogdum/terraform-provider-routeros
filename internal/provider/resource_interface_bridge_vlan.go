@@ -295,113 +295,80 @@ func interfaceBridgeVLANApply(ctx context.Context, obj client.Object, m *Interfa
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["bridge"]; ok {
-		_ = v
 		if v != "" {
 			m.Bridge = types.StringValue(v)
 		} else {
 			m.Bridge = types.StringNull()
 		}
-	} else {
-		m.Bridge = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["current-tagged"]; ok {
-		_ = v
 		if v != "" {
 			m.CurrentTagged = types.StringValue(v)
 		} else {
 			m.CurrentTagged = types.StringNull()
 		}
-	} else {
-		m.CurrentTagged = types.StringNull()
 	}
 	if v, ok := obj["current-untagged"]; ok {
-		_ = v
 		if v != "" {
 			m.CurrentUntagged = types.StringValue(v)
 		} else {
 			m.CurrentUntagged = types.StringNull()
 		}
-	} else {
-		m.CurrentUntagged = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["mvrp-attributes"]; ok {
-		_ = v
 		if v != "" {
 			m.MvrpAttributes = types.StringValue(v)
 		} else {
 			m.MvrpAttributes = types.StringNull()
 		}
-	} else {
-		m.MvrpAttributes = types.StringNull()
 	}
 	if v, ok := obj["mvrp-forbidden"]; ok {
-		_ = v
 		if v != "" {
 			m.MvrpForbidden = types.StringValue(v)
 		} else {
 			m.MvrpForbidden = types.StringNull()
 		}
-	} else {
-		m.MvrpForbidden = types.StringNull()
 	}
 	if v, ok := obj["tagged"]; ok {
-		_ = v
 		if v != "" {
 			m.Tagged = types.StringValue(v)
 		} else {
 			m.Tagged = types.StringNull()
 		}
-	} else {
-		m.Tagged = types.StringNull()
 	}
 	if v, ok := obj["untagged"]; ok {
-		_ = v
 		if v != "" {
 			m.Untagged = types.StringValue(v)
 		} else {
 			m.Untagged = types.StringNull()
 		}
-	} else {
-		m.Untagged = types.StringNull()
 	}
 	if v, ok := obj["vlan-ids"]; ok {
-		_ = v
 		if v != "" {
 			m.VLANIds = types.StringValue(v)
 		} else {
 			m.VLANIds = types.StringNull()
 		}
-	} else {
-		m.VLANIds = types.StringNull()
 	}
 }

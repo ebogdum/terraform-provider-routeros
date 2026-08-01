@@ -335,104 +335,74 @@ func userApply(ctx context.Context, obj client.Object, m *UserModel) {
 		m.LockoutAck = types.BoolNull()
 	}
 	if v, ok := obj["address"]; ok {
-		_ = v
 		if v != "" {
 			m.Address = types.StringValue(v)
 		} else {
 			m.Address = types.StringNull()
 		}
-	} else {
-		m.Address = types.StringNull()
 	}
 	if v, ok := obj["alias"]; ok {
-		_ = v
 		if v != "" {
 			m.Alias = types.StringValue(v)
 		} else {
 			m.Alias = types.StringNull()
 		}
-	} else {
-		m.Alias = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["expired"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Expired = types.BoolValue(b)
 		} else {
 			m.Expired = types.BoolNull()
 		}
-	} else {
-		m.Expired = types.BoolNull()
 	}
 	if v, ok := obj["group"]; ok {
-		_ = v
 		if v != "" {
 			m.Group = types.StringValue(v)
 		} else {
 			m.Group = types.StringNull()
 		}
-	} else {
-		m.Group = types.StringNull()
 	}
 	if v, ok := obj["inactivity-policy"]; ok {
-		_ = v
 		if v != "" {
 			m.InactivityPolicy = types.StringValue(v)
 		} else {
 			m.InactivityPolicy = types.StringNull()
 		}
-	} else {
-		m.InactivityPolicy = types.StringNull()
 	}
 	if v, ok := obj["inactivity-timeout"]; ok {
-		_ = v
 		if v != "" {
 			m.InactivityTimeout = types.StringValue(v)
 		} else {
 			m.InactivityTimeout = types.StringNull()
 		}
-	} else {
-		m.InactivityTimeout = types.StringNull()
 	}
 	if v, ok := obj["last-logged-in"]; ok {
-		_ = v
 		if v != "" {
 			m.LastLoggedIn = types.StringValue(v)
 		} else {
 			m.LastLoggedIn = types.StringNull()
 		}
-	} else {
-		m.LastLoggedIn = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	// Sensitive: RouterOS scrubs the value on read. If the server returned
 	// a value, decode it. Otherwise the plan value (user input) is what's

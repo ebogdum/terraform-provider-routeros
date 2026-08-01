@@ -611,124 +611,88 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 		m.TrustedDhcpv6 = newBoolStringValue(v)
 	}
 	if v, ok := obj["auto-isolate"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AutoIsolate = types.BoolValue(b)
 		} else {
 			m.AutoIsolate = types.BoolNull()
 		}
-	} else {
-		m.AutoIsolate = types.BoolNull()
 	}
 	if v, ok := obj["bpdu-guard"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.BpduGuard = types.BoolValue(b)
 		} else {
 			m.BpduGuard = types.BoolNull()
 		}
-	} else {
-		m.BpduGuard = types.BoolNull()
 	}
 	if v, ok := obj["bridge"]; ok {
-		_ = v
 		if v != "" {
 			m.Bridge = types.StringValue(v)
 		} else {
 			m.Bridge = types.StringNull()
 		}
-	} else {
-		m.Bridge = types.StringNull()
 	}
 	if v, ok := obj["broadcast-flood"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.BroadcastFlood = types.BoolValue(b)
 		} else {
 			m.BroadcastFlood = types.BoolNull()
 		}
-	} else {
-		m.BroadcastFlood = types.BoolNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["dynamic"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
-	} else {
-		m.Dynamic = types.BoolNull()
 	}
 	if v, ok := obj["edge"]; ok {
-		_ = v
 		if v != "" {
 			m.Edge = types.StringValue(v)
 		} else {
 			m.Edge = types.StringNull()
 		}
-	} else {
-		m.Edge = types.StringNull()
 	}
 	if v, ok := obj["fast-leave"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.FastLeave = types.BoolValue(b)
 		} else {
 			m.FastLeave = types.BoolNull()
 		}
-	} else {
-		m.FastLeave = types.BoolNull()
 	}
 	if v, ok := obj["frame-types"]; ok {
-		_ = v
 		if v != "" {
 			m.FrameTypes = types.StringValue(v)
 		} else {
 			m.FrameTypes = types.StringNull()
 		}
-	} else {
-		m.FrameTypes = types.StringNull()
 	}
 	if v, ok := obj["hardware-offload"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.HardwareOffload = types.BoolValue(b)
 		} else {
 			m.HardwareOffload = types.BoolNull()
 		}
-	} else {
-		m.HardwareOffload = types.BoolNull()
 	}
 	if v, ok := obj["horizon"]; ok {
-		_ = v
 		if v != "" {
 			m.Horizon = types.StringValue(v)
 		} else {
 			m.Horizon = types.StringNull()
 		}
-	} else {
-		m.Horizon = types.StringNull()
 	}
 	if v, ok := obj["hw"]; ok {
 		_ = v
@@ -737,104 +701,74 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 		}
 	}
 	if v, ok := obj["hw-offload"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.HwOffload = types.BoolValue(b)
 		} else {
 			m.HwOffload = types.BoolNull()
 		}
-	} else {
-		m.HwOffload = types.BoolNull()
 	}
 	if v, ok := obj["hw-offload-group"]; ok {
-		_ = v
 		if v != "" {
 			m.HwOffloadGroup = types.StringValue(v)
 		} else {
 			m.HwOffloadGroup = types.StringNull()
 		}
-	} else {
-		m.HwOffloadGroup = types.StringNull()
 	}
 	if v, ok := obj["inactive"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Inactive = types.BoolValue(b)
 		} else {
 			m.Inactive = types.BoolNull()
 		}
-	} else {
-		m.Inactive = types.BoolNull()
 	}
 	if v, ok := obj["ingress-filtering"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.IngressFiltering = types.BoolValue(b)
 		} else {
 			m.IngressFiltering = types.BoolNull()
 		}
-	} else {
-		m.IngressFiltering = types.BoolNull()
 	}
 	if v, ok := obj["interface"]; ok {
-		_ = v
 		if v != "" {
 			m.Interface = types.StringValue(v)
 		} else {
 			m.Interface = types.StringNull()
 		}
-	} else {
-		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["internal-path-cost"]; ok {
-		_ = v
 		if v != "" {
 			m.InternalPathCost = types.StringValue(v)
 		} else {
 			m.InternalPathCost = types.StringNull()
 		}
-	} else {
-		m.InternalPathCost = types.StringNull()
 	}
 	if v, ok := obj["learn"]; ok {
-		_ = v
 		if v != "" {
 			m.Learn = types.StringValue(v)
 		} else {
 			m.Learn = types.StringNull()
 		}
-	} else {
-		m.Learn = types.StringNull()
 	}
 	if v, ok := obj["multicast-router"]; ok {
-		_ = v
 		if v != "" {
 			m.MulticastRouter = types.StringValue(v)
 		} else {
 			m.MulticastRouter = types.StringNull()
 		}
-	} else {
-		m.MulticastRouter = types.StringNull()
 	}
 	if v, ok := obj["mvrp-applicant-state"]; ok {
-		_ = v
 		if v != "" {
 			m.MvrpApplicantState = types.StringValue(v)
 		} else {
 			m.MvrpApplicantState = types.StringNull()
 		}
-	} else {
-		m.MvrpApplicantState = types.StringNull()
 	}
 	if v, ok := obj["mvrp-registrar-state"]; ok {
-		_ = v
 		if v != "" {
 			m.MvrpRegistrarState = types.StringValue(v)
 		} else {
 			m.MvrpRegistrarState = types.StringNull()
 		}
-	} else {
-		m.MvrpRegistrarState = types.StringNull()
 	}
 	if v, ok := obj["parent"]; ok {
 		_ = v
@@ -847,34 +781,25 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 		m.Parent = types.Int64Null()
 	}
 	if v, ok := obj["path-cost"]; ok {
-		_ = v
 		if v != "" {
 			m.PathCost = types.StringValue(v)
 		} else {
 			m.PathCost = types.StringNull()
 		}
-	} else {
-		m.PathCost = types.StringNull()
 	}
 	if v, ok := obj["point-to-point"]; ok {
-		_ = v
 		if v != "" {
 			m.PointToPoint = types.StringValue(v)
 		} else {
 			m.PointToPoint = types.StringNull()
 		}
-	} else {
-		m.PointToPoint = types.StringNull()
 	}
 	if v, ok := obj["port-status"]; ok {
-		_ = v
 		if v != "" {
 			m.PortStatus = types.StringValue(v)
 		} else {
 			m.PortStatus = types.StringNull()
 		}
-	} else {
-		m.PortStatus = types.StringNull()
 	}
 	if v, ok := obj["priority"]; ok {
 		_ = v
@@ -897,24 +822,18 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 		m.Pvid = types.Int64Null()
 	}
 	if v, ok := obj["restricted-role"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.RestrictedRole = types.BoolValue(b)
 		} else {
 			m.RestrictedRole = types.BoolNull()
 		}
-	} else {
-		m.RestrictedRole = types.BoolNull()
 	}
 	if v, ok := obj["restricted-tcn"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.RestrictedTcn = types.BoolValue(b)
 		} else {
 			m.RestrictedTcn = types.BoolNull()
 		}
-	} else {
-		m.RestrictedTcn = types.BoolNull()
 	}
 	if v, ok := obj["role"]; ok && v != "" {
 		m.Role = types.StringValue(v)
@@ -927,53 +846,38 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 		m.Status = types.StringNull()
 	}
 	if v, ok := obj["tag-stacking"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.TagStacking = types.BoolValue(b)
 		} else {
 			m.TagStacking = types.BoolNull()
 		}
-	} else {
-		m.TagStacking = types.BoolNull()
 	}
 	if v, ok := obj["trusted"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Trusted = types.BoolValue(b)
 		} else {
 			m.Trusted = types.BoolNull()
 		}
-	} else {
-		m.Trusted = types.BoolNull()
 	}
 	if v, ok := obj["trusted-ra"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.TrustedRa = types.BoolValue(b)
 		} else {
 			m.TrustedRa = types.BoolNull()
 		}
-	} else {
-		m.TrustedRa = types.BoolNull()
 	}
 	if v, ok := obj["unknown-multicast-flood"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.UnknownMulticastFlood = types.BoolValue(b)
 		} else {
 			m.UnknownMulticastFlood = types.BoolNull()
 		}
-	} else {
-		m.UnknownMulticastFlood = types.BoolNull()
 	}
 	if v, ok := obj["unknown-unicast-flood"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.UnknownUnicastFlood = types.BoolValue(b)
 		} else {
 			m.UnknownUnicastFlood = types.BoolNull()
 		}
-	} else {
-		m.UnknownUnicastFlood = types.BoolNull()
 	}
 }

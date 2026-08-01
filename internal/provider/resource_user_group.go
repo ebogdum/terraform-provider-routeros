@@ -269,34 +269,25 @@ func userGroupApply(ctx context.Context, obj client.Object, m *UserGroupModel) {
 		m.LockoutAck = types.BoolNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["policies"]; ok {
-		_ = v
 		if v != "" {
 			m.Policies = types.StringValue(v)
 		} else {
 			m.Policies = types.StringNull()
 		}
-	} else {
-		m.Policies = types.StringNull()
 	}
 	if v, ok := obj["policy"]; ok {
 		_ = v
@@ -305,23 +296,17 @@ func userGroupApply(ctx context.Context, obj client.Object, m *UserGroupModel) {
 		m.Policy = types.SetNull(types.StringType)
 	}
 	if v, ok := obj["skin"]; ok {
-		_ = v
 		if v != "" {
 			m.Skin = types.StringValue(v)
 		} else {
 			m.Skin = types.StringNull()
 		}
-	} else {
-		m.Skin = types.StringNull()
 	}
 	if v, ok := obj["system"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.System = types.BoolValue(b)
 		} else {
 			m.System = types.BoolNull()
 		}
-	} else {
-		m.System = types.BoolNull()
 	}
 }

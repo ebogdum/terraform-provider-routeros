@@ -286,83 +286,59 @@ func iPDHCPServerAlertApply(ctx context.Context, obj client.Object, m *IPDHCPSer
 		m.ValidServer = types.StringNull()
 	}
 	if v, ok := obj["alert-timeout"]; ok {
-		_ = v
 		if v != "" {
 			m.AlertTimeout = types.StringValue(v)
 		} else {
 			m.AlertTimeout = types.StringNull()
 		}
-	} else {
-		m.AlertTimeout = types.StringNull()
 	}
 	if v, ok := obj["comment"]; ok {
-		_ = v
 		if v != "" {
 			m.Comment = types.StringValue(v)
 		} else {
 			m.Comment = types.StringNull()
 		}
-	} else {
-		m.Comment = types.StringNull()
 	}
 	if v, ok := obj["disabled"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
-	} else {
-		m.Disabled = types.BoolNull()
 	}
 	if v, ok := obj["interface"]; ok {
-		_ = v
 		if v != "" {
 			m.Interface = types.StringValue(v)
 		} else {
 			m.Interface = types.StringNull()
 		}
-	} else {
-		m.Interface = types.StringNull()
 	}
 	if v, ok := obj["on-alert"]; ok {
-		_ = v
 		if v != "" {
 			m.OnAlert = types.StringValue(v)
 		} else {
 			m.OnAlert = types.StringNull()
 		}
-	} else {
-		m.OnAlert = types.StringNull()
 	}
 	if v, ok := obj["reset-alert"]; ok {
-		_ = v
 		if v != "" {
 			m.ResetAlert = types.StringValue(v)
 		} else {
 			m.ResetAlert = types.StringNull()
 		}
-	} else {
-		m.ResetAlert = types.StringNull()
 	}
 	if v, ok := obj["unknown-servers"]; ok {
-		_ = v
 		if v != "" {
 			m.UnknownServers = types.StringValue(v)
 		} else {
 			m.UnknownServers = types.StringNull()
 		}
-	} else {
-		m.UnknownServers = types.StringNull()
 	}
 	if v, ok := obj["valid-servers"]; ok {
-		_ = v
 		if v != "" {
 			m.ValidServers = types.StringValue(v)
 		} else {
 			m.ValidServers = types.StringNull()
 		}
-	} else {
-		m.ValidServers = types.StringNull()
 	}
 }

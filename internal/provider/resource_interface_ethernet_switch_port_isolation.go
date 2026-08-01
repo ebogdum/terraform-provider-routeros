@@ -271,63 +271,45 @@ func interfaceEthernetSwitchPortIsolationApply(ctx context.Context, obj client.O
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["forward-to"]; ok {
-		_ = v
 		if v != "" {
 			m.ForwardTo = types.StringValue(v)
 		} else {
 			m.ForwardTo = types.StringNull()
 		}
-	} else {
-		m.ForwardTo = types.StringNull()
 	}
 	if v, ok := obj["forwarding-override"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.ForwardingOverride = types.BoolValue(b)
 		} else {
 			m.ForwardingOverride = types.BoolNull()
 		}
-	} else {
-		m.ForwardingOverride = types.BoolNull()
 	}
 	if v, ok := obj["invalid"]; ok {
-		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
-	} else {
-		m.Invalid = types.BoolNull()
 	}
 	if v, ok := obj["name"]; ok {
-		_ = v
 		if v != "" {
 			m.Name = types.StringValue(v)
 		} else {
 			m.Name = types.StringNull()
 		}
-	} else {
-		m.Name = types.StringNull()
 	}
 	if v, ok := obj["override"]; ok {
-		_ = v
 		if v != "" {
 			m.Override = types.StringValue(v)
 		} else {
 			m.Override = types.StringNull()
 		}
-	} else {
-		m.Override = types.StringNull()
 	}
 	if v, ok := obj["switch"]; ok {
-		_ = v
 		if v != "" {
 			m.Switch = types.StringValue(v)
 		} else {
 			m.Switch = types.StringNull()
 		}
-	} else {
-		m.Switch = types.StringNull()
 	}
 }
