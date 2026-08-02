@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.3] - 2026-08-02
+
+### Fixed
+
+Three schema defects confirmed against a live gateway:
+
+- **`routeros_ip_route.gateway` accepts an interface name.** RouterOS allows a
+  gateway of an IP, an interface name (e.g. a WireGuard peer `wgv-mac`), or
+  `IP%interface`; the attribute was validated as IP-only, so a route via an
+  interface was rejected at plan time. The IP-only validator is removed.
+- **`routeros_interface_dot1x_server.radius_mac_format` accepts upper-case.**
+  RouterOS stores `XX:XX:XX:XX:XX:XX`, but the enum only listed the lower-case
+  forms. The upper-case `XX:XX:…`, `XX-XX-…` and `XXXXXXXXXXXX` are now valid.
+- **`routeros_system_scheduler.on_event` is optional.** RouterOS runs a
+  scheduler with an empty `on-event` (e.g. driven purely by interval), so the
+  attribute is no longer Required.
+
 ## [3.0.2] - 2026-08-02
 
 ### Fixed

@@ -142,7 +142,8 @@ func (r *IPRouteResource) Schema(_ context.Context, _ resource.SchemaRequest, re
 				Optional:    true,
 				Computed:    true,
 				Description: "",
-				Validators:  []validator.String{schemautil.IsIP()},
+				// A gateway may be an IP, an interface name (e.g. a WireGuard
+				// peer), or IP%interface -- RouterOS accepts all three.
 			},
 			"hw_offloaded": schema.BoolAttribute{
 				Computed:    true,

@@ -95,7 +95,10 @@ func (r *SystemSchedulerResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "",
 			},
 			"on_event": schema.StringAttribute{
-				Required:    true,
+				// Not Required: RouterOS accepts a scheduler with an empty
+				// on-event (e.g. one driven purely by its start-time/interval).
+				Optional:    true,
+				Computed:    true,
 				Description: "",
 			},
 			"owner": schema.StringAttribute{

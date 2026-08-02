@@ -134,7 +134,7 @@ func (r *InterfaceDot1xServerResource) Schema(_ context.Context, _ resource.Sche
 				Optional:    true,
 				Computed:    true,
 				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"xx:xx:xx:xx:xx:xx", "xx-xx-xx-xx-xx-xx", "xxxxxxxxxxxx"}...)},
+				Validators:  []validator.String{schemautil.OneOf([]string{"XX:XX:XX:XX:XX:XX", "XX-XX-XX-XX-XX-XX", "XXXXXXXXXXXX", "xx:xx:xx:xx:xx:xx", "xx-xx-xx-xx-xx-xx", "xxxxxxxxxxxx"}...)},
 			},
 			"reauth_timeout": schema.StringAttribute{
 				Optional:    true,
