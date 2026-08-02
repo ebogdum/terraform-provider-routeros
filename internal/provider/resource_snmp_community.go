@@ -375,6 +375,8 @@ func sNMPCommunityApply(ctx context.Context, obj client.Object, m *SNMPCommunity
 	if v, ok := obj["default"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Default = types.BoolValue(true)
 		} else {
 			m.Default = types.BoolNull()
 		}
@@ -382,6 +384,8 @@ func sNMPCommunityApply(ctx context.Context, obj client.Object, m *SNMPCommunity
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
@@ -417,6 +421,8 @@ func sNMPCommunityApply(ctx context.Context, obj client.Object, m *SNMPCommunity
 	if v, ok := obj["read-access"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.ReadAccess = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.ReadAccess = types.BoolValue(true)
 		} else {
 			m.ReadAccess = types.BoolNull()
 		}
@@ -431,6 +437,8 @@ func sNMPCommunityApply(ctx context.Context, obj client.Object, m *SNMPCommunity
 	if v, ok := obj["write-access"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.WriteAccess = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.WriteAccess = types.BoolValue(true)
 		} else {
 			m.WriteAccess = types.BoolNull()
 		}

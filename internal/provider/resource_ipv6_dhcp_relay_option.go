@@ -249,6 +249,8 @@ func iPv6DHCPRelayOptionApply(ctx context.Context, obj client.Object, m *IPv6DHC
 	if v, ok := obj["only-if-mac-available"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.OnlyIfMACAvailable = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.OnlyIfMACAvailable = types.BoolValue(true)
 		} else {
 			m.OnlyIfMACAvailable = types.BoolNull()
 		}

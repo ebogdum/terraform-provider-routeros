@@ -186,6 +186,8 @@ func iPv6NdPrefixDefaultApply(ctx context.Context, obj client.Object, m *IPv6NdP
 	if v, ok := obj["autonomous"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Autonomous = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Autonomous = types.BoolValue(true)
 		} else {
 			m.Autonomous = types.BoolNull()
 		}
@@ -195,6 +197,8 @@ func iPv6NdPrefixDefaultApply(ctx context.Context, obj client.Object, m *IPv6NdP
 	if v, ok := obj["dhcp6-pd-preferred"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dhcp6PdPreferred = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Dhcp6PdPreferred = types.BoolValue(true)
 		} else {
 			m.Dhcp6PdPreferred = types.BoolNull()
 		}

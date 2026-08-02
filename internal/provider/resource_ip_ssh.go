@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -205,6 +206,8 @@ func iPSSHApply(ctx context.Context, obj client.Object, m *IPSSHModel) {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.ForwardingEnabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.ForwardingEnabled = types.BoolValue(true)
 		} else {
 			m.ForwardingEnabled = types.BoolNull()
 		}
@@ -245,6 +248,8 @@ func iPSSHApply(ctx context.Context, obj client.Object, m *IPSSHModel) {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.StrongCrypto = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.StrongCrypto = types.BoolValue(true)
 		} else {
 			m.StrongCrypto = types.BoolNull()
 		}

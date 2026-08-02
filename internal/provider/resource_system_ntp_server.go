@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -221,6 +222,8 @@ func systemNTPServerApply(ctx context.Context, obj client.Object, m *SystemNTPSe
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Broadcast = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Broadcast = types.BoolValue(true)
 		} else {
 			m.Broadcast = types.BoolNull()
 		}
@@ -237,6 +240,8 @@ func systemNTPServerApply(ctx context.Context, obj client.Object, m *SystemNTPSe
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Enabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Enabled = types.BoolValue(true)
 		} else {
 			m.Enabled = types.BoolNull()
 		}
@@ -253,6 +258,8 @@ func systemNTPServerApply(ctx context.Context, obj client.Object, m *SystemNTPSe
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Manycast = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Manycast = types.BoolValue(true)
 		} else {
 			m.Manycast = types.BoolNull()
 		}
@@ -261,6 +268,8 @@ func systemNTPServerApply(ctx context.Context, obj client.Object, m *SystemNTPSe
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Multicast = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Multicast = types.BoolValue(true)
 		} else {
 			m.Multicast = types.BoolNull()
 		}
@@ -269,6 +278,8 @@ func systemNTPServerApply(ctx context.Context, obj client.Object, m *SystemNTPSe
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.UseLocalClock = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.UseLocalClock = types.BoolValue(true)
 		} else {
 			m.UseLocalClock = types.BoolNull()
 		}

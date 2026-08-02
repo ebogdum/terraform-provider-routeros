@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -162,6 +163,8 @@ func toolRomonApply(ctx context.Context, obj client.Object, m *ToolRomonModel) {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Enabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Enabled = types.BoolValue(true)
 		} else {
 			m.Enabled = types.BoolNull()
 		}

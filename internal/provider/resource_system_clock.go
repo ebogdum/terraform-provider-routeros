@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -192,6 +193,8 @@ func systemClockApply(ctx context.Context, obj client.Object, m *SystemClockMode
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.DstActive = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.DstActive = types.BoolValue(true)
 		} else {
 			m.DstActive = types.BoolNull()
 		}
@@ -216,6 +219,8 @@ func systemClockApply(ctx context.Context, obj client.Object, m *SystemClockMode
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.TimeZoneAutodetect = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.TimeZoneAutodetect = types.BoolValue(true)
 		} else {
 			m.TimeZoneAutodetect = types.BoolNull()
 		}

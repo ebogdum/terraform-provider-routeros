@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -206,6 +207,8 @@ func capsManManagerApply(ctx context.Context, obj client.Object, m *CapsManManag
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Enabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Enabled = types.BoolValue(true)
 		} else {
 			m.Enabled = types.BoolNull()
 		}
@@ -222,6 +225,8 @@ func capsManManagerApply(ctx context.Context, obj client.Object, m *CapsManManag
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.RequirePeerCertificate = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.RequirePeerCertificate = types.BoolValue(true)
 		} else {
 			m.RequirePeerCertificate = types.BoolNull()
 		}

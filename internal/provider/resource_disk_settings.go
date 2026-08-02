@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -191,6 +192,8 @@ func diskSettingsApply(ctx context.Context, obj client.Object, m *DiskSettingsMo
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AutoMediaSharing = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.AutoMediaSharing = types.BoolValue(true)
 		} else {
 			m.AutoMediaSharing = types.BoolNull()
 		}
@@ -199,6 +202,8 @@ func diskSettingsApply(ctx context.Context, obj client.Object, m *DiskSettingsMo
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AutoSmbSharing = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.AutoSmbSharing = types.BoolValue(true)
 		} else {
 			m.AutoSmbSharing = types.BoolNull()
 		}

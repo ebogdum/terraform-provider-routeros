@@ -340,6 +340,8 @@ func interfaceL2TPServerServerApply(ctx context.Context, obj client.Object, m *I
 	if v, ok := obj["allow-fast-path"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.AllowFastPath = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.AllowFastPath = types.BoolValue(true)
 		} else {
 			m.AllowFastPath = types.BoolNull()
 		}
@@ -364,6 +366,8 @@ func interfaceL2TPServerServerApply(ctx context.Context, obj client.Object, m *I
 	if v, ok := obj["enabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Enabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Enabled = types.BoolValue(true)
 		} else {
 			m.Enabled = types.BoolNull()
 		}
@@ -434,6 +438,8 @@ func interfaceL2TPServerServerApply(ctx context.Context, obj client.Object, m *I
 	if v, ok := obj["one-session-per-host"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.OneSessionPerHost = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.OneSessionPerHost = types.BoolValue(true)
 		} else {
 			m.OneSessionPerHost = types.BoolNull()
 		}
@@ -443,6 +449,8 @@ func interfaceL2TPServerServerApply(ctx context.Context, obj client.Object, m *I
 	if v, ok := obj["use-ipsec"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.UseIPsec = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.UseIPsec = types.BoolValue(true)
 		} else {
 			m.UseIPsec = types.BoolNull()
 		}

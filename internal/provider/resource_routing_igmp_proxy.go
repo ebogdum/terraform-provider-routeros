@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -191,6 +192,8 @@ func routingIgmpProxyApply(ctx context.Context, obj client.Object, m *RoutingIgm
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.QuickLeave = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.QuickLeave = types.BoolValue(true)
 		} else {
 			m.QuickLeave = types.BoolNull()
 		}

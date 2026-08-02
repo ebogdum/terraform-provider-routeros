@@ -253,6 +253,8 @@ func iPFirewallServicePortApply(ctx context.Context, obj client.Object, m *IPFir
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
@@ -272,6 +274,8 @@ func iPFirewallServicePortApply(ctx context.Context, obj client.Object, m *IPFir
 	if v, ok := obj["sip-direct-media"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.SipDirectMedia = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.SipDirectMedia = types.BoolValue(true)
 		} else {
 			m.SipDirectMedia = types.BoolNull()
 		}

@@ -418,6 +418,8 @@ func iPRouteApply(ctx context.Context, obj client.Object, m *IPRouteModel) {
 	if v, ok := obj["active"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Active = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Active = types.BoolValue(true)
 		} else {
 			m.Active = types.BoolNull()
 		}
@@ -432,6 +434,8 @@ func iPRouteApply(ctx context.Context, obj client.Object, m *IPRouteModel) {
 	if v, ok := obj["connect"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Connect = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Connect = types.BoolValue(true)
 		} else {
 			m.Connect = types.BoolNull()
 		}
@@ -439,6 +443,8 @@ func iPRouteApply(ctx context.Context, obj client.Object, m *IPRouteModel) {
 	if v, ok := obj["dhcp"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.DHCP = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.DHCP = types.BoolValue(true)
 		} else {
 			m.DHCP = types.BoolNull()
 		}
@@ -446,6 +452,8 @@ func iPRouteApply(ctx context.Context, obj client.Object, m *IPRouteModel) {
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
@@ -470,6 +478,8 @@ func iPRouteApply(ctx context.Context, obj client.Object, m *IPRouteModel) {
 	if v, ok := obj["dynamic"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Dynamic = types.BoolValue(true)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
@@ -477,6 +487,8 @@ func iPRouteApply(ctx context.Context, obj client.Object, m *IPRouteModel) {
 	if v, ok := obj["ecmp"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Ecmp = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Ecmp = types.BoolValue(true)
 		} else {
 			m.Ecmp = types.BoolNull()
 		}
@@ -491,6 +503,8 @@ func iPRouteApply(ctx context.Context, obj client.Object, m *IPRouteModel) {
 	if v, ok := obj["hw-offloaded"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.HwOffloaded = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.HwOffloaded = types.BoolValue(true)
 		} else {
 			m.HwOffloaded = types.BoolNull()
 		}
@@ -505,6 +519,8 @@ func iPRouteApply(ctx context.Context, obj client.Object, m *IPRouteModel) {
 	if v, ok := obj["inactive"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Inactive = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Inactive = types.BoolValue(true)
 		} else {
 			m.Inactive = types.BoolNull()
 		}

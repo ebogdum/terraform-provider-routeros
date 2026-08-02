@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -537,6 +538,8 @@ func toolSnifferApply(ctx context.Context, obj client.Object, m *ToolSnifferMode
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.FilterStream = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.FilterStream = types.BoolValue(true)
 		} else {
 			m.FilterStream = types.BoolNull()
 		}
@@ -569,6 +572,8 @@ func toolSnifferApply(ctx context.Context, obj client.Object, m *ToolSnifferMode
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.MemoryScroll = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.MemoryScroll = types.BoolValue(true)
 		} else {
 			m.MemoryScroll = types.BoolNull()
 		}
@@ -577,6 +582,8 @@ func toolSnifferApply(ctx context.Context, obj client.Object, m *ToolSnifferMode
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.OnlyHeaders = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.OnlyHeaders = types.BoolValue(true)
 		} else {
 			m.OnlyHeaders = types.BoolNull()
 		}
@@ -593,6 +600,8 @@ func toolSnifferApply(ctx context.Context, obj client.Object, m *ToolSnifferMode
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.QuickShowFrame = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.QuickShowFrame = types.BoolValue(true)
 		} else {
 			m.QuickShowFrame = types.BoolNull()
 		}
@@ -601,6 +610,8 @@ func toolSnifferApply(ctx context.Context, obj client.Object, m *ToolSnifferMode
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Running = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Running = types.BoolValue(true)
 		} else {
 			m.Running = types.BoolNull()
 		}
@@ -609,6 +620,8 @@ func toolSnifferApply(ctx context.Context, obj client.Object, m *ToolSnifferMode
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.StreamingEnabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.StreamingEnabled = types.BoolValue(true)
 		} else {
 			m.StreamingEnabled = types.BoolNull()
 		}

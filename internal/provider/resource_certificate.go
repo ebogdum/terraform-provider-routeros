@@ -562,6 +562,8 @@ func certificateApply(ctx context.Context, obj client.Object, m *CertificateMode
 	if v, ok := obj["acme"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Acme = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Acme = types.BoolValue(true)
 		} else {
 			m.Acme = types.BoolNull()
 		}
@@ -590,6 +592,8 @@ func certificateApply(ctx context.Context, obj client.Object, m *CertificateMode
 	if v, ok := obj["authority"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Authority = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Authority = types.BoolValue(true)
 		} else {
 			m.Authority = types.BoolNull()
 		}
@@ -653,6 +657,8 @@ func certificateApply(ctx context.Context, obj client.Object, m *CertificateMode
 	if v, ok := obj["crl"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Crl = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Crl = types.BoolValue(true)
 		} else {
 			m.Crl = types.BoolNull()
 		}
@@ -677,6 +683,8 @@ func certificateApply(ctx context.Context, obj client.Object, m *CertificateMode
 	if v, ok := obj["dynamic"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Dynamic = types.BoolValue(true)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
@@ -684,6 +692,8 @@ func certificateApply(ctx context.Context, obj client.Object, m *CertificateMode
 	if v, ok := obj["expired"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Expired = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Expired = types.BoolValue(true)
 		} else {
 			m.Expired = types.BoolNull()
 		}
@@ -740,6 +750,8 @@ func certificateApply(ctx context.Context, obj client.Object, m *CertificateMode
 	if v, ok := obj["issued"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Issued = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Issued = types.BoolValue(true)
 		} else {
 			m.Issued = types.BoolNull()
 		}
@@ -803,6 +815,8 @@ func certificateApply(ctx context.Context, obj client.Object, m *CertificateMode
 	if v, ok := obj["private-key"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.PrivateKey = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.PrivateKey = types.BoolValue(true)
 		} else {
 			m.PrivateKey = types.BoolNull()
 		}
@@ -824,6 +838,8 @@ func certificateApply(ctx context.Context, obj client.Object, m *CertificateMode
 	if v, ok := obj["revoked"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Revoked = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Revoked = types.BoolValue(true)
 		} else {
 			m.Revoked = types.BoolNull()
 		}
@@ -887,6 +903,8 @@ func certificateApply(ctx context.Context, obj client.Object, m *CertificateMode
 	if v, ok := obj["smart-card-key"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.SmartCardKey = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.SmartCardKey = types.BoolValue(true)
 		} else {
 			m.SmartCardKey = types.BoolNull()
 		}

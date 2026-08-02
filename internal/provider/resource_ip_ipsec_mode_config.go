@@ -400,6 +400,8 @@ func iPIpsecModeConfigApply(ctx context.Context, obj client.Object, m *IPIpsecMo
 	if v, ok := obj["default"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Default = types.BoolValue(true)
 		} else {
 			m.Default = types.BoolNull()
 		}
@@ -435,6 +437,8 @@ func iPIpsecModeConfigApply(ctx context.Context, obj client.Object, m *IPIpsecMo
 	if v, ok := obj["responder"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Responder = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Responder = types.BoolValue(true)
 		} else {
 			m.Responder = types.BoolNull()
 		}
@@ -477,6 +481,8 @@ func iPIpsecModeConfigApply(ctx context.Context, obj client.Object, m *IPIpsecMo
 	if v, ok := obj["system-dns"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.SystemDNS = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.SystemDNS = types.BoolValue(true)
 		} else {
 			m.SystemDNS = types.BoolNull()
 		}

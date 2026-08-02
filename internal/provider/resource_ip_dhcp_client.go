@@ -517,6 +517,8 @@ func iPDHCPClientApply(ctx context.Context, obj client.Object, m *IPDHCPClientMo
 	if v, ok := obj["allow-reconfigure"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.AllowReconfigure = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.AllowReconfigure = types.BoolValue(true)
 		} else {
 			m.AllowReconfigure = types.BoolNull()
 		}
@@ -524,6 +526,8 @@ func iPDHCPClientApply(ctx context.Context, obj client.Object, m *IPDHCPClientMo
 	if v, ok := obj["allow-reconfigure-messages"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.AllowReconfigureMessages = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.AllowReconfigureMessages = types.BoolValue(true)
 		} else {
 			m.AllowReconfigureMessages = types.BoolNull()
 		}
@@ -582,6 +586,8 @@ func iPDHCPClientApply(ctx context.Context, obj client.Object, m *IPDHCPClientMo
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
@@ -599,6 +605,8 @@ func iPDHCPClientApply(ctx context.Context, obj client.Object, m *IPDHCPClientMo
 	if v, ok := obj["dynamic"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Dynamic = types.BoolValue(true)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
@@ -627,6 +635,8 @@ func iPDHCPClientApply(ctx context.Context, obj client.Object, m *IPDHCPClientMo
 	if v, ok := obj["invalid"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Invalid = types.BoolValue(true)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
@@ -739,6 +749,8 @@ func iPDHCPClientApply(ctx context.Context, obj client.Object, m *IPDHCPClientMo
 	if v, ok := obj["use-peer-dns"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.UsePeerDNS = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.UsePeerDNS = types.BoolValue(true)
 		} else {
 			m.UsePeerDNS = types.BoolNull()
 		}
@@ -746,6 +758,8 @@ func iPDHCPClientApply(ctx context.Context, obj client.Object, m *IPDHCPClientMo
 	if v, ok := obj["use-peer-ntp"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.UsePeerNTP = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.UsePeerNTP = types.BoolValue(true)
 		} else {
 			m.UsePeerNTP = types.BoolNull()
 		}

@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -192,6 +193,8 @@ func certificateSettingsApply(ctx context.Context, obj client.Object, m *Certifi
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.CrlDownload = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.CrlDownload = types.BoolValue(true)
 		} else {
 			m.CrlDownload = types.BoolNull()
 		}
@@ -208,6 +211,8 @@ func certificateSettingsApply(ctx context.Context, obj client.Object, m *Certifi
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.CrlUse = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.CrlUse = types.BoolValue(true)
 		} else {
 			m.CrlUse = types.BoolNull()
 		}

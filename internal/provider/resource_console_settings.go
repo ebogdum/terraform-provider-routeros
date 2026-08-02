@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -169,6 +170,8 @@ func consoleSettingsApply(ctx context.Context, obj client.Object, m *ConsoleSett
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.LogScriptErrors = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.LogScriptErrors = types.BoolValue(true)
 		} else {
 			m.LogScriptErrors = types.BoolNull()
 		}
@@ -177,6 +180,8 @@ func consoleSettingsApply(ctx context.Context, obj client.Object, m *ConsoleSett
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.SanitizeNames = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.SanitizeNames = types.BoolValue(true)
 		} else {
 			m.SanitizeNames = types.BoolNull()
 		}

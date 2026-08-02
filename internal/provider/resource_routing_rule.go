@@ -371,6 +371,8 @@ func routingRuleApply(ctx context.Context, obj client.Object, m *RoutingRuleMode
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
@@ -392,6 +394,8 @@ func routingRuleApply(ctx context.Context, obj client.Object, m *RoutingRuleMode
 	if v, ok := obj["invalid"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Invalid = types.BoolValue(true)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
@@ -427,6 +431,8 @@ func routingRuleApply(ctx context.Context, obj client.Object, m *RoutingRuleMode
 	if v, ok := obj["vrf"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Vrf = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Vrf = types.BoolValue(true)
 		} else {
 			m.Vrf = types.BoolNull()
 		}

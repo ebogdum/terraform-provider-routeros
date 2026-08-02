@@ -324,6 +324,8 @@ func routingIgmpProxyInterfaceApply(ctx context.Context, obj client.Object, m *R
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
@@ -331,6 +333,8 @@ func routingIgmpProxyInterfaceApply(ctx context.Context, obj client.Object, m *R
 	if v, ok := obj["dynamic"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Dynamic = types.BoolValue(true)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
@@ -338,6 +342,8 @@ func routingIgmpProxyInterfaceApply(ctx context.Context, obj client.Object, m *R
 	if v, ok := obj["inactive"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Inactive = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Inactive = types.BoolValue(true)
 		} else {
 			m.Inactive = types.BoolNull()
 		}
@@ -352,6 +358,8 @@ func routingIgmpProxyInterfaceApply(ctx context.Context, obj client.Object, m *R
 	if v, ok := obj["querier"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Querier = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Querier = types.BoolValue(true)
 		} else {
 			m.Querier = types.BoolNull()
 		}
@@ -404,6 +412,8 @@ func routingIgmpProxyInterfaceApply(ctx context.Context, obj client.Object, m *R
 	if v, ok := obj["upstream"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Upstream = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Upstream = types.BoolValue(true)
 		} else {
 			m.Upstream = types.BoolNull()
 		}

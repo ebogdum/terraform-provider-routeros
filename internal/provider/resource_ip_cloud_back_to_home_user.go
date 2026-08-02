@@ -370,6 +370,8 @@ func iPCloudBackToHomeUserApply(ctx context.Context, obj client.Object, m *IPClo
 	if v, ok := obj["active"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Active = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Active = types.BoolValue(true)
 		} else {
 			m.Active = types.BoolNull()
 		}
@@ -377,6 +379,8 @@ func iPCloudBackToHomeUserApply(ctx context.Context, obj client.Object, m *IPClo
 	if v, ok := obj["allow-lan"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.AllowLan = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.AllowLan = types.BoolValue(true)
 		} else {
 			m.AllowLan = types.BoolNull()
 		}
@@ -412,6 +416,8 @@ func iPCloudBackToHomeUserApply(ctx context.Context, obj client.Object, m *IPClo
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}

@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -325,6 +326,8 @@ func iPCloudApply(ctx context.Context, obj client.Object, m *IPCloudModel) {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.UpdateTime = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.UpdateTime = types.BoolValue(true)
 		} else {
 			m.UpdateTime = types.BoolNull()
 		}

@@ -290,6 +290,8 @@ func interfaceSSTPServerServerApply(ctx context.Context, obj client.Object, m *I
 	if v, ok := obj["enabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Enabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Enabled = types.BoolValue(true)
 		} else {
 			m.Enabled = types.BoolNull()
 		}
@@ -331,6 +333,8 @@ func interfaceSSTPServerServerApply(ctx context.Context, obj client.Object, m *I
 	if v, ok := obj["pfs"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Pfs = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Pfs = types.BoolValue(true)
 		} else {
 			m.Pfs = types.BoolNull()
 		}
@@ -354,6 +358,8 @@ func interfaceSSTPServerServerApply(ctx context.Context, obj client.Object, m *I
 	if v, ok := obj["verify-client-certificate"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.VerifyClientCertificate = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.VerifyClientCertificate = types.BoolValue(true)
 		} else {
 			m.VerifyClientCertificate = types.BoolNull()
 		}

@@ -246,6 +246,8 @@ func iPVrfApply(ctx context.Context, obj client.Object, m *IPVrfModel) {
 	if v, ok := obj["builtin"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Builtin = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Builtin = types.BoolValue(true)
 		} else {
 			m.Builtin = types.BoolNull()
 		}
@@ -260,6 +262,8 @@ func iPVrfApply(ctx context.Context, obj client.Object, m *IPVrfModel) {
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}

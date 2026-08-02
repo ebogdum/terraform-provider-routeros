@@ -943,6 +943,8 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 	if v, ok := obj["add-dhcp-option-82"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.AddDHCPOption82 = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.AddDHCPOption82 = types.BoolValue(true)
 		} else {
 			m.AddDHCPOption82 = types.BoolNull()
 		}
@@ -985,6 +987,8 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 	if v, ok := obj["auto-mac"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.AutoMAC = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.AutoMAC = types.BoolValue(true)
 		} else {
 			m.AutoMAC = types.BoolNull()
 		}
@@ -999,6 +1003,8 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 	if v, ok := obj["dhcp-snooping"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.DHCPSnooping = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.DHCPSnooping = types.BoolValue(true)
 		} else {
 			m.DHCPSnooping = types.BoolNull()
 		}
@@ -1006,6 +1012,8 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
@@ -1027,6 +1035,8 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 	if v, ok := obj["fast-forward"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.FastForward = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.FastForward = types.BoolValue(true)
 		} else {
 			m.FastForward = types.BoolNull()
 		}
@@ -1041,6 +1051,8 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 	if v, ok := obj["forward-reserved"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.ForwardReserved = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.ForwardReserved = types.BoolValue(true)
 		} else {
 			m.ForwardReserved = types.BoolNull()
 		}
@@ -1083,6 +1095,8 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 	if v, ok := obj["igmp-snooping"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.IgmpSnooping = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.IgmpSnooping = types.BoolValue(true)
 		} else {
 			m.IgmpSnooping = types.BoolNull()
 		}
@@ -1097,6 +1111,8 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 	if v, ok := obj["ingress-filtering"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.IngressFiltering = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.IngressFiltering = types.BoolValue(true)
 		} else {
 			m.IngressFiltering = types.BoolNull()
 		}
@@ -1204,6 +1220,8 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 	if v, ok := obj["multicast-querier"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.MulticastQuerier = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.MulticastQuerier = types.BoolValue(true)
 		} else {
 			m.MulticastQuerier = types.BoolNull()
 		}
@@ -1218,6 +1236,8 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 	if v, ok := obj["mvrp"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Mvrp = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Mvrp = types.BoolValue(true)
 		} else {
 			m.Mvrp = types.BoolNull()
 		}
@@ -1294,6 +1314,8 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 	if v, ok := obj["ra-guard"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.RaGuard = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.RaGuard = types.BoolValue(true)
 		} else {
 			m.RaGuard = types.BoolNull()
 		}
@@ -1390,6 +1412,8 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 	if v, ok := obj["vlan-filtering"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.VLANFiltering = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.VLANFiltering = types.BoolValue(true)
 		} else {
 			m.VLANFiltering = types.BoolNull()
 		}

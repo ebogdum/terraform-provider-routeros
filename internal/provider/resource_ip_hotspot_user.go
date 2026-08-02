@@ -479,6 +479,8 @@ func iPHotspotUserApply(ctx context.Context, obj client.Object, m *IPHotspotUser
 	if v, ok := obj["def"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Def = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Def = types.BoolValue(true)
 		} else {
 			m.Def = types.BoolNull()
 		}
@@ -486,6 +488,8 @@ func iPHotspotUserApply(ctx context.Context, obj client.Object, m *IPHotspotUser
 	if v, ok := obj["default"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Default = types.BoolValue(true)
 		} else {
 			m.Default = types.BoolNull()
 		}
@@ -493,6 +497,8 @@ func iPHotspotUserApply(ctx context.Context, obj client.Object, m *IPHotspotUser
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
@@ -500,6 +506,8 @@ func iPHotspotUserApply(ctx context.Context, obj client.Object, m *IPHotspotUser
 	if v, ok := obj["dynamic"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Dynamic = types.BoolValue(true)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}

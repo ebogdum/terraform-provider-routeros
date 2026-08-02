@@ -437,6 +437,8 @@ func toolTrafficGeneratorRawPacketTemplateApply(ctx context.Context, obj client.
 	if v, ok := obj["dynamic"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Dynamic = types.BoolValue(true)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
@@ -517,6 +519,8 @@ func toolTrafficGeneratorRawPacketTemplateApply(ctx context.Context, obj client.
 	if v, ok := obj["special-footer"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.SpecialFooter = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.SpecialFooter = types.BoolValue(true)
 		} else {
 			m.SpecialFooter = types.BoolNull()
 		}

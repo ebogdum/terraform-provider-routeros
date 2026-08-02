@@ -161,6 +161,8 @@ func systemResourceHardwareUSBSettingsApply(ctx context.Context, obj client.Obje
 	if v, ok := obj["authorization"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Authorization = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Authorization = types.BoolValue(true)
 		} else {
 			m.Authorization = types.BoolNull()
 		}

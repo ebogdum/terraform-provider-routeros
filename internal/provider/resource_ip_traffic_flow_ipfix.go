@@ -474,6 +474,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["bytes"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Bytes = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Bytes = types.BoolValue(true)
 		} else {
 			m.Bytes = types.BoolNull()
 		}
@@ -483,6 +485,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["dst-address"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.DstAddress = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.DstAddress = types.BoolValue(true)
 		} else {
 			m.DstAddress = types.BoolNull()
 		}
@@ -492,6 +496,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["dst-address-mask"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.DstAddressMask = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.DstAddressMask = types.BoolValue(true)
 		} else {
 			m.DstAddressMask = types.BoolNull()
 		}
@@ -501,6 +507,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["dst-mac-address"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.DstMACAddress = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.DstMACAddress = types.BoolValue(true)
 		} else {
 			m.DstMACAddress = types.BoolNull()
 		}
@@ -510,6 +518,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["dst-port"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.DstPort = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.DstPort = types.BoolValue(true)
 		} else {
 			m.DstPort = types.BoolNull()
 		}
@@ -519,6 +529,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["first-forwarded"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.FirstForwarded = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.FirstForwarded = types.BoolValue(true)
 		} else {
 			m.FirstForwarded = types.BoolNull()
 		}
@@ -528,6 +540,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["gateway"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Gateway = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Gateway = types.BoolValue(true)
 		} else {
 			m.Gateway = types.BoolNull()
 		}
@@ -537,6 +551,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["icmp-code"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.IcmpCode = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.IcmpCode = types.BoolValue(true)
 		} else {
 			m.IcmpCode = types.BoolNull()
 		}
@@ -546,6 +562,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["icmp-type"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.IcmpType = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.IcmpType = types.BoolValue(true)
 		} else {
 			m.IcmpType = types.BoolNull()
 		}
@@ -555,6 +573,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["igmp-type"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.IgmpType = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.IgmpType = types.BoolValue(true)
 		} else {
 			m.IgmpType = types.BoolNull()
 		}
@@ -564,6 +584,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["in-interface"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.InInterface = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.InInterface = types.BoolValue(true)
 		} else {
 			m.InInterface = types.BoolNull()
 		}
@@ -573,6 +595,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["ip-header-length"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.IPHeaderLength = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.IPHeaderLength = types.BoolValue(true)
 		} else {
 			m.IPHeaderLength = types.BoolNull()
 		}
@@ -582,6 +606,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["ip-total-length"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.IPTotalLength = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.IPTotalLength = types.BoolValue(true)
 		} else {
 			m.IPTotalLength = types.BoolNull()
 		}
@@ -591,6 +617,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["ipv6-flow-label"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.IPv6FlowLabel = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.IPv6FlowLabel = types.BoolValue(true)
 		} else {
 			m.IPv6FlowLabel = types.BoolNull()
 		}
@@ -600,6 +628,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["is-multicast"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.IsMulticast = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.IsMulticast = types.BoolValue(true)
 		} else {
 			m.IsMulticast = types.BoolNull()
 		}
@@ -609,6 +639,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["last-forwarded"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.LastForwarded = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.LastForwarded = types.BoolValue(true)
 		} else {
 			m.LastForwarded = types.BoolNull()
 		}
@@ -618,6 +650,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["nat-dst-address"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.NatDstAddress = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.NatDstAddress = types.BoolValue(true)
 		} else {
 			m.NatDstAddress = types.BoolNull()
 		}
@@ -627,6 +661,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["nat-dst-port"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.NatDstPort = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.NatDstPort = types.BoolValue(true)
 		} else {
 			m.NatDstPort = types.BoolNull()
 		}
@@ -636,6 +672,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["nat-events"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.NatEvents = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.NatEvents = types.BoolValue(true)
 		} else {
 			m.NatEvents = types.BoolNull()
 		}
@@ -645,6 +683,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["nat-src-address"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.NatSrcAddress = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.NatSrcAddress = types.BoolValue(true)
 		} else {
 			m.NatSrcAddress = types.BoolNull()
 		}
@@ -654,6 +694,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["nat-src-port"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.NatSrcPort = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.NatSrcPort = types.BoolValue(true)
 		} else {
 			m.NatSrcPort = types.BoolNull()
 		}
@@ -663,6 +705,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["out-interface"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.OutInterface = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.OutInterface = types.BoolValue(true)
 		} else {
 			m.OutInterface = types.BoolNull()
 		}
@@ -672,6 +716,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["packets"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Packets = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Packets = types.BoolValue(true)
 		} else {
 			m.Packets = types.BoolNull()
 		}
@@ -681,6 +727,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["protocol"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Protocol = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Protocol = types.BoolValue(true)
 		} else {
 			m.Protocol = types.BoolNull()
 		}
@@ -690,6 +738,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["src-address"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.SrcAddress = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.SrcAddress = types.BoolValue(true)
 		} else {
 			m.SrcAddress = types.BoolNull()
 		}
@@ -699,6 +749,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["src-address-mask"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.SrcAddressMask = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.SrcAddressMask = types.BoolValue(true)
 		} else {
 			m.SrcAddressMask = types.BoolNull()
 		}
@@ -708,6 +760,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["src-mac-address"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.SrcMACAddress = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.SrcMACAddress = types.BoolValue(true)
 		} else {
 			m.SrcMACAddress = types.BoolNull()
 		}
@@ -717,6 +771,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["src-port"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.SrcPort = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.SrcPort = types.BoolValue(true)
 		} else {
 			m.SrcPort = types.BoolNull()
 		}
@@ -726,6 +782,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["sys-init-time"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.SysInitTime = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.SysInitTime = types.BoolValue(true)
 		} else {
 			m.SysInitTime = types.BoolNull()
 		}
@@ -735,6 +793,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["tcp-ack-num"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.TCPAckNum = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.TCPAckNum = types.BoolValue(true)
 		} else {
 			m.TCPAckNum = types.BoolNull()
 		}
@@ -744,6 +804,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["tcp-flags"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.TCPFlags = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.TCPFlags = types.BoolValue(true)
 		} else {
 			m.TCPFlags = types.BoolNull()
 		}
@@ -753,6 +815,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["tcp-seq-num"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.TCPSeqNum = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.TCPSeqNum = types.BoolValue(true)
 		} else {
 			m.TCPSeqNum = types.BoolNull()
 		}
@@ -762,6 +826,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["tcp-window-size"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.TCPWindowSize = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.TCPWindowSize = types.BoolValue(true)
 		} else {
 			m.TCPWindowSize = types.BoolNull()
 		}
@@ -771,6 +837,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["tos"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Tos = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Tos = types.BoolValue(true)
 		} else {
 			m.Tos = types.BoolNull()
 		}
@@ -780,6 +848,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["ttl"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Ttl = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Ttl = types.BoolValue(true)
 		} else {
 			m.Ttl = types.BoolNull()
 		}
@@ -789,6 +859,8 @@ func iPTrafficFlowIPFIXApply(ctx context.Context, obj client.Object, m *IPTraffi
 	if v, ok := obj["udp-length"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.UDPLength = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.UDPLength = types.BoolValue(true)
 		} else {
 			m.UDPLength = types.BoolNull()
 		}

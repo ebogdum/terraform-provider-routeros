@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -243,6 +244,8 @@ func toolSmsApply(ctx context.Context, obj client.Object, m *ToolSmsModel) {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Polling = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Polling = types.BoolValue(true)
 		} else {
 			m.Polling = types.BoolNull()
 		}
@@ -259,6 +262,8 @@ func toolSmsApply(ctx context.Context, obj client.Object, m *ToolSmsModel) {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.ReceiveEnabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.ReceiveEnabled = types.BoolValue(true)
 		} else {
 			m.ReceiveEnabled = types.BoolNull()
 		}
@@ -267,6 +272,8 @@ func toolSmsApply(ctx context.Context, obj client.Object, m *ToolSmsModel) {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.RemoveSentSmsAfterSend = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.RemoveSentSmsAfterSend = types.BoolValue(true)
 		} else {
 			m.RemoveSentSmsAfterSend = types.BoolNull()
 		}

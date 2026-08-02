@@ -501,6 +501,8 @@ func interfaceApply(ctx context.Context, obj client.Object, m *InterfaceModel) {
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
@@ -508,6 +510,8 @@ func interfaceApply(ctx context.Context, obj client.Object, m *InterfaceModel) {
 	if v, ok := obj["dynamic"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Dynamic = types.BoolValue(true)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
@@ -579,6 +583,8 @@ func interfaceApply(ctx context.Context, obj client.Object, m *InterfaceModel) {
 	if v, ok := obj["inactive"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Inactive = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Inactive = types.BoolValue(true)
 		} else {
 			m.Inactive = types.BoolNull()
 		}
@@ -655,6 +661,8 @@ func interfaceApply(ctx context.Context, obj client.Object, m *InterfaceModel) {
 	if v, ok := obj["passthrough"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Passthrough = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Passthrough = types.BoolValue(true)
 		} else {
 			m.Passthrough = types.BoolNull()
 		}
@@ -669,6 +677,8 @@ func interfaceApply(ctx context.Context, obj client.Object, m *InterfaceModel) {
 	if v, ok := obj["running"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Running = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Running = types.BoolValue(true)
 		} else {
 			m.Running = types.BoolNull()
 		}
@@ -716,6 +726,8 @@ func interfaceApply(ctx context.Context, obj client.Object, m *InterfaceModel) {
 	if v, ok := obj["slave"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Slave = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Slave = types.BoolValue(true)
 		} else {
 			m.Slave = types.BoolNull()
 		}

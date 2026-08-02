@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -177,6 +178,8 @@ func systemNoteApply(ctx context.Context, obj client.Object, m *SystemNoteModel)
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.ShowAtCliLogin = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.ShowAtCliLogin = types.BoolValue(true)
 		} else {
 			m.ShowAtCliLogin = types.BoolNull()
 		}
@@ -185,6 +188,8 @@ func systemNoteApply(ctx context.Context, obj client.Object, m *SystemNoteModel)
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.ShowAtLogin = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.ShowAtLogin = types.BoolValue(true)
 		} else {
 			m.ShowAtLogin = types.BoolNull()
 		}

@@ -556,6 +556,8 @@ func interfaceWireguardPeersApply(ctx context.Context, obj client.Object, m *Int
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
@@ -563,6 +565,8 @@ func interfaceWireguardPeersApply(ctx context.Context, obj client.Object, m *Int
 	if v, ok := obj["dynamic"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Dynamic = types.BoolValue(true)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
@@ -657,6 +661,8 @@ func interfaceWireguardPeersApply(ctx context.Context, obj client.Object, m *Int
 	if v, ok := obj["responder"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Responder = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Responder = types.BoolValue(true)
 		} else {
 			m.Responder = types.BoolNull()
 		}

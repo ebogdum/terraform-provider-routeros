@@ -373,6 +373,8 @@ func iPIpsecProfileApply(ctx context.Context, obj client.Object, m *IPIpsecProfi
 	if v, ok := obj["default"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Default = types.BoolValue(true)
 		} else {
 			m.Default = types.BoolNull()
 		}
@@ -454,6 +456,8 @@ func iPIpsecProfileApply(ctx context.Context, obj client.Object, m *IPIpsecProfi
 	if v, ok := obj["nat-traversal"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.NATTraversal = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.NATTraversal = types.BoolValue(true)
 		} else {
 			m.NATTraversal = types.BoolNull()
 		}

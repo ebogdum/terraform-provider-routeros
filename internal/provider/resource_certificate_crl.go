@@ -285,6 +285,8 @@ func certificateCrlApply(ctx context.Context, obj client.Object, m *CertificateC
 	if v, ok := obj["dynamic"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Dynamic = types.BoolValue(true)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
@@ -292,6 +294,8 @@ func certificateCrlApply(ctx context.Context, obj client.Object, m *CertificateC
 	if v, ok := obj["expired"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Expired = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Expired = types.BoolValue(true)
 		} else {
 			m.Expired = types.BoolNull()
 		}
@@ -306,6 +310,8 @@ func certificateCrlApply(ctx context.Context, obj client.Object, m *CertificateC
 	if v, ok := obj["invalid"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Invalid = types.BoolValue(true)
 		} else {
 			m.Invalid = types.BoolNull()
 		}

@@ -339,6 +339,8 @@ func interface6to4Apply(ctx context.Context, obj client.Object, m *Interface6to4
 	if v, ok := obj["clamp-tcp-mss"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.ClampTCPMss = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.ClampTCPMss = types.BoolValue(true)
 		} else {
 			m.ClampTCPMss = types.BoolNull()
 		}
@@ -353,6 +355,8 @@ func interface6to4Apply(ctx context.Context, obj client.Object, m *Interface6to4
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
@@ -360,6 +364,8 @@ func interface6to4Apply(ctx context.Context, obj client.Object, m *Interface6to4
 	if v, ok := obj["dont-fragment"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.DontFragment = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.DontFragment = types.BoolValue(true)
 		} else {
 			m.DontFragment = types.BoolNull()
 		}

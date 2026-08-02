@@ -442,6 +442,8 @@ func iPV6NdApply(ctx context.Context, obj client.Object, m *IPV6NdModel) {
 	if v, ok := obj["advertise-mac-address"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.AdvertiseMACAddress = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.AdvertiseMACAddress = types.BoolValue(true)
 		} else {
 			m.AdvertiseMACAddress = types.BoolNull()
 		}
@@ -456,6 +458,8 @@ func iPV6NdApply(ctx context.Context, obj client.Object, m *IPV6NdModel) {
 	if v, ok := obj["default"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Default = types.BoolValue(true)
 		} else {
 			m.Default = types.BoolNull()
 		}
@@ -463,6 +467,8 @@ func iPV6NdApply(ctx context.Context, obj client.Object, m *IPV6NdModel) {
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
@@ -491,6 +497,8 @@ func iPV6NdApply(ctx context.Context, obj client.Object, m *IPV6NdModel) {
 	if v, ok := obj["invalid"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Invalid = types.BoolValue(true)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
@@ -498,6 +506,8 @@ func iPV6NdApply(ctx context.Context, obj client.Object, m *IPV6NdModel) {
 	if v, ok := obj["managed-address-configuration"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.ManagedAddressConfiguration = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.ManagedAddressConfiguration = types.BoolValue(true)
 		} else {
 			m.ManagedAddressConfiguration = types.BoolNull()
 		}
@@ -512,6 +522,8 @@ func iPV6NdApply(ctx context.Context, obj client.Object, m *IPV6NdModel) {
 	if v, ok := obj["other-configuration"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.OtherConfiguration = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.OtherConfiguration = types.BoolValue(true)
 		} else {
 			m.OtherConfiguration = types.BoolNull()
 		}

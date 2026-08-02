@@ -1388,6 +1388,8 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 		// toggle; an unparseable value becomes null instead of a bogus false.
 		if b, err := client.ParseBool(v); err == nil {
 			m.AutoNegotiation = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.AutoNegotiation = types.BoolValue(true)
 		} else {
 			m.AutoNegotiation = types.BoolNull()
 		}
@@ -1397,6 +1399,8 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	if v, ok := obj["autoneg"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Autoneg = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Autoneg = types.BoolValue(true)
 		} else {
 			m.Autoneg = types.BoolNull()
 		}
@@ -1501,6 +1505,8 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	if v, ok := obj["disable-running-check"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.DisableRunningCheck = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.DisableRunningCheck = types.BoolValue(true)
 		} else {
 			m.DisableRunningCheck = types.BoolNull()
 		}
@@ -1515,6 +1521,8 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
@@ -1577,6 +1585,8 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	if v, ok := obj["hastxqueuestats"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Hastxqueuestats = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Hastxqueuestats = types.BoolValue(true)
 		} else {
 			m.Hastxqueuestats = types.BoolNull()
 		}
@@ -1584,6 +1594,8 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	if v, ok := obj["ignore-rx-los"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.IgnoreRxLos = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.IgnoreRxLos = types.BoolValue(true)
 		} else {
 			m.IgnoreRxLos = types.BoolNull()
 		}
@@ -1657,6 +1669,8 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	if v, ok := obj["module-present"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.ModulePresent = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.ModulePresent = types.BoolValue(true)
 		} else {
 			m.ModulePresent = types.BoolNull()
 		}
@@ -1831,6 +1845,8 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	if v, ok := obj["poe-v"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.PoeV = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.PoeV = types.BoolValue(true)
 		} else {
 			m.PoeV = types.BoolNull()
 		}
@@ -1899,6 +1915,8 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	if v, ok := obj["power-cycle-host-alive"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.PowerCycleHostAlive = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.PowerCycleHostAlive = types.BoolValue(true)
 		} else {
 			m.PowerCycleHostAlive = types.BoolNull()
 		}
@@ -1920,6 +1938,8 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	if v, ok := obj["power-cycle-ping-enabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.PowerCyclePingEnabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.PowerCyclePingEnabled = types.BoolValue(true)
 		} else {
 			m.PowerCyclePingEnabled = types.BoolNull()
 		}
@@ -1969,6 +1989,8 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	if v, ok := obj["running"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Running = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Running = types.BoolValue(true)
 		} else {
 			m.Running = types.BoolNull()
 		}
@@ -2073,6 +2095,8 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	if v, ok := obj["rx-loss"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.RxLoss = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.RxLoss = types.BoolValue(true)
 		} else {
 			m.RxLoss = types.BoolNull()
 		}
@@ -2156,6 +2180,8 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	if v, ok := obj["sfp"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Sfp = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Sfp = types.BoolValue(true)
 		} else {
 			m.Sfp = types.BoolNull()
 		}
@@ -2190,6 +2216,8 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	if v, ok := obj["sfpshutdown"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Sfpshutdown = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Sfpshutdown = types.BoolValue(true)
 		} else {
 			m.Sfpshutdown = types.BoolNull()
 		}
@@ -2311,6 +2339,8 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	if v, ok := obj["tx-fault"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.TxFault = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.TxFault = types.BoolValue(true)
 		} else {
 			m.TxFault = types.BoolNull()
 		}

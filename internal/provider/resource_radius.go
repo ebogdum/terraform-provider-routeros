@@ -420,6 +420,8 @@ func rADIUSApply(ctx context.Context, obj client.Object, m *RADIUSModel) {
 	if v, ok := obj["accounting-backup"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.AccountingBackup = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.AccountingBackup = types.BoolValue(true)
 		} else {
 			m.AccountingBackup = types.BoolNull()
 		}
@@ -475,6 +477,8 @@ func rADIUSApply(ctx context.Context, obj client.Object, m *RADIUSModel) {
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}

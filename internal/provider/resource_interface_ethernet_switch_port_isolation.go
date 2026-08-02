@@ -280,6 +280,8 @@ func interfaceEthernetSwitchPortIsolationApply(ctx context.Context, obj client.O
 	if v, ok := obj["forwarding-override"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.ForwardingOverride = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.ForwardingOverride = types.BoolValue(true)
 		} else {
 			m.ForwardingOverride = types.BoolNull()
 		}
@@ -287,6 +289,8 @@ func interfaceEthernetSwitchPortIsolationApply(ctx context.Context, obj client.O
 	if v, ok := obj["invalid"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Invalid = types.BoolValue(true)
 		} else {
 			m.Invalid = types.BoolNull()
 		}

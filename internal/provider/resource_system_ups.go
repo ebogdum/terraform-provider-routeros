@@ -468,6 +468,8 @@ func systemUpsApply(ctx context.Context, obj client.Object, m *SystemUpsModel) {
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
@@ -485,6 +487,8 @@ func systemUpsApply(ctx context.Context, obj client.Object, m *SystemUpsModel) {
 	if v, ok := obj["invalid"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Invalid = types.BoolValue(true)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
@@ -509,6 +513,8 @@ func systemUpsApply(ctx context.Context, obj client.Object, m *SystemUpsModel) {
 	if v, ok := obj["low-battery"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.LowBattery = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.LowBattery = types.BoolValue(true)
 		} else {
 			m.LowBattery = types.BoolNull()
 		}
@@ -568,6 +574,8 @@ func systemUpsApply(ctx context.Context, obj client.Object, m *SystemUpsModel) {
 	if v, ok := obj["on-battery"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.OnBattery = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.OnBattery = types.BoolValue(true)
 		} else {
 			m.OnBattery = types.BoolNull()
 		}
@@ -575,6 +583,8 @@ func systemUpsApply(ctx context.Context, obj client.Object, m *SystemUpsModel) {
 	if v, ok := obj["on-line"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.OnLine = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.OnLine = types.BoolValue(true)
 		} else {
 			m.OnLine = types.BoolNull()
 		}
@@ -589,6 +599,8 @@ func systemUpsApply(ctx context.Context, obj client.Object, m *SystemUpsModel) {
 	if v, ok := obj["overload"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Overload = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Overload = types.BoolValue(true)
 		} else {
 			m.Overload = types.BoolNull()
 		}
@@ -603,6 +615,8 @@ func systemUpsApply(ctx context.Context, obj client.Object, m *SystemUpsModel) {
 	if v, ok := obj["replace-battery"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.ReplaceBattery = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.ReplaceBattery = types.BoolValue(true)
 		} else {
 			m.ReplaceBattery = types.BoolNull()
 		}
@@ -624,6 +638,8 @@ func systemUpsApply(ctx context.Context, obj client.Object, m *SystemUpsModel) {
 	if v, ok := obj["smart-boost"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.SmartBoost = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.SmartBoost = types.BoolValue(true)
 		} else {
 			m.SmartBoost = types.BoolNull()
 		}
@@ -631,6 +647,8 @@ func systemUpsApply(ctx context.Context, obj client.Object, m *SystemUpsModel) {
 	if v, ok := obj["smart-trim"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.SmartTrim = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.SmartTrim = types.BoolValue(true)
 		} else {
 			m.SmartTrim = types.BoolNull()
 		}

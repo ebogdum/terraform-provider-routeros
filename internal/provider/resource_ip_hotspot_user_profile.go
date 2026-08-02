@@ -314,6 +314,8 @@ func iPHotspotUserProfileApply(ctx context.Context, obj client.Object, m *IPHots
 	if v, ok := obj["add-mac-cookie"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.AddMACCookie = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.AddMACCookie = types.BoolValue(true)
 		} else {
 			m.AddMACCookie = types.BoolNull()
 		}
@@ -328,6 +330,8 @@ func iPHotspotUserProfileApply(ctx context.Context, obj client.Object, m *IPHots
 	if v, ok := obj["default"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Default = types.BoolValue(true)
 		} else {
 			m.Default = types.BoolNull()
 		}
@@ -377,6 +381,8 @@ func iPHotspotUserProfileApply(ctx context.Context, obj client.Object, m *IPHots
 	if v, ok := obj["transparent-proxy"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.TransparentProxy = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.TransparentProxy = types.BoolValue(true)
 		} else {
 			m.TransparentProxy = types.BoolNull()
 		}

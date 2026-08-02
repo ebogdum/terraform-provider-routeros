@@ -283,6 +283,8 @@ func iPNeighborDiscoverySettingsApply(ctx context.Context, obj client.Object, m 
 	if v, ok := obj["lldp-mac-phy-config"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.LldpMACPhyConfig = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.LldpMACPhyConfig = types.BoolValue(true)
 		} else {
 			m.LldpMACPhyConfig = types.BoolNull()
 		}
@@ -292,6 +294,8 @@ func iPNeighborDiscoverySettingsApply(ctx context.Context, obj client.Object, m 
 	if v, ok := obj["lldp-max-frame-size"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.LldpMaxFrameSize = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.LldpMaxFrameSize = types.BoolValue(true)
 		} else {
 			m.LldpMaxFrameSize = types.BoolNull()
 		}
@@ -306,6 +310,8 @@ func iPNeighborDiscoverySettingsApply(ctx context.Context, obj client.Object, m 
 	if v, ok := obj["lldp-poe-power"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.LldpPoePower = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.LldpPoePower = types.BoolValue(true)
 		} else {
 			m.LldpPoePower = types.BoolNull()
 		}
@@ -315,6 +321,8 @@ func iPNeighborDiscoverySettingsApply(ctx context.Context, obj client.Object, m 
 	if v, ok := obj["lldp-vlan-info"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.LldpVlanInfo = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.LldpVlanInfo = types.BoolValue(true)
 		} else {
 			m.LldpVlanInfo = types.BoolNull()
 		}

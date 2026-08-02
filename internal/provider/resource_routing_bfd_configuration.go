@@ -341,6 +341,8 @@ func routingBfdConfigurationApply(ctx context.Context, obj client.Object, m *Rou
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
@@ -355,6 +357,8 @@ func routingBfdConfigurationApply(ctx context.Context, obj client.Object, m *Rou
 	if v, ok := obj["inactive"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Inactive = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Inactive = types.BoolValue(true)
 		} else {
 			m.Inactive = types.BoolNull()
 		}

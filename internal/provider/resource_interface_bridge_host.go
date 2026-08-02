@@ -300,6 +300,8 @@ func interfaceBridgeHostApply(ctx context.Context, obj client.Object, m *Interfa
 	if v, ok := obj["aged"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Aged = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Aged = types.BoolValue(true)
 		} else {
 			m.Aged = types.BoolNull()
 		}
@@ -307,6 +309,8 @@ func interfaceBridgeHostApply(ctx context.Context, obj client.Object, m *Interfa
 	if v, ok := obj["aged-on-peer"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.AgedOnPeer = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.AgedOnPeer = types.BoolValue(true)
 		} else {
 			m.AgedOnPeer = types.BoolNull()
 		}
@@ -328,6 +332,8 @@ func interfaceBridgeHostApply(ctx context.Context, obj client.Object, m *Interfa
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
@@ -335,6 +341,8 @@ func interfaceBridgeHostApply(ctx context.Context, obj client.Object, m *Interfa
 	if v, ok := obj["dynamic"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Dynamic = types.BoolValue(true)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
@@ -342,6 +350,8 @@ func interfaceBridgeHostApply(ctx context.Context, obj client.Object, m *Interfa
 	if v, ok := obj["external-fdb"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.ExternalFdb = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.ExternalFdb = types.BoolValue(true)
 		} else {
 			m.ExternalFdb = types.BoolNull()
 		}
@@ -356,6 +366,8 @@ func interfaceBridgeHostApply(ctx context.Context, obj client.Object, m *Interfa
 	if v, ok := obj["local"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Local = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Local = types.BoolValue(true)
 		} else {
 			m.Local = types.BoolNull()
 		}

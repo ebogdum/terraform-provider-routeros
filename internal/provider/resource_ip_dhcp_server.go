@@ -603,6 +603,8 @@ func iPDHCPServerApply(ctx context.Context, obj client.Object, m *IPDHCPServerMo
 	if v, ok := obj["add-arp-for-leases"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.AddARPForLeases = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.AddARPForLeases = types.BoolValue(true)
 		} else {
 			m.AddARPForLeases = types.BoolNull()
 		}
@@ -624,6 +626,8 @@ func iPDHCPServerApply(ctx context.Context, obj client.Object, m *IPDHCPServerMo
 	if v, ok := obj["allow-dual-stack-queue"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.AllowDualStackQueue = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.AllowDualStackQueue = types.BoolValue(true)
 		} else {
 			m.AllowDualStackQueue = types.BoolNull()
 		}
@@ -631,6 +635,8 @@ func iPDHCPServerApply(ctx context.Context, obj client.Object, m *IPDHCPServerMo
 	if v, ok := obj["always-broadcast"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.AlwaysBroadcast = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.AlwaysBroadcast = types.BoolValue(true)
 		} else {
 			m.AlwaysBroadcast = types.BoolNull()
 		}
@@ -672,6 +678,8 @@ func iPDHCPServerApply(ctx context.Context, obj client.Object, m *IPDHCPServerMo
 	if v, ok := obj["conflict-detection"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.ConflictDetection = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.ConflictDetection = types.BoolValue(true)
 		} else {
 			m.ConflictDetection = types.BoolNull()
 		}
@@ -693,6 +701,8 @@ func iPDHCPServerApply(ctx context.Context, obj client.Object, m *IPDHCPServerMo
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
@@ -728,6 +738,8 @@ func iPDHCPServerApply(ctx context.Context, obj client.Object, m *IPDHCPServerMo
 	if v, ok := obj["invalid"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Invalid = types.BoolValue(true)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
@@ -777,6 +789,8 @@ func iPDHCPServerApply(ctx context.Context, obj client.Object, m *IPDHCPServerMo
 	if v, ok := obj["support-the-broadband-forum-tr-101"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.SupportTheBroadbandForumTr101 = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.SupportTheBroadbandForumTr101 = types.BoolValue(true)
 		} else {
 			m.SupportTheBroadbandForumTr101 = types.BoolNull()
 		}
@@ -784,6 +798,8 @@ func iPDHCPServerApply(ctx context.Context, obj client.Object, m *IPDHCPServerMo
 	if v, ok := obj["use-framed-as-classless"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.UseFramedAsClassless = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.UseFramedAsClassless = types.BoolValue(true)
 		} else {
 			m.UseFramedAsClassless = types.BoolNull()
 		}
@@ -798,6 +814,8 @@ func iPDHCPServerApply(ctx context.Context, obj client.Object, m *IPDHCPServerMo
 	if v, ok := obj["use-reconfigure"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.UseReconfigure = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.UseReconfigure = types.BoolValue(true)
 		} else {
 			m.UseReconfigure = types.BoolNull()
 		}

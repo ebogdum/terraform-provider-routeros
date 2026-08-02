@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -169,6 +170,8 @@ func iPUpnpApply(ctx context.Context, obj client.Object, m *IPUpnpModel) {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AllowDisableExternalInterface = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.AllowDisableExternalInterface = types.BoolValue(true)
 		} else {
 			m.AllowDisableExternalInterface = types.BoolNull()
 		}
@@ -177,6 +180,8 @@ func iPUpnpApply(ctx context.Context, obj client.Object, m *IPUpnpModel) {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Enabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Enabled = types.BoolValue(true)
 		} else {
 			m.Enabled = types.BoolNull()
 		}
@@ -185,6 +190,8 @@ func iPUpnpApply(ctx context.Context, obj client.Object, m *IPUpnpModel) {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.ShowDummyRule = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.ShowDummyRule = types.BoolValue(true)
 		} else {
 			m.ShowDummyRule = types.BoolNull()
 		}

@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -182,6 +183,8 @@ func iPDHCPServerConfigApply(ctx context.Context, obj client.Object, m *IPDHCPSe
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Accounting = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Accounting = types.BoolValue(true)
 		} else {
 			m.Accounting = types.BoolNull()
 		}

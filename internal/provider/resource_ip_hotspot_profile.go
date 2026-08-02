@@ -586,6 +586,8 @@ func iPHotspotProfileApply(ctx context.Context, obj client.Object, m *IPHotspotP
 	if v, ok := obj["default"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Default = types.BoolValue(true)
 		} else {
 			m.Default = types.BoolNull()
 		}
@@ -635,6 +637,8 @@ func iPHotspotProfileApply(ctx context.Context, obj client.Object, m *IPHotspotP
 	if v, ok := obj["install-hotspot-queue"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.InstallHotspotQueue = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.InstallHotspotQueue = types.BoolValue(true)
 		} else {
 			m.InstallHotspotQueue = types.BoolNull()
 		}
@@ -662,6 +666,8 @@ func iPHotspotProfileApply(ctx context.Context, obj client.Object, m *IPHotspotP
 	if v, ok := obj["split-user-domain"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.SplitUserDomain = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.SplitUserDomain = types.BoolValue(true)
 		} else {
 			m.SplitUserDomain = types.BoolNull()
 		}
@@ -669,6 +675,8 @@ func iPHotspotProfileApply(ctx context.Context, obj client.Object, m *IPHotspotP
 	if v, ok := obj["use-radius"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.UseRADIUS = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.UseRADIUS = types.BoolValue(true)
 		} else {
 			m.UseRADIUS = types.BoolNull()
 		}

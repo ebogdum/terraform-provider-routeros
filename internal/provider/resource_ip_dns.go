@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -296,6 +297,8 @@ func iPDNSApply(ctx context.Context, obj client.Object, m *IPDNSModel) {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AllowRemoteRequests = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.AllowRemoteRequests = types.BoolValue(true)
 		} else {
 			m.AllowRemoteRequests = types.BoolNull()
 		}
@@ -424,6 +427,8 @@ func iPDNSApply(ctx context.Context, obj client.Object, m *IPDNSModel) {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.VerifyDohCert = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.VerifyDohCert = types.BoolValue(true)
 		} else {
 			m.VerifyDohCert = types.BoolNull()
 		}

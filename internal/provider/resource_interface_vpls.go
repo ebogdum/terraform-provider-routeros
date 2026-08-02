@@ -493,6 +493,8 @@ func interfaceVplsApply(ctx context.Context, obj client.Object, m *InterfaceVpls
 	if v, ok := obj["bgp-signaled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.BGPSignaled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.BGPSignaled = types.BoolValue(true)
 		} else {
 			m.BGPSignaled = types.BoolNull()
 		}
@@ -542,6 +544,8 @@ func interfaceVplsApply(ctx context.Context, obj client.Object, m *InterfaceVpls
 	if v, ok := obj["cisco-bgp-signaled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.CiscoBGPSignaled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.CiscoBGPSignaled = types.BoolValue(true)
 		} else {
 			m.CiscoBGPSignaled = types.BoolNull()
 		}
@@ -563,6 +567,8 @@ func interfaceVplsApply(ctx context.Context, obj client.Object, m *InterfaceVpls
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}

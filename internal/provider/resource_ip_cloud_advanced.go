@@ -159,6 +159,8 @@ func iPCloudAdvancedApply(ctx context.Context, obj client.Object, m *IPCloudAdva
 	if v, ok := obj["use-local-address"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.UseLocalAddress = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.UseLocalAddress = types.BoolValue(true)
 		} else {
 			m.UseLocalAddress = types.BoolNull()
 		}

@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -287,6 +288,8 @@ func iPV6SettingsApply(ctx context.Context, obj client.Object, m *IPV6SettingsMo
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AllowFastPath = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.AllowFastPath = types.BoolValue(true)
 		} else {
 			m.AllowFastPath = types.BoolNull()
 		}
@@ -295,6 +298,8 @@ func iPV6SettingsApply(ctx context.Context, obj client.Object, m *IPV6SettingsMo
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.DisableIPV6 = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.DisableIPV6 = types.BoolValue(true)
 		} else {
 			m.DisableIPV6 = types.BoolNull()
 		}
@@ -303,6 +308,8 @@ func iPV6SettingsApply(ctx context.Context, obj client.Object, m *IPV6SettingsMo
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.DisableLinkLocalAddress = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.DisableLinkLocalAddress = types.BoolValue(true)
 		} else {
 			m.DisableLinkLocalAddress = types.BoolNull()
 		}
@@ -311,6 +318,8 @@ func iPV6SettingsApply(ctx context.Context, obj client.Object, m *IPV6SettingsMo
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Forward = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Forward = types.BoolValue(true)
 		} else {
 			m.Forward = types.BoolNull()
 		}
@@ -319,6 +328,8 @@ func iPV6SettingsApply(ctx context.Context, obj client.Object, m *IPV6SettingsMo
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.IPV6FastPathActive = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.IPV6FastPathActive = types.BoolValue(true)
 		} else {
 			m.IPV6FastPathActive = types.BoolNull()
 		}
@@ -343,6 +354,8 @@ func iPV6SettingsApply(ctx context.Context, obj client.Object, m *IPV6SettingsMo
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.IPV6FasttrackActive = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.IPV6FasttrackActive = types.BoolValue(true)
 		} else {
 			m.IPV6FasttrackActive = types.BoolNull()
 		}

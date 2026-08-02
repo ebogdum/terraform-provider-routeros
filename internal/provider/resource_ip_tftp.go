@@ -333,6 +333,8 @@ func iPTftpApply(ctx context.Context, obj client.Object, m *IPTftpModel) {
 	if v, ok := obj["allow"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Allow = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Allow = types.BoolValue(true)
 		} else {
 			m.Allow = types.BoolNull()
 		}
@@ -347,6 +349,8 @@ func iPTftpApply(ctx context.Context, obj client.Object, m *IPTftpModel) {
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
@@ -371,6 +375,8 @@ func iPTftpApply(ctx context.Context, obj client.Object, m *IPTftpModel) {
 	if v, ok := obj["read-only"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.ReadOnly = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.ReadOnly = types.BoolValue(true)
 		} else {
 			m.ReadOnly = types.BoolNull()
 		}

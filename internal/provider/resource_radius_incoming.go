@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -169,6 +170,8 @@ func rADIUSIncomingApply(ctx context.Context, obj client.Object, m *RADIUSIncomi
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Accept = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Accept = types.BoolValue(true)
 		} else {
 			m.Accept = types.BoolNull()
 		}

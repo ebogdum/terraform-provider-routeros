@@ -335,6 +335,8 @@ func iPDHCPRelayApply(ctx context.Context, obj client.Object, m *IPDHCPRelayMode
 	if v, ok := obj["add-relay-info"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.AddRelayInfo = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.AddRelayInfo = types.BoolValue(true)
 		} else {
 			m.AddRelayInfo = types.BoolNull()
 		}
@@ -363,6 +365,8 @@ func iPDHCPRelayApply(ctx context.Context, obj client.Object, m *IPDHCPRelayMode
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
@@ -377,6 +381,8 @@ func iPDHCPRelayApply(ctx context.Context, obj client.Object, m *IPDHCPRelayMode
 	if v, ok := obj["invalid"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Invalid = types.BoolValue(true)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
@@ -391,6 +397,8 @@ func iPDHCPRelayApply(ctx context.Context, obj client.Object, m *IPDHCPRelayMode
 	if v, ok := obj["local-address-as-source-ip"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.LocalAddressAsSourceIP = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.LocalAddressAsSourceIP = types.BoolValue(true)
 		} else {
 			m.LocalAddressAsSourceIP = types.BoolNull()
 		}

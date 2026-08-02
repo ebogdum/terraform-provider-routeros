@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -309,6 +310,8 @@ func iPSettingsApply(ctx context.Context, obj client.Object, m *IPSettingsModel)
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AcceptRedirects = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.AcceptRedirects = types.BoolValue(true)
 		} else {
 			m.AcceptRedirects = types.BoolNull()
 		}
@@ -317,6 +320,8 @@ func iPSettingsApply(ctx context.Context, obj client.Object, m *IPSettingsModel)
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AcceptSourceRoute = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.AcceptSourceRoute = types.BoolValue(true)
 		} else {
 			m.AcceptSourceRoute = types.BoolNull()
 		}
@@ -325,6 +330,8 @@ func iPSettingsApply(ctx context.Context, obj client.Object, m *IPSettingsModel)
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AllowFastPath = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.AllowFastPath = types.BoolValue(true)
 		} else {
 			m.AllowFastPath = types.BoolNull()
 		}
@@ -341,6 +348,8 @@ func iPSettingsApply(ctx context.Context, obj client.Object, m *IPSettingsModel)
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.IcmpErrorsUseInboundInterfaceAddress = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.IcmpErrorsUseInboundInterfaceAddress = types.BoolValue(true)
 		} else {
 			m.IcmpErrorsUseInboundInterfaceAddress = types.BoolNull()
 		}
@@ -365,6 +374,8 @@ func iPSettingsApply(ctx context.Context, obj client.Object, m *IPSettingsModel)
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.IPForward = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.IPForward = types.BoolValue(true)
 		} else {
 			m.IPForward = types.BoolNull()
 		}
@@ -373,6 +384,8 @@ func iPSettingsApply(ctx context.Context, obj client.Object, m *IPSettingsModel)
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Ipv4FastPathActive = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Ipv4FastPathActive = types.BoolValue(true)
 		} else {
 			m.Ipv4FastPathActive = types.BoolNull()
 		}
@@ -397,6 +410,8 @@ func iPSettingsApply(ctx context.Context, obj client.Object, m *IPSettingsModel)
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Ipv4FasttrackActive = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Ipv4FasttrackActive = types.BoolValue(true)
 		} else {
 			m.Ipv4FasttrackActive = types.BoolNull()
 		}
@@ -437,6 +452,8 @@ func iPSettingsApply(ctx context.Context, obj client.Object, m *IPSettingsModel)
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.RpFilter = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.RpFilter = types.BoolValue(true)
 		} else {
 			m.RpFilter = types.BoolNull()
 		}
@@ -445,6 +462,8 @@ func iPSettingsApply(ctx context.Context, obj client.Object, m *IPSettingsModel)
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.SecureRedirects = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.SecureRedirects = types.BoolValue(true)
 		} else {
 			m.SecureRedirects = types.BoolNull()
 		}
@@ -453,6 +472,8 @@ func iPSettingsApply(ctx context.Context, obj client.Object, m *IPSettingsModel)
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.SendRedirects = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.SendRedirects = types.BoolValue(true)
 		} else {
 			m.SendRedirects = types.BoolNull()
 		}
@@ -461,6 +482,8 @@ func iPSettingsApply(ctx context.Context, obj client.Object, m *IPSettingsModel)
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.TCPSyncookies = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.TCPSyncookies = types.BoolValue(true)
 		} else {
 			m.TCPSyncookies = types.BoolNull()
 		}

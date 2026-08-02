@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -232,6 +233,8 @@ func systemWatchdogApply(ctx context.Context, obj client.Object, m *SystemWatchd
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AutoSendSupout = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.AutoSendSupout = types.BoolValue(true)
 		} else {
 			m.AutoSendSupout = types.BoolNull()
 		}
@@ -240,6 +243,8 @@ func systemWatchdogApply(ctx context.Context, obj client.Object, m *SystemWatchd
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AutomaticSupout = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.AutomaticSupout = types.BoolValue(true)
 		} else {
 			m.AutomaticSupout = types.BoolNull()
 		}
@@ -304,6 +309,8 @@ func systemWatchdogApply(ctx context.Context, obj client.Object, m *SystemWatchd
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.WatchdogTimer = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.WatchdogTimer = types.BoolValue(true)
 		} else {
 			m.WatchdogTimer = types.BoolNull()
 		}

@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -198,6 +199,8 @@ func interfaceBridgeSettingsApply(ctx context.Context, obj client.Object, m *Int
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AllowFastPath = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.AllowFastPath = types.BoolValue(true)
 		} else {
 			m.AllowFastPath = types.BoolNull()
 		}
@@ -222,6 +225,8 @@ func interfaceBridgeSettingsApply(ctx context.Context, obj client.Object, m *Int
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.BridgeFastPathActive = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.BridgeFastPathActive = types.BoolValue(true)
 		} else {
 			m.BridgeFastPathActive = types.BoolNull()
 		}
@@ -246,6 +251,8 @@ func interfaceBridgeSettingsApply(ctx context.Context, obj client.Object, m *Int
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.UseIPFirewall = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.UseIPFirewall = types.BoolValue(true)
 		} else {
 			m.UseIPFirewall = types.BoolNull()
 		}
@@ -254,6 +261,8 @@ func interfaceBridgeSettingsApply(ctx context.Context, obj client.Object, m *Int
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.UseIPFirewallForPppoe = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.UseIPFirewallForPppoe = types.BoolValue(true)
 		} else {
 			m.UseIPFirewallForPppoe = types.BoolNull()
 		}
@@ -262,6 +271,8 @@ func interfaceBridgeSettingsApply(ctx context.Context, obj client.Object, m *Int
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.UseIPFirewallForVLAN = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.UseIPFirewallForVLAN = types.BoolValue(true)
 		} else {
 			m.UseIPFirewallForVLAN = types.BoolNull()
 		}

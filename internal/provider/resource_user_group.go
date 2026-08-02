@@ -305,6 +305,8 @@ func userGroupApply(ctx context.Context, obj client.Object, m *UserGroupModel) {
 	if v, ok := obj["system"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.System = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.System = types.BoolValue(true)
 		} else {
 			m.System = types.BoolNull()
 		}

@@ -430,6 +430,8 @@ func fileApply(ctx context.Context, obj client.Object, m *FileModel) {
 	if v, ok := obj["shared"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Shared = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Shared = types.BoolValue(true)
 		} else {
 			m.Shared = types.BoolNull()
 		}

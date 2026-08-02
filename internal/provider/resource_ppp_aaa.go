@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -187,6 +188,8 @@ func pPPAaaApply(ctx context.Context, obj client.Object, m *PPPAaaModel) {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Accounting = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Accounting = types.BoolValue(true)
 		} else {
 			m.Accounting = types.BoolNull()
 		}
@@ -195,6 +198,8 @@ func pPPAaaApply(ctx context.Context, obj client.Object, m *PPPAaaModel) {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.EnableIPV6Accounting = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.EnableIPV6Accounting = types.BoolValue(true)
 		} else {
 			m.EnableIPV6Accounting = types.BoolNull()
 		}
@@ -211,6 +216,8 @@ func pPPAaaApply(ctx context.Context, obj client.Object, m *PPPAaaModel) {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.UseCircuitIDInNasPortID = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.UseCircuitIDInNasPortID = types.BoolValue(true)
 		} else {
 			m.UseCircuitIDInNasPortID = types.BoolNull()
 		}
@@ -219,6 +226,8 @@ func pPPAaaApply(ctx context.Context, obj client.Object, m *PPPAaaModel) {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.UseRADIUS = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.UseRADIUS = types.BoolValue(true)
 		} else {
 			m.UseRADIUS = types.BoolNull()
 		}

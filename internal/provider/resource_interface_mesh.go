@@ -590,6 +590,8 @@ func interfaceMeshApply(ctx context.Context, obj client.Object, m *InterfaceMesh
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
@@ -604,6 +606,8 @@ func interfaceMeshApply(ctx context.Context, obj client.Object, m *InterfaceMesh
 	if v, ok := obj["mesh-portal"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.MeshPortal = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.MeshPortal = types.BoolValue(true)
 		} else {
 			m.MeshPortal = types.BoolNull()
 		}
@@ -635,6 +639,8 @@ func interfaceMeshApply(ctx context.Context, obj client.Object, m *InterfaceMesh
 	if v, ok := obj["preq-destination-only"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.PreqDestinationOnly = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.PreqDestinationOnly = types.BoolValue(true)
 		} else {
 			m.PreqDestinationOnly = types.BoolNull()
 		}
@@ -642,6 +648,8 @@ func interfaceMeshApply(ctx context.Context, obj client.Object, m *InterfaceMesh
 	if v, ok := obj["preq-reply-and-forward"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.PreqReplyAndForward = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.PreqReplyAndForward = types.BoolValue(true)
 		} else {
 			m.PreqReplyAndForward = types.BoolNull()
 		}
@@ -693,6 +701,8 @@ func interfaceMeshApply(ctx context.Context, obj client.Object, m *InterfaceMesh
 	if v, ok := obj["reoptimize-paths"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.ReoptimizePaths = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.ReoptimizePaths = types.BoolValue(true)
 		} else {
 			m.ReoptimizePaths = types.BoolNull()
 		}

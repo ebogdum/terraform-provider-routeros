@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -273,6 +274,8 @@ func iPProxyApply(ctx context.Context, obj client.Object, m *IPProxyModel) {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AlwaysFromCache = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.AlwaysFromCache = types.BoolValue(true)
 		} else {
 			m.AlwaysFromCache = types.BoolNull()
 		}
@@ -281,6 +284,8 @@ func iPProxyApply(ctx context.Context, obj client.Object, m *IPProxyModel) {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Anonymous = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Anonymous = types.BoolValue(true)
 		} else {
 			m.Anonymous = types.BoolNull()
 		}
@@ -305,6 +310,8 @@ func iPProxyApply(ctx context.Context, obj client.Object, m *IPProxyModel) {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.CacheOnDisk = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.CacheOnDisk = types.BoolValue(true)
 		} else {
 			m.CacheOnDisk = types.BoolNull()
 		}
@@ -321,6 +328,8 @@ func iPProxyApply(ctx context.Context, obj client.Object, m *IPProxyModel) {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Enabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Enabled = types.BoolValue(true)
 		} else {
 			m.Enabled = types.BoolNull()
 		}
@@ -393,6 +402,8 @@ func iPProxyApply(ctx context.Context, obj client.Object, m *IPProxyModel) {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.SerializeConnections = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.SerializeConnections = types.BoolValue(true)
 		} else {
 			m.SerializeConnections = types.BoolNull()
 		}

@@ -339,6 +339,8 @@ func iPV6NdPrefixApply(ctx context.Context, obj client.Object, m *IPV6NdPrefixMo
 	if v, ok := obj["autonomous"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Autonomous = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Autonomous = types.BoolValue(true)
 		} else {
 			m.Autonomous = types.BoolNull()
 		}
@@ -346,6 +348,8 @@ func iPV6NdPrefixApply(ctx context.Context, obj client.Object, m *IPV6NdPrefixMo
 	if v, ok := obj["dhcpv6-pd-preferred"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dhcpv6PdPreferred = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Dhcpv6PdPreferred = types.BoolValue(true)
 		} else {
 			m.Dhcpv6PdPreferred = types.BoolNull()
 		}
@@ -353,6 +357,8 @@ func iPV6NdPrefixApply(ctx context.Context, obj client.Object, m *IPV6NdPrefixMo
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
@@ -360,6 +366,8 @@ func iPV6NdPrefixApply(ctx context.Context, obj client.Object, m *IPV6NdPrefixMo
 	if v, ok := obj["dynamic"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Dynamic = types.BoolValue(true)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
@@ -374,6 +382,8 @@ func iPV6NdPrefixApply(ctx context.Context, obj client.Object, m *IPV6NdPrefixMo
 	if v, ok := obj["invalid"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Invalid = types.BoolValue(true)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
@@ -388,6 +398,8 @@ func iPV6NdPrefixApply(ctx context.Context, obj client.Object, m *IPV6NdPrefixMo
 	if v, ok := obj["on-link"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.OnLink = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.OnLink = types.BoolValue(true)
 		} else {
 			m.OnLink = types.BoolNull()
 		}

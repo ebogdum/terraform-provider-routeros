@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -204,6 +205,8 @@ func toolEMailApply(ctx context.Context, obj client.Object, m *ToolEMailModel) {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.CertificateVerification = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.CertificateVerification = types.BoolValue(true)
 		} else {
 			m.CertificateVerification = types.BoolNull()
 		}
@@ -246,6 +249,8 @@ func toolEMailApply(ctx context.Context, obj client.Object, m *ToolEMailModel) {
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.TLS = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.TLS = types.BoolValue(true)
 		} else {
 			m.TLS = types.BoolNull()
 		}

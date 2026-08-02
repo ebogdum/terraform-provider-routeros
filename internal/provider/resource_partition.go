@@ -261,6 +261,8 @@ func partitionApply(ctx context.Context, obj client.Object, m *PartitionModel) {
 	if v, ok := obj["active"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Active = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Active = types.BoolValue(true)
 		} else {
 			m.Active = types.BoolNull()
 		}
@@ -289,6 +291,8 @@ func partitionApply(ctx context.Context, obj client.Object, m *PartitionModel) {
 	if v, ok := obj["running"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Running = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Running = types.BoolValue(true)
 		} else {
 			m.Running = types.BoolNull()
 		}

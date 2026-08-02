@@ -263,6 +263,8 @@ func routingGmpApply(ctx context.Context, obj client.Object, m *RoutingGmpModel)
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
@@ -270,6 +272,8 @@ func routingGmpApply(ctx context.Context, obj client.Object, m *RoutingGmpModel)
 	if v, ok := obj["exclude"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Exclude = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Exclude = types.BoolValue(true)
 		} else {
 			m.Exclude = types.BoolNull()
 		}

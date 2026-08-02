@@ -284,6 +284,8 @@ func systemScriptApply(ctx context.Context, obj client.Object, m *SystemScriptMo
 	if v, ok := obj["dont-require-permissions"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.DonTRequirePermissions = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.DonTRequirePermissions = types.BoolValue(true)
 		} else {
 			m.DonTRequirePermissions = types.BoolNull()
 		}
@@ -291,6 +293,8 @@ func systemScriptApply(ctx context.Context, obj client.Object, m *SystemScriptMo
 	if v, ok := obj["invalid"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Invalid = types.BoolValue(true)
 		} else {
 			m.Invalid = types.BoolNull()
 		}

@@ -443,6 +443,8 @@ func iPIpsecPolicyApply(ctx context.Context, obj client.Object, m *IPIpsecPolicy
 	if v, ok := obj["active"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Active = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Active = types.BoolValue(true)
 		} else {
 			m.Active = types.BoolNull()
 		}
@@ -457,6 +459,8 @@ func iPIpsecPolicyApply(ctx context.Context, obj client.Object, m *IPIpsecPolicy
 	if v, ok := obj["default"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Default = types.BoolValue(true)
 		} else {
 			m.Default = types.BoolNull()
 		}
@@ -464,6 +468,8 @@ func iPIpsecPolicyApply(ctx context.Context, obj client.Object, m *IPIpsecPolicy
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
@@ -488,6 +494,8 @@ func iPIpsecPolicyApply(ctx context.Context, obj client.Object, m *IPIpsecPolicy
 	if v, ok := obj["dynamic"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Dynamic = types.BoolValue(true)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
@@ -502,6 +510,8 @@ func iPIpsecPolicyApply(ctx context.Context, obj client.Object, m *IPIpsecPolicy
 	if v, ok := obj["invalid"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Invalid = types.BoolValue(true)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
@@ -606,6 +616,8 @@ func iPIpsecPolicyApply(ctx context.Context, obj client.Object, m *IPIpsecPolicy
 	if v, ok := obj["template"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Template = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Template = types.BoolValue(true)
 		} else {
 			m.Template = types.BoolNull()
 		}
@@ -613,6 +625,8 @@ func iPIpsecPolicyApply(ctx context.Context, obj client.Object, m *IPIpsecPolicy
 	if v, ok := obj["tunnel"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Tunnel = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Tunnel = types.BoolValue(true)
 		} else {
 			m.Tunnel = types.BoolNull()
 		}

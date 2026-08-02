@@ -570,6 +570,8 @@ func systemLoggingActionApply(ctx context.Context, obj client.Object, m *SystemL
 	if v, ok := obj["default"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Default = types.BoolValue(true)
 		} else {
 			m.Default = types.BoolNull()
 		}
@@ -604,6 +606,8 @@ func systemLoggingActionApply(ctx context.Context, obj client.Object, m *SystemL
 	if v, ok := obj["disk-stop-on-full"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.DiskStopOnFull = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.DiskStopOnFull = types.BoolValue(true)
 		} else {
 			m.DiskStopOnFull = types.BoolNull()
 		}
@@ -621,6 +625,8 @@ func systemLoggingActionApply(ctx context.Context, obj client.Object, m *SystemL
 	if v, ok := obj["memory-stop-on-full"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.MemoryStopOnFull = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.MemoryStopOnFull = types.BoolValue(true)
 		} else {
 			m.MemoryStopOnFull = types.BoolNull()
 		}
@@ -635,6 +641,8 @@ func systemLoggingActionApply(ctx context.Context, obj client.Object, m *SystemL
 	if v, ok := obj["remember"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Remember = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Remember = types.BoolValue(true)
 		} else {
 			m.Remember = types.BoolNull()
 		}

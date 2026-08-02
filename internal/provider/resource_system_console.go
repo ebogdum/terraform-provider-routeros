@@ -281,6 +281,8 @@ func systemConsoleApply(ctx context.Context, obj client.Object, m *SystemConsole
 	if v, ok := obj["default"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Default = types.BoolValue(true)
 		} else {
 			m.Default = types.BoolNull()
 		}
@@ -288,6 +290,8 @@ func systemConsoleApply(ctx context.Context, obj client.Object, m *SystemConsole
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
@@ -295,6 +299,8 @@ func systemConsoleApply(ctx context.Context, obj client.Object, m *SystemConsole
 	if v, ok := obj["free"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Free = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Free = types.BoolValue(true)
 		} else {
 			m.Free = types.BoolNull()
 		}
@@ -316,6 +322,8 @@ func systemConsoleApply(ctx context.Context, obj client.Object, m *SystemConsole
 	if v, ok := obj["used"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Used = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Used = types.BoolValue(true)
 		} else {
 			m.Used = types.BoolNull()
 		}
@@ -343,6 +351,8 @@ func systemConsoleApply(ctx context.Context, obj client.Object, m *SystemConsole
 	if v, ok := obj["wedged"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Wedged = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Wedged = types.BoolValue(true)
 		} else {
 			m.Wedged = types.BoolNull()
 		}

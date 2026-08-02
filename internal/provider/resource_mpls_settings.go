@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -177,6 +178,8 @@ func mPLSSettingsApply(ctx context.Context, obj client.Object, m *MPLSSettingsMo
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.AllowFastPath = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.AllowFastPath = types.BoolValue(true)
 		} else {
 			m.AllowFastPath = types.BoolNull()
 		}
@@ -209,6 +212,8 @@ func mPLSSettingsApply(ctx context.Context, obj client.Object, m *MPLSSettingsMo
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.PropagateTtl = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.PropagateTtl = types.BoolValue(true)
 		} else {
 			m.PropagateTtl = types.BoolNull()
 		}

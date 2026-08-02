@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -214,6 +215,8 @@ func toolBandwidthServerApply(ctx context.Context, obj client.Object, m *ToolBan
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Authenticate = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Authenticate = types.BoolValue(true)
 		} else {
 			m.Authenticate = types.BoolNull()
 		}
@@ -222,6 +225,8 @@ func toolBandwidthServerApply(ctx context.Context, obj client.Object, m *ToolBan
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.Enabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Enabled = types.BoolValue(true)
 		} else {
 			m.Enabled = types.BoolNull()
 		}

@@ -365,6 +365,8 @@ func iPARPApply(ctx context.Context, obj client.Object, m *IPARPModel) {
 	if v, ok := obj["complete"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Complete = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Complete = types.BoolValue(true)
 		} else {
 			m.Complete = types.BoolNull()
 		}
@@ -372,6 +374,8 @@ func iPARPApply(ctx context.Context, obj client.Object, m *IPARPModel) {
 	if v, ok := obj["dhcp"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.DHCP = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.DHCP = types.BoolValue(true)
 		} else {
 			m.DHCP = types.BoolNull()
 		}
@@ -379,6 +383,8 @@ func iPARPApply(ctx context.Context, obj client.Object, m *IPARPModel) {
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
@@ -386,6 +392,8 @@ func iPARPApply(ctx context.Context, obj client.Object, m *IPARPModel) {
 	if v, ok := obj["dynamic"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Dynamic = types.BoolValue(true)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
@@ -407,6 +415,8 @@ func iPARPApply(ctx context.Context, obj client.Object, m *IPARPModel) {
 	if v, ok := obj["invalid"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Invalid = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Invalid = types.BoolValue(true)
 		} else {
 			m.Invalid = types.BoolNull()
 		}
@@ -456,6 +466,8 @@ func iPARPApply(ctx context.Context, obj client.Object, m *IPARPModel) {
 	if v, ok := obj["published"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Published = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Published = types.BoolValue(true)
 		} else {
 			m.Published = types.BoolNull()
 		}

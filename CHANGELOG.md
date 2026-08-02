@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.2] - 2026-08-02
+
+### Fixed
+
+- **Presence-flag booleans read back correctly.** RouterOS returns a set
+  boolean flag as a valueless key (`no-summaries: ""`); `ParseBool("")` failed
+  and the attribute was read back as `null`, tainting the resource so every plan
+  tried to replace it. `routing_ospf_area.no_summaries` was one such field. The
+  whole class is now handled: every boolean Apply (652) treats a present but
+  empty value as `true`, the same shape as the `fib`/`blackhole` fixes — this
+  time applied across all boolean attributes rather than one at a time.
+
 ## [3.0.1] - 2026-08-01
 
 ### Fixed

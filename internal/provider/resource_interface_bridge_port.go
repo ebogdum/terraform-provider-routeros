@@ -613,6 +613,8 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 	if v, ok := obj["auto-isolate"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.AutoIsolate = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.AutoIsolate = types.BoolValue(true)
 		} else {
 			m.AutoIsolate = types.BoolNull()
 		}
@@ -620,6 +622,8 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 	if v, ok := obj["bpdu-guard"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.BpduGuard = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.BpduGuard = types.BoolValue(true)
 		} else {
 			m.BpduGuard = types.BoolNull()
 		}
@@ -634,6 +638,8 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 	if v, ok := obj["broadcast-flood"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.BroadcastFlood = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.BroadcastFlood = types.BoolValue(true)
 		} else {
 			m.BroadcastFlood = types.BoolNull()
 		}
@@ -648,6 +654,8 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
@@ -655,6 +663,8 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 	if v, ok := obj["dynamic"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Dynamic = types.BoolValue(true)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
@@ -669,6 +679,8 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 	if v, ok := obj["fast-leave"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.FastLeave = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.FastLeave = types.BoolValue(true)
 		} else {
 			m.FastLeave = types.BoolNull()
 		}
@@ -683,6 +695,8 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 	if v, ok := obj["hardware-offload"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.HardwareOffload = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.HardwareOffload = types.BoolValue(true)
 		} else {
 			m.HardwareOffload = types.BoolNull()
 		}
@@ -703,6 +717,8 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 	if v, ok := obj["hw-offload"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.HwOffload = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.HwOffload = types.BoolValue(true)
 		} else {
 			m.HwOffload = types.BoolNull()
 		}
@@ -717,6 +733,8 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 	if v, ok := obj["inactive"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Inactive = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Inactive = types.BoolValue(true)
 		} else {
 			m.Inactive = types.BoolNull()
 		}
@@ -724,6 +742,8 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 	if v, ok := obj["ingress-filtering"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.IngressFiltering = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.IngressFiltering = types.BoolValue(true)
 		} else {
 			m.IngressFiltering = types.BoolNull()
 		}
@@ -824,6 +844,8 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 	if v, ok := obj["restricted-role"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.RestrictedRole = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.RestrictedRole = types.BoolValue(true)
 		} else {
 			m.RestrictedRole = types.BoolNull()
 		}
@@ -831,6 +853,8 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 	if v, ok := obj["restricted-tcn"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.RestrictedTcn = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.RestrictedTcn = types.BoolValue(true)
 		} else {
 			m.RestrictedTcn = types.BoolNull()
 		}
@@ -848,6 +872,8 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 	if v, ok := obj["tag-stacking"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.TagStacking = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.TagStacking = types.BoolValue(true)
 		} else {
 			m.TagStacking = types.BoolNull()
 		}
@@ -855,6 +881,8 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 	if v, ok := obj["trusted"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Trusted = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Trusted = types.BoolValue(true)
 		} else {
 			m.Trusted = types.BoolNull()
 		}
@@ -862,6 +890,8 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 	if v, ok := obj["trusted-ra"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.TrustedRa = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.TrustedRa = types.BoolValue(true)
 		} else {
 			m.TrustedRa = types.BoolNull()
 		}
@@ -869,6 +899,8 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 	if v, ok := obj["unknown-multicast-flood"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.UnknownMulticastFlood = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.UnknownMulticastFlood = types.BoolValue(true)
 		} else {
 			m.UnknownMulticastFlood = types.BoolNull()
 		}
@@ -876,6 +908,8 @@ func interfaceBridgePortApply(ctx context.Context, obj client.Object, m *Interfa
 	if v, ok := obj["unknown-unicast-flood"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.UnknownUnicastFlood = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.UnknownUnicastFlood = types.BoolValue(true)
 		} else {
 			m.UnknownUnicastFlood = types.BoolNull()
 		}

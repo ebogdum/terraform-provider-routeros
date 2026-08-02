@@ -288,6 +288,8 @@ func iPKidControlDeviceApply(ctx context.Context, obj client.Object, m *IPKidCon
 	if v, ok := obj["blocked"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Blocked = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Blocked = types.BoolValue(true)
 		} else {
 			m.Blocked = types.BoolNull()
 		}
@@ -302,6 +304,8 @@ func iPKidControlDeviceApply(ctx context.Context, obj client.Object, m *IPKidCon
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
@@ -309,6 +313,8 @@ func iPKidControlDeviceApply(ctx context.Context, obj client.Object, m *IPKidCon
 	if v, ok := obj["dynamic"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Dynamic = types.BoolValue(true)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
@@ -337,6 +343,8 @@ func iPKidControlDeviceApply(ctx context.Context, obj client.Object, m *IPKidCon
 	if v, ok := obj["rate-limited"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.RateLimited = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.RateLimited = types.BoolValue(true)
 		} else {
 			m.RateLimited = types.BoolNull()
 		}

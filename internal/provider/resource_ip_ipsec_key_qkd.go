@@ -233,6 +233,8 @@ func iPIPsecKeyQKDApply(ctx context.Context, obj client.Object, m *IPIPsecKeyQKD
 	if v, ok := obj["enabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Enabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Enabled = types.BoolValue(true)
 		} else {
 			m.Enabled = types.BoolNull()
 		}

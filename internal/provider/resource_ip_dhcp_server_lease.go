@@ -708,6 +708,8 @@ func iPDHCPServerLeaseApply(ctx context.Context, obj client.Object, m *IPDHCPSer
 	if v, ok := obj["always-broadcast"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.AlwaysBroadcast = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.AlwaysBroadcast = types.BoolValue(true)
 		} else {
 			m.AlwaysBroadcast = types.BoolNull()
 		}
@@ -715,6 +717,8 @@ func iPDHCPServerLeaseApply(ctx context.Context, obj client.Object, m *IPDHCPSer
 	if v, ok := obj["block-access"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.BlockAccess = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.BlockAccess = types.BoolValue(true)
 		} else {
 			m.BlockAccess = types.BoolNull()
 		}
@@ -722,6 +726,8 @@ func iPDHCPServerLeaseApply(ctx context.Context, obj client.Object, m *IPDHCPSer
 	if v, ok := obj["blocked"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Blocked = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Blocked = types.BoolValue(true)
 		} else {
 			m.Blocked = types.BoolNull()
 		}
@@ -771,6 +777,8 @@ func iPDHCPServerLeaseApply(ctx context.Context, obj client.Object, m *IPDHCPSer
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
@@ -785,6 +793,8 @@ func iPDHCPServerLeaseApply(ctx context.Context, obj client.Object, m *IPDHCPSer
 	if v, ok := obj["dynamic"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Dynamic = types.BoolValue(true)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
@@ -862,6 +872,8 @@ func iPDHCPServerLeaseApply(ctx context.Context, obj client.Object, m *IPDHCPSer
 	if v, ok := obj["radius"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.RADIUS = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.RADIUS = types.BoolValue(true)
 		} else {
 			m.RADIUS = types.BoolNull()
 		}
@@ -932,6 +944,8 @@ func iPDHCPServerLeaseApply(ctx context.Context, obj client.Object, m *IPDHCPSer
 	if v, ok := obj["use-src-mac-address"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.UseSrcMACAddress = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.UseSrcMACAddress = types.BoolValue(true)
 		} else {
 			m.UseSrcMACAddress = types.BoolNull()
 		}

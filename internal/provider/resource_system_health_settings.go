@@ -289,6 +289,8 @@ func systemHealthSettingsApply(ctx context.Context, obj client.Object, m *System
 	if v, ok := obj["cpu-overtemp-check"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.CPUOvertempCheck = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.CPUOvertempCheck = types.BoolValue(true)
 		} else {
 			m.CPUOvertempCheck = types.BoolNull()
 		}

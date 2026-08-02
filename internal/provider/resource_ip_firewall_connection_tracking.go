@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -323,6 +324,8 @@ func iPFirewallConnectionTrackingApply(ctx context.Context, obj client.Object, m
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.ActiveIpv4 = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.ActiveIpv4 = types.BoolValue(true)
 		} else {
 			m.ActiveIpv4 = types.BoolNull()
 		}
@@ -331,6 +334,8 @@ func iPFirewallConnectionTrackingApply(ctx context.Context, obj client.Object, m
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.ActiveIPV6 = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.ActiveIPV6 = types.BoolValue(true)
 		} else {
 			m.ActiveIPV6 = types.BoolNull()
 		}
@@ -363,6 +368,8 @@ func iPFirewallConnectionTrackingApply(ctx context.Context, obj client.Object, m
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.LiberalTCPTracking = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.LiberalTCPTracking = types.BoolValue(true)
 		} else {
 			m.LiberalTCPTracking = types.BoolNull()
 		}
@@ -371,6 +378,8 @@ func iPFirewallConnectionTrackingApply(ctx context.Context, obj client.Object, m
 		_ = v
 		if b, err := client.ParseBool(v); err == nil {
 			m.LooseTCPTracking = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.LooseTCPTracking = types.BoolValue(true)
 		} else {
 			m.LooseTCPTracking = types.BoolNull()
 		}

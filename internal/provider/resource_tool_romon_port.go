@@ -293,6 +293,8 @@ func toolRomonPortApply(ctx context.Context, obj client.Object, m *ToolRomonPort
 	if v, ok := obj["default"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Default = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Default = types.BoolValue(true)
 		} else {
 			m.Default = types.BoolNull()
 		}
@@ -300,6 +302,8 @@ func toolRomonPortApply(ctx context.Context, obj client.Object, m *ToolRomonPort
 	if v, ok := obj["disabled"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Disabled = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Disabled = types.BoolValue(true)
 		} else {
 			m.Disabled = types.BoolNull()
 		}
@@ -307,6 +311,8 @@ func toolRomonPortApply(ctx context.Context, obj client.Object, m *ToolRomonPort
 	if v, ok := obj["dynamic"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Dynamic = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Dynamic = types.BoolValue(true)
 		} else {
 			m.Dynamic = types.BoolNull()
 		}
@@ -314,6 +320,8 @@ func toolRomonPortApply(ctx context.Context, obj client.Object, m *ToolRomonPort
 	if v, ok := obj["forbid"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.Forbid = types.BoolValue(b)
+		} else if strings.TrimSpace(v) == "" {
+			m.Forbid = types.BoolValue(true)
 		} else {
 			m.Forbid = types.BoolNull()
 		}
