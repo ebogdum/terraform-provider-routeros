@@ -19,7 +19,7 @@ resource "routeros_interface_6to4" "ex_6to4_example" {
 
   # Optional attributes (uncomment as needed):
   # clamp_tcp_mss = false
-  # dont_fragment = false
+  # dont_fragment = "no"
   # dscp = "replace-me"
   # local_address = "10.99.0.1"
   # mtu = "replace-me"
@@ -36,7 +36,7 @@ This resource supports the following arguments:
 * `clamp_tcp_mss` - (Optional) Type: `bool`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
 * `disabled` - (Optional) Type: `bool`. Whether the entry is disabled.
-* `dont_fragment` - (Optional) Type: `bool`.
+* `dont_fragment` - (Optional) Type: `string`. Fragmentation policy for the tunnel: `no` or `inherit` (copy the Don't Fragment bit from the inner packet).
 * `dscp` - (Optional) Type: `string`.
 * `ipsec_secret` - (Optional) Type: `string`. RouterOS `ipsec-secret`. **Sensitive.**
 * `keepalive` - (Optional) Type: `string`. RouterOS `keepalive`.

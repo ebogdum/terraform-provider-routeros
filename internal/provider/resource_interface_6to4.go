@@ -37,7 +37,7 @@ type Interface6to4Model struct {
 	ClampTCPMss   types.Bool   `tfsdk:"clamp_tcp_mss"`
 	Comment       types.String `tfsdk:"comment"`
 	Disabled      types.Bool   `tfsdk:"disabled"`
-	DontFragment  types.Bool   `tfsdk:"dont_fragment"`
+	DontFragment  types.String `tfsdk:"dont_fragment"`
 	Dscp          types.String `tfsdk:"dscp"`
 	LocalAddress  types.String `tfsdk:"local_address"`
 	MTU           types.String `tfsdk:"mtu"`
@@ -95,10 +95,11 @@ func (r *Interface6to4Resource) Schema(_ context.Context, _ resource.SchemaReque
 				Computed:    true,
 				Description: "Whether the entry is disabled.",
 			},
-			"dont_fragment": schema.BoolAttribute{
+			"dont_fragment": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "",
+				Description: "Fragmentation policy for the tunnel: `no` or `inherit` (copy the Don't Fragment bit from the inner packet).",
+				Validators:  []validator.String{schemautil.OneOf([]string{"inherit", "no"}...)},
 			},
 			"dscp": schema.StringAttribute{
 				Optional:    true,
@@ -155,7 +156,7 @@ func (r *Interface6to4Resource) Create(ctx context.Context, req resource.CreateR
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
 	if !(plan.DontFragment.IsNull() || plan.DontFragment.IsUnknown()) {
-		body["dont-fragment"] = client.FormatBool(plan.DontFragment.ValueBool())
+		body["dont-fragment"] = plan.DontFragment.ValueString()
 	}
 	if !(plan.Dscp.IsNull() || plan.Dscp.IsUnknown()) {
 		body["dscp"] = plan.Dscp.ValueString()
@@ -236,7 +237,7 @@ func (r *Interface6to4Resource) Update(ctx context.Context, req resource.UpdateR
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
 	}
 	if !plan.DontFragment.Equal(state.DontFragment) && !plan.DontFragment.IsUnknown() {
-		body["dont-fragment"] = client.FormatBool(plan.DontFragment.ValueBool())
+		body["dont-fragment"] = plan.DontFragment.ValueString()
 	}
 	if !plan.Dscp.Equal(state.Dscp) && !plan.Dscp.IsUnknown() {
 		body["dscp"] = plan.Dscp.ValueString()
@@ -362,12 +363,10 @@ func interface6to4Apply(ctx context.Context, obj client.Object, m *Interface6to4
 		}
 	}
 	if v, ok := obj["dont-fragment"]; ok {
-		if b, err := client.ParseBool(v); err == nil {
-			m.DontFragment = types.BoolValue(b)
-		} else if strings.TrimSpace(v) == "" {
-			m.DontFragment = types.BoolValue(true)
+		if v != "" {
+			m.DontFragment = types.StringValue(v)
 		} else {
-			m.DontFragment = types.BoolNull()
+			m.DontFragment = types.StringNull()
 		}
 	}
 	if v, ok := obj["dscp"]; ok {

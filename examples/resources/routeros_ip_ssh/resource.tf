@@ -3,7 +3,7 @@ resource "routeros_ip_ssh" "ssh_example" {
 
   # Optional attributes (uncomment as needed):
   # ciphers = "replace-me"
-  # forwarding_enabled = false
+  # forwarding_enabled = "no"
   # host_key_size = 0
   # host_key_type = "replace-me"
   # password_authentication = "replace-me"

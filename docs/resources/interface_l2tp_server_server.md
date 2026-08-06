@@ -50,7 +50,7 @@ This resource supports the following arguments:
 * `max_sessions` - (Optional) Type: `string`. RouterOS `max-sessions`.
 * `mrru` - (Optional) Type: `string`. RouterOS `mrru`.
 * `one_session_per_host` - (Optional) Type: `bool`. RouterOS `one-session-per-host`.
-* `use_ipsec` - (Optional) Type: `bool`. RouterOS `use-ipsec`.
+* `use_ipsec` - (Optional) Type: `string`. IPsec usage for the L2TP server: `no`, `yes` (offer IPsec) or `required` (refuse plain L2TP).
 
 ## Attribute Reference
 

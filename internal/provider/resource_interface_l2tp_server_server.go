@@ -10,9 +10,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
 )
 
 var (
@@ -47,7 +49,7 @@ type InterfaceL2TPServerServerModel struct {
 	MaxSessions              types.String `tfsdk:"max_sessions"`
 	Mrru                     types.String `tfsdk:"mrru"`
 	OneSessionPerHost        types.Bool   `tfsdk:"one_session_per_host"`
-	UseIPsec                 types.Bool   `tfsdk:"use_ipsec"`
+	UseIPsec                 types.String `tfsdk:"use_ipsec"`
 	Router                   types.String `tfsdk:"router"`
 }
 
@@ -168,10 +170,11 @@ func (r *InterfaceL2TPServerServerResource) Schema(_ context.Context, _ resource
 				Computed:    true,
 				Description: "RouterOS `one-session-per-host`.",
 			},
-			"use_ipsec": schema.BoolAttribute{
+			"use_ipsec": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "RouterOS `use-ipsec`.",
+				Description: "IPsec usage for the L2TP server: `no`, `yes` (offer IPsec) or `required` (refuse plain L2TP).",
+				Validators:  []validator.String{schemautil.OneOf([]string{"no", "required", "yes"}...)},
 			},
 			"router": schema.StringAttribute{
 				Optional:    true,
@@ -306,7 +309,7 @@ func interfaceL2TPServerServerUpsert(ctx context.Context, reg *client.Registry, 
 		body["one-session-per-host"] = client.FormatBool(plan.OneSessionPerHost.ValueBool())
 	}
 	if !(plan.UseIPsec.IsNull() || plan.UseIPsec.IsUnknown()) && (state == nil || !plan.UseIPsec.Equal(state.UseIPsec)) {
-		body["use-ipsec"] = client.FormatBool(plan.UseIPsec.ValueBool())
+		body["use-ipsec"] = plan.UseIPsec.ValueString()
 	}
 	if !(plan.L2tpv3EtherInterfaceList.IsNull() || plan.L2tpv3EtherInterfaceList.IsUnknown()) && (state == nil || !plan.L2tpv3EtherInterfaceList.Equal(state.L2tpv3EtherInterfaceList)) {
 		body["l2tpv3-ether-interface-list"] = plan.L2tpv3EtherInterfaceList.ValueString()
@@ -447,14 +450,12 @@ func interfaceL2TPServerServerApply(ctx context.Context, obj client.Object, m *I
 		m.OneSessionPerHost = types.BoolNull()
 	}
 	if v, ok := obj["use-ipsec"]; ok {
-		if b, err := client.ParseBool(v); err == nil {
-			m.UseIPsec = types.BoolValue(b)
-		} else if strings.TrimSpace(v) == "" {
-			m.UseIPsec = types.BoolValue(true)
+		if v != "" {
+			m.UseIPsec = types.StringValue(v)
 		} else {
-			m.UseIPsec = types.BoolNull()
+			m.UseIPsec = types.StringNull()
 		}
 	} else {
-		m.UseIPsec = types.BoolNull()
+		m.UseIPsec = types.StringNull()
 	}
 }

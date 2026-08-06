@@ -31,7 +31,7 @@ type InterfaceEthernetSwitchPortIsolationResource struct {
 type InterfaceEthernetSwitchPortIsolationModel struct {
 	ID                 types.String `tfsdk:"id"`
 	ForwardTo          types.String `tfsdk:"forward_to"`
-	ForwardingOverride types.Bool   `tfsdk:"forwarding_override"`
+	ForwardingOverride types.String `tfsdk:"forwarding_override"`
 	Invalid            types.Bool   `tfsdk:"invalid"`
 	Name               types.String `tfsdk:"name"`
 	Override           types.String `tfsdk:"override"`
@@ -69,10 +69,10 @@ func (r *InterfaceEthernetSwitchPortIsolationResource) Schema(_ context.Context,
 				Computed:    true,
 				Description: "",
 			},
-			"forwarding_override": schema.BoolAttribute{
+			"forwarding_override": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "",
+				Description: "Name of the switch port this port may forward to, overriding the default isolation. Empty means no override.",
 			},
 			"invalid": schema.BoolAttribute{
 				Computed:    true,
@@ -140,7 +140,7 @@ func (r *InterfaceEthernetSwitchPortIsolationResource) Create(ctx context.Contex
 		body["forward-to"] = plan.ForwardTo.ValueString()
 	}
 	if !(plan.ForwardingOverride.IsNull() || plan.ForwardingOverride.IsUnknown()) {
-		body["forwarding-override"] = client.FormatBool(plan.ForwardingOverride.ValueBool())
+		body["forwarding-override"] = plan.ForwardingOverride.ValueString()
 	}
 	if !(plan.Override.IsNull() || plan.Override.IsUnknown()) {
 		body["override"] = plan.Override.ValueString()
@@ -197,7 +197,7 @@ func (r *InterfaceEthernetSwitchPortIsolationResource) Update(ctx context.Contex
 		body["forward-to"] = plan.ForwardTo.ValueString()
 	}
 	if !plan.ForwardingOverride.Equal(state.ForwardingOverride) && !plan.ForwardingOverride.IsUnknown() {
-		body["forwarding-override"] = client.FormatBool(plan.ForwardingOverride.ValueBool())
+		body["forwarding-override"] = plan.ForwardingOverride.ValueString()
 	}
 	if !plan.Override.Equal(state.Override) && !plan.Override.IsUnknown() {
 		body["override"] = plan.Override.ValueString()
@@ -278,12 +278,10 @@ func interfaceEthernetSwitchPortIsolationApply(ctx context.Context, obj client.O
 		}
 	}
 	if v, ok := obj["forwarding-override"]; ok {
-		if b, err := client.ParseBool(v); err == nil {
-			m.ForwardingOverride = types.BoolValue(b)
-		} else if strings.TrimSpace(v) == "" {
-			m.ForwardingOverride = types.BoolValue(true)
+		if v != "" {
+			m.ForwardingOverride = types.StringValue(v)
 		} else {
-			m.ForwardingOverride = types.BoolNull()
+			m.ForwardingOverride = types.StringNull()
 		}
 	}
 	if v, ok := obj["invalid"]; ok {

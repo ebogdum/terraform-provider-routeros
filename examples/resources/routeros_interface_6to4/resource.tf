@@ -5,7 +5,7 @@ resource "routeros_interface_6to4" "ex_6to4_example" {
 
   # Optional attributes (uncomment as needed):
   # clamp_tcp_mss = false
-  # dont_fragment = false
+  # dont_fragment = "no"
   # dscp = "replace-me"
   # local_address = "10.99.0.1"
   # mtu = "replace-me"

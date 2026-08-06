@@ -41,7 +41,7 @@ This resource supports the following arguments:
 * `max_mru` - (Optional) Type: `int`. RouterOS `max-mru`.
 * `max_mtu` - (Optional) Type: `int`. RouterOS `max-mtu`.
 * `mrru` - (Optional) Type: `string`. RouterOS `mrru`.
-* `pfs` - (Optional) Type: `bool`. RouterOS `pfs`.
+* `pfs` - (Optional) Type: `string`. Perfect forward secrecy: `no`, `yes` (offer PFS) or `required` (refuse clients without it).
 * `port` - (Optional) Type: `int`. RouterOS `port`.
 * `tls_version` - (Optional) Type: `string`. RouterOS `tls-version`.
 * `verify_client_certificate` - (Optional) Type: `bool`. RouterOS `verify-client-certificate`.

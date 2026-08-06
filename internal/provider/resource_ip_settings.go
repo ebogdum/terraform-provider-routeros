@@ -48,7 +48,7 @@ type IPSettingsModel struct {
 	Ipv4FasttrackPackets                 types.Int64  `tfsdk:"ipv4_fasttrack_packets"`
 	Ipv4MultipathHashPolicy              types.String `tfsdk:"ipv4_multipath_hash_policy"`
 	MaxNeighborEntries                   types.Int64  `tfsdk:"max_neighbor_entries"`
-	RpFilter                             types.Bool   `tfsdk:"rp_filter"`
+	RpFilter                             types.String `tfsdk:"rp_filter"`
 	SecureRedirects                      types.Bool   `tfsdk:"secure_redirects"`
 	SendRedirects                        types.Bool   `tfsdk:"send_redirects"`
 	TCPSyncookies                        types.Bool   `tfsdk:"tcp_syncookies"`
@@ -139,8 +139,9 @@ func (r *IPSettingsResource) Schema(_ context.Context, _ resource.SchemaRequest,
 			"max_neighbor_entries": schema.Int64Attribute{Optional: true, Computed: true,
 				Description: "",
 			},
-			"rp_filter": schema.BoolAttribute{Optional: true, Computed: true,
-				Description: "",
+			"rp_filter": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "Reverse path filtering: `no`, `loose` (RFC 3704 loose mode) or `strict` (drop packets arriving on an asymmetric path).",
+				Validators:  []validator.String{schemautil.OneOf([]string{"loose", "no", "strict"}...)},
 			},
 			"secure_redirects": schema.BoolAttribute{Optional: true, Computed: true,
 				Description: "",
@@ -265,7 +266,7 @@ func iPSettingsUpsert(ctx context.Context, reg *client.Registry, plan, state *IP
 		body["max-neighbor-entries"] = client.FormatInt64(plan.MaxNeighborEntries.ValueInt64())
 	}
 	if !(plan.RpFilter.IsNull() || plan.RpFilter.IsUnknown()) && (state == nil || !plan.RpFilter.Equal(state.RpFilter)) {
-		body["rp-filter"] = client.FormatBool(plan.RpFilter.ValueBool())
+		body["rp-filter"] = plan.RpFilter.ValueString()
 	}
 	if !(plan.SecureRedirects.IsNull() || plan.SecureRedirects.IsUnknown()) && (state == nil || !plan.SecureRedirects.Equal(state.SecureRedirects)) {
 		body["secure-redirects"] = client.FormatBool(plan.SecureRedirects.ValueBool())
@@ -450,12 +451,10 @@ func iPSettingsApply(ctx context.Context, obj client.Object, m *IPSettingsModel)
 	}
 	if v, ok := obj["rp-filter"]; ok {
 		_ = v
-		if b, err := client.ParseBool(v); err == nil {
-			m.RpFilter = types.BoolValue(b)
-		} else if strings.TrimSpace(v) == "" {
-			m.RpFilter = types.BoolValue(true)
+		if v != "" {
+			m.RpFilter = types.StringValue(v)
 		} else {
-			m.RpFilter = types.BoolNull()
+			m.RpFilter = types.StringNull()
 		}
 	}
 	if v, ok := obj["secure-redirects"]; ok {

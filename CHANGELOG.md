@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.4] - 2026-08-07
+
+### Fixed
+
+Eight attributes were typed `bool` but hold a RouterOS enum. RouterOS answers a
+boolean write to any of them with HTTP 400 (`input does not match any value of
+tls`), and reports the current setting as a literal token rather than
+`true`/`false` -- so the non-boolean values were unconfigurable *and* a device
+already using one read back as null, leaving a permanent diff. All eight are now
+validated strings passed to the device verbatim.
+
+The full bool surface of the provider (655 attributes across 258 menus) was
+audited against a live ROS 7.23.2 device using console argument completion, and
+cross-checked against the values the REST API reports; these eight are the
+complete set of mismatches.
+
+- `routeros_tool_e_mail.tls` -- `no` | `starttls` | `yes` (reported in #7)
+- `routeros_tool_e_mail.certificate_verification` -- `no` | `yes` |
+  `yes-without-crl` (reported in #7)
+- `routeros_ip_ssh.forwarding_enabled` -- `no` | `local` | `remote` | `both`
+- `routeros_ip_settings.rp_filter` -- `no` | `loose` | `strict`
+- `routeros_interface_l2tp_server_server.use_ipsec` -- `no` | `yes` | `required`
+- `routeros_interface_sstp_server_server.pfs` -- `no` | `yes` | `required`
+- `routeros_interface_6to4.dont_fragment` -- `no` | `inherit`. This menu rejects
+  `yes` outright (`must be either inherit or no`), so a `true` was a hard error.
+- `routeros_interface_ethernet_switch_port_isolation.forwarding_override` --
+  not an enum but a switch port name (e.g. `ether5`); a boolean write was
+  refused with `input does not match any value of port`.
+
+**Breaking:** configurations setting any of these to `true` / `false` must move
+to the string form (`"yes"` / `"no"`), and existing state for those attributes
+needs a refresh or a re-import.
+
 ## [3.0.3] - 2026-08-02
 
 ### Fixed

@@ -26,7 +26,7 @@ resource "routeros_ip_settings" "settings_example" {
   # ip_forward = false
   # ipv4_multipath_hash_policy = "replace-me"
   # max_neighbor_entries = 0
-  # rp_filter = false
+  # rp_filter = "no"
   # secure_redirects = false
   # send_redirects = false
   # tcp_syncookies = false
@@ -57,7 +57,7 @@ This resource supports the following arguments:
 * `ipv4_high_fragment_thresh` - (Optional) Type: `string`. RouterOS `ipv4-high-fragment-thresh`.
 * `ipv4_multipath_hash_policy` - (Optional) Type: `string`.
 * `max_neighbor_entries` - (Optional) Type: `int`.
-* `rp_filter` - (Optional) Type: `bool`.
+* `rp_filter` - (Optional) Type: `string`. Reverse path filtering: `no`, `loose` (RFC 3704 loose mode) or `strict` (drop packets arriving on an asymmetric path).
 * `secure_redirects` - (Optional) Type: `bool`.
 * `send_redirects` - (Optional) Type: `bool`.
 * `tcp_syncookies` - (Optional) Type: `bool`.

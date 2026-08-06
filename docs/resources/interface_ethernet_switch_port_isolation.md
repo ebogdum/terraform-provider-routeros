@@ -17,7 +17,7 @@ resource "routeros_interface_ethernet_switch_port_isolation" "port_isolation_exa
 
   # Optional attributes (uncomment as needed):
   # forward_to = "replace-me"
-  # forwarding_override = false
+  # forwarding_override = "ether5"
   # override = "replace-me"
 }
 ```
@@ -28,7 +28,7 @@ This resource supports the following arguments:
 
 * `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `forward_to` - (Optional) Type: `string`.
-* `forwarding_override` - (Optional) Type: `bool`.
+* `forwarding_override` - (Optional) Type: `string`. Name of the switch port this port may forward to, overriding the default isolation. Empty means no override.
 * `invalid` - (Read-only) Type: `bool`.
 * `name` - (Read-only) Type: `string`.
 * `override` - (Optional) Type: `string`.

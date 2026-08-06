@@ -17,7 +17,7 @@ resource "routeros_ip_ssh" "ssh_example" {
 
   # Optional attributes (uncomment as needed):
   # ciphers = "replace-me"
-  # forwarding_enabled = false
+  # forwarding_enabled = "no"
   # host_key_size = 0
   # host_key_type = "replace-me"
   # password_authentication = "replace-me"
@@ -32,7 +32,7 @@ This resource supports the following arguments:
 
 * `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
 * `ciphers` - (Optional) Type: `string`. Allow to configure SSH ciphers.
-* `forwarding_enabled` - (Optional) Type: `bool`. Allows to control which SSH forwarding method to allow: no - SSH forwarding is disabled; local - Allow SSH clients to originate connections from the server(router), this setting controls also dynamic forwarding; remote - Allow SSH clients to listen on the server(router) and forward incoming connections; both - Allow both local and remote forwarding methods.
+* `forwarding_enabled` - (Optional) Type: `string`. Allows to control which SSH forwarding method to allow: `no` - SSH forwarding is disabled; `local` - Allow SSH clients to originate connections from the server(router), this setting controls also dynamic forwarding; `remote` - Allow SSH clients to listen on the server(router) and forward incoming connections; `both` - Allow both local and remote forwarding methods.
 * `host_key_size` - (Optional) Type: `int`. RSA key size when host key is being regenerated.
 * `host_key_type` - (Optional) Type: `string`. Select host key type
 * `password_authentication` - (Optional) Type: `string`. Whether to allow password login at the same time when public key authorization is configured for a user.

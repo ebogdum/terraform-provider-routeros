@@ -10,9 +10,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
 )
 
 var (
@@ -38,7 +40,7 @@ type InterfaceSSTPServerServerModel struct {
 	MaxMru                  types.Int64  `tfsdk:"max_mru"`
 	MaxMtu                  types.Int64  `tfsdk:"max_mtu"`
 	Mrru                    types.String `tfsdk:"mrru"`
-	Pfs                     types.Bool   `tfsdk:"pfs"`
+	Pfs                     types.String `tfsdk:"pfs"`
 	Port                    types.Int64  `tfsdk:"port"`
 	TlsVersion              types.String `tfsdk:"tls_version"`
 	VerifyClientCertificate types.Bool   `tfsdk:"verify_client_certificate"`
@@ -116,10 +118,11 @@ func (r *InterfaceSSTPServerServerResource) Schema(_ context.Context, _ resource
 				Computed:    true,
 				Description: "RouterOS `mrru`.",
 			},
-			"pfs": schema.BoolAttribute{
+			"pfs": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "RouterOS `pfs`.",
+				Description: "Perfect forward secrecy: `no`, `yes` (offer PFS) or `required` (refuse clients without it).",
+				Validators:  []validator.String{schemautil.OneOf([]string{"no", "required", "yes"}...)},
 			},
 			"port": schema.Int64Attribute{
 				Optional:    true,
@@ -245,7 +248,7 @@ func interfaceSSTPServerServerUpsert(ctx context.Context, reg *client.Registry, 
 		body["mrru"] = plan.Mrru.ValueString()
 	}
 	if !(plan.Pfs.IsNull() || plan.Pfs.IsUnknown()) && (state == nil || !plan.Pfs.Equal(state.Pfs)) {
-		body["pfs"] = client.FormatBool(plan.Pfs.ValueBool())
+		body["pfs"] = plan.Pfs.ValueString()
 	}
 	if !(plan.Port.IsNull() || plan.Port.IsUnknown()) && (state == nil || !plan.Port.Equal(state.Port)) {
 		body["port"] = client.FormatInt64(plan.Port.ValueInt64())
@@ -331,15 +334,13 @@ func interfaceSSTPServerServerApply(ctx context.Context, obj client.Object, m *I
 		m.Mrru = types.StringNull()
 	}
 	if v, ok := obj["pfs"]; ok {
-		if b, err := client.ParseBool(v); err == nil {
-			m.Pfs = types.BoolValue(b)
-		} else if strings.TrimSpace(v) == "" {
-			m.Pfs = types.BoolValue(true)
+		if v != "" {
+			m.Pfs = types.StringValue(v)
 		} else {
-			m.Pfs = types.BoolNull()
+			m.Pfs = types.StringNull()
 		}
 	} else {
-		m.Pfs = types.BoolNull()
+		m.Pfs = types.StringNull()
 	}
 	if v, ok := obj["port"]; ok {
 		if n, err := client.ParseInt64(v); err == nil {

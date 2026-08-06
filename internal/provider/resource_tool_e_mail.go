@@ -3,16 +3,17 @@ package provider
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
 )
 
 var (
@@ -28,12 +29,12 @@ type ToolEMailResource struct {
 
 type ToolEMailModel struct {
 	ID                      types.String `tfsdk:"id"`
-	CertificateVerification types.Bool   `tfsdk:"certificate_verification"`
+	CertificateVerification types.String `tfsdk:"certificate_verification"`
 	From                    types.String `tfsdk:"from"`
 	Password                types.String `tfsdk:"password"`
 	Port                    types.Int64  `tfsdk:"port"`
 	Server                  types.String `tfsdk:"server"`
-	TLS                     types.Bool   `tfsdk:"tls"`
+	TLS                     types.String `tfsdk:"tls"`
 	User                    types.String `tfsdk:"user"`
 	Vrf                     types.String `tfsdk:"vrf"`
 	Router                  types.String `tfsdk:"router"`
@@ -62,8 +63,9 @@ func (r *ToolEMailResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Description:   "Stable identifier (the singleton's menu path, optionally namespaced by router).",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
-			"certificate_verification": schema.BoolAttribute{Optional: true, Computed: true,
-				Description: "",
+			"certificate_verification": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "How the SMTP server's certificate is checked: `no`, `yes`, or `yes-without-crl` (verify the chain but skip the CRL check).",
+				Validators:  []validator.String{schemautil.OneOf([]string{"no", "yes", "yes-without-crl"}...)},
 			},
 			"from": schema.StringAttribute{Optional: true, Computed: true,
 				Description: "",
@@ -77,8 +79,9 @@ func (r *ToolEMailResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 			"server": schema.StringAttribute{Optional: true, Computed: true,
 				Description: "",
 			},
-			"tls": schema.BoolAttribute{Optional: true, Computed: true,
-				Description: "",
+			"tls": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "Transport security: `no`, `starttls` (upgrade a plain connection via STARTTLS), or `yes` (implicit TLS).",
+				Validators:  []validator.String{schemautil.OneOf([]string{"no", "starttls", "yes"}...)},
 			},
 			"user": schema.StringAttribute{Optional: true, Computed: true,
 				Description: "",
@@ -167,7 +170,7 @@ func toolEMailUpsert(ctx context.Context, reg *client.Registry, plan, state *Too
 	}
 	body := client.Object{}
 	if !(plan.CertificateVerification.IsNull() || plan.CertificateVerification.IsUnknown()) && (state == nil || !plan.CertificateVerification.Equal(state.CertificateVerification)) {
-		body["certificate-verification"] = client.FormatBool(plan.CertificateVerification.ValueBool())
+		body["certificate-verification"] = plan.CertificateVerification.ValueString()
 	}
 	if !(plan.From.IsNull() || plan.From.IsUnknown()) && (state == nil || !plan.From.Equal(state.From)) {
 		body["from"] = plan.From.ValueString()
@@ -182,7 +185,7 @@ func toolEMailUpsert(ctx context.Context, reg *client.Registry, plan, state *Too
 		body["server"] = plan.Server.ValueString()
 	}
 	if !(plan.TLS.IsNull() || plan.TLS.IsUnknown()) && (state == nil || !plan.TLS.Equal(state.TLS)) {
-		body["tls"] = client.FormatBool(plan.TLS.ValueBool())
+		body["tls"] = plan.TLS.ValueString()
 	}
 	if !(plan.User.IsNull() || plan.User.IsUnknown()) && (state == nil || !plan.User.Equal(state.User)) {
 		body["user"] = plan.User.ValueString()
@@ -203,12 +206,10 @@ func toolEMailApply(ctx context.Context, obj client.Object, m *ToolEMailModel) {
 	_ = ctx
 	if v, ok := obj["certificate-verification"]; ok {
 		_ = v
-		if b, err := client.ParseBool(v); err == nil {
-			m.CertificateVerification = types.BoolValue(b)
-		} else if strings.TrimSpace(v) == "" {
-			m.CertificateVerification = types.BoolValue(true)
+		if v != "" {
+			m.CertificateVerification = types.StringValue(v)
 		} else {
-			m.CertificateVerification = types.BoolNull()
+			m.CertificateVerification = types.StringNull()
 		}
 	}
 	if v, ok := obj["from"]; ok {
@@ -247,12 +248,10 @@ func toolEMailApply(ctx context.Context, obj client.Object, m *ToolEMailModel) {
 	}
 	if v, ok := obj["tls"]; ok {
 		_ = v
-		if b, err := client.ParseBool(v); err == nil {
-			m.TLS = types.BoolValue(b)
-		} else if strings.TrimSpace(v) == "" {
-			m.TLS = types.BoolValue(true)
+		if v != "" {
+			m.TLS = types.StringValue(v)
 		} else {
-			m.TLS = types.BoolNull()
+			m.TLS = types.StringNull()
 		}
 	}
 	if v, ok := obj["user"]; ok {

@@ -3,6 +3,6 @@ resource "routeros_interface_ethernet_switch_port_isolation" "port_isolation_exa
 
   # Optional attributes (uncomment as needed):
   # forward_to = "replace-me"
-  # forwarding_override = false
+  # forwarding_override = "ether5"
   # override = "replace-me"
 }

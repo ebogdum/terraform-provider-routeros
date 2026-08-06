@@ -10,9 +10,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
 )
 
 var (
@@ -29,7 +31,7 @@ type IPSSHResource struct {
 type IPSSHModel struct {
 	ID                             types.String `tfsdk:"id"`
 	Ciphers                        types.String `tfsdk:"ciphers"`
-	ForwardingEnabled              types.Bool   `tfsdk:"forwarding_enabled"`
+	ForwardingEnabled              types.String `tfsdk:"forwarding_enabled"`
 	HostKeySize                    types.Int64  `tfsdk:"host_key_size"`
 	HostKeyType                    types.String `tfsdk:"host_key_type"`
 	PasswordAuthentication         types.String `tfsdk:"password_authentication"`
@@ -64,8 +66,9 @@ func (r *IPSSHResource) Schema(_ context.Context, _ resource.SchemaRequest, resp
 			"ciphers": schema.StringAttribute{Optional: true, Computed: true,
 				Description: "Allow to configure SSH ciphers.",
 			},
-			"forwarding_enabled": schema.BoolAttribute{Optional: true, Computed: true,
-				Description: "Allows to control which SSH forwarding method to allow: no - SSH forwarding is disabled; local - Allow SSH clients to originate connections from the server(router), this setting controls also dynamic forwarding; remote - Allow SSH clients to listen on the server(router) and forward incoming connections; both - Allow both local and remote forwarding methods.",
+			"forwarding_enabled": schema.StringAttribute{Optional: true, Computed: true,
+				Description: "Allows to control which SSH forwarding method to allow: `no` - SSH forwarding is disabled; `local` - Allow SSH clients to originate connections from the server(router), this setting controls also dynamic forwarding; `remote` - Allow SSH clients to listen on the server(router) and forward incoming connections; `both` - Allow both local and remote forwarding methods.",
+				Validators:  []validator.String{schemautil.OneOf([]string{"both", "local", "no", "remote"}...)},
 			},
 			"host_key_size": schema.Int64Attribute{Optional: true, Computed: true,
 				Description: "RSA key size when host key is being regenerated.",
@@ -166,7 +169,7 @@ func iPSSHUpsert(ctx context.Context, reg *client.Registry, plan, state *IPSSHMo
 		body["ciphers"] = plan.Ciphers.ValueString()
 	}
 	if !(plan.ForwardingEnabled.IsNull() || plan.ForwardingEnabled.IsUnknown()) && (state == nil || !plan.ForwardingEnabled.Equal(state.ForwardingEnabled)) {
-		body["forwarding-enabled"] = client.FormatBool(plan.ForwardingEnabled.ValueBool())
+		body["forwarding-enabled"] = plan.ForwardingEnabled.ValueString()
 	}
 	if !(plan.HostKeySize.IsNull() || plan.HostKeySize.IsUnknown()) && (state == nil || !plan.HostKeySize.Equal(state.HostKeySize)) {
 		body["host-key-size"] = client.FormatInt64(plan.HostKeySize.ValueInt64())
@@ -204,12 +207,10 @@ func iPSSHApply(ctx context.Context, obj client.Object, m *IPSSHModel) {
 	}
 	if v, ok := obj["forwarding-enabled"]; ok {
 		_ = v
-		if b, err := client.ParseBool(v); err == nil {
-			m.ForwardingEnabled = types.BoolValue(b)
-		} else if strings.TrimSpace(v) == "" {
-			m.ForwardingEnabled = types.BoolValue(true)
+		if v != "" {
+			m.ForwardingEnabled = types.StringValue(v)
 		} else {
-			m.ForwardingEnabled = types.BoolNull()
+			m.ForwardingEnabled = types.StringNull()
 		}
 	}
 	if v, ok := obj["host-key-size"]; ok {

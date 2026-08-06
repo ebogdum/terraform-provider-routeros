@@ -12,7 +12,7 @@ resource "routeros_ip_settings" "settings_example" {
   # ip_forward = false
   # ipv4_multipath_hash_policy = "replace-me"
   # max_neighbor_entries = 0
-  # rp_filter = false
+  # rp_filter = "no"
   # secure_redirects = false
   # send_redirects = false
   # tcp_syncookies = false
