@@ -43,11 +43,17 @@ type conformanceAttr struct {
 	B    string `json:"b"`
 }
 
+type conformanceRequired struct {
+	Kind  string `json:"kind"`
+	Value string `json:"value"`
+}
+
 type conformanceResource struct {
-	Menu       string                     `json:"menu"`
-	Addable    bool                       `json:"addable"`
-	Key        string                     `json:"key"`
-	Attributes map[string]conformanceAttr `json:"attributes"`
+	Menu       string                         `json:"menu"`
+	Addable    bool                           `json:"addable"`
+	Key        string                         `json:"key"`
+	Required   map[string]conformanceRequired `json:"required"`
+	Attributes map[string]conformanceAttr     `json:"attributes"`
 }
 
 type conformanceManifest struct {
@@ -104,6 +110,20 @@ provider "routeros" {
 	fmt.Fprintf(&b, "\nresource %q \"conf\" {\n  router = \"home\"\n", typeName)
 	if r.Addable && r.Key != "" {
 		fmt.Fprintf(&b, "  %s = \"tfacc-conf\"\n", r.Key)
+	}
+	// Required attributes are pinned into every config: Terraform rejects the
+	// config outright if one is absent, so the provider is never reached and
+	// the attribute under test is never exercised.
+	reqNames := make([]string, 0, len(r.Required))
+	for n := range r.Required {
+		if _, dup := set[n]; !dup && n != r.Key {
+			reqNames = append(reqNames, n)
+		}
+	}
+	sort.Strings(reqNames)
+	for _, n := range reqNames {
+		fmt.Fprintf(&b, "  %s = %s\n", n,
+			hclValue(conformanceAttr{Kind: r.Required[n].Kind, A: r.Required[n].Value}, "a"))
 	}
 	names := make([]string, 0, len(set))
 	for n := range set {

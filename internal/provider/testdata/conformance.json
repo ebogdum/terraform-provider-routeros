@@ -70,7 +70,8 @@
     }
    },
    "key": "name",
-   "menu": "/certificate"
+   "menu": "/certificate",
+   "required": {}
   },
   "routeros_certificate_scep_server": {
    "addable": true,
@@ -97,7 +98,8 @@
     }
    },
    "key": "",
-   "menu": "/certificate/scep-server"
+   "menu": "/certificate/scep-server",
+   "required": {}
   },
   "routeros_certificate_settings": {
    "addable": false,
@@ -129,7 +131,8 @@
     }
    },
    "key": "",
-   "menu": "/certificate/settings"
+   "menu": "/certificate/settings",
+   "required": {}
   },
   "routeros_console_settings": {
    "addable": false,
@@ -151,7 +154,8 @@
     }
    },
    "key": "",
-   "menu": "/console/settings"
+   "menu": "/console/settings",
+   "required": {}
   },
   "routeros_disk": {
    "addable": true,
@@ -223,7 +227,8 @@
     }
    },
    "key": "",
-   "menu": "/disk"
+   "menu": "/disk",
+   "required": {}
   },
   "routeros_disk_settings": {
    "addable": false,
@@ -250,7 +255,8 @@
     }
    },
    "key": "",
-   "menu": "/disk/settings"
+   "menu": "/disk/settings",
+   "required": {}
   },
   "routeros_file": {
    "addable": true,
@@ -262,7 +268,8 @@
     }
    },
    "key": "name",
-   "menu": "/file"
+   "menu": "/file",
+   "required": {}
   },
   "routeros_interface": {
    "addable": false,
@@ -274,7 +281,8 @@
     }
    },
    "key": "name",
-   "menu": "/interface"
+   "menu": "/interface",
+   "required": {}
   },
   "routeros_interface_6to4": {
    "addable": true,
@@ -316,7 +324,8 @@
     }
    },
    "key": "name",
-   "menu": "/interface/6to4"
+   "menu": "/interface/6to4",
+   "required": {}
   },
   "routeros_interface_bonding": {
    "addable": true,
@@ -428,7 +437,8 @@
     }
    },
    "key": "name",
-   "menu": "/interface/bonding"
+   "menu": "/interface/bonding",
+   "required": {}
   },
   "routeros_interface_bridge_calea": {
    "addable": true,
@@ -555,7 +565,8 @@
     }
    },
    "key": "",
-   "menu": "/interface/bridge/calea"
+   "menu": "/interface/bridge/calea",
+   "required": {}
   },
   "routeros_interface_bridge_filter": {
    "addable": true,
@@ -677,7 +688,13 @@
     }
    },
    "key": "",
-   "menu": "/interface/bridge/filter"
+   "menu": "/interface/bridge/filter",
+   "required": {
+    "chain": {
+     "kind": "String",
+     "value": "forward"
+    }
+   }
   },
   "routeros_interface_bridge_host": {
    "addable": true,
@@ -694,7 +711,8 @@
     }
    },
    "key": "",
-   "menu": "/interface/bridge/host"
+   "menu": "/interface/bridge/host",
+   "required": {}
   },
   "routeros_interface_bridge_msti": {
    "addable": true,
@@ -721,7 +739,8 @@
     }
    },
    "key": "",
-   "menu": "/interface/bridge/msti"
+   "menu": "/interface/bridge/msti",
+   "required": {}
   },
   "routeros_interface_bridge_nat": {
    "addable": true,
@@ -858,7 +877,13 @@
     }
    },
    "key": "",
-   "menu": "/interface/bridge/nat"
+   "menu": "/interface/bridge/nat",
+   "required": {
+    "chain": {
+     "kind": "String",
+     "value": "dstnat"
+    }
+   }
   },
   "routeros_interface_bridge_settings": {
    "addable": false,
@@ -885,7 +910,8 @@
     }
    },
    "key": "",
-   "menu": "/interface/bridge/settings"
+   "menu": "/interface/bridge/settings",
+   "required": {}
   },
   "routeros_interface_detect_internet": {
    "addable": false,
@@ -917,7 +943,8 @@
     }
    },
    "key": "",
-   "menu": "/interface/detect-internet"
+   "menu": "/interface/detect-internet",
+   "required": {}
   },
   "routeros_interface_dot1x_client": {
    "addable": true,
@@ -944,7 +971,8 @@
     }
    },
    "key": "",
-   "menu": "/interface/dot1x/client"
+   "menu": "/interface/dot1x/client",
+   "required": {}
   },
   "routeros_interface_dot1x_server": {
    "addable": true,
@@ -1011,7 +1039,8 @@
     }
    },
    "key": "",
-   "menu": "/interface/dot1x/server"
+   "menu": "/interface/dot1x/server",
+   "required": {}
   },
   "routeros_interface_eoip": {
    "addable": true,
@@ -1068,7 +1097,21 @@
     }
    },
    "key": "name",
-   "menu": "/interface/eoip"
+   "menu": "/interface/eoip",
+   "required": {
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    },
+    "remote_address": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    },
+    "tunnel_id": {
+     "kind": "Int64",
+     "value": "10"
+    }
+   }
   },
   "routeros_interface_eoipv6": {
    "addable": true,
@@ -1125,7 +1168,21 @@
     }
    },
    "key": "name",
-   "menu": "/interface/eoipv6"
+   "menu": "/interface/eoipv6",
+   "required": {
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    },
+    "remote_address": {
+     "kind": "String",
+     "value": "bridge"
+    },
+    "tunnel_id": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_interface_ethernet_poe": {
    "addable": false,
@@ -1162,7 +1219,8 @@
     }
    },
    "key": "name",
-   "menu": "/interface/ethernet/poe"
+   "menu": "/interface/ethernet/poe",
+   "required": {}
   },
   "routeros_interface_ethernet_switch": {
    "addable": false,
@@ -1189,7 +1247,8 @@
     }
    },
    "key": "name",
-   "menu": "/interface/ethernet/switch"
+   "menu": "/interface/ethernet/switch",
+   "required": {}
   },
   "routeros_interface_ethernet_switch_port_isolation": {
    "addable": false,
@@ -1201,7 +1260,8 @@
     }
    },
    "key": "",
-   "menu": "/interface/ethernet/switch/port-isolation"
+   "menu": "/interface/ethernet/switch/port-isolation",
+   "required": {}
   },
   "routeros_interface_gre": {
    "addable": true,
@@ -1248,7 +1308,8 @@
     }
    },
    "key": "name",
-   "menu": "/interface/gre"
+   "menu": "/interface/gre",
+   "required": {}
   },
   "routeros_interface_gre6": {
    "addable": true,
@@ -1290,7 +1351,8 @@
     }
    },
    "key": "name",
-   "menu": "/interface/gre6"
+   "menu": "/interface/gre6",
+   "required": {}
   },
   "routeros_interface_ipip": {
    "addable": true,
@@ -1337,7 +1399,8 @@
     }
    },
    "key": "name",
-   "menu": "/interface/ipip"
+   "menu": "/interface/ipip",
+   "required": {}
   },
   "routeros_interface_ipipv6": {
    "addable": true,
@@ -1379,7 +1442,8 @@
     }
    },
    "key": "name",
-   "menu": "/interface/ipipv6"
+   "menu": "/interface/ipipv6",
+   "required": {}
   },
   "routeros_interface_l2tp_client": {
    "addable": true,
@@ -1471,7 +1535,21 @@
     }
    },
    "key": "name",
-   "menu": "/interface/l2tp-client"
+   "menu": "/interface/l2tp-client",
+   "required": {
+    "connect_to": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    },
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    },
+    "user": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_interface_l2tp_ether": {
    "addable": true,
@@ -1568,7 +1646,8 @@
     }
    },
    "key": "name",
-   "menu": "/interface/l2tp-ether"
+   "menu": "/interface/l2tp-ether",
+   "required": {}
   },
   "routeros_interface_l2tp_server": {
    "addable": true,
@@ -1580,7 +1659,17 @@
     }
    },
    "key": "name",
-   "menu": "/interface/l2tp-server"
+   "menu": "/interface/l2tp-server",
+   "required": {
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    },
+    "user": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_interface_l2tp_server_server": {
    "addable": false,
@@ -1667,7 +1756,8 @@
     }
    },
    "key": "",
-   "menu": "/interface/l2tp-server/server"
+   "menu": "/interface/l2tp-server/server",
+   "required": {}
   },
   "routeros_interface_lte": {
    "addable": false,
@@ -1729,7 +1819,8 @@
     }
    },
    "key": "name",
-   "menu": "/interface/lte"
+   "menu": "/interface/lte",
+   "required": {}
   },
   "routeros_interface_lte_apn": {
    "addable": true,
@@ -1791,7 +1882,17 @@
     }
    },
    "key": "name",
-   "menu": "/interface/lte/apn"
+   "menu": "/interface/lte/apn",
+   "required": {
+    "apn": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    },
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_interface_lte_settings": {
    "addable": false,
@@ -1818,7 +1919,8 @@
     }
    },
    "key": "",
-   "menu": "/interface/lte/settings"
+   "menu": "/interface/lte/settings",
+   "required": {}
   },
   "routeros_interface_macsec": {
    "addable": true,
@@ -1845,7 +1947,8 @@
     }
    },
    "key": "name",
-   "menu": "/interface/macsec"
+   "menu": "/interface/macsec",
+   "required": {}
   },
   "routeros_interface_macsec_profile": {
    "addable": true,
@@ -1862,7 +1965,8 @@
     }
    },
    "key": "name",
-   "menu": "/interface/macsec/profile"
+   "menu": "/interface/macsec/profile",
+   "required": {}
   },
   "routeros_interface_macvlan": {
    "addable": true,
@@ -1904,7 +2008,8 @@
     }
    },
    "key": "name",
-   "menu": "/interface/macvlan"
+   "menu": "/interface/macvlan",
+   "required": {}
   },
   "routeros_interface_mesh": {
    "addable": true,
@@ -1991,7 +2096,8 @@
     }
    },
    "key": "name",
-   "menu": "/interface/mesh"
+   "menu": "/interface/mesh",
+   "required": {}
   },
   "routeros_interface_mesh_port": {
    "addable": true,
@@ -2023,7 +2129,8 @@
     }
    },
    "key": "",
-   "menu": "/interface/mesh/port"
+   "menu": "/interface/mesh/port",
+   "required": {}
   },
   "routeros_interface_ovpn_client": {
    "addable": true,
@@ -2095,7 +2202,21 @@
     }
    },
    "key": "name",
-   "menu": "/interface/ovpn-client"
+   "menu": "/interface/ovpn-client",
+   "required": {
+    "connect_to": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    },
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    },
+    "user": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_interface_ovpn_server": {
    "addable": true,
@@ -2107,7 +2228,17 @@
     }
    },
    "key": "name",
-   "menu": "/interface/ovpn-server"
+   "menu": "/interface/ovpn-server",
+   "required": {
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    },
+    "user": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_interface_ppp_client": {
    "addable": true,
@@ -2214,7 +2345,8 @@
     }
    },
    "key": "name",
-   "menu": "/interface/ppp-client"
+   "menu": "/interface/ppp-client",
+   "required": {}
   },
   "routeros_interface_ppp_server": {
    "addable": true,
@@ -2266,7 +2398,8 @@
     }
    },
    "key": "name",
-   "menu": "/interface/ppp-server"
+   "menu": "/interface/ppp-server",
+   "required": {}
   },
   "routeros_interface_pppoe_client": {
    "addable": true,
@@ -2323,7 +2456,8 @@
     }
    },
    "key": "name",
-   "menu": "/interface/pppoe-client"
+   "menu": "/interface/pppoe-client",
+   "required": {}
   },
   "routeros_interface_pppoe_server": {
    "addable": true,
@@ -2340,7 +2474,8 @@
     }
    },
    "key": "name",
-   "menu": "/interface/pppoe-server"
+   "menu": "/interface/pppoe-server",
+   "required": {}
   },
   "routeros_interface_pptp_client": {
    "addable": true,
@@ -2392,7 +2527,21 @@
     }
    },
    "key": "name",
-   "menu": "/interface/pptp-client"
+   "menu": "/interface/pptp-client",
+   "required": {
+    "connect_to": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    },
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    },
+    "user": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_interface_pptp_server": {
    "addable": true,
@@ -2404,7 +2553,17 @@
     }
    },
    "key": "name",
-   "menu": "/interface/pptp-server"
+   "menu": "/interface/pptp-server",
+   "required": {
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    },
+    "user": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_interface_pptp_server_server": {
    "addable": false,
@@ -2436,7 +2595,8 @@
     }
    },
    "key": "",
-   "menu": "/interface/pptp-server/server"
+   "menu": "/interface/pptp-server/server",
+   "required": {}
   },
   "routeros_interface_sstp_client": {
    "addable": true,
@@ -2523,7 +2683,21 @@
     }
    },
    "key": "name",
-   "menu": "/interface/sstp-client"
+   "menu": "/interface/sstp-client",
+   "required": {
+    "connect_to": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    },
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    },
+    "user": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_interface_sstp_server": {
    "addable": true,
@@ -2535,7 +2709,17 @@
     }
    },
    "key": "name",
-   "menu": "/interface/sstp-server"
+   "menu": "/interface/sstp-server",
+   "required": {
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    },
+    "user": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_interface_sstp_server_server": {
    "addable": false,
@@ -2587,7 +2771,8 @@
     }
    },
    "key": "",
-   "menu": "/interface/sstp-server/server"
+   "menu": "/interface/sstp-server/server",
+   "required": {}
   },
   "routeros_interface_vlan": {
    "addable": true,
@@ -2624,7 +2809,21 @@
     }
    },
    "key": "name",
-   "menu": "/interface/vlan"
+   "menu": "/interface/vlan",
+   "required": {
+    "interface": {
+     "kind": "String",
+     "value": "bridge"
+    },
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    },
+    "vlan_id": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_interface_vpls": {
    "addable": true,
@@ -2691,7 +2890,8 @@
     }
    },
    "key": "name",
-   "menu": "/interface/vpls"
+   "menu": "/interface/vpls",
+   "required": {}
   },
   "routeros_interface_vrrp": {
    "addable": true,
@@ -2788,7 +2988,17 @@
     }
    },
    "key": "name",
-   "menu": "/interface/vrrp"
+   "menu": "/interface/vrrp",
+   "required": {
+    "interface": {
+     "kind": "String",
+     "value": "bridge"
+    },
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_interface_vxlan": {
    "addable": true,
@@ -2875,7 +3085,17 @@
     }
    },
    "key": "name",
-   "menu": "/interface/vxlan"
+   "menu": "/interface/vxlan",
+   "required": {
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    },
+    "vni": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_interface_wifi": {
    "addable": true,
@@ -2962,7 +3182,8 @@
     }
    },
    "key": "name",
-   "menu": "/interface/wifi"
+   "menu": "/interface/wifi",
+   "required": {}
   },
   "routeros_interface_wifi_aaa": {
    "addable": true,
@@ -2999,7 +3220,8 @@
     }
    },
    "key": "name",
-   "menu": "/interface/wifi/aaa"
+   "menu": "/interface/wifi/aaa",
+   "required": {}
   },
   "routeros_interface_wifi_access_list": {
    "addable": true,
@@ -3056,7 +3278,8 @@
     }
    },
    "key": "",
-   "menu": "/interface/wifi/access-list"
+   "menu": "/interface/wifi/access-list",
+   "required": {}
   },
   "routeros_interface_wifi_cap": {
    "addable": false,
@@ -3113,7 +3336,8 @@
     }
    },
    "key": "",
-   "menu": "/interface/wifi/cap"
+   "menu": "/interface/wifi/cap",
+   "required": {}
   },
   "routeros_interface_wifi_capsman": {
    "addable": false,
@@ -3150,7 +3374,8 @@
     }
    },
    "key": "",
-   "menu": "/interface/wifi/capsman"
+   "menu": "/interface/wifi/capsman",
+   "required": {}
   },
   "routeros_interface_wifi_channel": {
    "addable": true,
@@ -3207,7 +3432,13 @@
     }
    },
    "key": "name",
-   "menu": "/interface/wifi/channel"
+   "menu": "/interface/wifi/channel",
+   "required": {
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_interface_wifi_configuration": {
    "addable": true,
@@ -3344,7 +3575,13 @@
     }
    },
    "key": "name",
-   "menu": "/interface/wifi/configuration"
+   "menu": "/interface/wifi/configuration",
+   "required": {
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_interface_wifi_datapath": {
    "addable": true,
@@ -3376,7 +3613,13 @@
     }
    },
    "key": "name",
-   "menu": "/interface/wifi/datapath"
+   "menu": "/interface/wifi/datapath",
+   "required": {
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_interface_wifi_interworking": {
    "addable": true,
@@ -3523,7 +3766,13 @@
     }
    },
    "key": "name",
-   "menu": "/interface/wifi/interworking"
+   "menu": "/interface/wifi/interworking",
+   "required": {
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_interface_wifi_provisioning": {
    "addable": true,
@@ -3590,7 +3839,13 @@
     }
    },
    "key": "",
-   "menu": "/interface/wifi/provisioning"
+   "menu": "/interface/wifi/provisioning",
+   "required": {
+    "action": {
+     "kind": "String",
+     "value": "create-disabled"
+    }
+   }
   },
   "routeros_interface_wifi_security": {
    "addable": true,
@@ -3752,7 +4007,13 @@
     }
    },
    "key": "name",
-   "menu": "/interface/wifi/security"
+   "menu": "/interface/wifi/security",
+   "required": {
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_interface_wifi_steering": {
    "addable": true,
@@ -3799,7 +4060,13 @@
     }
    },
    "key": "name",
-   "menu": "/interface/wifi/steering"
+   "menu": "/interface/wifi/steering",
+   "required": {
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_interface_wireguard": {
    "addable": true,
@@ -3821,7 +4088,8 @@
     }
    },
    "key": "name",
-   "menu": "/interface/wireguard"
+   "menu": "/interface/wireguard",
+   "required": {}
   },
   "routeros_interface_wireguard_peers": {
    "addable": true,
@@ -3903,7 +4171,8 @@
     }
    },
    "key": "name",
-   "menu": "/interface/wireguard/peers"
+   "menu": "/interface/wireguard/peers",
+   "required": {}
   },
   "routeros_ip_arp": {
    "addable": true,
@@ -3920,7 +4189,17 @@
     }
    },
    "key": "",
-   "menu": "/ip/arp"
+   "menu": "/ip/arp",
+   "required": {
+    "address": {
+     "kind": "String",
+     "value": "192.0.2.10"
+    },
+    "interface": {
+     "kind": "String",
+     "value": "bridge"
+    }
+   }
   },
   "routeros_ip_cloud_advanced": {
    "addable": false,
@@ -3932,7 +4211,8 @@
     }
    },
    "key": "",
-   "menu": "/ip/cloud/advanced"
+   "menu": "/ip/cloud/advanced",
+   "required": {}
   },
   "routeros_ip_cloud_back_to_home_user": {
    "addable": true,
@@ -3969,7 +4249,8 @@
     }
    },
    "key": "name",
-   "menu": "/ip/cloud/back-to-home-user"
+   "menu": "/ip/cloud/back-to-home-user",
+   "required": {}
   },
   "routeros_ip_dhcp_client_option": {
    "addable": true,
@@ -3991,7 +4272,8 @@
     }
    },
    "key": "name",
-   "menu": "/ip/dhcp-client/option"
+   "menu": "/ip/dhcp-client/option",
+   "required": {}
   },
   "routeros_ip_dhcp_relay": {
    "addable": true,
@@ -4018,7 +4300,21 @@
     }
    },
    "key": "name",
-   "menu": "/ip/dhcp-relay"
+   "menu": "/ip/dhcp-relay",
+   "required": {
+    "dhcp_server": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    },
+    "interface": {
+     "kind": "String",
+     "value": "bridge"
+    },
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_ip_dhcp_server_alert": {
    "addable": true,
@@ -4040,7 +4336,13 @@
     }
    },
    "key": "",
-   "menu": "/ip/dhcp-server/alert"
+   "menu": "/ip/dhcp-server/alert",
+   "required": {
+    "interface": {
+     "kind": "String",
+     "value": "bridge"
+    }
+   }
   },
   "routeros_ip_dhcp_server_config": {
    "addable": false,
@@ -4067,7 +4369,8 @@
     }
    },
    "key": "",
-   "menu": "/ip/dhcp-server/config"
+   "menu": "/ip/dhcp-server/config",
+   "required": {}
   },
   "routeros_ip_dhcp_server_lease": {
    "addable": true,
@@ -4149,7 +4452,8 @@
     }
    },
    "key": "",
-   "menu": "/ip/dhcp-server/lease"
+   "menu": "/ip/dhcp-server/lease",
+   "required": {}
   },
   "routeros_ip_dhcp_server_matcher": {
    "addable": true,
@@ -4171,7 +4475,8 @@
     }
    },
    "key": "name",
-   "menu": "/ip/dhcp-server/matcher"
+   "menu": "/ip/dhcp-server/matcher",
+   "required": {}
   },
   "routeros_ip_dhcp_server_network": {
    "addable": true,
@@ -4243,7 +4548,13 @@
     }
    },
    "key": "",
-   "menu": "/ip/dhcp-server/network"
+   "menu": "/ip/dhcp-server/network",
+   "required": {
+    "address": {
+     "kind": "String",
+     "value": "192.0.2.0/24"
+    }
+   }
   },
   "routeros_ip_dhcp_server_option": {
    "addable": true,
@@ -4260,7 +4571,17 @@
     }
    },
    "key": "name",
-   "menu": "/ip/dhcp-server/option"
+   "menu": "/ip/dhcp-server/option",
+   "required": {
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    },
+    "value": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_ip_dhcp_server_option_sets": {
    "addable": true,
@@ -4272,7 +4593,8 @@
     }
    },
    "key": "name",
-   "menu": "/ip/dhcp-server/option/sets"
+   "menu": "/ip/dhcp-server/option/sets",
+   "required": {}
   },
   "routeros_ip_dns": {
    "addable": false,
@@ -4359,7 +4681,8 @@
     }
    },
    "key": "",
-   "menu": "/ip/dns"
+   "menu": "/ip/dns",
+   "required": {}
   },
   "routeros_ip_dns_adlist": {
    "addable": true,
@@ -4386,7 +4709,8 @@
     }
    },
    "key": "",
-   "menu": "/ip/dns/adlist"
+   "menu": "/ip/dns/adlist",
+   "required": {}
   },
   "routeros_ip_dns_forwarders": {
    "addable": true,
@@ -4413,7 +4737,8 @@
     }
    },
    "key": "name",
-   "menu": "/ip/dns/forwarders"
+   "menu": "/ip/dns/forwarders",
+   "required": {}
   },
   "routeros_ip_dns_static": {
    "addable": true,
@@ -4500,7 +4825,17 @@
     }
    },
    "key": "name",
-   "menu": "/ip/dns/static"
+   "menu": "/ip/dns/static",
+   "required": {
+    "address": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    },
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_ip_firewall_address_list": {
    "addable": true,
@@ -4517,7 +4852,17 @@
     }
    },
    "key": "",
-   "menu": "/ip/firewall/address-list"
+   "menu": "/ip/firewall/address-list",
+   "required": {
+    "address": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    },
+    "list": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_ip_firewall_calea": {
    "addable": true,
@@ -4689,7 +5034,8 @@
     }
    },
    "key": "",
-   "menu": "/ip/firewall/calea"
+   "menu": "/ip/firewall/calea",
+   "required": {}
   },
   "routeros_ip_firewall_connection_tracking": {
    "addable": false,
@@ -4781,7 +5127,8 @@
     }
    },
    "key": "",
-   "menu": "/ip/firewall/connection/tracking"
+   "menu": "/ip/firewall/connection/tracking",
+   "required": {}
   },
   "routeros_ip_firewall_layer7_protocol": {
    "addable": true,
@@ -4798,7 +5145,8 @@
     }
    },
    "key": "name",
-   "menu": "/ip/firewall/layer7-protocol"
+   "menu": "/ip/firewall/layer7-protocol",
+   "required": {}
   },
   "routeros_ip_firewall_mangle": {
    "addable": true,
@@ -5020,7 +5368,17 @@
     }
    },
    "key": "",
-   "menu": "/ip/firewall/mangle"
+   "menu": "/ip/firewall/mangle",
+   "required": {
+    "action": {
+     "kind": "String",
+     "value": "accept"
+    },
+    "chain": {
+     "kind": "String",
+     "value": "forward"
+    }
+   }
   },
   "routeros_ip_firewall_raw": {
    "addable": true,
@@ -5167,7 +5525,17 @@
     }
    },
    "key": "",
-   "menu": "/ip/firewall/raw"
+   "menu": "/ip/firewall/raw",
+   "required": {
+    "action": {
+     "kind": "String",
+     "value": "accept"
+    },
+    "chain": {
+     "kind": "String",
+     "value": "output"
+    }
+   }
   },
   "routeros_ip_firewall_service_port": {
    "addable": false,
@@ -5189,7 +5557,8 @@
     }
    },
    "key": "",
-   "menu": "/ip/firewall/service-port"
+   "menu": "/ip/firewall/service-port",
+   "required": {}
   },
   "routeros_ip_hotspot_ip_binding": {
    "addable": true,
@@ -5211,7 +5580,8 @@
     }
    },
    "key": "",
-   "menu": "/ip/hotspot/ip-binding"
+   "menu": "/ip/hotspot/ip-binding",
+   "required": {}
   },
   "routeros_ip_hotspot_profile": {
    "addable": true,
@@ -5328,7 +5698,8 @@
     }
    },
    "key": "name",
-   "menu": "/ip/hotspot/profile"
+   "menu": "/ip/hotspot/profile",
+   "required": {}
   },
   "routeros_ip_hotspot_service_port": {
    "addable": false,
@@ -5340,7 +5711,8 @@
     }
    },
    "key": "",
-   "menu": "/ip/hotspot/service-port"
+   "menu": "/ip/hotspot/service-port",
+   "required": {}
   },
   "routeros_ip_hotspot_user": {
    "addable": true,
@@ -5387,7 +5759,13 @@
     }
    },
    "key": "name",
-   "menu": "/ip/hotspot/user"
+   "menu": "/ip/hotspot/user",
+   "required": {
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_ip_hotspot_user_profile": {
    "addable": true,
@@ -5414,7 +5792,8 @@
     }
    },
    "key": "name",
-   "menu": "/ip/hotspot/user/profile"
+   "menu": "/ip/hotspot/user/profile",
+   "required": {}
   },
   "routeros_ip_hotspot_walled_garden": {
    "addable": true,
@@ -5431,7 +5810,8 @@
     }
    },
    "key": "",
-   "menu": "/ip/hotspot/walled-garden"
+   "menu": "/ip/hotspot/walled-garden",
+   "required": {}
   },
   "routeros_ip_hotspot_walled_garden_ip": {
    "addable": true,
@@ -5453,7 +5833,8 @@
     }
    },
    "key": "",
-   "menu": "/ip/hotspot/walled-garden/ip"
+   "menu": "/ip/hotspot/walled-garden/ip",
+   "required": {}
   },
   "routeros_ip_ipsec_identity": {
    "addable": true,
@@ -5535,7 +5916,8 @@
     }
    },
    "key": "",
-   "menu": "/ip/ipsec/identity"
+   "menu": "/ip/ipsec/identity",
+   "required": {}
   },
   "routeros_ip_ipsec_key_qkd": {
    "addable": false,
@@ -5567,7 +5949,8 @@
     }
    },
    "key": "",
-   "menu": "/ip/ipsec/key/qkd"
+   "menu": "/ip/ipsec/key/qkd",
+   "required": {}
   },
   "routeros_ip_ipsec_mode_config": {
    "addable": true,
@@ -5614,7 +5997,13 @@
     }
    },
    "key": "name",
-   "menu": "/ip/ipsec/mode-config"
+   "menu": "/ip/ipsec/mode-config",
+   "required": {
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_ip_ipsec_peer": {
    "addable": true,
@@ -5651,7 +6040,8 @@
     }
    },
    "key": "name",
-   "menu": "/ip/ipsec/peer"
+   "menu": "/ip/ipsec/peer",
+   "required": {}
   },
   "routeros_ip_ipsec_policy": {
    "addable": true,
@@ -5693,7 +6083,8 @@
     }
    },
    "key": "",
-   "menu": "/ip/ipsec/policy"
+   "menu": "/ip/ipsec/policy",
+   "required": {}
   },
   "routeros_ip_ipsec_profile": {
    "addable": true,
@@ -5750,7 +6141,13 @@
     }
    },
    "key": "name",
-   "menu": "/ip/ipsec/profile"
+   "menu": "/ip/ipsec/profile",
+   "required": {
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_ip_ipsec_proposal": {
    "addable": true,
@@ -5782,7 +6179,8 @@
     }
    },
    "key": "name",
-   "menu": "/ip/ipsec/proposal"
+   "menu": "/ip/ipsec/proposal",
+   "required": {}
   },
   "routeros_ip_ipsec_settings": {
    "addable": false,
@@ -5809,7 +6207,8 @@
     }
    },
    "key": "",
-   "menu": "/ip/ipsec/settings"
+   "menu": "/ip/ipsec/settings",
+   "required": {}
   },
   "routeros_ip_kid_control": {
    "addable": true,
@@ -5891,7 +6290,8 @@
     }
    },
    "key": "name",
-   "menu": "/ip/kid-control"
+   "menu": "/ip/kid-control",
+   "required": {}
   },
   "routeros_ip_media": {
    "addable": true,
@@ -5918,7 +6318,13 @@
     }
    },
    "key": "",
-   "menu": "/ip/media"
+   "menu": "/ip/media",
+   "required": {
+    "interface": {
+     "kind": "String",
+     "value": "bridge"
+    }
+   }
   },
   "routeros_ip_media_settings": {
    "addable": false,
@@ -5930,7 +6336,8 @@
     }
    },
    "key": "",
-   "menu": "/ip/media/settings"
+   "menu": "/ip/media/settings",
+   "required": {}
   },
   "routeros_ip_nat_pmp": {
    "addable": false,
@@ -5942,7 +6349,8 @@
     }
    },
    "key": "",
-   "menu": "/ip/nat-pmp"
+   "menu": "/ip/nat-pmp",
+   "required": {}
   },
   "routeros_ip_packing": {
    "addable": true,
@@ -5964,7 +6372,13 @@
     }
    },
    "key": "",
-   "menu": "/ip/packing"
+   "menu": "/ip/packing",
+   "required": {
+    "interface": {
+     "kind": "String",
+     "value": "bridge"
+    }
+   }
   },
   "routeros_ip_pool": {
    "addable": true,
@@ -5976,7 +6390,17 @@
     }
    },
    "key": "name",
-   "menu": "/ip/pool"
+   "menu": "/ip/pool",
+   "required": {
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    },
+    "ranges": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_ip_proxy": {
    "addable": false,
@@ -6058,7 +6482,8 @@
     }
    },
    "key": "",
-   "menu": "/ip/proxy"
+   "menu": "/ip/proxy",
+   "required": {}
   },
   "routeros_ip_proxy_access": {
    "addable": true,
@@ -6080,7 +6505,8 @@
     }
    },
    "key": "",
-   "menu": "/ip/proxy/access"
+   "menu": "/ip/proxy/access",
+   "required": {}
   },
   "routeros_ip_proxy_cache": {
    "addable": true,
@@ -6097,7 +6523,8 @@
     }
    },
    "key": "",
-   "menu": "/ip/proxy/cache"
+   "menu": "/ip/proxy/cache",
+   "required": {}
   },
   "routeros_ip_reverse_proxy": {
    "addable": true,
@@ -6119,7 +6546,8 @@
     }
    },
    "key": "",
-   "menu": "/ip/reverse-proxy"
+   "menu": "/ip/reverse-proxy",
+   "required": {}
   },
   "routeros_ip_smb": {
    "addable": false,
@@ -6146,7 +6574,8 @@
     }
    },
    "key": "",
-   "menu": "/ip/smb"
+   "menu": "/ip/smb",
+   "required": {}
   },
   "routeros_ip_smb_shares": {
    "addable": true,
@@ -6178,7 +6607,13 @@
     }
    },
    "key": "name",
-   "menu": "/ip/smb/shares"
+   "menu": "/ip/smb/shares",
+   "required": {
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_ip_smb_users": {
    "addable": true,
@@ -6195,7 +6630,8 @@
     }
    },
    "key": "name",
-   "menu": "/ip/smb/users"
+   "menu": "/ip/smb/users",
+   "required": {}
   },
   "routeros_ip_socks": {
    "addable": false,
@@ -6227,7 +6663,8 @@
     }
    },
    "key": "",
-   "menu": "/ip/socks"
+   "menu": "/ip/socks",
+   "required": {}
   },
   "routeros_ip_socks_access": {
    "addable": true,
@@ -6239,7 +6676,8 @@
     }
    },
    "key": "",
-   "menu": "/ip/socks/access"
+   "menu": "/ip/socks/access",
+   "required": {}
   },
   "routeros_ip_socks_users": {
    "addable": true,
@@ -6256,7 +6694,17 @@
     }
    },
    "key": "name",
-   "menu": "/ip/socks/users"
+   "menu": "/ip/socks/users",
+   "required": {
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    },
+    "password": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_ip_socksify": {
    "addable": true,
@@ -6288,7 +6736,13 @@
     }
    },
    "key": "name",
-   "menu": "/ip/socksify"
+   "menu": "/ip/socksify",
+   "required": {
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_ip_tftp": {
    "addable": true,
@@ -6340,7 +6794,8 @@
     }
    },
    "key": "",
-   "menu": "/ip/tftp"
+   "menu": "/ip/tftp",
+   "required": {}
   },
   "routeros_ip_tftp_settings": {
    "addable": false,
@@ -6352,7 +6807,8 @@
     }
    },
    "key": "",
-   "menu": "/ip/tftp/settings"
+   "menu": "/ip/tftp/settings",
+   "required": {}
   },
   "routeros_ip_traffic_flow": {
    "addable": false,
@@ -6399,7 +6855,8 @@
     }
    },
    "key": "",
-   "menu": "/ip/traffic-flow"
+   "menu": "/ip/traffic-flow",
+   "required": {}
   },
   "routeros_ip_traffic_flow_ipfix": {
    "addable": false,
@@ -6576,7 +7033,8 @@
     }
    },
    "key": "",
-   "menu": "/ip/traffic-flow/ipfix"
+   "menu": "/ip/traffic-flow/ipfix",
+   "required": {}
   },
   "routeros_ip_traffic_flow_target": {
    "addable": true,
@@ -6598,7 +7056,8 @@
     }
    },
    "key": "",
-   "menu": "/ip/traffic-flow/target"
+   "menu": "/ip/traffic-flow/target",
+   "required": {}
   },
   "routeros_ip_upnp": {
    "addable": false,
@@ -6620,7 +7079,8 @@
     }
    },
    "key": "",
-   "menu": "/ip/upnp"
+   "menu": "/ip/upnp",
+   "required": {}
   },
   "routeros_ip_upnp_interfaces": {
    "addable": true,
@@ -6632,7 +7092,17 @@
     }
    },
    "key": "",
-   "menu": "/ip/upnp/interfaces"
+   "menu": "/ip/upnp/interfaces",
+   "required": {
+    "interface": {
+     "kind": "String",
+     "value": "bridge"
+    },
+    "type": {
+     "kind": "String",
+     "value": "external"
+    }
+   }
   },
   "routeros_ip_vrf": {
    "addable": true,
@@ -6649,7 +7119,8 @@
     }
    },
    "key": "name",
-   "menu": "/ip/vrf"
+   "menu": "/ip/vrf",
+   "required": {}
   },
   "routeros_ipv6_address": {
    "addable": true,
@@ -6691,7 +7162,17 @@
     }
    },
    "key": "",
-   "menu": "/ipv6/address"
+   "menu": "/ipv6/address",
+   "required": {
+    "address": {
+     "kind": "String",
+     "value": "192.0.2.0/24"
+    },
+    "interface": {
+     "kind": "String",
+     "value": "bridge"
+    }
+   }
   },
   "routeros_ipv6_dhcp_client": {
    "addable": true,
@@ -6798,7 +7279,17 @@
     }
    },
    "key": "",
-   "menu": "/ipv6/dhcp-client"
+   "menu": "/ipv6/dhcp-client",
+   "required": {
+    "interface": {
+     "kind": "String",
+     "value": "bridge"
+    },
+    "request": {
+     "kind": "String",
+     "value": "info"
+    }
+   }
   },
   "routeros_ipv6_dhcp_relay": {
    "addable": true,
@@ -6830,7 +7321,8 @@
     }
    },
    "key": "name",
-   "menu": "/ipv6/dhcp-relay"
+   "menu": "/ipv6/dhcp-relay",
+   "required": {}
   },
   "routeros_ipv6_dhcp_relay_option": {
    "addable": true,
@@ -6852,7 +7344,8 @@
     }
    },
    "key": "name",
-   "menu": "/ipv6/dhcp-relay/option"
+   "menu": "/ipv6/dhcp-relay/option",
+   "required": {}
   },
   "routeros_ipv6_dhcp_server": {
    "addable": true,
@@ -6924,7 +7417,17 @@
     }
    },
    "key": "name",
-   "menu": "/ipv6/dhcp-server"
+   "menu": "/ipv6/dhcp-server",
+   "required": {
+    "interface": {
+     "kind": "String",
+     "value": "bridge"
+    },
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_ipv6_firewall_address_list": {
    "addable": true,
@@ -6941,7 +7444,17 @@
     }
    },
    "key": "",
-   "menu": "/ipv6/firewall/address-list"
+   "menu": "/ipv6/firewall/address-list",
+   "required": {
+    "address": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    },
+    "list": {
+     "kind": "String",
+     "value": "tfacc-req"
+    }
+   }
   },
   "routeros_ipv6_firewall_mangle": {
    "addable": true,
@@ -7153,7 +7666,17 @@
     }
    },
    "key": "",
-   "menu": "/ipv6/firewall/mangle"
+   "menu": "/ipv6/firewall/mangle",
+   "required": {
+    "action": {
+     "kind": "String",
+     "value": "accept"
+    },
+    "chain": {
+     "kind": "String",
+     "value": "forward"
+    }
+   }
   },
   "routeros_ipv6_firewall_nat": {
    "addable": true,
@@ -7325,7 +7848,17 @@
     }
    },
    "key": "",
-   "menu": "/ipv6/firewall/nat"
+   "menu": "/ipv6/firewall/nat",
+   "required": {
+    "action": {
+     "kind": "String",
+     "value": "accept"
+    },
+    "chain": {
+     "kind": "String",
+     "value": "dstnat"
+    }
+   }
   },
   "routeros_ipv6_firewall_raw": {
    "addable": true,
@@ -7462,7 +7995,17 @@
     }
    },
    "key": "",
-   "menu": "/ipv6/firewall/raw"
+   "menu": "/ipv6/firewall/raw",
+   "required": {
+    "action": {
+     "kind": "String",
+     "value": "accept"
+    },
+    "chain": {
+     "kind": "String",
+     "value": "output"
+    }
+   }
   },
   "routeros_ipv6_nd": {
    "addable": true,
@@ -7519,7 +8062,8 @@
     }
    },
    "key": "",
-   "menu": "/ipv6/nd"
+   "menu": "/ipv6/nd",
+   "required": {}
   },
   "routeros_ipv6_nd_prefix": {
    "addable": true,
@@ -7541,7 +8085,8 @@
     }
    },
    "key": "",
-   "menu": "/ipv6/nd/prefix"
+   "menu": "/ipv6/nd/prefix",
+   "required": {}
   },
   "routeros_ipv6_nd_prefix_default": {
    "addable": false,
@@ -7558,7 +8103,8 @@
     }
    },
    "key": "",
-   "menu": "/ipv6/nd/prefix/default"
+   "menu": "/ipv6/nd/prefix/default",
+   "required": {}
   },
   "routeros_ipv6_nd_proxy": {
    "addable": true,
@@ -7570,7 +8116,8 @@
     }
    },
    "key": "",
-   "menu": "/ipv6/nd/proxy"
+   "menu": "/ipv6/nd/proxy",
+   "required": {}
   },
   "routeros_ipv6_neighbor": {
    "addable": true,
@@ -7582,7 +8129,8 @@
     }
    },
    "key": "",
-   "menu": "/ipv6/neighbor"
+   "menu": "/ipv6/neighbor",
+   "required": {}
   },
   "routeros_ipv6_pool": {
    "addable": true,
@@ -7599,7 +8147,21 @@
     }
    },
    "key": "name",
-   "menu": "/ipv6/pool"
+   "menu": "/ipv6/pool",
+   "required": {
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    },
+    "prefix": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    },
+    "prefix_length": {
+     "kind": "Int64",
+     "value": "10"
+    }
+   }
   },
   "routeros_ipv6_route": {
    "addable": true,
@@ -7651,7 +8213,8 @@
     }
    },
    "key": "",
-   "menu": "/ipv6/route"
+   "menu": "/ipv6/route",
+   "required": {}
   },
   "routeros_ipv6_settings": {
    "addable": false,
@@ -7723,7 +8286,8 @@
     }
    },
    "key": "",
-   "menu": "/ipv6/settings"
+   "menu": "/ipv6/settings",
+   "required": {}
   },
   "routeros_mpls_interface": {
    "addable": true,
@@ -7745,7 +8309,13 @@
     }
    },
    "key": "",
-   "menu": "/mpls/interface"
+   "menu": "/mpls/interface",
+   "required": {
+    "interface": {
+     "kind": "String",
+     "value": "bridge"
+    }
+   }
   },
   "routeros_mpls_ldp": {
    "addable": true,
@@ -7802,7 +8372,8 @@
     }
    },
    "key": "",
-   "menu": "/mpls/ldp"
+   "menu": "/mpls/ldp",
+   "required": {}
   },
   "routeros_mpls_ldp_accept_filter": {
    "addable": true,
@@ -7834,7 +8405,8 @@
     }
    },
    "key": "",
-   "menu": "/mpls/ldp/accept-filter"
+   "menu": "/mpls/ldp/accept-filter",
+   "required": {}
   },
   "routeros_mpls_ldp_advertise_filter": {
    "addable": true,
@@ -7866,7 +8438,8 @@
     }
    },
    "key": "",
-   "menu": "/mpls/ldp/advertise-filter"
+   "menu": "/mpls/ldp/advertise-filter",
+   "required": {}
   },
   "routeros_mpls_ldp_interface": {
    "addable": true,
@@ -7903,7 +8476,13 @@
     }
    },
    "key": "",
-   "menu": "/mpls/ldp/interface"
+   "menu": "/mpls/ldp/interface",
+   "required": {
+    "interface": {
+     "kind": "String",
+     "value": "bridge"
+    }
+   }
   },
   "routeros_mpls_ldp_neighbor": {
    "addable": true,
@@ -7925,7 +8504,8 @@
     }
    },
    "key": "",
-   "menu": "/mpls/ldp/neighbor"
+   "menu": "/mpls/ldp/neighbor",
+   "required": {}
   },
   "routeros_mpls_mangle": {
    "addable": true,
@@ -7947,7 +8527,8 @@
     }
    },
    "key": "",
-   "menu": "/mpls/mangle"
+   "menu": "/mpls/mangle",
+   "required": {}
   },
   "routeros_mpls_settings": {
    "addable": false,
@@ -7969,7 +8550,8 @@
     }
    },
    "key": "",
-   "menu": "/mpls/settings"
+   "menu": "/mpls/settings",
+   "required": {}
   },
   "routeros_partition": {
    "addable": false,
@@ -7986,7 +8568,8 @@
     }
    },
    "key": "name",
-   "menu": "/partition"
+   "menu": "/partition",
+   "required": {}
   },
   "routeros_port_remote_access": {
    "addable": true,
@@ -8028,7 +8611,8 @@
     }
    },
    "key": "",
-   "menu": "/port/remote-access"
+   "menu": "/port/remote-access",
+   "required": {}
   },
   "routeros_ppp_aaa": {
    "addable": false,
@@ -8060,7 +8644,8 @@
     }
    },
    "key": "",
-   "menu": "/ppp/aaa"
+   "menu": "/ppp/aaa",
+   "required": {}
   },
   "routeros_ppp_l2tp_secret": {
    "addable": true,
@@ -8077,7 +8662,8 @@
     }
    },
    "key": "",
-   "menu": "/ppp/l2tp-secret"
+   "menu": "/ppp/l2tp-secret",
+   "required": {}
   },
   "routeros_ppp_profile": {
    "addable": true,
@@ -8254,7 +8840,13 @@
     }
    },
    "key": "name",
-   "menu": "/ppp/profile"
+   "menu": "/ppp/profile",
+   "required": {
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_ppp_secret": {
    "addable": true,
@@ -8316,7 +8908,13 @@
     }
    },
    "key": "name",
-   "menu": "/ppp/secret"
+   "menu": "/ppp/secret",
+   "required": {
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_queue_interface": {
    "addable": false,
@@ -8328,7 +8926,8 @@
     }
    },
    "key": "",
-   "menu": "/queue/interface"
+   "menu": "/queue/interface",
+   "required": {}
   },
   "routeros_queue_simple": {
    "addable": true,
@@ -8430,7 +9029,17 @@
     }
    },
    "key": "name",
-   "menu": "/queue/simple"
+   "menu": "/queue/simple",
+   "required": {
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    },
+    "target": {
+     "kind": "String",
+     "value": "bridge"
+    }
+   }
   },
   "routeros_queue_tree": {
    "addable": true,
@@ -8487,7 +9096,17 @@
     }
    },
    "key": "name",
-   "menu": "/queue/tree"
+   "menu": "/queue/tree",
+   "required": {
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    },
+    "parent": {
+     "kind": "String",
+     "value": "global"
+    }
+   }
   },
   "routeros_queue_type": {
    "addable": true,
@@ -8734,7 +9353,17 @@
     }
    },
    "key": "name",
-   "menu": "/queue/type"
+   "menu": "/queue/type",
+   "required": {
+    "kind": {
+     "kind": "String",
+     "value": "bfifo"
+    },
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_radius": {
    "addable": true,
@@ -8806,7 +9435,8 @@
     }
    },
    "key": "",
-   "menu": "/radius"
+   "menu": "/radius",
+   "required": {}
   },
   "routeros_radius_incoming": {
    "addable": false,
@@ -8818,7 +9448,8 @@
     }
    },
    "key": "",
-   "menu": "/radius/incoming"
+   "menu": "/radius/incoming",
+   "required": {}
   },
   "routeros_routing_bfd_configuration": {
    "addable": true,
@@ -8860,7 +9491,8 @@
     }
    },
    "key": "",
-   "menu": "/routing/bfd/configuration"
+   "menu": "/routing/bfd/configuration",
+   "required": {}
   },
   "routeros_routing_bgp_connection": {
    "addable": true,
@@ -9122,7 +9754,8 @@
     }
    },
    "key": "name",
-   "menu": "/routing/bgp/connection"
+   "menu": "/routing/bgp/connection",
+   "required": {}
   },
   "routeros_routing_bgp_instance": {
    "addable": true,
@@ -9149,7 +9782,8 @@
     }
    },
    "key": "name",
-   "menu": "/routing/bgp/instance"
+   "menu": "/routing/bgp/instance",
+   "required": {}
   },
   "routeros_routing_bgp_template": {
    "addable": true,
@@ -9346,7 +9980,13 @@
     }
    },
    "key": "name",
-   "menu": "/routing/bgp/template"
+   "menu": "/routing/bgp/template",
+   "required": {
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_routing_bgp_vpn": {
    "addable": true,
@@ -9403,7 +10043,8 @@
     }
    },
    "key": "name",
-   "menu": "/routing/bgp/vpn"
+   "menu": "/routing/bgp/vpn",
+   "required": {}
   },
   "routeros_routing_fantasy": {
    "addable": true,
@@ -9470,7 +10111,8 @@
     }
    },
    "key": "name",
-   "menu": "/routing/fantasy"
+   "menu": "/routing/fantasy",
+   "required": {}
   },
   "routeros_routing_filter_community_list": {
    "addable": true,
@@ -9497,7 +10139,8 @@
     }
    },
    "key": "",
-   "menu": "/routing/filter/community-list"
+   "menu": "/routing/filter/community-list",
+   "required": {}
   },
   "routeros_routing_filter_num_list": {
    "addable": true,
@@ -9519,7 +10162,8 @@
     }
    },
    "key": "",
-   "menu": "/routing/filter/num-list"
+   "menu": "/routing/filter/num-list",
+   "required": {}
   },
   "routeros_routing_filter_rule": {
    "addable": true,
@@ -9536,7 +10180,13 @@
     }
    },
    "key": "",
-   "menu": "/routing/filter/rule"
+   "menu": "/routing/filter/rule",
+   "required": {
+    "chain": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_routing_filter_select_rule": {
    "addable": true,
@@ -9583,7 +10233,8 @@
     }
    },
    "key": "",
-   "menu": "/routing/filter/select-rule"
+   "menu": "/routing/filter/select-rule",
+   "required": {}
   },
   "routeros_routing_gmp": {
    "addable": true,
@@ -9610,7 +10261,8 @@
     }
    },
    "key": "",
-   "menu": "/routing/gmp"
+   "menu": "/routing/gmp",
+   "required": {}
   },
   "routeros_routing_id": {
    "addable": true,
@@ -9627,7 +10279,8 @@
     }
    },
    "key": "name",
-   "menu": "/routing/id"
+   "menu": "/routing/id",
+   "required": {}
   },
   "routeros_routing_igmp_proxy": {
    "addable": false,
@@ -9649,7 +10302,8 @@
     }
    },
    "key": "",
-   "menu": "/routing/igmp-proxy"
+   "menu": "/routing/igmp-proxy",
+   "required": {}
   },
   "routeros_routing_igmp_proxy_interface": {
    "addable": true,
@@ -9676,7 +10330,8 @@
     }
    },
    "key": "",
-   "menu": "/routing/igmp-proxy/interface"
+   "menu": "/routing/igmp-proxy/interface",
+   "required": {}
   },
   "routeros_routing_isis_instance": {
    "addable": true,
@@ -9793,7 +10448,8 @@
     }
    },
    "key": "name",
-   "menu": "/routing/isis/instance"
+   "menu": "/routing/isis/instance",
+   "required": {}
   },
   "routeros_routing_isis_interface_template": {
    "addable": true,
@@ -9945,7 +10601,8 @@
     }
    },
    "key": "",
-   "menu": "/routing/isis/interface-template"
+   "menu": "/routing/isis/interface-template",
+   "required": {}
   },
   "routeros_routing_ospf_area": {
    "addable": true,
@@ -9987,7 +10644,8 @@
     }
    },
    "key": "name",
-   "menu": "/routing/ospf/area"
+   "menu": "/routing/ospf/area",
+   "required": {}
   },
   "routeros_routing_ospf_instance": {
    "addable": true,
@@ -10054,7 +10712,8 @@
     }
    },
    "key": "name",
-   "menu": "/routing/ospf/instance"
+   "menu": "/routing/ospf/instance",
+   "required": {}
   },
   "routeros_routing_ospf_interface_template": {
    "addable": true,
@@ -10146,7 +10805,8 @@
     }
    },
    "key": "",
-   "menu": "/routing/ospf/interface-template"
+   "menu": "/routing/ospf/interface-template",
+   "required": {}
   },
   "routeros_routing_ospf_static_neighbor": {
    "addable": true,
@@ -10173,7 +10833,8 @@
     }
    },
    "key": "",
-   "menu": "/routing/ospf/static-neighbor"
+   "menu": "/routing/ospf/static-neighbor",
+   "required": {}
   },
   "routeros_routing_pimsm_interface_template": {
    "addable": true,
@@ -10230,7 +10891,8 @@
     }
    },
    "key": "",
-   "menu": "/routing/pimsm/interface-template"
+   "menu": "/routing/pimsm/interface-template",
+   "required": {}
   },
   "routeros_routing_rip_instance": {
    "addable": true,
@@ -10282,7 +10944,8 @@
     }
    },
    "key": "name",
-   "menu": "/routing/rip/instance"
+   "menu": "/routing/rip/instance",
+   "required": {}
   },
   "routeros_routing_rpki": {
    "addable": true,
@@ -10314,7 +10977,8 @@
     }
    },
    "key": "",
-   "menu": "/routing/rpki"
+   "menu": "/routing/rpki",
+   "required": {}
   },
   "routeros_routing_rule": {
    "addable": true,
@@ -10346,7 +11010,8 @@
     }
    },
    "key": "",
-   "menu": "/routing/rule"
+   "menu": "/routing/rule",
+   "required": {}
   },
   "routeros_routing_settings": {
    "addable": false,
@@ -10388,7 +11053,8 @@
     }
    },
    "key": "",
-   "menu": "/routing/settings"
+   "menu": "/routing/settings",
+   "required": {}
   },
   "routeros_routing_table": {
    "addable": true,
@@ -10405,7 +11071,8 @@
     }
    },
    "key": "name",
-   "menu": "/routing/table"
+   "menu": "/routing/table",
+   "required": {}
   },
   "routeros_snmp": {
    "addable": false,
@@ -10452,7 +11119,8 @@
     }
    },
    "key": "",
-   "menu": "/snmp"
+   "menu": "/snmp",
+   "required": {}
   },
   "routeros_snmp_community": {
    "addable": true,
@@ -10504,7 +11172,13 @@
     }
    },
    "key": "name",
-   "menu": "/snmp/community"
+   "menu": "/snmp/community",
+   "required": {
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_special_login": {
    "addable": true,
@@ -10516,7 +11190,8 @@
     }
    },
    "key": "",
-   "menu": "/special-login"
+   "menu": "/special-login",
+   "required": {}
   },
   "routeros_system_clock": {
    "addable": false,
@@ -10543,7 +11218,8 @@
     }
    },
    "key": "",
-   "menu": "/system/clock"
+   "menu": "/system/clock",
+   "required": {}
   },
   "routeros_system_clock_manual": {
    "addable": false,
@@ -10570,7 +11246,8 @@
     }
    },
    "key": "",
-   "menu": "/system/clock/manual"
+   "menu": "/system/clock/manual",
+   "required": {}
   },
   "routeros_system_console": {
    "addable": true,
@@ -10587,7 +11264,8 @@
     }
    },
    "key": "",
-   "menu": "/system/console"
+   "menu": "/system/console",
+   "required": {}
   },
   "routeros_system_health_settings": {
    "addable": false,
@@ -10649,7 +11327,8 @@
     }
    },
    "key": "",
-   "menu": "/system/health/settings"
+   "menu": "/system/health/settings",
+   "required": {}
   },
   "routeros_system_leds": {
    "addable": true,
@@ -10671,7 +11350,8 @@
     }
    },
    "key": "",
-   "menu": "/system/leds"
+   "menu": "/system/leds",
+   "required": {}
   },
   "routeros_system_leds_settings": {
    "addable": false,
@@ -10683,7 +11363,8 @@
     }
    },
    "key": "",
-   "menu": "/system/leds/settings"
+   "menu": "/system/leds/settings",
+   "required": {}
   },
   "routeros_system_logging": {
    "addable": true,
@@ -10710,7 +11391,8 @@
     }
    },
    "key": "",
-   "menu": "/system/logging"
+   "menu": "/system/logging",
+   "required": {}
   },
   "routeros_system_logging_action": {
    "addable": true,
@@ -10832,7 +11514,8 @@
     }
    },
    "key": "name",
-   "menu": "/system/logging/action"
+   "menu": "/system/logging/action",
+   "required": {}
   },
   "routeros_system_note": {
    "addable": false,
@@ -10854,7 +11537,8 @@
     }
    },
    "key": "",
-   "menu": "/system/note"
+   "menu": "/system/note",
+   "required": {}
   },
   "routeros_system_ntp_client": {
    "addable": false,
@@ -10876,7 +11560,8 @@
     }
    },
    "key": "",
-   "menu": "/system/ntp/client"
+   "menu": "/system/ntp/client",
+   "required": {}
   },
   "routeros_system_ntp_client_servers": {
    "addable": true,
@@ -10903,7 +11588,8 @@
     }
    },
    "key": "",
-   "menu": "/system/ntp/client/servers"
+   "menu": "/system/ntp/client/servers",
+   "required": {}
   },
   "routeros_system_ntp_server": {
    "addable": false,
@@ -10945,7 +11631,8 @@
     }
    },
    "key": "",
-   "menu": "/system/ntp/server"
+   "menu": "/system/ntp/server",
+   "required": {}
   },
   "routeros_system_package_local_update_mirror": {
    "addable": false,
@@ -10972,7 +11659,8 @@
     }
    },
    "key": "",
-   "menu": "/system/package/local-update/mirror"
+   "menu": "/system/package/local-update/mirror",
+   "required": {}
   },
   "routeros_system_resource_hardware_usb_settings": {
    "addable": false,
@@ -10984,7 +11672,8 @@
     }
    },
    "key": "",
-   "menu": "/system/resource/hardware/usb-settings"
+   "menu": "/system/resource/hardware/usb-settings",
+   "required": {}
   },
   "routeros_system_watchdog": {
    "addable": false,
@@ -11036,7 +11725,8 @@
     }
    },
    "key": "",
-   "menu": "/system/watchdog"
+   "menu": "/system/watchdog",
+   "required": {}
   },
   "routeros_tool_bandwidth_server": {
    "addable": false,
@@ -11073,7 +11763,8 @@
     }
    },
    "key": "",
-   "menu": "/tool/bandwidth-server"
+   "menu": "/tool/bandwidth-server",
+   "required": {}
   },
   "routeros_tool_e_mail": {
    "addable": false,
@@ -11100,7 +11791,8 @@
     }
    },
    "key": "",
-   "menu": "/tool/e-mail"
+   "menu": "/tool/e-mail",
+   "required": {}
   },
   "routeros_tool_graphing": {
    "addable": false,
@@ -11112,7 +11804,8 @@
     }
    },
    "key": "",
-   "menu": "/tool/graphing"
+   "menu": "/tool/graphing",
+   "required": {}
   },
   "routeros_tool_graphing_resource": {
    "addable": true,
@@ -11129,7 +11822,8 @@
     }
    },
    "key": "",
-   "menu": "/tool/graphing/resource"
+   "menu": "/tool/graphing/resource",
+   "required": {}
   },
   "routeros_tool_mac_server_mac_winbox": {
    "addable": false,
@@ -11141,7 +11835,8 @@
     }
    },
    "key": "",
-   "menu": "/tool/mac-server/mac-winbox"
+   "menu": "/tool/mac-server/mac-winbox",
+   "required": {}
   },
   "routeros_tool_mac_server_ping": {
    "addable": false,
@@ -11153,7 +11848,8 @@
     }
    },
    "key": "",
-   "menu": "/tool/mac-server/ping"
+   "menu": "/tool/mac-server/ping",
+   "required": {}
   },
   "routeros_tool_netwatch": {
    "addable": true,
@@ -11310,7 +12006,13 @@
     }
    },
    "key": "name",
-   "menu": "/tool/netwatch"
+   "menu": "/tool/netwatch",
+   "required": {
+    "host": {
+     "kind": "String",
+     "value": "bridge"
+    }
+   }
   },
   "routeros_tool_romon": {
    "addable": false,
@@ -11327,7 +12029,8 @@
     }
    },
    "key": "",
-   "menu": "/tool/romon"
+   "menu": "/tool/romon",
+   "required": {}
   },
   "routeros_tool_romon_port": {
    "addable": true,
@@ -11354,7 +12057,8 @@
     }
    },
    "key": "",
-   "menu": "/tool/romon/port"
+   "menu": "/tool/romon/port",
+   "required": {}
   },
   "routeros_tool_sms": {
    "addable": false,
@@ -11401,7 +12105,8 @@
     }
    },
    "key": "",
-   "menu": "/tool/sms"
+   "menu": "/tool/sms",
+   "required": {}
   },
   "routeros_tool_sniffer": {
    "addable": false,
@@ -11503,7 +12208,8 @@
     }
    },
    "key": "",
-   "menu": "/tool/sniffer"
+   "menu": "/tool/sniffer",
+   "required": {}
   },
   "routeros_tool_traffic_generator": {
    "addable": false,
@@ -11530,7 +12236,8 @@
     }
    },
    "key": "",
-   "menu": "/tool/traffic-generator"
+   "menu": "/tool/traffic-generator",
+   "required": {}
   },
   "routeros_tool_traffic_generator_packet_template": {
    "addable": true,
@@ -11732,7 +12439,8 @@
     }
    },
    "key": "name",
-   "menu": "/tool/traffic-generator/packet-template"
+   "menu": "/tool/traffic-generator/packet-template",
+   "required": {}
   },
   "routeros_tool_traffic_generator_raw_packet_template": {
    "addable": true,
@@ -11799,7 +12507,8 @@
     }
    },
    "key": "name",
-   "menu": "/tool/traffic-generator/raw-packet-template"
+   "menu": "/tool/traffic-generator/raw-packet-template",
+   "required": {}
   },
   "routeros_tool_traffic_monitor": {
    "addable": true,
@@ -11831,7 +12540,17 @@
     }
    },
    "key": "name",
-   "menu": "/tool/traffic-monitor"
+   "menu": "/tool/traffic-monitor",
+   "required": {
+    "interface": {
+     "kind": "String",
+     "value": "bridge"
+    },
+    "name": {
+     "kind": "String",
+     "value": "tf-acc-a"
+    }
+   }
   },
   "routeros_user_aaa": {
    "addable": false,
@@ -11863,7 +12582,8 @@
     }
    },
    "key": "",
-   "menu": "/user/aaa"
+   "menu": "/user/aaa",
+   "required": {}
   },
   "routeros_user_settings": {
    "addable": false,
@@ -11880,7 +12600,8 @@
     }
    },
    "key": "",
-   "menu": "/user/settings"
+   "menu": "/user/settings",
+   "required": {}
   }
  },
  "skipped": {

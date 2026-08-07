@@ -82,12 +82,12 @@ def provider_resources():
                 r'"([a-z0-9_]+)":\s*schema\.(\w+?)Attribute\{(.{0,600}?)(?=\n\t{3}"[a-z0-9_]+":|\n\t{2}\},)',
                 src, re.S):
             name, kind, body = m.group(1), m.group(2), m.group(3)
-            if "Optional:" not in body:
+            if "Optional:" not in body and "Required:" not in body:
                 continue                      # Computed-only: not settable
             vld = re.search(r'schemautil\.(\w+)\(([^)]*)\)', body)
             enum = re.findall(r'"([^"]+)"', vld.group(2)) if vld and vld.group(1).startswith("OneOf") else []
             attrs[name] = {"kind": kind, "validator": vld.group(1) if vld else "",
-                           "enum": enum}
+                           "enum": enum, "required": "Required:" in body}
         out["routeros" + tn.group(1)] = {"menu": menus[0],
                                          "file": os.path.basename(f),
                                          "attrs": attrs}
@@ -218,11 +218,24 @@ def main():
             if pair:
                 cases[tf] = {"kind": res["attrs"][tf]["kind"],
                              "a": pair[0], "b": pair[1]}
+        required = {}
+        for tf, meta in res["attrs"].items():
+            if not meta.get("required"):
+                continue
+            arg = tf.replace("_", "-")
+            pair = value_pair(meta, vals.get((menu, arg), []))
+            if pair:
+                required[tf] = {"kind": meta["kind"], "value": pair[0]}
+            elif meta["kind"] == "String":
+                required[tf] = {"kind": "String", "value": "tfacc-req"}
+        for tf in required:
+            cases.pop(tf, None)          # pinned; not a variable under test
         if not cases:
             skipped[name] = "no safely settable attribute"
             continue
         manifest[name] = {"menu": menu, "addable": mi.get("addable", False),
                           "key": "name" if "name" in mi["args"] else "",
+                          "required": required,
                           "attributes": cases}
 
     covered = sum(len(v["attributes"]) for v in manifest.values())
