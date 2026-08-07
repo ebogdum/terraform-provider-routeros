@@ -6,14 +6,32 @@ description: |-
 
 # RouterOS Provider
 
-The RouterOS provider manages MikroTik RouterOS 7.x devices through their
-REST API. It covers every menu the device exposes -- 186 resources, 277
-data sources, 75 actions, 3522 properties -- all generated from a schema
-validated property by property against a live router.
+Manages MikroTik RouterOS 7.x devices over the device's REST API. It covers
+the menus RouterOS exposes: 310 resources, 285 data sources and 75 actions,
+with each property's schema validated against a live router.
 
-A single provider block can manage one router or an entire fleet via a
-named `routers` map; every resource and data source takes an optional
-`router` attribute, omitted for the default router.
+One provider block can manage a single router or a whole fleet through a
+named `routers` map. Every resource, data source and action takes an optional
+`router` attribute, which you leave out to target the default.
+
+## Before You Start
+
+RouterOS is not one API. It is one per board and one per release. A property
+that exists on a hAP ax³ running 7.23 can be missing on a CCR, read-only on a
+CRS, or renamed in the next stable. Whole menus for hardware you do not have
+(CAPsMAN, wireless, LTE, UPS, SFP) are simply absent. The schema here was
+validated against real hardware, but no single device exposes all of it, and
+MikroTik keeps moving things between releases.
+
+So expect the occasional rough edge on a board or a RouterOS version that
+differs from the one a given property was checked against. It usually shows up
+as a 400 from the device on apply, an attribute that never stops showing a
+diff, or a value that reads back empty.
+
+If you run into one, please open a pull request. The fix is usually a few lines
+in that resource's schema, and a change that comes with the RouterOS version,
+the board name and the exact error the device returned is most of the way
+there already.
 
 ## Example Usage
 
@@ -22,7 +40,7 @@ terraform {
   required_providers {
     routeros = {
       source  = "ebogdum/routeros"
-      version = "~> 2.0"
+      version = "~> 3.0"
     }
   }
 }
