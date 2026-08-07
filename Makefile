@@ -46,3 +46,18 @@ release:
 .PHONY: clean
 clean:
 	rm -rf $(BIN) dist
+
+# --- live-device conformance -------------------------------------------------
+# Needs ROUTEROS_HOST / ROUTEROS_USER / ROUTEROS_PASSWORD.
+
+.PHONY: audit
+audit:
+	python3 tools/conformance/schema_audit.py all
+
+.PHONY: dms-backup dms-install dms-arm dms-disarm dms-verify dms-remove
+dms-backup:  ; tools/conformance/deadman.sh backup
+dms-install: ; tools/conformance/deadman.sh install
+dms-arm:     ; tools/conformance/deadman.sh arm
+dms-disarm:  ; tools/conformance/deadman.sh disarm
+dms-verify:  ; tools/conformance/deadman.sh verify
+dms-remove:  ; tools/conformance/deadman.sh remove

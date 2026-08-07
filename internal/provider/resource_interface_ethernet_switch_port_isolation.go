@@ -65,7 +65,6 @@ func (r *InterfaceEthernetSwitchPortIsolationResource) Schema(_ context.Context,
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"forward_to": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -84,7 +83,6 @@ func (r *InterfaceEthernetSwitchPortIsolationResource) Schema(_ context.Context,
 				Description: "Port name of the fixed row to adopt (e.g. `ether1`).",
 			},
 			"override": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -136,14 +134,8 @@ func (r *InterfaceEthernetSwitchPortIsolationResource) Create(ctx context.Contex
 		return
 	}
 	body := client.Object{}
-	if !(plan.ForwardTo.IsNull() || plan.ForwardTo.IsUnknown()) {
-		body["forward-to"] = plan.ForwardTo.ValueString()
-	}
 	if !(plan.ForwardingOverride.IsNull() || plan.ForwardingOverride.IsUnknown()) {
 		body["forwarding-override"] = plan.ForwardingOverride.ValueString()
-	}
-	if !(plan.Override.IsNull() || plan.Override.IsUnknown()) {
-		body["override"] = plan.Override.ValueString()
 	}
 	obj, err := c.Set(ctx, "/interface/ethernet/switch/port-isolation", id, body)
 	if err != nil {
@@ -193,14 +185,8 @@ func (r *InterfaceEthernetSwitchPortIsolationResource) Update(ctx context.Contex
 		return
 	}
 	body := client.Object{}
-	if !plan.ForwardTo.Equal(state.ForwardTo) && !plan.ForwardTo.IsUnknown() {
-		body["forward-to"] = plan.ForwardTo.ValueString()
-	}
 	if !plan.ForwardingOverride.Equal(state.ForwardingOverride) && !plan.ForwardingOverride.IsUnknown() {
 		body["forwarding-override"] = plan.ForwardingOverride.ValueString()
-	}
-	if !plan.Override.Equal(state.Override) && !plan.Override.IsUnknown() {
-		body["override"] = plan.Override.ValueString()
 	}
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/interface/ethernet/switch/port-isolation", state.ID.ValueString(), body)

@@ -290,7 +290,7 @@ func (r *InterfaceWifiInterworkingResource) Create(ctx context.Context, req reso
 		body["connection-capabilities"] = plan.ConnectionCapabilities.ValueString()
 	}
 	if !(plan.Dgaf.IsNull() || plan.Dgaf.IsUnknown()) {
-		body["dgaf"] = plan.Dgaf.ValueString()
+		body["hotspot20-dgaf"] = plan.Dgaf.ValueString()
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
@@ -437,7 +437,7 @@ func (r *InterfaceWifiInterworkingResource) Update(ctx context.Context, req reso
 		body["connection-capabilities"] = plan.ConnectionCapabilities.ValueString()
 	}
 	if !plan.Dgaf.Equal(state.Dgaf) && !plan.Dgaf.IsUnknown() {
-		body["dgaf"] = plan.Dgaf.ValueString()
+		body["hotspot20-dgaf"] = plan.Dgaf.ValueString()
 	}
 	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
@@ -627,7 +627,7 @@ func interfaceWifiInterworkingApply(ctx context.Context, obj client.Object, m *I
 			m.ConnectionCapabilities = types.StringNull()
 		}
 	}
-	if v, ok := obj["dgaf"]; ok {
+	if v, ok := obj["hotspot20-dgaf"]; ok {
 		if v != "" {
 			m.Dgaf = types.StringValue(v)
 		} else {

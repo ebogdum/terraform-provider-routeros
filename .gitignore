@@ -84,3 +84,4 @@ desktop.ini
 *.tar.gz
 *.tar
 *.zip
+.conformance/

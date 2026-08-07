@@ -174,7 +174,7 @@ func (r *InterfaceWifiSteeringResource) Create(ctx context.Context, req resource
 		body["neighbor-group"] = plan.NeighborGroup.ValueString()
 	}
 	if !(plan.NeighborGroups.IsNull() || plan.NeighborGroups.IsUnknown()) {
-		body["neighbor-groups"] = plan.NeighborGroups.ValueString()
+		body["neighbor-group"] = plan.NeighborGroups.ValueString()
 	}
 	if !(plan.Rrm.IsNull() || plan.Rrm.IsUnknown()) {
 		body["rrm"] = plan.Rrm.ValueString()
@@ -186,7 +186,7 @@ func (r *InterfaceWifiSteeringResource) Create(ctx context.Context, req resource
 		body["transition-threshold"] = plan.TransitionThreshold.ValueString()
 	}
 	if !(plan.TransitionThresholdPeriod.IsNull() || plan.TransitionThresholdPeriod.IsUnknown()) {
-		body["transition-threshold-period"] = plan.TransitionThresholdPeriod.ValueString()
+		body["transition-request-period"] = plan.TransitionThresholdPeriod.ValueString()
 	}
 	if !(plan.TransitionThresholdTime.IsNull() || plan.TransitionThresholdTime.IsUnknown()) {
 		body["transition-threshold-time"] = plan.TransitionThresholdTime.ValueString()
@@ -264,7 +264,7 @@ func (r *InterfaceWifiSteeringResource) Update(ctx context.Context, req resource
 		body["neighbor-group"] = plan.NeighborGroup.ValueString()
 	}
 	if !plan.NeighborGroups.Equal(state.NeighborGroups) && !plan.NeighborGroups.IsUnknown() {
-		body["neighbor-groups"] = plan.NeighborGroups.ValueString()
+		body["neighbor-group"] = plan.NeighborGroups.ValueString()
 	}
 	if !plan.Rrm.Equal(state.Rrm) && !plan.Rrm.IsUnknown() {
 		body["rrm"] = plan.Rrm.ValueString()
@@ -276,7 +276,7 @@ func (r *InterfaceWifiSteeringResource) Update(ctx context.Context, req resource
 		body["transition-threshold"] = plan.TransitionThreshold.ValueString()
 	}
 	if !plan.TransitionThresholdPeriod.Equal(state.TransitionThresholdPeriod) && !plan.TransitionThresholdPeriod.IsUnknown() {
-		body["transition-threshold-period"] = plan.TransitionThresholdPeriod.ValueString()
+		body["transition-request-period"] = plan.TransitionThresholdPeriod.ValueString()
 	}
 	if !plan.TransitionThresholdTime.Equal(state.TransitionThresholdTime) && !plan.TransitionThresholdTime.IsUnknown() {
 		body["transition-threshold-time"] = plan.TransitionThresholdTime.ValueString()
@@ -399,7 +399,7 @@ func interfaceWifiSteeringApply(ctx context.Context, obj client.Object, m *Inter
 			m.NeighborGroup = types.StringNull()
 		}
 	}
-	if v, ok := obj["neighbor-groups"]; ok {
+	if v, ok := obj["neighbor-group"]; ok {
 		if v != "" {
 			m.NeighborGroups = types.StringValue(v)
 		} else {
@@ -427,7 +427,7 @@ func interfaceWifiSteeringApply(ctx context.Context, obj client.Object, m *Inter
 			m.TransitionThreshold = types.StringNull()
 		}
 	}
-	if v, ok := obj["transition-threshold-period"]; ok {
+	if v, ok := obj["transition-request-period"]; ok {
 		if v != "" {
 			m.TransitionThresholdPeriod = types.StringValue(v)
 		} else {

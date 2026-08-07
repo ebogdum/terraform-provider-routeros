@@ -7,6 +7,64 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.5] - 2026-08-07
+
+### Fixed
+
+**135 property names the device rejects.** The provider was putting names on
+the wire that RouterOS does not accept, so setting any of those attributes was
+a guaranteed HTTP 400. The bulk of them are the `/interface/wifi` family, where
+RouterOS uses dotted properties and the provider had flattened them: it sent
+`beacon-protection` where the device wants `security.beacon-protection`, and
+answered with `unknown parameter beacon-protection`. Verified on the device:
+
+- 83 dotted names restored on `routeros_interface_wifi` and
+  `routeros_interface_wifi_configuration` (`channel.width`, `security.*`,
+  `interworking.*`, `steering.*`, `configuration.*`)
+- renames confirmed against the menu's own argument list, including
+  `ciphers` to `security.encryption`, `types` to `security.authentication-types`,
+  `ft-enabled` to `security.ft`, `ft-reassoc-deadline` to
+  `security.ft-reassociation-deadline`, `hotspot-2-0` to `interworking.hotspot20`,
+  `dgaf` to `interworking.hotspot20-dgaf`, `neighbor-groups` to `neighbor-group`,
+  `weekdays` to `days`, and `ignore-rx-los` / `rate-select` to their `sfp-`
+  prefixed forms
+- 24 attributes that are RouterOS commands or read-only flags, not settable
+  properties (`scan`, `sniffer`, `wps-accept`, `bound`, `master`, `virt`,
+  `openflow`, port-isolation's `forward-to` and `override`) are now
+  Computed-only, so they fail at plan time instead of as a device 400
+
+Docs: the provider overview had stale counts (186 resources, 277 data sources;
+actually 310, 285 and 75 actions) and pinned its example at `~> 2.0`. It now
+also states plainly that RouterOS varies by board and by release, what that
+looks like when it bites, and asks people to open a PR when they hit one.
+
+### Added
+
+`tools/conformance/` -- the harness that found these defects, made repeatable.
+
+- `schema_audit.py` diffs every property name and every bool attribute in the
+  provider against the live device's own schema, via `/console/inspect`. It
+  exits non-zero on a defect, so it can gate a release. `make audit`.
+- `deadman.sh` installs a watchdog for live-device runs: a scheduler restores
+  the pre-run backup and reboots if nothing re-arms it, plus a management
+  accept rule, a static secondary address, and independent SSH and REST
+  re-armers. `make dms-verify` proves it by letting it fire.
+
+The audit is the point. The acceptance suite was green through all of these:
+296 of its 364 files set no attribute at all, and a name that is never set is
+never put on the wire, while a wrong read key is a skipped branch that leaves
+the attribute null -- which is legal for `Optional + Computed`. Tests check
+what they exercise; the audit checks the whole surface.
+
+### Known
+
+67 names remain unresolved on four hardware-gated menus -- `/disk` (43),
+`/interface/ethernet/poe` (10), `/interface/ethernet` (10) and
+`/interface/ethernet/switch` (4). A hAP ax³ has no disk, no SFP cage, no PoE-in
+and a limited switch chip, so its schema cannot say whether those names are
+wrong or merely absent. Running `make audit` on a CRS or CCR that has the
+hardware will settle them; guessing would risk breaking the people who do.
+
 ## [3.0.4] - 2026-08-07
 
 ### Fixed

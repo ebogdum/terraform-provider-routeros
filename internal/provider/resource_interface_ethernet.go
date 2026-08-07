@@ -1007,7 +1007,7 @@ func (r *InterfaceEthernetResource) Create(ctx context.Context, req resource.Cre
 		body["flowcntrl"] = plan.Flowcntrl.ValueString()
 	}
 	if !(plan.IgnoreRxLos.IsNull() || plan.IgnoreRxLos.IsUnknown()) {
-		body["ignore-rx-los"] = client.FormatBool(plan.IgnoreRxLos.ValueBool())
+		body["sfp-ignore-rx-los"] = client.FormatBool(plan.IgnoreRxLos.ValueBool())
 	}
 	if !(plan.LoopProtect.IsNull() || plan.LoopProtect.IsUnknown()) {
 		body["loop-protect"] = plan.LoopProtect.ValueString()
@@ -1056,7 +1056,7 @@ func (r *InterfaceEthernetResource) Create(ctx context.Context, req resource.Cre
 		body["qstats"] = plan.Qstats.ValueString()
 	}
 	if !(plan.RateSelect.IsNull() || plan.RateSelect.IsUnknown()) {
-		body["rate-select"] = plan.RateSelect.ValueString()
+		body["sfp-rate-select"] = plan.RateSelect.ValueString()
 	}
 	if !(plan.RxFlowControl.IsNull() || plan.RxFlowControl.IsUnknown()) {
 		body["rx-flow-control"] = plan.RxFlowControl.ValueString()
@@ -1197,7 +1197,7 @@ func (r *InterfaceEthernetResource) Update(ctx context.Context, req resource.Upd
 		body["flowcntrl"] = plan.Flowcntrl.ValueString()
 	}
 	if !plan.IgnoreRxLos.Equal(state.IgnoreRxLos) && !plan.IgnoreRxLos.IsUnknown() {
-		body["ignore-rx-los"] = client.FormatBool(plan.IgnoreRxLos.ValueBool())
+		body["sfp-ignore-rx-los"] = client.FormatBool(plan.IgnoreRxLos.ValueBool())
 	}
 	if !plan.LoopProtect.Equal(state.LoopProtect) && !plan.LoopProtect.IsUnknown() {
 		body["loop-protect"] = plan.LoopProtect.ValueString()
@@ -1246,7 +1246,7 @@ func (r *InterfaceEthernetResource) Update(ctx context.Context, req resource.Upd
 		body["qstats"] = plan.Qstats.ValueString()
 	}
 	if !plan.RateSelect.Equal(state.RateSelect) && !plan.RateSelect.IsUnknown() {
-		body["rate-select"] = plan.RateSelect.ValueString()
+		body["sfp-rate-select"] = plan.RateSelect.ValueString()
 	}
 	if !plan.RxFlowControl.Equal(state.RxFlowControl) && !plan.RxFlowControl.IsUnknown() {
 		body["rx-flow-control"] = plan.RxFlowControl.ValueString()
@@ -1591,7 +1591,7 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 			m.Hastxqueuestats = types.BoolNull()
 		}
 	}
-	if v, ok := obj["ignore-rx-los"]; ok {
+	if v, ok := obj["sfp-ignore-rx-los"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.IgnoreRxLos = types.BoolValue(b)
 		} else if strings.TrimSpace(v) == "" {
@@ -1965,7 +1965,7 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 			m.Rate = types.StringNull()
 		}
 	}
-	if v, ok := obj["rate-select"]; ok {
+	if v, ok := obj["sfp-rate-select"]; ok {
 		if v != "" {
 			m.RateSelect = types.StringValue(v)
 		} else {

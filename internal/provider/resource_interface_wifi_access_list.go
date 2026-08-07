@@ -241,7 +241,7 @@ func (r *InterfaceWifiAccessListResource) Create(ctx context.Context, req resour
 		body["vlan-id"] = plan.VLANID.ValueString()
 	}
 	if !(plan.Weekdays.IsNull() || plan.Weekdays.IsUnknown()) {
-		body["weekdays"] = plan.Weekdays.ValueString()
+		body["days"] = plan.Weekdays.ValueString()
 	}
 	if !(plan.Days.IsNull() || plan.Days.IsUnknown()) {
 		body["days"] = plan.Days.ValueString()
@@ -340,7 +340,7 @@ func (r *InterfaceWifiAccessListResource) Update(ctx context.Context, req resour
 		body["vlan-id"] = plan.VLANID.ValueString()
 	}
 	if !plan.Weekdays.Equal(state.Weekdays) && !plan.Weekdays.IsUnknown() {
-		body["weekdays"] = plan.Weekdays.ValueString()
+		body["days"] = plan.Weekdays.ValueString()
 	}
 	if !plan.Days.Equal(state.Days) && !plan.Days.IsUnknown() {
 		body["days"] = plan.Days.ValueString()
@@ -552,7 +552,7 @@ func interfaceWifiAccessListApply(ctx context.Context, obj client.Object, m *Int
 			m.VLANID = types.StringNull()
 		}
 	}
-	if v, ok := obj["weekdays"]; ok {
+	if v, ok := obj["days"]; ok {
 		if v != "" {
 			m.Weekdays = types.StringValue(v)
 		} else {

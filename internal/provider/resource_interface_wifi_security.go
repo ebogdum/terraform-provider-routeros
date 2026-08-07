@@ -314,7 +314,7 @@ func (r *InterfaceWifiSecurityResource) Create(ctx context.Context, req resource
 		body["beacon-protection"] = plan.BeaconProtection.ValueString()
 	}
 	if !(plan.Ciphers.IsNull() || plan.Ciphers.IsUnknown()) {
-		body["ciphers"] = plan.Ciphers.ValueString()
+		body["encryption"] = plan.Ciphers.ValueString()
 	}
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
@@ -359,7 +359,7 @@ func (r *InterfaceWifiSecurityResource) Create(ctx context.Context, req resource
 		body["encryption"] = plan.Encryption.ValueString()
 	}
 	if !(plan.FtEnabled.IsNull() || plan.FtEnabled.IsUnknown()) {
-		body["ft-enabled"] = plan.FtEnabled.ValueString()
+		body["ft"] = plan.FtEnabled.ValueString()
 	}
 	if !(plan.FtMobilityDomain.IsNull() || plan.FtMobilityDomain.IsUnknown()) {
 		body["ft-mobility-domain"] = plan.FtMobilityDomain.ValueString()
@@ -374,7 +374,7 @@ func (r *InterfaceWifiSecurityResource) Create(ctx context.Context, req resource
 		body["ft-r0-key-lifetime"] = plan.FtR0KeyLifetime.ValueString()
 	}
 	if !(plan.FtReassocDeadline.IsNull() || plan.FtReassocDeadline.IsUnknown()) {
-		body["ft-reassoc-deadline"] = plan.FtReassocDeadline.ValueString()
+		body["ft-reassociation-deadline"] = plan.FtReassocDeadline.ValueString()
 	}
 	if !(plan.GroupEncryption.IsNull() || plan.GroupEncryption.IsUnknown()) {
 		body["group-encryption"] = plan.GroupEncryption.ValueString()
@@ -410,7 +410,7 @@ func (r *InterfaceWifiSecurityResource) Create(ctx context.Context, req resource
 		body["sae-pwe"] = plan.SaePwe.ValueString()
 	}
 	if !(plan.Types.IsNull() || plan.Types.IsUnknown()) {
-		body["types"] = plan.Types.ValueString()
+		body["authentication-types"] = plan.Types.ValueString()
 	}
 	if !(plan.Wps.IsNull() || plan.Wps.IsUnknown()) {
 		body["wps"] = plan.Wps.ValueString()
@@ -479,7 +479,7 @@ func (r *InterfaceWifiSecurityResource) Update(ctx context.Context, req resource
 		body["beacon-protection"] = plan.BeaconProtection.ValueString()
 	}
 	if !plan.Ciphers.Equal(state.Ciphers) && !plan.Ciphers.IsUnknown() {
-		body["ciphers"] = plan.Ciphers.ValueString()
+		body["encryption"] = plan.Ciphers.ValueString()
 	}
 	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
@@ -524,7 +524,7 @@ func (r *InterfaceWifiSecurityResource) Update(ctx context.Context, req resource
 		body["encryption"] = plan.Encryption.ValueString()
 	}
 	if !plan.FtEnabled.Equal(state.FtEnabled) && !plan.FtEnabled.IsUnknown() {
-		body["ft-enabled"] = plan.FtEnabled.ValueString()
+		body["ft"] = plan.FtEnabled.ValueString()
 	}
 	if !plan.FtMobilityDomain.Equal(state.FtMobilityDomain) && !plan.FtMobilityDomain.IsUnknown() {
 		body["ft-mobility-domain"] = plan.FtMobilityDomain.ValueString()
@@ -539,7 +539,7 @@ func (r *InterfaceWifiSecurityResource) Update(ctx context.Context, req resource
 		body["ft-r0-key-lifetime"] = plan.FtR0KeyLifetime.ValueString()
 	}
 	if !plan.FtReassocDeadline.Equal(state.FtReassocDeadline) && !plan.FtReassocDeadline.IsUnknown() {
-		body["ft-reassoc-deadline"] = plan.FtReassocDeadline.ValueString()
+		body["ft-reassociation-deadline"] = plan.FtReassocDeadline.ValueString()
 	}
 	if !plan.GroupEncryption.Equal(state.GroupEncryption) && !plan.GroupEncryption.IsUnknown() {
 		body["group-encryption"] = plan.GroupEncryption.ValueString()
@@ -575,7 +575,7 @@ func (r *InterfaceWifiSecurityResource) Update(ctx context.Context, req resource
 		body["sae-pwe"] = plan.SaePwe.ValueString()
 	}
 	if !plan.Types.Equal(state.Types) && !plan.Types.IsUnknown() {
-		body["types"] = plan.Types.ValueString()
+		body["authentication-types"] = plan.Types.ValueString()
 	}
 	if !plan.Wps.Equal(state.Wps) && !plan.Wps.IsUnknown() {
 		body["wps"] = plan.Wps.ValueString()
@@ -686,7 +686,7 @@ func interfaceWifiSecurityApply(ctx context.Context, obj client.Object, m *Inter
 			m.BeaconProtection = types.StringNull()
 		}
 	}
-	if v, ok := obj["ciphers"]; ok {
+	if v, ok := obj["encryption"]; ok {
 		if v != "" {
 			m.Ciphers = types.StringValue(v)
 		} else {
@@ -793,7 +793,7 @@ func interfaceWifiSecurityApply(ctx context.Context, obj client.Object, m *Inter
 			m.Encryption = types.StringNull()
 		}
 	}
-	if v, ok := obj["ft-enabled"]; ok {
+	if v, ok := obj["ft"]; ok {
 		if v != "" {
 			m.FtEnabled = types.StringValue(v)
 		} else {
@@ -828,7 +828,7 @@ func interfaceWifiSecurityApply(ctx context.Context, obj client.Object, m *Inter
 			m.FtR0KeyLifetime = types.StringNull()
 		}
 	}
-	if v, ok := obj["ft-reassoc-deadline"]; ok {
+	if v, ok := obj["ft-reassociation-deadline"]; ok {
 		if v != "" {
 			m.FtReassocDeadline = types.StringValue(v)
 		} else {
@@ -912,7 +912,7 @@ func interfaceWifiSecurityApply(ctx context.Context, obj client.Object, m *Inter
 			m.SaePwe = types.StringNull()
 		}
 	}
-	if v, ok := obj["types"]; ok {
+	if v, ok := obj["authentication-types"]; ok {
 		if v != "" {
 			m.Types = types.StringValue(v)
 		} else {

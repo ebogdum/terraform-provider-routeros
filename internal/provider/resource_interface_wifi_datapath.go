@@ -108,12 +108,10 @@ func (r *InterfaceWifiDatapathResource) Schema(_ context.Context, _ resource.Sch
 				Description: "",
 			},
 			"open_flow_switch": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"openflow": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -169,12 +167,6 @@ func (r *InterfaceWifiDatapathResource) Create(ctx context.Context, req resource
 	}
 	if !(plan.Name.IsNull() || plan.Name.IsUnknown()) {
 		body["name"] = plan.Name.ValueString()
-	}
-	if !(plan.OpenFlowSwitch.IsNull() || plan.OpenFlowSwitch.IsUnknown()) {
-		body["open-flow-switch"] = plan.OpenFlowSwitch.ValueString()
-	}
-	if !(plan.Openflow.IsNull() || plan.Openflow.IsUnknown()) {
-		body["openflow"] = plan.Openflow.ValueString()
 	}
 	if !(plan.TrafficProcessing.IsNull() || plan.TrafficProcessing.IsUnknown()) {
 		body["traffic-processing"] = plan.TrafficProcessing.ValueString()
@@ -253,12 +245,6 @@ func (r *InterfaceWifiDatapathResource) Update(ctx context.Context, req resource
 	}
 	if !plan.Name.Equal(state.Name) && !plan.Name.IsUnknown() {
 		body["name"] = plan.Name.ValueString()
-	}
-	if !plan.OpenFlowSwitch.Equal(state.OpenFlowSwitch) && !plan.OpenFlowSwitch.IsUnknown() {
-		body["open-flow-switch"] = plan.OpenFlowSwitch.ValueString()
-	}
-	if !plan.Openflow.Equal(state.Openflow) && !plan.Openflow.IsUnknown() {
-		body["openflow"] = plan.Openflow.ValueString()
 	}
 	if !plan.TrafficProcessing.Equal(state.TrafficProcessing) && !plan.TrafficProcessing.IsUnknown() {
 		body["traffic-processing"] = plan.TrafficProcessing.ValueString()
