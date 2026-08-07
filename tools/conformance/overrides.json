@@ -1,0 +1,16 @@
+{
+  "_comment": [
+    "Per-attribute value overrides for the conformance sweep.",
+    "",
+    "The generator picks values from the device's own completion lists, which",
+    "are correct per attribute but occasionally illegal in isolation because",
+    "RouterOS enforces a cross-property constraint. /ip/ipsec/proposal rejects",
+    "an AEAD cipher alongside any auth algorithm ('AEAD already provides",
+    "authentication') and one is set by default, so chacha20poly1305 can never",
+    "be applied on its own.",
+    "",
+    "Record a compatible pair here rather than weakening the sweep. Keyed by",
+    "<resource>.<attribute>."
+  ],
+  "routeros_ip_ipsec_proposal.enc_algorithms": {"a": "aes-256-cbc", "b": "aes-128-cbc"}
+}

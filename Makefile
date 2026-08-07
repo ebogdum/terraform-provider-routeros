@@ -61,3 +61,11 @@ dms-arm:     ; tools/conformance/deadman.sh arm
 dms-disarm:  ; tools/conformance/deadman.sh disarm
 dms-verify:  ; tools/conformance/deadman.sh verify
 dms-remove:  ; tools/conformance/deadman.sh remove
+
+.PHONY: conformance-manifest conformance
+conformance-manifest:
+	python3 tools/conformance/gen_manifest.py > internal/provider/testdata/conformance.json
+
+conformance:
+	TF_ACC=1 $(GO) test -tags acceptance -count=1 -timeout 180m \
+	  -run TestAccConformanceSweep ./internal/provider/ -v
