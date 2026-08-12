@@ -46,12 +46,12 @@ func TestCapsManConfigurationHasNoFlattenedSubObjects(t *testing.T) {
 	}
 }
 
-// The menu carries name/mirror-source/mirror-target/cpu-flow-control on the
+// The menu carries name/mirror-source/mirror-target/cpu-flow-control/l3-hw-offloading on the
 // device; without them the resource had nothing to declare and emitted no
 // usable configuration.
 func TestEthernetSwitchAttrs(t *testing.T) {
 	attrs := schemaOf(t, NewInterfaceEthernetSwitchResource()).Schema.Attributes
-	for _, a := range []string{"name", "mirror_source", "mirror_target", "cpu_flow_control"} {
+	for _, a := range []string{"name", "mirror_source", "mirror_target", "cpu_flow_control", "l3_hw_offloading"} {
 		if _, ok := attrs[a]; !ok {
 			t.Errorf("routeros_interface_ethernet_switch is missing %q", a)
 		}
