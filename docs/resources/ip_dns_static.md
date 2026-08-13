@@ -44,7 +44,7 @@ resource "routeros_ip_dns_static" "static_example" {
 This resource supports the following arguments:
 
 * `router` - (Optional) Type: `string`. Name of the router (key in provider's `routers` map). Omit to use the default.
-* `address` - (Required) Type: `string`. Address to return.
+* `address` - (Optional) Type: `string`. IPv4/IPv6 address to return. Required when `type` is `"A"` or `"AAAA"` (the default); must be left unset for other types (`CNAME`, `FWD`, `MX`, `NS`, `SRV`, `TXT`, or a `regexp`-matched entry).
 * `address_list` - (Optional) Type: `string`.
 * `cname` - (Optional) Type: `string`.
 * `comment` - (Optional) Type: `string`. Free-form comment.
