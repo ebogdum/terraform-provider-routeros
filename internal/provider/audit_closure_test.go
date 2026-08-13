@@ -8,6 +8,8 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
 func schemaOf(t *testing.T, r resource.Resource) resource.SchemaResponse {
@@ -43,6 +45,108 @@ func TestCapsManConfigurationHasNoFlattenedSubObjects(t *testing.T) {
 		if _, ok := attrs[sec]; !ok {
 			t.Errorf("caps_man_configuration lost the %q profile reference", sec)
 		}
+	}
+}
+
+func TestIPDNSStaticAddressIsOptional(t *testing.T) {
+	attrs := schemaOf(t, NewIPDNSStaticResource()).Schema.Attributes
+	att, ok := attrs["address"].(schema.StringAttribute)
+	if !ok {
+		t.Fatalf("routeros_ip_dns_static.address missing or not a StringAttribute")
+	}
+	if att.Required {
+		t.Error("address is Required; should be Optional so non-A/AAAA entries can omit it")
+	}
+	if !att.Optional || !att.Computed {
+		t.Error("address should be Optional and Computed, matching the resource's other type-specific fields")
+	}
+}
+
+// Test which /ip/dns/static types support address. Ie 'A' or 'AAAA' records versus every other type, which have their own
+// dedicated field.
+func TestIPDNSStaticTypeNeedsAddress(t *testing.T) {
+	cases := []struct {
+		typ  string
+		want bool
+	}{
+		{"", true}, // unset means the device default, "A"
+		{"A", true},
+		{"AAAA", true},
+		{"a", true}, // RouterOS types are case-insensitive on the wire
+		{"CNAME", false},
+		{"FWD", false},
+		{"MX", false},
+		{"NS", false},
+		{"SRV", false},
+		{"TXT", false},
+	}
+	for _, tc := range cases {
+		if got := ipDNSStaticTypeNeedsAddress(tc.typ); got != tc.want {
+			t.Errorf("ipDNSStaticTypeNeedsAddress(%q) = %v, want %v", tc.typ, got, tc.want)
+		}
+	}
+}
+
+// Confirmed live against RouterOS 7.23 (two SRV records, created then deleted): setting
+// address on a non-A/AAAA type is not a harmless no-op. Create silently drops it; Update silently rewrites the
+// record's type to "A" and destroys every type-specific field it had. ValidateConfig must forbid both
+// setting and not setting address when the wrong type of record.
+func TestIPDNSStaticAddressTypeConflict(t *testing.T) {
+	cases := []struct {
+		name       string
+		typ        string
+		hasAddress bool
+		wantErr    bool
+	}{
+		{"A with address", "A", true, false},
+		{"default type with address", "", true, false},
+		{"AAAA with address", "AAAA", true, false},
+		{"A without address", "A", false, true},
+		{"default type without address", "", false, true},
+		{"SRV without address", "SRV", false, false},
+		{"SRV with address", "SRV", true, true},
+		{"TXT with address", "TXT", true, true},
+		{"CNAME with address", "CNAME", true, true},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			summary, detail := ipDNSStaticAddressTypeConflict(tc.typ, tc.hasAddress)
+			gotErr := summary != ""
+			if gotErr != tc.wantErr {
+				t.Errorf("conflict(%q, %v) = (%q, %q), want error=%v", tc.typ, tc.hasAddress, summary, detail, tc.wantErr)
+			}
+		})
+	}
+}
+
+// RouterOS accepts an empty address on Create but rejects it on Update with "invalid value for argument
+// ip/ipv6", confirmed live, even when address isn't actually changing. So Update must skip writing address
+// whenever the *new* (plan) value is empty or null, or address isn't changing at all. It must still write
+// address when address is genuinely changing to a new value.
+func TestIPDNSStaticShouldWriteAddress(t *testing.T) {
+	cases := []struct {
+		name        string
+		planAddr    types.String
+		stateAddr   types.String
+		wantWritten bool
+	}{
+		{"both null (typical non-A/AAAA record)", types.StringNull(), types.StringNull(), false},
+		{"empty unchanged", types.StringValue(""), types.StringValue(""), false},
+		{"empty, was null", types.StringValue(""), types.StringNull(), false},
+		{"null, was empty (pre-fix state converging)", types.StringNull(), types.StringValue(""), false},
+		{"real change", types.StringValue("10.0.0.1"), types.StringValue("10.0.0.2"), true},
+		{"real value unchanged", types.StringValue("10.0.0.1"), types.StringValue("10.0.0.1"), false},
+		{"unknown", types.StringUnknown(), types.StringValue(""), false},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			plan := IPDNSStaticModel{Address: tc.planAddr}
+			state := IPDNSStaticModel{Address: tc.stateAddr}
+			got := ipDNSStaticShouldWriteAddress(plan, state)
+			if got != tc.wantWritten {
+				t.Errorf("shouldWriteAddress = %v, want %v", got, tc.wantWritten)
+			}
+		})
 	}
 }
 
