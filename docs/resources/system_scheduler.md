@@ -24,7 +24,7 @@ resource "routeros_system_scheduler" "scheduler_example" {
   # interval = "1h"
   # policy = "replace-me"
   # start_date = "replace-me"
-  # start_time = "startup"
+  # start_time = "23:57:05"  # or "startup" to run once at boot
 }
 ```
 
@@ -43,7 +43,7 @@ This resource supports the following arguments:
 * `policy` - (Optional) Type: `string`.
 * `run_count` - (Read-only) Type: `int`.
 * `start_date` - (Optional) Type: `string`.
-* `start_time` - (Optional) Type: `string`.
+* `start_time` - (Optional) Type: `string`. A specific HH:MM:SS time, or the keyword `startup` to run once when RouterOS boots.
 
 ## Attribute Reference
 
