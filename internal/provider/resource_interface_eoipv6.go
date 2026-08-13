@@ -11,9 +11,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
 )
 
 var (
@@ -141,9 +143,11 @@ func (r *InterfaceEoipv6Resource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "",
 			},
 			"mac_address": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "",
+				Optional:      true,
+				Computed:      true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsMAC()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
 			},
 			"mtu": schema.StringAttribute{
 				Optional:    true,

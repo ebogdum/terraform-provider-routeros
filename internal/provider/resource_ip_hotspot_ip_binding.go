@@ -84,9 +84,11 @@ func (r *IPHotspotIPBindingResource) Schema(_ context.Context, _ resource.Schema
 				Description: "Whether the entry is disabled.",
 			},
 			"mac_address": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "",
+				Optional:      true,
+				Computed:      true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsMAC()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
 			},
 			"server": schema.StringAttribute{
 				Optional:    true,

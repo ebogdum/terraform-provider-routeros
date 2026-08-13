@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 )
 
 func schemaOf(t *testing.T, r resource.Resource) resource.SchemaResponse {
@@ -131,6 +132,32 @@ func TestUncoveredMenusHaveResources(t *testing.T) {
 	for _, w := range want {
 		if !have[w] {
 			t.Errorf("%s is not registered", w)
+		}
+	}
+}
+
+// A settable mac_address without schemautil.NormalizeMAC() diffs against RouterOS's own upper-case and
+// crashes with "Provider produced inconsistent result after apply". Scans every registered resource so a
+// new one can't reintroduce this error.
+func TestMACAddressFieldsAreNormalized(t *testing.T) {
+	const normalizeMACDescription = "normalize MAC to upper-case colon form"
+	for _, f := range registryResources() {
+		r := f()
+		m := &resource.MetadataResponse{}
+		r.Metadata(context.Background(), resource.MetadataRequest{ProviderTypeName: "routeros"}, m)
+		attrs := schemaOf(t, r).Schema.Attributes
+		att, ok := attrs["mac_address"].(schema.StringAttribute)
+		if !ok || !att.Optional {
+			continue
+		}
+		normalized := false
+		for _, pm := range att.PlanModifiers {
+			if pm.Description(context.Background()) == normalizeMACDescription {
+				normalized = true
+			}
+		}
+		if !normalized {
+			t.Errorf("%s.mac_address is Optional but missing schemautil.NormalizeMAC()", m.TypeName)
 		}
 	}
 }

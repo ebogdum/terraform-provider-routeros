@@ -11,9 +11,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
 )
 
 var (
@@ -110,9 +112,11 @@ func (r *InterfaceW60gResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "Layer2 Maximum transmission unit",
 			},
 			"mac_address": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "MAC address of the radio interface",
+				Optional:      true,
+				Computed:      true,
+				Description:   "MAC address of the radio interface",
+				Validators:    []validator.String{schemautil.IsMAC()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
 			},
 			"mdmg_fix": schema.StringAttribute{
 				Optional:    true,

@@ -109,9 +109,11 @@ func (r *IPV6NeighborResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description: "",
 			},
 			"mac_address": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "",
+				Optional:      true,
+				Computed:      true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsMAC()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
 			},
 			"mac_ping": schema.StringAttribute{
 				Computed:    true,
