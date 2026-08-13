@@ -18,11 +18,12 @@ import (
 )
 
 var (
-	_ resource.Resource                = &IPFirewallFilterResource{}
-	_ resource.ResourceWithImportState = &IPFirewallFilterResource{}
-	_                                  = attr.Value(nil)
-	_                                  = strings.TrimSpace
-	_                                  = path.Root
+	_ resource.Resource                   = &IPFirewallFilterResource{}
+	_ resource.ResourceWithImportState    = &IPFirewallFilterResource{}
+	_ resource.ResourceWithValidateConfig = &IPFirewallFilterResource{}
+	_                                     = attr.Value(nil)
+	_                                     = strings.TrimSpace
+	_                                     = path.Root
 )
 
 type IPFirewallFilterResource struct {
@@ -98,6 +99,7 @@ type IPFirewallFilterModel struct {
 	Ttl                     types.String `tfsdk:"ttl"`
 	Router                  types.String `tfsdk:"router"`
 	Position                types.Int64  `tfsdk:"position"`
+	PlaceBefore             types.String `tfsdk:"place_before"`
 	LockoutAck              types.Bool   `tfsdk:"lockout_ack"`
 }
 
@@ -115,9 +117,35 @@ func (r *IPFirewallFilterResource) Configure(_ context.Context, req resource.Con
 	}
 }
 
+// ValidateConfig rejects position and place_before set together:
+func (r *IPFirewallFilterResource) ValidateConfig(ctx context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
+	var m IPFirewallFilterModel
+	if diags := req.Config.Get(ctx, &m); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	if firewallFilterPositionConflictsWithPlaceBefore(m) {
+		resp.Diagnostics.AddAttributeError(
+			path.Root("place_before"),
+			"Conflicting ordering attributes",
+			"\"position\" and \"place_before\" are mutually exclusive. \"position\" orders this rule relative "+
+				"to other rules managed by this same apply; \"place_before\" orders it relative to a specific "+
+				"device .id. Set only one.",
+		)
+	}
+}
+
+func firewallFilterPositionConflictsWithPlaceBefore(m IPFirewallFilterModel) bool {
+	positionSet := !(m.Position.IsNull() || m.Position.IsUnknown())
+	placeBeforeSet := !(m.PlaceBefore.IsNull() || m.PlaceBefore.IsUnknown())
+	return positionSet && placeBeforeSet
+}
+
 func (r *IPFirewallFilterResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "IP firewall filter rule. Ordered top-down by `position` (sort key, not\nidentity). Position is persisted on the device via [tf:pos=N] in the\ncomment so destroy+apply rebuilds the same order.\nSafety: refuses an unconditional chain=input/forward action=drop|reject|\ntarpit rule unless `lockout_ack = true`.\n",
+		Description: "IP firewall filter rule. `position` is a sort key (not identity) ordering this rule " +
+			"only relative to other rules managed by the same apply. Use `place_before` (a real RouterOS `.id`) " +
+			"for that instead.\n",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:      true,
@@ -457,6 +485,13 @@ func (r *IPFirewallFilterResource) Schema(_ context.Context, _ resource.SchemaRe
 				Computed:    true,
 				Description: "Sort key for placement in the ordered chain. Lower = higher in the chain. Persisted on the device via a [tf:pos=N] prefix in the comment so destroy+apply rebuilds the same order.",
 			},
+			"place_before": schema.StringAttribute{
+				Optional: true,
+				Description: "RouterOS `.id` (e.g. `*3`) of an existing rule. Typically resolved via a " +
+					"`data \"routeros_ip_firewall_filter\"` lookup to move this rule directly before. Unlike " +
+					"`position`, which only orders rules managed by the same apply, this moves the rule on the " +
+					"device relative to any existing rule by its `.id`. Mutually exclusive with `position`.",
+			},
 			"lockout_ack": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -697,6 +732,24 @@ func (r *IPFirewallFilterResource) Create(ctx context.Context, req resource.Crea
 			return
 		}
 		obj = reread
+	}
+	if !(plan.PlaceBefore.IsNull() || plan.PlaceBefore.IsUnknown()) {
+		if err := c.Move(ctx, "/ip/firewall/filter", obj[".id"], plan.PlaceBefore.ValueString()); err != nil {
+			iPFirewallFilterApply(ctx, obj, &plan)
+			nullifyUnknownAttrs(&plan)
+			resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+			resp.Diagnostics.AddError("Move /ip/firewall/filter failed", err.Error())
+			return
+		}
+		moved, rerr := c.GetByID(ctx, "/ip/firewall/filter", obj[".id"])
+		if rerr != nil {
+			iPFirewallFilterApply(ctx, obj, &plan)
+			nullifyUnknownAttrs(&plan)
+			resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+			resp.Diagnostics.AddError("Re-read after move failed", rerr.Error())
+			return
+		}
+		obj = moved
 	}
 	iPFirewallFilterApply(ctx, obj, &plan)
 	// Apply has already split the marker off the comment; carry position
@@ -1400,6 +1453,24 @@ func (r *IPFirewallFilterResource) Update(ctx context.Context, req resource.Upda
 				return
 			}
 		}
+	}
+	if !plan.PlaceBefore.Equal(state.PlaceBefore) && !plan.PlaceBefore.IsUnknown() &&
+		!(plan.PlaceBefore.IsNull() || plan.PlaceBefore.ValueString() == "") {
+		if err := c.Move(ctx, "/ip/firewall/filter", plan.ID.ValueString(), plan.PlaceBefore.ValueString()); err != nil {
+			nullifyUnknownAttrs(&plan)
+			resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+			resp.Diagnostics.AddError("Move /ip/firewall/filter failed", err.Error())
+			return
+		}
+		// The move alone doesn't return the object; re-read so Computed attrs that went Unknown during
+		// planning (nothing in body means the framework can't assume any of them are unchanged) get filled
+		// back in rather than written to state as Unknown.
+		obj, err := c.GetByID(ctx, "/ip/firewall/filter", plan.ID.ValueString())
+		if err != nil {
+			resp.Diagnostics.AddError("Re-read after move failed", err.Error())
+			return
+		}
+		iPFirewallFilterApply(ctx, obj, &plan)
 	}
 	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
