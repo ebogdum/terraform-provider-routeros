@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
 func schemaOf(t *testing.T, r resource.Resource) resource.SchemaResponse {
@@ -18,6 +19,49 @@ func schemaOf(t *testing.T, r resource.Resource) resource.SchemaResponse {
 		t.Fatalf("schema diagnostics: %v", resp.Diagnostics)
 	}
 	return *resp
+}
+
+// queue_tree and queue_simple both declare place_before as Computed-only (no Optional), so the framework
+// forbids ever setting it from config - plan.PlaceBefore is always Unknown pre-apply, making the Move() call
+// that reads it permanently dead code. ip_firewall_filter's place_before must be genuinely settable from HCL.
+func TestFirewallFilterPlaceBeforeIsSettable(t *testing.T) {
+	attrs := schemaOf(t, NewIPFirewallFilterResource()).Schema.Attributes
+	att, ok := attrs["place_before"]
+	if !ok {
+		t.Fatalf("routeros_ip_firewall_filter is missing place_before")
+	}
+	if !att.IsOptional() {
+		t.Errorf("place_before must be Optional so it can be set from config; found Computed-only (matches the " +
+			"dead-code bug in queue_tree/queue_simple)")
+	}
+}
+
+// position and place_before order a rule against two different scopes and always run in a fixed internal
+// sequence (position then place_before), so combining them would silently make place_before win with no
+// indication that position's request was overridden. Test that setting both is rejected, and that setting
+// either alone is not.
+func TestFirewallFilterPositionAndPlaceBeforeAreMutuallyExclusive(t *testing.T) {
+	cases := []struct {
+		name         string
+		position     types.Int64
+		placeBefore  types.String
+		wantConflict bool
+	}{
+		{"neither set", types.Int64Null(), types.StringNull(), false},
+		{"position only", types.Int64Value(100), types.StringNull(), false},
+		{"place_before only", types.Int64Null(), types.StringValue("*5"), false},
+		{"both set", types.Int64Value(100), types.StringValue("*5"), true},
+		{"position unknown, place_before set", types.Int64Unknown(), types.StringValue("*5"), false},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			m := IPFirewallFilterModel{Position: tc.position, PlaceBefore: tc.placeBefore}
+			got := firewallFilterPositionConflictsWithPlaceBefore(m)
+			if got != tc.wantConflict {
+				t.Errorf("conflict = %v, want %v", got, tc.wantConflict)
+			}
+		})
+	}
 }
 
 // /caps-man/configuration was suspected of the same dotted sub-object defect as
