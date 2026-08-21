@@ -105,8 +105,9 @@ func (r *SystemGpsResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Description: "Whether to set the router's date and time to one received from GPS.",
 			},
 			"router": schema.StringAttribute{
-				Optional:    true,
-				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				Optional:      true,
+				Description:   "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 			},
 		},
 	}

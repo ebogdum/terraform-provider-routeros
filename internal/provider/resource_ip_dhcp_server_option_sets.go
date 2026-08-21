@@ -69,8 +69,9 @@ func (r *IPDHCPServerOptionSetsResource) Schema(_ context.Context, _ resource.Sc
 				Description: "Comma-separated list of `/ip/dhcp-server/option` names in this set.",
 			},
 			"router": schema.StringAttribute{
-				Optional:    true,
-				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				Optional:      true,
+				Description:   "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 			},
 		},
 	}

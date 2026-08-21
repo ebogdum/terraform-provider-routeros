@@ -140,8 +140,9 @@ func (r *InterfaceGreResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description: "IP address of remote tunnel end.",
 			},
 			"router": schema.StringAttribute{
-				Optional:    true,
-				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				Optional:      true,
+				Description:   "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 			},
 		},
 	}

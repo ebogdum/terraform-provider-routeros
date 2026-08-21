@@ -110,7 +110,8 @@ func (r *InterfaceWifiCapResource) Schema(_ context.Context, _ resource.SchemaRe
 				Description: "Create static rather than dynamic interfaces for provisioned radios.",
 			},
 			"router": schema.StringAttribute{Optional: true,
-				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				Description:   "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 			},
 		},
 	}

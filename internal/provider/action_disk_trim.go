@@ -77,7 +77,8 @@ func (r *DiskTrimResource) Schema(_ context.Context, _ resource.SchemaRequest, r
 				Description:   "Extra parameters forwarded to RouterOS verbatim. Keys with dots are allowed. Example: { ca = \"my-ca\", name = \"new-cert\" }.",
 			},
 			"router": schema.StringAttribute{Optional: true,
-				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				Description:   "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 			},
 			"output": schema.ListAttribute{
 				Computed:    true,

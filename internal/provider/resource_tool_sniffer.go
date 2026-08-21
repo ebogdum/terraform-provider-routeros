@@ -183,7 +183,8 @@ func (r *ToolSnifferResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Description: "",
 			},
 			"router": schema.StringAttribute{Optional: true,
-				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				Description:   "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 			},
 		},
 	}

@@ -165,8 +165,9 @@ func (r *IotLoraResource) Schema(_ context.Context, _ resource.SchemaRequest, re
 				Description: "Specifies uplink packet source address if necessary (address should match an address configured on the RB).",
 			},
 			"router": schema.StringAttribute{
-				Optional:    true,
-				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				Optional:      true,
+				Description:   "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 			},
 		},
 	}

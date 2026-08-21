@@ -105,7 +105,8 @@ func (r *SystemWatchdogResource) Schema(_ context.Context, _ resource.SchemaRequ
 				Description: "Acknowledge that a `watch_address` the device cannot reach will reboot-loop it off the network.",
 			},
 			"router": schema.StringAttribute{Optional: true,
-				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				Description:   "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 			},
 		},
 	}

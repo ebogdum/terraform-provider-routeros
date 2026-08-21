@@ -614,3 +614,36 @@ func TestFirewallPlaceBeforeRejectsAnythingButAnID(t *testing.T) {
 		}
 	}
 }
+
+// `router` selects which device a resource lives on, so it is part of the
+// resource's identity, not one of its settings. Without RequiresReplace,
+// re-pointing one issues a PATCH at the new device using the old device's .id,
+// which either edits an unrelated object or 404s.
+func TestRouterAttributeRequiresReplace(t *testing.T) {
+	for _, f := range registryResources() {
+		r := f()
+		m := &resource.MetadataResponse{}
+		r.Metadata(context.Background(), resource.MetadataRequest{ProviderTypeName: "routeros"}, m)
+		raw, ok := schemaOf(t, r).Schema.Attributes["router"]
+		if !ok {
+			continue
+		}
+		att, ok := raw.(schema.StringAttribute)
+		if !ok {
+			t.Errorf("%s.router is %T, want a plain StringAttribute", m.TypeName, raw)
+			continue
+		}
+		if !att.Optional {
+			t.Errorf("%s.router is not Optional, so no router can be selected", m.TypeName)
+		}
+		replaces := false
+		for _, pm := range att.PlanModifiers {
+			if strings.Contains(pm.Description(context.Background()), "destroy and recreate") {
+				replaces = true
+			}
+		}
+		if !replaces {
+			t.Errorf("%s.router is missing RequiresReplace()", m.TypeName)
+		}
+	}
+}

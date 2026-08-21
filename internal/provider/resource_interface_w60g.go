@@ -170,8 +170,9 @@ func (r *InterfaceW60gResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "Disables beamforming and locks to selected radiation pattern",
 			},
 			"router": schema.StringAttribute{
-				Optional:    true,
-				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				Optional:      true,
+				Description:   "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 			},
 		},
 	}

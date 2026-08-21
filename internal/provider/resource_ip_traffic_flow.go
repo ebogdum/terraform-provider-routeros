@@ -93,7 +93,8 @@ func (r *IPTrafficFlowResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "The number of packets that are consecutively omitted.",
 			},
 			"router": schema.StringAttribute{Optional: true,
-				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				Description:   "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 			},
 		},
 	}

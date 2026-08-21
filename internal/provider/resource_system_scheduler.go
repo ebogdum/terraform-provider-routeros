@@ -127,8 +127,9 @@ func (r *SystemSchedulerResource) Schema(_ context.Context, _ resource.SchemaReq
 				Validators: []validator.String{schemautil.IsTimeOfDayOrStartup()},
 			},
 			"router": schema.StringAttribute{
-				Optional:    true,
-				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				Optional:      true,
+				Description:   "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 			},
 		},
 	}
