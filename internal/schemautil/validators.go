@@ -164,3 +164,24 @@ func IsDSCPOrInherit() validator.String {
 		return nil
 	}, emptyOK: true}
 }
+
+// IsIntInRange restricts a numeric string attribute to lo..hi inclusive.
+func IsIntInRange(lo, hi int) validator.String {
+	return stringValidator{desc: fmt.Sprintf("must be %d-%d", lo, hi), fn: func(s string) error {
+		n, err := strconv.Atoi(strings.TrimSpace(s))
+		if err != nil || n < lo || n > hi {
+			return fmt.Errorf("%q is not in %d-%d", s, lo, hi)
+		}
+		return nil
+	}, emptyOK: true}
+}
+
+// MinLength rejects a value shorter than n characters.
+func MinLength(n int) validator.String {
+	return stringValidator{desc: fmt.Sprintf("must be at least %d characters", n), fn: func(s string) error {
+		if len(s) < n {
+			return fmt.Errorf("is %d characters, need at least %d", len(s), n)
+		}
+		return nil
+	}, emptyOK: true}
+}
