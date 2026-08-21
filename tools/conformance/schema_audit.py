@@ -43,12 +43,27 @@ SRC = "internal/provider"
 BATCH = 25
 
 
+class SSHError(RuntimeError):
+    pass
+
+
 def ssh(script, timeout=240):
-    """Run a RouterOS console script over SSH and return stdout."""
-    return subprocess.run(
+    """Run a RouterOS console script over SSH and return stdout.
+
+    Raises on a non-zero exit. Returning stdout blind meant that a missing
+    ssh-agent produced empty output for every menu, every menu was classified
+    "not present on this hardware", and the audit printed AUDIT CLEAN and
+    exited 0 without having reached a device.
+    """
+    r = subprocess.run(
         ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15",
          "%s@%s" % (USER, HOST), script],
-        capture_output=True, text=True, timeout=timeout).stdout
+        capture_output=True, text=True, timeout=timeout)
+    if r.returncode != 0:
+        raise SSHError("ssh to %s@%s exited %d: %s"
+                       % (USER, HOST, r.returncode,
+                          (r.stderr or r.stdout).strip()[:400] or "no output"))
+    return r.stdout
 
 
 def console_path(menu, *rest):
@@ -98,6 +113,31 @@ def device_set_args(menus):
         sys.stderr.write("  args %d/%d\n" % (i // BATCH + 1,
                                              (len(menus) + BATCH - 1) // BATCH))
     return args
+
+
+def device_row_keys(menus):
+    """Every property name that appears in a real row, per menu.
+
+    A read-only flag is not a `set` argument, so set args alone cannot tell a
+    correct read-only name from a misspelled one. The rows can.
+    """
+    keys = {}
+    for i in range(0, len(menus), BATCH):
+        cmds = []
+        for m in menus[i:i + BATCH]:
+            cmds.append(':put "@@@%s"' % m)
+            cmds.append(':put [:tostr [%s/print as-value]]' % m)
+        cur = None
+        for line in ssh("; ".join(cmds)).splitlines():
+            line = line.strip()
+            if line.startswith("@@@"):
+                cur = line[3:]
+                keys.setdefault(cur, set())
+            elif cur:
+                keys[cur].update(re.findall(r"([A-Za-z0-9.\-]+)=", line))
+        sys.stderr.write("  rows %d/%d\n" % (i // BATCH + 1,
+                                              (len(menus) + BATCH - 1) // BATCH))
+    return keys
 
 
 def device_completions(pairs):
@@ -166,6 +206,12 @@ def check_names():
         if p["written"] and p["prop"] not in a:
             broken.append(p)
 
+    resolved = len(menus) - len(unreachable)
+    if resolved < max(1, len(menus) // 4):
+        sys.exit("audit aborted: only %d of %d menus resolved on the device. "
+                 "That is a connection or permissions problem, not a bare "
+                 "board -- refusing to report a result." % (resolved, len(menus)))
+
     print("\n== write-name check ==")
     print("menus not present on this hardware (skipped): %d" % len(unreachable))
     if ambiguous:
@@ -182,7 +228,24 @@ def check_names():
 def check_types():
     pairs = bool_attributes()
     sys.stderr.write("types: %d bool attributes\n" % len(pairs))
-    comp = device_completions(pairs)
+
+    # request=completion resolves a unique prefix, so poe-v answers exactly as
+    # poe-voltage does. REST needs the whole name, so a prefix is a bad name
+    # rather than a type problem -- check the name against the menu's own set
+    # arg list before asking what values it takes.
+    menus = sorted({m for m, _ in pairs})
+    args = device_set_args(menus)
+    rows = device_row_keys(menus)
+
+    def known(menu, prop):
+        return prop in (args.get(menu) or []) or prop in rows.get(menu, set())
+
+    # A read-only name can only be judged against a real row. An empty menu
+    # proves nothing, so it is left alone rather than reported as misspelled.
+    misnamed = [(m, p) for m, p in pairs
+                if args.get(m) and rows.get(m) and not known(m, p)]
+    checkable = [(m, p) for m, p in pairs if p in (args.get(m) or [])]
+    comp = device_completions(checkable)
 
     mismatched, unverifiable = [], 0
     for (menu, prop), vals in sorted(comp.items()):
@@ -195,11 +258,19 @@ def check_types():
     print("\n== bool-vs-enum check ==")
     print("bool attributes not settable here (read-only flags / absent "
           "menus): %d" % unverifiable)
+    print("bool attributes the device has under no such name: %d" % len(misnamed))
+    if misnamed:
+        print("  (a flag only present while true will not appear in a healthy "
+              "row; confirm before renaming)")
+    for menu, prop in sorted(misnamed):
+        near = [a for a in args[menu] if a.startswith(prop)]
+        hint = ("  -> %s" % near[0]) if len(near) == 1 else ""
+        print("  %-46s %-30s%s" % (menu, prop, hint))
     print("declared bool but the device accepts other values: %d"
           % len(mismatched))
     for menu, prop, vals in mismatched:
         print("  %-46s %-30s %s" % (menu, prop, vals))
-    return len(mismatched)
+    return len(mismatched) + len(misnamed)
 
 
 def main():
@@ -217,4 +288,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except SSHError as e:
+        sys.exit("audit aborted: %s" % e)
