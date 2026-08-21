@@ -43,6 +43,6 @@ This data source supports the following arguments:
 
 This data source exports the following attributes in addition to the arguments above:
 
-* `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`.
+* `records` - List of matching rows. Each row has the same fields as the resource above (string-typed), plus the device's `.id`. **Marked sensitive**: this menu holds a secret, which RouterOS returns in the row like any other column, so an unprojected read puts it in your state file. Use `proplist` to name the columns you need.
 * `default` - Type: `bool`.
 

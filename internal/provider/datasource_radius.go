@@ -19,9 +19,10 @@ var (
 type RADIUSDataSource struct{ reg *client.Registry }
 
 type RADIUSDSModel struct {
-	Router  types.String `tfsdk:"router"`
-	Filter  types.Map    `tfsdk:"filter"`
-	Records types.List   `tfsdk:"records"`
+	Router   types.String `tfsdk:"router"`
+	Filter   types.Map    `tfsdk:"filter"`
+	Proplist types.List   `tfsdk:"proplist"`
+	Records  types.List   `tfsdk:"records"`
 }
 
 func NewRADIUSDataSource() datasource.DataSource { return &RADIUSDataSource{} }
@@ -51,8 +52,14 @@ func (d *RADIUSDataSource) Schema(_ context.Context, _ datasource.SchemaRequest,
 				ElementType: types.StringType,
 				Description: "Equality filters (?k=v).",
 			},
+			"proplist": schema.ListAttribute{
+				Optional:    true,
+				ElementType: types.StringType,
+				Description: "Columns to return. Omit to return every column, including any secret this menu holds.",
+			},
 			"records": schema.ListAttribute{
 				Computed:    true,
+				Sensitive:   true,
 				ElementType: types.MapType{ElemType: types.StringType},
 				Description: "Matching records as flat string maps (RouterOS wire form).",
 			},
@@ -76,6 +83,13 @@ func (d *RADIUSDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		resp.Diagnostics.Append(m.Filter.ElementsAs(ctx, &filt, false)...)
 		for k, v := range filt {
 			opts = append(opts, client.WithFilter(k, v))
+		}
+	}
+	if !m.Proplist.IsNull() && !m.Proplist.IsUnknown() {
+		var props []string
+		resp.Diagnostics.Append(m.Proplist.ElementsAs(ctx, &props, false)...)
+		if len(props) > 0 {
+			opts = append(opts, client.WithProplist(props...))
 		}
 	}
 	rows, err := c.List(ctx, "/radius", opts...)
