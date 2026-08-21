@@ -58,6 +58,12 @@ type Client struct {
 
 	orderLocksMu sync.Mutex
 	orderLocks   map[string]*sync.Mutex
+
+	capMu     sync.Mutex
+	capCache  map[string]map[string]bool
+	idDone    bool
+	idBoard   string
+	idVersion string
 }
 
 // New constructs a Client. The router's reachability is not checked here.
@@ -338,6 +344,9 @@ func (c *Client) GetByID(ctx context.Context, path, id string) (Object, error) {
 
 // Add creates a record. Returns the full created object (including .id).
 func (c *Client) Add(ctx context.Context, path string, body Object) (Object, error) {
+	if err := c.CheckWritable(ctx, path, "add", body); err != nil {
+		return nil, err
+	}
 	u := c.rel(path)
 	raw, err := c.request(ctx, http.MethodPut, u.String(), body)
 	if err != nil {
@@ -348,6 +357,9 @@ func (c *Client) Add(ctx context.Context, path string, body Object) (Object, err
 
 // Set patches fields on a record by id, returning the full updated object.
 func (c *Client) Set(ctx context.Context, path, id string, body Object) (Object, error) {
+	if err := c.CheckWritable(ctx, path, "set", body); err != nil {
+		return nil, err
+	}
 	u := c.rel(path, id)
 	raw, err := c.request(ctx, http.MethodPatch, u.String(), body)
 	if err != nil {
@@ -362,6 +374,9 @@ func (c *Client) Set(ctx context.Context, path, id string, body Object) (Object,
 // segment. The accepted form is POST /rest/<menu>/set with the same body.
 // After the set we GET the menu to return the fresh state.
 func (c *Client) SetSingleton(ctx context.Context, path string, body Object) (Object, error) {
+	if err := c.CheckWritable(ctx, path, "set", body); err != nil {
+		return nil, err
+	}
 	u := c.rel(path, "set")
 	if _, err := c.request(ctx, http.MethodPost, u.String(), body); err != nil {
 		return nil, err
