@@ -403,14 +403,19 @@ func (c *Client) Exec(ctx context.Context, path, command string, body any) ([]Ob
 	return decodeAny(raw)
 }
 
-// Move issues POST /rest/<path>/move with {numbers:<id>, destination:<dest>}.
-// Used for ordered menus (firewall filter/nat/mangle, queue tree, etc.).
+// Move places id directly before destination in an ordered menu. An empty
+// destination means "bottom of the menu" to RouterOS; MoveToEnd spells that out.
 func (c *Client) Move(ctx context.Context, path, id, destination string) error {
-	body := Object{"numbers": id}
-	if destination != "" {
-		body["destination"] = destination
+	if strings.TrimSpace(destination) == "" {
+		return fmt.Errorf("routeros: refusing to move %s in %s with no destination; use MoveToEnd to place it last", id, path)
 	}
-	_, err := c.Exec(ctx, path, "move", body)
+	_, err := c.Exec(ctx, path, "move", Object{"numbers": id, "destination": destination})
+	return err
+}
+
+// MoveToEnd sends id to the bottom of menuPath.
+func (c *Client) MoveToEnd(ctx context.Context, path, id string) error {
+	_, err := c.Exec(ctx, path, "move", Object{"numbers": id})
 	return err
 }
 

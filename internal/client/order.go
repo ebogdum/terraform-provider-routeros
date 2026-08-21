@@ -75,11 +75,19 @@ func (c *Client) PlaceOrdered(ctx context.Context, router, menuPath, thisID stri
 	copy(desired, managedInDeviceOrder)
 	sort.SliceStable(desired, func(i, j int) bool { return desired[i].pos < desired[j].pos })
 
+	// A lone managed rule has no peer to sort against.
+	if len(desired) < 2 {
+		return nil
+	}
+
 	// Find what should come AFTER thisID in the desired order.
-	var destID string
+	var destID, prevID string
 	for i, p := range desired {
 		if p.id != thisID {
 			continue
+		}
+		if i > 0 {
+			prevID = desired[i-1].id
 		}
 		if i+1 < len(desired) {
 			destID = desired[i+1].id
@@ -87,8 +95,7 @@ func (c *Client) PlaceOrdered(ctx context.Context, router, menuPath, thisID stri
 		break
 	}
 
-	// Skip the move if device order already has thisID directly before destID
-	// (or thisID at the tail of the managed section and destID empty).
+	// Skip the move if device order already has thisID directly before destID.
 	for i, p := range managedInDeviceOrder {
 		if p.id != thisID {
 			continue
@@ -102,5 +109,29 @@ func (c *Client) PlaceOrdered(ctx context.Context, router, menuPath, thisID stri
 		}
 		break
 	}
-	return c.Move(ctx, menuPath, thisID, destID)
+	if destID != "" {
+		return c.Move(ctx, menuPath, thisID, destID)
+	}
+	return c.moveAfter(ctx, menuPath, rows, thisID, prevID)
+}
+
+// moveAfter places thisID directly after anchorID, so a rule sorting last among
+// managed rules stays put instead of jumping every unmanaged rule below it.
+func (c *Client) moveAfter(ctx context.Context, menuPath string, rows []Object, thisID, anchorID string) error {
+	anchor := -1
+	for i, r := range rows {
+		if r[".id"] == anchorID {
+			anchor = i
+			break
+		}
+	}
+	if anchor < 0 {
+		return nil
+	}
+	for _, r := range rows[anchor+1:] {
+		if id := r[".id"]; id != thisID {
+			return c.Move(ctx, menuPath, thisID, id)
+		}
+	}
+	return c.MoveToEnd(ctx, menuPath, thisID)
 }

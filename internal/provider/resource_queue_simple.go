@@ -313,7 +313,7 @@ func (r *QueueSimpleResource) Create(ctx context.Context, req resource.CreateReq
 		resp.Diagnostics.AddError("Create /queue/simple failed", err.Error())
 		return
 	}
-	if !(plan.PlaceBefore.IsNull() || plan.PlaceBefore.IsUnknown()) {
+	if !(plan.PlaceBefore.IsNull() || plan.PlaceBefore.IsUnknown() || plan.PlaceBefore.ValueString() == "") {
 		if err := c.Move(ctx, "/queue/simple", obj[".id"], plan.PlaceBefore.ValueString()); err != nil {
 			resp.Diagnostics.AddError("Move /queue/simple failed", err.Error())
 			return
@@ -449,7 +449,7 @@ func (r *QueueSimpleResource) Update(ctx context.Context, req resource.UpdateReq
 	} else {
 		plan.ID = state.ID
 	}
-	if !plan.PlaceBefore.Equal(state.PlaceBefore) && !(plan.PlaceBefore.IsNull() || plan.PlaceBefore.IsUnknown()) {
+	if !plan.PlaceBefore.Equal(state.PlaceBefore) && !(plan.PlaceBefore.IsNull() || plan.PlaceBefore.IsUnknown() || plan.PlaceBefore.ValueString() == "") {
 		if err := c.Move(ctx, "/queue/simple", plan.ID.ValueString(), plan.PlaceBefore.ValueString()); err != nil {
 			resp.Diagnostics.AddError("Move /queue/simple failed", err.Error())
 			return
