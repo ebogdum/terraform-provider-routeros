@@ -14,6 +14,7 @@ type UnsupportedArgs struct {
 	Verb     string
 	Rejected []string
 	Accepted []string
+	Reasons  []string
 	Board    string
 	Version  string
 }
@@ -29,6 +30,10 @@ func (e *UnsupportedArgs) Error() string {
 		if e.Version != "" {
 			where += ", RouterOS " + e.Version
 		}
+	}
+	if len(e.Reasons) > 0 {
+		return fmt.Sprintf("%s does not have these on %s: %s",
+			where, e.Menu, strings.Join(e.Reasons, "; "))
 	}
 	return fmt.Sprintf("%s does not accept %s on %s. The menu accepts: %s",
 		where, strings.Join(attrs, ", "), e.Menu, strings.Join(e.Accepted, ", "))
@@ -95,6 +100,30 @@ func (c *Client) identity(ctx context.Context) (board, version string) {
 		c.idBoard, c.idVersion = obj["board-name"], obj["version"]
 	}
 	return c.idBoard, c.idVersion
+}
+
+// ResolveBody renames body's properties to what this board calls them, using
+// the device matrix. It returns an error naming any the board does not have.
+func (c *Client) ResolveBody(ctx context.Context, menuPath string, body Object) (Object, error) {
+	board, version := c.identity(ctx)
+	out, absent := applyMatrix(menuPath, board, body)
+	if len(absent) == 0 {
+		return out, nil
+	}
+	rejected := make([]string, 0, len(absent))
+	for k := range absent {
+		rejected = append(rejected, k)
+	}
+	sort.Strings(rejected)
+	reasons := make([]string, len(rejected))
+	for i, k := range rejected {
+		reasons[i] = fmt.Sprintf("%s (%q) -- %s",
+			strings.ReplaceAll(k, "-", "_"), k, absent[k])
+	}
+	return out, &UnsupportedArgs{
+		Menu: menuPath, Rejected: rejected, Board: board, Version: version,
+		Reasons: reasons,
+	}
 }
 
 // CheckWritable reports property names in body that menuPath does not accept.

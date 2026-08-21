@@ -344,6 +344,10 @@ func (c *Client) GetByID(ctx context.Context, path, id string) (Object, error) {
 
 // Add creates a record. Returns the full created object (including .id).
 func (c *Client) Add(ctx context.Context, path string, body Object) (Object, error) {
+	body, err := c.ResolveBody(ctx, path, body)
+	if err != nil {
+		return nil, err
+	}
 	if err := c.CheckWritable(ctx, path, "add", body); err != nil {
 		return nil, err
 	}
@@ -357,6 +361,10 @@ func (c *Client) Add(ctx context.Context, path string, body Object) (Object, err
 
 // Set patches fields on a record by id, returning the full updated object.
 func (c *Client) Set(ctx context.Context, path, id string, body Object) (Object, error) {
+	body, err := c.ResolveBody(ctx, path, body)
+	if err != nil {
+		return nil, err
+	}
 	if err := c.CheckWritable(ctx, path, "set", body); err != nil {
 		return nil, err
 	}
@@ -374,6 +382,10 @@ func (c *Client) Set(ctx context.Context, path, id string, body Object) (Object,
 // segment. The accepted form is POST /rest/<menu>/set with the same body.
 // After the set we GET the menu to return the fresh state.
 func (c *Client) SetSingleton(ctx context.Context, path string, body Object) (Object, error) {
+	body, err := c.ResolveBody(ctx, path, body)
+	if err != nil {
+		return nil, err
+	}
 	if err := c.CheckWritable(ctx, path, "set", body); err != nil {
 		return nil, err
 	}
