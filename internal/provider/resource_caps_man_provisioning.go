@@ -42,7 +42,7 @@ type CapsManProvisioningModel struct {
 	MasterConfiguration types.String `tfsdk:"master_configuration"`
 	NameFormat          types.String `tfsdk:"name_format"`
 	NamePrefix          types.String `tfsdk:"name_prefix"`
-	RadioMAC            types.String `tfsdk:"radio_mac"`
+	RadioMAC            macValue     `tfsdk:"radio_mac"`
 	SlaveConfiguration  types.String `tfsdk:"slave_configuration"`
 	SlaveConfigurations types.String `tfsdk:"slave_configurations"`
 	Router              types.String `tfsdk:"router"`
@@ -124,11 +124,11 @@ func (r *CapsManProvisioningResource) Schema(_ context.Context, _ resource.Schem
 				Description: "",
 			},
 			"radio_mac": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsMAC()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
+				CustomType:  macType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"slave_configuration": schema.StringAttribute{
 				Optional:    true,
@@ -426,9 +426,9 @@ func capsManProvisioningApply(ctx context.Context, obj client.Object, m *CapsMan
 	}
 	if v, ok := obj["radio-mac"]; ok {
 		if v != "" {
-			m.RadioMAC = types.StringValue(v)
+			m.RadioMAC = newMACValue(v)
 		} else {
-			m.RadioMAC = types.StringNull()
+			m.RadioMAC = newMACNull()
 		}
 	}
 	if v, ok := obj["slave-configuration"]; ok {

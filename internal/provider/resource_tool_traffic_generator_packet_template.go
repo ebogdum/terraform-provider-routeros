@@ -41,9 +41,9 @@ type ToolTrafficGeneratorPacketTemplateModel struct {
 	RawHeader                 types.String `tfsdk:"raw_header"`
 	RandomRanges              types.String `tfsdk:"random_ranges"`
 	RandomByteOffsetsAndMasks types.String `tfsdk:"random_byte_offsets_and_masks"`
-	MacSrc                    types.String `tfsdk:"mac_src"`
+	MacSrc                    macValue     `tfsdk:"mac_src"`
 	MacProtocol               types.String `tfsdk:"mac_protocol"`
-	MacDst                    types.String `tfsdk:"mac_dst"`
+	MacDst                    macValue     `tfsdk:"mac_dst"`
 	Ipv6TrafficClass          types.String `tfsdk:"ipv6_traffic_class"`
 	Ipv6Src                   types.String `tfsdk:"ipv6_src"`
 	Ipv6NextHeader            types.String `tfsdk:"ipv6_next_header"`
@@ -199,9 +199,11 @@ func (r *ToolTrafficGeneratorPacketTemplateResource) Schema(_ context.Context, _
 				Description: "RouterOS `random-byte-offsets-and-masks`.",
 			},
 			"mac_src": schema.StringAttribute{
+				CustomType:  macType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "RouterOS `mac-src`.",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"mac_protocol": schema.StringAttribute{
 				Optional:    true,
@@ -209,9 +211,11 @@ func (r *ToolTrafficGeneratorPacketTemplateResource) Schema(_ context.Context, _
 				Description: "RouterOS `mac-protocol`.",
 			},
 			"mac_dst": schema.StringAttribute{
+				CustomType:  macType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "RouterOS `mac-dst`.",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"ipv6_traffic_class": schema.StringAttribute{
 				Optional:    true,
@@ -1014,9 +1018,9 @@ func toolTrafficGeneratorPacketTemplateApply(ctx context.Context, obj client.Obj
 		m.RandomByteOffsetsAndMasks = types.StringNull()
 	}
 	if v, ok := obj["mac-src"]; ok && v != "" {
-		m.MacSrc = types.StringValue(v)
+		m.MacSrc = newMACValue(v)
 	} else {
-		m.MacSrc = types.StringNull()
+		m.MacSrc = newMACNull()
 	}
 	if v, ok := obj["mac-protocol"]; ok && v != "" {
 		m.MacProtocol = types.StringValue(v)
@@ -1024,9 +1028,9 @@ func toolTrafficGeneratorPacketTemplateApply(ctx context.Context, obj client.Obj
 		m.MacProtocol = types.StringNull()
 	}
 	if v, ok := obj["mac-dst"]; ok && v != "" {
-		m.MacDst = types.StringValue(v)
+		m.MacDst = newMACValue(v)
 	} else {
-		m.MacDst = types.StringNull()
+		m.MacDst = newMACNull()
 	}
 	if v, ok := obj["ipv6-traffic-class"]; ok && v != "" {
 		m.Ipv6TrafficClass = types.StringValue(v)

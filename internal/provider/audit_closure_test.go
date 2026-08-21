@@ -182,14 +182,14 @@ func TestSchedulerStartTimeAcceptsConcreteTime(t *testing.T) {
 		}
 		return true
 	}
-	// Accepted by ROS 7.23.2; "24:00:00" and "1d00:00:00" are rejected here
-	// because the device silently rewrites both to "00:00:00".
-	for _, ok := range []string{"23:57:05", "startup", "00:00:00", "0:0:0", "23:57"} {
+	// The device also takes "0:0:0", "23:57" and "24:00:00", but rewrites each of
+	// them, which Terraform reports as an inconsistent result. Refused instead.
+	for _, ok := range []string{"23:57:05", "startup", "00:00:00", "23:59:59"} {
 		if !check(ok) {
 			t.Errorf("start_time rejected %q, want accepted", ok)
 		}
 	}
-	for _, bad := range []string{"nonsense", "24:00:00", "1d00:00:00", "25:00:00", "12:60:00"} {
+	for _, bad := range []string{"nonsense", "0:0:0", "23:57", "24:00:00", "1d00:00:00", "25:00:00", "12:60:00"} {
 		if check(bad) {
 			t.Errorf("start_time accepted %q, want rejected", bad)
 		}
@@ -269,6 +269,43 @@ func TestUncoveredMenusHaveResources(t *testing.T) {
 	for _, w := range want {
 		if !have[w] {
 			t.Errorf("%s is not registered", w)
+		}
+	}
+}
+
+// A settable MAC compared literally diffs against RouterOS's own upper-case form
+// and fails with "inconsistent result after apply". Every attribute holding a
+// bare MAC is checked, not just the one called mac_address.
+func TestMACAddressFieldsAreNormalized(t *testing.T) {
+	// A MAC/mask pair, a comma-separated list, a flag or a count -- none of them
+	// a bare MAC, and IsMAC rejects all of them.
+	notPlainMACs := map[string]bool{
+		"src_mac_address": true, "dst_mac_address": true,
+		"arp_src_mac_address": true, "arp_dst_mac_address": true,
+		"filter_src_mac_address": true, "filter_dst_mac_address": true,
+		"filter_mac_address": true, "filter_mac_protocol": true, "mac_address_list": true,
+		"use_src_mac": true, "auto_mac": true, "addresses_per_mac": true,
+	}
+	isMACAttr := func(name string) bool {
+		if notPlainMACs[name] {
+			return false
+		}
+		return name == "mac" || strings.HasSuffix(name, "_mac") ||
+			name == "mac_address" || strings.HasSuffix(name, "_mac_address") ||
+			name == "mac_src" || name == "mac_dst"
+	}
+	for _, f := range registryResources() {
+		r := f()
+		m := &resource.MetadataResponse{}
+		r.Metadata(context.Background(), resource.MetadataRequest{ProviderTypeName: "routeros"}, m)
+		for name, raw := range schemaOf(t, r).Schema.Attributes {
+			att, ok := raw.(schema.StringAttribute)
+			if !ok || !isMACAttr(name) || !(att.Optional || att.Required) {
+				continue
+			}
+			if _, ok := att.CustomType.(macType); !ok {
+				t.Errorf("%s.%s holds a MAC but is not typed macType, so plan and state compare literally", m.TypeName, name)
+			}
 		}
 	}
 }

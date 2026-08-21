@@ -11,9 +11,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
 )
 
 var (
@@ -38,7 +40,7 @@ type InterfaceMacvlanModel struct {
 	ARPTimeout              types.String `tfsdk:"arp_timeout"`
 	Comment                 types.String `tfsdk:"comment"`
 	Disabled                types.Bool   `tfsdk:"disabled"`
-	MACAddress              types.String `tfsdk:"mac_address"`
+	MACAddress              macValue     `tfsdk:"mac_address"`
 	Mode                    types.String `tfsdk:"mode"`
 	MTU                     types.String `tfsdk:"mtu"`
 	Name                    types.String `tfsdk:"name"`
@@ -109,9 +111,11 @@ func (r *InterfaceMacvlanResource) Schema(_ context.Context, _ resource.SchemaRe
 				Description: "Whether the entry is disabled.",
 			},
 			"mac_address": schema.StringAttribute{
+				CustomType:  macType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"mode": schema.StringAttribute{
 				Optional:    true,
@@ -386,9 +390,9 @@ func interfaceMacvlanApply(ctx context.Context, obj client.Object, m *InterfaceM
 	}
 	if v, ok := obj["mac-address"]; ok {
 		if v != "" {
-			m.MACAddress = types.StringValue(v)
+			m.MACAddress = newMACValue(v)
 		} else {
-			m.MACAddress = types.StringNull()
+			m.MACAddress = newMACNull()
 		}
 	}
 	if v, ok := obj["mode"]; ok {

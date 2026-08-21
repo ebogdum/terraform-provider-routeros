@@ -96,10 +96,10 @@ type CapsManInterfaceModel struct {
 	ARPTimeout               types.String `tfsdk:"arp_timeout"`
 	Comment                  types.String `tfsdk:"comment"`
 	Disabled                 types.Bool   `tfsdk:"disabled"`
-	MACAddress               types.String `tfsdk:"mac_address"`
+	MACAddress               macValue     `tfsdk:"mac_address"`
 	MasterInterface          types.String `tfsdk:"master_interface"`
 	Name                     types.String `tfsdk:"name"`
-	RadioMAC                 types.String `tfsdk:"radio_mac"`
+	RadioMAC                 macValue     `tfsdk:"radio_mac"`
 	Router                   types.String `tfsdk:"router"`
 }
 
@@ -448,11 +448,11 @@ func (r *CapsManInterfaceResource) Schema(_ context.Context, _ resource.SchemaRe
 				Description: "Whether the entry is disabled.",
 			},
 			"mac_address": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsMAC()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
+				CustomType:  macType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"master_interface": schema.StringAttribute{
 				Optional:    true,
@@ -465,11 +465,11 @@ func (r *CapsManInterfaceResource) Schema(_ context.Context, _ resource.SchemaRe
 				Description: "",
 			},
 			"radio_mac": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsMAC()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
+				CustomType:  macType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"router": schema.StringAttribute{
 				Optional:    true,
@@ -1343,9 +1343,9 @@ func capsManInterfaceApply(ctx context.Context, obj client.Object, m *CapsManInt
 	}
 	if v, ok := obj["mac-address"]; ok {
 		if v != "" {
-			m.MACAddress = types.StringValue(v)
+			m.MACAddress = newMACValue(v)
 		} else {
-			m.MACAddress = types.StringNull()
+			m.MACAddress = newMACNull()
 		}
 	}
 	if v, ok := obj["master-interface"]; ok {
@@ -1364,9 +1364,9 @@ func capsManInterfaceApply(ctx context.Context, obj client.Object, m *CapsManInt
 	}
 	if v, ok := obj["radio-mac"]; ok {
 		if v != "" {
-			m.RadioMAC = types.StringValue(v)
+			m.RadioMAC = newMACValue(v)
 		} else {
-			m.RadioMAC = types.StringNull()
+			m.RadioMAC = newMACNull()
 		}
 	}
 }

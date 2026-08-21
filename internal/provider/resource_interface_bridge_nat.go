@@ -11,9 +11,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
 )
 
 var (
@@ -33,9 +35,9 @@ type InterfaceBridgeNATModel struct {
 	VlanPriority         types.String `tfsdk:"vlan_priority"`
 	VlanId               types.String `tfsdk:"vlan_id"`
 	VlanEncap            types.String `tfsdk:"vlan_encap"`
-	ToSrcMacAddress      types.String `tfsdk:"to_src_mac_address"`
-	ToDstMacAddress      types.String `tfsdk:"to_dst_mac_address"`
-	ToArpReplyMacAddress types.String `tfsdk:"to_arp_reply_mac_address"`
+	ToSrcMacAddress      macValue     `tfsdk:"to_src_mac_address"`
+	ToDstMacAddress      macValue     `tfsdk:"to_dst_mac_address"`
+	ToArpReplyMacAddress macValue     `tfsdk:"to_arp_reply_mac_address"`
 	StpType              types.String `tfsdk:"stp_type"`
 	StpSenderPriority    types.String `tfsdk:"stp_sender_priority"`
 	StpSenderAddress     types.String `tfsdk:"stp_sender_address"`
@@ -131,19 +133,25 @@ func (r *InterfaceBridgeNATResource) Schema(_ context.Context, _ resource.Schema
 				Description: "RouterOS `vlan-encap`.",
 			},
 			"to_src_mac_address": schema.StringAttribute{
+				CustomType:  macType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "RouterOS `to-src-mac-address`.",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"to_dst_mac_address": schema.StringAttribute{
+				CustomType:  macType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "RouterOS `to-dst-mac-address`.",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"to_arp_reply_mac_address": schema.StringAttribute{
+				CustomType:  macType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "RouterOS `to-arp-reply-mac-address`.",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"stp_type": schema.StringAttribute{
 				Optional:    true,
@@ -913,19 +921,19 @@ func interfaceBridgeNATApply(ctx context.Context, obj client.Object, m *Interfac
 		m.VlanEncap = types.StringNull()
 	}
 	if v, ok := obj["to-src-mac-address"]; ok && v != "" {
-		m.ToSrcMacAddress = types.StringValue(v)
+		m.ToSrcMacAddress = newMACValue(v)
 	} else {
-		m.ToSrcMacAddress = types.StringNull()
+		m.ToSrcMacAddress = newMACNull()
 	}
 	if v, ok := obj["to-dst-mac-address"]; ok && v != "" {
-		m.ToDstMacAddress = types.StringValue(v)
+		m.ToDstMacAddress = newMACValue(v)
 	} else {
-		m.ToDstMacAddress = types.StringNull()
+		m.ToDstMacAddress = newMACNull()
 	}
 	if v, ok := obj["to-arp-reply-mac-address"]; ok && v != "" {
-		m.ToArpReplyMacAddress = types.StringValue(v)
+		m.ToArpReplyMacAddress = newMACValue(v)
 	} else {
-		m.ToArpReplyMacAddress = types.StringNull()
+		m.ToArpReplyMacAddress = newMACNull()
 	}
 	if v, ok := obj["stp-type"]; ok && v != "" {
 		m.StpType = types.StringValue(v)

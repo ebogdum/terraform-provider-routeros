@@ -11,9 +11,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
 )
 
 var (
@@ -36,7 +38,7 @@ type IPKidControlDeviceModel struct {
 	Disabled      types.Bool   `tfsdk:"disabled"`
 	Dynamic       types.Bool   `tfsdk:"dynamic"`
 	IPAddress     types.String `tfsdk:"ip_address"`
-	MACAddress    types.String `tfsdk:"mac_address"`
+	MACAddress    macValue     `tfsdk:"mac_address"`
 	Name          types.String `tfsdk:"name"`
 	RateLimited   types.Bool   `tfsdk:"rate_limited"`
 	RateUpDown    types.String `tfsdk:"rate_up_down"`
@@ -94,9 +96,11 @@ func (r *IPKidControlDeviceResource) Schema(_ context.Context, _ resource.Schema
 				Description: "",
 			},
 			"mac_address": schema.StringAttribute{
+				CustomType:  macType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"name": schema.StringAttribute{
 				Optional:    true,
@@ -328,9 +332,9 @@ func iPKidControlDeviceApply(ctx context.Context, obj client.Object, m *IPKidCon
 	}
 	if v, ok := obj["mac-address"]; ok {
 		if v != "" {
-			m.MACAddress = types.StringValue(v)
+			m.MACAddress = newMACValue(v)
 		} else {
-			m.MACAddress = types.StringNull()
+			m.MACAddress = newMACNull()
 		}
 	}
 	if v, ok := obj["name"]; ok {

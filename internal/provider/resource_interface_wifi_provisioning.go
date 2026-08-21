@@ -41,7 +41,7 @@ type InterfaceWifiProvisioningModel struct {
 	MasterConfiguration types.String `tfsdk:"master_configuration"`
 	MultiLinkMode       types.String `tfsdk:"multi_link_mode"`
 	NameFormat          types.String `tfsdk:"name_format"`
-	RadioMAC            types.String `tfsdk:"radio_mac"`
+	RadioMAC            macValue     `tfsdk:"radio_mac"`
 	SlaveConfigurations types.String `tfsdk:"slave_configurations"`
 	SlaveNameFormat     types.String `tfsdk:"slave_name_format"`
 	SupportedBands      types.String `tfsdk:"supported_bands"`
@@ -120,9 +120,11 @@ func (r *InterfaceWifiProvisioningResource) Schema(_ context.Context, _ resource
 				Description: "",
 			},
 			"radio_mac": schema.StringAttribute{
+				CustomType:  macType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"slave_configurations": schema.StringAttribute{
 				Optional:    true,
@@ -429,9 +431,9 @@ func interfaceWifiProvisioningApply(ctx context.Context, obj client.Object, m *I
 	}
 	if v, ok := obj["radio-mac"]; ok {
 		if v != "" {
-			m.RadioMAC = types.StringValue(v)
+			m.RadioMAC = newMACValue(v)
 		} else {
-			m.RadioMAC = types.StringNull()
+			m.RadioMAC = newMACNull()
 		}
 	}
 	if v, ok := obj["slave-configurations"]; ok {

@@ -11,9 +11,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
 )
 
 var (
@@ -43,7 +45,7 @@ type InterfaceEoipv6Model struct {
 	Disabled                types.Bool   `tfsdk:"disabled"`
 	IpsecSecret             types.String `tfsdk:"ipsec_secret"`
 	LocalAddress            types.String `tfsdk:"local_address"`
-	MACAddress              types.String `tfsdk:"mac_address"`
+	MACAddress              macValue     `tfsdk:"mac_address"`
 	MTU                     types.String `tfsdk:"mtu"`
 	Name                    types.String `tfsdk:"name"`
 	RemoteAddress           types.String `tfsdk:"remote_address"`
@@ -141,9 +143,11 @@ func (r *InterfaceEoipv6Resource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "",
 			},
 			"mac_address": schema.StringAttribute{
+				CustomType:  macType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"mtu": schema.StringAttribute{
 				Optional:    true,
@@ -485,9 +489,9 @@ func interfaceEoipv6Apply(ctx context.Context, obj client.Object, m *InterfaceEo
 	}
 	if v, ok := obj["mac-address"]; ok {
 		if v != "" {
-			m.MACAddress = types.StringValue(v)
+			m.MACAddress = newMACValue(v)
 		} else {
-			m.MACAddress = types.StringNull()
+			m.MACAddress = newMACNull()
 		}
 	}
 	if v, ok := obj["mtu"]; ok {

@@ -35,7 +35,7 @@ type IPHotspotIPBindingModel struct {
 	Address    types.String `tfsdk:"address"`
 	Comment    types.String `tfsdk:"comment"`
 	Disabled   types.Bool   `tfsdk:"disabled"`
-	MACAddress types.String `tfsdk:"mac_address"`
+	MACAddress macValue     `tfsdk:"mac_address"`
 	Server     types.String `tfsdk:"server"`
 	ToAddress  types.String `tfsdk:"to_address"`
 	Type       types.String `tfsdk:"type"`
@@ -84,9 +84,11 @@ func (r *IPHotspotIPBindingResource) Schema(_ context.Context, _ resource.Schema
 				Description: "Whether the entry is disabled.",
 			},
 			"mac_address": schema.StringAttribute{
+				CustomType:  macType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"server": schema.StringAttribute{
 				Optional:    true,
@@ -306,9 +308,9 @@ func iPHotspotIPBindingApply(ctx context.Context, obj client.Object, m *IPHotspo
 	}
 	if v, ok := obj["mac-address"]; ok {
 		if v != "" {
-			m.MACAddress = types.StringValue(v)
+			m.MACAddress = newMACValue(v)
 		} else {
-			m.MACAddress = types.StringNull()
+			m.MACAddress = newMACNull()
 		}
 	}
 	if v, ok := obj["server"]; ok {

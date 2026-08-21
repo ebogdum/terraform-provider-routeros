@@ -13,9 +13,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
 )
 
 var (
@@ -33,7 +35,7 @@ type ToolWolModel struct {
 	Trigger  types.String `tfsdk:"trigger"`
 	TargetID types.String `tfsdk:"target_id"`
 	Params   types.Map    `tfsdk:"params"`
-	MAC      types.String `tfsdk:"mac"`
+	MAC      macValue     `tfsdk:"mac"`
 	Router   types.String `tfsdk:"router"`
 	Output   types.List   `tfsdk:"output"`
 }
@@ -77,8 +79,10 @@ func (r *ToolWolResource) Schema(_ context.Context, _ resource.SchemaRequest, re
 				PlanModifiers: []planmodifier.Map{mapplanmodifier.RequiresReplaceIfConfigured()},
 				Description:   "Extra parameters forwarded to RouterOS verbatim. Keys with dots are allowed. Example: { ca = \"my-ca\", name = \"new-cert\" }.",
 			},
-			"mac": schema.StringAttribute{Required: true,
-				Description: "",
+			"mac": schema.StringAttribute{
+				CustomType: macType{}, Required: true,
+				Description: "MAC address of the host to wake.",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"router": schema.StringAttribute{Optional: true,
 				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",

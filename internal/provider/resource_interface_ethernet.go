@@ -72,7 +72,7 @@ type InterfaceEthernetModel struct {
 	LoopProtectDisableTime    types.String `tfsdk:"loop_protect_disable_time"`
 	LoopProtectSendInterval   types.String `tfsdk:"loop_protect_send_interval"`
 	LoopProtectStatus         types.String `tfsdk:"loop_protect_status"`
-	MACAddress                types.String `tfsdk:"mac_address"`
+	MACAddress                macValue     `tfsdk:"mac_address"`
 	ManufacturingDate         types.String `tfsdk:"manufacturing_date"`
 	MaxL2MTU                  types.Int64  `tfsdk:"max_l2_mtu"`
 	MaxPower                  types.String `tfsdk:"max_power"`
@@ -86,7 +86,7 @@ type InterfaceEthernetModel struct {
 	Om3LinkLength             types.Int64  `tfsdk:"om3_link_length"`
 	Om4LinkLength             types.Int64  `tfsdk:"om4_link_length"`
 	Om5LinkLength             types.Int64  `tfsdk:"om5_link_length"`
-	OrigMACAddress            types.String `tfsdk:"orig_mac_address"`
+	OrigMACAddress            macValue     `tfsdk:"orig_mac_address"`
 	PassthroughInterface      types.String `tfsdk:"passthrough_interface"`
 	PciePassthrough           types.Int64  `tfsdk:"pcie_passthrough"`
 	PoEOut                    types.String `tfsdk:"poe_out"`
@@ -421,11 +421,11 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"mac_address": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "MAC address to be mapped to",
-				Validators:    []validator.String{schemautil.IsMAC()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
+				CustomType:  macType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "MAC address to be mapped to",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"manufacturing_date": schema.StringAttribute{
 				Computed:    true,
@@ -484,11 +484,11 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"orig_mac_address": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsMAC()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
+				CustomType:  macType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"passthrough_interface": schema.StringAttribute{
 				Computed:    true,
@@ -1637,9 +1637,9 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	}
 	if v, ok := obj["mac-address"]; ok {
 		if v != "" {
-			m.MACAddress = types.StringValue(v)
+			m.MACAddress = newMACValue(v)
 		} else {
-			m.MACAddress = types.StringNull()
+			m.MACAddress = newMACNull()
 		}
 	}
 	if v, ok := obj["manufacturing-date"]; ok {
@@ -1758,9 +1758,9 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	}
 	if v, ok := obj["orig-mac-address"]; ok {
 		if v != "" {
-			m.OrigMACAddress = types.StringValue(v)
+			m.OrigMACAddress = newMACValue(v)
 		} else {
-			m.OrigMACAddress = types.StringNull()
+			m.OrigMACAddress = newMACNull()
 		}
 	}
 	if v, ok := obj["passthrough-interface"]; ok {

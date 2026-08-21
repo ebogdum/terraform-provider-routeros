@@ -43,7 +43,7 @@ This resource supports the following arguments:
 * `policy` - (Optional) Type: `string`.
 * `run_count` - (Read-only) Type: `int`.
 * `start_date` - (Optional) Type: `string`.
-* `start_time` - (Optional) Type: `string`. A specific HH:MM:SS time, or the keyword `startup` to run once when RouterOS boots.
+* `start_time` - (Optional) Type: `string`. A specific `HH:MM:SS` time, or the keyword `startup` to run once when RouterOS boots. RouterOS also accepts shorter spellings such as `23:57` and `0:0:0`, but rewrites them, so they are refused here rather than applied as something else.
 
 ## Attribute Reference
 

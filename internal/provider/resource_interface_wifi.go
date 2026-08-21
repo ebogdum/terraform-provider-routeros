@@ -32,7 +32,7 @@ type InterfaceWifiResource struct {
 
 type InterfaceWifiModel struct {
 	ID                        types.String `tfsdk:"id"`
-	RadioMac                  types.String `tfsdk:"radio_mac"`
+	RadioMac                  macValue     `tfsdk:"radio_mac"`
 	MasterInterface           types.String `tfsdk:"master_interface"`
 	DisableRunningCheck       types.String `tfsdk:"disable_running_check"`
 	X2gProbeDelay             types.String `tfsdk:"x2g_probe_delay"`
@@ -108,7 +108,7 @@ type InterfaceWifiModel struct {
 	Ipv4Availability          types.String `tfsdk:"ipv4_availability"`
 	IPV6Availability          types.String `tfsdk:"ipv6_availability"`
 	L2mtu                     types.String `tfsdk:"l2mtu"`
-	MACAddress                types.String `tfsdk:"mac_address"`
+	MACAddress                macValue     `tfsdk:"mac_address"`
 	MACCaching                types.String `tfsdk:"mac_caching"`
 	ManagementEncryption      types.String `tfsdk:"management_encryption"`
 	ManagementProtection      types.String `tfsdk:"management_protection"`
@@ -211,9 +211,11 @@ func (r *InterfaceWifiResource) Schema(_ context.Context, _ resource.SchemaReque
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"radio_mac": schema.StringAttribute{
+				CustomType:  macType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "RouterOS `radio-mac`.",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"master_interface": schema.StringAttribute{
 				Optional:    true,
@@ -584,9 +586,11 @@ func (r *InterfaceWifiResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"mac_address": schema.StringAttribute{
+				CustomType:  macType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"mac_caching": schema.StringAttribute{
 				Optional:    true,
@@ -1846,9 +1850,9 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["radio-mac"]; ok && v != "" {
-		m.RadioMac = types.StringValue(v)
+		m.RadioMac = newMACValue(v)
 	} else {
-		m.RadioMac = types.StringNull()
+		m.RadioMac = newMACNull()
 	}
 	if v, ok := obj["master-interface"]; ok && v != "" {
 		m.MasterInterface = types.StringValue(v)
@@ -2469,9 +2473,9 @@ func interfaceWifiApply(ctx context.Context, obj client.Object, m *InterfaceWifi
 	}
 	if v, ok := obj["mac-address"]; ok {
 		if v != "" {
-			m.MACAddress = types.StringValue(v)
+			m.MACAddress = newMACValue(v)
 		} else {
-			m.MACAddress = types.StringNull()
+			m.MACAddress = newMACNull()
 		}
 	}
 	if v, ok := obj["aaa.mac-caching"]; ok {

@@ -11,9 +11,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
 )
 
 var (
@@ -43,7 +45,7 @@ type InterfaceOVPNClientModel struct {
 	Comment                 types.String `tfsdk:"comment"`
 	ConnectTo               types.String `tfsdk:"connect_to"`
 	Disabled                types.Bool   `tfsdk:"disabled"`
-	MACAddress              types.String `tfsdk:"mac_address"`
+	MACAddress              macValue     `tfsdk:"mac_address"`
 	MaxMTU                  types.String `tfsdk:"max_mtu"`
 	Mode                    types.String `tfsdk:"mode"`
 	Name                    types.String `tfsdk:"name"`
@@ -142,9 +144,11 @@ func (r *InterfaceOVPNClientResource) Schema(_ context.Context, _ resource.Schem
 				Description: "Whether the entry is disabled.",
 			},
 			"mac_address": schema.StringAttribute{
+				CustomType:  macType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"max_mtu": schema.StringAttribute{
 				Optional:    true,
@@ -519,9 +523,9 @@ func interfaceOVPNClientApply(ctx context.Context, obj client.Object, m *Interfa
 	}
 	if v, ok := obj["mac-address"]; ok {
 		if v != "" {
-			m.MACAddress = types.StringValue(v)
+			m.MACAddress = newMACValue(v)
 		} else {
-			m.MACAddress = types.StringNull()
+			m.MACAddress = newMACNull()
 		}
 	}
 	if v, ok := obj["max-mtu"]; ok {

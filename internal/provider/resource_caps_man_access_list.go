@@ -11,9 +11,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
 )
 
 var (
@@ -34,7 +36,7 @@ type CapsManAccessListModel struct {
 	Comment    types.String `tfsdk:"comment"`
 	Disabled   types.Bool   `tfsdk:"disabled"`
 	Interface  types.String `tfsdk:"interface"`
-	MACAddress types.String `tfsdk:"mac_address"`
+	MACAddress macValue     `tfsdk:"mac_address"`
 	VLANID     types.String `tfsdk:"vlan_id"`
 	Router     types.String `tfsdk:"router"`
 }
@@ -83,9 +85,11 @@ func (r *CapsManAccessListResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"mac_address": schema.StringAttribute{
+				CustomType:  macType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"vlan_id": schema.StringAttribute{
 				Optional:    true,
@@ -294,9 +298,9 @@ func capsManAccessListApply(ctx context.Context, obj client.Object, m *CapsManAc
 	}
 	if v, ok := obj["mac-address"]; ok {
 		if v != "" {
-			m.MACAddress = types.StringValue(v)
+			m.MACAddress = newMACValue(v)
 		} else {
-			m.MACAddress = types.StringNull()
+			m.MACAddress = newMACNull()
 		}
 	}
 	if v, ok := obj["vlan-id"]; ok {

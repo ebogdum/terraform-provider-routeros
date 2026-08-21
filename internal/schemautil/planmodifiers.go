@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
 )
@@ -23,7 +22,7 @@ type normalizeStringPM struct {
 func (m normalizeStringPM) Description(_ context.Context) string         { return m.desc }
 func (m normalizeStringPM) MarkdownDescription(_ context.Context) string { return m.desc }
 func (m normalizeStringPM) PlanModifyString(_ context.Context, req planmodifier.StringRequest, resp *planmodifier.StringResponse) {
-	if req.ConfigValue.IsNull() || req.ConfigValue.IsUnknown() {
+	if req.ConfigValue.IsNull() || req.ConfigValue.IsUnknown() || req.ConfigValue.ValueString() == "" {
 		return
 	}
 	canon, err := m.fn(req.ConfigValue.ValueString())
@@ -34,9 +33,11 @@ func (m normalizeStringPM) PlanModifyString(_ context.Context, req planmodifier.
 		resp.Diagnostics.AddAttributeError(req.Path, "Invalid value", err.Error())
 		return
 	}
-	// The device stores the canonical form and echoes it back, so planning the
-	// raw config value makes every create report an inconsistent result.
-	resp.PlanValue = types.StringValue(canon)
+	// Terraform requires the plan to keep a known config value verbatim, so the
+	// canonical form is only a comparison key here; equality is semantic.
+	if !req.StateValue.IsNull() && req.StateValue.ValueString() == canon {
+		resp.PlanValue = req.StateValue
+	}
 }
 
 // NormalizeCIDR canonicalises "10.0.0.1/24" / spaces / case so that
@@ -103,10 +104,4 @@ func NormalizeCase(canonical ...string) planmodifier.String {
 			return s, nil
 		},
 	}
-}
-
-// NormalizeTimeOfDay canonicalises a start-time to the HH:MM:SS the device
-// stores, so "23:57" and "0:0:0" don't come back as a changed value.
-func NormalizeTimeOfDay() planmodifier.String {
-	return normalizeStringPM{desc: "normalize time of day", fn: client.CanonicalTimeOfDay}
 }

@@ -40,7 +40,7 @@ type InterfaceBridgeModel struct {
 	DhcpAgentCircuitId       types.String    `tfsdk:"dhcp_agent_circuit_id"`
 	ActiveRole               types.String    `tfsdk:"active_role"`
 	AddDHCPOption82          types.Bool      `tfsdk:"add_dhcp_option_82"`
-	AdminMAC                 types.String    `tfsdk:"admin_mac"`
+	AdminMAC                 macValue        `tfsdk:"admin_mac"`
 	AdminMACAddress          types.String    `tfsdk:"admin_mac_address"`
 	AgeingTime               types.String    `tfsdk:"ageing_time"`
 	ARP                      types.String    `tfsdk:"arp"`
@@ -167,9 +167,11 @@ func (r *InterfaceBridgeResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "",
 			},
 			"admin_mac": schema.StringAttribute{
+				CustomType:  macType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"admin_mac_address": schema.StringAttribute{
 				Computed:    true,
@@ -951,9 +953,9 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 	}
 	if v, ok := obj["admin-mac"]; ok {
 		if v != "" {
-			m.AdminMAC = types.StringValue(v)
+			m.AdminMAC = newMACValue(v)
 		} else {
-			m.AdminMAC = types.StringNull()
+			m.AdminMAC = newMACNull()
 		}
 	}
 	if v, ok := obj["admin-mac-address"]; ok {

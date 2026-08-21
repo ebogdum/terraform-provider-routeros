@@ -11,9 +11,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
 )
 
 var (
@@ -79,7 +81,7 @@ type InterfaceWirelessModel struct {
 	InterworkingProfile      types.String `tfsdk:"interworking_profile"`
 	KeepaliveFrames          types.String `tfsdk:"keepalive_frames"`
 	L2mtu                    types.String `tfsdk:"l2mtu"`
-	MACAddress               types.String `tfsdk:"mac_address"`
+	MACAddress               macValue     `tfsdk:"mac_address"`
 	MasterInterface          types.String `tfsdk:"master_interface"`
 	MaxStationCount          types.String `tfsdk:"max_station_count"`
 	Mode                     types.String `tfsdk:"mode"`
@@ -107,7 +109,7 @@ type InterfaceWirelessModel struct {
 	SecurityProfile          types.String `tfsdk:"security_profile"`
 	SkipDfsChannels          types.String `tfsdk:"skip_dfs_channels"`
 	Ssid                     types.String `tfsdk:"ssid"`
-	StationBridgeCloneMAC    types.String `tfsdk:"station_bridge_clone_mac"`
+	StationBridgeCloneMAC    macValue     `tfsdk:"station_bridge_clone_mac"`
 	StationRoaming           types.String `tfsdk:"station_roaming"`
 	SupportedRatesB          types.String `tfsdk:"supported_rates_b"`
 	TdmaPeriodSize           types.String `tfsdk:"tdma_period_size"`
@@ -400,9 +402,11 @@ func (r *InterfaceWirelessResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"mac_address": schema.StringAttribute{
+				CustomType:  macType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"master_interface": schema.StringAttribute{
 				Optional:    true,
@@ -541,9 +545,11 @@ func (r *InterfaceWirelessResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "SSID (service set identifier) is a name that identifies wireless network.",
 			},
 			"station_bridge_clone_mac": schema.StringAttribute{
+				CustomType:  macType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "This property has effect only in the station-pseudobridge-clone mode. Use this MAC address when connection to AP. If this value is 00:00:00:00:00:00 , station will initially use MAC address of the wireless interface. As soon as packet with MAC address of another device needs to be transmitted, station will reconnect to AP using that address.",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"station_roaming": schema.StringAttribute{
 				Optional:    true,
@@ -1689,9 +1695,9 @@ func interfaceWirelessApply(ctx context.Context, obj client.Object, m *Interface
 	}
 	if v, ok := obj["mac-address"]; ok {
 		if v != "" {
-			m.MACAddress = types.StringValue(v)
+			m.MACAddress = newMACValue(v)
 		} else {
-			m.MACAddress = types.StringNull()
+			m.MACAddress = newMACNull()
 		}
 	}
 	if v, ok := obj["master-interface"]; ok {
@@ -1892,9 +1898,9 @@ func interfaceWirelessApply(ctx context.Context, obj client.Object, m *Interface
 	}
 	if v, ok := obj["station-bridge-clone-mac"]; ok {
 		if v != "" {
-			m.StationBridgeCloneMAC = types.StringValue(v)
+			m.StationBridgeCloneMAC = newMACValue(v)
 		} else {
-			m.StationBridgeCloneMAC = types.StringNull()
+			m.StationBridgeCloneMAC = newMACNull()
 		}
 	}
 	if v, ok := obj["station-roaming"]; ok {
