@@ -11,9 +11,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
 )
 
 var (
@@ -69,7 +71,7 @@ func (r *IPDNSStaticResource) Configure(_ context.Context, req resource.Configur
 
 func (r *IPDNSStaticResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "A DNS A/AAAA/CNAME/MX/... static entry. Requires either name OR regexp.",
+		Description: "A DNS A/AAAA/CNAME/MX/... static entry. Requires either `name` or `regexp`.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:      true,
@@ -124,8 +126,9 @@ func (r *IPDNSStaticResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Description: "",
 			},
 			"name": schema.StringAttribute{
-				Required:    true,
-				Description: "FQDN matched against incoming queries.",
+				Optional:    true,
+				Computed:    true,
+				Description: "FQDN matched against incoming queries. Provide this or `regexp`, not both.",
 			},
 			"ns": schema.StringAttribute{
 				Optional:    true,
@@ -170,7 +173,9 @@ func (r *IPDNSStaticResource) Schema(_ context.Context, _ resource.SchemaRequest
 			"type": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "",
+				Description: "Record type. Defaults to `A`.",
+				Validators: []validator.String{schemautil.OneOf(
+					"A", "AAAA", "CNAME", "FWD", "MX", "NS", "NXDOMAIN", "SRV", "TXT")},
 			},
 			"router": schema.StringAttribute{
 				Optional:    true,
@@ -180,12 +185,10 @@ func (r *IPDNSStaticResource) Schema(_ context.Context, _ resource.SchemaRequest
 	}
 }
 
-// ipDNSStaticTypeNeedsAddress reports whether typ (RouterOS's /ip/dns/static "type" value, "" meaning the
-// device default of "A") is one that stores an address. Per RouterOS's docs, address is "the address that
-// will be used for 'A' or 'AAAA' type records" - every other type (CNAME, FWD, MX, NS, SRV, TXT, or a
-// regexp-matched entry) has its own dedicated field instead.
+// ipDNSStaticTypeNeedsAddress reports whether typ stores an address ("" meaning
+// the device default, "A"). Every other type has its own dedicated field.
 func ipDNSStaticTypeNeedsAddress(typ string) bool {
-	switch strings.ToUpper(typ) {
+	switch typ {
 	case "", "A", "AAAA":
 		return true
 	default:
@@ -203,7 +206,7 @@ func ipDNSStaticAddressTypeConflict(typ string, hasAddress bool) (summary, detai
 		return "Address not valid for this type",
 			`routeros_ip_dns_static: "address" only applies when type is "A" or "AAAA". Setting it on any ` +
 				`other type is silently dropped on Create and, worse, silently rewrites the record's type to ` +
-				`"A" - destroying its other type-specific fields - on Update. Confirmed live on RouterOS 7.22.`
+				`"A" - destroying its other type-specific fields - on Update. Confirmed live on RouterOS 7.23.2.`
 	default:
 		return "", ""
 	}
@@ -216,13 +219,49 @@ func (r *IPDNSStaticResource) ValidateConfig(ctx context.Context, req resource.V
 		resp.Diagnostics.Append(diags...)
 		return
 	}
+	if summary, detail := ipDNSStaticNameOrRegexp(cfg); summary != "" {
+		resp.Diagnostics.AddAttributeError(path.Root("name"), summary, detail)
+	}
 	if cfg.Type.IsUnknown() || cfg.Address.IsUnknown() {
 		return
 	}
-	hasAddress := !cfg.Address.IsNull() && cfg.Address.ValueString() != ""
-	if summary, detail := ipDNSStaticAddressTypeConflict(cfg.Type.ValueString(), hasAddress); summary != "" {
+	if summary, detail := ipDNSStaticAddressTypeConflict(cfg.Type.ValueString(), ipDNSStaticHasAddress(cfg)); summary != "" {
 		resp.Diagnostics.AddAttributeError(path.Root("address"), summary, detail)
 	}
+}
+
+func ipDNSStaticHasAddress(m IPDNSStaticModel) bool {
+	return !m.Address.IsNull() && !m.Address.IsUnknown() && m.Address.ValueString() != ""
+}
+
+// A record is keyed by one or the other; RouterOS accepts a regexp entry with
+// no name, and rejects an entry carrying both.
+func ipDNSStaticNameOrRegexp(m IPDNSStaticModel) (summary, detail string) {
+	if m.Name.IsUnknown() || m.Regexp.IsUnknown() {
+		return "", ""
+	}
+	name := !m.Name.IsNull() && m.Name.ValueString() != ""
+	re := !m.Regexp.IsNull() && m.Regexp.ValueString() != ""
+	switch {
+	case !name && !re:
+		return "Missing name or regexp", `routeros_ip_dns_static requires either "name" or "regexp"`
+	case name && re:
+		return "Conflicting name and regexp",
+			`routeros_ip_dns_static takes either "name" or "regexp", not both`
+	}
+	return "", ""
+}
+
+// ValidateConfig only sees config, so a value arriving from a variable or
+// another resource is still Unknown there. Re-check once it is resolved.
+func ipDNSStaticCheckResolved(m IPDNSStaticModel) (summary, detail string) {
+	if summary, detail := ipDNSStaticNameOrRegexp(m); summary != "" {
+		return summary, detail
+	}
+	if m.Type.IsUnknown() {
+		return "", ""
+	}
+	return ipDNSStaticAddressTypeConflict(m.Type.ValueString(), ipDNSStaticHasAddress(m))
 }
 
 func (r *IPDNSStaticResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
@@ -235,8 +274,12 @@ func (r *IPDNSStaticResource) Create(ctx context.Context, req resource.CreateReq
 	if c == nil {
 		return
 	}
+	if summary, detail := ipDNSStaticCheckResolved(plan); summary != "" {
+		resp.Diagnostics.AddError(summary, detail)
+		return
+	}
 	body := client.Object{}
-	if !(plan.Address.IsNull() || plan.Address.IsUnknown()) {
+	if ipDNSStaticHasAddress(plan) {
 		body["address"] = plan.Address.ValueString()
 	}
 	if !(plan.AddressList.IsNull() || plan.AddressList.IsUnknown()) {
@@ -346,6 +389,10 @@ func (r *IPDNSStaticResource) Update(ctx context.Context, req resource.UpdateReq
 	}
 	c := pickClient(r.reg, plan.Router, &resp.Diagnostics)
 	if c == nil {
+		return
+	}
+	if summary, detail := ipDNSStaticCheckResolved(plan); summary != "" {
+		resp.Diagnostics.AddError(summary, detail)
 		return
 	}
 	body := client.Object{}

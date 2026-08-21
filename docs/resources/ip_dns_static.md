@@ -2,12 +2,12 @@
 subcategory: "DNS"
 page_title: "RouterOS: routeros_ip_dns_static"
 description: |-
-  A DNS A/AAAA/CNAME/MX/... static entry. Requires either name OR regexp.
+  A DNS A/AAAA/CNAME/MX/... static entry. Requires either `name` or `regexp`.
 ---
 
 # Resource: routeros_ip_dns_static
 
-A DNS A/AAAA/CNAME/MX/... static entry. Requires either name OR regexp.
+A DNS A/AAAA/CNAME/MX/... static entry. Requires either `name` or `regexp`.
 
 ## Example Usage
 
@@ -53,7 +53,7 @@ This resource supports the following arguments:
 * `match_subdomain` - (Optional) Type: `string`.
 * `mx_exchange` - (Optional) Type: `string`.
 * `mx_preference` - (Optional) Type: `string`.
-* `name` - (Required) Type: `string`. FQDN matched against incoming queries.
+* `name` - (Optional) Type: `string`. FQDN matched against incoming queries. Provide this or `regexp`, not both.
 * `ns` - (Optional) Type: `string`.
 * `regexp` - (Optional) Type: `string`.
 * `srv_port` - (Optional) Type: `string`.
@@ -62,7 +62,7 @@ This resource supports the following arguments:
 * `srv_weight` - (Optional) Type: `string`.
 * `text` - (Optional) Type: `string`.
 * `ttl` - (Optional) Type: `string`.
-* `type` - (Optional) Type: `string`.
+* `type` - (Optional) Type: `string`. Record type: `A`, `AAAA`, `CNAME`, `FWD`, `MX`, `NS`, `NXDOMAIN`, `SRV` or `TXT`. Defaults to `A`. Case-sensitive: RouterOS rejects a lower-case value.
 
 ## Attribute Reference
 
