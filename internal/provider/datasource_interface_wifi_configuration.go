@@ -19,9 +19,10 @@ var (
 type InterfaceWifiConfigurationDataSource struct{ reg *client.Registry }
 
 type InterfaceWifiConfigurationDSModel struct {
-	Router  types.String `tfsdk:"router"`
-	Filter  types.Map    `tfsdk:"filter"`
-	Records types.List   `tfsdk:"records"`
+	Router   types.String `tfsdk:"router"`
+	Filter   types.Map    `tfsdk:"filter"`
+	Proplist types.List   `tfsdk:"proplist"`
+	Records  types.List   `tfsdk:"records"`
 }
 
 func NewInterfaceWifiConfigurationDataSource() datasource.DataSource {
@@ -53,8 +54,14 @@ func (d *InterfaceWifiConfigurationDataSource) Schema(_ context.Context, _ datas
 				ElementType: types.StringType,
 				Description: "Equality filters (?k=v).",
 			},
+			"proplist": schema.ListAttribute{
+				Optional:    true,
+				ElementType: types.StringType,
+				Description: "Columns to return. Omit to return every column, including any secret this menu holds.",
+			},
 			"records": schema.ListAttribute{
 				Computed:    true,
+				Sensitive:   true,
 				ElementType: types.MapType{ElemType: types.StringType},
 				Description: "Matching records as flat string maps (RouterOS wire form).",
 			},
@@ -78,6 +85,13 @@ func (d *InterfaceWifiConfigurationDataSource) Read(ctx context.Context, req dat
 		resp.Diagnostics.Append(m.Filter.ElementsAs(ctx, &filt, false)...)
 		for k, v := range filt {
 			opts = append(opts, client.WithFilter(k, v))
+		}
+	}
+	if !m.Proplist.IsNull() && !m.Proplist.IsUnknown() {
+		var props []string
+		resp.Diagnostics.Append(m.Proplist.ElementsAs(ctx, &props, false)...)
+		if len(props) > 0 {
+			opts = append(opts, client.WithProplist(props...))
 		}
 	}
 	rows, err := c.List(ctx, "/interface/wifi/configuration", opts...)
