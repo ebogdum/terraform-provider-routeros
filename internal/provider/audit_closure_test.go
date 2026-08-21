@@ -7,7 +7,11 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
 func schemaOf(t *testing.T, r resource.Resource) resource.SchemaResponse {
@@ -54,6 +58,42 @@ func TestEthernetSwitchAttrs(t *testing.T) {
 	for _, a := range []string{"name", "mirror_source", "mirror_target", "cpu_flow_control"} {
 		if _, ok := attrs[a]; !ok {
 			t.Errorf("routeros_interface_ethernet_switch is missing %q", a)
+		}
+	}
+}
+
+// start_time previously carried a OneOf(["startup"]) validator, rejecting every HH:MM:SS
+// time that ROS accepts. Check validator accepts a time, so the restriction can't return.
+func TestSchedulerStartTimeAcceptsConcreteTime(t *testing.T) {
+	attrs := schemaOf(t, NewSystemSchedulerResource()).Schema.Attributes
+	att, ok := attrs["start_time"].(schema.StringAttribute)
+	if !ok {
+		t.Fatalf("routeros_system_scheduler.start_time missing or not a StringAttribute")
+	}
+	if len(att.Validators) == 0 {
+		t.Fatal("start_time has no validator: garbage now reaches the device and fails mid-apply")
+	}
+	check := func(v string) bool {
+		req := validator.StringRequest{Path: path.Root("start_time"), ConfigValue: types.StringValue(v)}
+		for _, val := range att.Validators {
+			resp := &validator.StringResponse{}
+			val.ValidateString(context.Background(), req, resp)
+			if resp.Diagnostics.HasError() {
+				return false
+			}
+		}
+		return true
+	}
+	// Accepted by ROS 7.23.2; "24:00:00" and "1d00:00:00" are rejected here
+	// because the device silently rewrites both to "00:00:00".
+	for _, ok := range []string{"23:57:05", "startup", "00:00:00", "0:0:0", "23:57"} {
+		if !check(ok) {
+			t.Errorf("start_time rejected %q, want accepted", ok)
+		}
+	}
+	for _, bad := range []string{"nonsense", "24:00:00", "1d00:00:00", "25:00:00", "12:60:00"} {
+		if check(bad) {
+			t.Errorf("start_time accepted %q, want rejected", bad)
 		}
 	}
 }

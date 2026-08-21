@@ -120,10 +120,12 @@ func (r *SystemSchedulerResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "",
 			},
 			"start_time": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"startup"}...)},
+				Optional: true,
+				Computed: true,
+				Description: "A specific HH:MM:SS time, or the keyword `startup` to run once when RouterOS " +
+					"boots.",
+				Validators:    []validator.String{schemautil.IsTimeOfDayOrStartup()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeTimeOfDay()},
 			},
 			"router": schema.StringAttribute{
 				Optional:    true,

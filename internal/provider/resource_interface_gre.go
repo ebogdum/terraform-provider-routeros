@@ -105,7 +105,7 @@ func (r *InterfaceGreResource) Schema(_ context.Context, _ resource.SchemaReques
 				Optional:    true,
 				Computed:    true,
 				Description: "Set dscp value in Gre header to a fixed value or inherit from dscp value taken from tunnelled traffic",
-				Validators:  []validator.String{schemautil.OneOf([]string{"inherit"}...)},
+				Validators:  []validator.String{schemautil.IsDSCPOrInherit()},
 			},
 			"ipsec_secret": schema.StringAttribute{
 				Optional:    true,
