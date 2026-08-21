@@ -7,7 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [4.0.0] - 2026-08-21
+## [4.0.1] - 2026-08-21
+
+Re-release of 4.0.0, which was published without its provider binaries and has
+been withdrawn. The contents below are unchanged; only the version differs.
 
 A major version because several changes reject configuration that 3.x accepted.
 Every behavioural claim below was verified against a live RouterOS 7.23.2 device.
