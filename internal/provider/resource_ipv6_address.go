@@ -34,7 +34,7 @@ type IPV6AddressModel struct {
 	ID              types.String `tfsdk:"id"`
 	FromPoolPolicy  types.String `tfsdk:"from_pool_policy"`
 	ActualInterface types.String `tfsdk:"actual_interface"`
-	Address         types.String `tfsdk:"address"`
+	Address         cidrValue    `tfsdk:"address"`
 	Advertise       types.Bool   `tfsdk:"advertise"`
 	AutoLinkLocal   types.Bool   `tfsdk:"auto_link_local"`
 	Comment         types.String `tfsdk:"comment"`
@@ -89,10 +89,10 @@ func (r *IPV6AddressResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Description: "",
 			},
 			"address": schema.StringAttribute{
-				Required:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsCIDR()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeCIDR()},
+				CustomType:  cidrType{},
+				Required:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsCIDR()},
 			},
 			"advertise": schema.BoolAttribute{
 				Optional:    true,
@@ -382,9 +382,9 @@ func iPV6AddressApply(ctx context.Context, obj client.Object, m *IPV6AddressMode
 	}
 	if v, ok := obj["address"]; ok {
 		if v != "" {
-			m.Address = types.StringValue(v)
+			m.Address = newCIDRValue(v)
 		} else {
-			m.Address = types.StringNull()
+			m.Address = newCIDRNull()
 		}
 	}
 	if v, ok := obj["advertise"]; ok {

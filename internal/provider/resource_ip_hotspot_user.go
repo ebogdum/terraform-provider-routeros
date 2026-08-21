@@ -31,35 +31,35 @@ type IPHotspotUserResource struct {
 }
 
 type IPHotspotUserModel struct {
-	ID               types.String `tfsdk:"id"`
-	Address          types.String `tfsdk:"address"`
-	BytesIn          types.Int64  `tfsdk:"bytes_in"`
-	BytesOut         types.Int64  `tfsdk:"bytes_out"`
-	Comment          types.String `tfsdk:"comment"`
-	Def              types.Bool   `tfsdk:"def"`
-	Default          types.Bool   `tfsdk:"default"`
-	Disabled         types.Bool   `tfsdk:"disabled"`
-	Dynamic          types.Bool   `tfsdk:"dynamic"`
-	Email            types.String `tfsdk:"email"`
-	LimitBytesIn     types.String `tfsdk:"limit_bytes_in"`
-	LimitBytesOut    types.String `tfsdk:"limit_bytes_out"`
-	LimitBytesTotal  types.String `tfsdk:"limit_bytes_total"`
-	LimitUptime      types.String `tfsdk:"limit_uptime"`
-	MACAddress       macValue     `tfsdk:"mac_address"`
-	Name             types.String `tfsdk:"name"`
-	Nondef           types.String `tfsdk:"nondef"`
-	Nondefro         types.String `tfsdk:"nondefro"`
-	OtpSecret        types.String `tfsdk:"otp_secret"`
-	PacketsIn        types.Int64  `tfsdk:"packets_in"`
-	PacketsOut       types.Int64  `tfsdk:"packets_out"`
-	Password         types.String `tfsdk:"password"`
-	Profile          types.String `tfsdk:"profile"`
-	ResetAllCounters types.String `tfsdk:"reset_all_counters"`
-	ResetCounters    types.String `tfsdk:"reset_counters"`
-	Routes           types.String `tfsdk:"routes"`
-	Server           types.String `tfsdk:"server"`
-	Uptime           types.String `tfsdk:"uptime"`
-	Router           types.String `tfsdk:"router"`
+	ID               types.String  `tfsdk:"id"`
+	Address          types.String  `tfsdk:"address"`
+	BytesIn          types.Int64   `tfsdk:"bytes_in"`
+	BytesOut         types.Int64   `tfsdk:"bytes_out"`
+	Comment          types.String  `tfsdk:"comment"`
+	Def              types.Bool    `tfsdk:"def"`
+	Default          types.Bool    `tfsdk:"default"`
+	Disabled         types.Bool    `tfsdk:"disabled"`
+	Dynamic          types.Bool    `tfsdk:"dynamic"`
+	Email            types.String  `tfsdk:"email"`
+	LimitBytesIn     types.String  `tfsdk:"limit_bytes_in"`
+	LimitBytesOut    types.String  `tfsdk:"limit_bytes_out"`
+	LimitBytesTotal  types.String  `tfsdk:"limit_bytes_total"`
+	LimitUptime      durationValue `tfsdk:"limit_uptime"`
+	MACAddress       macValue      `tfsdk:"mac_address"`
+	Name             types.String  `tfsdk:"name"`
+	Nondef           types.String  `tfsdk:"nondef"`
+	Nondefro         types.String  `tfsdk:"nondefro"`
+	OtpSecret        types.String  `tfsdk:"otp_secret"`
+	PacketsIn        types.Int64   `tfsdk:"packets_in"`
+	PacketsOut       types.Int64   `tfsdk:"packets_out"`
+	Password         types.String  `tfsdk:"password"`
+	Profile          types.String  `tfsdk:"profile"`
+	ResetAllCounters types.String  `tfsdk:"reset_all_counters"`
+	ResetCounters    types.String  `tfsdk:"reset_counters"`
+	Routes           types.String  `tfsdk:"routes"`
+	Server           types.String  `tfsdk:"server"`
+	Uptime           durationValue `tfsdk:"uptime"`
+	Router           types.String  `tfsdk:"router"`
 }
 
 func NewIPHotspotUserResource() resource.Resource { return &IPHotspotUserResource{} }
@@ -144,11 +144,11 @@ func (r *IPHotspotUserResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"limit_uptime": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"mac_address": schema.StringAttribute{
 				CustomType:  macType{},
@@ -215,10 +215,10 @@ func (r *IPHotspotUserResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"uptime": schema.StringAttribute{
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"router": schema.StringAttribute{
 				Optional:      true,
@@ -545,9 +545,9 @@ func iPHotspotUserApply(ctx context.Context, obj client.Object, m *IPHotspotUser
 	}
 	if v, ok := obj["limit-uptime"]; ok {
 		if v != "" {
-			m.LimitUptime = types.StringValue(v)
+			m.LimitUptime = newDurationValue(v)
 		} else {
-			m.LimitUptime = types.StringNull()
+			m.LimitUptime = newDurationNull()
 		}
 	}
 	if v, ok := obj["mac-address"]; ok {
@@ -663,9 +663,9 @@ func iPHotspotUserApply(ctx context.Context, obj client.Object, m *IPHotspotUser
 	}
 	if v, ok := obj["uptime"]; ok {
 		if v != "" {
-			m.Uptime = types.StringValue(v)
+			m.Uptime = newDurationValue(v)
 		} else {
-			m.Uptime = types.StringNull()
+			m.Uptime = newDurationNull()
 		}
 	}
 }

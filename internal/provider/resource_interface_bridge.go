@@ -42,9 +42,9 @@ type InterfaceBridgeModel struct {
 	AddDHCPOption82          types.Bool      `tfsdk:"add_dhcp_option_82"`
 	AdminMAC                 macValue        `tfsdk:"admin_mac"`
 	AdminMACAddress          types.String    `tfsdk:"admin_mac_address"`
-	AgeingTime               types.String    `tfsdk:"ageing_time"`
+	AgeingTime               durationValue   `tfsdk:"ageing_time"`
 	ARP                      types.String    `tfsdk:"arp"`
-	ARPTimeout               types.String    `tfsdk:"arp_timeout"`
+	ARPTimeout               durationValue   `tfsdk:"arp_timeout"`
 	AutoMAC                  types.Bool      `tfsdk:"auto_mac"`
 	Comment                  types.String    `tfsdk:"comment"`
 	DHCPSnooping             types.Bool      `tfsdk:"dhcp_snooping"`
@@ -52,12 +52,12 @@ type InterfaceBridgeModel struct {
 	Dumb                     types.String    `tfsdk:"dumb"`
 	EtherType                types.String    `tfsdk:"ether_type"`
 	FastForward              types.Bool      `tfsdk:"fast_forward"`
-	ForwardDelay             types.String    `tfsdk:"forward_delay"`
+	ForwardDelay             durationValue   `tfsdk:"forward_delay"`
 	ForwardReserved          types.Bool      `tfsdk:"forward_reserved"`
 	FpTxRxPacketRate         types.String    `tfsdk:"fp_tx_rx_packet_rate"`
 	FpTxRxRate               types.String    `tfsdk:"fp_tx_rx_rate"`
 	FrameTypes               types.String    `tfsdk:"frame_types"`
-	Heartbeat                types.String    `tfsdk:"heartbeat"`
+	Heartbeat                durationValue   `tfsdk:"heartbeat"`
 	Igmp                     types.String    `tfsdk:"igmp"`
 	IgmpSnooping             types.Bool      `tfsdk:"igmp_snooping"`
 	IgmpVersion              types.String    `tfsdk:"igmp_version"`
@@ -67,9 +67,9 @@ type InterfaceBridgeModel struct {
 	MACAddress               types.String    `tfsdk:"mac_address"`
 	MaxHops                  types.Int64     `tfsdk:"max_hops"`
 	MaxLearnedEntries        types.String    `tfsdk:"max_learned_entries"`
-	MaxMessageAge            types.String    `tfsdk:"max_message_age"`
+	MaxMessageAge            durationValue   `tfsdk:"max_message_age"`
 	MembershipInterval       types.String    `tfsdk:"membership_interval"`
-	MlagHeartbeat            types.String    `tfsdk:"mlag_heartbeat"`
+	MlagHeartbeat            durationValue   `tfsdk:"mlag_heartbeat"`
 	MlagPeerPort             types.String    `tfsdk:"mlag_peer_port"`
 	MlagPriority             types.Int64     `tfsdk:"mlag_priority"`
 	MldVersion               types.String    `tfsdk:"mld_version"`
@@ -178,11 +178,11 @@ func (r *InterfaceBridgeResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "",
 			},
 			"ageing_time": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"arp": schema.StringAttribute{
 				Optional:    true,
@@ -191,11 +191,11 @@ func (r *InterfaceBridgeResource) Schema(_ context.Context, _ resource.SchemaReq
 				Validators:  []validator.String{schemautil.OneOf([]string{"disabled", "enabled", "proxy-arp", "reply-only", "local-proxy-arp"}...)},
 			},
 			"arp_timeout": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationOrKeyword("auto")},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationOrKeyword("auto")},
 			},
 			"auto_mac": schema.BoolAttribute{
 				Optional:    true,
@@ -233,11 +233,11 @@ func (r *InterfaceBridgeResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "",
 			},
 			"forward_delay": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"forward_reserved": schema.BoolAttribute{
 				Computed:    true,
@@ -258,10 +258,10 @@ func (r *InterfaceBridgeResource) Schema(_ context.Context, _ resource.SchemaReq
 				Validators:  []validator.String{schemautil.OneOf([]string{"admit-all", "admit-only-vlan-tagged", "admit-only-untagged-and-priority-tagged"}...)},
 			},
 			"heartbeat": schema.StringAttribute{
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"igmp": schema.StringAttribute{
 				Computed:    true,
@@ -309,11 +309,11 @@ func (r *InterfaceBridgeResource) Schema(_ context.Context, _ resource.SchemaReq
 				Validators:  []validator.String{schemautil.OneOf([]string{"unlimited", "auto"}...)},
 			},
 			"max_message_age": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"membership_interval": schema.StringAttribute{
 				Optional:    true,
@@ -321,11 +321,11 @@ func (r *InterfaceBridgeResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "",
 			},
 			"mlag_heartbeat": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"mlag_peer_port": schema.StringAttribute{
 				Optional:    true,
@@ -968,9 +968,9 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 	}
 	if v, ok := obj["ageing-time"]; ok {
 		if v != "" {
-			m.AgeingTime = types.StringValue(v)
+			m.AgeingTime = newDurationValue(v)
 		} else {
-			m.AgeingTime = types.StringNull()
+			m.AgeingTime = newDurationNull()
 		}
 	}
 	if v, ok := obj["arp"]; ok {
@@ -982,9 +982,9 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 	}
 	if v, ok := obj["arp-timeout"]; ok {
 		if v != "" {
-			m.ARPTimeout = types.StringValue(v)
+			m.ARPTimeout = newDurationValue(v)
 		} else {
-			m.ARPTimeout = types.StringNull()
+			m.ARPTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["auto-mac"]; ok {
@@ -1046,9 +1046,9 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 	}
 	if v, ok := obj["forward-delay"]; ok {
 		if v != "" {
-			m.ForwardDelay = types.StringValue(v)
+			m.ForwardDelay = newDurationValue(v)
 		} else {
-			m.ForwardDelay = types.StringNull()
+			m.ForwardDelay = newDurationNull()
 		}
 	}
 	if v, ok := obj["forward-reserved"]; ok {
@@ -1083,9 +1083,9 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 	}
 	if v, ok := obj["heartbeat"]; ok {
 		if v != "" {
-			m.Heartbeat = types.StringValue(v)
+			m.Heartbeat = newDurationValue(v)
 		} else {
-			m.Heartbeat = types.StringNull()
+			m.Heartbeat = newDurationNull()
 		}
 	}
 	if v, ok := obj["igmp"]; ok {
@@ -1163,9 +1163,9 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 	}
 	if v, ok := obj["max-message-age"]; ok {
 		if v != "" {
-			m.MaxMessageAge = types.StringValue(v)
+			m.MaxMessageAge = newDurationValue(v)
 		} else {
-			m.MaxMessageAge = types.StringNull()
+			m.MaxMessageAge = newDurationNull()
 		}
 	}
 	if v, ok := obj["membership-interval"]; ok {
@@ -1177,9 +1177,9 @@ func interfaceBridgeApply(ctx context.Context, obj client.Object, m *InterfaceBr
 	}
 	if v, ok := obj["mlag-heartbeat"]; ok {
 		if v != "" {
-			m.MlagHeartbeat = types.StringValue(v)
+			m.MlagHeartbeat = newDurationValue(v)
 		} else {
-			m.MlagHeartbeat = types.StringNull()
+			m.MlagHeartbeat = newDurationNull()
 		}
 	}
 	if v, ok := obj["mlag-peer-port"]; ok {

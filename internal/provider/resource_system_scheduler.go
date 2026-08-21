@@ -31,19 +31,19 @@ type SystemSchedulerResource struct {
 }
 
 type SystemSchedulerModel struct {
-	ID        types.String `tfsdk:"id"`
-	Comment   types.String `tfsdk:"comment"`
-	Disabled  types.Bool   `tfsdk:"disabled"`
-	Interval  types.String `tfsdk:"interval"`
-	Name      types.String `tfsdk:"name"`
-	NextRun   types.String `tfsdk:"next_run"`
-	OnEvent   types.String `tfsdk:"on_event"`
-	Owner     types.String `tfsdk:"owner"`
-	Policy    types.String `tfsdk:"policy"`
-	RunCount  types.Int64  `tfsdk:"run_count"`
-	StartDate types.String `tfsdk:"start_date"`
-	StartTime types.String `tfsdk:"start_time"`
-	Router    types.String `tfsdk:"router"`
+	ID        types.String  `tfsdk:"id"`
+	Comment   types.String  `tfsdk:"comment"`
+	Disabled  types.Bool    `tfsdk:"disabled"`
+	Interval  durationValue `tfsdk:"interval"`
+	Name      types.String  `tfsdk:"name"`
+	NextRun   types.String  `tfsdk:"next_run"`
+	OnEvent   types.String  `tfsdk:"on_event"`
+	Owner     types.String  `tfsdk:"owner"`
+	Policy    types.String  `tfsdk:"policy"`
+	RunCount  types.Int64   `tfsdk:"run_count"`
+	StartDate types.String  `tfsdk:"start_date"`
+	StartTime types.String  `tfsdk:"start_time"`
+	Router    types.String  `tfsdk:"router"`
 }
 
 func NewSystemSchedulerResource() resource.Resource { return &SystemSchedulerResource{} }
@@ -80,11 +80,11 @@ func (r *SystemSchedulerResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "Whether the entry is disabled.",
 			},
 			"interval": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"name": schema.StringAttribute{
 				Required:    true,
@@ -327,9 +327,9 @@ func systemSchedulerApply(ctx context.Context, obj client.Object, m *SystemSched
 	}
 	if v, ok := obj["interval"]; ok {
 		if v != "" {
-			m.Interval = types.StringValue(v)
+			m.Interval = newDurationValue(v)
 		} else {
-			m.Interval = types.StringNull()
+			m.Interval = newDurationNull()
 		}
 	}
 	if v, ok := obj["name"]; ok {

@@ -31,17 +31,17 @@ type IPIpsecProposalResource struct {
 }
 
 type IPIpsecProposalModel struct {
-	ID             types.String `tfsdk:"id"`
-	AuthAlgorithms types.String `tfsdk:"auth_algorithms"`
-	Comment        types.String `tfsdk:"comment"`
-	Default        types.Bool   `tfsdk:"default"`
-	Disabled       types.Bool   `tfsdk:"disabled"`
-	EncAlgorithms  types.Set    `tfsdk:"enc_algorithms"`
-	EncrAlgorithms types.String `tfsdk:"encr_algorithms"`
-	Lifetime       types.String `tfsdk:"lifetime"`
-	Name           types.String `tfsdk:"name"`
-	PfsGroup       types.String `tfsdk:"pfs_group"`
-	Router         types.String `tfsdk:"router"`
+	ID             types.String  `tfsdk:"id"`
+	AuthAlgorithms types.String  `tfsdk:"auth_algorithms"`
+	Comment        types.String  `tfsdk:"comment"`
+	Default        types.Bool    `tfsdk:"default"`
+	Disabled       types.Bool    `tfsdk:"disabled"`
+	EncAlgorithms  types.Set     `tfsdk:"enc_algorithms"`
+	EncrAlgorithms types.String  `tfsdk:"encr_algorithms"`
+	Lifetime       durationValue `tfsdk:"lifetime"`
+	Name           types.String  `tfsdk:"name"`
+	PfsGroup       types.String  `tfsdk:"pfs_group"`
+	Router         types.String  `tfsdk:"router"`
 }
 
 func NewIPIpsecProposalResource() resource.Resource { return &IPIpsecProposalResource{} }
@@ -98,11 +98,11 @@ func (r *IPIpsecProposalResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "",
 			},
 			"lifetime": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"name": schema.StringAttribute{
 				Optional:    true,
@@ -338,9 +338,9 @@ func iPIpsecProposalApply(ctx context.Context, obj client.Object, m *IPIpsecProp
 	}
 	if v, ok := obj["lifetime"]; ok {
 		if v != "" {
-			m.Lifetime = types.StringValue(v)
+			m.Lifetime = newDurationValue(v)
 		} else {
-			m.Lifetime = types.StringNull()
+			m.Lifetime = newDurationNull()
 		}
 	}
 	if v, ok := obj["name"]; ok {

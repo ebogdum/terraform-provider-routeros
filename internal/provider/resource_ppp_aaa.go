@@ -29,13 +29,13 @@ type PPPAaaResource struct {
 }
 
 type PPPAaaModel struct {
-	ID                      types.String `tfsdk:"id"`
-	Accounting              types.Bool   `tfsdk:"accounting"`
-	EnableIPV6Accounting    types.Bool   `tfsdk:"enable_ipv6_accounting"`
-	InterimUpdate           types.String `tfsdk:"interim_update"`
-	UseCircuitIDInNasPortID types.Bool   `tfsdk:"use_circuit_id_in_nas_port_id"`
-	UseRADIUS               types.Bool   `tfsdk:"use_radius"`
-	Router                  types.String `tfsdk:"router"`
+	ID                      types.String  `tfsdk:"id"`
+	Accounting              types.Bool    `tfsdk:"accounting"`
+	EnableIPV6Accounting    types.Bool    `tfsdk:"enable_ipv6_accounting"`
+	InterimUpdate           durationValue `tfsdk:"interim_update"`
+	UseCircuitIDInNasPortID types.Bool    `tfsdk:"use_circuit_id_in_nas_port_id"`
+	UseRADIUS               types.Bool    `tfsdk:"use_radius"`
+	Router                  types.String  `tfsdk:"router"`
 }
 
 func NewPPPAaaResource() resource.Resource { return &PPPAaaResource{} }
@@ -67,10 +67,10 @@ func (r *PPPAaaResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 			"enable_ipv6_accounting": schema.BoolAttribute{Optional: true, Computed: true,
 				Description: "",
 			},
-			"interim_update": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"interim_update": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"use_circuit_id_in_nas_port_id": schema.BoolAttribute{Optional: true, Computed: true,
 				Description: "",
@@ -208,9 +208,9 @@ func pPPAaaApply(ctx context.Context, obj client.Object, m *PPPAaaModel) {
 	if v, ok := obj["interim-update"]; ok {
 		_ = v
 		if v != "" {
-			m.InterimUpdate = types.StringValue(v)
+			m.InterimUpdate = newDurationValue(v)
 		} else {
-			m.InterimUpdate = types.StringNull()
+			m.InterimUpdate = newDurationNull()
 		}
 	}
 	if v, ok := obj["use-circuit-id-in-nas-port-id"]; ok {

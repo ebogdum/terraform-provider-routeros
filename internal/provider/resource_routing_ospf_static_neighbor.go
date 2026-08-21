@@ -31,15 +31,15 @@ type RoutingOSPFStaticNeighborResource struct {
 }
 
 type RoutingOSPFStaticNeighborModel struct {
-	ID           types.String `tfsdk:"id"`
-	Address      types.String `tfsdk:"address"`
-	Area         types.String `tfsdk:"area"`
-	Comment      types.String `tfsdk:"comment"`
-	Disabled     types.Bool   `tfsdk:"disabled"`
-	InstanceID   types.Int64  `tfsdk:"instance_id"`
-	Invalid      types.Bool   `tfsdk:"invalid"`
-	PollInterval types.String `tfsdk:"poll_interval"`
-	Router       types.String `tfsdk:"router"`
+	ID           types.String  `tfsdk:"id"`
+	Address      types.String  `tfsdk:"address"`
+	Area         types.String  `tfsdk:"area"`
+	Comment      types.String  `tfsdk:"comment"`
+	Disabled     types.Bool    `tfsdk:"disabled"`
+	InstanceID   types.Int64   `tfsdk:"instance_id"`
+	Invalid      types.Bool    `tfsdk:"invalid"`
+	PollInterval durationValue `tfsdk:"poll_interval"`
+	Router       types.String  `tfsdk:"router"`
 }
 
 func NewRoutingOSPFStaticNeighborResource() resource.Resource {
@@ -97,11 +97,11 @@ func (r *RoutingOSPFStaticNeighborResource) Schema(_ context.Context, _ resource
 				Description: "",
 			},
 			"poll_interval": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"router": schema.StringAttribute{
 				Optional:      true,
@@ -325,9 +325,9 @@ func routingOSPFStaticNeighborApply(ctx context.Context, obj client.Object, m *R
 	}
 	if v, ok := obj["poll-interval"]; ok {
 		if v != "" {
-			m.PollInterval = types.StringValue(v)
+			m.PollInterval = newDurationValue(v)
 		} else {
-			m.PollInterval = types.StringNull()
+			m.PollInterval = newDurationNull()
 		}
 	}
 }

@@ -670,3 +670,38 @@ func TestDiskDoesNotWriteNamesTheDeviceRejects(t *testing.T) {
 		}
 	}
 }
+
+// An attribute validated as a RouterOS duration is one the device rewrites, so
+// it has to compare semantically or every create where the spelling differs
+// fails with "inconsistent result after apply". The validator is the marker: if
+// a value is a duration on the way in, it is a duration on the way back.
+func TestDurationAttributesCompareSemantically(t *testing.T) {
+	checked := 0
+	for _, f := range registryResources() {
+		r := f()
+		m := &resource.MetadataResponse{}
+		r.Metadata(context.Background(), resource.MetadataRequest{ProviderTypeName: "routeros"}, m)
+		for name, raw := range schemaOf(t, r).Schema.Attributes {
+			att, ok := raw.(schema.StringAttribute)
+			if !ok || !(att.Optional || att.Required) {
+				continue
+			}
+			isDuration := false
+			for _, v := range att.Validators {
+				if strings.Contains(v.Description(context.Background()), "RouterOS duration") {
+					isDuration = true
+				}
+			}
+			if !isDuration {
+				continue
+			}
+			checked++
+			if _, ok := att.CustomType.(durationType); !ok {
+				t.Errorf("%s.%s is validated as a duration but is not typed durationType", m.TypeName, name)
+			}
+		}
+	}
+	if checked < 80 {
+		t.Fatalf("only %d duration attributes examined; the matcher stopped matching", checked)
+	}
+}

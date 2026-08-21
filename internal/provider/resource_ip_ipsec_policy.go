@@ -37,7 +37,7 @@ type IPIpsecPolicyModel struct {
 	Comment        types.String `tfsdk:"comment"`
 	Default        types.Bool   `tfsdk:"default"`
 	Disabled       types.Bool   `tfsdk:"disabled"`
-	DstAddress     types.String `tfsdk:"dst_address"`
+	DstAddress     cidrValue    `tfsdk:"dst_address"`
 	DstPort        types.Int64  `tfsdk:"dst_port"`
 	Dynamic        types.Bool   `tfsdk:"dynamic"`
 	Group          types.String `tfsdk:"group"`
@@ -53,7 +53,7 @@ type IPIpsecPolicyModel struct {
 	Protocol       types.String `tfsdk:"protocol"`
 	SaDstAddress   types.String `tfsdk:"sa_dst_address"`
 	SaSrcAddress   types.String `tfsdk:"sa_src_address"`
-	SrcAddress     types.String `tfsdk:"src_address"`
+	SrcAddress     cidrValue    `tfsdk:"src_address"`
 	SrcPort        types.Int64  `tfsdk:"src_port"`
 	Template       types.Bool   `tfsdk:"template"`
 	Tunnel         types.Bool   `tfsdk:"tunnel"`
@@ -108,11 +108,11 @@ func (r *IPIpsecPolicyResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"dst_address": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsCIDR()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeCIDR()},
+				CustomType:  cidrType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsCIDR()},
 			},
 			"dst_port": schema.Int64Attribute{
 				Optional:    true,
@@ -188,11 +188,11 @@ func (r *IPIpsecPolicyResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"src_address": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsCIDR()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeCIDR()},
+				CustomType:  cidrType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsCIDR()},
 			},
 			"src_port": schema.Int64Attribute{
 				Optional:    true,
@@ -477,9 +477,9 @@ func iPIpsecPolicyApply(ctx context.Context, obj client.Object, m *IPIpsecPolicy
 	}
 	if v, ok := obj["dst-address"]; ok {
 		if v != "" {
-			m.DstAddress = types.StringValue(v)
+			m.DstAddress = newCIDRValue(v)
 		} else {
-			m.DstAddress = types.StringNull()
+			m.DstAddress = newCIDRNull()
 		}
 	}
 	if v, ok := obj["dst-port"]; ok {
@@ -599,9 +599,9 @@ func iPIpsecPolicyApply(ctx context.Context, obj client.Object, m *IPIpsecPolicy
 	}
 	if v, ok := obj["src-address"]; ok {
 		if v != "" {
-			m.SrcAddress = types.StringValue(v)
+			m.SrcAddress = newCIDRValue(v)
 		} else {
-			m.SrcAddress = types.StringNull()
+			m.SrcAddress = newCIDRNull()
 		}
 	}
 	if v, ok := obj["src-port"]; ok {

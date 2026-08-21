@@ -31,28 +31,28 @@ type RADIUSResource struct {
 }
 
 type RADIUSModel struct {
-	ID                 types.String `tfsdk:"id"`
-	AccountingBackup   types.Bool   `tfsdk:"accounting_backup"`
-	AccountingPort     types.Int64  `tfsdk:"accounting_port"`
-	Address            types.String `tfsdk:"address"`
-	AuthenticationPort types.Int64  `tfsdk:"authentication_port"`
-	CalledID           types.String `tfsdk:"called_id"`
-	Certificate        types.String `tfsdk:"certificate"`
-	Comment            types.String `tfsdk:"comment"`
-	Disabled           types.Bool   `tfsdk:"disabled"`
-	Domain             types.String `tfsdk:"domain"`
-	Protocol           types.String `tfsdk:"protocol"`
-	Radsec             types.String `tfsdk:"radsec"`
-	RadsecTimeout      types.String `tfsdk:"radsec_timeout"`
-	Realm              types.String `tfsdk:"realm"`
-	RequireMessageAuth types.String `tfsdk:"require_message_auth"`
-	ResetStatus        types.String `tfsdk:"reset_status"`
-	Secret             types.String `tfsdk:"secret"`
-	Service            types.String `tfsdk:"service"`
-	SrcAddress         types.String `tfsdk:"src_address"`
-	Timeout            types.String `tfsdk:"timeout"`
-	UDP                types.String `tfsdk:"udp"`
-	Router             types.String `tfsdk:"router"`
+	ID                 types.String  `tfsdk:"id"`
+	AccountingBackup   types.Bool    `tfsdk:"accounting_backup"`
+	AccountingPort     types.Int64   `tfsdk:"accounting_port"`
+	Address            types.String  `tfsdk:"address"`
+	AuthenticationPort types.Int64   `tfsdk:"authentication_port"`
+	CalledID           types.String  `tfsdk:"called_id"`
+	Certificate        types.String  `tfsdk:"certificate"`
+	Comment            types.String  `tfsdk:"comment"`
+	Disabled           types.Bool    `tfsdk:"disabled"`
+	Domain             types.String  `tfsdk:"domain"`
+	Protocol           types.String  `tfsdk:"protocol"`
+	Radsec             types.String  `tfsdk:"radsec"`
+	RadsecTimeout      types.String  `tfsdk:"radsec_timeout"`
+	Realm              types.String  `tfsdk:"realm"`
+	RequireMessageAuth types.String  `tfsdk:"require_message_auth"`
+	ResetStatus        types.String  `tfsdk:"reset_status"`
+	Secret             types.String  `tfsdk:"secret"`
+	Service            types.String  `tfsdk:"service"`
+	SrcAddress         types.String  `tfsdk:"src_address"`
+	Timeout            durationValue `tfsdk:"timeout"`
+	UDP                types.String  `tfsdk:"udp"`
+	Router             types.String  `tfsdk:"router"`
 }
 
 func NewRADIUSResource() resource.Resource { return &RADIUSResource{} }
@@ -171,11 +171,11 @@ func (r *RADIUSResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 				Description: "Source IP/IPv6 address of the packets sent to the RADIUS server",
 			},
 			"timeout": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "Timeout after which the request should be resent.",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "Timeout after which the request should be resent.",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"udp": schema.StringAttribute{
 				Computed:    true,
@@ -562,9 +562,9 @@ func rADIUSApply(ctx context.Context, obj client.Object, m *RADIUSModel) {
 		}
 	}
 	if v, ok := obj["timeout"]; ok && v != "" {
-		m.Timeout = types.StringValue(v)
+		m.Timeout = newDurationValue(v)
 	} else {
-		m.Timeout = types.StringNull()
+		m.Timeout = newDurationNull()
 	}
 	if v, ok := obj["udp"]; ok {
 		if v != "" {

@@ -31,31 +31,31 @@ type InterfaceEoipResource struct {
 }
 
 type InterfaceEoipModel struct {
-	ID                      types.String `tfsdk:"id"`
-	ActualMTU               types.Int64  `tfsdk:"actual_mtu"`
-	AllowFastPath           types.Bool   `tfsdk:"allow_fast_path"`
-	ARP                     types.String `tfsdk:"arp"`
-	ARPTimeout              types.String `tfsdk:"arp_timeout"`
-	ClampTCPMss             types.Bool   `tfsdk:"clamp_tcp_mss"`
-	Comment                 types.String `tfsdk:"comment"`
-	DisableTime             types.String `tfsdk:"disable_time"`
-	Disabled                types.Bool   `tfsdk:"disabled"`
-	DontFragment            types.String `tfsdk:"dont_fragment"`
-	Dscp                    types.String `tfsdk:"dscp"`
-	IpsecSecret             types.String `tfsdk:"ipsec_secret"`
-	Keepalive               types.String `tfsdk:"keepalive"`
-	LocalAddress            types.String `tfsdk:"local_address"`
-	LoopProtect             types.String `tfsdk:"loop_protect"`
-	LoopProtectDisableTime  types.String `tfsdk:"loop_protect_disable_time"`
-	LoopProtectSendInterval types.String `tfsdk:"loop_protect_send_interval"`
-	MACAddress              macValue     `tfsdk:"mac_address"`
-	MTU                     types.String `tfsdk:"mtu"`
-	Name                    types.String `tfsdk:"name"`
-	RemoteAddress           types.String `tfsdk:"remote_address"`
-	SendInterval            types.String `tfsdk:"send_interval"`
-	Status                  types.String `tfsdk:"status"`
-	TunnelID                types.Int64  `tfsdk:"tunnel_id"`
-	Router                  types.String `tfsdk:"router"`
+	ID                      types.String  `tfsdk:"id"`
+	ActualMTU               types.Int64   `tfsdk:"actual_mtu"`
+	AllowFastPath           types.Bool    `tfsdk:"allow_fast_path"`
+	ARP                     types.String  `tfsdk:"arp"`
+	ARPTimeout              durationValue `tfsdk:"arp_timeout"`
+	ClampTCPMss             types.Bool    `tfsdk:"clamp_tcp_mss"`
+	Comment                 types.String  `tfsdk:"comment"`
+	DisableTime             durationValue `tfsdk:"disable_time"`
+	Disabled                types.Bool    `tfsdk:"disabled"`
+	DontFragment            types.String  `tfsdk:"dont_fragment"`
+	Dscp                    types.String  `tfsdk:"dscp"`
+	IpsecSecret             types.String  `tfsdk:"ipsec_secret"`
+	Keepalive               types.String  `tfsdk:"keepalive"`
+	LocalAddress            types.String  `tfsdk:"local_address"`
+	LoopProtect             types.String  `tfsdk:"loop_protect"`
+	LoopProtectDisableTime  types.String  `tfsdk:"loop_protect_disable_time"`
+	LoopProtectSendInterval types.String  `tfsdk:"loop_protect_send_interval"`
+	MACAddress              macValue      `tfsdk:"mac_address"`
+	MTU                     types.String  `tfsdk:"mtu"`
+	Name                    types.String  `tfsdk:"name"`
+	RemoteAddress           types.String  `tfsdk:"remote_address"`
+	SendInterval            durationValue `tfsdk:"send_interval"`
+	Status                  types.String  `tfsdk:"status"`
+	TunnelID                types.Int64   `tfsdk:"tunnel_id"`
+	Router                  types.String  `tfsdk:"router"`
 }
 
 func NewInterfaceEoipResource() resource.Resource { return &InterfaceEoipResource{} }
@@ -97,11 +97,11 @@ func (r *InterfaceEoipResource) Schema(_ context.Context, _ resource.SchemaReque
 				Validators:  []validator.String{schemautil.OneOf([]string{"disabled", "enabled", "proxy-arp", "reply-only", "local-proxy-arp"}...)},
 			},
 			"arp_timeout": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "Time interval in which ARP entries should time out.",
-				Validators:    []validator.String{schemautil.IsDurationOrKeyword("auto")},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "Time interval in which ARP entries should time out.",
+				Validators:  []validator.String{schemautil.IsDurationOrKeyword("auto")},
 			},
 			"clamp_tcp_mss": schema.BoolAttribute{
 				Optional:    true,
@@ -114,10 +114,10 @@ func (r *InterfaceEoipResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "Free-form comment.",
 			},
 			"disable_time": schema.StringAttribute{
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"disabled": schema.BoolAttribute{
 				Optional:    true,
@@ -190,10 +190,10 @@ func (r *InterfaceEoipResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "IP address of remote end of EoIP tunnel",
 			},
 			"send_interval": schema.StringAttribute{
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"status": schema.StringAttribute{
 				Computed:    true,
@@ -481,9 +481,9 @@ func interfaceEoipApply(ctx context.Context, obj client.Object, m *InterfaceEoip
 	}
 	if v, ok := obj["arp-timeout"]; ok {
 		if v != "" {
-			m.ARPTimeout = types.StringValue(v)
+			m.ARPTimeout = newDurationValue(v)
 		} else {
-			m.ARPTimeout = types.StringNull()
+			m.ARPTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["clamp-tcp-mss"]; ok {
@@ -504,9 +504,9 @@ func interfaceEoipApply(ctx context.Context, obj client.Object, m *InterfaceEoip
 	}
 	if v, ok := obj["disable-time"]; ok {
 		if v != "" {
-			m.DisableTime = types.StringValue(v)
+			m.DisableTime = newDurationValue(v)
 		} else {
-			m.DisableTime = types.StringNull()
+			m.DisableTime = newDurationNull()
 		}
 	}
 	if v, ok := obj["disabled"]; ok {
@@ -611,9 +611,9 @@ func interfaceEoipApply(ctx context.Context, obj client.Object, m *InterfaceEoip
 	}
 	if v, ok := obj["send-interval"]; ok {
 		if v != "" {
-			m.SendInterval = types.StringValue(v)
+			m.SendInterval = newDurationValue(v)
 		} else {
-			m.SendInterval = types.StringNull()
+			m.SendInterval = newDurationNull()
 		}
 	}
 	if v, ok := obj["status"]; ok {

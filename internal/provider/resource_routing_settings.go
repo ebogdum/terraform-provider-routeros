@@ -29,15 +29,15 @@ type RoutingSettingsResource struct {
 }
 
 type RoutingSettingsModel struct {
-	ID                       types.String `tfsdk:"id"`
-	DynamicInChain           types.String `tfsdk:"dynamic_in_chain"`
-	ConnectedInChain         types.String `tfsdk:"connected_in_chain"`
-	CheckGatewayPingCount    types.Int64  `tfsdk:"check_gateway_ping_count"`
-	CheckGatewayPingInterval types.String `tfsdk:"check_gateway_ping_interval"`
-	CheckGatewayPingTimeout  types.String `tfsdk:"check_gateway_ping_timeout"`
-	PolicyRules              types.List   `tfsdk:"policy_rules"`
-	SingleProcess            types.Bool   `tfsdk:"single_process"`
-	Router                   types.String `tfsdk:"router"`
+	ID                       types.String  `tfsdk:"id"`
+	DynamicInChain           types.String  `tfsdk:"dynamic_in_chain"`
+	ConnectedInChain         types.String  `tfsdk:"connected_in_chain"`
+	CheckGatewayPingCount    types.Int64   `tfsdk:"check_gateway_ping_count"`
+	CheckGatewayPingInterval durationValue `tfsdk:"check_gateway_ping_interval"`
+	CheckGatewayPingTimeout  durationValue `tfsdk:"check_gateway_ping_timeout"`
+	PolicyRules              types.List    `tfsdk:"policy_rules"`
+	SingleProcess            types.Bool    `tfsdk:"single_process"`
+	Router                   types.String  `tfsdk:"router"`
 }
 
 func NewRoutingSettingsResource() resource.Resource { return &RoutingSettingsResource{} }
@@ -76,15 +76,15 @@ func (r *RoutingSettingsResource) Schema(_ context.Context, _ resource.SchemaReq
 			"check_gateway_ping_count": schema.Int64Attribute{Optional: true, Computed: true,
 				Description: "",
 			},
-			"check_gateway_ping_interval": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"check_gateway_ping_interval": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
-			"check_gateway_ping_timeout": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"check_gateway_ping_timeout": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"policy_rules": schema.ListAttribute{Optional: true, Computed: true,
 				ElementType: types.StringType,
@@ -227,17 +227,17 @@ func routingSettingsApply(ctx context.Context, obj client.Object, m *RoutingSett
 	if v, ok := obj["check-gateway-ping-interval"]; ok {
 		_ = v
 		if v != "" {
-			m.CheckGatewayPingInterval = types.StringValue(v)
+			m.CheckGatewayPingInterval = newDurationValue(v)
 		} else {
-			m.CheckGatewayPingInterval = types.StringNull()
+			m.CheckGatewayPingInterval = newDurationNull()
 		}
 	}
 	if v, ok := obj["check-gateway-ping-timeout"]; ok {
 		_ = v
 		if v != "" {
-			m.CheckGatewayPingTimeout = types.StringValue(v)
+			m.CheckGatewayPingTimeout = newDurationValue(v)
 		} else {
-			m.CheckGatewayPingTimeout = types.StringNull()
+			m.CheckGatewayPingTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["policy-rules"]; ok {

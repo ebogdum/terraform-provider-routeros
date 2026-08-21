@@ -29,13 +29,13 @@ type UserAaaResource struct {
 }
 
 type UserAaaModel struct {
-	ID            types.String `tfsdk:"id"`
-	Accounting    types.Bool   `tfsdk:"accounting"`
-	DefaultGroup  types.String `tfsdk:"default_group"`
-	ExcludeGroups types.String `tfsdk:"exclude_groups"`
-	InterimUpdate types.String `tfsdk:"interim_update"`
-	UseRADIUS     types.Bool   `tfsdk:"use_radius"`
-	Router        types.String `tfsdk:"router"`
+	ID            types.String  `tfsdk:"id"`
+	Accounting    types.Bool    `tfsdk:"accounting"`
+	DefaultGroup  types.String  `tfsdk:"default_group"`
+	ExcludeGroups types.String  `tfsdk:"exclude_groups"`
+	InterimUpdate durationValue `tfsdk:"interim_update"`
+	UseRADIUS     types.Bool    `tfsdk:"use_radius"`
+	Router        types.String  `tfsdk:"router"`
 }
 
 func NewUserAaaResource() resource.Resource { return &UserAaaResource{} }
@@ -70,10 +70,10 @@ func (r *UserAaaResource) Schema(_ context.Context, _ resource.SchemaRequest, re
 			"exclude_groups": schema.StringAttribute{Optional: true, Computed: true,
 				Description: "",
 			},
-			"interim_update": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"interim_update": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"use_radius": schema.BoolAttribute{Optional: true, Computed: true,
 				Description: "",
@@ -214,9 +214,9 @@ func userAaaApply(ctx context.Context, obj client.Object, m *UserAaaModel) {
 	if v, ok := obj["interim-update"]; ok {
 		_ = v
 		if v != "" {
-			m.InterimUpdate = types.StringValue(v)
+			m.InterimUpdate = newDurationValue(v)
 		} else {
-			m.InterimUpdate = types.StringNull()
+			m.InterimUpdate = newDurationNull()
 		}
 	}
 	if v, ok := obj["use-radius"]; ok {

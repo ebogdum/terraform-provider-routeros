@@ -28,13 +28,13 @@ type InterfaceDetectInternetResource struct {
 }
 
 type InterfaceDetectInternetModel struct {
-	ID                    types.String `tfsdk:"id"`
-	DetectInterfaceList   types.String `tfsdk:"detect_interface_list"`
-	InternetInterfaceList types.String `tfsdk:"internet_interface_list"`
-	LanInterfaceList      types.String `tfsdk:"lan_interface_list"`
-	RequestInterval       types.String `tfsdk:"request_interval"`
-	WanInterfaceList      types.String `tfsdk:"wan_interface_list"`
-	Router                types.String `tfsdk:"router"`
+	ID                    types.String  `tfsdk:"id"`
+	DetectInterfaceList   types.String  `tfsdk:"detect_interface_list"`
+	InternetInterfaceList types.String  `tfsdk:"internet_interface_list"`
+	LanInterfaceList      types.String  `tfsdk:"lan_interface_list"`
+	RequestInterval       durationValue `tfsdk:"request_interval"`
+	WanInterfaceList      types.String  `tfsdk:"wan_interface_list"`
+	Router                types.String  `tfsdk:"router"`
 }
 
 func NewInterfaceDetectInternetResource() resource.Resource {
@@ -71,10 +71,10 @@ func (r *InterfaceDetectInternetResource) Schema(_ context.Context, _ resource.S
 			"lan_interface_list": schema.StringAttribute{Optional: true, Computed: true,
 				Description: "",
 			},
-			"request_interval": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"request_interval": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"wan_interface_list": schema.StringAttribute{Optional: true, Computed: true,
 				Description: "",
@@ -213,9 +213,9 @@ func interfaceDetectInternetApply(ctx context.Context, obj client.Object, m *Int
 	if v, ok := obj["request-interval"]; ok {
 		_ = v
 		if v != "" {
-			m.RequestInterval = types.StringValue(v)
+			m.RequestInterval = newDurationValue(v)
 		} else {
-			m.RequestInterval = types.StringNull()
+			m.RequestInterval = newDurationNull()
 		}
 	}
 	if v, ok := obj["wan-interface-list"]; ok {

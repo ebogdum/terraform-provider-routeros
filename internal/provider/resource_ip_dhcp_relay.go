@@ -31,21 +31,21 @@ type IPDHCPRelayResource struct {
 }
 
 type IPDHCPRelayModel struct {
-	ID                     types.String `tfsdk:"id"`
-	LocalAddressAsSrcIp    types.String `tfsdk:"local_address_as_src_ip"`
-	AddRelayInfo           types.Bool   `tfsdk:"add_relay_info"`
-	DelayThreshold         types.String `tfsdk:"delay_threshold"`
-	DHCPServer             types.String `tfsdk:"dhcp_server"`
-	DHCPServerVrf          types.String `tfsdk:"dhcp_server_vrf"`
-	Disabled               types.Bool   `tfsdk:"disabled"`
-	Interface              types.String `tfsdk:"interface"`
-	Invalid                types.Bool   `tfsdk:"invalid"`
-	LocalAddress           types.String `tfsdk:"local_address"`
-	LocalAddressAsSourceIP types.Bool   `tfsdk:"local_address_as_source_ip"`
-	Name                   types.String `tfsdk:"name"`
-	RelayInfoRemoteID      types.String `tfsdk:"relay_info_remote_id"`
-	ResetCounters          types.String `tfsdk:"reset_counters"`
-	Router                 types.String `tfsdk:"router"`
+	ID                     types.String  `tfsdk:"id"`
+	LocalAddressAsSrcIp    types.String  `tfsdk:"local_address_as_src_ip"`
+	AddRelayInfo           types.Bool    `tfsdk:"add_relay_info"`
+	DelayThreshold         durationValue `tfsdk:"delay_threshold"`
+	DHCPServer             types.String  `tfsdk:"dhcp_server"`
+	DHCPServerVrf          types.String  `tfsdk:"dhcp_server_vrf"`
+	Disabled               types.Bool    `tfsdk:"disabled"`
+	Interface              types.String  `tfsdk:"interface"`
+	Invalid                types.Bool    `tfsdk:"invalid"`
+	LocalAddress           types.String  `tfsdk:"local_address"`
+	LocalAddressAsSourceIP types.Bool    `tfsdk:"local_address_as_source_ip"`
+	Name                   types.String  `tfsdk:"name"`
+	RelayInfoRemoteID      types.String  `tfsdk:"relay_info_remote_id"`
+	ResetCounters          types.String  `tfsdk:"reset_counters"`
+	Router                 types.String  `tfsdk:"router"`
 }
 
 func NewIPDHCPRelayResource() resource.Resource { return &IPDHCPRelayResource{} }
@@ -82,11 +82,11 @@ func (r *IPDHCPRelayResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Description: "",
 			},
 			"delay_threshold": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"dhcp_server": schema.StringAttribute{
 				Required:    true,
@@ -344,9 +344,9 @@ func iPDHCPRelayApply(ctx context.Context, obj client.Object, m *IPDHCPRelayMode
 	}
 	if v, ok := obj["delay-threshold"]; ok {
 		if v != "" {
-			m.DelayThreshold = types.StringValue(v)
+			m.DelayThreshold = newDurationValue(v)
 		} else {
-			m.DelayThreshold = types.StringNull()
+			m.DelayThreshold = newDurationNull()
 		}
 	}
 	if v, ok := obj["dhcp-server"]; ok {

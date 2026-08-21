@@ -31,32 +31,32 @@ type RoutingOSPFInterfaceTemplateResource struct {
 }
 
 type RoutingOSPFInterfaceTemplateModel struct {
-	ID                 types.String `tfsdk:"id"`
-	Type               types.String `tfsdk:"type"`
-	Auth               types.String `tfsdk:"auth"`
-	Area               types.String `tfsdk:"area"`
-	AuthID             types.String `tfsdk:"auth_id"`
-	AuthKey            types.String `tfsdk:"auth_key"`
-	Authentication     types.String `tfsdk:"authentication"`
-	Comment            types.String `tfsdk:"comment"`
-	Cost               types.Int64  `tfsdk:"cost"`
-	DeadInterval       types.String `tfsdk:"dead_interval"`
-	Disabled           types.Bool   `tfsdk:"disabled"`
-	HelloInterval      types.String `tfsdk:"hello_interval"`
-	InstanceID         types.Int64  `tfsdk:"instance_id"`
-	Interfaces         types.String `tfsdk:"interfaces"`
-	Invalid            types.Bool   `tfsdk:"invalid"`
-	NetworkType        types.String `tfsdk:"network_type"`
-	Networks           types.String `tfsdk:"networks"`
-	Passive            types.Bool   `tfsdk:"passive"`
-	PrefixList         types.String `tfsdk:"prefix_list"`
-	Priority           types.Int64  `tfsdk:"priority"`
-	RetransmitInterval types.String `tfsdk:"retransmit_interval"`
-	TransmitDelay      types.Int64  `tfsdk:"transmit_delay"`
-	UseBfd             types.String `tfsdk:"use_bfd"`
-	VlinkNeighborID    types.String `tfsdk:"vlink_neighbor_id"`
-	VlinkTransitArea   types.String `tfsdk:"vlink_transit_area"`
-	Router             types.String `tfsdk:"router"`
+	ID                 types.String  `tfsdk:"id"`
+	Type               types.String  `tfsdk:"type"`
+	Auth               types.String  `tfsdk:"auth"`
+	Area               types.String  `tfsdk:"area"`
+	AuthID             types.String  `tfsdk:"auth_id"`
+	AuthKey            types.String  `tfsdk:"auth_key"`
+	Authentication     types.String  `tfsdk:"authentication"`
+	Comment            types.String  `tfsdk:"comment"`
+	Cost               types.Int64   `tfsdk:"cost"`
+	DeadInterval       durationValue `tfsdk:"dead_interval"`
+	Disabled           types.Bool    `tfsdk:"disabled"`
+	HelloInterval      durationValue `tfsdk:"hello_interval"`
+	InstanceID         types.Int64   `tfsdk:"instance_id"`
+	Interfaces         types.String  `tfsdk:"interfaces"`
+	Invalid            types.Bool    `tfsdk:"invalid"`
+	NetworkType        types.String  `tfsdk:"network_type"`
+	Networks           types.String  `tfsdk:"networks"`
+	Passive            types.Bool    `tfsdk:"passive"`
+	PrefixList         types.String  `tfsdk:"prefix_list"`
+	Priority           types.Int64   `tfsdk:"priority"`
+	RetransmitInterval durationValue `tfsdk:"retransmit_interval"`
+	TransmitDelay      types.Int64   `tfsdk:"transmit_delay"`
+	UseBfd             types.String  `tfsdk:"use_bfd"`
+	VlinkNeighborID    types.String  `tfsdk:"vlink_neighbor_id"`
+	VlinkTransitArea   types.String  `tfsdk:"vlink_transit_area"`
+	Router             types.String  `tfsdk:"router"`
 }
 
 func NewRoutingOSPFInterfaceTemplateResource() resource.Resource {
@@ -125,11 +125,11 @@ func (r *RoutingOSPFInterfaceTemplateResource) Schema(_ context.Context, _ resou
 				Description: "",
 			},
 			"dead_interval": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"disabled": schema.BoolAttribute{
 				Optional:    true,
@@ -137,11 +137,11 @@ func (r *RoutingOSPFInterfaceTemplateResource) Schema(_ context.Context, _ resou
 				Description: "Whether the entry is disabled.",
 			},
 			"hello_interval": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"instance_id": schema.Int64Attribute{
 				Optional:    true,
@@ -183,11 +183,11 @@ func (r *RoutingOSPFInterfaceTemplateResource) Schema(_ context.Context, _ resou
 				Description: "",
 			},
 			"retransmit_interval": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"transmit_delay": schema.Int64Attribute{
 				Optional:    true,
@@ -520,9 +520,9 @@ func routingOSPFInterfaceTemplateApply(ctx context.Context, obj client.Object, m
 	}
 	if v, ok := obj["dead-interval"]; ok {
 		if v != "" {
-			m.DeadInterval = types.StringValue(v)
+			m.DeadInterval = newDurationValue(v)
 		} else {
-			m.DeadInterval = types.StringNull()
+			m.DeadInterval = newDurationNull()
 		}
 	}
 	if v, ok := obj["disabled"]; ok {
@@ -536,9 +536,9 @@ func routingOSPFInterfaceTemplateApply(ctx context.Context, obj client.Object, m
 	}
 	if v, ok := obj["hello-interval"]; ok {
 		if v != "" {
-			m.HelloInterval = types.StringValue(v)
+			m.HelloInterval = newDurationValue(v)
 		} else {
-			m.HelloInterval = types.StringNull()
+			m.HelloInterval = newDurationNull()
 		}
 	}
 	if v, ok := obj["instance-id"]; ok {
@@ -606,9 +606,9 @@ func routingOSPFInterfaceTemplateApply(ctx context.Context, obj client.Object, m
 	}
 	if v, ok := obj["retransmit-interval"]; ok {
 		if v != "" {
-			m.RetransmitInterval = types.StringValue(v)
+			m.RetransmitInterval = newDurationValue(v)
 		} else {
-			m.RetransmitInterval = types.StringNull()
+			m.RetransmitInterval = newDurationNull()
 		}
 	}
 	if v, ok := obj["transmit-delay"]; ok {

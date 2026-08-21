@@ -29,16 +29,16 @@ type IPTrafficFlowResource struct {
 }
 
 type IPTrafficFlowModel struct {
-	ID                  types.String `tfsdk:"id"`
-	ActiveFlowTimeout   types.String `tfsdk:"active_flow_timeout"`
-	CacheEntries        types.String `tfsdk:"cache_entries"`
-	Enabled             types.Bool   `tfsdk:"enabled"`
-	InactiveFlowTimeout types.String `tfsdk:"inactive_flow_timeout"`
-	Interfaces          types.String `tfsdk:"interfaces"`
-	PacketSampling      types.Bool   `tfsdk:"packet_sampling"`
-	SamplingInterval    types.Int64  `tfsdk:"sampling_interval"`
-	SamplingSpace       types.Int64  `tfsdk:"sampling_space"`
-	Router              types.String `tfsdk:"router"`
+	ID                  types.String  `tfsdk:"id"`
+	ActiveFlowTimeout   durationValue `tfsdk:"active_flow_timeout"`
+	CacheEntries        types.String  `tfsdk:"cache_entries"`
+	Enabled             types.Bool    `tfsdk:"enabled"`
+	InactiveFlowTimeout durationValue `tfsdk:"inactive_flow_timeout"`
+	Interfaces          types.String  `tfsdk:"interfaces"`
+	PacketSampling      types.Bool    `tfsdk:"packet_sampling"`
+	SamplingInterval    types.Int64   `tfsdk:"sampling_interval"`
+	SamplingSpace       types.Int64   `tfsdk:"sampling_space"`
+	Router              types.String  `tfsdk:"router"`
 }
 
 func NewIPTrafficFlowResource() resource.Resource { return &IPTrafficFlowResource{} }
@@ -64,10 +64,10 @@ func (r *IPTrafficFlowResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description:   "Stable identifier (the singleton's menu path, optionally namespaced by router).",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
-			"active_flow_timeout": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "Maximum life-time of a flow.",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"active_flow_timeout": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "Maximum life-time of a flow.",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"cache_entries": schema.StringAttribute{Optional: true, Computed: true,
 				Description: "Number of flows which can be in router's memory simultaneously.",
@@ -75,10 +75,10 @@ func (r *IPTrafficFlowResource) Schema(_ context.Context, _ resource.SchemaReque
 			"enabled": schema.BoolAttribute{Optional: true, Computed: true,
 				Description: "",
 			},
-			"inactive_flow_timeout": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "How long to keep the flow active, if it is idle. If a connection does not see any packet within this timeout, then traffic-flow will send a packet out as a new flow. If this timeout is too small it can create a significant amount of flows and overflow the buffer.",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"inactive_flow_timeout": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "How long to keep the flow active, if it is idle. If a connection does not see any packet within this timeout, then traffic-flow will send a packet out as a new flow. If this timeout is too small it can create a significant amount of flows and overflow the buffer.",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"interfaces": schema.StringAttribute{Optional: true, Computed: true,
 				Description: "Names of those interfaces will be used to gather statistics for traffic-flow. To specify more than one interface, separate them with a comma.",
@@ -211,9 +211,9 @@ func iPTrafficFlowApply(ctx context.Context, obj client.Object, m *IPTrafficFlow
 	if v, ok := obj["active-flow-timeout"]; ok {
 		_ = v
 		if v != "" {
-			m.ActiveFlowTimeout = types.StringValue(v)
+			m.ActiveFlowTimeout = newDurationValue(v)
 		} else {
-			m.ActiveFlowTimeout = types.StringNull()
+			m.ActiveFlowTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["cache-entries"]; ok {
@@ -237,9 +237,9 @@ func iPTrafficFlowApply(ctx context.Context, obj client.Object, m *IPTrafficFlow
 	if v, ok := obj["inactive-flow-timeout"]; ok {
 		_ = v
 		if v != "" {
-			m.InactiveFlowTimeout = types.StringValue(v)
+			m.InactiveFlowTimeout = newDurationValue(v)
 		} else {
-			m.InactiveFlowTimeout = types.StringNull()
+			m.InactiveFlowTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["interfaces"]; ok {

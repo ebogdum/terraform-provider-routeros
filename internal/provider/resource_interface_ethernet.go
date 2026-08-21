@@ -31,168 +31,168 @@ type InterfaceEthernetResource struct {
 }
 
 type InterfaceEthernetModel struct {
-	ID                        types.String `tfsdk:"id"`
-	SfpRateSelect             types.String `tfsdk:"sfp_rate_select"`
-	SfpIgnoreRxLos            types.String `tfsdk:"sfp_ignore_rx_los"`
-	MdixEnable                types.String `tfsdk:"mdix_enable"`
-	L2mtu                     types.String `tfsdk:"l2mtu"`
-	Advertise                 types.Set    `tfsdk:"advertise"`
-	Advertising               types.String `tfsdk:"advertising"`
-	ARP                       types.String `tfsdk:"arp"`
-	ARPTimeout                types.String `tfsdk:"arp_timeout"`
-	AutoNegotiation           types.Bool   `tfsdk:"auto_negotiation"`
-	Autoneg                   types.Bool   `tfsdk:"autoneg"`
-	Blink                     types.String `tfsdk:"blink"`
-	CableAssemblyLinkLength   types.String `tfsdk:"cable_assembly_link_length"`
-	Bandwidth                 types.String `tfsdk:"bandwidth"`
-	CableSettings             types.String `tfsdk:"cable_settings"`
-	CableTest                 types.String `tfsdk:"cable_test"`
-	CmisModuleState           types.String `tfsdk:"cmis_module_state"`
-	CmisRevision              types.String `tfsdk:"cmis_revision"`
-	Combo                     types.Int64  `tfsdk:"combo"`
-	ComboMode                 types.String `tfsdk:"combo_mode"`
-	Comment                   types.String `tfsdk:"comment"`
-	ConnectorType             types.String `tfsdk:"connector_type"`
-	CopperActiveOm4LinkLength types.Int64  `tfsdk:"copper_active_om4_link_length"`
-	DefaultName               types.String `tfsdk:"default_name"`
-	DisableRunningCheck       types.Bool   `tfsdk:"disable_running_check"`
-	DisableTime               types.String `tfsdk:"disable_time"`
-	Disabled                  types.Bool   `tfsdk:"disabled"`
-	Encoding                  types.String `tfsdk:"encoding"`
-	Extrastats                types.String `tfsdk:"extrastats"`
-	Fec                       types.Int64  `tfsdk:"fec"`
-	FecMode                   types.String `tfsdk:"fec_mode"`
-	Flowcntrl                 types.String `tfsdk:"flowcntrl"`
-	Flowcontrol               types.Int64  `tfsdk:"flowcontrol"`
-	FullDuplex                types.String `tfsdk:"full_duplex"`
-	Hastxqueuestats           types.Bool   `tfsdk:"hastxqueuestats"`
-	IgnoreRxLos               types.Bool   `tfsdk:"ignore_rx_los"`
-	LinkPartnerAdvertising    types.String `tfsdk:"link_partner_advertising"`
-	LoopProtect               types.String `tfsdk:"loop_protect"`
-	LoopProtectDisableTime    types.String `tfsdk:"loop_protect_disable_time"`
-	LoopProtectSendInterval   types.String `tfsdk:"loop_protect_send_interval"`
-	LoopProtectStatus         types.String `tfsdk:"loop_protect_status"`
-	MACAddress                macValue     `tfsdk:"mac_address"`
-	ManufacturingDate         types.String `tfsdk:"manufacturing_date"`
-	MaxL2MTU                  types.Int64  `tfsdk:"max_l2_mtu"`
-	MaxPower                  types.String `tfsdk:"max_power"`
-	ModulePresent             types.Bool   `tfsdk:"module_present"`
-	MTU                       types.Int64  `tfsdk:"mtu"`
-	Name                      types.String `tfsdk:"name"`
-	Noautoneg                 types.String `tfsdk:"noautoneg"`
-	NonMgmt                   types.String `tfsdk:"non_mgmt"`
-	Om1LinkLength             types.Int64  `tfsdk:"om1_link_length"`
-	Om2LinkLength             types.Int64  `tfsdk:"om2_link_length"`
-	Om3LinkLength             types.Int64  `tfsdk:"om3_link_length"`
-	Om4LinkLength             types.Int64  `tfsdk:"om4_link_length"`
-	Om5LinkLength             types.Int64  `tfsdk:"om5_link_length"`
-	OrigMACAddress            macValue     `tfsdk:"orig_mac_address"`
-	PassthroughInterface      types.String `tfsdk:"passthrough_interface"`
-	PciePassthrough           types.Int64  `tfsdk:"pcie_passthrough"`
-	PoEOut                    types.String `tfsdk:"poe_out"`
-	PoEOutCurrent             types.Int64  `tfsdk:"poe_out_current"`
-	PoEOutPower               types.String `tfsdk:"poe_out_power"`
-	PoEOutStatus              types.String `tfsdk:"poe_out_status"`
-	PoEOutVoltage             types.String `tfsdk:"poe_out_voltage"`
-	PoEPriority               types.Int64  `tfsdk:"poe_priority"`
-	PoEVoltage                types.String `tfsdk:"poe_voltage"`
-	Poe                       types.String `tfsdk:"poe"`
-	PoeV                      types.Bool   `tfsdk:"poe_v"`
-	Poecurr                   types.Int64  `tfsdk:"poecurr"`
-	Poeping                   types.String `tfsdk:"poeping"`
-	Poepower                  types.Int64  `tfsdk:"poepower"`
-	Poevolt                   types.Int64  `tfsdk:"poevolt"`
-	PowerClass                types.Int64  `tfsdk:"power_class"`
-	PowerCycle                types.String `tfsdk:"power_cycle"`
-	PowerCycleAfter           types.String `tfsdk:"power_cycle_after"`
-	PowerCycleHostAlive       types.Bool   `tfsdk:"power_cycle_host_alive"`
-	PowerCycleInterval        types.String `tfsdk:"power_cycle_interval"`
-	PowerCyclePingAddress     types.String `tfsdk:"power_cycle_ping_address"`
-	PowerCyclePingEnabled     types.Bool   `tfsdk:"power_cycle_ping_enabled"`
-	PowerCyclePingTimeout     types.String `tfsdk:"power_cycle_ping_timeout"`
-	Qstats                    types.String `tfsdk:"qstats"`
-	Rate                      types.String `tfsdk:"rate"`
-	RateSelect                types.String `tfsdk:"rate_select"`
-	ResetCounters             types.String `tfsdk:"reset_counters"`
-	ResetMACAddress           types.String `tfsdk:"reset_mac_address"`
-	Running                   types.Bool   `tfsdk:"running"`
-	RxAlignError              types.String `tfsdk:"rx_align_error"`
-	RxBroadcast               types.Int64  `tfsdk:"rx_broadcast"`
-	RxBytes                   types.Int64  `tfsdk:"rx_bytes"`
-	RxCarrierError            types.String `tfsdk:"rx_carrier_error"`
-	RxCodeError               types.String `tfsdk:"rx_code_error"`
-	RxControl                 types.String `tfsdk:"rx_control"`
-	RxDrop                    types.String `tfsdk:"rx_drop"`
-	RxErrorEvents             types.String `tfsdk:"rx_error_events"`
-	RxFcsError                types.String `tfsdk:"rx_fcs_error"`
-	RxFlowControl             types.String `tfsdk:"rx_flow_control"`
-	RxFragment                types.String `tfsdk:"rx_fragment"`
-	RxJabber                  types.String `tfsdk:"rx_jabber"`
-	RxLengthError             types.String `tfsdk:"rx_length_error"`
-	RxLoss                    types.Bool   `tfsdk:"rx_loss"`
-	RxMulticast               types.Int64  `tfsdk:"rx_multicast"`
-	RxOverflow                types.String `tfsdk:"rx_overflow"`
-	RxPacket                  types.Int64  `tfsdk:"rx_packet"`
-	RxPause                   types.String `tfsdk:"rx_pause"`
-	RxPower                   types.String `tfsdk:"rx_power"`
-	RxTooLong                 types.String `tfsdk:"rx_too_long"`
-	RxTooShort                types.String `tfsdk:"rx_too_short"`
-	RxUnicast                 types.String `tfsdk:"rx_unicast"`
-	RxUnknownOp               types.String `tfsdk:"rx_unknown_op"`
-	SendInterval              types.String `tfsdk:"send_interval"`
-	Sfp                       types.Bool   `tfsdk:"sfp"`
-	SfpShutdownTemperature    types.Int64  `tfsdk:"sfp_shutdown_temperature"`
-	SfpSupported              types.String `tfsdk:"sfp_supported"`
-	Sfprate                   types.Int64  `tfsdk:"sfprate"`
-	Sfpshutdown               types.Bool   `tfsdk:"sfpshutdown"`
-	SmLinkLength              types.String `tfsdk:"sm_link_length"`
-	Speed                     types.String `tfsdk:"speed"`
-	Status                    types.String `tfsdk:"status"`
-	SupplyVoltage             types.String `tfsdk:"supply_voltage"`
-	Supported                 types.String `tfsdk:"supported"`
-	Temperature               types.String `tfsdk:"temperature"`
-	TxBiasCurrent             types.Int64  `tfsdk:"tx_bias_current"`
-	TxBroadcast               types.Int64  `tfsdk:"tx_broadcast"`
-	TxBytes                   types.Int64  `tfsdk:"tx_bytes"`
-	TxCollision               types.String `tfsdk:"tx_collision"`
-	TxControl                 types.String `tfsdk:"tx_control"`
-	TxDeferred                types.String `tfsdk:"tx_deferred"`
-	TxDrop                    types.String `tfsdk:"tx_drop"`
-	TxExcessiveCollision      types.String `tfsdk:"tx_excessive_collision"`
-	TxExcessiveDeferred       types.String `tfsdk:"tx_excessive_deferred"`
-	TxFault                   types.Bool   `tfsdk:"tx_fault"`
-	TxFcsError                types.String `tfsdk:"tx_fcs_error"`
-	TxFlowControl             types.String `tfsdk:"tx_flow_control"`
-	TxFragment                types.String `tfsdk:"tx_fragment"`
-	TxJabber                  types.String `tfsdk:"tx_jabber"`
-	TxLateCollision           types.String `tfsdk:"tx_late_collision"`
-	TxMulticast               types.Int64  `tfsdk:"tx_multicast"`
-	TxMultipleCollision       types.String `tfsdk:"tx_multiple_collision"`
-	TxPacket                  types.Int64  `tfsdk:"tx_packet"`
-	TxPause                   types.String `tfsdk:"tx_pause"`
-	TxPauseHonorred           types.String `tfsdk:"tx_pause_honorred"`
-	TxPower                   types.String `tfsdk:"tx_power"`
-	TxRx10241518              types.String `tfsdk:"tx_rx_1024_1518"`
-	TxRx1024Max               types.String `tfsdk:"tx_rx_1024_max"`
-	TxRx128255                types.String `tfsdk:"tx_rx_128_255"`
-	TxRx1519Max               types.String `tfsdk:"tx_rx_1519_max"`
-	TxRx256511                types.String `tfsdk:"tx_rx_256_511"`
-	TxRx5121023               types.String `tfsdk:"tx_rx_512_1023"`
-	TxRx64                    types.String `tfsdk:"tx_rx_64"`
-	TxRx65127                 types.String `tfsdk:"tx_rx_65_127"`
-	TxRxBytes                 types.String `tfsdk:"tx_rx_bytes"`
-	TxRxPackets               types.String `tfsdk:"tx_rx_packets"`
-	TxSingleCollision         types.String `tfsdk:"tx_single_collision"`
-	TxTooShort                types.String `tfsdk:"tx_too_short"`
-	TxTotalCollision          types.String `tfsdk:"tx_total_collision"`
-	TxUnderrun                types.String `tfsdk:"tx_underrun"`
-	TxUnicast                 types.String `tfsdk:"tx_unicast"`
-	VendorName                types.String `tfsdk:"vendor_name"`
-	VendorPartNumber          types.String `tfsdk:"vendor_part_number"`
-	VendorRevision            types.String `tfsdk:"vendor_revision"`
-	VendorSerial              types.String `tfsdk:"vendor_serial"`
-	Wavelength                types.String `tfsdk:"wavelength"`
-	Router                    types.String `tfsdk:"router"`
+	ID                        types.String  `tfsdk:"id"`
+	SfpRateSelect             types.String  `tfsdk:"sfp_rate_select"`
+	SfpIgnoreRxLos            types.String  `tfsdk:"sfp_ignore_rx_los"`
+	MdixEnable                types.String  `tfsdk:"mdix_enable"`
+	L2mtu                     types.String  `tfsdk:"l2mtu"`
+	Advertise                 types.Set     `tfsdk:"advertise"`
+	Advertising               types.String  `tfsdk:"advertising"`
+	ARP                       types.String  `tfsdk:"arp"`
+	ARPTimeout                durationValue `tfsdk:"arp_timeout"`
+	AutoNegotiation           types.Bool    `tfsdk:"auto_negotiation"`
+	Autoneg                   types.Bool    `tfsdk:"autoneg"`
+	Blink                     types.String  `tfsdk:"blink"`
+	CableAssemblyLinkLength   types.String  `tfsdk:"cable_assembly_link_length"`
+	Bandwidth                 types.String  `tfsdk:"bandwidth"`
+	CableSettings             types.String  `tfsdk:"cable_settings"`
+	CableTest                 types.String  `tfsdk:"cable_test"`
+	CmisModuleState           types.String  `tfsdk:"cmis_module_state"`
+	CmisRevision              types.String  `tfsdk:"cmis_revision"`
+	Combo                     types.Int64   `tfsdk:"combo"`
+	ComboMode                 types.String  `tfsdk:"combo_mode"`
+	Comment                   types.String  `tfsdk:"comment"`
+	ConnectorType             types.String  `tfsdk:"connector_type"`
+	CopperActiveOm4LinkLength types.Int64   `tfsdk:"copper_active_om4_link_length"`
+	DefaultName               types.String  `tfsdk:"default_name"`
+	DisableRunningCheck       types.Bool    `tfsdk:"disable_running_check"`
+	DisableTime               durationValue `tfsdk:"disable_time"`
+	Disabled                  types.Bool    `tfsdk:"disabled"`
+	Encoding                  types.String  `tfsdk:"encoding"`
+	Extrastats                types.String  `tfsdk:"extrastats"`
+	Fec                       types.Int64   `tfsdk:"fec"`
+	FecMode                   types.String  `tfsdk:"fec_mode"`
+	Flowcntrl                 types.String  `tfsdk:"flowcntrl"`
+	Flowcontrol               types.Int64   `tfsdk:"flowcontrol"`
+	FullDuplex                types.String  `tfsdk:"full_duplex"`
+	Hastxqueuestats           types.Bool    `tfsdk:"hastxqueuestats"`
+	IgnoreRxLos               types.Bool    `tfsdk:"ignore_rx_los"`
+	LinkPartnerAdvertising    types.String  `tfsdk:"link_partner_advertising"`
+	LoopProtect               types.String  `tfsdk:"loop_protect"`
+	LoopProtectDisableTime    durationValue `tfsdk:"loop_protect_disable_time"`
+	LoopProtectSendInterval   durationValue `tfsdk:"loop_protect_send_interval"`
+	LoopProtectStatus         types.String  `tfsdk:"loop_protect_status"`
+	MACAddress                macValue      `tfsdk:"mac_address"`
+	ManufacturingDate         types.String  `tfsdk:"manufacturing_date"`
+	MaxL2MTU                  types.Int64   `tfsdk:"max_l2_mtu"`
+	MaxPower                  types.String  `tfsdk:"max_power"`
+	ModulePresent             types.Bool    `tfsdk:"module_present"`
+	MTU                       types.Int64   `tfsdk:"mtu"`
+	Name                      types.String  `tfsdk:"name"`
+	Noautoneg                 types.String  `tfsdk:"noautoneg"`
+	NonMgmt                   types.String  `tfsdk:"non_mgmt"`
+	Om1LinkLength             types.Int64   `tfsdk:"om1_link_length"`
+	Om2LinkLength             types.Int64   `tfsdk:"om2_link_length"`
+	Om3LinkLength             types.Int64   `tfsdk:"om3_link_length"`
+	Om4LinkLength             types.Int64   `tfsdk:"om4_link_length"`
+	Om5LinkLength             types.Int64   `tfsdk:"om5_link_length"`
+	OrigMACAddress            macValue      `tfsdk:"orig_mac_address"`
+	PassthroughInterface      types.String  `tfsdk:"passthrough_interface"`
+	PciePassthrough           types.Int64   `tfsdk:"pcie_passthrough"`
+	PoEOut                    types.String  `tfsdk:"poe_out"`
+	PoEOutCurrent             types.Int64   `tfsdk:"poe_out_current"`
+	PoEOutPower               types.String  `tfsdk:"poe_out_power"`
+	PoEOutStatus              types.String  `tfsdk:"poe_out_status"`
+	PoEOutVoltage             types.String  `tfsdk:"poe_out_voltage"`
+	PoEPriority               types.Int64   `tfsdk:"poe_priority"`
+	PoEVoltage                types.String  `tfsdk:"poe_voltage"`
+	Poe                       types.String  `tfsdk:"poe"`
+	PoeV                      types.Bool    `tfsdk:"poe_v"`
+	Poecurr                   types.Int64   `tfsdk:"poecurr"`
+	Poeping                   types.String  `tfsdk:"poeping"`
+	Poepower                  types.Int64   `tfsdk:"poepower"`
+	Poevolt                   types.Int64   `tfsdk:"poevolt"`
+	PowerClass                types.Int64   `tfsdk:"power_class"`
+	PowerCycle                types.String  `tfsdk:"power_cycle"`
+	PowerCycleAfter           types.String  `tfsdk:"power_cycle_after"`
+	PowerCycleHostAlive       types.Bool    `tfsdk:"power_cycle_host_alive"`
+	PowerCycleInterval        durationValue `tfsdk:"power_cycle_interval"`
+	PowerCyclePingAddress     types.String  `tfsdk:"power_cycle_ping_address"`
+	PowerCyclePingEnabled     types.Bool    `tfsdk:"power_cycle_ping_enabled"`
+	PowerCyclePingTimeout     durationValue `tfsdk:"power_cycle_ping_timeout"`
+	Qstats                    types.String  `tfsdk:"qstats"`
+	Rate                      types.String  `tfsdk:"rate"`
+	RateSelect                types.String  `tfsdk:"rate_select"`
+	ResetCounters             types.String  `tfsdk:"reset_counters"`
+	ResetMACAddress           types.String  `tfsdk:"reset_mac_address"`
+	Running                   types.Bool    `tfsdk:"running"`
+	RxAlignError              types.String  `tfsdk:"rx_align_error"`
+	RxBroadcast               types.Int64   `tfsdk:"rx_broadcast"`
+	RxBytes                   types.Int64   `tfsdk:"rx_bytes"`
+	RxCarrierError            types.String  `tfsdk:"rx_carrier_error"`
+	RxCodeError               types.String  `tfsdk:"rx_code_error"`
+	RxControl                 types.String  `tfsdk:"rx_control"`
+	RxDrop                    types.String  `tfsdk:"rx_drop"`
+	RxErrorEvents             types.String  `tfsdk:"rx_error_events"`
+	RxFcsError                types.String  `tfsdk:"rx_fcs_error"`
+	RxFlowControl             types.String  `tfsdk:"rx_flow_control"`
+	RxFragment                types.String  `tfsdk:"rx_fragment"`
+	RxJabber                  types.String  `tfsdk:"rx_jabber"`
+	RxLengthError             types.String  `tfsdk:"rx_length_error"`
+	RxLoss                    types.Bool    `tfsdk:"rx_loss"`
+	RxMulticast               types.Int64   `tfsdk:"rx_multicast"`
+	RxOverflow                types.String  `tfsdk:"rx_overflow"`
+	RxPacket                  types.Int64   `tfsdk:"rx_packet"`
+	RxPause                   types.String  `tfsdk:"rx_pause"`
+	RxPower                   types.String  `tfsdk:"rx_power"`
+	RxTooLong                 types.String  `tfsdk:"rx_too_long"`
+	RxTooShort                types.String  `tfsdk:"rx_too_short"`
+	RxUnicast                 types.String  `tfsdk:"rx_unicast"`
+	RxUnknownOp               types.String  `tfsdk:"rx_unknown_op"`
+	SendInterval              durationValue `tfsdk:"send_interval"`
+	Sfp                       types.Bool    `tfsdk:"sfp"`
+	SfpShutdownTemperature    types.Int64   `tfsdk:"sfp_shutdown_temperature"`
+	SfpSupported              types.String  `tfsdk:"sfp_supported"`
+	Sfprate                   types.Int64   `tfsdk:"sfprate"`
+	Sfpshutdown               types.Bool    `tfsdk:"sfpshutdown"`
+	SmLinkLength              types.String  `tfsdk:"sm_link_length"`
+	Speed                     types.String  `tfsdk:"speed"`
+	Status                    types.String  `tfsdk:"status"`
+	SupplyVoltage             types.String  `tfsdk:"supply_voltage"`
+	Supported                 types.String  `tfsdk:"supported"`
+	Temperature               types.String  `tfsdk:"temperature"`
+	TxBiasCurrent             types.Int64   `tfsdk:"tx_bias_current"`
+	TxBroadcast               types.Int64   `tfsdk:"tx_broadcast"`
+	TxBytes                   types.Int64   `tfsdk:"tx_bytes"`
+	TxCollision               types.String  `tfsdk:"tx_collision"`
+	TxControl                 types.String  `tfsdk:"tx_control"`
+	TxDeferred                types.String  `tfsdk:"tx_deferred"`
+	TxDrop                    types.String  `tfsdk:"tx_drop"`
+	TxExcessiveCollision      types.String  `tfsdk:"tx_excessive_collision"`
+	TxExcessiveDeferred       types.String  `tfsdk:"tx_excessive_deferred"`
+	TxFault                   types.Bool    `tfsdk:"tx_fault"`
+	TxFcsError                types.String  `tfsdk:"tx_fcs_error"`
+	TxFlowControl             types.String  `tfsdk:"tx_flow_control"`
+	TxFragment                types.String  `tfsdk:"tx_fragment"`
+	TxJabber                  types.String  `tfsdk:"tx_jabber"`
+	TxLateCollision           types.String  `tfsdk:"tx_late_collision"`
+	TxMulticast               types.Int64   `tfsdk:"tx_multicast"`
+	TxMultipleCollision       types.String  `tfsdk:"tx_multiple_collision"`
+	TxPacket                  types.Int64   `tfsdk:"tx_packet"`
+	TxPause                   types.String  `tfsdk:"tx_pause"`
+	TxPauseHonorred           types.String  `tfsdk:"tx_pause_honorred"`
+	TxPower                   types.String  `tfsdk:"tx_power"`
+	TxRx10241518              types.String  `tfsdk:"tx_rx_1024_1518"`
+	TxRx1024Max               types.String  `tfsdk:"tx_rx_1024_max"`
+	TxRx128255                types.String  `tfsdk:"tx_rx_128_255"`
+	TxRx1519Max               types.String  `tfsdk:"tx_rx_1519_max"`
+	TxRx256511                types.String  `tfsdk:"tx_rx_256_511"`
+	TxRx5121023               types.String  `tfsdk:"tx_rx_512_1023"`
+	TxRx64                    types.String  `tfsdk:"tx_rx_64"`
+	TxRx65127                 types.String  `tfsdk:"tx_rx_65_127"`
+	TxRxBytes                 types.String  `tfsdk:"tx_rx_bytes"`
+	TxRxPackets               types.String  `tfsdk:"tx_rx_packets"`
+	TxSingleCollision         types.String  `tfsdk:"tx_single_collision"`
+	TxTooShort                types.String  `tfsdk:"tx_too_short"`
+	TxTotalCollision          types.String  `tfsdk:"tx_total_collision"`
+	TxUnderrun                types.String  `tfsdk:"tx_underrun"`
+	TxUnicast                 types.String  `tfsdk:"tx_unicast"`
+	VendorName                types.String  `tfsdk:"vendor_name"`
+	VendorPartNumber          types.String  `tfsdk:"vendor_part_number"`
+	VendorRevision            types.String  `tfsdk:"vendor_revision"`
+	VendorSerial              types.String  `tfsdk:"vendor_serial"`
+	Wavelength                types.String  `tfsdk:"wavelength"`
+	Router                    types.String  `tfsdk:"router"`
 }
 
 func NewInterfaceEthernetResource() resource.Resource { return &InterfaceEthernetResource{} }
@@ -255,11 +255,11 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Validators:  []validator.String{schemautil.OneOf([]string{"disabled", "enabled", "proxy-arp", "reply-only", "local-proxy-arp"}...)},
 			},
 			"arp_timeout": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationOrKeyword("auto")},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationOrKeyword("auto")},
 			},
 			"auto_negotiation": schema.BoolAttribute{
 				Optional: true,
@@ -340,10 +340,10 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"disable_time": schema.StringAttribute{
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"disabled": schema.BoolAttribute{
 				Optional:    true,
@@ -403,18 +403,18 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Validators:  []validator.String{schemautil.OneOf([]string{"default", "off", "on"}...)},
 			},
 			"loop_protect_disable_time": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"loop_protect_send_interval": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"loop_protect_status": schema.StringAttribute{
 				Computed:    true,
@@ -579,11 +579,11 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"power_cycle_interval": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"power_cycle_ping_address": schema.StringAttribute{
 				Computed:    true,
@@ -595,10 +595,10 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"power_cycle_ping_timeout": schema.StringAttribute{
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"qstats": schema.StringAttribute{
 				Optional:    true,
@@ -722,10 +722,10 @@ func (r *InterfaceEthernetResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"send_interval": schema.StringAttribute{
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"sfp": schema.BoolAttribute{
 				Optional:    true,
@@ -1378,9 +1378,9 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	}
 	if v, ok := obj["arp-timeout"]; ok {
 		if v != "" {
-			m.ARPTimeout = types.StringValue(v)
+			m.ARPTimeout = newDurationValue(v)
 		} else {
-			m.ARPTimeout = types.StringNull()
+			m.ARPTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["auto-negotiation"]; ok {
@@ -1514,9 +1514,9 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	}
 	if v, ok := obj["disable-time"]; ok {
 		if v != "" {
-			m.DisableTime = types.StringValue(v)
+			m.DisableTime = newDurationValue(v)
 		} else {
-			m.DisableTime = types.StringNull()
+			m.DisableTime = newDurationNull()
 		}
 	}
 	if v, ok := obj["disabled"]; ok {
@@ -1617,16 +1617,16 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	}
 	if v, ok := obj["loop-protect-disable-time"]; ok {
 		if v != "" {
-			m.LoopProtectDisableTime = types.StringValue(v)
+			m.LoopProtectDisableTime = newDurationValue(v)
 		} else {
-			m.LoopProtectDisableTime = types.StringNull()
+			m.LoopProtectDisableTime = newDurationNull()
 		}
 	}
 	if v, ok := obj["loop-protect-send-interval"]; ok {
 		if v != "" {
-			m.LoopProtectSendInterval = types.StringValue(v)
+			m.LoopProtectSendInterval = newDurationValue(v)
 		} else {
-			m.LoopProtectSendInterval = types.StringNull()
+			m.LoopProtectSendInterval = newDurationNull()
 		}
 	}
 	if v, ok := obj["loop-protect-status"]; ok {
@@ -1924,9 +1924,9 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	}
 	if v, ok := obj["power-cycle-interval"]; ok {
 		if v != "" {
-			m.PowerCycleInterval = types.StringValue(v)
+			m.PowerCycleInterval = newDurationValue(v)
 		} else {
-			m.PowerCycleInterval = types.StringNull()
+			m.PowerCycleInterval = newDurationNull()
 		}
 	}
 	if v, ok := obj["power-cycle-ping-address"]; ok {
@@ -1947,9 +1947,9 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	}
 	if v, ok := obj["power-cycle-ping-timeout"]; ok {
 		if v != "" {
-			m.PowerCyclePingTimeout = types.StringValue(v)
+			m.PowerCyclePingTimeout = newDurationValue(v)
 		} else {
-			m.PowerCyclePingTimeout = types.StringNull()
+			m.PowerCyclePingTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["qstats"]; ok {
@@ -2173,9 +2173,9 @@ func interfaceEthernetApply(ctx context.Context, obj client.Object, m *Interface
 	}
 	if v, ok := obj["send-interval"]; ok {
 		if v != "" {
-			m.SendInterval = types.StringValue(v)
+			m.SendInterval = newDurationValue(v)
 		} else {
-			m.SendInterval = types.StringNull()
+			m.SendInterval = newDurationNull()
 		}
 	}
 	if v, ok := obj["sfp"]; ok {

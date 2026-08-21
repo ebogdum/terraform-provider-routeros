@@ -31,18 +31,18 @@ type IPHotspotUserProfileResource struct {
 }
 
 type IPHotspotUserProfileModel struct {
-	ID                types.String `tfsdk:"id"`
-	AddMACCookie      types.Bool   `tfsdk:"add_mac_cookie"`
-	AddressList       types.String `tfsdk:"address_list"`
-	Default           types.Bool   `tfsdk:"default"`
-	IdleTimeout       types.String `tfsdk:"idle_timeout"`
-	KeepaliveTimeout  types.String `tfsdk:"keepalive_timeout"`
-	MACCookieTimeout  types.String `tfsdk:"mac_cookie_timeout"`
-	Name              types.String `tfsdk:"name"`
-	SharedUsers       types.String `tfsdk:"shared_users"`
-	StatusAutorefresh types.String `tfsdk:"status_autorefresh"`
-	TransparentProxy  types.Bool   `tfsdk:"transparent_proxy"`
-	Router            types.String `tfsdk:"router"`
+	ID                types.String  `tfsdk:"id"`
+	AddMACCookie      types.Bool    `tfsdk:"add_mac_cookie"`
+	AddressList       types.String  `tfsdk:"address_list"`
+	Default           types.Bool    `tfsdk:"default"`
+	IdleTimeout       types.String  `tfsdk:"idle_timeout"`
+	KeepaliveTimeout  durationValue `tfsdk:"keepalive_timeout"`
+	MACCookieTimeout  durationValue `tfsdk:"mac_cookie_timeout"`
+	Name              types.String  `tfsdk:"name"`
+	SharedUsers       types.String  `tfsdk:"shared_users"`
+	StatusAutorefresh durationValue `tfsdk:"status_autorefresh"`
+	TransparentProxy  types.Bool    `tfsdk:"transparent_proxy"`
+	Router            types.String  `tfsdk:"router"`
 }
 
 func NewIPHotspotUserProfileResource() resource.Resource { return &IPHotspotUserProfileResource{} }
@@ -88,18 +88,18 @@ func (r *IPHotspotUserProfileResource) Schema(_ context.Context, _ resource.Sche
 				Description: "",
 			},
 			"keepalive_timeout": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"mac_cookie_timeout": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"name": schema.StringAttribute{
 				Optional:    true,
@@ -112,11 +112,11 @@ func (r *IPHotspotUserProfileResource) Schema(_ context.Context, _ resource.Sche
 				Description: "A number, or `unlimited`.",
 			},
 			"status_autorefresh": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"transparent_proxy": schema.BoolAttribute{
 				Optional:    true,
@@ -346,16 +346,16 @@ func iPHotspotUserProfileApply(ctx context.Context, obj client.Object, m *IPHots
 	}
 	if v, ok := obj["keepalive-timeout"]; ok {
 		if v != "" {
-			m.KeepaliveTimeout = types.StringValue(v)
+			m.KeepaliveTimeout = newDurationValue(v)
 		} else {
-			m.KeepaliveTimeout = types.StringNull()
+			m.KeepaliveTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["mac-cookie-timeout"]; ok {
 		if v != "" {
-			m.MACCookieTimeout = types.StringValue(v)
+			m.MACCookieTimeout = newDurationValue(v)
 		} else {
-			m.MACCookieTimeout = types.StringNull()
+			m.MACCookieTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["name"]; ok {
@@ -374,9 +374,9 @@ func iPHotspotUserProfileApply(ctx context.Context, obj client.Object, m *IPHots
 	}
 	if v, ok := obj["status-autorefresh"]; ok {
 		if v != "" {
-			m.StatusAutorefresh = types.StringValue(v)
+			m.StatusAutorefresh = newDurationValue(v)
 		} else {
-			m.StatusAutorefresh = types.StringNull()
+			m.StatusAutorefresh = newDurationNull()
 		}
 	}
 	if v, ok := obj["transparent-proxy"]; ok {

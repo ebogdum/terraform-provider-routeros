@@ -31,35 +31,35 @@ type IPHotspotProfileResource struct {
 }
 
 type IPHotspotProfileModel struct {
-	ID                    types.String `tfsdk:"id"`
-	TrialUserProfile      types.String `tfsdk:"trial_user_profile"`
-	TrialUptimeReset      types.String `tfsdk:"trial_uptime_reset"`
-	TrialUptimeLimit      types.String `tfsdk:"trial_uptime_limit"`
-	SslCertificate        types.String `tfsdk:"ssl_certificate"`
-	RateLimit             types.String `tfsdk:"rate_limit"`
-	RadiusMacFormat       types.String `tfsdk:"radius_mac_format"`
-	RadiusLocationName    types.String `tfsdk:"radius_location_name"`
-	RadiusLocationId      types.String `tfsdk:"radius_location_id"`
-	RadiusInterimUpdate   types.String `tfsdk:"radius_interim_update"`
-	RadiusDefaultDomain   types.String `tfsdk:"radius_default_domain"`
-	RadiusAccounting      types.String `tfsdk:"radius_accounting"`
-	NasPortType           types.String `tfsdk:"nas_port_type"`
-	MacAuthPassword       types.String `tfsdk:"mac_auth_password"`
-	MacAuthMode           types.String `tfsdk:"mac_auth_mode"`
-	Default               types.Bool   `tfsdk:"default"`
-	DNSName               types.String `tfsdk:"dns_name"`
-	HotspotAddress        types.String `tfsdk:"hotspot_address"`
-	HtmlDirectory         types.String `tfsdk:"html_directory"`
-	HtmlDirectoryOverride types.String `tfsdk:"html_directory_override"`
-	HTTPCookieLifetime    types.String `tfsdk:"http_cookie_lifetime"`
-	HTTPProxy             types.String `tfsdk:"http_proxy"`
-	InstallHotspotQueue   types.Bool   `tfsdk:"install_hotspot_queue"`
-	LoginBy               types.Set    `tfsdk:"login_by"`
-	Name                  types.String `tfsdk:"name"`
-	SMTPServer            types.String `tfsdk:"smtp_server"`
-	SplitUserDomain       types.Bool   `tfsdk:"split_user_domain"`
-	UseRADIUS             types.Bool   `tfsdk:"use_radius"`
-	Router                types.String `tfsdk:"router"`
+	ID                    types.String  `tfsdk:"id"`
+	TrialUserProfile      types.String  `tfsdk:"trial_user_profile"`
+	TrialUptimeReset      types.String  `tfsdk:"trial_uptime_reset"`
+	TrialUptimeLimit      types.String  `tfsdk:"trial_uptime_limit"`
+	SslCertificate        types.String  `tfsdk:"ssl_certificate"`
+	RateLimit             types.String  `tfsdk:"rate_limit"`
+	RadiusMacFormat       types.String  `tfsdk:"radius_mac_format"`
+	RadiusLocationName    types.String  `tfsdk:"radius_location_name"`
+	RadiusLocationId      types.String  `tfsdk:"radius_location_id"`
+	RadiusInterimUpdate   types.String  `tfsdk:"radius_interim_update"`
+	RadiusDefaultDomain   types.String  `tfsdk:"radius_default_domain"`
+	RadiusAccounting      types.String  `tfsdk:"radius_accounting"`
+	NasPortType           types.String  `tfsdk:"nas_port_type"`
+	MacAuthPassword       types.String  `tfsdk:"mac_auth_password"`
+	MacAuthMode           types.String  `tfsdk:"mac_auth_mode"`
+	Default               types.Bool    `tfsdk:"default"`
+	DNSName               types.String  `tfsdk:"dns_name"`
+	HotspotAddress        types.String  `tfsdk:"hotspot_address"`
+	HtmlDirectory         types.String  `tfsdk:"html_directory"`
+	HtmlDirectoryOverride types.String  `tfsdk:"html_directory_override"`
+	HTTPCookieLifetime    durationValue `tfsdk:"http_cookie_lifetime"`
+	HTTPProxy             types.String  `tfsdk:"http_proxy"`
+	InstallHotspotQueue   types.Bool    `tfsdk:"install_hotspot_queue"`
+	LoginBy               types.Set     `tfsdk:"login_by"`
+	Name                  types.String  `tfsdk:"name"`
+	SMTPServer            types.String  `tfsdk:"smtp_server"`
+	SplitUserDomain       types.Bool    `tfsdk:"split_user_domain"`
+	UseRADIUS             types.Bool    `tfsdk:"use_radius"`
+	Router                types.String  `tfsdk:"router"`
 }
 
 func NewIPHotspotProfileResource() resource.Resource { return &IPHotspotProfileResource{} }
@@ -182,11 +182,11 @@ func (r *IPHotspotProfileResource) Schema(_ context.Context, _ resource.SchemaRe
 				Description: "",
 			},
 			"http_cookie_lifetime": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"http_proxy": schema.StringAttribute{
 				Optional:    true,
@@ -623,9 +623,9 @@ func iPHotspotProfileApply(ctx context.Context, obj client.Object, m *IPHotspotP
 	}
 	if v, ok := obj["http-cookie-lifetime"]; ok {
 		if v != "" {
-			m.HTTPCookieLifetime = types.StringValue(v)
+			m.HTTPCookieLifetime = newDurationValue(v)
 		} else {
-			m.HTTPCookieLifetime = types.StringNull()
+			m.HTTPCookieLifetime = newDurationNull()
 		}
 	}
 	if v, ok := obj["http-proxy"]; ok {

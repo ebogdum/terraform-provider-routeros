@@ -29,11 +29,11 @@ type RoutingIgmpProxyResource struct {
 }
 
 type RoutingIgmpProxyModel struct {
-	ID                    types.String `tfsdk:"id"`
-	QueryInterval         types.String `tfsdk:"query_interval"`
-	QueryResponseInterval types.String `tfsdk:"query_response_interval"`
-	QuickLeave            types.Bool   `tfsdk:"quick_leave"`
-	Router                types.String `tfsdk:"router"`
+	ID                    types.String  `tfsdk:"id"`
+	QueryInterval         durationValue `tfsdk:"query_interval"`
+	QueryResponseInterval durationValue `tfsdk:"query_response_interval"`
+	QuickLeave            types.Bool    `tfsdk:"quick_leave"`
+	Router                types.String  `tfsdk:"router"`
 }
 
 func NewRoutingIgmpProxyResource() resource.Resource { return &RoutingIgmpProxyResource{} }
@@ -59,15 +59,15 @@ func (r *RoutingIgmpProxyResource) Schema(_ context.Context, _ resource.SchemaRe
 				Description:   "Stable identifier (the singleton's menu path, optionally namespaced by router).",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
-			"query_interval": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"query_interval": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
-			"query_response_interval": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"query_response_interval": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"quick_leave": schema.BoolAttribute{Optional: true, Computed: true,
 				Description: "",
@@ -176,17 +176,17 @@ func routingIgmpProxyApply(ctx context.Context, obj client.Object, m *RoutingIgm
 	if v, ok := obj["query-interval"]; ok {
 		_ = v
 		if v != "" {
-			m.QueryInterval = types.StringValue(v)
+			m.QueryInterval = newDurationValue(v)
 		} else {
-			m.QueryInterval = types.StringNull()
+			m.QueryInterval = newDurationNull()
 		}
 	}
 	if v, ok := obj["query-response-interval"]; ok {
 		_ = v
 		if v != "" {
-			m.QueryResponseInterval = types.StringValue(v)
+			m.QueryResponseInterval = newDurationValue(v)
 		} else {
-			m.QueryResponseInterval = types.StringNull()
+			m.QueryResponseInterval = newDurationNull()
 		}
 	}
 	if v, ok := obj["quick-leave"]; ok {

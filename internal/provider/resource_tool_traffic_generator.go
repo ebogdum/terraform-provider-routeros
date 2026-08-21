@@ -29,15 +29,15 @@ type ToolTrafficGeneratorResource struct {
 }
 
 type ToolTrafficGeneratorModel struct {
-	ID                                 types.String `tfsdk:"id"`
-	LatencyDistributionMax             types.String `tfsdk:"latency_distribution_max"`
-	LatencyDistributionMeasureInterval types.String `tfsdk:"latency_distribution_measure_interval"`
-	LatencyDistributionSamples         types.Int64  `tfsdk:"latency_distribution_samples"`
-	MeasureOutOfOrder                  types.Bool   `tfsdk:"measure_out_of_order"`
-	Running                            types.Bool   `tfsdk:"running"`
-	StatsSamplesToKeep                 types.Int64  `tfsdk:"stats_samples_to_keep"`
-	TestID                             types.Int64  `tfsdk:"test_id"`
-	Router                             types.String `tfsdk:"router"`
+	ID                                 types.String  `tfsdk:"id"`
+	LatencyDistributionMax             durationValue `tfsdk:"latency_distribution_max"`
+	LatencyDistributionMeasureInterval types.String  `tfsdk:"latency_distribution_measure_interval"`
+	LatencyDistributionSamples         types.Int64   `tfsdk:"latency_distribution_samples"`
+	MeasureOutOfOrder                  types.Bool    `tfsdk:"measure_out_of_order"`
+	Running                            types.Bool    `tfsdk:"running"`
+	StatsSamplesToKeep                 types.Int64   `tfsdk:"stats_samples_to_keep"`
+	TestID                             types.Int64   `tfsdk:"test_id"`
+	Router                             types.String  `tfsdk:"router"`
 }
 
 func NewToolTrafficGeneratorResource() resource.Resource { return &ToolTrafficGeneratorResource{} }
@@ -63,10 +63,10 @@ func (r *ToolTrafficGeneratorResource) Schema(_ context.Context, _ resource.Sche
 				Description:   "Stable identifier (the singleton's menu path, optionally namespaced by router).",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
-			"latency_distribution_max": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"latency_distribution_max": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"latency_distribution_measure_interval": schema.StringAttribute{Optional: true, Computed: true,
 				Description: "",
@@ -193,9 +193,9 @@ func toolTrafficGeneratorApply(ctx context.Context, obj client.Object, m *ToolTr
 	if v, ok := obj["latency-distribution-max"]; ok {
 		_ = v
 		if v != "" {
-			m.LatencyDistributionMax = types.StringValue(v)
+			m.LatencyDistributionMax = newDurationValue(v)
 		} else {
-			m.LatencyDistributionMax = types.StringNull()
+			m.LatencyDistributionMax = newDurationNull()
 		}
 	}
 	if v, ok := obj["latency-distribution-measure-interval"]; ok {

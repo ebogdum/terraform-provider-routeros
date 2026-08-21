@@ -31,39 +31,39 @@ type InterfaceMeshResource struct {
 }
 
 type InterfaceMeshModel struct {
-	ID                       types.String `tfsdk:"id"`
-	Name                     types.String `tfsdk:"name"`
-	HwmpRannPropagationDelay types.String `tfsdk:"hwmp_rann_propagation_delay"`
-	HwmpRannLifetime         types.String `tfsdk:"hwmp_rann_lifetime"`
-	HwmpRannInterval         types.String `tfsdk:"hwmp_rann_interval"`
-	HwmpPreqWaitingTime      types.String `tfsdk:"hwmp_preq_waiting_time"`
-	HwmpPreqRetries          types.String `tfsdk:"hwmp_preq_retries"`
-	HwmpPreqReplyAndForward  types.String `tfsdk:"hwmp_preq_reply_and_forward"`
-	HwmpPreqDestinationOnly  types.String `tfsdk:"hwmp_preq_destination_only"`
-	HwmpPrepLifetime         types.String `tfsdk:"hwmp_prep_lifetime"`
-	HwmpDefaultHoplimit      types.String `tfsdk:"hwmp_default_hoplimit"`
-	AutoMac                  types.String `tfsdk:"auto_mac"`
-	AdminMac                 macValue     `tfsdk:"admin_mac"`
-	AdminMACAddress          types.String `tfsdk:"admin_mac_address"`
-	ARP                      types.String `tfsdk:"arp"`
-	ARPTimeout               types.String `tfsdk:"arp_timeout"`
-	Comment                  types.String `tfsdk:"comment"`
-	DefaultHoplimit          types.Int64  `tfsdk:"default_hoplimit"`
-	Disabled                 types.Bool   `tfsdk:"disabled"`
-	MACAddress               types.String `tfsdk:"mac_address"`
-	MeshPortal               types.Bool   `tfsdk:"mesh_portal"`
-	MeshTraceroute           types.String `tfsdk:"mesh_traceroute"`
-	MTU                      types.Int64  `tfsdk:"mtu"`
-	PrepLifetime             types.String `tfsdk:"prep_lifetime"`
-	PreqDestinationOnly      types.Bool   `tfsdk:"preq_destination_only"`
-	PreqReplyAndForward      types.Bool   `tfsdk:"preq_reply_and_forward"`
-	PreqRetries              types.Int64  `tfsdk:"preq_retries"`
-	PreqWaitingTime          types.Int64  `tfsdk:"preq_waiting_time"`
-	RannInterval             types.String `tfsdk:"rann_interval"`
-	RannLifetime             types.String `tfsdk:"rann_lifetime"`
-	RannPropagationDelay     types.Int64  `tfsdk:"rann_propagation_delay"`
-	ReoptimizePaths          types.Bool   `tfsdk:"reoptimize_paths"`
-	Router                   types.String `tfsdk:"router"`
+	ID                       types.String  `tfsdk:"id"`
+	Name                     types.String  `tfsdk:"name"`
+	HwmpRannPropagationDelay types.String  `tfsdk:"hwmp_rann_propagation_delay"`
+	HwmpRannLifetime         types.String  `tfsdk:"hwmp_rann_lifetime"`
+	HwmpRannInterval         types.String  `tfsdk:"hwmp_rann_interval"`
+	HwmpPreqWaitingTime      types.String  `tfsdk:"hwmp_preq_waiting_time"`
+	HwmpPreqRetries          types.String  `tfsdk:"hwmp_preq_retries"`
+	HwmpPreqReplyAndForward  types.String  `tfsdk:"hwmp_preq_reply_and_forward"`
+	HwmpPreqDestinationOnly  types.String  `tfsdk:"hwmp_preq_destination_only"`
+	HwmpPrepLifetime         types.String  `tfsdk:"hwmp_prep_lifetime"`
+	HwmpDefaultHoplimit      types.String  `tfsdk:"hwmp_default_hoplimit"`
+	AutoMac                  types.String  `tfsdk:"auto_mac"`
+	AdminMac                 macValue      `tfsdk:"admin_mac"`
+	AdminMACAddress          types.String  `tfsdk:"admin_mac_address"`
+	ARP                      types.String  `tfsdk:"arp"`
+	ARPTimeout               durationValue `tfsdk:"arp_timeout"`
+	Comment                  types.String  `tfsdk:"comment"`
+	DefaultHoplimit          types.Int64   `tfsdk:"default_hoplimit"`
+	Disabled                 types.Bool    `tfsdk:"disabled"`
+	MACAddress               types.String  `tfsdk:"mac_address"`
+	MeshPortal               types.Bool    `tfsdk:"mesh_portal"`
+	MeshTraceroute           types.String  `tfsdk:"mesh_traceroute"`
+	MTU                      types.Int64   `tfsdk:"mtu"`
+	PrepLifetime             durationValue `tfsdk:"prep_lifetime"`
+	PreqDestinationOnly      types.Bool    `tfsdk:"preq_destination_only"`
+	PreqReplyAndForward      types.Bool    `tfsdk:"preq_reply_and_forward"`
+	PreqRetries              types.Int64   `tfsdk:"preq_retries"`
+	PreqWaitingTime          types.Int64   `tfsdk:"preq_waiting_time"`
+	RannInterval             durationValue `tfsdk:"rann_interval"`
+	RannLifetime             durationValue `tfsdk:"rann_lifetime"`
+	RannPropagationDelay     types.Int64   `tfsdk:"rann_propagation_delay"`
+	ReoptimizePaths          types.Bool    `tfsdk:"reoptimize_paths"`
+	Router                   types.String  `tfsdk:"router"`
 }
 
 func NewInterfaceMeshResource() resource.Resource { return &InterfaceMeshResource{} }
@@ -162,11 +162,11 @@ func (r *InterfaceMeshResource) Schema(_ context.Context, _ resource.SchemaReque
 				Validators:  []validator.String{schemautil.OneOf([]string{"disabled", "enabled", "proxy-arp", "reply-only", "local-proxy-arp"}...)},
 			},
 			"arp_timeout": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationOrKeyword("auto")},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationOrKeyword("auto")},
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -201,10 +201,10 @@ func (r *InterfaceMeshResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"prep_lifetime": schema.StringAttribute{
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"preq_destination_only": schema.BoolAttribute{
 				Computed:    true,
@@ -223,16 +223,16 @@ func (r *InterfaceMeshResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"rann_interval": schema.StringAttribute{
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"rann_lifetime": schema.StringAttribute{
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"rann_propagation_delay": schema.Int64Attribute{
 				Computed:    true,
@@ -568,9 +568,9 @@ func interfaceMeshApply(ctx context.Context, obj client.Object, m *InterfaceMesh
 	}
 	if v, ok := obj["arp-timeout"]; ok {
 		if v != "" {
-			m.ARPTimeout = types.StringValue(v)
+			m.ARPTimeout = newDurationValue(v)
 		} else {
-			m.ARPTimeout = types.StringNull()
+			m.ARPTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["comment"]; ok {
@@ -634,9 +634,9 @@ func interfaceMeshApply(ctx context.Context, obj client.Object, m *InterfaceMesh
 	}
 	if v, ok := obj["prep-lifetime"]; ok {
 		if v != "" {
-			m.PrepLifetime = types.StringValue(v)
+			m.PrepLifetime = newDurationValue(v)
 		} else {
-			m.PrepLifetime = types.StringNull()
+			m.PrepLifetime = newDurationNull()
 		}
 	}
 	if v, ok := obj["preq-destination-only"]; ok {
@@ -679,16 +679,16 @@ func interfaceMeshApply(ctx context.Context, obj client.Object, m *InterfaceMesh
 	}
 	if v, ok := obj["rann-interval"]; ok {
 		if v != "" {
-			m.RannInterval = types.StringValue(v)
+			m.RannInterval = newDurationValue(v)
 		} else {
-			m.RannInterval = types.StringNull()
+			m.RannInterval = newDurationNull()
 		}
 	}
 	if v, ok := obj["rann-lifetime"]; ok {
 		if v != "" {
-			m.RannLifetime = types.StringValue(v)
+			m.RannLifetime = newDurationValue(v)
 		} else {
-			m.RannLifetime = types.StringNull()
+			m.RannLifetime = newDurationNull()
 		}
 	}
 	if v, ok := obj["rann-propagation-delay"]; ok {

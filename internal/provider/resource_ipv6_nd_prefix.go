@@ -31,21 +31,21 @@ type IPV6NdPrefixResource struct {
 }
 
 type IPV6NdPrefixModel struct {
-	ID                types.String `tfsdk:"id"`
-	Dhcp6PdPreferred  types.String `tfsdk:"dhcp6_pd_preferred"`
-	X6to4Interface    types.String `tfsdk:"x6to4_interface"`
-	Autonomous        types.Bool   `tfsdk:"autonomous"`
-	Dhcpv6PdPreferred types.Bool   `tfsdk:"dhcpv6_pd_preferred"`
-	Disabled          types.Bool   `tfsdk:"disabled"`
-	Dynamic           types.Bool   `tfsdk:"dynamic"`
-	Interface         types.String `tfsdk:"interface"`
-	Invalid           types.Bool   `tfsdk:"invalid"`
-	No6to4            types.String `tfsdk:"no6to4"`
-	OnLink            types.Bool   `tfsdk:"on_link"`
-	PreferredLifetime types.String `tfsdk:"preferred_lifetime"`
-	Prefix            types.String `tfsdk:"prefix"`
-	ValidLifetime     types.String `tfsdk:"valid_lifetime"`
-	Router            types.String `tfsdk:"router"`
+	ID                types.String  `tfsdk:"id"`
+	Dhcp6PdPreferred  types.String  `tfsdk:"dhcp6_pd_preferred"`
+	X6to4Interface    types.String  `tfsdk:"x6to4_interface"`
+	Autonomous        types.Bool    `tfsdk:"autonomous"`
+	Dhcpv6PdPreferred types.Bool    `tfsdk:"dhcpv6_pd_preferred"`
+	Disabled          types.Bool    `tfsdk:"disabled"`
+	Dynamic           types.Bool    `tfsdk:"dynamic"`
+	Interface         types.String  `tfsdk:"interface"`
+	Invalid           types.Bool    `tfsdk:"invalid"`
+	No6to4            types.String  `tfsdk:"no6to4"`
+	OnLink            types.Bool    `tfsdk:"on_link"`
+	PreferredLifetime durationValue `tfsdk:"preferred_lifetime"`
+	Prefix            types.String  `tfsdk:"prefix"`
+	ValidLifetime     durationValue `tfsdk:"valid_lifetime"`
+	Router            types.String  `tfsdk:"router"`
 }
 
 func NewIPV6NdPrefixResource() resource.Resource { return &IPV6NdPrefixResource{} }
@@ -118,11 +118,11 @@ func (r *IPV6NdPrefixResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description: "",
 			},
 			"preferred_lifetime": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"prefix": schema.StringAttribute{
 				Optional:    true,
@@ -130,11 +130,11 @@ func (r *IPV6NdPrefixResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description: "",
 			},
 			"valid_lifetime": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"router": schema.StringAttribute{
 				Optional:      true,
@@ -407,9 +407,9 @@ func iPV6NdPrefixApply(ctx context.Context, obj client.Object, m *IPV6NdPrefixMo
 	}
 	if v, ok := obj["preferred-lifetime"]; ok {
 		if v != "" {
-			m.PreferredLifetime = types.StringValue(v)
+			m.PreferredLifetime = newDurationValue(v)
 		} else {
-			m.PreferredLifetime = types.StringNull()
+			m.PreferredLifetime = newDurationNull()
 		}
 	}
 	if v, ok := obj["prefix"]; ok {
@@ -421,9 +421,9 @@ func iPV6NdPrefixApply(ctx context.Context, obj client.Object, m *IPV6NdPrefixMo
 	}
 	if v, ok := obj["valid-lifetime"]; ok {
 		if v != "" {
-			m.ValidLifetime = types.StringValue(v)
+			m.ValidLifetime = newDurationValue(v)
 		} else {
-			m.ValidLifetime = types.StringNull()
+			m.ValidLifetime = newDurationNull()
 		}
 	}
 }

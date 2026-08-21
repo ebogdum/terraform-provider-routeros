@@ -31,17 +31,17 @@ type IPDHCPServerAlertResource struct {
 }
 
 type IPDHCPServerAlertModel struct {
-	ID             types.String `tfsdk:"id"`
-	ValidServer    types.String `tfsdk:"valid_server"`
-	AlertTimeout   types.String `tfsdk:"alert_timeout"`
-	Comment        types.String `tfsdk:"comment"`
-	Disabled       types.Bool   `tfsdk:"disabled"`
-	Interface      types.String `tfsdk:"interface"`
-	OnAlert        types.String `tfsdk:"on_alert"`
-	ResetAlert     types.String `tfsdk:"reset_alert"`
-	UnknownServers types.String `tfsdk:"unknown_servers"`
-	ValidServers   types.String `tfsdk:"valid_servers"`
-	Router         types.String `tfsdk:"router"`
+	ID             types.String  `tfsdk:"id"`
+	ValidServer    types.String  `tfsdk:"valid_server"`
+	AlertTimeout   durationValue `tfsdk:"alert_timeout"`
+	Comment        types.String  `tfsdk:"comment"`
+	Disabled       types.Bool    `tfsdk:"disabled"`
+	Interface      types.String  `tfsdk:"interface"`
+	OnAlert        types.String  `tfsdk:"on_alert"`
+	ResetAlert     types.String  `tfsdk:"reset_alert"`
+	UnknownServers types.String  `tfsdk:"unknown_servers"`
+	ValidServers   types.String  `tfsdk:"valid_servers"`
+	Router         types.String  `tfsdk:"router"`
 }
 
 func NewIPDHCPServerAlertResource() resource.Resource { return &IPDHCPServerAlertResource{} }
@@ -73,11 +73,11 @@ func (r *IPDHCPServerAlertResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "RouterOS `valid-server`.",
 			},
 			"alert_timeout": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -288,9 +288,9 @@ func iPDHCPServerAlertApply(ctx context.Context, obj client.Object, m *IPDHCPSer
 	}
 	if v, ok := obj["alert-timeout"]; ok {
 		if v != "" {
-			m.AlertTimeout = types.StringValue(v)
+			m.AlertTimeout = newDurationValue(v)
 		} else {
-			m.AlertTimeout = types.StringNull()
+			m.AlertTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["comment"]; ok {

@@ -31,58 +31,58 @@ type IPDHCPServerLeaseResource struct {
 }
 
 type IPDHCPServerLeaseModel struct {
-	ID                   types.String `tfsdk:"id"`
-	UseSrcMac            types.String `tfsdk:"use_src_mac"`
-	DhcpOption           types.String `tfsdk:"dhcp_option"`
-	AddressLists         types.String `tfsdk:"address_lists"`
-	ActiveAddress        types.String `tfsdk:"active_address"`
-	ActiveAgentCircuitID types.String `tfsdk:"active_agent_circuit_id"`
-	ActiveAgentRemoteID  types.String `tfsdk:"active_agent_remote_id"`
-	ActiveClassID        types.String `tfsdk:"active_class_id"`
-	ActiveClientID       types.String `tfsdk:"active_client_id"`
-	ActiveHostName       types.String `tfsdk:"active_host_name"`
-	ActiveMACAddress     types.String `tfsdk:"active_mac_address"`
-	ActiveServer         types.String `tfsdk:"active_server"`
-	Address              types.String `tfsdk:"address"`
-	AddressList          types.String `tfsdk:"address_list"`
-	Age                  types.String `tfsdk:"age"`
-	AgentCircuitID       types.String `tfsdk:"agent_circuit_id"`
-	AgentRemoteID        types.String `tfsdk:"agent_remote_id"`
-	AllowDualStackQueue  types.String `tfsdk:"allow_dual_stack_queue"`
-	AlwaysBroadcast      types.Bool   `tfsdk:"always_broadcast"`
-	BlockAccess          types.Bool   `tfsdk:"block_access"`
-	Blocked              types.Bool   `tfsdk:"blocked"`
-	BridgePort           types.String `tfsdk:"bridge_port"`
-	CheckStatus          types.String `tfsdk:"check_status"`
-	ClientID             types.String `tfsdk:"client_id"`
-	Comment              types.String `tfsdk:"comment"`
-	DHCPOptionSet        types.String `tfsdk:"dhcp_option_set"`
-	DHCPOptions          types.String `tfsdk:"dhcp_options"`
-	Disabled             types.Bool   `tfsdk:"disabled"`
-	Dyn                  types.String `tfsdk:"dyn"`
-	Dynamic              types.Bool   `tfsdk:"dynamic"`
-	ExpiresAfter         types.String `tfsdk:"expires_after"`
-	InsertQueueBefore    types.String `tfsdk:"insert_queue_before"`
-	LastSeen             types.String `tfsdk:"last_seen"`
-	LastSentCounter      types.String `tfsdk:"last_sent_counter"`
-	LeaseTime            types.String `tfsdk:"lease_time"`
-	MACAddress           macValue     `tfsdk:"mac_address"`
-	MakeStatic           types.String `tfsdk:"make_static"`
-	ParentQueue          types.String `tfsdk:"parent_queue"`
-	Ping                 types.String `tfsdk:"ping"`
-	QueueType            types.String `tfsdk:"queue_type"`
-	RADIUS               types.Bool   `tfsdk:"radius"`
-	RateLimit            types.String `tfsdk:"rate_limit"`
-	ReconfigureKey       types.String `tfsdk:"reconfigure_key"`
-	ReconfigureStatus    types.String `tfsdk:"reconfigure_status"`
-	Rostat               types.String `tfsdk:"rostat"`
-	Routes               types.String `tfsdk:"routes"`
-	SendReconfigure      types.String `tfsdk:"send_reconfigure"`
-	Server               types.String `tfsdk:"server"`
-	SrcMACAddress        types.String `tfsdk:"src_mac_address"`
-	Stat                 types.String `tfsdk:"stat"`
-	UseSrcMACAddress     types.Bool   `tfsdk:"use_src_mac_address"`
-	Router               types.String `tfsdk:"router"`
+	ID                   types.String  `tfsdk:"id"`
+	UseSrcMac            types.String  `tfsdk:"use_src_mac"`
+	DhcpOption           types.String  `tfsdk:"dhcp_option"`
+	AddressLists         types.String  `tfsdk:"address_lists"`
+	ActiveAddress        types.String  `tfsdk:"active_address"`
+	ActiveAgentCircuitID types.String  `tfsdk:"active_agent_circuit_id"`
+	ActiveAgentRemoteID  types.String  `tfsdk:"active_agent_remote_id"`
+	ActiveClassID        types.String  `tfsdk:"active_class_id"`
+	ActiveClientID       types.String  `tfsdk:"active_client_id"`
+	ActiveHostName       types.String  `tfsdk:"active_host_name"`
+	ActiveMACAddress     types.String  `tfsdk:"active_mac_address"`
+	ActiveServer         types.String  `tfsdk:"active_server"`
+	Address              types.String  `tfsdk:"address"`
+	AddressList          types.String  `tfsdk:"address_list"`
+	Age                  types.String  `tfsdk:"age"`
+	AgentCircuitID       types.String  `tfsdk:"agent_circuit_id"`
+	AgentRemoteID        types.String  `tfsdk:"agent_remote_id"`
+	AllowDualStackQueue  types.String  `tfsdk:"allow_dual_stack_queue"`
+	AlwaysBroadcast      types.Bool    `tfsdk:"always_broadcast"`
+	BlockAccess          types.Bool    `tfsdk:"block_access"`
+	Blocked              types.Bool    `tfsdk:"blocked"`
+	BridgePort           types.String  `tfsdk:"bridge_port"`
+	CheckStatus          types.String  `tfsdk:"check_status"`
+	ClientID             types.String  `tfsdk:"client_id"`
+	Comment              types.String  `tfsdk:"comment"`
+	DHCPOptionSet        types.String  `tfsdk:"dhcp_option_set"`
+	DHCPOptions          types.String  `tfsdk:"dhcp_options"`
+	Disabled             types.Bool    `tfsdk:"disabled"`
+	Dyn                  types.String  `tfsdk:"dyn"`
+	Dynamic              types.Bool    `tfsdk:"dynamic"`
+	ExpiresAfter         types.String  `tfsdk:"expires_after"`
+	InsertQueueBefore    types.String  `tfsdk:"insert_queue_before"`
+	LastSeen             types.String  `tfsdk:"last_seen"`
+	LastSentCounter      types.String  `tfsdk:"last_sent_counter"`
+	LeaseTime            durationValue `tfsdk:"lease_time"`
+	MACAddress           macValue      `tfsdk:"mac_address"`
+	MakeStatic           types.String  `tfsdk:"make_static"`
+	ParentQueue          types.String  `tfsdk:"parent_queue"`
+	Ping                 types.String  `tfsdk:"ping"`
+	QueueType            types.String  `tfsdk:"queue_type"`
+	RADIUS               types.Bool    `tfsdk:"radius"`
+	RateLimit            types.String  `tfsdk:"rate_limit"`
+	ReconfigureKey       types.String  `tfsdk:"reconfigure_key"`
+	ReconfigureStatus    types.String  `tfsdk:"reconfigure_status"`
+	Rostat               types.String  `tfsdk:"rostat"`
+	Routes               types.String  `tfsdk:"routes"`
+	SendReconfigure      types.String  `tfsdk:"send_reconfigure"`
+	Server               types.String  `tfsdk:"server"`
+	SrcMACAddress        types.String  `tfsdk:"src_mac_address"`
+	Stat                 types.String  `tfsdk:"stat"`
+	UseSrcMACAddress     types.Bool    `tfsdk:"use_src_mac_address"`
+	Router               types.String  `tfsdk:"router"`
 }
 
 func NewIPDHCPServerLeaseResource() resource.Resource { return &IPDHCPServerLeaseResource{} }
@@ -256,11 +256,11 @@ func (r *IPDHCPServerLeaseResource) Schema(_ context.Context, _ resource.SchemaR
 				Description: "",
 			},
 			"lease_time": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"mac_address": schema.StringAttribute{
 				CustomType:  macType{},
@@ -832,9 +832,9 @@ func iPDHCPServerLeaseApply(ctx context.Context, obj client.Object, m *IPDHCPSer
 	}
 	if v, ok := obj["lease-time"]; ok {
 		if v != "" {
-			m.LeaseTime = types.StringValue(v)
+			m.LeaseTime = newDurationValue(v)
 		} else {
-			m.LeaseTime = types.StringNull()
+			m.LeaseTime = newDurationNull()
 		}
 	}
 	if v, ok := obj["mac-address"]; ok {

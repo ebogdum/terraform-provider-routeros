@@ -31,29 +31,29 @@ type IPV6NdResource struct {
 }
 
 type IPV6NdModel struct {
-	ID                          types.String `tfsdk:"id"`
-	Pref64                      types.String `tfsdk:"pref64"`
-	Dns                         types.String `tfsdk:"dns"`
-	AdvertiseDNS                types.String `tfsdk:"advertise_dns"`
-	AdvertiseMACAddress         types.Bool   `tfsdk:"advertise_mac_address"`
-	Comment                     types.String `tfsdk:"comment"`
-	Default                     types.Bool   `tfsdk:"default"`
-	Disabled                    types.Bool   `tfsdk:"disabled"`
-	DNSServers                  types.String `tfsdk:"dns_servers"`
-	HopLimit                    types.String `tfsdk:"hop_limit"`
-	Interface                   types.String `tfsdk:"interface"`
-	Invalid                     types.Bool   `tfsdk:"invalid"`
-	ManagedAddressConfiguration types.Bool   `tfsdk:"managed_address_configuration"`
-	MTU                         types.String `tfsdk:"mtu"`
-	OtherConfiguration          types.Bool   `tfsdk:"other_configuration"`
-	Pref64Prefixes              types.String `tfsdk:"pref64_prefixes"`
-	RaDelay                     types.String `tfsdk:"ra_delay"`
-	RaInterval                  types.String `tfsdk:"ra_interval"`
-	RaLifetime                  types.String `tfsdk:"ra_lifetime"`
-	RaPreference                types.String `tfsdk:"ra_preference"`
-	ReachableTime               types.String `tfsdk:"reachable_time"`
-	RetransmitInterval          types.String `tfsdk:"retransmit_interval"`
-	Router                      types.String `tfsdk:"router"`
+	ID                          types.String  `tfsdk:"id"`
+	Pref64                      types.String  `tfsdk:"pref64"`
+	Dns                         types.String  `tfsdk:"dns"`
+	AdvertiseDNS                types.String  `tfsdk:"advertise_dns"`
+	AdvertiseMACAddress         types.Bool    `tfsdk:"advertise_mac_address"`
+	Comment                     types.String  `tfsdk:"comment"`
+	Default                     types.Bool    `tfsdk:"default"`
+	Disabled                    types.Bool    `tfsdk:"disabled"`
+	DNSServers                  types.String  `tfsdk:"dns_servers"`
+	HopLimit                    types.String  `tfsdk:"hop_limit"`
+	Interface                   types.String  `tfsdk:"interface"`
+	Invalid                     types.Bool    `tfsdk:"invalid"`
+	ManagedAddressConfiguration types.Bool    `tfsdk:"managed_address_configuration"`
+	MTU                         types.String  `tfsdk:"mtu"`
+	OtherConfiguration          types.Bool    `tfsdk:"other_configuration"`
+	Pref64Prefixes              types.String  `tfsdk:"pref64_prefixes"`
+	RaDelay                     durationValue `tfsdk:"ra_delay"`
+	RaInterval                  types.String  `tfsdk:"ra_interval"`
+	RaLifetime                  durationValue `tfsdk:"ra_lifetime"`
+	RaPreference                types.String  `tfsdk:"ra_preference"`
+	ReachableTime               types.String  `tfsdk:"reachable_time"`
+	RetransmitInterval          types.String  `tfsdk:"retransmit_interval"`
+	Router                      types.String  `tfsdk:"router"`
 }
 
 func NewIPV6NdResource() resource.Resource { return &IPV6NdResource{} }
@@ -152,11 +152,11 @@ func (r *IPV6NdResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 				Description: "",
 			},
 			"ra_delay": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"ra_interval": schema.StringAttribute{
 				Optional:    true,
@@ -164,11 +164,11 @@ func (r *IPV6NdResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 				Description: "",
 			},
 			"ra_lifetime": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"ra_preference": schema.StringAttribute{
 				Optional:    true,
@@ -538,9 +538,9 @@ func iPV6NdApply(ctx context.Context, obj client.Object, m *IPV6NdModel) {
 	}
 	if v, ok := obj["ra-delay"]; ok {
 		if v != "" {
-			m.RaDelay = types.StringValue(v)
+			m.RaDelay = newDurationValue(v)
 		} else {
-			m.RaDelay = types.StringNull()
+			m.RaDelay = newDurationNull()
 		}
 	}
 	if v, ok := obj["ra-interval"]; ok {
@@ -552,9 +552,9 @@ func iPV6NdApply(ctx context.Context, obj client.Object, m *IPV6NdModel) {
 	}
 	if v, ok := obj["ra-lifetime"]; ok {
 		if v != "" {
-			m.RaLifetime = types.StringValue(v)
+			m.RaLifetime = newDurationValue(v)
 		} else {
-			m.RaLifetime = types.StringNull()
+			m.RaLifetime = newDurationNull()
 		}
 	}
 	if v, ok := obj["ra-preference"]; ok {

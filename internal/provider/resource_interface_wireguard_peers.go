@@ -31,35 +31,35 @@ type InterfaceWireguardPeersResource struct {
 }
 
 type InterfaceWireguardPeersModel struct {
-	ID                     types.String `tfsdk:"id"`
-	AllowedAddress         types.String `tfsdk:"allowed_address"`
-	ClientAddress          types.String `tfsdk:"client_address"`
-	ClientAllowedAddress   types.String `tfsdk:"client_allowed_address"`
-	ClientConfig           types.String `tfsdk:"client_config"`
-	ClientDNS              types.String `tfsdk:"client_dns"`
-	ClientEndpoint         types.String `tfsdk:"client_endpoint"`
-	ClientKeepalive        types.String `tfsdk:"client_keepalive"`
-	ClientListenPort       types.Int64  `tfsdk:"client_listen_port"`
-	ClientQr               types.String `tfsdk:"client_qr"`
-	Comment                types.String `tfsdk:"comment"`
-	CurrentEndpointAddress types.String `tfsdk:"current_endpoint_address"`
-	CurrentEndpointPort    types.Int64  `tfsdk:"current_endpoint_port"`
-	Disabled               types.Bool   `tfsdk:"disabled"`
-	Dynamic                types.Bool   `tfsdk:"dynamic"`
-	Endpoint               types.String `tfsdk:"endpoint"`
-	EndpointAddress        types.String `tfsdk:"endpoint_address"`
-	EndpointPort           types.Int64  `tfsdk:"endpoint_port"`
-	Interface              types.String `tfsdk:"interface"`
-	LastHandshake          types.String `tfsdk:"last_handshake"`
-	Name                   types.String `tfsdk:"name"`
-	PersistentKeepalive    types.String `tfsdk:"persistent_keepalive"`
-	PresharedKey           types.String `tfsdk:"preshared_key"`
-	PrivateKey             types.String `tfsdk:"private_key"`
-	PublicKey              types.String `tfsdk:"public_key"`
-	Responder              types.Bool   `tfsdk:"responder"`
-	Rx                     types.String `tfsdk:"rx"`
-	Tx                     types.String `tfsdk:"tx"`
-	Router                 types.String `tfsdk:"router"`
+	ID                     types.String  `tfsdk:"id"`
+	AllowedAddress         types.String  `tfsdk:"allowed_address"`
+	ClientAddress          types.String  `tfsdk:"client_address"`
+	ClientAllowedAddress   types.String  `tfsdk:"client_allowed_address"`
+	ClientConfig           types.String  `tfsdk:"client_config"`
+	ClientDNS              types.String  `tfsdk:"client_dns"`
+	ClientEndpoint         types.String  `tfsdk:"client_endpoint"`
+	ClientKeepalive        durationValue `tfsdk:"client_keepalive"`
+	ClientListenPort       types.Int64   `tfsdk:"client_listen_port"`
+	ClientQr               types.String  `tfsdk:"client_qr"`
+	Comment                types.String  `tfsdk:"comment"`
+	CurrentEndpointAddress types.String  `tfsdk:"current_endpoint_address"`
+	CurrentEndpointPort    types.Int64   `tfsdk:"current_endpoint_port"`
+	Disabled               types.Bool    `tfsdk:"disabled"`
+	Dynamic                types.Bool    `tfsdk:"dynamic"`
+	Endpoint               types.String  `tfsdk:"endpoint"`
+	EndpointAddress        types.String  `tfsdk:"endpoint_address"`
+	EndpointPort           types.Int64   `tfsdk:"endpoint_port"`
+	Interface              types.String  `tfsdk:"interface"`
+	LastHandshake          durationValue `tfsdk:"last_handshake"`
+	Name                   types.String  `tfsdk:"name"`
+	PersistentKeepalive    durationValue `tfsdk:"persistent_keepalive"`
+	PresharedKey           types.String  `tfsdk:"preshared_key"`
+	PrivateKey             types.String  `tfsdk:"private_key"`
+	PublicKey              types.String  `tfsdk:"public_key"`
+	Responder              types.Bool    `tfsdk:"responder"`
+	Rx                     types.String  `tfsdk:"rx"`
+	Tx                     types.String  `tfsdk:"tx"`
+	Router                 types.String  `tfsdk:"router"`
 }
 
 func NewInterfaceWireguardPeersResource() resource.Resource {
@@ -117,11 +117,11 @@ func (r *InterfaceWireguardPeersResource) Schema(_ context.Context, _ resource.S
 				Description: "",
 			},
 			"client_keepalive": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"client_listen_port": schema.Int64Attribute{
 				Optional:    true,
@@ -174,10 +174,10 @@ func (r *InterfaceWireguardPeersResource) Schema(_ context.Context, _ resource.S
 				Description: "",
 			},
 			"last_handshake": schema.StringAttribute{
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"name": schema.StringAttribute{
 				Optional:    true,
@@ -185,11 +185,11 @@ func (r *InterfaceWireguardPeersResource) Schema(_ context.Context, _ resource.S
 				Description: "",
 			},
 			"persistent_keepalive": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"preshared_key": schema.StringAttribute{
 				Optional:    true,
@@ -508,9 +508,9 @@ func interfaceWireguardPeersApply(ctx context.Context, obj client.Object, m *Int
 	}
 	if v, ok := obj["client-keepalive"]; ok {
 		if v != "" {
-			m.ClientKeepalive = types.StringValue(v)
+			m.ClientKeepalive = newDurationValue(v)
 		} else {
-			m.ClientKeepalive = types.StringNull()
+			m.ClientKeepalive = newDurationNull()
 		}
 	}
 	if v, ok := obj["client-listen-port"]; ok {
@@ -605,9 +605,9 @@ func interfaceWireguardPeersApply(ctx context.Context, obj client.Object, m *Int
 	}
 	if v, ok := obj["last-handshake"]; ok {
 		if v != "" {
-			m.LastHandshake = types.StringValue(v)
+			m.LastHandshake = newDurationValue(v)
 		} else {
-			m.LastHandshake = types.StringNull()
+			m.LastHandshake = newDurationNull()
 		}
 	}
 	if v, ok := obj["name"]; ok {
@@ -619,9 +619,9 @@ func interfaceWireguardPeersApply(ctx context.Context, obj client.Object, m *Int
 	}
 	if v, ok := obj["persistent-keepalive"]; ok {
 		if v != "" {
-			m.PersistentKeepalive = types.StringValue(v)
+			m.PersistentKeepalive = newDurationValue(v)
 		} else {
-			m.PersistentKeepalive = types.StringNull()
+			m.PersistentKeepalive = newDurationNull()
 		}
 	}
 	// Sensitive: RouterOS scrubs the value on read. If the server returned
