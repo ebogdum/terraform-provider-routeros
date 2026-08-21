@@ -1377,6 +1377,7 @@ func (r *IPFirewallFilterResource) Update(ctx context.Context, req resource.Upda
 		resp.Diagnostics.AddError("Refusing dangerous firewall rule", err.Error())
 		return
 	}
+	reread := false
 	if len(body) > 0 {
 		obj, err := c.Set(ctx, "/ip/firewall/filter", state.ID.ValueString(), body)
 		if err != nil {
@@ -1386,6 +1387,10 @@ func (r *IPFirewallFilterResource) Update(ctx context.Context, req resource.Upda
 		iPFirewallFilterApply(ctx, obj, &plan)
 	} else {
 		plan.ID = state.ID
+		// Nothing in body means every Computed attribute is still whatever the plan phase left it as
+		// (Unknown, since none of them were set in config). Create always re-reads after ordering; do the
+		// same here so Update doesn't leave Unknown values behind when the only change is `position`.
+		reread = true
 	}
 	if !plan.Position.IsNull() && !plan.Position.IsUnknown() {
 		r.reg.RegisterOrdered(plan.Router.ValueString(), "/ip/firewall/filter", plan.ID.ValueString(), plan.Position.ValueInt64())
@@ -1399,7 +1404,16 @@ func (r *IPFirewallFilterResource) Update(ctx context.Context, req resource.Upda
 				resp.Diagnostics.AddError("Order /ip/firewall/filter failed", err.Error())
 				return
 			}
+			reread = true
 		}
+	}
+	if reread {
+		obj, err := c.GetByID(ctx, "/ip/firewall/filter", plan.ID.ValueString())
+		if err != nil {
+			resp.Diagnostics.AddError("Re-read after update failed", err.Error())
+			return
+		}
+		iPFirewallFilterApply(ctx, obj, &plan)
 	}
 	nullifyUnknownAttrs(&plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
