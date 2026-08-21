@@ -54,6 +54,12 @@ clean:
 audit:
 	python3 tools/conformance/schema_audit.py all
 
+# Dump a device's menu tree for hardware the maintainers do not have.
+# Names and structure only, no configuration values. See COLLECTING.md.
+.PHONY: collect
+collect:
+	@python3 tools/conformance/collect_schema.py $(COLLECT_ARGS)
+
 .PHONY: dms-backup dms-install dms-arm dms-disarm dms-verify dms-remove
 dms-backup:  ; tools/conformance/deadman.sh backup
 dms-install: ; tools/conformance/deadman.sh install
