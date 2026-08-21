@@ -39,6 +39,7 @@ type InterfaceEthernetSwitchModel struct {
 	FasttrackHw      types.String `tfsdk:"fasttrack_hw"`
 	IcmpReplyOnError types.String `tfsdk:"icmp_reply_on_error"`
 	IPV6Hw           types.String `tfsdk:"ipv6_hw"`
+	L3HwOffloading   types.String `tfsdk:"l3_hw_offloading"`
 	Router           types.String `tfsdk:"router"`
 }
 
@@ -112,6 +113,11 @@ func (r *InterfaceEthernetSwitchResource) Schema(_ context.Context, _ resource.S
 				Computed:    true,
 				Description: "Enables or disables IPv6 Hardware Offloading. Since IPv6 routes occupy a lot of HW memory, enable it only if IPv6 traffic speed is significant enough to benefit from hardware routing.",
 			},
+			"l3_hw_offloading": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "Enables or disables Layer 3 Hardware Offloading on the switch chip. Not all switch chips support L3 hardware offloading.",
+			},
 			"router": schema.StringAttribute{
 				Optional:    true,
 				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
@@ -154,6 +160,9 @@ func (r *InterfaceEthernetSwitchResource) Create(ctx context.Context, req resour
 	}
 	if !(plan.IPV6Hw.IsNull() || plan.IPV6Hw.IsUnknown()) {
 		body["ipv6-hw"] = plan.IPV6Hw.ValueString()
+	}
+	if !(plan.L3HwOffloading.IsNull() || plan.L3HwOffloading.IsUnknown()) {
+		body["l3-hw-offloading"] = plan.L3HwOffloading.ValueString()
 	}
 	if !(plan.SwitchAllPorts.IsNull() || plan.SwitchAllPorts.IsUnknown()) {
 		body["switch-all-ports"] = plan.SwitchAllPorts.ValueString()
@@ -247,6 +256,9 @@ func (r *InterfaceEthernetSwitchResource) Update(ctx context.Context, req resour
 	}
 	if !plan.IPV6Hw.Equal(state.IPV6Hw) && !plan.IPV6Hw.IsUnknown() {
 		body["ipv6-hw"] = plan.IPV6Hw.ValueString()
+	}
+	if !plan.L3HwOffloading.Equal(state.L3HwOffloading) && !plan.L3HwOffloading.IsUnknown() {
+		body["l3-hw-offloading"] = plan.L3HwOffloading.ValueString()
 	}
 	if !plan.SwitchAllPorts.Equal(state.SwitchAllPorts) && !plan.SwitchAllPorts.IsUnknown() {
 		body["switch-all-ports"] = plan.SwitchAllPorts.ValueString()
@@ -370,6 +382,13 @@ func interfaceEthernetSwitchApply(ctx context.Context, obj client.Object, m *Int
 			m.IPV6Hw = types.StringValue(v)
 		} else {
 			m.IPV6Hw = types.StringNull()
+		}
+	}
+	if v, ok := obj["l3-hw-offloading"]; ok {
+		if v != "" {
+			m.L3HwOffloading = types.StringValue(v)
+		} else {
+			m.L3HwOffloading = types.StringNull()
 		}
 	}
 }
