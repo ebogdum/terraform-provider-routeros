@@ -29,12 +29,12 @@ type IPDHCPServerConfigResource struct {
 }
 
 type IPDHCPServerConfigModel struct {
-	ID              types.String `tfsdk:"id"`
-	Accounting      types.Bool   `tfsdk:"accounting"`
-	InterimUpdate   types.String `tfsdk:"interim_update"`
-	RADIUSPassword  types.String `tfsdk:"radius_password"`
-	StoreLeasesDisk types.String `tfsdk:"store_leases_disk"`
-	Router          types.String `tfsdk:"router"`
+	ID              types.String  `tfsdk:"id"`
+	Accounting      types.Bool    `tfsdk:"accounting"`
+	InterimUpdate   durationValue `tfsdk:"interim_update"`
+	RADIUSPassword  types.String  `tfsdk:"radius_password"`
+	StoreLeasesDisk durationValue `tfsdk:"store_leases_disk"`
+	Router          types.String  `tfsdk:"router"`
 }
 
 func NewIPDHCPServerConfigResource() resource.Resource { return &IPDHCPServerConfigResource{} }
@@ -63,18 +63,18 @@ func (r *IPDHCPServerConfigResource) Schema(_ context.Context, _ resource.Schema
 			"accounting": schema.BoolAttribute{Optional: true, Computed: true,
 				Description: "",
 			},
-			"interim_update": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"interim_update": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"radius_password": schema.StringAttribute{Optional: true, Computed: true, Sensitive: true,
 				Description: "",
 			},
-			"store_leases_disk": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"store_leases_disk": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"router": schema.StringAttribute{Optional: true,
 				Description:   "Name of the router (key in provider's `routers` map). Omit to use the default.",
@@ -193,9 +193,9 @@ func iPDHCPServerConfigApply(ctx context.Context, obj client.Object, m *IPDHCPSe
 	if v, ok := obj["interim-update"]; ok {
 		_ = v
 		if v != "" {
-			m.InterimUpdate = types.StringValue(v)
+			m.InterimUpdate = newDurationValue(v)
 		} else {
-			m.InterimUpdate = types.StringNull()
+			m.InterimUpdate = newDurationNull()
 		}
 	}
 	if v, ok := obj["radius-password"]; ok && v != "" {
@@ -211,9 +211,9 @@ func iPDHCPServerConfigApply(ctx context.Context, obj client.Object, m *IPDHCPSe
 	if v, ok := obj["store-leases-disk"]; ok {
 		_ = v
 		if v != "" {
-			m.StoreLeasesDisk = types.StringValue(v)
+			m.StoreLeasesDisk = newDurationValue(v)
 		} else {
-			m.StoreLeasesDisk = types.StringNull()
+			m.StoreLeasesDisk = newDurationNull()
 		}
 	}
 }

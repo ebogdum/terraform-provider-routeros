@@ -29,12 +29,12 @@ type IPIpsecSettingsResource struct {
 }
 
 type IPIpsecSettingsModel struct {
-	ID                  types.String `tfsdk:"id"`
-	Accounting          types.Bool   `tfsdk:"accounting"`
-	DdosCookieThreshold types.Int64  `tfsdk:"ddos_cookie_threshold"`
-	InterimUpdate       types.String `tfsdk:"interim_update"`
-	XauthUseRADIUS      types.Bool   `tfsdk:"xauth_use_radius"`
-	Router              types.String `tfsdk:"router"`
+	ID                  types.String  `tfsdk:"id"`
+	Accounting          types.Bool    `tfsdk:"accounting"`
+	DdosCookieThreshold types.Int64   `tfsdk:"ddos_cookie_threshold"`
+	InterimUpdate       durationValue `tfsdk:"interim_update"`
+	XauthUseRADIUS      types.Bool    `tfsdk:"xauth_use_radius"`
+	Router              types.String  `tfsdk:"router"`
 }
 
 func NewIPIpsecSettingsResource() resource.Resource { return &IPIpsecSettingsResource{} }
@@ -66,10 +66,10 @@ func (r *IPIpsecSettingsResource) Schema(_ context.Context, _ resource.SchemaReq
 			"ddos_cookie_threshold": schema.Int64Attribute{Optional: true, Computed: true,
 				Description: "",
 			},
-			"interim_update": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"interim_update": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"xauth_use_radius": schema.BoolAttribute{Optional: true, Computed: true,
 				Description: "",
@@ -199,9 +199,9 @@ func iPIpsecSettingsApply(ctx context.Context, obj client.Object, m *IPIpsecSett
 	if v, ok := obj["interim-update"]; ok {
 		_ = v
 		if v != "" {
-			m.InterimUpdate = types.StringValue(v)
+			m.InterimUpdate = newDurationValue(v)
 		} else {
-			m.InterimUpdate = types.StringNull()
+			m.InterimUpdate = newDurationNull()
 		}
 	}
 	if v, ok := obj["xauth-use-radius"]; ok {

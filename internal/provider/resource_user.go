@@ -31,21 +31,21 @@ type UserResource struct {
 }
 
 type UserModel struct {
-	ID                types.String `tfsdk:"id"`
-	Address           types.String `tfsdk:"address"`
-	Alias             types.String `tfsdk:"alias"`
-	Comment           types.String `tfsdk:"comment"`
-	Disabled          types.Bool   `tfsdk:"disabled"`
-	Expired           types.Bool   `tfsdk:"expired"`
-	Group             types.String `tfsdk:"group"`
-	InactivityPolicy  types.String `tfsdk:"inactivity_policy"`
-	InactivityTimeout types.String `tfsdk:"inactivity_timeout"`
-	LastLoggedIn      types.String `tfsdk:"last_logged_in"`
-	Name              types.String `tfsdk:"name"`
-	Password          types.String `tfsdk:"password"`
-	Type              types.Int64  `tfsdk:"type"`
-	Router            types.String `tfsdk:"router"`
-	LockoutAck        types.Bool   `tfsdk:"lockout_ack"`
+	ID                types.String  `tfsdk:"id"`
+	Address           types.String  `tfsdk:"address"`
+	Alias             types.String  `tfsdk:"alias"`
+	Comment           types.String  `tfsdk:"comment"`
+	Disabled          types.Bool    `tfsdk:"disabled"`
+	Expired           types.Bool    `tfsdk:"expired"`
+	Group             types.String  `tfsdk:"group"`
+	InactivityPolicy  types.String  `tfsdk:"inactivity_policy"`
+	InactivityTimeout durationValue `tfsdk:"inactivity_timeout"`
+	LastLoggedIn      types.String  `tfsdk:"last_logged_in"`
+	Name              types.String  `tfsdk:"name"`
+	Password          types.String  `tfsdk:"password"`
+	Type              types.Int64   `tfsdk:"type"`
+	Router            types.String  `tfsdk:"router"`
+	LockoutAck        types.Bool    `tfsdk:"lockout_ack"`
 }
 
 func NewUserResource() resource.Resource { return &UserResource{} }
@@ -104,11 +104,11 @@ func (r *UserResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"inactivity_timeout": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"last_logged_in": schema.StringAttribute{
 				Computed:    true,
@@ -390,9 +390,9 @@ func userApply(ctx context.Context, obj client.Object, m *UserModel) {
 	}
 	if v, ok := obj["inactivity-timeout"]; ok {
 		if v != "" {
-			m.InactivityTimeout = types.StringValue(v)
+			m.InactivityTimeout = newDurationValue(v)
 		} else {
-			m.InactivityTimeout = types.StringNull()
+			m.InactivityTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["last-logged-in"]; ok {

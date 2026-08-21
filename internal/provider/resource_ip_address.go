@@ -35,7 +35,7 @@ type IPAddressModel struct {
 	Netmask         types.String `tfsdk:"netmask"`
 	Broadcast       types.String `tfsdk:"broadcast"`
 	ActualInterface types.String `tfsdk:"actual_interface"`
-	Address         types.String `tfsdk:"address"`
+	Address         cidrValue    `tfsdk:"address"`
 	Comment         types.String `tfsdk:"comment"`
 	Disabled        types.Bool   `tfsdk:"disabled"`
 	Dynamic         types.Bool   `tfsdk:"dynamic"`
@@ -85,10 +85,10 @@ func (r *IPAddressResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Description: "",
 			},
 			"address": schema.StringAttribute{
-				Required:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsCIDR()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeCIDR()},
+				CustomType:  cidrType{},
+				Required:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsCIDR()},
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -315,9 +315,9 @@ func iPAddressApply(ctx context.Context, obj client.Object, m *IPAddressModel) {
 	}
 	if v, ok := obj["address"]; ok {
 		if v != "" {
-			m.Address = types.StringValue(v)
+			m.Address = newCIDRValue(v)
 		} else {
-			m.Address = types.StringNull()
+			m.Address = newCIDRNull()
 		}
 	}
 	if v, ok := obj["comment"]; ok {

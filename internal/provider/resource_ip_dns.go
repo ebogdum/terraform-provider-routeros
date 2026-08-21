@@ -29,27 +29,27 @@ type IPDNSResource struct {
 }
 
 type IPDNSModel struct {
-	ID                       types.String `tfsdk:"id"`
-	AddressListExtraTime     types.String `tfsdk:"address_list_extra_time"`
-	AllowRemoteRequests      types.Bool   `tfsdk:"allow_remote_requests"`
-	CacheMaxTtl              types.String `tfsdk:"cache_max_ttl"`
-	CacheSize                types.Int64  `tfsdk:"cache_size"`
-	CacheUsed                types.Int64  `tfsdk:"cache_used"`
-	DohMaxConcurrentQueries  types.Int64  `tfsdk:"doh_max_concurrent_queries"`
-	DohMaxServerConnections  types.Int64  `tfsdk:"doh_max_server_connections"`
-	DohTimeout               types.String `tfsdk:"doh_timeout"`
-	DynamicServers           types.String `tfsdk:"dynamic_servers"`
-	MaxConcurrentQueries     types.Int64  `tfsdk:"max_concurrent_queries"`
-	MaxConcurrentTCPSessions types.Int64  `tfsdk:"max_concurrent_tcp_sessions"`
-	MaxUDPPacketSize         types.Int64  `tfsdk:"max_udp_packet_size"`
-	MdnsRepeatIfaces         types.String `tfsdk:"mdns_repeat_ifaces"`
-	QueryServerTimeout       types.String `tfsdk:"query_server_timeout"`
-	QueryTotalTimeout        types.String `tfsdk:"query_total_timeout"`
-	Servers                  types.String `tfsdk:"servers"`
-	UseDohServer             types.String `tfsdk:"use_doh_server"`
-	VerifyDohCert            types.Bool   `tfsdk:"verify_doh_cert"`
-	Vrf                      types.String `tfsdk:"vrf"`
-	Router                   types.String `tfsdk:"router"`
+	ID                       types.String  `tfsdk:"id"`
+	AddressListExtraTime     durationValue `tfsdk:"address_list_extra_time"`
+	AllowRemoteRequests      types.Bool    `tfsdk:"allow_remote_requests"`
+	CacheMaxTtl              durationValue `tfsdk:"cache_max_ttl"`
+	CacheSize                types.Int64   `tfsdk:"cache_size"`
+	CacheUsed                types.Int64   `tfsdk:"cache_used"`
+	DohMaxConcurrentQueries  types.Int64   `tfsdk:"doh_max_concurrent_queries"`
+	DohMaxServerConnections  types.Int64   `tfsdk:"doh_max_server_connections"`
+	DohTimeout               durationValue `tfsdk:"doh_timeout"`
+	DynamicServers           types.String  `tfsdk:"dynamic_servers"`
+	MaxConcurrentQueries     types.Int64   `tfsdk:"max_concurrent_queries"`
+	MaxConcurrentTCPSessions types.Int64   `tfsdk:"max_concurrent_tcp_sessions"`
+	MaxUDPPacketSize         types.Int64   `tfsdk:"max_udp_packet_size"`
+	MdnsRepeatIfaces         types.String  `tfsdk:"mdns_repeat_ifaces"`
+	QueryServerTimeout       durationValue `tfsdk:"query_server_timeout"`
+	QueryTotalTimeout        durationValue `tfsdk:"query_total_timeout"`
+	Servers                  types.String  `tfsdk:"servers"`
+	UseDohServer             types.String  `tfsdk:"use_doh_server"`
+	VerifyDohCert            types.Bool    `tfsdk:"verify_doh_cert"`
+	Vrf                      types.String  `tfsdk:"vrf"`
+	Router                   types.String  `tfsdk:"router"`
 }
 
 func NewIPDNSResource() resource.Resource { return &IPDNSResource{} }
@@ -75,18 +75,18 @@ func (r *IPDNSResource) Schema(_ context.Context, _ resource.SchemaRequest, resp
 				Description:   "Stable identifier (the singleton's menu path, optionally namespaced by router).",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
-			"address_list_extra_time": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"address_list_extra_time": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"allow_remote_requests": schema.BoolAttribute{Optional: true, Computed: true,
 				Description: "",
 			},
-			"cache_max_ttl": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"cache_max_ttl": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"cache_size": schema.Int64Attribute{Optional: true, Computed: true,
 				Description: "",
@@ -100,10 +100,10 @@ func (r *IPDNSResource) Schema(_ context.Context, _ resource.SchemaRequest, resp
 			"doh_max_server_connections": schema.Int64Attribute{Optional: true, Computed: true,
 				Description: "",
 			},
-			"doh_timeout": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"doh_timeout": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"dynamic_servers": schema.StringAttribute{Optional: true, Computed: true,
 				Description: "",
@@ -121,15 +121,15 @@ func (r *IPDNSResource) Schema(_ context.Context, _ resource.SchemaRequest, resp
 			"mdns_repeat_ifaces": schema.StringAttribute{Optional: true, Computed: true,
 				Description: "",
 			},
-			"query_server_timeout": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"query_server_timeout": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
-			"query_total_timeout": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"query_total_timeout": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"servers": schema.StringAttribute{Optional: true, Computed: true,
 				Description: "",
@@ -289,9 +289,9 @@ func iPDNSApply(ctx context.Context, obj client.Object, m *IPDNSModel) {
 	if v, ok := obj["address-list-extra-time"]; ok {
 		_ = v
 		if v != "" {
-			m.AddressListExtraTime = types.StringValue(v)
+			m.AddressListExtraTime = newDurationValue(v)
 		} else {
-			m.AddressListExtraTime = types.StringNull()
+			m.AddressListExtraTime = newDurationNull()
 		}
 	}
 	if v, ok := obj["allow-remote-requests"]; ok {
@@ -307,9 +307,9 @@ func iPDNSApply(ctx context.Context, obj client.Object, m *IPDNSModel) {
 	if v, ok := obj["cache-max-ttl"]; ok {
 		_ = v
 		if v != "" {
-			m.CacheMaxTtl = types.StringValue(v)
+			m.CacheMaxTtl = newDurationValue(v)
 		} else {
-			m.CacheMaxTtl = types.StringNull()
+			m.CacheMaxTtl = newDurationNull()
 		}
 	}
 	if v, ok := obj["cache-size"]; ok {
@@ -347,9 +347,9 @@ func iPDNSApply(ctx context.Context, obj client.Object, m *IPDNSModel) {
 	if v, ok := obj["doh-timeout"]; ok {
 		_ = v
 		if v != "" {
-			m.DohTimeout = types.StringValue(v)
+			m.DohTimeout = newDurationValue(v)
 		} else {
-			m.DohTimeout = types.StringNull()
+			m.DohTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["dynamic-servers"]; ok {
@@ -395,17 +395,17 @@ func iPDNSApply(ctx context.Context, obj client.Object, m *IPDNSModel) {
 	if v, ok := obj["query-server-timeout"]; ok {
 		_ = v
 		if v != "" {
-			m.QueryServerTimeout = types.StringValue(v)
+			m.QueryServerTimeout = newDurationValue(v)
 		} else {
-			m.QueryServerTimeout = types.StringNull()
+			m.QueryServerTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["query-total-timeout"]; ok {
 		_ = v
 		if v != "" {
-			m.QueryTotalTimeout = types.StringValue(v)
+			m.QueryTotalTimeout = newDurationValue(v)
 		} else {
-			m.QueryTotalTimeout = types.StringNull()
+			m.QueryTotalTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["servers"]; ok {

@@ -41,7 +41,7 @@ type IPV6RouteModel struct {
 	Connect      types.Bool   `tfsdk:"connect"`
 	Disabled     types.Bool   `tfsdk:"disabled"`
 	Distance     types.Int64  `tfsdk:"distance"`
-	DstAddress   types.String `tfsdk:"dst_address"`
+	DstAddress   cidrValue    `tfsdk:"dst_address"`
 	Dynamic      types.Bool   `tfsdk:"dynamic"`
 	Gateway      types.String `tfsdk:"gateway"`
 	ImmediateGw  types.String `tfsdk:"immediate_gw"`
@@ -119,11 +119,11 @@ func (r *IPV6RouteResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Description: "",
 			},
 			"dst_address": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsCIDR()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeCIDR()},
+				CustomType:  cidrType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsCIDR()},
 			},
 			"dynamic": schema.BoolAttribute{
 				Computed:    true,
@@ -436,9 +436,9 @@ func iPV6RouteApply(ctx context.Context, obj client.Object, m *IPV6RouteModel) {
 	}
 	if v, ok := obj["dst-address"]; ok {
 		if v != "" {
-			m.DstAddress = types.StringValue(v)
+			m.DstAddress = newCIDRValue(v)
 		} else {
-			m.DstAddress = types.StringNull()
+			m.DstAddress = newCIDRNull()
 		}
 	}
 	if v, ok := obj["dynamic"]; ok {

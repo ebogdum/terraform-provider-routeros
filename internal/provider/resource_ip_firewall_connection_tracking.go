@@ -29,31 +29,31 @@ type IPFirewallConnectionTrackingResource struct {
 }
 
 type IPFirewallConnectionTrackingModel struct {
-	ID                    types.String `tfsdk:"id"`
-	ActiveIpv4            types.Bool   `tfsdk:"active_ipv4"`
-	ActiveIPV6            types.Bool   `tfsdk:"active_ipv6"`
-	Enabled               types.String `tfsdk:"enabled"`
-	GenericTimeout        types.String `tfsdk:"generic_timeout"`
-	IcmpTimeout           types.String `tfsdk:"icmp_timeout"`
-	LiberalTCPTracking    types.Bool   `tfsdk:"liberal_tcp_tracking"`
-	LooseTCPTracking      types.Bool   `tfsdk:"loose_tcp_tracking"`
-	MaxEntries            types.Int64  `tfsdk:"max_entries"`
-	TCPCloseTimeout       types.String `tfsdk:"tcp_close_timeout"`
-	TCPCloseWaitTimeout   types.String `tfsdk:"tcp_close_wait_timeout"`
-	TCPEstablishedTimeout types.String `tfsdk:"tcp_established_timeout"`
-	TCPFinWaitTimeout     types.String `tfsdk:"tcp_fin_wait_timeout"`
-	TCPLastAckTimeout     types.String `tfsdk:"tcp_last_ack_timeout"`
-	TCPMaxRetransTimeout  types.String `tfsdk:"tcp_max_retrans_timeout"`
-	TCPSynReceivedTimeout types.String `tfsdk:"tcp_syn_received_timeout"`
-	TCPSynSentTimeout     types.String `tfsdk:"tcp_syn_sent_timeout"`
-	TCPTimeWaitTimeout    types.String `tfsdk:"tcp_time_wait_timeout"`
-	TCPUnackedTimeout     types.String `tfsdk:"tcp_unacked_timeout"`
-	TotalEntries          types.Int64  `tfsdk:"total_entries"`
-	TotalIp4Entries       types.Int64  `tfsdk:"total_ip4_entries"`
-	TotalIp6Entries       types.Int64  `tfsdk:"total_ip6_entries"`
-	UDPStreamTimeout      types.String `tfsdk:"udp_stream_timeout"`
-	UDPTimeout            types.String `tfsdk:"udp_timeout"`
-	Router                types.String `tfsdk:"router"`
+	ID                    types.String  `tfsdk:"id"`
+	ActiveIpv4            types.Bool    `tfsdk:"active_ipv4"`
+	ActiveIPV6            types.Bool    `tfsdk:"active_ipv6"`
+	Enabled               types.String  `tfsdk:"enabled"`
+	GenericTimeout        durationValue `tfsdk:"generic_timeout"`
+	IcmpTimeout           durationValue `tfsdk:"icmp_timeout"`
+	LiberalTCPTracking    types.Bool    `tfsdk:"liberal_tcp_tracking"`
+	LooseTCPTracking      types.Bool    `tfsdk:"loose_tcp_tracking"`
+	MaxEntries            types.Int64   `tfsdk:"max_entries"`
+	TCPCloseTimeout       durationValue `tfsdk:"tcp_close_timeout"`
+	TCPCloseWaitTimeout   durationValue `tfsdk:"tcp_close_wait_timeout"`
+	TCPEstablishedTimeout durationValue `tfsdk:"tcp_established_timeout"`
+	TCPFinWaitTimeout     durationValue `tfsdk:"tcp_fin_wait_timeout"`
+	TCPLastAckTimeout     durationValue `tfsdk:"tcp_last_ack_timeout"`
+	TCPMaxRetransTimeout  durationValue `tfsdk:"tcp_max_retrans_timeout"`
+	TCPSynReceivedTimeout durationValue `tfsdk:"tcp_syn_received_timeout"`
+	TCPSynSentTimeout     durationValue `tfsdk:"tcp_syn_sent_timeout"`
+	TCPTimeWaitTimeout    durationValue `tfsdk:"tcp_time_wait_timeout"`
+	TCPUnackedTimeout     durationValue `tfsdk:"tcp_unacked_timeout"`
+	TotalEntries          types.Int64   `tfsdk:"total_entries"`
+	TotalIp4Entries       types.Int64   `tfsdk:"total_ip4_entries"`
+	TotalIp6Entries       types.Int64   `tfsdk:"total_ip6_entries"`
+	UDPStreamTimeout      durationValue `tfsdk:"udp_stream_timeout"`
+	UDPTimeout            durationValue `tfsdk:"udp_timeout"`
+	Router                types.String  `tfsdk:"router"`
 }
 
 func NewIPFirewallConnectionTrackingResource() resource.Resource {
@@ -90,15 +90,15 @@ func (r *IPFirewallConnectionTrackingResource) Schema(_ context.Context, _ resou
 			"enabled": schema.StringAttribute{Optional: true, Computed: true,
 				Description: "",
 			},
-			"generic_timeout": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"generic_timeout": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
-			"icmp_timeout": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"icmp_timeout": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"liberal_tcp_tracking": schema.BoolAttribute{Optional: true, Computed: true,
 				Description: "",
@@ -109,55 +109,55 @@ func (r *IPFirewallConnectionTrackingResource) Schema(_ context.Context, _ resou
 			"max_entries": schema.Int64Attribute{Optional: true, Computed: true,
 				Description: "",
 			},
-			"tcp_close_timeout": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"tcp_close_timeout": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
-			"tcp_close_wait_timeout": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"tcp_close_wait_timeout": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
-			"tcp_established_timeout": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"tcp_established_timeout": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
-			"tcp_fin_wait_timeout": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"tcp_fin_wait_timeout": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
-			"tcp_last_ack_timeout": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"tcp_last_ack_timeout": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
-			"tcp_max_retrans_timeout": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"tcp_max_retrans_timeout": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
-			"tcp_syn_received_timeout": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"tcp_syn_received_timeout": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
-			"tcp_syn_sent_timeout": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"tcp_syn_sent_timeout": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
-			"tcp_time_wait_timeout": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"tcp_time_wait_timeout": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
-			"tcp_unacked_timeout": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"tcp_unacked_timeout": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"total_entries": schema.Int64Attribute{Optional: true, Computed: true,
 				Description: "",
@@ -168,15 +168,15 @@ func (r *IPFirewallConnectionTrackingResource) Schema(_ context.Context, _ resou
 			"total_ip6_entries": schema.Int64Attribute{Optional: true, Computed: true,
 				Description: "",
 			},
-			"udp_stream_timeout": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"udp_stream_timeout": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
-			"udp_timeout": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"udp_timeout": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"router": schema.StringAttribute{Optional: true,
 				Description:   "Name of the router (key in provider's `routers` map). Omit to use the default.",
@@ -352,17 +352,17 @@ func iPFirewallConnectionTrackingApply(ctx context.Context, obj client.Object, m
 	if v, ok := obj["generic-timeout"]; ok {
 		_ = v
 		if v != "" {
-			m.GenericTimeout = types.StringValue(v)
+			m.GenericTimeout = newDurationValue(v)
 		} else {
-			m.GenericTimeout = types.StringNull()
+			m.GenericTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["icmp-timeout"]; ok {
 		_ = v
 		if v != "" {
-			m.IcmpTimeout = types.StringValue(v)
+			m.IcmpTimeout = newDurationValue(v)
 		} else {
-			m.IcmpTimeout = types.StringNull()
+			m.IcmpTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["liberal-tcp-tracking"]; ok {
@@ -396,81 +396,81 @@ func iPFirewallConnectionTrackingApply(ctx context.Context, obj client.Object, m
 	if v, ok := obj["tcp-close-timeout"]; ok {
 		_ = v
 		if v != "" {
-			m.TCPCloseTimeout = types.StringValue(v)
+			m.TCPCloseTimeout = newDurationValue(v)
 		} else {
-			m.TCPCloseTimeout = types.StringNull()
+			m.TCPCloseTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["tcp-close-wait-timeout"]; ok {
 		_ = v
 		if v != "" {
-			m.TCPCloseWaitTimeout = types.StringValue(v)
+			m.TCPCloseWaitTimeout = newDurationValue(v)
 		} else {
-			m.TCPCloseWaitTimeout = types.StringNull()
+			m.TCPCloseWaitTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["tcp-established-timeout"]; ok {
 		_ = v
 		if v != "" {
-			m.TCPEstablishedTimeout = types.StringValue(v)
+			m.TCPEstablishedTimeout = newDurationValue(v)
 		} else {
-			m.TCPEstablishedTimeout = types.StringNull()
+			m.TCPEstablishedTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["tcp-fin-wait-timeout"]; ok {
 		_ = v
 		if v != "" {
-			m.TCPFinWaitTimeout = types.StringValue(v)
+			m.TCPFinWaitTimeout = newDurationValue(v)
 		} else {
-			m.TCPFinWaitTimeout = types.StringNull()
+			m.TCPFinWaitTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["tcp-last-ack-timeout"]; ok {
 		_ = v
 		if v != "" {
-			m.TCPLastAckTimeout = types.StringValue(v)
+			m.TCPLastAckTimeout = newDurationValue(v)
 		} else {
-			m.TCPLastAckTimeout = types.StringNull()
+			m.TCPLastAckTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["tcp-max-retrans-timeout"]; ok {
 		_ = v
 		if v != "" {
-			m.TCPMaxRetransTimeout = types.StringValue(v)
+			m.TCPMaxRetransTimeout = newDurationValue(v)
 		} else {
-			m.TCPMaxRetransTimeout = types.StringNull()
+			m.TCPMaxRetransTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["tcp-syn-received-timeout"]; ok {
 		_ = v
 		if v != "" {
-			m.TCPSynReceivedTimeout = types.StringValue(v)
+			m.TCPSynReceivedTimeout = newDurationValue(v)
 		} else {
-			m.TCPSynReceivedTimeout = types.StringNull()
+			m.TCPSynReceivedTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["tcp-syn-sent-timeout"]; ok {
 		_ = v
 		if v != "" {
-			m.TCPSynSentTimeout = types.StringValue(v)
+			m.TCPSynSentTimeout = newDurationValue(v)
 		} else {
-			m.TCPSynSentTimeout = types.StringNull()
+			m.TCPSynSentTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["tcp-time-wait-timeout"]; ok {
 		_ = v
 		if v != "" {
-			m.TCPTimeWaitTimeout = types.StringValue(v)
+			m.TCPTimeWaitTimeout = newDurationValue(v)
 		} else {
-			m.TCPTimeWaitTimeout = types.StringNull()
+			m.TCPTimeWaitTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["tcp-unacked-timeout"]; ok {
 		_ = v
 		if v != "" {
-			m.TCPUnackedTimeout = types.StringValue(v)
+			m.TCPUnackedTimeout = newDurationValue(v)
 		} else {
-			m.TCPUnackedTimeout = types.StringNull()
+			m.TCPUnackedTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["total-entries"]; ok {
@@ -500,17 +500,17 @@ func iPFirewallConnectionTrackingApply(ctx context.Context, obj client.Object, m
 	if v, ok := obj["udp-stream-timeout"]; ok {
 		_ = v
 		if v != "" {
-			m.UDPStreamTimeout = types.StringValue(v)
+			m.UDPStreamTimeout = newDurationValue(v)
 		} else {
-			m.UDPStreamTimeout = types.StringNull()
+			m.UDPStreamTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["udp-timeout"]; ok {
 		_ = v
 		if v != "" {
-			m.UDPTimeout = types.StringValue(v)
+			m.UDPTimeout = newDurationValue(v)
 		} else {
-			m.UDPTimeout = types.StringNull()
+			m.UDPTimeout = newDurationNull()
 		}
 	}
 }

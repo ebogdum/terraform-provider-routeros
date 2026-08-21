@@ -31,44 +31,44 @@ type ToolNetwatchResource struct {
 }
 
 type ToolNetwatchModel struct {
-	ID                     types.String `tfsdk:"id"`
-	UpScript               types.String `tfsdk:"up_script"`
-	ThrTcpConnTime         types.String `tfsdk:"thr_tcp_conn_time"`
-	ThrStdev               types.String `tfsdk:"thr_stdev"`
-	ThrMax                 types.String `tfsdk:"thr_max"`
-	ThrLossPercent         types.String `tfsdk:"thr_loss_percent"`
-	ThrLossCount           types.String `tfsdk:"thr_loss_count"`
-	ThrJitter              types.String `tfsdk:"thr_jitter"`
-	ThrHttpTime            types.String `tfsdk:"thr_http_time"`
-	ThrAvg                 types.String `tfsdk:"thr_avg"`
-	TestScript             types.String `tfsdk:"test_script"`
-	StartupDelay           types.String `tfsdk:"startup_delay"`
-	StartDelay             types.String `tfsdk:"start_delay"`
-	RecordType             types.String `tfsdk:"record_type"`
-	PacketSize             types.String `tfsdk:"packet_size"`
-	PacketInterval         types.String `tfsdk:"packet_interval"`
-	PacketCount            types.String `tfsdk:"packet_count"`
-	IgnoreInitialUp        types.String `tfsdk:"ignore_initial_up"`
-	IgnoreInitialDown      types.String `tfsdk:"ignore_initial_down"`
-	HttpCodes              types.String `tfsdk:"http_codes"`
-	EarlySuccessDetection  types.String `tfsdk:"early_success_detection"`
-	EarlyFailureDetection  types.String `tfsdk:"early_failure_detection"`
-	DownScript             types.String `tfsdk:"down_script"`
-	CheckCertificate       types.String `tfsdk:"check_certificate"`
-	AcceptIcmpTimeExceeded types.String `tfsdk:"accept_icmp_time_exceeded"`
-	Certificate            types.String `tfsdk:"certificate"`
-	Comment                types.String `tfsdk:"comment"`
-	Disabled               types.Bool   `tfsdk:"disabled"`
-	DNSServer              types.String `tfsdk:"dns_server"`
-	Host                   types.String `tfsdk:"host"`
-	Interval               types.String `tfsdk:"interval"`
-	Name                   types.String `tfsdk:"name"`
-	Port                   types.String `tfsdk:"port"`
-	SrcAddress             types.String `tfsdk:"src_address"`
-	Timeout                types.String `tfsdk:"timeout"`
-	Ttl                    types.String `tfsdk:"ttl"`
-	Type                   types.String `tfsdk:"type"`
-	Router                 types.String `tfsdk:"router"`
+	ID                     types.String  `tfsdk:"id"`
+	UpScript               types.String  `tfsdk:"up_script"`
+	ThrTcpConnTime         types.String  `tfsdk:"thr_tcp_conn_time"`
+	ThrStdev               types.String  `tfsdk:"thr_stdev"`
+	ThrMax                 types.String  `tfsdk:"thr_max"`
+	ThrLossPercent         types.String  `tfsdk:"thr_loss_percent"`
+	ThrLossCount           types.String  `tfsdk:"thr_loss_count"`
+	ThrJitter              types.String  `tfsdk:"thr_jitter"`
+	ThrHttpTime            types.String  `tfsdk:"thr_http_time"`
+	ThrAvg                 types.String  `tfsdk:"thr_avg"`
+	TestScript             types.String  `tfsdk:"test_script"`
+	StartupDelay           types.String  `tfsdk:"startup_delay"`
+	StartDelay             types.String  `tfsdk:"start_delay"`
+	RecordType             types.String  `tfsdk:"record_type"`
+	PacketSize             types.String  `tfsdk:"packet_size"`
+	PacketInterval         types.String  `tfsdk:"packet_interval"`
+	PacketCount            types.String  `tfsdk:"packet_count"`
+	IgnoreInitialUp        types.String  `tfsdk:"ignore_initial_up"`
+	IgnoreInitialDown      types.String  `tfsdk:"ignore_initial_down"`
+	HttpCodes              types.String  `tfsdk:"http_codes"`
+	EarlySuccessDetection  types.String  `tfsdk:"early_success_detection"`
+	EarlyFailureDetection  types.String  `tfsdk:"early_failure_detection"`
+	DownScript             types.String  `tfsdk:"down_script"`
+	CheckCertificate       types.String  `tfsdk:"check_certificate"`
+	AcceptIcmpTimeExceeded types.String  `tfsdk:"accept_icmp_time_exceeded"`
+	Certificate            types.String  `tfsdk:"certificate"`
+	Comment                types.String  `tfsdk:"comment"`
+	Disabled               types.Bool    `tfsdk:"disabled"`
+	DNSServer              types.String  `tfsdk:"dns_server"`
+	Host                   types.String  `tfsdk:"host"`
+	Interval               durationValue `tfsdk:"interval"`
+	Name                   types.String  `tfsdk:"name"`
+	Port                   types.String  `tfsdk:"port"`
+	SrcAddress             types.String  `tfsdk:"src_address"`
+	Timeout                types.String  `tfsdk:"timeout"`
+	Ttl                    types.String  `tfsdk:"ttl"`
+	Type                   types.String  `tfsdk:"type"`
+	Router                 types.String  `tfsdk:"router"`
 }
 
 func NewToolNetwatchResource() resource.Resource { return &ToolNetwatchResource{} }
@@ -239,11 +239,11 @@ func (r *ToolNetwatchResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description: "",
 			},
 			"interval": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"name": schema.StringAttribute{
 				Optional:    true,
@@ -785,9 +785,9 @@ func toolNetwatchApply(ctx context.Context, obj client.Object, m *ToolNetwatchMo
 	}
 	if v, ok := obj["interval"]; ok {
 		if v != "" {
-			m.Interval = types.StringValue(v)
+			m.Interval = newDurationValue(v)
 		} else {
-			m.Interval = types.StringNull()
+			m.Interval = newDurationNull()
 		}
 	}
 	if v, ok := obj["name"]; ok {

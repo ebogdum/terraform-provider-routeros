@@ -29,19 +29,19 @@ type SystemWatchdogResource struct {
 }
 
 type SystemWatchdogModel struct {
-	ID                 types.String `tfsdk:"id"`
-	AutoSendSupout     types.Bool   `tfsdk:"auto_send_supout"`
-	AutomaticSupout    types.Bool   `tfsdk:"automatic_supout"`
-	NoPingDelay        types.String `tfsdk:"no_ping_delay"`
-	PingStartAfterBoot types.String `tfsdk:"ping_start_after_boot"`
-	PingTimeout        types.String `tfsdk:"ping_timeout"`
-	SendEmailFrom      types.String `tfsdk:"send_email_from"`
-	SendEmailTo        types.String `tfsdk:"send_email_to"`
-	SendSMTPServer     types.String `tfsdk:"send_smtp_server"`
-	WatchAddress       types.String `tfsdk:"watch_address"`
-	WatchdogTimer      types.Bool   `tfsdk:"watchdog_timer"`
-	Router             types.String `tfsdk:"router"`
-	LockoutAck         types.Bool   `tfsdk:"lockout_ack"`
+	ID                 types.String  `tfsdk:"id"`
+	AutoSendSupout     types.Bool    `tfsdk:"auto_send_supout"`
+	AutomaticSupout    types.Bool    `tfsdk:"automatic_supout"`
+	NoPingDelay        types.String  `tfsdk:"no_ping_delay"`
+	PingStartAfterBoot durationValue `tfsdk:"ping_start_after_boot"`
+	PingTimeout        durationValue `tfsdk:"ping_timeout"`
+	SendEmailFrom      types.String  `tfsdk:"send_email_from"`
+	SendEmailTo        types.String  `tfsdk:"send_email_to"`
+	SendSMTPServer     types.String  `tfsdk:"send_smtp_server"`
+	WatchAddress       types.String  `tfsdk:"watch_address"`
+	WatchdogTimer      types.Bool    `tfsdk:"watchdog_timer"`
+	Router             types.String  `tfsdk:"router"`
+	LockoutAck         types.Bool    `tfsdk:"lockout_ack"`
 }
 
 func NewSystemWatchdogResource() resource.Resource { return &SystemWatchdogResource{} }
@@ -76,15 +76,15 @@ func (r *SystemWatchdogResource) Schema(_ context.Context, _ resource.SchemaRequ
 			"no_ping_delay": schema.StringAttribute{Optional: true, Computed: true,
 				Description: "Specifies how long will it wait before trying to reach the watch-address.",
 			},
-			"ping_start_after_boot": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"ping_start_after_boot": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
-			"ping_timeout": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "Specifies the time interval in which the device will be pinged 6 times (after \"no-ping-delay\").",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"ping_timeout": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "Specifies the time interval in which the device will be pinged 6 times (after \"no-ping-delay\").",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"send_email_from": schema.StringAttribute{Optional: true, Computed: true,
 				Description: "The e-mail address to send the support output file from. If not set, the value set in /tool e-mail is used.",
@@ -261,17 +261,17 @@ func systemWatchdogApply(ctx context.Context, obj client.Object, m *SystemWatchd
 	if v, ok := obj["ping-start-after-boot"]; ok {
 		_ = v
 		if v != "" {
-			m.PingStartAfterBoot = types.StringValue(v)
+			m.PingStartAfterBoot = newDurationValue(v)
 		} else {
-			m.PingStartAfterBoot = types.StringNull()
+			m.PingStartAfterBoot = newDurationNull()
 		}
 	}
 	if v, ok := obj["ping-timeout"]; ok {
 		_ = v
 		if v != "" {
-			m.PingTimeout = types.StringValue(v)
+			m.PingTimeout = newDurationValue(v)
 		} else {
-			m.PingTimeout = types.StringNull()
+			m.PingTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["send-email-from"]; ok {

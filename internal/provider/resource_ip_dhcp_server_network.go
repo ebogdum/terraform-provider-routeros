@@ -34,7 +34,7 @@ type IPDHCPServerNetworkModel struct {
 	ID            types.String `tfsdk:"id"`
 	NtpNone       types.String `tfsdk:"ntp_none"`
 	DnsNone       types.String `tfsdk:"dns_none"`
-	Address       types.String `tfsdk:"address"`
+	Address       cidrValue    `tfsdk:"address"`
 	BootFileName  types.String `tfsdk:"boot_file_name"`
 	CapsManager   types.String `tfsdk:"caps_manager"`
 	CapsManagers  types.String `tfsdk:"caps_managers"`
@@ -94,10 +94,10 @@ func (r *IPDHCPServerNetworkResource) Schema(_ context.Context, _ resource.Schem
 				Description: "RouterOS `dns-none`.",
 			},
 			"address": schema.StringAttribute{
-				Required:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsCIDR()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeCIDR()},
+				CustomType:  cidrType{},
+				Required:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsCIDR()},
 			},
 			"boot_file_name": schema.StringAttribute{
 				Optional:    true,
@@ -436,9 +436,9 @@ func iPDHCPServerNetworkApply(ctx context.Context, obj client.Object, m *IPDHCPS
 	}
 	if v, ok := obj["address"]; ok {
 		if v != "" {
-			m.Address = types.StringValue(v)
+			m.Address = newCIDRValue(v)
 		} else {
-			m.Address = types.StringNull()
+			m.Address = newCIDRNull()
 		}
 	}
 	if v, ok := obj["boot-file-name"]; ok {

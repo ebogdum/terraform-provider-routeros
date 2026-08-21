@@ -31,24 +31,24 @@ type InterfaceDot1xServerResource struct {
 }
 
 type InterfaceDot1xServerModel struct {
-	ID               types.String `tfsdk:"id"`
-	Accounting       types.Bool   `tfsdk:"accounting"`
-	AuthTimeout      types.String `tfsdk:"auth_timeout"`
-	AuthTypes        types.String `tfsdk:"auth_types"`
-	Comment          types.String `tfsdk:"comment"`
-	Disabled         types.Bool   `tfsdk:"disabled"`
-	GuestVLANID      types.String `tfsdk:"guest_vlan_id"`
-	Interface        types.String `tfsdk:"interface"`
-	InterimUpdate    types.String `tfsdk:"interim_update"`
-	Invalid          types.Bool   `tfsdk:"invalid"`
-	MAC              types.String `tfsdk:"mac"`
-	MACAuthMode      types.String `tfsdk:"mac_auth_mode"`
-	RADIUSMACFormat  types.String `tfsdk:"radius_mac_format"`
-	ReauthTimeout    types.String `tfsdk:"reauth_timeout"`
-	RejectVLANID     types.String `tfsdk:"reject_vlan_id"`
-	RetransTimeout   types.String `tfsdk:"retrans_timeout"`
-	ServerFailVLANID types.String `tfsdk:"server_fail_vlan_id"`
-	Router           types.String `tfsdk:"router"`
+	ID               types.String  `tfsdk:"id"`
+	Accounting       types.Bool    `tfsdk:"accounting"`
+	AuthTimeout      types.String  `tfsdk:"auth_timeout"`
+	AuthTypes        types.String  `tfsdk:"auth_types"`
+	Comment          types.String  `tfsdk:"comment"`
+	Disabled         types.Bool    `tfsdk:"disabled"`
+	GuestVLANID      types.String  `tfsdk:"guest_vlan_id"`
+	Interface        types.String  `tfsdk:"interface"`
+	InterimUpdate    durationValue `tfsdk:"interim_update"`
+	Invalid          types.Bool    `tfsdk:"invalid"`
+	MAC              types.String  `tfsdk:"mac"`
+	MACAuthMode      types.String  `tfsdk:"mac_auth_mode"`
+	RADIUSMACFormat  types.String  `tfsdk:"radius_mac_format"`
+	ReauthTimeout    types.String  `tfsdk:"reauth_timeout"`
+	RejectVLANID     types.String  `tfsdk:"reject_vlan_id"`
+	RetransTimeout   types.String  `tfsdk:"retrans_timeout"`
+	ServerFailVLANID types.String  `tfsdk:"server_fail_vlan_id"`
+	Router           types.String  `tfsdk:"router"`
 }
 
 func NewInterfaceDot1xServerResource() resource.Resource { return &InterfaceDot1xServerResource{} }
@@ -110,11 +110,11 @@ func (r *InterfaceDot1xServerResource) Schema(_ context.Context, _ resource.Sche
 				Description: "",
 			},
 			"interim_update": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"invalid": schema.BoolAttribute{
 				Computed:    true,
@@ -430,9 +430,9 @@ func interfaceDot1xServerApply(ctx context.Context, obj client.Object, m *Interf
 	}
 	if v, ok := obj["interim-update"]; ok {
 		if v != "" {
-			m.InterimUpdate = types.StringValue(v)
+			m.InterimUpdate = newDurationValue(v)
 		} else {
-			m.InterimUpdate = types.StringNull()
+			m.InterimUpdate = newDurationNull()
 		}
 	}
 	if v, ok := obj["invalid"]; ok {

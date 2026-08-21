@@ -31,126 +31,126 @@ type DiskResource struct {
 }
 
 type DiskModel struct {
-	ID                         types.String `tfsdk:"id"`
-	Acquired                   types.Bool   `tfsdk:"acquired"`
-	ActiveTime                 types.String `tfsdk:"active_time"`
-	AvailableSpare             types.Int64  `tfsdk:"available_spare"`
-	AvailableSpareThreshold    types.Int64  `tfsdk:"available_spare_threshold"`
-	BlockDevice                types.Bool   `tfsdk:"block_device"`
-	Btrfs                      types.String `tfsdk:"btrfs"`
-	Comment                    types.String `tfsdk:"comment"`
-	ControllerBurstTime        types.String `tfsdk:"controller_burst_time"`
-	CriticalTemperature        types.Int64  `tfsdk:"critical_temperature"`
-	CriticalTemperatureTime    types.String `tfsdk:"critical_temperature_time"`
-	CriticalWarning            types.String `tfsdk:"critical_warning"`
-	DefaultSlot                types.String `tfsdk:"default_slot"`
-	Disabled                   types.Bool   `tfsdk:"disabled"`
-	DiscardBytes               types.String `tfsdk:"discard_bytes"`
-	DiscardMerges              types.String `tfsdk:"discard_merges"`
-	DiscardOps                 types.String `tfsdk:"discard_ops"`
-	DiscardTime                types.String `tfsdk:"discard_time"`
-	EjectDrive                 types.String `tfsdk:"eject_drive"`
-	Empty                      types.Bool   `tfsdk:"empty"`
-	Encrypted                  types.Bool   `tfsdk:"encrypted"`
-	FlushOps                   types.String `tfsdk:"flush_ops"`
-	FlushTime                  types.String `tfsdk:"flush_time"`
-	Formatting                 types.Bool   `tfsdk:"formatting"`
-	Free                       types.String `tfsdk:"free"`
-	Fs                         types.String `tfsdk:"fs"`
-	FwVersion                  types.String `tfsdk:"fw_version"`
-	GuidPartitionTable         types.Bool   `tfsdk:"guid_partition_table"`
-	HostReadBytes              types.String `tfsdk:"host_read_bytes"`
-	HostReadCommands           types.String `tfsdk:"host_read_commands"`
-	HostWriteBytes             types.String `tfsdk:"host_write_bytes"`
-	HostWriteCommands          types.String `tfsdk:"host_write_commands"`
-	IScsiExport                types.Bool   `tfsdk:"i_scsi_export"`
-	IScsiServerIqn             types.String `tfsdk:"i_scsi_server_iqn"`
-	IScsiServerPort            types.Int64  `tfsdk:"i_scsi_server_port"`
-	InFlightOps                types.String `tfsdk:"in_flight_ops"`
-	Interface                  types.String `tfsdk:"interface"`
-	InterfaceSpeed             types.String `tfsdk:"interface_speed"`
-	IscsiSharing               types.String `tfsdk:"iscsi_sharing"`
-	Label                      types.String `tfsdk:"label"`
-	MediaInterface             types.String `tfsdk:"media_interface"`
-	MediaSharing               types.Bool   `tfsdk:"media_sharing"`
-	Model                      types.String `tfsdk:"model"`
-	MountCompress              types.Bool   `tfsdk:"mount_compress"`
-	MountFilesystem            types.Bool   `tfsdk:"mount_filesystem"`
-	MountPoint                 types.String `tfsdk:"mount_point"`
-	MountPointTemplate         types.String `tfsdk:"mount_point_template"`
-	MountReadOnly              types.Bool   `tfsdk:"mount_read_only"`
-	Mounted                    types.Bool   `tfsdk:"mounted"`
-	Newfileman                 types.String `tfsdk:"newfileman"`
-	NfsSharing                 types.Bool   `tfsdk:"nfs_sharing"`
-	Nvme                       types.String `tfsdk:"nvme"`
-	NvmeTCPExport              types.Bool   `tfsdk:"nvme_tcp_export"`
-	NvmeTCPServerAllowHostName types.String `tfsdk:"nvme_tcp_server_allow_host_name"`
-	NvmeTCPServerNqn           types.String `tfsdk:"nvme_tcp_server_nqn"`
-	NvmeTCPServerPassword      types.String `tfsdk:"nvme_tcp_server_password"`
-	NvmeTCPServerPort          types.Int64  `tfsdk:"nvme_tcp_server_port"`
-	NvmeTCPServerSecret        types.String `tfsdk:"nvme_tcp_server_secret"`
-	Oldfileman                 types.String `tfsdk:"oldfileman"`
-	Parent                     types.String `tfsdk:"parent"`
-	Part                       types.String `tfsdk:"part"`
-	Partition                  types.Bool   `tfsdk:"partition"`
-	PartitionNumber            types.Int64  `tfsdk:"partition_number"`
-	PartitionOffset            types.String `tfsdk:"partition_offset"`
-	PartitionSize              types.String `tfsdk:"partition_size"`
-	PercentageUsed             types.Int64  `tfsdk:"percentage_used"`
-	PowerCycles                types.Int64  `tfsdk:"power_cycles"`
-	PowerOnTime                types.String `tfsdk:"power_on_time"`
-	Raid                       types.String `tfsdk:"raid"`
-	RaidAndMaster              types.String `tfsdk:"raid_and_master"`
-	RaidAndType                types.String `tfsdk:"raid_and_type"`
-	RaidMaster                 types.String `tfsdk:"raid_master"`
-	RaidMember                 types.Bool   `tfsdk:"raid_member"`
-	RaidMemberFailed           types.Bool   `tfsdk:"raid_member_failed"`
-	RaidRole                   types.String `tfsdk:"raid_role"`
-	RaidScrub                  types.String `tfsdk:"raid_scrub"`
-	ReadBytes                  types.String `tfsdk:"read_bytes"`
-	ReadMerges                 types.String `tfsdk:"read_merges"`
-	ReadOnly                   types.Bool   `tfsdk:"read_only"`
-	ReadOps                    types.String `tfsdk:"read_ops"`
-	ReadOpsPerSecond           types.String `tfsdk:"read_ops_per_second"`
-	ReadRate                   types.String `tfsdk:"read_rate"`
-	ReadTime                   types.String `tfsdk:"read_time"`
-	ResetCounters              types.String `tfsdk:"reset_counters"`
-	Rose                       types.String `tfsdk:"rose"`
-	Scan                       types.String `tfsdk:"scan"`
-	SelfEncryptedAndLocked     types.Bool   `tfsdk:"self_encrypted_and_locked"`
-	SelfEncryptionEnabled      types.Bool   `tfsdk:"self_encryption_enabled"`
-	SelfEncryptionPassword     types.String `tfsdk:"self_encryption_password"`
-	SelfEncryptionSupported    types.Bool   `tfsdk:"self_encryption_supported"`
-	Serial                     types.String `tfsdk:"serial"`
-	Size                       types.String `tfsdk:"size"`
-	Slot                       types.String `tfsdk:"slot"`
-	SmbServerEncryption        types.Bool   `tfsdk:"smb_server_encryption"`
-	SmbServerPassword          types.String `tfsdk:"smb_server_password"`
-	SmbServerUser              types.String `tfsdk:"smb_server_user"`
-	SmbSharing                 types.Bool   `tfsdk:"smb_sharing"`
-	State                      types.String `tfsdk:"state"`
-	Swap                       types.Bool   `tfsdk:"swap"`
-	SwapEnabled                types.Bool   `tfsdk:"swap_enabled"`
-	Temperature                types.Int64  `tfsdk:"temperature"`
-	Temperatures               types.String `tfsdk:"temperatures"`
-	Tmpfs                      types.String `tfsdk:"tmpfs"`
-	TmpfsMaxSize               types.String `tfsdk:"tmpfs_max_size"`
-	Trim                       types.String `tfsdk:"trim"`
-	Type                       types.String `tfsdk:"type"`
-	UnrecoveredIntegrityErrors types.Int64  `tfsdk:"unrecovered_integrity_errors"`
-	UnsafeShutdown             types.Int64  `tfsdk:"unsafe_shutdown"`
-	Use                        types.Int64  `tfsdk:"use"`
-	Uuid                       types.String `tfsdk:"uuid"`
-	WaitTime                   types.String `tfsdk:"wait_time"`
-	WarningTemperature         types.Int64  `tfsdk:"warning_temperature"`
-	WarningTemperatureTime     types.String `tfsdk:"warning_temperature_time"`
-	WriteBytes                 types.String `tfsdk:"write_bytes"`
-	WriteMerges                types.String `tfsdk:"write_merges"`
-	WriteOps                   types.String `tfsdk:"write_ops"`
-	WriteOpsPerSecond          types.String `tfsdk:"write_ops_per_second"`
-	WriteRate                  types.String `tfsdk:"write_rate"`
-	WriteTime                  types.String `tfsdk:"write_time"`
-	Router                     types.String `tfsdk:"router"`
+	ID                         types.String  `tfsdk:"id"`
+	Acquired                   types.Bool    `tfsdk:"acquired"`
+	ActiveTime                 types.String  `tfsdk:"active_time"`
+	AvailableSpare             types.Int64   `tfsdk:"available_spare"`
+	AvailableSpareThreshold    types.Int64   `tfsdk:"available_spare_threshold"`
+	BlockDevice                types.Bool    `tfsdk:"block_device"`
+	Btrfs                      types.String  `tfsdk:"btrfs"`
+	Comment                    types.String  `tfsdk:"comment"`
+	ControllerBurstTime        durationValue `tfsdk:"controller_burst_time"`
+	CriticalTemperature        types.Int64   `tfsdk:"critical_temperature"`
+	CriticalTemperatureTime    durationValue `tfsdk:"critical_temperature_time"`
+	CriticalWarning            types.String  `tfsdk:"critical_warning"`
+	DefaultSlot                types.String  `tfsdk:"default_slot"`
+	Disabled                   types.Bool    `tfsdk:"disabled"`
+	DiscardBytes               types.String  `tfsdk:"discard_bytes"`
+	DiscardMerges              types.String  `tfsdk:"discard_merges"`
+	DiscardOps                 types.String  `tfsdk:"discard_ops"`
+	DiscardTime                types.String  `tfsdk:"discard_time"`
+	EjectDrive                 types.String  `tfsdk:"eject_drive"`
+	Empty                      types.Bool    `tfsdk:"empty"`
+	Encrypted                  types.Bool    `tfsdk:"encrypted"`
+	FlushOps                   types.String  `tfsdk:"flush_ops"`
+	FlushTime                  types.String  `tfsdk:"flush_time"`
+	Formatting                 types.Bool    `tfsdk:"formatting"`
+	Free                       types.String  `tfsdk:"free"`
+	Fs                         types.String  `tfsdk:"fs"`
+	FwVersion                  types.String  `tfsdk:"fw_version"`
+	GuidPartitionTable         types.Bool    `tfsdk:"guid_partition_table"`
+	HostReadBytes              types.String  `tfsdk:"host_read_bytes"`
+	HostReadCommands           types.String  `tfsdk:"host_read_commands"`
+	HostWriteBytes             types.String  `tfsdk:"host_write_bytes"`
+	HostWriteCommands          types.String  `tfsdk:"host_write_commands"`
+	IScsiExport                types.Bool    `tfsdk:"i_scsi_export"`
+	IScsiServerIqn             types.String  `tfsdk:"i_scsi_server_iqn"`
+	IScsiServerPort            types.Int64   `tfsdk:"i_scsi_server_port"`
+	InFlightOps                types.String  `tfsdk:"in_flight_ops"`
+	Interface                  types.String  `tfsdk:"interface"`
+	InterfaceSpeed             types.String  `tfsdk:"interface_speed"`
+	IscsiSharing               types.String  `tfsdk:"iscsi_sharing"`
+	Label                      types.String  `tfsdk:"label"`
+	MediaInterface             types.String  `tfsdk:"media_interface"`
+	MediaSharing               types.Bool    `tfsdk:"media_sharing"`
+	Model                      types.String  `tfsdk:"model"`
+	MountCompress              types.Bool    `tfsdk:"mount_compress"`
+	MountFilesystem            types.Bool    `tfsdk:"mount_filesystem"`
+	MountPoint                 types.String  `tfsdk:"mount_point"`
+	MountPointTemplate         types.String  `tfsdk:"mount_point_template"`
+	MountReadOnly              types.Bool    `tfsdk:"mount_read_only"`
+	Mounted                    types.Bool    `tfsdk:"mounted"`
+	Newfileman                 types.String  `tfsdk:"newfileman"`
+	NfsSharing                 types.Bool    `tfsdk:"nfs_sharing"`
+	Nvme                       types.String  `tfsdk:"nvme"`
+	NvmeTCPExport              types.Bool    `tfsdk:"nvme_tcp_export"`
+	NvmeTCPServerAllowHostName types.String  `tfsdk:"nvme_tcp_server_allow_host_name"`
+	NvmeTCPServerNqn           types.String  `tfsdk:"nvme_tcp_server_nqn"`
+	NvmeTCPServerPassword      types.String  `tfsdk:"nvme_tcp_server_password"`
+	NvmeTCPServerPort          types.Int64   `tfsdk:"nvme_tcp_server_port"`
+	NvmeTCPServerSecret        types.String  `tfsdk:"nvme_tcp_server_secret"`
+	Oldfileman                 types.String  `tfsdk:"oldfileman"`
+	Parent                     types.String  `tfsdk:"parent"`
+	Part                       types.String  `tfsdk:"part"`
+	Partition                  types.Bool    `tfsdk:"partition"`
+	PartitionNumber            types.Int64   `tfsdk:"partition_number"`
+	PartitionOffset            types.String  `tfsdk:"partition_offset"`
+	PartitionSize              types.String  `tfsdk:"partition_size"`
+	PercentageUsed             types.Int64   `tfsdk:"percentage_used"`
+	PowerCycles                types.Int64   `tfsdk:"power_cycles"`
+	PowerOnTime                durationValue `tfsdk:"power_on_time"`
+	Raid                       types.String  `tfsdk:"raid"`
+	RaidAndMaster              types.String  `tfsdk:"raid_and_master"`
+	RaidAndType                types.String  `tfsdk:"raid_and_type"`
+	RaidMaster                 types.String  `tfsdk:"raid_master"`
+	RaidMember                 types.Bool    `tfsdk:"raid_member"`
+	RaidMemberFailed           types.Bool    `tfsdk:"raid_member_failed"`
+	RaidRole                   types.String  `tfsdk:"raid_role"`
+	RaidScrub                  types.String  `tfsdk:"raid_scrub"`
+	ReadBytes                  types.String  `tfsdk:"read_bytes"`
+	ReadMerges                 types.String  `tfsdk:"read_merges"`
+	ReadOnly                   types.Bool    `tfsdk:"read_only"`
+	ReadOps                    types.String  `tfsdk:"read_ops"`
+	ReadOpsPerSecond           types.String  `tfsdk:"read_ops_per_second"`
+	ReadRate                   types.String  `tfsdk:"read_rate"`
+	ReadTime                   types.String  `tfsdk:"read_time"`
+	ResetCounters              types.String  `tfsdk:"reset_counters"`
+	Rose                       types.String  `tfsdk:"rose"`
+	Scan                       types.String  `tfsdk:"scan"`
+	SelfEncryptedAndLocked     types.Bool    `tfsdk:"self_encrypted_and_locked"`
+	SelfEncryptionEnabled      types.Bool    `tfsdk:"self_encryption_enabled"`
+	SelfEncryptionPassword     types.String  `tfsdk:"self_encryption_password"`
+	SelfEncryptionSupported    types.Bool    `tfsdk:"self_encryption_supported"`
+	Serial                     types.String  `tfsdk:"serial"`
+	Size                       types.String  `tfsdk:"size"`
+	Slot                       types.String  `tfsdk:"slot"`
+	SmbServerEncryption        types.Bool    `tfsdk:"smb_server_encryption"`
+	SmbServerPassword          types.String  `tfsdk:"smb_server_password"`
+	SmbServerUser              types.String  `tfsdk:"smb_server_user"`
+	SmbSharing                 types.Bool    `tfsdk:"smb_sharing"`
+	State                      types.String  `tfsdk:"state"`
+	Swap                       types.Bool    `tfsdk:"swap"`
+	SwapEnabled                types.Bool    `tfsdk:"swap_enabled"`
+	Temperature                types.Int64   `tfsdk:"temperature"`
+	Temperatures               types.String  `tfsdk:"temperatures"`
+	Tmpfs                      types.String  `tfsdk:"tmpfs"`
+	TmpfsMaxSize               types.String  `tfsdk:"tmpfs_max_size"`
+	Trim                       types.String  `tfsdk:"trim"`
+	Type                       types.String  `tfsdk:"type"`
+	UnrecoveredIntegrityErrors types.Int64   `tfsdk:"unrecovered_integrity_errors"`
+	UnsafeShutdown             types.Int64   `tfsdk:"unsafe_shutdown"`
+	Use                        types.Int64   `tfsdk:"use"`
+	Uuid                       types.String  `tfsdk:"uuid"`
+	WaitTime                   types.String  `tfsdk:"wait_time"`
+	WarningTemperature         types.Int64   `tfsdk:"warning_temperature"`
+	WarningTemperatureTime     durationValue `tfsdk:"warning_temperature_time"`
+	WriteBytes                 types.String  `tfsdk:"write_bytes"`
+	WriteMerges                types.String  `tfsdk:"write_merges"`
+	WriteOps                   types.String  `tfsdk:"write_ops"`
+	WriteOpsPerSecond          types.String  `tfsdk:"write_ops_per_second"`
+	WriteRate                  types.String  `tfsdk:"write_rate"`
+	WriteTime                  types.String  `tfsdk:"write_time"`
+	Router                     types.String  `tfsdk:"router"`
 }
 
 func NewDiskResource() resource.Resource { return &DiskResource{} }
@@ -207,20 +207,20 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "Free-form comment.",
 			},
 			"controller_burst_time": schema.StringAttribute{
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"critical_temperature": schema.Int64Attribute{
 				Computed:    true,
 				Description: "",
 			},
 			"critical_temperature_time": schema.StringAttribute{
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"critical_warning": schema.StringAttribute{
 				Computed:    true,
@@ -460,10 +460,10 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"power_on_time": schema.StringAttribute{
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"raid": schema.StringAttribute{
 				Computed:    true,
@@ -652,10 +652,10 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"warning_temperature_time": schema.StringAttribute{
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"write_bytes": schema.StringAttribute{
 				Computed:    true,
@@ -991,9 +991,9 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 	}
 	if v, ok := obj["controller-burst-time"]; ok {
 		if v != "" {
-			m.ControllerBurstTime = types.StringValue(v)
+			m.ControllerBurstTime = newDurationValue(v)
 		} else {
-			m.ControllerBurstTime = types.StringNull()
+			m.ControllerBurstTime = newDurationNull()
 		}
 	}
 	if v, ok := obj["critical-temperature"]; ok {
@@ -1008,9 +1008,9 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 	}
 	if v, ok := obj["critical-temperature-time"]; ok {
 		if v != "" {
-			m.CriticalTemperatureTime = types.StringValue(v)
+			m.CriticalTemperatureTime = newDurationValue(v)
 		} else {
-			m.CriticalTemperatureTime = types.StringNull()
+			m.CriticalTemperatureTime = newDurationNull()
 		}
 	}
 	if v, ok := obj["critical-warning"]; ok {
@@ -1450,9 +1450,9 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 	}
 	if v, ok := obj["power-on-time"]; ok {
 		if v != "" {
-			m.PowerOnTime = types.StringValue(v)
+			m.PowerOnTime = newDurationValue(v)
 		} else {
-			m.PowerOnTime = types.StringNull()
+			m.PowerOnTime = newDurationNull()
 		}
 	}
 	if v, ok := obj["raid"]; ok {
@@ -1807,9 +1807,9 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 	}
 	if v, ok := obj["warning-temperature-time"]; ok {
 		if v != "" {
-			m.WarningTemperatureTime = types.StringValue(v)
+			m.WarningTemperatureTime = newDurationValue(v)
 		} else {
-			m.WarningTemperatureTime = types.StringNull()
+			m.WarningTemperatureTime = newDurationNull()
 		}
 	}
 	if v, ok := obj["write-bytes"]; ok {

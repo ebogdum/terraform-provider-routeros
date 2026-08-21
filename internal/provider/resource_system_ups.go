@@ -31,40 +31,40 @@ type SystemUpsResource struct {
 }
 
 type SystemUpsModel struct {
-	ID                    types.String `tfsdk:"id"`
-	AlarmSetting          types.String `tfsdk:"alarm_setting"`
-	BatteryCharge         types.Int64  `tfsdk:"battery_charge"`
-	BatteryVoltage        types.String `tfsdk:"battery_voltage"`
-	Beep                  types.String `tfsdk:"beep"`
-	CheckCapabilities     types.String `tfsdk:"check_capabilities"`
-	Comment               types.String `tfsdk:"comment"`
-	Disabled              types.Bool   `tfsdk:"disabled"`
-	Frequency             types.Int64  `tfsdk:"frequency"`
-	Invalid               types.Bool   `tfsdk:"invalid"`
-	LineVoltage           types.String `tfsdk:"line_voltage"`
-	Load                  types.Int64  `tfsdk:"load"`
-	LowBattery            types.Bool   `tfsdk:"low_battery"`
-	ManufactureDate       types.String `tfsdk:"manufacture_date"`
-	MinRuntime            types.String `tfsdk:"min_runtime"`
-	Model                 types.String `tfsdk:"model"`
-	Name                  types.String `tfsdk:"name"`
-	NominalBatteryVoltage types.Int64  `tfsdk:"nominal_battery_voltage"`
-	OfflineAfter          types.String `tfsdk:"offline_after"`
-	OfflineTime           types.String `tfsdk:"offline_time"`
-	OnBattery             types.Bool   `tfsdk:"on_battery"`
-	OnLine                types.Bool   `tfsdk:"on_line"`
-	OuputVoltage          types.String `tfsdk:"ouput_voltage"`
-	Overload              types.Bool   `tfsdk:"overload"`
-	Port                  types.String `tfsdk:"port"`
-	ReplaceBattery        types.Bool   `tfsdk:"replace_battery"`
-	RunTimeLeft           types.String `tfsdk:"run_time_left"`
-	SerialNumber          types.String `tfsdk:"serial_number"`
-	SmartBoost            types.Bool   `tfsdk:"smart_boost"`
-	SmartTrim             types.Bool   `tfsdk:"smart_trim"`
-	Temperature           types.String `tfsdk:"temperature"`
-	TransferCause         types.String `tfsdk:"transfer_cause"`
-	Version               types.String `tfsdk:"version"`
-	Router                types.String `tfsdk:"router"`
+	ID                    types.String  `tfsdk:"id"`
+	AlarmSetting          types.String  `tfsdk:"alarm_setting"`
+	BatteryCharge         types.Int64   `tfsdk:"battery_charge"`
+	BatteryVoltage        types.String  `tfsdk:"battery_voltage"`
+	Beep                  types.String  `tfsdk:"beep"`
+	CheckCapabilities     types.String  `tfsdk:"check_capabilities"`
+	Comment               types.String  `tfsdk:"comment"`
+	Disabled              types.Bool    `tfsdk:"disabled"`
+	Frequency             types.Int64   `tfsdk:"frequency"`
+	Invalid               types.Bool    `tfsdk:"invalid"`
+	LineVoltage           types.String  `tfsdk:"line_voltage"`
+	Load                  types.Int64   `tfsdk:"load"`
+	LowBattery            types.Bool    `tfsdk:"low_battery"`
+	ManufactureDate       types.String  `tfsdk:"manufacture_date"`
+	MinRuntime            types.String  `tfsdk:"min_runtime"`
+	Model                 types.String  `tfsdk:"model"`
+	Name                  types.String  `tfsdk:"name"`
+	NominalBatteryVoltage types.Int64   `tfsdk:"nominal_battery_voltage"`
+	OfflineAfter          durationValue `tfsdk:"offline_after"`
+	OfflineTime           types.String  `tfsdk:"offline_time"`
+	OnBattery             types.Bool    `tfsdk:"on_battery"`
+	OnLine                types.Bool    `tfsdk:"on_line"`
+	OuputVoltage          types.String  `tfsdk:"ouput_voltage"`
+	Overload              types.Bool    `tfsdk:"overload"`
+	Port                  types.String  `tfsdk:"port"`
+	ReplaceBattery        types.Bool    `tfsdk:"replace_battery"`
+	RunTimeLeft           durationValue `tfsdk:"run_time_left"`
+	SerialNumber          types.String  `tfsdk:"serial_number"`
+	SmartBoost            types.Bool    `tfsdk:"smart_boost"`
+	SmartTrim             types.Bool    `tfsdk:"smart_trim"`
+	Temperature           types.String  `tfsdk:"temperature"`
+	TransferCause         types.String  `tfsdk:"transfer_cause"`
+	Version               types.String  `tfsdk:"version"`
+	Router                types.String  `tfsdk:"router"`
 }
 
 func NewSystemUpsResource() resource.Resource { return &SystemUpsResource{} }
@@ -167,10 +167,10 @@ func (r *SystemUpsResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Description: "",
 			},
 			"offline_after": schema.StringAttribute{
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"offline_time": schema.StringAttribute{
 				Optional:    true,
@@ -203,10 +203,10 @@ func (r *SystemUpsResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Description: "",
 			},
 			"run_time_left": schema.StringAttribute{
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"serial_number": schema.StringAttribute{
 				Computed:    true,
@@ -560,9 +560,9 @@ func systemUpsApply(ctx context.Context, obj client.Object, m *SystemUpsModel) {
 	}
 	if v, ok := obj["offline-after"]; ok {
 		if v != "" {
-			m.OfflineAfter = types.StringValue(v)
+			m.OfflineAfter = newDurationValue(v)
 		} else {
-			m.OfflineAfter = types.StringNull()
+			m.OfflineAfter = newDurationNull()
 		}
 	}
 	if v, ok := obj["offline-time"]; ok {
@@ -624,9 +624,9 @@ func systemUpsApply(ctx context.Context, obj client.Object, m *SystemUpsModel) {
 	}
 	if v, ok := obj["run-time-left"]; ok {
 		if v != "" {
-			m.RunTimeLeft = types.StringValue(v)
+			m.RunTimeLeft = newDurationValue(v)
 		} else {
-			m.RunTimeLeft = types.StringNull()
+			m.RunTimeLeft = newDurationNull()
 		}
 	}
 	if v, ok := obj["serial-number"]; ok {

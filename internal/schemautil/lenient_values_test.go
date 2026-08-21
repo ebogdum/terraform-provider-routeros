@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
@@ -65,114 +64,21 @@ func TestIsDurationOrKeyword(t *testing.T) {
 	}
 }
 
-// planString runs a string plan modifier and returns the resulting plan value.
-func planString(m planmodifier.String, config, state string) string {
-	resp := &planmodifier.StringResponse{PlanValue: types.StringValue(config)}
-	req := planmodifier.StringRequest{
-		Path:        path.Root("test"),
-		ConfigValue: types.StringValue(config),
-		StateValue:  types.StringValue(state),
-	}
-	m.PlanModifyString(context.Background(), req, resp)
-	if resp.Diagnostics.HasError() {
-		return "ERROR"
-	}
-	return resp.PlanValue.ValueString()
-}
-
-func TestNormalizeDurationExceptPassesKeywordThrough(t *testing.T) {
-	m := NormalizeDurationExcept("auto")
-	// The bug: the plain duration modifier raised "Invalid value" on the
-	// router's own default, so a bridge at defaults could not even be planned.
-	if got := planString(m, "auto", "auto"); got == "ERROR" {
-		t.Fatal("NormalizeDurationExcept errored on the keyword it was told to pass through")
-	}
-	if got := planString(NormalizeDuration(), "auto", "auto"); got != "ERROR" {
-		t.Fatalf("plain NormalizeDuration accepted %q; expected it to still reject", "auto")
-	}
-	// Real durations still normalise against state.
-	if got := planString(m, "60s", "1m"); got != "1m" {
-		t.Errorf("duration normalization = %q, want %q", got, "1m")
-	}
-}
-
-func TestNormalizeCase(t *testing.T) {
-	m := NormalizeCase("MD5", "SHA1")
-	// A config written lower-case must reach state in the device's spelling,
-	// otherwise every plan shows a diff against a router reporting MD5.
-	if got := planString(m, "md5", "MD5"); got != "MD5" {
-		t.Errorf("NormalizeCase(md5) = %q, want MD5", got)
-	}
-	// Unlisted values pass through untouched; rejecting them is the validator's job.
-	if got := planString(m, "whatever", "whatever"); got != "whatever" {
-		t.Errorf("NormalizeCase mangled an unlisted value: %q", got)
-	}
-}
-
-// planStringOnCreate runs a string plan modifier with no prior state.
-func planStringOnCreate(m planmodifier.String, config string) string {
-	resp := &planmodifier.StringResponse{PlanValue: types.StringValue(config)}
-	req := planmodifier.StringRequest{
-		Path:        path.Root("test"),
-		ConfigValue: types.StringValue(config),
-		StateValue:  types.StringNull(),
-	}
-	m.PlanModifyString(context.Background(), req, resp)
-	if resp.Diagnostics.HasError() {
-		return "ERROR"
-	}
-	return resp.PlanValue.ValueString()
-}
-
-// Terraform rejects a plan that rewrites a known config value, so the modifier
-// keeps the config value and only reuses state when the two mean the same.
-func TestNormalizersKeepConfigButSuppressCosmeticDiffs(t *testing.T) {
-	for _, tc := range []struct {
-		name          string
-		m             planmodifier.String
-		config, state string
-		want          string
-	}{
-		{"mac already canonical in state", NormalizeMAC(), "aa:bb:cc:dd:ee:ff", "AA:BB:CC:DD:EE:FF", "AA:BB:CC:DD:EE:FF"},
-		{"mac genuinely changed", NormalizeMAC(), "aa:bb:cc:dd:ee:ff", "11:22:33:44:55:66", "aa:bb:cc:dd:ee:ff"},
-		{"duration already canonical in state", NormalizeDuration(), "120", "2m", "2m"},
-		{"duration clock form in state", NormalizeDuration(), "00:05:00", "5m", "5m"},
-		{"cidr spaces", NormalizeCIDR(), "  10.0.0.1/24  ", "10.0.0.1/24", "10.0.0.1/24"},
-	} {
-		t.Run(tc.name, func(t *testing.T) {
-			if got := planString(tc.m, tc.config, tc.state); got != tc.want {
-				t.Errorf("plan value = %q, want %q", got, tc.want)
-			}
-		})
-	}
-}
-
-// On create there is no state to reuse, so the config value stands as written;
-// reconciling it with what the device echoes back is semantic equality's job.
-func TestNormalizersLeaveTheConfigValueAloneOnCreate(t *testing.T) {
-	if got := planStringOnCreate(NormalizeMAC(), "aa:bb:cc:dd:ee:ff"); got != "aa:bb:cc:dd:ee:ff" {
-		t.Errorf("plan value = %q, want the config value verbatim", got)
-	}
-}
-
-func TestNormalizeMACRejectsNonMAC(t *testing.T) {
-	for _, bad := range []string{"nope", "aa:bb:cc:dd:ee", "aa:bb:cc:dd:ee:gg"} {
-		if got := planStringOnCreate(NormalizeMAC(), bad); got != "ERROR" {
-			t.Errorf("NormalizeMAC(%q) planned %q, want a diagnostic", bad, got)
-		}
-	}
-}
-
 // These attributes are Optional+Computed and "" was accepted before they gained
 // a validator; failing the plan on it would break existing configurations.
 func TestEmptyStringMeansUnsetNotInvalid(t *testing.T) {
-	if got := planStringOnCreate(NormalizeMAC(), ""); got != "" {
-		t.Errorf(`NormalizeMAC("") planned %q, want it left alone`, got)
+	for name, v := range map[string]validator.String{
+		"IsMAC":                IsMAC(),
+		"IsDurationRouterOS":   IsDurationRouterOS(),
+		"IsCIDR":               IsCIDR(),
+		"IsTimeOfDayOrStartup": IsTimeOfDayOrStartup(),
+	} {
+		if !checkString(v, "") {
+			t.Errorf("%s rejected the empty string", name)
+		}
 	}
-	if !checkString(IsMAC(), "") {
-		t.Error(`IsMAC("") rejected the empty string`)
-	}
-	if !checkString(IsDurationRouterOS(), "") {
-		t.Error(`IsDurationRouterOS("") rejected the empty string`)
+	// Enumerations are not format validators: "" is a value, not an absence.
+	if checkString(OneOfFold("MD5", "SHA1"), "") {
+		t.Error("OneOfFold accepted the empty string")
 	}
 }

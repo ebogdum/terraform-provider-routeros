@@ -29,15 +29,15 @@ type IPSocksResource struct {
 }
 
 type IPSocksModel struct {
-	ID                    types.String `tfsdk:"id"`
-	AuthMethod            types.String `tfsdk:"auth_method"`
-	ConnectionIdleTimeout types.String `tfsdk:"connection_idle_timeout"`
-	Enabled               types.Bool   `tfsdk:"enabled"`
-	MaxConnections        types.Int64  `tfsdk:"max_connections"`
-	Port                  types.Int64  `tfsdk:"port"`
-	Version               types.Int64  `tfsdk:"version"`
-	Vrf                   types.String `tfsdk:"vrf"`
-	Router                types.String `tfsdk:"router"`
+	ID                    types.String  `tfsdk:"id"`
+	AuthMethod            types.String  `tfsdk:"auth_method"`
+	ConnectionIdleTimeout durationValue `tfsdk:"connection_idle_timeout"`
+	Enabled               types.Bool    `tfsdk:"enabled"`
+	MaxConnections        types.Int64   `tfsdk:"max_connections"`
+	Port                  types.Int64   `tfsdk:"port"`
+	Version               types.Int64   `tfsdk:"version"`
+	Vrf                   types.String  `tfsdk:"vrf"`
+	Router                types.String  `tfsdk:"router"`
 }
 
 func NewIPSocksResource() resource.Resource { return &IPSocksResource{} }
@@ -66,10 +66,10 @@ func (r *IPSocksResource) Schema(_ context.Context, _ resource.SchemaRequest, re
 			"auth_method": schema.StringAttribute{Optional: true, Computed: true,
 				Description: "",
 			},
-			"connection_idle_timeout": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"connection_idle_timeout": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"enabled": schema.BoolAttribute{Optional: true, Computed: true,
 				Description: "",
@@ -210,9 +210,9 @@ func iPSocksApply(ctx context.Context, obj client.Object, m *IPSocksModel) {
 	if v, ok := obj["connection-idle-timeout"]; ok {
 		_ = v
 		if v != "" {
-			m.ConnectionIdleTimeout = types.StringValue(v)
+			m.ConnectionIdleTimeout = newDurationValue(v)
 		} else {
-			m.ConnectionIdleTimeout = types.StringNull()
+			m.ConnectionIdleTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["enabled"]; ok {

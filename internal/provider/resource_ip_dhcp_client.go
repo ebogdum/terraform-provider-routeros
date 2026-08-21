@@ -31,44 +31,44 @@ type IPDHCPClientResource struct {
 }
 
 type IPDHCPClientModel struct {
-	ID                       types.String `tfsdk:"id"`
-	AddDefaultRoute          types.String `tfsdk:"add_default_route"`
-	Address                  types.String `tfsdk:"address"`
-	AllowReconfigure         types.Bool   `tfsdk:"allow_reconfigure"`
-	AllowReconfigureMessages types.Bool   `tfsdk:"allow_reconfigure_messages"`
-	CapsManagers             types.String `tfsdk:"caps_managers"`
-	CheckGateway             types.String `tfsdk:"check_gateway"`
-	Comment                  types.String `tfsdk:"comment"`
-	DefaultRouteDistance     types.Int64  `tfsdk:"default_route_distance"`
-	DefaultRouteTables       types.String `tfsdk:"default_route_tables"`
-	DHCPOptions              types.Set    `tfsdk:"dhcp_options"`
-	DHCPServer               types.String `tfsdk:"dhcp_server"`
-	Disabled                 types.Bool   `tfsdk:"disabled"`
-	Dscp                     types.Int64  `tfsdk:"dscp"`
-	Dynamic                  types.Bool   `tfsdk:"dynamic"`
-	ExpiresAfter             types.String `tfsdk:"expires_after"`
-	Gateway                  types.String `tfsdk:"gateway"`
-	Interface                types.String `tfsdk:"interface"`
-	Invalid                  types.Bool   `tfsdk:"invalid"`
-	IPAddress                types.String `tfsdk:"ip_address"`
-	LastReceivedCounter      types.String `tfsdk:"last_received_counter"`
-	Name                     types.String `tfsdk:"name"`
-	PrimaryDNS               types.String `tfsdk:"primary_dns"`
-	PrimaryNTP               types.String `tfsdk:"primary_ntp"`
-	ReconfigureKey           types.String `tfsdk:"reconfigure_key"`
-	Release                  types.String `tfsdk:"release"`
-	Renew                    types.String `tfsdk:"renew"`
-	Route                    types.String `tfsdk:"route"`
-	RoutingTables            types.String `tfsdk:"routing_tables"`
-	Script                   types.String `tfsdk:"script"`
-	SecondaryDNS             types.String `tfsdk:"secondary_dns"`
-	SecondaryNTP             types.String `tfsdk:"secondary_ntp"`
-	Status                   types.String `tfsdk:"status"`
-	UseBroadcast             types.String `tfsdk:"use_broadcast"`
-	UsePeerDNS               types.Bool   `tfsdk:"use_peer_dns"`
-	UsePeerNTP               types.Bool   `tfsdk:"use_peer_ntp"`
-	VLANPriority             types.Int64  `tfsdk:"vlan_priority"`
-	Router                   types.String `tfsdk:"router"`
+	ID                       types.String  `tfsdk:"id"`
+	AddDefaultRoute          types.String  `tfsdk:"add_default_route"`
+	Address                  cidrValue     `tfsdk:"address"`
+	AllowReconfigure         types.Bool    `tfsdk:"allow_reconfigure"`
+	AllowReconfigureMessages types.Bool    `tfsdk:"allow_reconfigure_messages"`
+	CapsManagers             types.String  `tfsdk:"caps_managers"`
+	CheckGateway             types.String  `tfsdk:"check_gateway"`
+	Comment                  types.String  `tfsdk:"comment"`
+	DefaultRouteDistance     types.Int64   `tfsdk:"default_route_distance"`
+	DefaultRouteTables       types.String  `tfsdk:"default_route_tables"`
+	DHCPOptions              types.Set     `tfsdk:"dhcp_options"`
+	DHCPServer               types.String  `tfsdk:"dhcp_server"`
+	Disabled                 types.Bool    `tfsdk:"disabled"`
+	Dscp                     types.Int64   `tfsdk:"dscp"`
+	Dynamic                  types.Bool    `tfsdk:"dynamic"`
+	ExpiresAfter             durationValue `tfsdk:"expires_after"`
+	Gateway                  types.String  `tfsdk:"gateway"`
+	Interface                types.String  `tfsdk:"interface"`
+	Invalid                  types.Bool    `tfsdk:"invalid"`
+	IPAddress                cidrValue     `tfsdk:"ip_address"`
+	LastReceivedCounter      types.String  `tfsdk:"last_received_counter"`
+	Name                     types.String  `tfsdk:"name"`
+	PrimaryDNS               types.String  `tfsdk:"primary_dns"`
+	PrimaryNTP               types.String  `tfsdk:"primary_ntp"`
+	ReconfigureKey           types.String  `tfsdk:"reconfigure_key"`
+	Release                  types.String  `tfsdk:"release"`
+	Renew                    types.String  `tfsdk:"renew"`
+	Route                    types.String  `tfsdk:"route"`
+	RoutingTables            types.String  `tfsdk:"routing_tables"`
+	Script                   types.String  `tfsdk:"script"`
+	SecondaryDNS             types.String  `tfsdk:"secondary_dns"`
+	SecondaryNTP             types.String  `tfsdk:"secondary_ntp"`
+	Status                   types.String  `tfsdk:"status"`
+	UseBroadcast             types.String  `tfsdk:"use_broadcast"`
+	UsePeerDNS               types.Bool    `tfsdk:"use_peer_dns"`
+	UsePeerNTP               types.Bool    `tfsdk:"use_peer_ntp"`
+	VLANPriority             types.Int64   `tfsdk:"vlan_priority"`
+	Router                   types.String  `tfsdk:"router"`
 }
 
 func NewIPDHCPClientResource() resource.Resource { return &IPDHCPClientResource{} }
@@ -101,10 +101,10 @@ func (r *IPDHCPClientResource) Schema(_ context.Context, _ resource.SchemaReques
 				Validators:  []validator.String{schemautil.OneOf([]string{"no", "yes", "special-classless"}...)},
 			},
 			"address": schema.StringAttribute{
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsCIDR()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeCIDR()},
+				CustomType:  cidrType{},
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsCIDR()},
 			},
 			"allow_reconfigure": schema.BoolAttribute{
 				Optional:    true,
@@ -166,10 +166,10 @@ func (r *IPDHCPClientResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description: "",
 			},
 			"expires_after": schema.StringAttribute{
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"gateway": schema.StringAttribute{
 				Computed:    true,
@@ -186,10 +186,10 @@ func (r *IPDHCPClientResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description: "",
 			},
 			"ip_address": schema.StringAttribute{
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsCIDR()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeCIDR()},
+				CustomType:  cidrType{},
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsCIDR()},
 			},
 			"last_received_counter": schema.StringAttribute{
 				Computed:    true,
@@ -510,9 +510,9 @@ func iPDHCPClientApply(ctx context.Context, obj client.Object, m *IPDHCPClientMo
 	}
 	if v, ok := obj["address"]; ok {
 		if v != "" {
-			m.Address = types.StringValue(v)
+			m.Address = newCIDRValue(v)
 		} else {
-			m.Address = types.StringNull()
+			m.Address = newCIDRNull()
 		}
 	}
 	if v, ok := obj["allow-reconfigure"]; ok {
@@ -614,9 +614,9 @@ func iPDHCPClientApply(ctx context.Context, obj client.Object, m *IPDHCPClientMo
 	}
 	if v, ok := obj["expires-after"]; ok {
 		if v != "" {
-			m.ExpiresAfter = types.StringValue(v)
+			m.ExpiresAfter = newDurationValue(v)
 		} else {
-			m.ExpiresAfter = types.StringNull()
+			m.ExpiresAfter = newDurationNull()
 		}
 	}
 	if v, ok := obj["gateway"]; ok {
@@ -644,9 +644,9 @@ func iPDHCPClientApply(ctx context.Context, obj client.Object, m *IPDHCPClientMo
 	}
 	if v, ok := obj["ip-address"]; ok {
 		if v != "" {
-			m.IPAddress = types.StringValue(v)
+			m.IPAddress = newCIDRValue(v)
 		} else {
-			m.IPAddress = types.StringNull()
+			m.IPAddress = newCIDRNull()
 		}
 	}
 	if v, ok := obj["last-received-counter"]; ok {

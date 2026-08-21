@@ -29,31 +29,31 @@ type IPSettingsResource struct {
 }
 
 type IPSettingsModel struct {
-	ID                                   types.String `tfsdk:"id"`
-	Ipv4HighFragmentThresh               types.String `tfsdk:"ipv4_high_fragment_thresh"`
-	Ipv4FragmentTime                     types.String `tfsdk:"ipv4_fragment_time"`
-	AcceptRedirects                      types.Bool   `tfsdk:"accept_redirects"`
-	AcceptSourceRoute                    types.Bool   `tfsdk:"accept_source_route"`
-	AllowFastPath                        types.Bool   `tfsdk:"allow_fast_path"`
-	ARPTimeout                           types.String `tfsdk:"arp_timeout"`
-	IcmpErrorsUseInboundInterfaceAddress types.Bool   `tfsdk:"icmp_errors_use_inbound_interface_address"`
-	IcmpRateLimit                        types.Int64  `tfsdk:"icmp_rate_limit"`
-	IcmpRateMask                         types.Int64  `tfsdk:"icmp_rate_mask"`
-	IPForward                            types.Bool   `tfsdk:"ip_forward"`
-	Ipv4FastPathActive                   types.Bool   `tfsdk:"ipv4_fast_path_active"`
-	Ipv4FastPathBytes                    types.Int64  `tfsdk:"ipv4_fast_path_bytes"`
-	Ipv4FastPathPackets                  types.Int64  `tfsdk:"ipv4_fast_path_packets"`
-	Ipv4FasttrackActive                  types.Bool   `tfsdk:"ipv4_fasttrack_active"`
-	Ipv4FasttrackBytes                   types.Int64  `tfsdk:"ipv4_fasttrack_bytes"`
-	Ipv4FasttrackPackets                 types.Int64  `tfsdk:"ipv4_fasttrack_packets"`
-	Ipv4MultipathHashPolicy              types.String `tfsdk:"ipv4_multipath_hash_policy"`
-	MaxNeighborEntries                   types.Int64  `tfsdk:"max_neighbor_entries"`
-	RpFilter                             types.String `tfsdk:"rp_filter"`
-	SecureRedirects                      types.Bool   `tfsdk:"secure_redirects"`
-	SendRedirects                        types.Bool   `tfsdk:"send_redirects"`
-	TCPSyncookies                        types.Bool   `tfsdk:"tcp_syncookies"`
-	TCPTimestamps                        types.String `tfsdk:"tcp_timestamps"`
-	Router                               types.String `tfsdk:"router"`
+	ID                                   types.String  `tfsdk:"id"`
+	Ipv4HighFragmentThresh               types.String  `tfsdk:"ipv4_high_fragment_thresh"`
+	Ipv4FragmentTime                     types.String  `tfsdk:"ipv4_fragment_time"`
+	AcceptRedirects                      types.Bool    `tfsdk:"accept_redirects"`
+	AcceptSourceRoute                    types.Bool    `tfsdk:"accept_source_route"`
+	AllowFastPath                        types.Bool    `tfsdk:"allow_fast_path"`
+	ARPTimeout                           durationValue `tfsdk:"arp_timeout"`
+	IcmpErrorsUseInboundInterfaceAddress types.Bool    `tfsdk:"icmp_errors_use_inbound_interface_address"`
+	IcmpRateLimit                        types.Int64   `tfsdk:"icmp_rate_limit"`
+	IcmpRateMask                         types.Int64   `tfsdk:"icmp_rate_mask"`
+	IPForward                            types.Bool    `tfsdk:"ip_forward"`
+	Ipv4FastPathActive                   types.Bool    `tfsdk:"ipv4_fast_path_active"`
+	Ipv4FastPathBytes                    types.Int64   `tfsdk:"ipv4_fast_path_bytes"`
+	Ipv4FastPathPackets                  types.Int64   `tfsdk:"ipv4_fast_path_packets"`
+	Ipv4FasttrackActive                  types.Bool    `tfsdk:"ipv4_fasttrack_active"`
+	Ipv4FasttrackBytes                   types.Int64   `tfsdk:"ipv4_fasttrack_bytes"`
+	Ipv4FasttrackPackets                 types.Int64   `tfsdk:"ipv4_fasttrack_packets"`
+	Ipv4MultipathHashPolicy              types.String  `tfsdk:"ipv4_multipath_hash_policy"`
+	MaxNeighborEntries                   types.Int64   `tfsdk:"max_neighbor_entries"`
+	RpFilter                             types.String  `tfsdk:"rp_filter"`
+	SecureRedirects                      types.Bool    `tfsdk:"secure_redirects"`
+	SendRedirects                        types.Bool    `tfsdk:"send_redirects"`
+	TCPSyncookies                        types.Bool    `tfsdk:"tcp_syncookies"`
+	TCPTimestamps                        types.String  `tfsdk:"tcp_timestamps"`
+	Router                               types.String  `tfsdk:"router"`
 }
 
 func NewIPSettingsResource() resource.Resource { return &IPSettingsResource{} }
@@ -98,10 +98,10 @@ func (r *IPSettingsResource) Schema(_ context.Context, _ resource.SchemaRequest,
 			"allow_fast_path": schema.BoolAttribute{Optional: true, Computed: true,
 				Description: "",
 			},
-			"arp_timeout": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"arp_timeout": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"icmp_errors_use_inbound_interface_address": schema.BoolAttribute{Optional: true, Computed: true,
 				Description: "",
@@ -341,9 +341,9 @@ func iPSettingsApply(ctx context.Context, obj client.Object, m *IPSettingsModel)
 	if v, ok := obj["arp-timeout"]; ok {
 		_ = v
 		if v != "" {
-			m.ARPTimeout = types.StringValue(v)
+			m.ARPTimeout = newDurationValue(v)
 		} else {
-			m.ARPTimeout = types.StringNull()
+			m.ARPTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["icmp-errors-use-inbound-interface-address"]; ok {

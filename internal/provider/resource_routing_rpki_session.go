@@ -31,16 +31,16 @@ type RoutingRpkiSessionResource struct {
 }
 
 type RoutingRpkiSessionModel struct {
-	ID      types.String `tfsdk:"id"`
-	Address types.String `tfsdk:"address"`
-	Expires types.String `tfsdk:"expires"`
-	Group   types.String `tfsdk:"group"`
-	Port    types.Int64  `tfsdk:"port"`
-	Serial  types.Int64  `tfsdk:"serial"`
-	Session types.Int64  `tfsdk:"session"`
-	State   types.String `tfsdk:"state"`
-	Version types.Int64  `tfsdk:"version"`
-	Router  types.String `tfsdk:"router"`
+	ID      types.String  `tfsdk:"id"`
+	Address types.String  `tfsdk:"address"`
+	Expires durationValue `tfsdk:"expires"`
+	Group   types.String  `tfsdk:"group"`
+	Port    types.Int64   `tfsdk:"port"`
+	Serial  types.Int64   `tfsdk:"serial"`
+	Session types.Int64   `tfsdk:"session"`
+	State   types.String  `tfsdk:"state"`
+	Version types.Int64   `tfsdk:"version"`
+	Router  types.String  `tfsdk:"router"`
 }
 
 func NewRoutingRpkiSessionResource() resource.Resource { return &RoutingRpkiSessionResource{} }
@@ -72,11 +72,11 @@ func (r *RoutingRpkiSessionResource) Schema(_ context.Context, _ resource.Schema
 				Description: "",
 			},
 			"expires": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"group": schema.StringAttribute{
 				Optional:    true,
@@ -301,9 +301,9 @@ func routingRpkiSessionApply(ctx context.Context, obj client.Object, m *RoutingR
 	}
 	if v, ok := obj["expires"]; ok {
 		if v != "" {
-			m.Expires = types.StringValue(v)
+			m.Expires = newDurationValue(v)
 		} else {
-			m.Expires = types.StringNull()
+			m.Expires = newDurationNull()
 		}
 	}
 	if v, ok := obj["group"]; ok {

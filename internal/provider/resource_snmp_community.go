@@ -32,7 +32,7 @@ type SNMPCommunityResource struct {
 
 type SNMPCommunityModel struct {
 	ID                     types.String `tfsdk:"id"`
-	Addresses              types.String `tfsdk:"addresses"`
+	Addresses              cidrValue    `tfsdk:"addresses"`
 	AuthenticationPassword types.String `tfsdk:"authentication_password"`
 	AuthenticationProtocol types.String `tfsdk:"authentication_protocol"`
 	Comment                types.String `tfsdk:"comment"`
@@ -71,11 +71,11 @@ func (r *SNMPCommunityResource) Schema(_ context.Context, _ resource.SchemaReque
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"addresses": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsCIDR()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeCIDR()},
+				CustomType:  cidrType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsCIDR()},
 			},
 			"authentication_password": schema.StringAttribute{
 				Optional:    true,
@@ -84,11 +84,10 @@ func (r *SNMPCommunityResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"authentication_protocol": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.OneOfFold([]string{"MD5", "SHA1"}...)},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeCase([]string{"MD5", "SHA1"}...)},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.OneOf([]string{"MD5", "SHA1"}...)},
 			},
 			"comment": schema.StringAttribute{
 				Optional:    true,
@@ -111,11 +110,10 @@ func (r *SNMPCommunityResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"encryption_protocol": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.OneOfFold([]string{"DES", "AES"}...)},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeCase([]string{"DES", "AES"}...)},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.OneOf([]string{"DES", "AES"}...)},
 			},
 			"name": schema.StringAttribute{
 				Required:    true,
@@ -340,9 +338,9 @@ func sNMPCommunityApply(ctx context.Context, obj client.Object, m *SNMPCommunity
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["addresses"]; ok {
 		if v != "" {
-			m.Addresses = types.StringValue(v)
+			m.Addresses = newCIDRValue(v)
 		} else {
-			m.Addresses = types.StringNull()
+			m.Addresses = newCIDRNull()
 		}
 	}
 	// Sensitive: RouterOS scrubs the value on read. If the server returned

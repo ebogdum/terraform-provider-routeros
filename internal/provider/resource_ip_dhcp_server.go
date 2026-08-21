@@ -43,12 +43,12 @@ type IPDHCPServerModel struct {
 	AllowDualStackQueue           types.Bool      `tfsdk:"allow_dual_stack_queue"`
 	AlwaysBroadcast               types.Bool      `tfsdk:"always_broadcast"`
 	Authoritative                 types.String    `tfsdk:"authoritative"`
-	BootpLeaseTime                types.String    `tfsdk:"bootp_lease_time"`
+	BootpLeaseTime                durationValue   `tfsdk:"bootp_lease_time"`
 	BootpSupport                  types.String    `tfsdk:"bootp_support"`
 	ClientMACLimit                types.String    `tfsdk:"client_mac_limit"`
 	Comment                       types.String    `tfsdk:"comment"`
 	ConflictDetection             types.Bool      `tfsdk:"conflict_detection"`
-	DelayThreshold                types.String    `tfsdk:"delay_threshold"`
+	DelayThreshold                durationValue   `tfsdk:"delay_threshold"`
 	DHCPOptionSet                 types.String    `tfsdk:"dhcp_option_set"`
 	Disabled                      types.Bool      `tfsdk:"disabled"`
 	DynamicLeaseIdentifiers       types.String    `tfsdk:"dynamic_lease_identifiers"`
@@ -57,7 +57,7 @@ type IPDHCPServerModel struct {
 	Interface                     types.String    `tfsdk:"interface"`
 	Invalid                       types.Bool      `tfsdk:"invalid"`
 	LeaseScript                   types.String    `tfsdk:"lease_script"`
-	LeaseTime                     types.String    `tfsdk:"lease_time"`
+	LeaseTime                     durationValue   `tfsdk:"lease_time"`
 	Name                          types.String    `tfsdk:"name"`
 	ParentQueue                   types.String    `tfsdk:"parent_queue"`
 	Relay                         types.String    `tfsdk:"relay"`
@@ -148,11 +148,11 @@ func (r *IPDHCPServerResource) Schema(_ context.Context, _ resource.SchemaReques
 				Validators:  []validator.String{schemautil.OneOf([]string{"yes", "after-2s-delay", "after-10s-delay", "no"}...)},
 			},
 			"bootp_lease_time": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"bootp_support": schema.StringAttribute{
 				Optional:    true,
@@ -176,11 +176,11 @@ func (r *IPDHCPServerResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description: "",
 			},
 			"delay_threshold": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"dhcp_option_set": schema.StringAttribute{
 				Optional:    true,
@@ -220,11 +220,11 @@ func (r *IPDHCPServerResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description: "",
 			},
 			"lease_time": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"name": schema.StringAttribute{
 				Required:    true,
@@ -650,9 +650,9 @@ func iPDHCPServerApply(ctx context.Context, obj client.Object, m *IPDHCPServerMo
 	}
 	if v, ok := obj["bootp-lease-time"]; ok {
 		if v != "" {
-			m.BootpLeaseTime = types.StringValue(v)
+			m.BootpLeaseTime = newDurationValue(v)
 		} else {
-			m.BootpLeaseTime = types.StringNull()
+			m.BootpLeaseTime = newDurationNull()
 		}
 	}
 	if v, ok := obj["bootp-support"]; ok {
@@ -687,9 +687,9 @@ func iPDHCPServerApply(ctx context.Context, obj client.Object, m *IPDHCPServerMo
 	}
 	if v, ok := obj["delay-threshold"]; ok {
 		if v != "" {
-			m.DelayThreshold = types.StringValue(v)
+			m.DelayThreshold = newDurationValue(v)
 		} else {
-			m.DelayThreshold = types.StringNull()
+			m.DelayThreshold = newDurationNull()
 		}
 	}
 	if v, ok := obj["dhcp-option-set"]; ok {
@@ -754,9 +754,9 @@ func iPDHCPServerApply(ctx context.Context, obj client.Object, m *IPDHCPServerMo
 	}
 	if v, ok := obj["lease-time"]; ok {
 		if v != "" {
-			m.LeaseTime = types.StringValue(v)
+			m.LeaseTime = newDurationValue(v)
 		} else {
-			m.LeaseTime = types.StringNull()
+			m.LeaseTime = newDurationNull()
 		}
 	}
 	if v, ok := obj["name"]; ok {

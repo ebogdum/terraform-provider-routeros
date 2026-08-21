@@ -41,7 +41,7 @@ type IPRouteModel struct {
 	DHCP         types.Bool   `tfsdk:"dhcp"`
 	Disabled     types.Bool   `tfsdk:"disabled"`
 	Distance     types.Int64  `tfsdk:"distance"`
-	DstAddress   types.String `tfsdk:"dst_address"`
+	DstAddress   cidrValue    `tfsdk:"dst_address"`
 	Dynamic      types.Bool   `tfsdk:"dynamic"`
 	Ecmp         types.Bool   `tfsdk:"ecmp"`
 	Gateway      types.String `tfsdk:"gateway"`
@@ -124,11 +124,11 @@ func (r *IPRouteResource) Schema(_ context.Context, _ resource.SchemaRequest, re
 				Description: "",
 			},
 			"dst_address": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsCIDR()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeCIDR()},
+				CustomType:  cidrType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsCIDR()},
 			},
 			"dynamic": schema.BoolAttribute{
 				Computed:    true,
@@ -472,9 +472,9 @@ func iPRouteApply(ctx context.Context, obj client.Object, m *IPRouteModel) {
 	}
 	if v, ok := obj["dst-address"]; ok {
 		if v != "" {
-			m.DstAddress = types.StringValue(v)
+			m.DstAddress = newCIDRValue(v)
 		} else {
-			m.DstAddress = types.StringNull()
+			m.DstAddress = newCIDRNull()
 		}
 	}
 	if v, ok := obj["dynamic"]; ok {

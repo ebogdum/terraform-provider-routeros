@@ -31,16 +31,16 @@ type CertificateScepServerResource struct {
 }
 
 type CertificateScepServerModel struct {
-	ID                types.String `tfsdk:"id"`
-	NextCaCert        types.String `tfsdk:"next_ca_cert"`
-	CaCert            types.String `tfsdk:"ca_cert"`
-	CACertificate     types.String `tfsdk:"ca_certificate"`
-	DaysValid         types.Int64  `tfsdk:"days_valid"`
-	Disabled          types.Bool   `tfsdk:"disabled"`
-	NextCACertificate types.String `tfsdk:"next_ca_certificate"`
-	Path              types.String `tfsdk:"path"`
-	RequestLifetime   types.String `tfsdk:"request_lifetime"`
-	Router            types.String `tfsdk:"router"`
+	ID                types.String  `tfsdk:"id"`
+	NextCaCert        types.String  `tfsdk:"next_ca_cert"`
+	CaCert            types.String  `tfsdk:"ca_cert"`
+	CACertificate     types.String  `tfsdk:"ca_certificate"`
+	DaysValid         types.Int64   `tfsdk:"days_valid"`
+	Disabled          types.Bool    `tfsdk:"disabled"`
+	NextCACertificate types.String  `tfsdk:"next_ca_certificate"`
+	Path              types.String  `tfsdk:"path"`
+	RequestLifetime   durationValue `tfsdk:"request_lifetime"`
+	Router            types.String  `tfsdk:"router"`
 }
 
 func NewCertificateScepServerResource() resource.Resource { return &CertificateScepServerResource{} }
@@ -100,11 +100,11 @@ func (r *CertificateScepServerResource) Schema(_ context.Context, _ resource.Sch
 				Description: "",
 			},
 			"request_lifetime": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"router": schema.StringAttribute{
 				Optional:      true,
@@ -329,9 +329,9 @@ func certificateScepServerApply(ctx context.Context, obj client.Object, m *Certi
 	}
 	if v, ok := obj["request-lifetime"]; ok {
 		if v != "" {
-			m.RequestLifetime = types.StringValue(v)
+			m.RequestLifetime = newDurationValue(v)
 		} else {
-			m.RequestLifetime = types.StringNull()
+			m.RequestLifetime = newDurationNull()
 		}
 	}
 }

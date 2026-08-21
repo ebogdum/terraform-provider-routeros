@@ -31,36 +31,36 @@ type InterfaceVplsResource struct {
 }
 
 type InterfaceVplsModel struct {
-	ID                  types.String `tfsdk:"id"`
-	Peer                types.String `tfsdk:"peer"`
-	Name                types.String `tfsdk:"name"`
-	DisableRunningCheck types.String `tfsdk:"disable_running_check"`
-	ARP                 types.String `tfsdk:"arp"`
-	ARPTimeout          types.String `tfsdk:"arp_timeout"`
-	BGPSignaled         types.Bool   `tfsdk:"bgp_signaled"`
-	BGPVpls             types.String `tfsdk:"bgp_vpls"`
-	BGPVplsPrefix       types.String `tfsdk:"bgp_vpls_prefix"`
-	Bridge              types.String `tfsdk:"bridge"`
-	BridgeCost          types.String `tfsdk:"bridge_cost"`
-	BridgeHorizon       types.String `tfsdk:"bridge_horizon"`
-	BridgePvid          types.String `tfsdk:"bridge_pvid"`
-	CiscoBGPSignaled    types.Bool   `tfsdk:"cisco_bgp_signaled"`
-	CiscoStaticID       types.String `tfsdk:"cisco_static_id"`
-	Comment             types.String `tfsdk:"comment"`
-	Disabled            types.Bool   `tfsdk:"disabled"`
-	LocalLabel          types.Int64  `tfsdk:"local_label"`
-	MACAddress          macValue     `tfsdk:"mac_address"`
-	MTU                 types.Int64  `tfsdk:"mtu"`
-	PwControlWord       types.String `tfsdk:"pw_control_word"`
-	PwL2mtu             types.String `tfsdk:"pw_l2mtu"`
-	PwType              types.String `tfsdk:"pw_type"`
-	RemoteGroup         types.Int64  `tfsdk:"remote_group"`
-	RemoteLabel         types.Int64  `tfsdk:"remote_label"`
-	RemotePeer          types.String `tfsdk:"remote_peer"`
-	RemoteStatus        types.String `tfsdk:"remote_status"`
-	TeTunnel            types.Int64  `tfsdk:"te_tunnel"`
-	VplsID              types.String `tfsdk:"vpls_id"`
-	Router              types.String `tfsdk:"router"`
+	ID                  types.String  `tfsdk:"id"`
+	Peer                types.String  `tfsdk:"peer"`
+	Name                types.String  `tfsdk:"name"`
+	DisableRunningCheck types.String  `tfsdk:"disable_running_check"`
+	ARP                 types.String  `tfsdk:"arp"`
+	ARPTimeout          durationValue `tfsdk:"arp_timeout"`
+	BGPSignaled         types.Bool    `tfsdk:"bgp_signaled"`
+	BGPVpls             types.String  `tfsdk:"bgp_vpls"`
+	BGPVplsPrefix       types.String  `tfsdk:"bgp_vpls_prefix"`
+	Bridge              types.String  `tfsdk:"bridge"`
+	BridgeCost          types.String  `tfsdk:"bridge_cost"`
+	BridgeHorizon       types.String  `tfsdk:"bridge_horizon"`
+	BridgePvid          types.String  `tfsdk:"bridge_pvid"`
+	CiscoBGPSignaled    types.Bool    `tfsdk:"cisco_bgp_signaled"`
+	CiscoStaticID       types.String  `tfsdk:"cisco_static_id"`
+	Comment             types.String  `tfsdk:"comment"`
+	Disabled            types.Bool    `tfsdk:"disabled"`
+	LocalLabel          types.Int64   `tfsdk:"local_label"`
+	MACAddress          macValue      `tfsdk:"mac_address"`
+	MTU                 types.Int64   `tfsdk:"mtu"`
+	PwControlWord       types.String  `tfsdk:"pw_control_word"`
+	PwL2mtu             types.String  `tfsdk:"pw_l2mtu"`
+	PwType              types.String  `tfsdk:"pw_type"`
+	RemoteGroup         types.Int64   `tfsdk:"remote_group"`
+	RemoteLabel         types.Int64   `tfsdk:"remote_label"`
+	RemotePeer          types.String  `tfsdk:"remote_peer"`
+	RemoteStatus        types.String  `tfsdk:"remote_status"`
+	TeTunnel            types.Int64   `tfsdk:"te_tunnel"`
+	VplsID              types.String  `tfsdk:"vpls_id"`
+	Router              types.String  `tfsdk:"router"`
 }
 
 func NewInterfaceVplsResource() resource.Resource { return &InterfaceVplsResource{} }
@@ -108,11 +108,11 @@ func (r *InterfaceVplsResource) Schema(_ context.Context, _ resource.SchemaReque
 				Validators:  []validator.String{schemautil.OneOf([]string{"disabled", "enabled", "proxy-arp", "reply-only", "local-proxy-arp"}...)},
 			},
 			"arp_timeout": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationOrKeyword("auto")},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationOrKeyword("auto")},
 			},
 			"bgp_signaled": schema.BoolAttribute{
 				Computed:    true,
@@ -488,9 +488,9 @@ func interfaceVplsApply(ctx context.Context, obj client.Object, m *InterfaceVpls
 	}
 	if v, ok := obj["arp-timeout"]; ok {
 		if v != "" {
-			m.ARPTimeout = types.StringValue(v)
+			m.ARPTimeout = newDurationValue(v)
 		} else {
-			m.ARPTimeout = types.StringNull()
+			m.ARPTimeout = newDurationNull()
 		}
 	}
 	if v, ok := obj["bgp-signaled"]; ok {

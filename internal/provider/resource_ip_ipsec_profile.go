@@ -31,24 +31,24 @@ type IPIpsecProfileResource struct {
 }
 
 type IPIpsecProfileModel struct {
-	ID                  types.String `tfsdk:"id"`
-	PrfAlgorithm        types.String `tfsdk:"prf_algorithm"`
-	Default             types.Bool   `tfsdk:"default"`
-	DhGroup             types.Set    `tfsdk:"dh_group"`
-	DpdInterval         types.String `tfsdk:"dpd_interval"`
-	DpdMaximumFailures  types.Int64  `tfsdk:"dpd_maximum_failures"`
-	EncAlgorithm        types.Set    `tfsdk:"enc_algorithm"`
-	EncryptionAlgorithm types.String `tfsdk:"encryption_algorithm"`
-	HashAlgorithm       types.String `tfsdk:"hash_algorithm"`
-	HashAlgorithms      types.String `tfsdk:"hash_algorithms"`
-	Lifebytes           types.Int64  `tfsdk:"lifebytes"`
-	Lifetime            types.String `tfsdk:"lifetime"`
-	Name                types.String `tfsdk:"name"`
-	NATTraversal        types.Bool   `tfsdk:"nat_traversal"`
-	Ppk                 types.String `tfsdk:"ppk"`
-	PrfAlgorithms       types.String `tfsdk:"prf_algorithms"`
-	ProposalCheck       types.String `tfsdk:"proposal_check"`
-	Router              types.String `tfsdk:"router"`
+	ID                  types.String  `tfsdk:"id"`
+	PrfAlgorithm        types.String  `tfsdk:"prf_algorithm"`
+	Default             types.Bool    `tfsdk:"default"`
+	DhGroup             types.Set     `tfsdk:"dh_group"`
+	DpdInterval         durationValue `tfsdk:"dpd_interval"`
+	DpdMaximumFailures  types.Int64   `tfsdk:"dpd_maximum_failures"`
+	EncAlgorithm        types.Set     `tfsdk:"enc_algorithm"`
+	EncryptionAlgorithm types.String  `tfsdk:"encryption_algorithm"`
+	HashAlgorithm       types.String  `tfsdk:"hash_algorithm"`
+	HashAlgorithms      types.String  `tfsdk:"hash_algorithms"`
+	Lifebytes           types.Int64   `tfsdk:"lifebytes"`
+	Lifetime            durationValue `tfsdk:"lifetime"`
+	Name                types.String  `tfsdk:"name"`
+	NATTraversal        types.Bool    `tfsdk:"nat_traversal"`
+	Ppk                 types.String  `tfsdk:"ppk"`
+	PrfAlgorithms       types.String  `tfsdk:"prf_algorithms"`
+	ProposalCheck       types.String  `tfsdk:"proposal_check"`
+	Router              types.String  `tfsdk:"router"`
 }
 
 func NewIPIpsecProfileResource() resource.Resource { return &IPIpsecProfileResource{} }
@@ -90,11 +90,11 @@ func (r *IPIpsecProfileResource) Schema(_ context.Context, _ resource.SchemaRequ
 				Description: "",
 			},
 			"dpd_interval": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationOrKeyword("disable-dpd")},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDurationExcept("disable-dpd")},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationOrKeyword("disable-dpd")},
 			},
 			"dpd_maximum_failures": schema.Int64Attribute{
 				Optional:    true,
@@ -127,11 +127,11 @@ func (r *IPIpsecProfileResource) Schema(_ context.Context, _ resource.SchemaRequ
 				Description: "",
 			},
 			"lifetime": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"name": schema.StringAttribute{
 				Required:    true,
@@ -388,9 +388,9 @@ func iPIpsecProfileApply(ctx context.Context, obj client.Object, m *IPIpsecProfi
 	}
 	if v, ok := obj["dpd-interval"]; ok {
 		if v != "" {
-			m.DpdInterval = types.StringValue(v)
+			m.DpdInterval = newDurationValue(v)
 		} else {
-			m.DpdInterval = types.StringNull()
+			m.DpdInterval = newDurationNull()
 		}
 	}
 	if v, ok := obj["dpd-maximum-failures"]; ok {
@@ -442,9 +442,9 @@ func iPIpsecProfileApply(ctx context.Context, obj client.Object, m *IPIpsecProfi
 	}
 	if v, ok := obj["lifetime"]; ok {
 		if v != "" {
-			m.Lifetime = types.StringValue(v)
+			m.Lifetime = newDurationValue(v)
 		} else {
-			m.Lifetime = types.StringNull()
+			m.Lifetime = newDurationNull()
 		}
 	}
 	if v, ok := obj["name"]; ok {

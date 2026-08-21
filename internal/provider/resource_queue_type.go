@@ -31,60 +31,60 @@ type QueueTypeResource struct {
 }
 
 type QueueTypeModel struct {
-	ID                  types.String `tfsdk:"id"`
-	FqCodelTarget       types.String `tfsdk:"fq_codel_target"`
-	FqCodelQuantum      types.String `tfsdk:"fq_codel_quantum"`
-	FqCodelMemlimit     types.String `tfsdk:"fq_codel_memlimit"`
-	FqCodelLimit        types.String `tfsdk:"fq_codel_limit"`
-	FqCodelInterval     types.String `tfsdk:"fq_codel_interval"`
-	FqCodelFlows        types.String `tfsdk:"fq_codel_flows"`
-	FqCodelEcn          types.String `tfsdk:"fq_codel_ecn"`
-	FqCodelCeThreshold  types.String `tfsdk:"fq_codel_ce_threshold"`
-	CodelTarget         types.String `tfsdk:"codel_target"`
-	CodelLimit          types.String `tfsdk:"codel_limit"`
-	CodelInterval       types.String `tfsdk:"codel_interval"`
-	CodelEcn            types.String `tfsdk:"codel_ecn"`
-	CodelCeThreshold    types.String `tfsdk:"codel_ce_threshold"`
-	CakeWash            types.String `tfsdk:"cake_wash"`
-	CakeRttScheme       types.String `tfsdk:"cake_rtt_scheme"`
-	CakeRtt             types.String `tfsdk:"cake_rtt"`
-	CakeOverheadScheme  types.String `tfsdk:"cake_overhead_scheme"`
-	CakeOverhead        types.String `tfsdk:"cake_overhead"`
-	CakeNat             types.String `tfsdk:"cake_nat"`
-	CakeMpu             types.String `tfsdk:"cake_mpu"`
-	CakeMemlimit        types.String `tfsdk:"cake_memlimit"`
-	CakeFlowmode        types.String `tfsdk:"cake_flowmode"`
-	CakeDiffserv        types.String `tfsdk:"cake_diffserv"`
-	CakeBandwidth       types.String `tfsdk:"cake_bandwidth"`
-	CakeAutorateIngress types.String `tfsdk:"cake_autorate_ingress"`
-	CakeAtm             types.String `tfsdk:"cake_atm"`
-	CakeAckFilter       types.String `tfsdk:"cake_ack_filter"`
-	BfifoLimit          types.String `tfsdk:"bfifo_limit"`
-	Default             types.Bool   `tfsdk:"default"`
-	Kind                types.String `tfsdk:"kind"`
-	MqPfifoLimit        types.Int64  `tfsdk:"mq_pfifo_limit"`
-	Name                types.String `tfsdk:"name"`
-	PcqBurstRate        types.Int64  `tfsdk:"pcq_burst_rate"`
-	PcqBurstThreshold   types.Int64  `tfsdk:"pcq_burst_threshold"`
-	PcqBurstTime        types.String `tfsdk:"pcq_burst_time"`
-	PcqClassifier       types.String `tfsdk:"pcq_classifier"`
-	PcqDstAddressMask   types.Int64  `tfsdk:"pcq_dst_address_mask"`
-	PcqDstAddress6Mask  types.Int64  `tfsdk:"pcq_dst_address6_mask"`
-	PcqLimit            types.Int64  `tfsdk:"pcq_limit"`
-	PcqRate             types.Int64  `tfsdk:"pcq_rate"`
-	PcqSrcAddressMask   types.Int64  `tfsdk:"pcq_src_address_mask"`
-	PcqSrcAddress6Mask  types.Int64  `tfsdk:"pcq_src_address6_mask"`
-	PcqTotalLimit       types.Int64  `tfsdk:"pcq_total_limit"`
-	PfifoLimit          types.Int64  `tfsdk:"pfifo_limit"`
-	RedAvgPacket        types.Int64  `tfsdk:"red_avg_packet"`
-	RedBurst            types.Int64  `tfsdk:"red_burst"`
-	RedLimit            types.Int64  `tfsdk:"red_limit"`
-	RedMaxThreshold     types.Int64  `tfsdk:"red_max_threshold"`
-	RedMinThreshold     types.Int64  `tfsdk:"red_min_threshold"`
-	SfqAllot            types.Int64  `tfsdk:"sfq_allot"`
-	SfqPerturb          types.Int64  `tfsdk:"sfq_perturb"`
-	TypeName            types.String `tfsdk:"type_name"`
-	Router              types.String `tfsdk:"router"`
+	ID                  types.String  `tfsdk:"id"`
+	FqCodelTarget       types.String  `tfsdk:"fq_codel_target"`
+	FqCodelQuantum      types.String  `tfsdk:"fq_codel_quantum"`
+	FqCodelMemlimit     types.String  `tfsdk:"fq_codel_memlimit"`
+	FqCodelLimit        types.String  `tfsdk:"fq_codel_limit"`
+	FqCodelInterval     types.String  `tfsdk:"fq_codel_interval"`
+	FqCodelFlows        types.String  `tfsdk:"fq_codel_flows"`
+	FqCodelEcn          types.String  `tfsdk:"fq_codel_ecn"`
+	FqCodelCeThreshold  types.String  `tfsdk:"fq_codel_ce_threshold"`
+	CodelTarget         types.String  `tfsdk:"codel_target"`
+	CodelLimit          types.String  `tfsdk:"codel_limit"`
+	CodelInterval       types.String  `tfsdk:"codel_interval"`
+	CodelEcn            types.String  `tfsdk:"codel_ecn"`
+	CodelCeThreshold    types.String  `tfsdk:"codel_ce_threshold"`
+	CakeWash            types.String  `tfsdk:"cake_wash"`
+	CakeRttScheme       types.String  `tfsdk:"cake_rtt_scheme"`
+	CakeRtt             types.String  `tfsdk:"cake_rtt"`
+	CakeOverheadScheme  types.String  `tfsdk:"cake_overhead_scheme"`
+	CakeOverhead        types.String  `tfsdk:"cake_overhead"`
+	CakeNat             types.String  `tfsdk:"cake_nat"`
+	CakeMpu             types.String  `tfsdk:"cake_mpu"`
+	CakeMemlimit        types.String  `tfsdk:"cake_memlimit"`
+	CakeFlowmode        types.String  `tfsdk:"cake_flowmode"`
+	CakeDiffserv        types.String  `tfsdk:"cake_diffserv"`
+	CakeBandwidth       types.String  `tfsdk:"cake_bandwidth"`
+	CakeAutorateIngress types.String  `tfsdk:"cake_autorate_ingress"`
+	CakeAtm             types.String  `tfsdk:"cake_atm"`
+	CakeAckFilter       types.String  `tfsdk:"cake_ack_filter"`
+	BfifoLimit          types.String  `tfsdk:"bfifo_limit"`
+	Default             types.Bool    `tfsdk:"default"`
+	Kind                types.String  `tfsdk:"kind"`
+	MqPfifoLimit        types.Int64   `tfsdk:"mq_pfifo_limit"`
+	Name                types.String  `tfsdk:"name"`
+	PcqBurstRate        types.Int64   `tfsdk:"pcq_burst_rate"`
+	PcqBurstThreshold   types.Int64   `tfsdk:"pcq_burst_threshold"`
+	PcqBurstTime        durationValue `tfsdk:"pcq_burst_time"`
+	PcqClassifier       types.String  `tfsdk:"pcq_classifier"`
+	PcqDstAddressMask   types.Int64   `tfsdk:"pcq_dst_address_mask"`
+	PcqDstAddress6Mask  types.Int64   `tfsdk:"pcq_dst_address6_mask"`
+	PcqLimit            types.Int64   `tfsdk:"pcq_limit"`
+	PcqRate             types.Int64   `tfsdk:"pcq_rate"`
+	PcqSrcAddressMask   types.Int64   `tfsdk:"pcq_src_address_mask"`
+	PcqSrcAddress6Mask  types.Int64   `tfsdk:"pcq_src_address6_mask"`
+	PcqTotalLimit       types.Int64   `tfsdk:"pcq_total_limit"`
+	PfifoLimit          types.Int64   `tfsdk:"pfifo_limit"`
+	RedAvgPacket        types.Int64   `tfsdk:"red_avg_packet"`
+	RedBurst            types.Int64   `tfsdk:"red_burst"`
+	RedLimit            types.Int64   `tfsdk:"red_limit"`
+	RedMaxThreshold     types.Int64   `tfsdk:"red_max_threshold"`
+	RedMinThreshold     types.Int64   `tfsdk:"red_min_threshold"`
+	SfqAllot            types.Int64   `tfsdk:"sfq_allot"`
+	SfqPerturb          types.Int64   `tfsdk:"sfq_perturb"`
+	TypeName            types.String  `tfsdk:"type_name"`
+	Router              types.String  `tfsdk:"router"`
 }
 
 func NewQueueTypeResource() resource.Resource { return &QueueTypeResource{} }
@@ -279,11 +279,11 @@ func (r *QueueTypeResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Description: "",
 			},
 			"pcq_burst_time": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+				CustomType:  durationType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"pcq_classifier": schema.StringAttribute{
 				Optional:    true,
@@ -999,9 +999,9 @@ func queueTypeApply(ctx context.Context, obj client.Object, m *QueueTypeModel) {
 	}
 	if v, ok := obj["pcq-burst-time"]; ok {
 		if v != "" {
-			m.PcqBurstTime = types.StringValue(v)
+			m.PcqBurstTime = newDurationValue(v)
 		} else {
-			m.PcqBurstTime = types.StringNull()
+			m.PcqBurstTime = newDurationNull()
 		}
 	}
 	if v, ok := obj["pcq-classifier"]; ok {

@@ -29,25 +29,25 @@ type IPProxyResource struct {
 }
 
 type IPProxyModel struct {
-	ID                   types.String `tfsdk:"id"`
-	AlwaysFromCache      types.Bool   `tfsdk:"always_from_cache"`
-	Anonymous            types.Bool   `tfsdk:"anonymous"`
-	CacheAdministrator   types.String `tfsdk:"cache_administrator"`
-	CacheHitDscp         types.Int64  `tfsdk:"cache_hit_dscp"`
-	CacheOnDisk          types.Bool   `tfsdk:"cache_on_disk"`
-	CachePath            types.String `tfsdk:"cache_path"`
-	Enabled              types.Bool   `tfsdk:"enabled"`
-	MaxCacheObjectSize   types.Int64  `tfsdk:"max_cache_object_size"`
-	MaxCacheSize         types.String `tfsdk:"max_cache_size"`
-	MaxClientConnections types.Int64  `tfsdk:"max_client_connections"`
-	MaxFreshTime         types.String `tfsdk:"max_fresh_time"`
-	MaxServerConnections types.Int64  `tfsdk:"max_server_connections"`
-	ParentProxy          types.String `tfsdk:"parent_proxy"`
-	ParentProxyPort      types.Int64  `tfsdk:"parent_proxy_port"`
-	Port                 types.Int64  `tfsdk:"port"`
-	SerializeConnections types.Bool   `tfsdk:"serialize_connections"`
-	SrcAddress           types.String `tfsdk:"src_address"`
-	Router               types.String `tfsdk:"router"`
+	ID                   types.String  `tfsdk:"id"`
+	AlwaysFromCache      types.Bool    `tfsdk:"always_from_cache"`
+	Anonymous            types.Bool    `tfsdk:"anonymous"`
+	CacheAdministrator   types.String  `tfsdk:"cache_administrator"`
+	CacheHitDscp         types.Int64   `tfsdk:"cache_hit_dscp"`
+	CacheOnDisk          types.Bool    `tfsdk:"cache_on_disk"`
+	CachePath            types.String  `tfsdk:"cache_path"`
+	Enabled              types.Bool    `tfsdk:"enabled"`
+	MaxCacheObjectSize   types.Int64   `tfsdk:"max_cache_object_size"`
+	MaxCacheSize         types.String  `tfsdk:"max_cache_size"`
+	MaxClientConnections types.Int64   `tfsdk:"max_client_connections"`
+	MaxFreshTime         durationValue `tfsdk:"max_fresh_time"`
+	MaxServerConnections types.Int64   `tfsdk:"max_server_connections"`
+	ParentProxy          types.String  `tfsdk:"parent_proxy"`
+	ParentProxyPort      types.Int64   `tfsdk:"parent_proxy_port"`
+	Port                 types.Int64   `tfsdk:"port"`
+	SerializeConnections types.Bool    `tfsdk:"serialize_connections"`
+	SrcAddress           types.String  `tfsdk:"src_address"`
+	Router               types.String  `tfsdk:"router"`
 }
 
 func NewIPProxyResource() resource.Resource { return &IPProxyResource{} }
@@ -103,10 +103,10 @@ func (r *IPProxyResource) Schema(_ context.Context, _ resource.SchemaRequest, re
 			"max_client_connections": schema.Int64Attribute{Optional: true, Computed: true,
 				Description: "",
 			},
-			"max_fresh_time": schema.StringAttribute{Optional: true, Computed: true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsDurationRouterOS()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
+			"max_fresh_time": schema.StringAttribute{
+				CustomType: durationType{}, Optional: true, Computed: true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsDurationRouterOS()},
 			},
 			"max_server_connections": schema.Int64Attribute{Optional: true, Computed: true,
 				Description: "",
@@ -362,9 +362,9 @@ func iPProxyApply(ctx context.Context, obj client.Object, m *IPProxyModel) {
 	if v, ok := obj["max-fresh-time"]; ok {
 		_ = v
 		if v != "" {
-			m.MaxFreshTime = types.StringValue(v)
+			m.MaxFreshTime = newDurationValue(v)
 		} else {
-			m.MaxFreshTime = types.StringNull()
+			m.MaxFreshTime = newDurationNull()
 		}
 	}
 	if v, ok := obj["max-server-connections"]; ok {
