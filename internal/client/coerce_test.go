@@ -90,13 +90,46 @@ func TestCanonicalCIDR(t *testing.T) {
 	}
 }
 
+// Every accepted form was PUT to a ROS 7.23.2 /ip/dhcp-server/lease and came
+// back as upper-case colon form.
 func TestCanonicalMAC(t *testing.T) {
-	got, err := CanonicalMAC("aa:bb:cc:dd:ee:ff")
-	if err != nil || got != "AA:BB:CC:DD:EE:FF" {
-		t.Fatalf("CanonicalMAC = %q,%v", got, err)
+	for in, want := range map[string]string{
+		"aa:bb:cc:dd:ee:ff":   "AA:BB:CC:DD:EE:FF",
+		"AA:BB:CC:DD:EE:FF":   "AA:BB:CC:DD:EE:FF",
+		"Aa-Bb-Cc-Dd-Ee-01":   "AA:BB:CC:DD:EE:01",
+		"aabbccddee02":        "AA:BB:CC:DD:EE:02",
+		" AA:BB:CC:DD:EE:FF ": "AA:BB:CC:DD:EE:FF",
+	} {
+		got, err := CanonicalMAC(in)
+		if err != nil || got != want {
+			t.Errorf("CanonicalMAC(%q) = %q,%v want %q", in, got, err, want)
+		}
 	}
-	if _, err := CanonicalMAC("nope"); err == nil {
-		t.Fatal("want error")
+	for _, bad := range []string{"nope", "", "aa:bb:cc:dd:ee", "aa:bb:cc:dd:ee:gg", "aabbccddee", "AA:BB:CC:DD:EE:FF/FF:FF:FF:FF:FF:FF"} {
+		if _, err := CanonicalMAC(bad); err == nil {
+			t.Errorf("CanonicalMAC(%q) accepted, want error", bad)
+		}
+	}
+}
+
+// RouterOS prints and accepts a clock form alongside the unit form; the parser
+// rejected both, so an interval copied off the router would not plan.
+func TestParseDurationClockForm(t *testing.T) {
+	for in, want := range map[string]time.Duration{
+		"00:05:00":   5 * time.Minute,
+		"1d00:00:00": 24 * time.Hour,
+		"23:59:59":   23*time.Hour + 59*time.Minute + 59*time.Second,
+		"2d03:04:05": 2*24*time.Hour + 3*time.Hour + 4*time.Minute + 5*time.Second,
+	} {
+		got, err := ParseDuration(in)
+		if err != nil || got != want {
+			t.Errorf("ParseDuration(%q) = %v,%v want %v", in, got, err, want)
+		}
+	}
+	for _, bad := range []string{"00:60:00", "00:00:60", "nonsense"} {
+		if _, err := ParseDuration(bad); err == nil {
+			t.Errorf("ParseDuration(%q) accepted, want error", bad)
+		}
 	}
 }
 

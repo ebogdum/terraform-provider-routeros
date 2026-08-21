@@ -69,10 +69,25 @@ func FormatInt64(v int64) string { return strconv.FormatInt(v, 10) }
 // treated as seconds (matching RouterOS).
 var durationRe = regexp.MustCompile(`^(?:(\d+)w)?(?:(\d+)d)?(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$`)
 
+// The clock form RouterOS prints and accepts alongside the unit form, e.g.
+// "00:05:00" and "1d00:00:00".
+var durationClockRe = regexp.MustCompile(`^(?:(\d+)d)?(\d{1,2}):(\d{2}):(\d{2})$`)
+
 func ParseDuration(s string) (time.Duration, error) {
 	s = strings.TrimSpace(strings.ToLower(s))
 	if s == "" || s == "none" || s == "never" || s == "0s" || s == "0" {
 		return 0, nil
+	}
+	if m := durationClockRe.FindStringSubmatch(s); m != nil {
+		days, _ := strconv.Atoi(m[1])
+		hours, _ := strconv.Atoi(m[2])
+		mins, _ := strconv.Atoi(m[3])
+		secs, _ := strconv.Atoi(m[4])
+		if mins > 59 || secs > 59 {
+			return 0, fmt.Errorf("routeros: bad duration %q", s)
+		}
+		return time.Duration(days)*24*time.Hour + time.Duration(hours)*time.Hour +
+			time.Duration(mins)*time.Minute + time.Duration(secs)*time.Second, nil
 	}
 	if onlyDigits(s) {
 		secs, err := strconv.ParseInt(s, 10, 64)
@@ -200,14 +215,27 @@ func CanonicalCIDR(s string) (string, error) {
 	return fmt.Sprintf("%s/%d", ip.String(), m), nil
 }
 
-var macRe = regexp.MustCompile(`^[0-9A-Fa-f]{2}(:[0-9A-Fa-f]{2}){5}$`)
+// RouterOS accepts a MAC written with colons, with hyphens, or as bare hex, and
+// stores every one of them as upper-case colon form.
+var (
+	macRe     = regexp.MustCompile(`^[0-9A-Fa-f]{2}([:-][0-9A-Fa-f]{2}){5}$`)
+	macBareRe = regexp.MustCompile(`^[0-9A-Fa-f]{12}$`)
+)
 
 func ParseMAC(s string) (net.HardwareAddr, error) {
 	s = strings.TrimSpace(s)
-	if !macRe.MatchString(s) {
+	switch {
+	case macRe.MatchString(s):
+		return net.ParseMAC(strings.ToUpper(strings.ReplaceAll(s, "-", ":")))
+	case macBareRe.MatchString(s):
+		var b []string
+		for i := 0; i < 12; i += 2 {
+			b = append(b, s[i:i+2])
+		}
+		return net.ParseMAC(strings.ToUpper(strings.Join(b, ":")))
+	default:
 		return nil, fmt.Errorf("routeros: %q is not a MAC address", s)
 	}
-	return net.ParseMAC(strings.ToUpper(s))
 }
 
 func CanonicalMAC(s string) (string, error) {

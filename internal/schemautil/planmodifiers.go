@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
 )
@@ -33,10 +34,9 @@ func (m normalizeStringPM) PlanModifyString(_ context.Context, req planmodifier.
 		resp.Diagnostics.AddAttributeError(req.Path, "Invalid value", err.Error())
 		return
 	}
-	// If state already equals the canonical form, keep state to avoid a diff.
-	if !req.StateValue.IsNull() && req.StateValue.ValueString() == canon {
-		resp.PlanValue = req.StateValue
-	}
+	// The device stores the canonical form and echoes it back, so planning the
+	// raw config value makes every create report an inconsistent result.
+	resp.PlanValue = types.StringValue(canon)
 }
 
 // NormalizeCIDR canonicalises "10.0.0.1/24" / spaces / case so that

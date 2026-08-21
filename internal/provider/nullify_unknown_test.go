@@ -3,7 +3,9 @@ package provider
 import (
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 )
 
 // TestNullifyUnknownAttrs proves the post-apply sweep resolves every Unknown
@@ -48,4 +50,39 @@ func TestNullifyUnknownAttrs(t *testing.T) {
 	nullifyUnknownAttrs(nil)
 	nullifyUnknownAttrs(model{})
 	nullifyUnknownAttrs("not a struct")
+}
+
+// The switch named only the basetypes, so a custom-typed attribute stayed
+// Unknown and reached Terraform as an invalid result. Every ordered firewall
+// resource carries `time` as a csvSetValue, which is how it surfaced.
+func TestNullifyUnknownAttrsResolvesCustomAndCollectionTypes(t *testing.T) {
+	type model struct {
+		Time     csvSetValue
+		AList    types.List
+		ASet     types.Set
+		AMap     types.Map
+		KeptTime csvSetValue
+	}
+	m := &model{
+		Time:     csvSetValue{StringValue: basetypes.NewStringUnknown()},
+		AList:    types.ListUnknown(types.StringType),
+		ASet:     types.SetUnknown(types.StringType),
+		AMap:     types.MapUnknown(types.StringType),
+		KeptTime: csvSetValue{StringValue: basetypes.NewStringValue("mon,tue")},
+	}
+	nullifyUnknownAttrs(m)
+
+	for name, v := range map[string]attr.Value{
+		"Time": m.Time, "AList": m.AList, "ASet": m.ASet, "AMap": m.AMap,
+	} {
+		if v.IsUnknown() {
+			t.Errorf("%s: still unknown", name)
+		}
+		if !v.IsNull() {
+			t.Errorf("%s: want null, got %v", name, v)
+		}
+	}
+	if m.KeptTime.ValueString() != "mon,tue" {
+		t.Errorf("KeptTime: want mon,tue, got %v", m.KeptTime)
+	}
 }
