@@ -647,3 +647,26 @@ func TestRouterAttributeRequiresReplace(t *testing.T) {
 		}
 	}
 }
+
+// /disk was generated against a RouterOS that is not 7.23: 42 of the names it
+// declares are not settable on either an RB5009UPr+S+ or a CRS305-1G-4S+, and
+// most have no counterpart under any spelling. They are read-only here so a
+// config cannot send something the device answers 400 to. Their working
+// equivalents already exist as separate attributes -- swap, tmpfs_max_size,
+// mount_read_only, type -- so nothing is lost by not writing these.
+func TestDiskDoesNotWriteNamesTheDeviceRejects(t *testing.T) {
+	deviceSetArgs := map[string]bool{}
+	for _, a := range strings.Fields(`comment compress disabled file-offset file-path file-size
+		media-interface media-sharing mount-filesystem mount-point-template mount-read-only parent
+		partition-number partition-offset partition-size slot smb-address smb-encryption smb-password
+		smb-server-encryption smb-server-password smb-server-user smb-share smb-sharing smb-user
+		sshfs-address sshfs-password sshfs-path sshfs-port sshfs-user swap tmpfs-max-size type`) {
+		deviceSetArgs[a] = true
+	}
+	src := readResource(t, "resource_disk.go")
+	for _, m := range regexp.MustCompile(`body\["([a-z0-9-]+)"\]`).FindAllStringSubmatch(src, -1) {
+		if !deviceSetArgs[m[1]] {
+			t.Errorf("/disk writes %q, which RouterOS 7.23 does not accept", m[1])
+		}
+	}
+}

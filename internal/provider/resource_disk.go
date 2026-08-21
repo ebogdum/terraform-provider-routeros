@@ -194,12 +194,10 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"block_device": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"btrfs": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -254,17 +252,14 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"eject_drive": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"empty": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"encrypted": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -277,7 +272,6 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"formatting": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -295,7 +289,6 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"guid_partition_table": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -316,17 +309,14 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"i_scsi_export": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"i_scsi_server_iqn": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"i_scsi_server_port": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -343,7 +333,6 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"iscsi_sharing": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -368,7 +357,7 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			"mount_compress": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "",
+				Description: "Filesystem compression. RouterOS calls this `compress`.",
 			},
 			"mount_filesystem": schema.BoolAttribute{
 				Optional:    true,
@@ -390,48 +379,39 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "Sets the mounted disk in read only mode when set to yes .",
 			},
 			"mounted": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"newfileman": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"nfs_sharing": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"nvme": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"nvme_tcp_export": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"nvme_tcp_server_allow_host_name": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"nvme_tcp_server_nqn": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"nvme_tcp_server_password": schema.StringAttribute{
-				Optional:    true,
 				Sensitive:   true,
 				Computed:    true,
 				Description: "",
 			},
 			"nvme_tcp_server_port": schema.Int64Attribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -441,7 +421,6 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"oldfileman": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -451,12 +430,10 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"part": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"partition": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -489,43 +466,34 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
 			},
 			"raid": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"raid_and_master": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"raid_and_type": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"raid_master": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"raid_member": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"raid_member_failed": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"raid_role": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
-				Validators:  []validator.String{schemautil.OneOf([]string{"spare"}...)},
 			},
 			"raid_scrub": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -538,7 +506,6 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"read_only": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -559,38 +526,31 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"reset_counters": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"rose": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"scan": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"self_encrypted_and_locked": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"self_encryption_enabled": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
 			"self_encryption_password": schema.StringAttribute{
-				Optional:    true,
 				Sensitive:   true,
 				Computed:    true,
 				Description: "",
 			},
 			"self_encryption_supported": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -638,7 +598,6 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"swap_enabled": schema.BoolAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -651,7 +610,6 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"tmpfs": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -661,7 +619,6 @@ func (r *DiskResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "",
 			},
 			"trim": schema.StringAttribute{
-				Optional:    true,
 				Computed:    true,
 				Description: "",
 			},
@@ -744,44 +701,11 @@ func (r *DiskResource) Create(ctx context.Context, req resource.CreateRequest, r
 		return
 	}
 	body := client.Object{}
-	if !(plan.BlockDevice.IsNull() || plan.BlockDevice.IsUnknown()) {
-		body["block-device"] = client.FormatBool(plan.BlockDevice.ValueBool())
-	}
-	if !(plan.Btrfs.IsNull() || plan.Btrfs.IsUnknown()) {
-		body["btrfs"] = plan.Btrfs.ValueString()
-	}
 	if !(plan.Comment.IsNull() || plan.Comment.IsUnknown()) {
 		body["comment"] = plan.Comment.ValueString()
 	}
 	if !(plan.Disabled.IsNull() || plan.Disabled.IsUnknown()) {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
-	}
-	if !(plan.EjectDrive.IsNull() || plan.EjectDrive.IsUnknown()) {
-		body["eject-drive"] = plan.EjectDrive.ValueString()
-	}
-	if !(plan.Empty.IsNull() || plan.Empty.IsUnknown()) {
-		body["empty"] = client.FormatBool(plan.Empty.ValueBool())
-	}
-	if !(plan.Encrypted.IsNull() || plan.Encrypted.IsUnknown()) {
-		body["encrypted"] = client.FormatBool(plan.Encrypted.ValueBool())
-	}
-	if !(plan.Formatting.IsNull() || plan.Formatting.IsUnknown()) {
-		body["formatting"] = client.FormatBool(plan.Formatting.ValueBool())
-	}
-	if !(plan.GuidPartitionTable.IsNull() || plan.GuidPartitionTable.IsUnknown()) {
-		body["guid-partition-table"] = client.FormatBool(plan.GuidPartitionTable.ValueBool())
-	}
-	if !(plan.IScsiExport.IsNull() || plan.IScsiExport.IsUnknown()) {
-		body["i-scsi-export"] = client.FormatBool(plan.IScsiExport.ValueBool())
-	}
-	if !(plan.IScsiServerIqn.IsNull() || plan.IScsiServerIqn.IsUnknown()) {
-		body["i-scsi-server-iqn"] = plan.IScsiServerIqn.ValueString()
-	}
-	if !(plan.IScsiServerPort.IsNull() || plan.IScsiServerPort.IsUnknown()) {
-		body["i-scsi-server-port"] = client.FormatInt64(plan.IScsiServerPort.ValueInt64())
-	}
-	if !(plan.IscsiSharing.IsNull() || plan.IscsiSharing.IsUnknown()) {
-		body["iscsi-sharing"] = plan.IscsiSharing.ValueString()
 	}
 	if !(plan.MediaInterface.IsNull() || plan.MediaInterface.IsUnknown()) {
 		body["media-interface"] = plan.MediaInterface.ValueString()
@@ -790,7 +714,7 @@ func (r *DiskResource) Create(ctx context.Context, req resource.CreateRequest, r
 		body["media-sharing"] = client.FormatBool(plan.MediaSharing.ValueBool())
 	}
 	if !(plan.MountCompress.IsNull() || plan.MountCompress.IsUnknown()) {
-		body["mount-compress"] = client.FormatBool(plan.MountCompress.ValueBool())
+		body["compress"] = client.FormatBool(plan.MountCompress.ValueBool())
 	}
 	if !(plan.MountFilesystem.IsNull() || plan.MountFilesystem.IsUnknown()) {
 		body["mount-filesystem"] = client.FormatBool(plan.MountFilesystem.ValueBool())
@@ -801,98 +725,14 @@ func (r *DiskResource) Create(ctx context.Context, req resource.CreateRequest, r
 	if !(plan.MountReadOnly.IsNull() || plan.MountReadOnly.IsUnknown()) {
 		body["mount-read-only"] = client.FormatBool(plan.MountReadOnly.ValueBool())
 	}
-	if !(plan.Mounted.IsNull() || plan.Mounted.IsUnknown()) {
-		body["mounted"] = client.FormatBool(plan.Mounted.ValueBool())
-	}
-	if !(plan.Newfileman.IsNull() || plan.Newfileman.IsUnknown()) {
-		body["newfileman"] = plan.Newfileman.ValueString()
-	}
-	if !(plan.NfsSharing.IsNull() || plan.NfsSharing.IsUnknown()) {
-		body["nfs-sharing"] = client.FormatBool(plan.NfsSharing.ValueBool())
-	}
-	if !(plan.Nvme.IsNull() || plan.Nvme.IsUnknown()) {
-		body["nvme"] = plan.Nvme.ValueString()
-	}
-	if !(plan.NvmeTCPExport.IsNull() || plan.NvmeTCPExport.IsUnknown()) {
-		body["nvme-tcp-export"] = client.FormatBool(plan.NvmeTCPExport.ValueBool())
-	}
-	if !(plan.NvmeTCPServerAllowHostName.IsNull() || plan.NvmeTCPServerAllowHostName.IsUnknown()) {
-		body["nvme-tcp-server-allow-host-name"] = plan.NvmeTCPServerAllowHostName.ValueString()
-	}
-	if !(plan.NvmeTCPServerNqn.IsNull() || plan.NvmeTCPServerNqn.IsUnknown()) {
-		body["nvme-tcp-server-nqn"] = plan.NvmeTCPServerNqn.ValueString()
-	}
-	if !(plan.NvmeTCPServerPassword.IsNull() || plan.NvmeTCPServerPassword.IsUnknown()) {
-		body["nvme-tcp-server-password"] = plan.NvmeTCPServerPassword.ValueString()
-	}
-	if !(plan.NvmeTCPServerPort.IsNull() || plan.NvmeTCPServerPort.IsUnknown()) {
-		body["nvme-tcp-server-port"] = client.FormatInt64(plan.NvmeTCPServerPort.ValueInt64())
-	}
-	if !(plan.Oldfileman.IsNull() || plan.Oldfileman.IsUnknown()) {
-		body["oldfileman"] = plan.Oldfileman.ValueString()
-	}
 	if !(plan.Parent.IsNull() || plan.Parent.IsUnknown()) {
 		body["parent"] = plan.Parent.ValueString()
-	}
-	if !(plan.Part.IsNull() || plan.Part.IsUnknown()) {
-		body["part"] = plan.Part.ValueString()
-	}
-	if !(plan.Partition.IsNull() || plan.Partition.IsUnknown()) {
-		body["partition"] = client.FormatBool(plan.Partition.ValueBool())
 	}
 	if !(plan.PartitionOffset.IsNull() || plan.PartitionOffset.IsUnknown()) {
 		body["partition-offset"] = plan.PartitionOffset.ValueString()
 	}
 	if !(plan.PartitionSize.IsNull() || plan.PartitionSize.IsUnknown()) {
 		body["partition-size"] = plan.PartitionSize.ValueString()
-	}
-	if !(plan.Raid.IsNull() || plan.Raid.IsUnknown()) {
-		body["raid"] = plan.Raid.ValueString()
-	}
-	if !(plan.RaidAndMaster.IsNull() || plan.RaidAndMaster.IsUnknown()) {
-		body["raid-and-master"] = plan.RaidAndMaster.ValueString()
-	}
-	if !(plan.RaidAndType.IsNull() || plan.RaidAndType.IsUnknown()) {
-		body["raid-and-type"] = plan.RaidAndType.ValueString()
-	}
-	if !(plan.RaidMaster.IsNull() || plan.RaidMaster.IsUnknown()) {
-		body["raid-master"] = plan.RaidMaster.ValueString()
-	}
-	if !(plan.RaidMember.IsNull() || plan.RaidMember.IsUnknown()) {
-		body["raid-member"] = client.FormatBool(plan.RaidMember.ValueBool())
-	}
-	if !(plan.RaidMemberFailed.IsNull() || plan.RaidMemberFailed.IsUnknown()) {
-		body["raid-member-failed"] = client.FormatBool(plan.RaidMemberFailed.ValueBool())
-	}
-	if !(plan.RaidRole.IsNull() || plan.RaidRole.IsUnknown()) {
-		body["raid-role"] = plan.RaidRole.ValueString()
-	}
-	if !(plan.RaidScrub.IsNull() || plan.RaidScrub.IsUnknown()) {
-		body["raid-scrub"] = plan.RaidScrub.ValueString()
-	}
-	if !(plan.ReadOnly.IsNull() || plan.ReadOnly.IsUnknown()) {
-		body["read-only"] = client.FormatBool(plan.ReadOnly.ValueBool())
-	}
-	if !(plan.ResetCounters.IsNull() || plan.ResetCounters.IsUnknown()) {
-		body["reset-counters"] = plan.ResetCounters.ValueString()
-	}
-	if !(plan.Rose.IsNull() || plan.Rose.IsUnknown()) {
-		body["rose"] = plan.Rose.ValueString()
-	}
-	if !(plan.Scan.IsNull() || plan.Scan.IsUnknown()) {
-		body["scan"] = plan.Scan.ValueString()
-	}
-	if !(plan.SelfEncryptedAndLocked.IsNull() || plan.SelfEncryptedAndLocked.IsUnknown()) {
-		body["self-encrypted-and-locked"] = client.FormatBool(plan.SelfEncryptedAndLocked.ValueBool())
-	}
-	if !(plan.SelfEncryptionEnabled.IsNull() || plan.SelfEncryptionEnabled.IsUnknown()) {
-		body["self-encryption-enabled"] = client.FormatBool(plan.SelfEncryptionEnabled.ValueBool())
-	}
-	if !(plan.SelfEncryptionPassword.IsNull() || plan.SelfEncryptionPassword.IsUnknown()) {
-		body["self-encryption-password"] = plan.SelfEncryptionPassword.ValueString()
-	}
-	if !(plan.SelfEncryptionSupported.IsNull() || plan.SelfEncryptionSupported.IsUnknown()) {
-		body["self-encryption-supported"] = client.FormatBool(plan.SelfEncryptionSupported.ValueBool())
 	}
 	if !(plan.Slot.IsNull() || plan.Slot.IsUnknown()) {
 		body["slot"] = plan.Slot.ValueString()
@@ -912,17 +752,8 @@ func (r *DiskResource) Create(ctx context.Context, req resource.CreateRequest, r
 	if !(plan.Swap.IsNull() || plan.Swap.IsUnknown()) {
 		body["swap"] = client.FormatBool(plan.Swap.ValueBool())
 	}
-	if !(plan.SwapEnabled.IsNull() || plan.SwapEnabled.IsUnknown()) {
-		body["swap-enabled"] = client.FormatBool(plan.SwapEnabled.ValueBool())
-	}
-	if !(plan.Tmpfs.IsNull() || plan.Tmpfs.IsUnknown()) {
-		body["tmpfs"] = plan.Tmpfs.ValueString()
-	}
 	if !(plan.TmpfsMaxSize.IsNull() || plan.TmpfsMaxSize.IsUnknown()) {
 		body["tmpfs-max-size"] = plan.TmpfsMaxSize.ValueString()
-	}
-	if !(plan.Trim.IsNull() || plan.Trim.IsUnknown()) {
-		body["trim"] = plan.Trim.ValueString()
 	}
 	if !(plan.Type.IsNull() || plan.Type.IsUnknown()) {
 		body["type"] = plan.Type.ValueString()
@@ -975,44 +806,11 @@ func (r *DiskResource) Update(ctx context.Context, req resource.UpdateRequest, r
 		return
 	}
 	body := client.Object{}
-	if !plan.BlockDevice.Equal(state.BlockDevice) && !plan.BlockDevice.IsUnknown() {
-		body["block-device"] = client.FormatBool(plan.BlockDevice.ValueBool())
-	}
-	if !plan.Btrfs.Equal(state.Btrfs) && !plan.Btrfs.IsUnknown() {
-		body["btrfs"] = plan.Btrfs.ValueString()
-	}
 	if !plan.Comment.Equal(state.Comment) && !plan.Comment.IsUnknown() {
 		body["comment"] = plan.Comment.ValueString()
 	}
 	if !plan.Disabled.Equal(state.Disabled) && !plan.Disabled.IsUnknown() {
 		body["disabled"] = client.FormatBool(plan.Disabled.ValueBool())
-	}
-	if !plan.EjectDrive.Equal(state.EjectDrive) && !plan.EjectDrive.IsUnknown() {
-		body["eject-drive"] = plan.EjectDrive.ValueString()
-	}
-	if !plan.Empty.Equal(state.Empty) && !plan.Empty.IsUnknown() {
-		body["empty"] = client.FormatBool(plan.Empty.ValueBool())
-	}
-	if !plan.Encrypted.Equal(state.Encrypted) && !plan.Encrypted.IsUnknown() {
-		body["encrypted"] = client.FormatBool(plan.Encrypted.ValueBool())
-	}
-	if !plan.Formatting.Equal(state.Formatting) && !plan.Formatting.IsUnknown() {
-		body["formatting"] = client.FormatBool(plan.Formatting.ValueBool())
-	}
-	if !plan.GuidPartitionTable.Equal(state.GuidPartitionTable) && !plan.GuidPartitionTable.IsUnknown() {
-		body["guid-partition-table"] = client.FormatBool(plan.GuidPartitionTable.ValueBool())
-	}
-	if !plan.IScsiExport.Equal(state.IScsiExport) && !plan.IScsiExport.IsUnknown() {
-		body["i-scsi-export"] = client.FormatBool(plan.IScsiExport.ValueBool())
-	}
-	if !plan.IScsiServerIqn.Equal(state.IScsiServerIqn) && !plan.IScsiServerIqn.IsUnknown() {
-		body["i-scsi-server-iqn"] = plan.IScsiServerIqn.ValueString()
-	}
-	if !plan.IScsiServerPort.Equal(state.IScsiServerPort) && !plan.IScsiServerPort.IsUnknown() {
-		body["i-scsi-server-port"] = client.FormatInt64(plan.IScsiServerPort.ValueInt64())
-	}
-	if !plan.IscsiSharing.Equal(state.IscsiSharing) && !plan.IscsiSharing.IsUnknown() {
-		body["iscsi-sharing"] = plan.IscsiSharing.ValueString()
 	}
 	if !plan.MediaInterface.Equal(state.MediaInterface) && !plan.MediaInterface.IsUnknown() {
 		body["media-interface"] = plan.MediaInterface.ValueString()
@@ -1021,7 +819,7 @@ func (r *DiskResource) Update(ctx context.Context, req resource.UpdateRequest, r
 		body["media-sharing"] = client.FormatBool(plan.MediaSharing.ValueBool())
 	}
 	if !plan.MountCompress.Equal(state.MountCompress) && !plan.MountCompress.IsUnknown() {
-		body["mount-compress"] = client.FormatBool(plan.MountCompress.ValueBool())
+		body["compress"] = client.FormatBool(plan.MountCompress.ValueBool())
 	}
 	if !plan.MountFilesystem.Equal(state.MountFilesystem) && !plan.MountFilesystem.IsUnknown() {
 		body["mount-filesystem"] = client.FormatBool(plan.MountFilesystem.ValueBool())
@@ -1032,98 +830,14 @@ func (r *DiskResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	if !plan.MountReadOnly.Equal(state.MountReadOnly) && !plan.MountReadOnly.IsUnknown() {
 		body["mount-read-only"] = client.FormatBool(plan.MountReadOnly.ValueBool())
 	}
-	if !plan.Mounted.Equal(state.Mounted) && !plan.Mounted.IsUnknown() {
-		body["mounted"] = client.FormatBool(plan.Mounted.ValueBool())
-	}
-	if !plan.Newfileman.Equal(state.Newfileman) && !plan.Newfileman.IsUnknown() {
-		body["newfileman"] = plan.Newfileman.ValueString()
-	}
-	if !plan.NfsSharing.Equal(state.NfsSharing) && !plan.NfsSharing.IsUnknown() {
-		body["nfs-sharing"] = client.FormatBool(plan.NfsSharing.ValueBool())
-	}
-	if !plan.Nvme.Equal(state.Nvme) && !plan.Nvme.IsUnknown() {
-		body["nvme"] = plan.Nvme.ValueString()
-	}
-	if !plan.NvmeTCPExport.Equal(state.NvmeTCPExport) && !plan.NvmeTCPExport.IsUnknown() {
-		body["nvme-tcp-export"] = client.FormatBool(plan.NvmeTCPExport.ValueBool())
-	}
-	if !plan.NvmeTCPServerAllowHostName.Equal(state.NvmeTCPServerAllowHostName) && !plan.NvmeTCPServerAllowHostName.IsUnknown() {
-		body["nvme-tcp-server-allow-host-name"] = plan.NvmeTCPServerAllowHostName.ValueString()
-	}
-	if !plan.NvmeTCPServerNqn.Equal(state.NvmeTCPServerNqn) && !plan.NvmeTCPServerNqn.IsUnknown() {
-		body["nvme-tcp-server-nqn"] = plan.NvmeTCPServerNqn.ValueString()
-	}
-	if !plan.NvmeTCPServerPassword.Equal(state.NvmeTCPServerPassword) && !plan.NvmeTCPServerPassword.IsUnknown() {
-		body["nvme-tcp-server-password"] = plan.NvmeTCPServerPassword.ValueString()
-	}
-	if !plan.NvmeTCPServerPort.Equal(state.NvmeTCPServerPort) && !plan.NvmeTCPServerPort.IsUnknown() {
-		body["nvme-tcp-server-port"] = client.FormatInt64(plan.NvmeTCPServerPort.ValueInt64())
-	}
-	if !plan.Oldfileman.Equal(state.Oldfileman) && !plan.Oldfileman.IsUnknown() {
-		body["oldfileman"] = plan.Oldfileman.ValueString()
-	}
 	if !plan.Parent.Equal(state.Parent) && !plan.Parent.IsUnknown() {
 		body["parent"] = plan.Parent.ValueString()
-	}
-	if !plan.Part.Equal(state.Part) && !plan.Part.IsUnknown() {
-		body["part"] = plan.Part.ValueString()
-	}
-	if !plan.Partition.Equal(state.Partition) && !plan.Partition.IsUnknown() {
-		body["partition"] = client.FormatBool(plan.Partition.ValueBool())
 	}
 	if !plan.PartitionOffset.Equal(state.PartitionOffset) && !plan.PartitionOffset.IsUnknown() {
 		body["partition-offset"] = plan.PartitionOffset.ValueString()
 	}
 	if !plan.PartitionSize.Equal(state.PartitionSize) && !plan.PartitionSize.IsUnknown() {
 		body["partition-size"] = plan.PartitionSize.ValueString()
-	}
-	if !plan.Raid.Equal(state.Raid) && !plan.Raid.IsUnknown() {
-		body["raid"] = plan.Raid.ValueString()
-	}
-	if !plan.RaidAndMaster.Equal(state.RaidAndMaster) && !plan.RaidAndMaster.IsUnknown() {
-		body["raid-and-master"] = plan.RaidAndMaster.ValueString()
-	}
-	if !plan.RaidAndType.Equal(state.RaidAndType) && !plan.RaidAndType.IsUnknown() {
-		body["raid-and-type"] = plan.RaidAndType.ValueString()
-	}
-	if !plan.RaidMaster.Equal(state.RaidMaster) && !plan.RaidMaster.IsUnknown() {
-		body["raid-master"] = plan.RaidMaster.ValueString()
-	}
-	if !plan.RaidMember.Equal(state.RaidMember) && !plan.RaidMember.IsUnknown() {
-		body["raid-member"] = client.FormatBool(plan.RaidMember.ValueBool())
-	}
-	if !plan.RaidMemberFailed.Equal(state.RaidMemberFailed) && !plan.RaidMemberFailed.IsUnknown() {
-		body["raid-member-failed"] = client.FormatBool(plan.RaidMemberFailed.ValueBool())
-	}
-	if !plan.RaidRole.Equal(state.RaidRole) && !plan.RaidRole.IsUnknown() {
-		body["raid-role"] = plan.RaidRole.ValueString()
-	}
-	if !plan.RaidScrub.Equal(state.RaidScrub) && !plan.RaidScrub.IsUnknown() {
-		body["raid-scrub"] = plan.RaidScrub.ValueString()
-	}
-	if !plan.ReadOnly.Equal(state.ReadOnly) && !plan.ReadOnly.IsUnknown() {
-		body["read-only"] = client.FormatBool(plan.ReadOnly.ValueBool())
-	}
-	if !plan.ResetCounters.Equal(state.ResetCounters) && !plan.ResetCounters.IsUnknown() {
-		body["reset-counters"] = plan.ResetCounters.ValueString()
-	}
-	if !plan.Rose.Equal(state.Rose) && !plan.Rose.IsUnknown() {
-		body["rose"] = plan.Rose.ValueString()
-	}
-	if !plan.Scan.Equal(state.Scan) && !plan.Scan.IsUnknown() {
-		body["scan"] = plan.Scan.ValueString()
-	}
-	if !plan.SelfEncryptedAndLocked.Equal(state.SelfEncryptedAndLocked) && !plan.SelfEncryptedAndLocked.IsUnknown() {
-		body["self-encrypted-and-locked"] = client.FormatBool(plan.SelfEncryptedAndLocked.ValueBool())
-	}
-	if !plan.SelfEncryptionEnabled.Equal(state.SelfEncryptionEnabled) && !plan.SelfEncryptionEnabled.IsUnknown() {
-		body["self-encryption-enabled"] = client.FormatBool(plan.SelfEncryptionEnabled.ValueBool())
-	}
-	if !plan.SelfEncryptionPassword.Equal(state.SelfEncryptionPassword) && !plan.SelfEncryptionPassword.IsUnknown() {
-		body["self-encryption-password"] = plan.SelfEncryptionPassword.ValueString()
-	}
-	if !plan.SelfEncryptionSupported.Equal(state.SelfEncryptionSupported) && !plan.SelfEncryptionSupported.IsUnknown() {
-		body["self-encryption-supported"] = client.FormatBool(plan.SelfEncryptionSupported.ValueBool())
 	}
 	if !plan.Slot.Equal(state.Slot) && !plan.Slot.IsUnknown() {
 		body["slot"] = plan.Slot.ValueString()
@@ -1143,17 +857,8 @@ func (r *DiskResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	if !plan.Swap.Equal(state.Swap) && !plan.Swap.IsUnknown() {
 		body["swap"] = client.FormatBool(plan.Swap.ValueBool())
 	}
-	if !plan.SwapEnabled.Equal(state.SwapEnabled) && !plan.SwapEnabled.IsUnknown() {
-		body["swap-enabled"] = client.FormatBool(plan.SwapEnabled.ValueBool())
-	}
-	if !plan.Tmpfs.Equal(state.Tmpfs) && !plan.Tmpfs.IsUnknown() {
-		body["tmpfs"] = plan.Tmpfs.ValueString()
-	}
 	if !plan.TmpfsMaxSize.Equal(state.TmpfsMaxSize) && !plan.TmpfsMaxSize.IsUnknown() {
 		body["tmpfs-max-size"] = plan.TmpfsMaxSize.ValueString()
-	}
-	if !plan.Trim.Equal(state.Trim) && !plan.Trim.IsUnknown() {
-		body["trim"] = plan.Trim.ValueString()
 	}
 	if !plan.Type.Equal(state.Type) && !plan.Type.IsUnknown() {
 		body["type"] = plan.Type.ValueString()
@@ -1549,7 +1254,7 @@ func diskApply(ctx context.Context, obj client.Object, m *DiskModel) {
 			m.Model = types.StringNull()
 		}
 	}
-	if v, ok := obj["mount-compress"]; ok {
+	if v, ok := obj["compress"]; ok {
 		if b, err := client.ParseBool(v); err == nil {
 			m.MountCompress = types.BoolValue(b)
 		} else if strings.TrimSpace(v) == "" {
