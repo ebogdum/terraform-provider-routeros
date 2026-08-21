@@ -17,11 +17,12 @@ import (
 )
 
 var (
-	_ resource.Resource                = &IPDNSStaticResource{}
-	_ resource.ResourceWithImportState = &IPDNSStaticResource{}
-	_                                  = attr.Value(nil)
-	_                                  = strings.TrimSpace
-	_                                  = path.Root
+	_ resource.Resource                   = &IPDNSStaticResource{}
+	_ resource.ResourceWithImportState    = &IPDNSStaticResource{}
+	_ resource.ResourceWithValidateConfig = &IPDNSStaticResource{}
+	_                                     = attr.Value(nil)
+	_                                     = strings.TrimSpace
+	_                                     = path.Root
 )
 
 type IPDNSStaticResource struct {
@@ -76,8 +77,11 @@ func (r *IPDNSStaticResource) Schema(_ context.Context, _ resource.SchemaRequest
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"address": schema.StringAttribute{
-				Required:    true,
-				Description: "Address to return.",
+				Optional: true,
+				Computed: true,
+				Description: "IPv4/IPv6 address to return. Required when `type` is `\"A\"` or `\"AAAA\"` (the " +
+					"default); must be left unset for other types (`CNAME`, `FWD`, `MX`, `NS`, `SRV`, `TXT`, or " +
+					"a `regexp` entry).",
 			},
 			"address_list": schema.StringAttribute{
 				Optional:    true,
@@ -173,6 +177,51 @@ func (r *IPDNSStaticResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
 			},
 		},
+	}
+}
+
+// ipDNSStaticTypeNeedsAddress reports whether typ (RouterOS's /ip/dns/static "type" value, "" meaning the
+// device default of "A") is one that stores an address. Per RouterOS's docs, address is "the address that
+// will be used for 'A' or 'AAAA' type records" - every other type (CNAME, FWD, MX, NS, SRV, TXT, or a
+// regexp-matched entry) has its own dedicated field instead.
+func ipDNSStaticTypeNeedsAddress(typ string) bool {
+	switch strings.ToUpper(typ) {
+	case "", "A", "AAAA":
+		return true
+	default:
+		return false
+	}
+}
+
+// ipDNSStaticAddressTypeConflict checks address is required when type needs it and forbidden when it doesn't.
+func ipDNSStaticAddressTypeConflict(typ string, hasAddress bool) (summary, detail string) {
+	needsAddress := ipDNSStaticTypeNeedsAddress(typ)
+	switch {
+	case needsAddress && !hasAddress:
+		return "Missing address", `routeros_ip_dns_static requires "address" when type is "A" or "AAAA" (the default)`
+	case !needsAddress && hasAddress:
+		return "Address not valid for this type",
+			`routeros_ip_dns_static: "address" only applies when type is "A" or "AAAA". Setting it on any ` +
+				`other type is silently dropped on Create and, worse, silently rewrites the record's type to ` +
+				`"A" - destroying its other type-specific fields - on Update. Confirmed live on RouterOS 7.22.`
+	default:
+		return "", ""
+	}
+}
+
+// ValidateConfig catches address/type conflicts at plan time.
+func (r *IPDNSStaticResource) ValidateConfig(ctx context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
+	var cfg IPDNSStaticModel
+	if diags := req.Config.Get(ctx, &cfg); diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	if cfg.Type.IsUnknown() || cfg.Address.IsUnknown() {
+		return
+	}
+	hasAddress := !cfg.Address.IsNull() && cfg.Address.ValueString() != ""
+	if summary, detail := ipDNSStaticAddressTypeConflict(cfg.Type.ValueString(), hasAddress); summary != "" {
+		resp.Diagnostics.AddAttributeError(path.Root("address"), summary, detail)
 	}
 }
 
@@ -277,6 +326,14 @@ func (r *IPDNSStaticResource) Read(ctx context.Context, req resource.ReadRequest
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
 }
 
+// ipDNSStaticShouldWriteAddress reports whether Update should include address in the PATCH body.
+func ipDNSStaticShouldWriteAddress(plan, state IPDNSStaticModel) bool {
+	if plan.Address.IsUnknown() || plan.Address.Equal(state.Address) {
+		return false
+	}
+	return !plan.Address.IsNull() && plan.Address.ValueString() != ""
+}
+
 func (r *IPDNSStaticResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var plan, state IPDNSStaticModel
 	if diags := req.Plan.Get(ctx, &plan); diags.HasError() {
@@ -292,7 +349,7 @@ func (r *IPDNSStaticResource) Update(ctx context.Context, req resource.UpdateReq
 		return
 	}
 	body := client.Object{}
-	if !plan.Address.Equal(state.Address) && !plan.Address.IsUnknown() {
+	if ipDNSStaticShouldWriteAddress(plan, state) {
 		body["address"] = plan.Address.ValueString()
 	}
 	if !plan.AddressList.Equal(state.AddressList) && !plan.AddressList.IsUnknown() {
@@ -417,9 +474,10 @@ func iPDNSStaticApply(ctx context.Context, obj client.Object, m *IPDNSStaticMode
 	_ = ctx
 	m.ID = types.StringValue(obj[".id"])
 	if v, ok := obj["address"]; ok {
-		_ = v
 		if v != "" {
 			m.Address = types.StringValue(v)
+		} else {
+			m.Address = types.StringNull()
 		}
 	}
 	if v, ok := obj["address-list"]; ok {
