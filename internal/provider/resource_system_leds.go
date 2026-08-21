@@ -93,8 +93,9 @@ func (r *SystemLedsResource) Schema(_ context.Context, _ resource.SchemaRequest,
 				Description: "Type of the status: align-down \u00a0 - light the led if the w60g device needs to be aligned downwards for the best signal quality align-left \u00a0 - light the led if the w60g device needs to be aligned to the left align-right \u00a0 - light the led if the w60g device needs to be aligned to the right align-up \u00a0 - light the led if the w60g device needs to be aligned upwards ap-cap \u00a0 - blink on CAP initializing with CAPsMAN, steady on once connected fan-fault \u00a0 - light the led when any of the devices controlled fans stop working flash-access \u00a0 - blink the led on flash access interface-activity \u00a0 - blink the led on interface (traffic) activity interface-receive \u00a0 - blink the led on interface received a traffic interface-speed \u00a0 - light the led when interface works in 10Gbit rate interface-speed-1G \u00a0 - light the led when interface works in 1Gbit rate interface-speed-25G \u00a0 - light the led when interface works in 25Gbit rate interface-speed-100G - light the led when interface works in 100Gbit rate interface-status \u00a0 - light the led on interface status change interface-transmit \u00a0 - blink the led on interface transmitted traffic modem-signal \u00a0 - blink the led on 3G modem signal (either USB or miniPCIe) modem-technology \u00a0 - turns on LEDs in order of modem technology generation: GSM; 3G; LTE; single led turns on only when LTE is active. off \u00a0 - turn off the led on \u00a0 - turn on the led poe-fault \u00a0 - light the led when PoE out budget is close to the maximum supported limit poe-out \u00a0 - light the led when interface PoE out turns on wireless-signal-strength \u00a0 - light the leds displaying wireless signal (requires more than one led) wireless-status \u00a0 - light the led on wireless status change.",
 			},
 			"router": schema.StringAttribute{
-				Optional:    true,
-				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				Optional:      true,
+				Description:   "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 			},
 		},
 	}

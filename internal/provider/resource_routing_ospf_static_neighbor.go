@@ -104,8 +104,9 @@ func (r *RoutingOSPFStaticNeighborResource) Schema(_ context.Context, _ resource
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
 			},
 			"router": schema.StringAttribute{
-				Optional:    true,
-				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				Optional:      true,
+				Description:   "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 			},
 		},
 	}

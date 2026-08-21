@@ -88,8 +88,9 @@ func (r *SystemPackageLocalUpdateMirrorResource) Schema(_ context.Context, _ res
 				Description: "RouterOS `user`.",
 			},
 			"router": schema.StringAttribute{
-				Optional:    true,
-				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				Optional:      true,
+				Description:   "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 			},
 		},
 	}

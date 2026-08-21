@@ -177,8 +177,9 @@ func (r *InterfaceL2TPServerServerResource) Schema(_ context.Context, _ resource
 				Validators:  []validator.String{schemautil.OneOf([]string{"no", "required", "yes"}...)},
 			},
 			"router": schema.StringAttribute{
-				Optional:    true,
-				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				Optional:      true,
+				Description:   "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 			},
 		},
 	}

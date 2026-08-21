@@ -178,8 +178,9 @@ func (r *IPDNSStaticResource) Schema(_ context.Context, _ resource.SchemaRequest
 					"A", "AAAA", "CNAME", "FWD", "MX", "NS", "NXDOMAIN", "SRV", "TXT")},
 			},
 			"router": schema.StringAttribute{
-				Optional:    true,
-				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				Optional:      true,
+				Description:   "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 			},
 		},
 	}

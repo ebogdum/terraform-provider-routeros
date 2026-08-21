@@ -68,8 +68,9 @@ func (r *SystemResourceIRQRPSResource) Schema(_ context.Context, _ resource.Sche
 				Description: "Interface name of the fixed row to adopt (e.g. `ether1`).",
 			},
 			"router": schema.StringAttribute{
-				Optional:    true,
-				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				Optional:      true,
+				Description:   "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 			},
 		},
 	}

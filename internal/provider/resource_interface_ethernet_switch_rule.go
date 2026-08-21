@@ -65,8 +65,9 @@ func (r *InterfaceEthernetSwitchRuleResource) Schema(_ context.Context, _ resour
 				Description: "Allows enabling QoS for the given switch chip (if the latter supports QoS). New generation devices\u00a0force qos-hw-offloading=yes at all times.",
 			},
 			"router": schema.StringAttribute{
-				Optional:    true,
-				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				Optional:      true,
+				Description:   "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 			},
 		},
 	}

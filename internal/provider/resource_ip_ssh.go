@@ -86,7 +86,8 @@ func (r *IPSSHResource) Schema(_ context.Context, _ resource.SchemaRequest, resp
 				Description: "Use stronger encryption, HMAC algorithms, use bigger DH primes and disallow weaker ones: use 256 and 192 bit encryption instead of 128 bits; disable null encryption; use sha256 for hashing instead of sha1; disable md5; use 2048bit prime for Diffie-Hellman exchange instead of 1024bit.",
 			},
 			"router": schema.StringAttribute{Optional: true,
-				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				Description:   "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 			},
 		},
 	}

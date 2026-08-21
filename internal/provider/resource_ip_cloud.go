@@ -161,7 +161,8 @@ func (r *IPCloudResource) Schema(_ context.Context, _ resource.SchemaRequest, re
 				Description: "Shows a warning message if the IP address sent by the device differs from the IP address in the UDP packet header as visible by MikroTik's Cloud server. Typically this happens if the device is behind NAT. Example: \"DDNS server received a request from IP 123.123.123.123 but your local IP was 192.168.88.23; DDNS service might not work\"",
 			},
 			"router": schema.StringAttribute{Optional: true,
-				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				Description:   "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 			},
 		},
 	}

@@ -187,8 +187,9 @@ func (r *IPV6NdResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 				Description: "Retransmit interval advertised in router advertisements. A number, or `unspecified` (the default).",
 			},
 			"router": schema.StringAttribute{
-				Optional:    true,
-				Description: "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				Optional:      true,
+				Description:   "Name of the router (key in provider's `routers` map). Omit to use the default.",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 			},
 		},
 	}
