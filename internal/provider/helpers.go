@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-go/tftypes"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
 )
@@ -105,8 +106,24 @@ func nullifyUnknownAttrs(m any) {
 			f.Set(reflect.ValueOf(types.Float64Null()))
 		case types.Number:
 			f.Set(reflect.ValueOf(types.NumberNull()))
+		default:
+			if nv, ok := nullOf(av); ok && reflect.TypeOf(nv) == f.Type() {
+				f.Set(reflect.ValueOf(nv))
+			}
 		}
 	}
+}
+
+// nullOf builds the null of av's own type, covering custom types (csvSetValue)
+// and collections that the switch above cannot name.
+func nullOf(av attr.Value) (attr.Value, bool) {
+	ctx := context.Background()
+	t := av.Type(ctx)
+	nv, err := t.ValueFromTerraform(ctx, tftypes.NewValue(t.TerraformType(ctx), nil))
+	if err != nil {
+		return nil, false
+	}
+	return nv, true
 }
 
 // configureRegistry is called from every generated resource's and data source's

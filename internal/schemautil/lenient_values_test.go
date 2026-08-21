@@ -108,3 +108,50 @@ func TestNormalizeCase(t *testing.T) {
 		t.Errorf("NormalizeCase mangled an unlisted value: %q", got)
 	}
 }
+
+// planStringOnCreate runs a string plan modifier with no prior state.
+func planStringOnCreate(m planmodifier.String, config string) string {
+	resp := &planmodifier.StringResponse{PlanValue: types.StringValue(config)}
+	req := planmodifier.StringRequest{
+		Path:        path.Root("test"),
+		ConfigValue: types.StringValue(config),
+		StateValue:  types.StringNull(),
+	}
+	m.PlanModifyString(context.Background(), req, resp)
+	if resp.Diagnostics.HasError() {
+		return "ERROR"
+	}
+	return resp.PlanValue.ValueString()
+}
+
+// The modifier used to compute the canonical form and use it only as a
+// comparison key, so on create the raw config value stayed in the plan.
+func TestNormalizersPlanTheCanonicalValueOnCreate(t *testing.T) {
+	for _, tc := range []struct {
+		name   string
+		m      planmodifier.String
+		config string
+		want   string
+	}{
+		{"mac lower-case", NormalizeMAC(), "aa:bb:cc:dd:ee:ff", "AA:BB:CC:DD:EE:FF"},
+		{"mac hyphen", NormalizeMAC(), "aa-bb-cc-dd-ee-01", "AA:BB:CC:DD:EE:01"},
+		{"mac bare hex", NormalizeMAC(), "aabbccddee02", "AA:BB:CC:DD:EE:02"},
+		{"duration bare seconds", NormalizeDuration(), "120", "2m"},
+		{"duration clock form", NormalizeDuration(), "00:05:00", "5m"},
+		{"cidr spaces", NormalizeCIDR(), "  10.0.0.1/24  ", "10.0.0.1/24"},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			if got := planStringOnCreate(tc.m, tc.config); got != tc.want {
+				t.Errorf("plan value = %q, want %q", got, tc.want)
+			}
+		})
+	}
+}
+
+func TestNormalizeMACRejectsNonMAC(t *testing.T) {
+	for _, bad := range []string{"", "nope", "aa:bb:cc:dd:ee"} {
+		if got := planStringOnCreate(NormalizeMAC(), bad); got != "ERROR" {
+			t.Errorf("NormalizeMAC(%q) planned %q, want a diagnostic", bad, got)
+		}
+	}
+}
