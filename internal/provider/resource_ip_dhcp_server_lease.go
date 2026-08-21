@@ -263,9 +263,11 @@ func (r *IPDHCPServerLeaseResource) Schema(_ context.Context, _ resource.SchemaR
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
 			},
 			"mac_address": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "",
+				Optional:      true,
+				Computed:      true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsMAC()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
 			},
 			"make_static": schema.StringAttribute{
 				Computed:    true,

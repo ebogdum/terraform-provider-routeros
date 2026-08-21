@@ -584,9 +584,11 @@ func (r *InterfaceWifiResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"mac_address": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "",
+				Optional:      true,
+				Computed:      true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsMAC()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
 			},
 			"mac_caching": schema.StringAttribute{
 				Optional:    true,

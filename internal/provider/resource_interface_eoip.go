@@ -170,9 +170,11 @@ func (r *InterfaceEoipResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"mac_address": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "Media Access Control number of an interface. The address numeration authority IANA allows the use of MAC addresses in the range from 00:00:5E:80:00:00 - 00:00:5E:FF:FF:FF freely",
+				Optional:      true,
+				Computed:      true,
+				Description:   "Media Access Control number of an interface. The address numeration authority IANA allows the use of MAC addresses in the range from 00:00:5E:80:00:00 - 00:00:5E:FF:FF:FF freely",
+				Validators:    []validator.String{schemautil.IsMAC()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
 			},
 			"mtu": schema.StringAttribute{
 				Optional:    true,

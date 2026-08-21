@@ -170,9 +170,11 @@ func (r *InterfaceVplsResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"mac_address": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "",
+				Optional:      true,
+				Computed:      true,
+				Description:   "",
+				Validators:    []validator.String{schemautil.IsMAC()},
+				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
 			},
 			"mtu": schema.Int64Attribute{
 				Optional:    true,
