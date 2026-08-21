@@ -11,9 +11,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
 )
 
 var (
@@ -107,13 +109,15 @@ func (r *InterfaceWifiSecurityMultiPassphraseResource) Schema(_ context.Context,
 				Computed:  true,
 				Sensitive: true,
 				Description: "The PSK passphrase. Multiple entries may share a passphrase. Not compatible " +
-					"with WPA3-PSK.",
+					"with WPA3-PSK. At least 8 characters.",
+				Validators: []validator.String{schemautil.MinLength(8)},
 			},
 			"vlan_id": schema.StringAttribute{
 				Optional: true,
 				Computed: true,
-				Description: "VLAN ID assigned to clients using this passphrase. Only supported on " +
+				Description: "VLAN ID assigned to clients using this passphrase (1-4095). Only supported on " +
 					"wifi-qcom interfaces; a wifi-qcom-ac AP will refuse a client whose passphrase carries one.",
+				Validators: []validator.String{schemautil.IsIntInRange(1, 4095)},
 			},
 			"router": schema.StringAttribute{
 				Optional:    true,
@@ -332,19 +336,16 @@ func interfaceWifiSecurityMultiPassphraseApply(ctx context.Context, obj client.O
 		if b, err := client.ParseBool(v); err == nil {
 			m.Isolation = types.BoolValue(b)
 		} else if strings.TrimSpace(v) == "" {
-			m.Isolation = types.BoolValue(false)
+			// A valueless flag means set, as it does for disabled above.
+			m.Isolation = types.BoolValue(true)
 		} else {
 			m.Isolation = types.BoolNull()
 		}
 	}
-	// The device returns the passphrase in plain text on read (confirmed against a live
-	// 7.23.3 router), so this isn't a scrub-on-read case like some other sensitive fields.
-	if v, ok := obj["passphrase"]; ok {
-		if v != "" {
-			m.Passphrase = types.StringValue(v)
-		} else {
-			m.Passphrase = types.StringNull()
-		}
+	// Returned in plain text to an account holding RouterOS's `sensitive` policy;
+	// without it the key comes back empty and must not overwrite what we have.
+	if v, ok := obj["passphrase"]; ok && v != "" {
+		m.Passphrase = types.StringValue(v)
 	} else if m.Passphrase.IsUnknown() {
 		m.Passphrase = types.StringNull()
 	}

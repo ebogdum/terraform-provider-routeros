@@ -19,9 +19,10 @@ var (
 type InterfaceWifiSecurityMultiPassphraseDataSource struct{ reg *client.Registry }
 
 type InterfaceWifiSecurityMultiPassphraseDSModel struct {
-	Router  types.String `tfsdk:"router"`
-	Filter  types.Map    `tfsdk:"filter"`
-	Records types.List   `tfsdk:"records"`
+	Router   types.String `tfsdk:"router"`
+	Filter   types.Map    `tfsdk:"filter"`
+	Proplist types.List   `tfsdk:"proplist"`
+	Records  types.List   `tfsdk:"records"`
 }
 
 func NewInterfaceWifiSecurityMultiPassphraseDataSource() datasource.DataSource {
@@ -53,10 +54,17 @@ func (d *InterfaceWifiSecurityMultiPassphraseDataSource) Schema(_ context.Contex
 				ElementType: types.StringType,
 				Description: "Equality filters (?k=v).",
 			},
+			"proplist": schema.ListAttribute{
+				Optional:    true,
+				ElementType: types.StringType,
+				Description: "Columns to return. Omit to return every column, `passphrase` included.",
+			},
 			"records": schema.ListAttribute{
 				Computed:    true,
+				Sensitive:   true,
 				ElementType: types.MapType{ElemType: types.StringType},
-				Description: "Matching records as flat string maps (RouterOS wire form).",
+				Description: "Matching records as flat string maps (RouterOS wire form). Marked sensitive: " +
+					"the device returns `passphrase` in cleartext. Use `proplist` to leave it out.",
 			},
 		},
 	}
@@ -78,6 +86,13 @@ func (d *InterfaceWifiSecurityMultiPassphraseDataSource) Read(ctx context.Contex
 		resp.Diagnostics.Append(m.Filter.ElementsAs(ctx, &filt, false)...)
 		for k, v := range filt {
 			opts = append(opts, client.WithFilter(k, v))
+		}
+	}
+	if !m.Proplist.IsNull() && !m.Proplist.IsUnknown() {
+		var props []string
+		resp.Diagnostics.Append(m.Proplist.ElementsAs(ctx, &props, false)...)
+		if len(props) > 0 {
+			opts = append(opts, client.WithProplist(props...))
 		}
 	}
 	rows, err := c.List(ctx, "/interface/wifi/security/multi-passphrase", opts...)

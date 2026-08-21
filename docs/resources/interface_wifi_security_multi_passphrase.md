@@ -60,6 +60,7 @@ terraform import routeros_interface_wifi_security_multi_passphrase.example '*3'
 # Named router
 terraform import routeros_interface_wifi_security_multi_passphrase.example 'home/*3'
 
-# By natural key (the resource's `name` attribute, when present)
-terraform import routeros_interface_wifi_security_multi_passphrase.example 'home/my-resource-name'
+# By comment, if one is set and unique. This menu has no `name` column, and
+# `group` is shared by every entry in a group, so neither is an import key.
+terraform import routeros_interface_wifi_security_multi_passphrase.example 'home/my-comment'
 ```
