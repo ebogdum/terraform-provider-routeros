@@ -50,6 +50,104 @@ func TestCapsManConfigurationHasNoFlattenedSubObjects(t *testing.T) {
 	}
 }
 
+func TestIPDNSStaticAddressIsOptional(t *testing.T) {
+	attrs := schemaOf(t, NewIPDNSStaticResource()).Schema.Attributes
+	att, ok := attrs["address"].(schema.StringAttribute)
+	if !ok {
+		t.Fatalf("routeros_ip_dns_static.address missing or not a StringAttribute")
+	}
+	if att.Required {
+		t.Error("address is Required; should be Optional so non-A/AAAA entries can omit it")
+	}
+	if !att.Optional || !att.Computed {
+		t.Error("address should be Optional and Computed, matching the resource's other type-specific fields")
+	}
+}
+
+// Test which /ip/dns/static types support address. Ie 'A' or 'AAAA' records versus every other type, which have their own
+// dedicated field.
+func TestIPDNSStaticTypeNeedsAddress(t *testing.T) {
+	cases := []struct {
+		typ  string
+		want bool
+	}{
+		{"", true}, // unset means the device default, "A"
+		{"A", true},
+		{"AAAA", true},
+		{"NXDOMAIN", false},
+		{"CNAME", false},
+		{"FWD", false},
+		{"MX", false},
+		{"NS", false},
+		{"SRV", false},
+		{"TXT", false},
+	}
+	for _, tc := range cases {
+		if got := ipDNSStaticTypeNeedsAddress(tc.typ); got != tc.want {
+			t.Errorf("ipDNSStaticTypeNeedsAddress(%q) = %v, want %v", tc.typ, got, tc.want)
+		}
+	}
+}
+
+// Confirmed on RouterOS 7.23.2: Create silently drops address on a non-A/AAAA
+// type, and Update silently rewrites the record to type A, losing the srv fields.
+func TestIPDNSStaticAddressTypeConflict(t *testing.T) {
+	cases := []struct {
+		name       string
+		typ        string
+		hasAddress bool
+		wantErr    bool
+	}{
+		{"A with address", "A", true, false},
+		{"default type with address", "", true, false},
+		{"AAAA with address", "AAAA", true, false},
+		{"A without address", "A", false, true},
+		{"default type without address", "", false, true},
+		{"SRV without address", "SRV", false, false},
+		{"SRV with address", "SRV", true, true},
+		{"TXT with address", "TXT", true, true},
+		{"CNAME with address", "CNAME", true, true},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			summary, detail := ipDNSStaticAddressTypeConflict(tc.typ, tc.hasAddress)
+			gotErr := summary != ""
+			if gotErr != tc.wantErr {
+				t.Errorf("conflict(%q, %v) = (%q, %q), want error=%v", tc.typ, tc.hasAddress, summary, detail, tc.wantErr)
+			}
+		})
+	}
+}
+
+// RouterOS rejects an empty address on both Create and Update with "invalid value
+// for argument ip/ipv6", so neither path may write one.
+func TestIPDNSStaticShouldWriteAddress(t *testing.T) {
+	cases := []struct {
+		name        string
+		planAddr    types.String
+		stateAddr   types.String
+		wantWritten bool
+	}{
+		{"both null (typical non-A/AAAA record)", types.StringNull(), types.StringNull(), false},
+		{"empty unchanged", types.StringValue(""), types.StringValue(""), false},
+		{"empty, was null", types.StringValue(""), types.StringNull(), false},
+		{"null, was empty (pre-fix state converging)", types.StringNull(), types.StringValue(""), false},
+		{"real change", types.StringValue("10.0.0.1"), types.StringValue("10.0.0.2"), true},
+		{"real value unchanged", types.StringValue("10.0.0.1"), types.StringValue("10.0.0.1"), false},
+		{"unknown", types.StringUnknown(), types.StringValue(""), false},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			plan := IPDNSStaticModel{Address: tc.planAddr}
+			state := IPDNSStaticModel{Address: tc.stateAddr}
+			got := ipDNSStaticShouldWriteAddress(plan, state)
+			if got != tc.wantWritten {
+				t.Errorf("shouldWriteAddress = %v, want %v", got, tc.wantWritten)
+			}
+		})
+	}
+}
+
 // The menu carries name/mirror-source/mirror-target/cpu-flow-control/l3-hw-offloading on the
 // device; without them the resource had nothing to declare and emitted no
 // usable configuration.
@@ -278,4 +376,90 @@ func TestNewSecretsAreSensitive(t *testing.T) {
 func regexpFind(s, pat string) string {
 	re := regexp.MustCompile(pat)
 	return re.FindString(s)
+}
+
+// ValidateConfig only sees config, so an interpolated type or address is still
+// Unknown there. The resolved plan has to be re-checked or the type rewrite is
+// reachable through any computed reference.
+func TestIPDNSStaticResolvedCheckCatchesWhatValidateConfigCannot(t *testing.T) {
+	srvWithAddress := IPDNSStaticModel{
+		Name:    types.StringValue("_sip._tcp.example.lan"),
+		Type:    types.StringValue("SRV"),
+		Address: types.StringValue("10.0.0.1"),
+	}
+	if summary, _ := ipDNSStaticCheckResolved(srvWithAddress); summary == "" {
+		t.Error("a resolved SRV record carrying an address was accepted")
+	}
+
+	// At plan time the same config has address Unknown, which is exactly why
+	// ValidateConfig cannot catch it and Create/Update must.
+	atPlanTime := srvWithAddress
+	atPlanTime.Address = types.StringUnknown()
+	if ipDNSStaticHasAddress(atPlanTime) {
+		t.Error("an unknown address counted as set")
+	}
+
+	ok := IPDNSStaticModel{Name: types.StringValue("a.example.lan"), Type: types.StringValue("A"), Address: types.StringValue("10.0.0.1")}
+	if summary, _ := ipDNSStaticCheckResolved(ok); summary != "" {
+		t.Errorf("a valid A record was rejected: %s", summary)
+	}
+}
+
+// Requires either name OR regexp -- what the docs always claimed and the schema
+// did not allow. RouterOS accepts a regexp entry with no name.
+func TestIPDNSStaticNameOrRegexp(t *testing.T) {
+	for _, tc := range []struct {
+		name, nameVal, reVal string
+		wantErr              bool
+	}{
+		{"name only", "a.example.lan", "", false},
+		{"regexp only", "", `.*\.example\.lan`, false},
+		{"neither", "", "", true},
+		{"both", "a.example.lan", `.*\.example\.lan`, true},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			m := IPDNSStaticModel{Name: types.StringNull(), Regexp: types.StringNull()}
+			if tc.nameVal != "" {
+				m.Name = types.StringValue(tc.nameVal)
+			}
+			if tc.reVal != "" {
+				m.Regexp = types.StringValue(tc.reVal)
+			}
+			summary, _ := ipDNSStaticNameOrRegexp(m)
+			if (summary != "") != tc.wantErr {
+				t.Errorf("got %q, wantErr=%v", summary, tc.wantErr)
+			}
+		})
+	}
+}
+
+// The device rejects a lower-case type outright, so nothing may rely on
+// case-folding it.
+func TestIPDNSStaticTypeIsCaseSensitive(t *testing.T) {
+	attrs := schemaOf(t, NewIPDNSStaticResource()).Schema.Attributes
+	att, ok := attrs["type"].(schema.StringAttribute)
+	if !ok || len(att.Validators) == 0 {
+		t.Fatal("type has no validator")
+	}
+	check := func(v string) bool {
+		req := validator.StringRequest{Path: path.Root("type"), ConfigValue: types.StringValue(v)}
+		for _, val := range att.Validators {
+			resp := &validator.StringResponse{}
+			val.ValidateString(context.Background(), req, resp)
+			if resp.Diagnostics.HasError() {
+				return false
+			}
+		}
+		return true
+	}
+	for _, good := range []string{"A", "AAAA", "CNAME", "FWD", "MX", "NS", "NXDOMAIN", "SRV", "TXT"} {
+		if !check(good) {
+			t.Errorf("type rejected %q", good)
+		}
+	}
+	for _, bad := range []string{"a", "srv", "bogus"} {
+		if check(bad) {
+			t.Errorf("type accepted %q; the device answers 400 for it", bad)
+		}
+	}
 }
