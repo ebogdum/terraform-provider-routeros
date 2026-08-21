@@ -210,7 +210,7 @@ func (r *QueueTreeResource) Create(ctx context.Context, req resource.CreateReque
 		resp.Diagnostics.AddError("Create /queue/tree failed", err.Error())
 		return
 	}
-	if !(plan.PlaceBefore.IsNull() || plan.PlaceBefore.IsUnknown()) {
+	if !(plan.PlaceBefore.IsNull() || plan.PlaceBefore.IsUnknown() || plan.PlaceBefore.ValueString() == "") {
 		if err := c.Move(ctx, "/queue/tree", obj[".id"], plan.PlaceBefore.ValueString()); err != nil {
 			resp.Diagnostics.AddError("Move /queue/tree failed", err.Error())
 			return
@@ -313,7 +313,7 @@ func (r *QueueTreeResource) Update(ctx context.Context, req resource.UpdateReque
 	} else {
 		plan.ID = state.ID
 	}
-	if !plan.PlaceBefore.Equal(state.PlaceBefore) && !(plan.PlaceBefore.IsNull() || plan.PlaceBefore.IsUnknown()) {
+	if !plan.PlaceBefore.Equal(state.PlaceBefore) && !(plan.PlaceBefore.IsNull() || plan.PlaceBefore.IsUnknown() || plan.PlaceBefore.ValueString() == "") {
 		if err := c.Move(ctx, "/queue/tree", plan.ID.ValueString(), plan.PlaceBefore.ValueString()); err != nil {
 			resp.Diagnostics.AddError("Move /queue/tree failed", err.Error())
 			return
