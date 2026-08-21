@@ -1387,9 +1387,8 @@ func (r *IPFirewallFilterResource) Update(ctx context.Context, req resource.Upda
 		iPFirewallFilterApply(ctx, obj, &plan)
 	} else {
 		plan.ID = state.ID
-		// Nothing in body means every Computed attribute is still whatever the plan phase left it as
-		// (Unknown, since none of them were set in config). Create always re-reads after ordering; do the
-		// same here so Update doesn't leave Unknown values behind when the only change is `position`.
+		// An empty body means no Set ran, so every Computed attribute still holds
+		// the Unknown the plan phase gave it. Read them back from the device.
 		reread = true
 	}
 	if !plan.Position.IsNull() && !plan.Position.IsUnknown() {
@@ -1404,12 +1403,15 @@ func (r *IPFirewallFilterResource) Update(ctx context.Context, req resource.Upda
 				resp.Diagnostics.AddError("Order /ip/firewall/filter failed", err.Error())
 				return
 			}
-			reread = true
 		}
 	}
 	if reread {
 		obj, err := c.GetByID(ctx, "/ip/firewall/filter", plan.ID.ValueString())
 		if err != nil {
+			if client.IsNotFound(err) {
+				resp.State.RemoveResource(ctx)
+				return
+			}
 			resp.Diagnostics.AddError("Re-read after update failed", err.Error())
 			return
 		}
