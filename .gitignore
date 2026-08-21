@@ -85,3 +85,4 @@ desktop.ini
 *.tar
 *.zip
 .conformance/
+.claude/
