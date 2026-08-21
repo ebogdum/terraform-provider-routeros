@@ -51,7 +51,11 @@ func (q *Query) Encode() string {
 	if len(q.Proplist) > 0 {
 		vals.Set(".proplist", strings.Join(q.Proplist, ","))
 	}
-	return vals.Encode()
+	// url.Values.Encode() form-encodes spaces as "+", but RouterOS's REST API only recognizes literal "%20" -
+	// a filter value containing a space (eg a comment filter) silently matches nothing instead of erroring.
+	// Safe to blanket-replace: Encode() already percent-escapes any literal "+" in the input as "%2B", so every
+	// remaining "+" in its output can only be a former space.
+	return strings.ReplaceAll(vals.Encode(), "+", "%20")
 }
 
 // PrintBody constructs the body for POST /rest/<path>/print, supporting the
