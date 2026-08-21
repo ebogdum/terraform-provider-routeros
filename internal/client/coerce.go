@@ -238,6 +238,31 @@ func ParseMAC(s string) (net.HardwareAddr, error) {
 	}
 }
 
+// RouterOS start-time: a clock time it stores as HH:MM:SS, or the keyword
+// "startup". An empty value is stored as "startup".
+var timeOfDayRe = regexp.MustCompile(`^(\d{1,2}):(\d{1,2})(?::(\d{1,2}))?$`)
+
+func CanonicalTimeOfDay(s string) (string, error) {
+	s = strings.TrimSpace(strings.ToLower(s))
+	if s == "" || s == "startup" {
+		return "startup", nil
+	}
+	m := timeOfDayRe.FindStringSubmatch(s)
+	if m == nil {
+		return "", fmt.Errorf("routeros: %q is not a time of day or %q", s, "startup")
+	}
+	h, _ := strconv.Atoi(m[1])
+	min, _ := strconv.Atoi(m[2])
+	sec := 0
+	if m[3] != "" {
+		sec, _ = strconv.Atoi(m[3])
+	}
+	if h > 23 || min > 59 || sec > 59 {
+		return "", fmt.Errorf("routeros: %q is not a time of day", s)
+	}
+	return fmt.Sprintf("%02d:%02d:%02d", h, min, sec), nil
+}
+
 func CanonicalMAC(s string) (string, error) {
 	m, err := ParseMAC(s)
 	if err != nil {

@@ -7,6 +7,7 @@ import (
 	"context"
 	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -132,6 +133,30 @@ func RegexMatch(re *regexp.Regexp, desc string) validator.String {
 	return stringValidator{desc: desc, fn: func(s string) error {
 		if !re.MatchString(s) {
 			return fmt.Errorf("does not match %s", re.String())
+		}
+		return nil
+	}}
+}
+
+// IsTimeOfDayOrStartup accepts what /system/scheduler start-time accepts: a
+// clock time, or the keyword "startup".
+func IsTimeOfDayOrStartup() validator.String {
+	return stringValidator{desc: `must be a time of day (HH:MM:SS) or "startup"`, fn: func(s string) error {
+		_, err := client.CanonicalTimeOfDay(s)
+		return err
+	}}
+}
+
+// IsDSCPOrInherit accepts a DSCP code point (0-63) or the keyword "inherit",
+// which is what RouterOS's tunnel menus take.
+func IsDSCPOrInherit() validator.String {
+	return stringValidator{desc: `must be 0-63 or "inherit"`, fn: func(s string) error {
+		if strings.EqualFold(strings.TrimSpace(s), "inherit") {
+			return nil
+		}
+		n, err := strconv.Atoi(strings.TrimSpace(s))
+		if err != nil || n < 0 || n > 63 {
+			return fmt.Errorf("%q is not a DSCP value (0-63) or \"inherit\"", s)
 		}
 		return nil
 	}}

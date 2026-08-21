@@ -134,7 +134,7 @@ func (r *InterfaceEoipResource) Schema(_ context.Context, _ resource.SchemaReque
 				Optional:    true,
 				Computed:    true,
 				Description: "DSCP value of packet. Inherited option means that dscp value will be inherited from packet which is going to be encapsulated.",
-				Validators:  []validator.String{schemautil.OneOf([]string{"inherit"}...)},
+				Validators:  []validator.String{schemautil.IsDSCPOrInherit()},
 			},
 			"ipsec_secret": schema.StringAttribute{
 				Optional:    true,
