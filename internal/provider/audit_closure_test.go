@@ -182,14 +182,14 @@ func TestSchedulerStartTimeAcceptsConcreteTime(t *testing.T) {
 		}
 		return true
 	}
-	// Accepted by ROS 7.23.2; "24:00:00" and "1d00:00:00" are rejected here
-	// because the device silently rewrites both to "00:00:00".
-	for _, ok := range []string{"23:57:05", "startup", "00:00:00", "0:0:0", "23:57"} {
+	// The device also takes "0:0:0", "23:57" and "24:00:00", but rewrites each of
+	// them, which Terraform reports as an inconsistent result. Refused instead.
+	for _, ok := range []string{"23:57:05", "startup", "00:00:00", "23:59:59"} {
 		if !check(ok) {
 			t.Errorf("start_time rejected %q, want accepted", ok)
 		}
 	}
-	for _, bad := range []string{"nonsense", "24:00:00", "1d00:00:00", "25:00:00", "12:60:00"} {
+	for _, bad := range []string{"nonsense", "0:0:0", "23:57", "24:00:00", "1d00:00:00", "25:00:00", "12:60:00"} {
 		if check(bad) {
 			t.Errorf("start_time accepted %q, want rejected", bad)
 		}

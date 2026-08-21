@@ -105,9 +105,3 @@ func NormalizeCase(canonical ...string) planmodifier.String {
 		},
 	}
 }
-
-// NormalizeTimeOfDay canonicalises a start-time to the HH:MM:SS the device
-// stores, so "23:57" and "0:0:0" don't come back as a changed value.
-func NormalizeTimeOfDay() planmodifier.String {
-	return normalizeStringPM{desc: "normalize time of day", fn: client.CanonicalTimeOfDay}
-}

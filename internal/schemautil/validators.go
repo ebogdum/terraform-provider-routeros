@@ -144,13 +144,10 @@ func RegexMatch(re *regexp.Regexp, desc string) validator.String {
 	}}
 }
 
-// IsTimeOfDayOrStartup accepts what /system/scheduler start-time accepts: a
-// clock time, or the keyword "startup".
+// IsTimeOfDayOrStartup accepts what /system/scheduler start-time accepts without
+// rewriting: an HH:MM:SS time, or the keyword "startup".
 func IsTimeOfDayOrStartup() validator.String {
-	return stringValidator{desc: `must be a time of day (HH:MM:SS) or "startup"`, fn: func(s string) error {
-		_, err := client.CanonicalTimeOfDay(s)
-		return err
-	}, emptyOK: true}
+	return stringValidator{desc: `must be an HH:MM:SS time or "startup"`, fn: client.IsTimeOfDay, emptyOK: true}
 }
 
 // IsDSCPOrInherit accepts a DSCP code point (0-63) or the keyword "inherit",
