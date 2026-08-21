@@ -39,7 +39,7 @@ type InterfaceW60gModel struct {
 	Frequency           types.String `tfsdk:"frequency"`
 	IsolateStations     types.String `tfsdk:"isolate_stations"`
 	L2mtu               types.String `tfsdk:"l2mtu"`
-	MACAddress          types.String `tfsdk:"mac_address"`
+	MACAddress          macValue     `tfsdk:"mac_address"`
 	MdmgFix             types.String `tfsdk:"mdmg_fix"`
 	Mode                types.String `tfsdk:"mode"`
 	MTU                 types.String `tfsdk:"mtu"`
@@ -112,11 +112,11 @@ func (r *InterfaceW60gResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "Layer2 Maximum transmission unit",
 			},
 			"mac_address": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "MAC address of the radio interface",
-				Validators:    []validator.String{schemautil.IsMAC()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
+				CustomType:  macType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "MAC address of the radio interface",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"mdmg_fix": schema.StringAttribute{
 				Optional:    true,
@@ -462,9 +462,9 @@ func interfaceW60gApply(ctx context.Context, obj client.Object, m *InterfaceW60g
 	}
 	if v, ok := obj["mac-address"]; ok {
 		if v != "" {
-			m.MACAddress = types.StringValue(v)
+			m.MACAddress = newMACValue(v)
 		} else {
-			m.MACAddress = types.StringNull()
+			m.MACAddress = newMACNull()
 		}
 	}
 	if v, ok := obj["mdmg-fix"]; ok {

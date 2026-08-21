@@ -124,34 +124,55 @@ func planStringOnCreate(m planmodifier.String, config string) string {
 	return resp.PlanValue.ValueString()
 }
 
-// The modifier used to compute the canonical form and use it only as a
-// comparison key, so on create the raw config value stayed in the plan.
-func TestNormalizersPlanTheCanonicalValueOnCreate(t *testing.T) {
+// Terraform rejects a plan that rewrites a known config value, so the modifier
+// keeps the config value and only reuses state when the two mean the same.
+func TestNormalizersKeepConfigButSuppressCosmeticDiffs(t *testing.T) {
 	for _, tc := range []struct {
-		name   string
-		m      planmodifier.String
-		config string
-		want   string
+		name          string
+		m             planmodifier.String
+		config, state string
+		want          string
 	}{
-		{"mac lower-case", NormalizeMAC(), "aa:bb:cc:dd:ee:ff", "AA:BB:CC:DD:EE:FF"},
-		{"mac hyphen", NormalizeMAC(), "aa-bb-cc-dd-ee-01", "AA:BB:CC:DD:EE:01"},
-		{"mac bare hex", NormalizeMAC(), "aabbccddee02", "AA:BB:CC:DD:EE:02"},
-		{"duration bare seconds", NormalizeDuration(), "120", "2m"},
-		{"duration clock form", NormalizeDuration(), "00:05:00", "5m"},
-		{"cidr spaces", NormalizeCIDR(), "  10.0.0.1/24  ", "10.0.0.1/24"},
+		{"mac already canonical in state", NormalizeMAC(), "aa:bb:cc:dd:ee:ff", "AA:BB:CC:DD:EE:FF", "AA:BB:CC:DD:EE:FF"},
+		{"mac genuinely changed", NormalizeMAC(), "aa:bb:cc:dd:ee:ff", "11:22:33:44:55:66", "aa:bb:cc:dd:ee:ff"},
+		{"duration already canonical in state", NormalizeDuration(), "120", "2m", "2m"},
+		{"duration clock form in state", NormalizeDuration(), "00:05:00", "5m", "5m"},
+		{"cidr spaces", NormalizeCIDR(), "  10.0.0.1/24  ", "10.0.0.1/24", "10.0.0.1/24"},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			if got := planStringOnCreate(tc.m, tc.config); got != tc.want {
+			if got := planString(tc.m, tc.config, tc.state); got != tc.want {
 				t.Errorf("plan value = %q, want %q", got, tc.want)
 			}
 		})
 	}
 }
 
+// On create there is no state to reuse, so the config value stands as written;
+// reconciling it with what the device echoes back is semantic equality's job.
+func TestNormalizersLeaveTheConfigValueAloneOnCreate(t *testing.T) {
+	if got := planStringOnCreate(NormalizeMAC(), "aa:bb:cc:dd:ee:ff"); got != "aa:bb:cc:dd:ee:ff" {
+		t.Errorf("plan value = %q, want the config value verbatim", got)
+	}
+}
+
 func TestNormalizeMACRejectsNonMAC(t *testing.T) {
-	for _, bad := range []string{"", "nope", "aa:bb:cc:dd:ee"} {
+	for _, bad := range []string{"nope", "aa:bb:cc:dd:ee", "aa:bb:cc:dd:ee:gg"} {
 		if got := planStringOnCreate(NormalizeMAC(), bad); got != "ERROR" {
 			t.Errorf("NormalizeMAC(%q) planned %q, want a diagnostic", bad, got)
 		}
+	}
+}
+
+// These attributes are Optional+Computed and "" was accepted before they gained
+// a validator; failing the plan on it would break existing configurations.
+func TestEmptyStringMeansUnsetNotInvalid(t *testing.T) {
+	if got := planStringOnCreate(NormalizeMAC(), ""); got != "" {
+		t.Errorf(`NormalizeMAC("") planned %q, want it left alone`, got)
+	}
+	if !checkString(IsMAC(), "") {
+		t.Error(`IsMAC("") rejected the empty string`)
+	}
+	if !checkString(IsDurationRouterOS(), "") {
+		t.Error(`IsDurationRouterOS("") rejected the empty string`)
 	}
 }

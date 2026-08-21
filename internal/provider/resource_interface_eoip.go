@@ -48,7 +48,7 @@ type InterfaceEoipModel struct {
 	LoopProtect             types.String `tfsdk:"loop_protect"`
 	LoopProtectDisableTime  types.String `tfsdk:"loop_protect_disable_time"`
 	LoopProtectSendInterval types.String `tfsdk:"loop_protect_send_interval"`
-	MACAddress              types.String `tfsdk:"mac_address"`
+	MACAddress              macValue     `tfsdk:"mac_address"`
 	MTU                     types.String `tfsdk:"mtu"`
 	Name                    types.String `tfsdk:"name"`
 	RemoteAddress           types.String `tfsdk:"remote_address"`
@@ -170,11 +170,11 @@ func (r *InterfaceEoipResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"mac_address": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "Media Access Control number of an interface. The address numeration authority IANA allows the use of MAC addresses in the range from 00:00:5E:80:00:00 - 00:00:5E:FF:FF:FF freely",
-				Validators:    []validator.String{schemautil.IsMAC()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
+				CustomType:  macType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "Media Access Control number of an interface. The address numeration authority IANA allows the use of MAC addresses in the range from 00:00:5E:80:00:00 - 00:00:5E:FF:FF:FF freely",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"mtu": schema.StringAttribute{
 				Optional:    true,
@@ -582,9 +582,9 @@ func interfaceEoipApply(ctx context.Context, obj client.Object, m *InterfaceEoip
 	}
 	if v, ok := obj["mac-address"]; ok {
 		if v != "" {
-			m.MACAddress = types.StringValue(v)
+			m.MACAddress = newMACValue(v)
 		} else {
-			m.MACAddress = types.StringNull()
+			m.MACAddress = newMACNull()
 		}
 	}
 	if v, ok := obj["mtu"]; ok {

@@ -39,7 +39,7 @@ type IPV6NeighborModel struct {
 	Dynamic    types.Bool   `tfsdk:"dynamic"`
 	HostName   types.String `tfsdk:"host_name"`
 	Interface  types.String `tfsdk:"interface"`
-	MACAddress types.String `tfsdk:"mac_address"`
+	MACAddress macValue     `tfsdk:"mac_address"`
 	MACPing    types.String `tfsdk:"mac_ping"`
 	MACTelnet  types.String `tfsdk:"mac_telnet"`
 	MakeStatic types.String `tfsdk:"make_static"`
@@ -109,11 +109,11 @@ func (r *IPV6NeighborResource) Schema(_ context.Context, _ resource.SchemaReques
 				Description: "",
 			},
 			"mac_address": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsMAC()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
+				CustomType:  macType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"mac_ping": schema.StringAttribute{
 				Computed:    true,
@@ -372,9 +372,9 @@ func iPV6NeighborApply(ctx context.Context, obj client.Object, m *IPV6NeighborMo
 	}
 	if v, ok := obj["mac-address"]; ok {
 		if v != "" {
-			m.MACAddress = types.StringValue(v)
+			m.MACAddress = newMACValue(v)
 		} else {
-			m.MACAddress = types.StringNull()
+			m.MACAddress = newMACNull()
 		}
 	}
 	if v, ok := obj["mac-ping"]; ok {

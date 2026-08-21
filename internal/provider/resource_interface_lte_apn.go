@@ -11,9 +11,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
 )
 
 var (
@@ -33,7 +35,7 @@ type InterfaceLteApnModel struct {
 	User                  types.String `tfsdk:"user"`
 	Password              types.String `tfsdk:"password"`
 	PassthroughSubnetSize types.String `tfsdk:"passthrough_subnet_size"`
-	PassthroughMac        types.String `tfsdk:"passthrough_mac"`
+	PassthroughMac        macValue     `tfsdk:"passthrough_mac"`
 	PassthroughInterface  types.String `tfsdk:"passthrough_interface"`
 	Ipv6Interface         types.String `tfsdk:"ipv6_interface"`
 	AddDefaultRoute       types.Bool   `tfsdk:"add_default_route"`
@@ -89,9 +91,11 @@ func (r *InterfaceLteApnResource) Schema(_ context.Context, _ resource.SchemaReq
 				Description: "RouterOS `passthrough-subnet-size`.",
 			},
 			"passthrough_mac": schema.StringAttribute{
+				CustomType:  macType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "RouterOS `passthrough-mac`.",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"passthrough_interface": schema.StringAttribute{
 				Optional:    true,
@@ -390,9 +394,9 @@ func interfaceLteApnApply(ctx context.Context, obj client.Object, m *InterfaceLt
 		m.PassthroughSubnetSize = types.StringNull()
 	}
 	if v, ok := obj["passthrough-mac"]; ok && v != "" {
-		m.PassthroughMac = types.StringValue(v)
+		m.PassthroughMac = newMACValue(v)
 	} else {
-		m.PassthroughMac = types.StringNull()
+		m.PassthroughMac = newMACNull()
 	}
 	if v, ok := obj["passthrough-interface"]; ok && v != "" {
 		m.PassthroughInterface = types.StringValue(v)

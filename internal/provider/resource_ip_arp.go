@@ -43,7 +43,7 @@ type IPARPModel struct {
 	Interface  types.String `tfsdk:"interface"`
 	Invalid    types.Bool   `tfsdk:"invalid"`
 	IPAddress  types.String `tfsdk:"ip_address"`
-	MACAddress types.String `tfsdk:"mac_address"`
+	MACAddress macValue     `tfsdk:"mac_address"`
 	MACPing    types.String `tfsdk:"mac_ping"`
 	MACTelnet  types.String `tfsdk:"mac_telnet"`
 	MakeStatic types.String `tfsdk:"make_static"`
@@ -128,11 +128,11 @@ func (r *IPARPResource) Schema(_ context.Context, _ resource.SchemaRequest, resp
 				Validators:  []validator.String{schemautil.IsIP()},
 			},
 			"mac_address": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsMAC()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
+				CustomType:  macType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"mac_ping": schema.StringAttribute{
 				Computed:    true,
@@ -430,9 +430,9 @@ func iPARPApply(ctx context.Context, obj client.Object, m *IPARPModel) {
 	}
 	if v, ok := obj["mac-address"]; ok {
 		if v != "" {
-			m.MACAddress = types.StringValue(v)
+			m.MACAddress = newMACValue(v)
 		} else {
-			m.MACAddress = types.StringNull()
+			m.MACAddress = newMACNull()
 		}
 	}
 	if v, ok := obj["mac-ping"]; ok {

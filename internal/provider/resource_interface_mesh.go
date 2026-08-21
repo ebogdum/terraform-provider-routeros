@@ -43,7 +43,7 @@ type InterfaceMeshModel struct {
 	HwmpPrepLifetime         types.String `tfsdk:"hwmp_prep_lifetime"`
 	HwmpDefaultHoplimit      types.String `tfsdk:"hwmp_default_hoplimit"`
 	AutoMac                  types.String `tfsdk:"auto_mac"`
-	AdminMac                 types.String `tfsdk:"admin_mac"`
+	AdminMac                 macValue     `tfsdk:"admin_mac"`
 	AdminMACAddress          types.String `tfsdk:"admin_mac_address"`
 	ARP                      types.String `tfsdk:"arp"`
 	ARPTimeout               types.String `tfsdk:"arp_timeout"`
@@ -145,9 +145,11 @@ func (r *InterfaceMeshResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "RouterOS `auto-mac`.",
 			},
 			"admin_mac": schema.StringAttribute{
+				CustomType:  macType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "RouterOS `admin-mac`.",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"admin_mac_address": schema.StringAttribute{
 				Computed:    true,
@@ -545,9 +547,9 @@ func interfaceMeshApply(ctx context.Context, obj client.Object, m *InterfaceMesh
 		m.AutoMac = types.StringNull()
 	}
 	if v, ok := obj["admin-mac"]; ok && v != "" {
-		m.AdminMac = types.StringValue(v)
+		m.AdminMac = newMACValue(v)
 	} else {
-		m.AdminMac = types.StringNull()
+		m.AdminMac = newMACNull()
 	}
 	if v, ok := obj["admin-mac-address"]; ok {
 		if v != "" {

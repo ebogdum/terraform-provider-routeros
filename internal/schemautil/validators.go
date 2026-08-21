@@ -20,12 +20,18 @@ import (
 type stringValidator struct {
 	desc string
 	fn   func(string) error
+	// emptyOK marks a format validator, where "" means the attribute is unset
+	// rather than malformed. Enumerations leave it false.
+	emptyOK bool
 }
 
 func (v stringValidator) Description(_ context.Context) string         { return v.desc }
 func (v stringValidator) MarkdownDescription(_ context.Context) string { return v.desc }
 func (v stringValidator) ValidateString(_ context.Context, req validator.StringRequest, resp *validator.StringResponse) {
 	if req.ConfigValue.IsNull() || req.ConfigValue.IsUnknown() {
+		return
+	}
+	if v.emptyOK && req.ConfigValue.ValueString() == "" {
 		return
 	}
 	if err := v.fn(req.ConfigValue.ValueString()); err != nil {
@@ -38,7 +44,7 @@ func IsIP() validator.String {
 	return stringValidator{desc: "must be an IPv4 or IPv6 address", fn: func(s string) error {
 		_, err := client.ParseIP(s)
 		return err
-	}}
+	}, emptyOK: true}
 }
 
 // IsCIDR validates an IP/prefixlen pair.
@@ -46,7 +52,7 @@ func IsCIDR() validator.String {
 	return stringValidator{desc: "must be in CIDR form (e.g. 10.0.0.0/24)", fn: func(s string) error {
 		_, err := client.ParseCIDR(s)
 		return err
-	}}
+	}, emptyOK: true}
 }
 
 // IsMAC validates a colon-separated EUI-48 MAC address.
@@ -54,7 +60,7 @@ func IsMAC() validator.String {
 	return stringValidator{desc: "must be a MAC address (aa:bb:cc:dd:ee:ff)", fn: func(s string) error {
 		_, err := client.ParseMAC(s)
 		return err
-	}}
+	}, emptyOK: true}
 }
 
 // IsDurationRouterOS validates a RouterOS-style duration string ("1w2d3h4m5s",
@@ -63,7 +69,7 @@ func IsDurationRouterOS() validator.String {
 	return stringValidator{desc: "must be a RouterOS duration (e.g. 1w2d3h, 30m, 120)", fn: func(s string) error {
 		_, err := client.ParseDuration(s)
 		return err
-	}}
+	}, emptyOK: true}
 }
 
 // OneOf restricts a string to one of the listed values (case-sensitive).
@@ -144,7 +150,7 @@ func IsTimeOfDayOrStartup() validator.String {
 	return stringValidator{desc: `must be a time of day (HH:MM:SS) or "startup"`, fn: func(s string) error {
 		_, err := client.CanonicalTimeOfDay(s)
 		return err
-	}}
+	}, emptyOK: true}
 }
 
 // IsDSCPOrInherit accepts a DSCP code point (0-63) or the keyword "inherit",
@@ -159,5 +165,5 @@ func IsDSCPOrInherit() validator.String {
 			return fmt.Errorf("%q is not a DSCP value (0-63) or \"inherit\"", s)
 		}
 		return nil
-	}}
+	}, emptyOK: true}
 }

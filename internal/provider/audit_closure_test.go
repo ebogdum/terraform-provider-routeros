@@ -273,28 +273,39 @@ func TestUncoveredMenusHaveResources(t *testing.T) {
 	}
 }
 
-// A settable mac_address without schemautil.NormalizeMAC() diffs against RouterOS's own upper-case and
-// crashes with "Provider produced inconsistent result after apply". Scans every registered resource so a
-// new one can't reintroduce this error.
+// A settable MAC compared literally diffs against RouterOS's own upper-case form
+// and fails with "inconsistent result after apply". Every attribute holding a
+// bare MAC is checked, not just the one called mac_address.
 func TestMACAddressFieldsAreNormalized(t *testing.T) {
-	const normalizeMACDescription = "normalize MAC to upper-case colon form"
+	// A MAC/mask pair, a comma-separated list, a flag or a count -- none of them
+	// a bare MAC, and IsMAC rejects all of them.
+	notPlainMACs := map[string]bool{
+		"src_mac_address": true, "dst_mac_address": true,
+		"arp_src_mac_address": true, "arp_dst_mac_address": true,
+		"filter_src_mac_address": true, "filter_dst_mac_address": true,
+		"filter_mac_address": true, "filter_mac_protocol": true, "mac_address_list": true,
+		"use_src_mac": true, "auto_mac": true, "addresses_per_mac": true,
+	}
+	isMACAttr := func(name string) bool {
+		if notPlainMACs[name] {
+			return false
+		}
+		return name == "mac" || strings.HasSuffix(name, "_mac") ||
+			name == "mac_address" || strings.HasSuffix(name, "_mac_address") ||
+			name == "mac_src" || name == "mac_dst"
+	}
 	for _, f := range registryResources() {
 		r := f()
 		m := &resource.MetadataResponse{}
 		r.Metadata(context.Background(), resource.MetadataRequest{ProviderTypeName: "routeros"}, m)
-		attrs := schemaOf(t, r).Schema.Attributes
-		att, ok := attrs["mac_address"].(schema.StringAttribute)
-		if !ok || !att.Optional {
-			continue
-		}
-		normalized := false
-		for _, pm := range att.PlanModifiers {
-			if pm.Description(context.Background()) == normalizeMACDescription {
-				normalized = true
+		for name, raw := range schemaOf(t, r).Schema.Attributes {
+			att, ok := raw.(schema.StringAttribute)
+			if !ok || !isMACAttr(name) || !(att.Optional || att.Required) {
+				continue
 			}
-		}
-		if !normalized {
-			t.Errorf("%s.mac_address is Optional but missing schemautil.NormalizeMAC()", m.TypeName)
+			if _, ok := att.CustomType.(macType); !ok {
+				t.Errorf("%s.%s holds a MAC but is not typed macType, so plan and state compare literally", m.TypeName, name)
+			}
 		}
 	}
 }

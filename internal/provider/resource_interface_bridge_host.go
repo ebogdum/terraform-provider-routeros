@@ -41,7 +41,7 @@ type InterfaceBridgeHostModel struct {
 	ExternalFdb types.Bool   `tfsdk:"external_fdb"`
 	Interface   types.String `tfsdk:"interface"`
 	Local       types.Bool   `tfsdk:"local"`
-	MACAddress  types.String `tfsdk:"mac_address"`
+	MACAddress  macValue     `tfsdk:"mac_address"`
 	OnInterface types.String `tfsdk:"on_interface"`
 	RemoteIP    types.String `tfsdk:"remote_ip"`
 	Vid         types.String `tfsdk:"vid"`
@@ -112,11 +112,11 @@ func (r *InterfaceBridgeHostResource) Schema(_ context.Context, _ resource.Schem
 				Description: "",
 			},
 			"mac_address": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsMAC()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
+				CustomType:  macType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"on_interface": schema.StringAttribute{
 				Computed:    true,
@@ -378,9 +378,9 @@ func interfaceBridgeHostApply(ctx context.Context, obj client.Object, m *Interfa
 	}
 	if v, ok := obj["mac-address"]; ok {
 		if v != "" {
-			m.MACAddress = types.StringValue(v)
+			m.MACAddress = newMACValue(v)
 		} else {
-			m.MACAddress = types.StringNull()
+			m.MACAddress = newMACNull()
 		}
 	}
 	if v, ok := obj["on-interface"]; ok {

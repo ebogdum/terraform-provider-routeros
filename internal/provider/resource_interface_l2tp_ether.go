@@ -51,7 +51,7 @@ type InterfaceL2TPEtherModel struct {
 	Disabled              types.Bool   `tfsdk:"disabled"`
 	IpsecSecret           types.String `tfsdk:"ipsec_secret"`
 	LocalAddress          types.String `tfsdk:"local_address"`
-	MACAddress            types.String `tfsdk:"mac_address"`
+	MACAddress            macValue     `tfsdk:"mac_address"`
 	MTU                   types.String `tfsdk:"mtu"`
 	Name                  types.String `tfsdk:"name"`
 	Router                types.String `tfsdk:"router"`
@@ -177,11 +177,11 @@ func (r *InterfaceL2TPEtherResource) Schema(_ context.Context, _ resource.Schema
 				Description: "",
 			},
 			"mac_address": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsMAC()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
+				CustomType:  macType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"mtu": schema.StringAttribute{
 				Optional:    true,
@@ -566,9 +566,9 @@ func interfaceL2TPEtherApply(ctx context.Context, obj client.Object, m *Interfac
 	}
 	if v, ok := obj["mac-address"]; ok {
 		if v != "" {
-			m.MACAddress = types.StringValue(v)
+			m.MACAddress = newMACValue(v)
 		} else {
-			m.MACAddress = types.StringNull()
+			m.MACAddress = newMACNull()
 		}
 	}
 	if v, ok := obj["mtu"]; ok {

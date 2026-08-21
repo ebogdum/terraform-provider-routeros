@@ -41,7 +41,7 @@ type InterfaceWifiAccessListModel struct {
 	Interface             types.String `tfsdk:"interface"`
 	LastLoggedIn          types.String `tfsdk:"last_logged_in"`
 	LastLoggedOut         types.String `tfsdk:"last_logged_out"`
-	MACAddress            types.String `tfsdk:"mac_address"`
+	MACAddress            macValue     `tfsdk:"mac_address"`
 	MACAddressMask        types.String `tfsdk:"mac_address_mask"`
 	MultiPassphraseGroup  types.String `tfsdk:"multi_passphrase_group"`
 	Passphrase            types.String `tfsdk:"passphrase"`
@@ -124,11 +124,11 @@ func (r *InterfaceWifiAccessListResource) Schema(_ context.Context, _ resource.S
 				Description: "",
 			},
 			"mac_address": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsMAC()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
+				CustomType:  macType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"mac_address_mask": schema.StringAttribute{
 				Optional:    true,
@@ -481,9 +481,9 @@ func interfaceWifiAccessListApply(ctx context.Context, obj client.Object, m *Int
 	}
 	if v, ok := obj["mac-address"]; ok {
 		if v != "" {
-			m.MACAddress = types.StringValue(v)
+			m.MACAddress = newMACValue(v)
 		} else {
-			m.MACAddress = types.StringNull()
+			m.MACAddress = newMACNull()
 		}
 	}
 	if v, ok := obj["mac-address-mask"]; ok {

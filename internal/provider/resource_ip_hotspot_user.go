@@ -45,7 +45,7 @@ type IPHotspotUserModel struct {
 	LimitBytesOut    types.String `tfsdk:"limit_bytes_out"`
 	LimitBytesTotal  types.String `tfsdk:"limit_bytes_total"`
 	LimitUptime      types.String `tfsdk:"limit_uptime"`
-	MACAddress       types.String `tfsdk:"mac_address"`
+	MACAddress       macValue     `tfsdk:"mac_address"`
 	Name             types.String `tfsdk:"name"`
 	Nondef           types.String `tfsdk:"nondef"`
 	Nondefro         types.String `tfsdk:"nondefro"`
@@ -151,11 +151,11 @@ func (r *IPHotspotUserResource) Schema(_ context.Context, _ resource.SchemaReque
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
 			},
 			"mac_address": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsMAC()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
+				CustomType:  macType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"name": schema.StringAttribute{
 				Required:    true,
@@ -551,9 +551,9 @@ func iPHotspotUserApply(ctx context.Context, obj client.Object, m *IPHotspotUser
 	}
 	if v, ok := obj["mac-address"]; ok {
 		if v != "" {
-			m.MACAddress = types.StringValue(v)
+			m.MACAddress = newMACValue(v)
 		} else {
-			m.MACAddress = types.StringNull()
+			m.MACAddress = newMACNull()
 		}
 	}
 	if v, ok := obj["name"]; ok {

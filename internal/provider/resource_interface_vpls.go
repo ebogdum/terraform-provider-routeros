@@ -49,7 +49,7 @@ type InterfaceVplsModel struct {
 	Comment             types.String `tfsdk:"comment"`
 	Disabled            types.Bool   `tfsdk:"disabled"`
 	LocalLabel          types.Int64  `tfsdk:"local_label"`
-	MACAddress          types.String `tfsdk:"mac_address"`
+	MACAddress          macValue     `tfsdk:"mac_address"`
 	MTU                 types.Int64  `tfsdk:"mtu"`
 	PwControlWord       types.String `tfsdk:"pw_control_word"`
 	PwL2mtu             types.String `tfsdk:"pw_l2mtu"`
@@ -170,11 +170,11 @@ func (r *InterfaceVplsResource) Schema(_ context.Context, _ resource.SchemaReque
 				Description: "",
 			},
 			"mac_address": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsMAC()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
+				CustomType:  macType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"mtu": schema.Int64Attribute{
 				Optional:    true,
@@ -587,9 +587,9 @@ func interfaceVplsApply(ctx context.Context, obj client.Object, m *InterfaceVpls
 	}
 	if v, ok := obj["mac-address"]; ok {
 		if v != "" {
-			m.MACAddress = types.StringValue(v)
+			m.MACAddress = newMACValue(v)
 		} else {
-			m.MACAddress = types.StringNull()
+			m.MACAddress = newMACNull()
 		}
 	}
 	if v, ok := obj["mtu"]; ok {

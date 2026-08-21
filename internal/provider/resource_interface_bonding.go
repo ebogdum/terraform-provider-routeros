@@ -11,9 +11,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/ebogdum/terraform-provider-routeros/internal/client"
+	"github.com/ebogdum/terraform-provider-routeros/internal/schemautil"
 )
 
 var (
@@ -43,7 +45,7 @@ type InterfaceBondingModel struct {
 	LacpSystemId       types.String `tfsdk:"lacp_system_id"`
 	LacpRate           types.String `tfsdk:"lacp_rate"`
 	LacpMode           types.String `tfsdk:"lacp_mode"`
-	ForcedMacAddress   types.String `tfsdk:"forced_mac_address"`
+	ForcedMacAddress   macValue     `tfsdk:"forced_mac_address"`
 	DownDelay          types.String `tfsdk:"down_delay"`
 	ArpIpTargets       types.String `tfsdk:"arp_ip_targets"`
 	ArpInterval        types.String `tfsdk:"arp_interval"`
@@ -146,9 +148,11 @@ func (r *InterfaceBondingResource) Schema(_ context.Context, _ resource.SchemaRe
 				Description: "RouterOS `lacp-mode`.",
 			},
 			"forced_mac_address": schema.StringAttribute{
+				CustomType:  macType{},
 				Optional:    true,
 				Computed:    true,
 				Description: "RouterOS `forced-mac-address`.",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"down_delay": schema.StringAttribute{
 				Optional:    true,
@@ -544,9 +548,9 @@ func interfaceBondingApply(ctx context.Context, obj client.Object, m *InterfaceB
 		m.LacpMode = types.StringNull()
 	}
 	if v, ok := obj["forced-mac-address"]; ok && v != "" {
-		m.ForcedMacAddress = types.StringValue(v)
+		m.ForcedMacAddress = newMACValue(v)
 	} else {
-		m.ForcedMacAddress = types.StringNull()
+		m.ForcedMacAddress = newMACNull()
 	}
 	if v, ok := obj["down-delay"]; ok && v != "" {
 		m.DownDelay = types.StringValue(v)

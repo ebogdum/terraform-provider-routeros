@@ -66,7 +66,7 @@ type IPDHCPServerLeaseModel struct {
 	LastSeen             types.String `tfsdk:"last_seen"`
 	LastSentCounter      types.String `tfsdk:"last_sent_counter"`
 	LeaseTime            types.String `tfsdk:"lease_time"`
-	MACAddress           types.String `tfsdk:"mac_address"`
+	MACAddress           macValue     `tfsdk:"mac_address"`
 	MakeStatic           types.String `tfsdk:"make_static"`
 	ParentQueue          types.String `tfsdk:"parent_queue"`
 	Ping                 types.String `tfsdk:"ping"`
@@ -263,11 +263,11 @@ func (r *IPDHCPServerLeaseResource) Schema(_ context.Context, _ resource.SchemaR
 				PlanModifiers: []planmodifier.String{schemautil.NormalizeDuration()},
 			},
 			"mac_address": schema.StringAttribute{
-				Optional:      true,
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsMAC()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
+				CustomType:  macType{},
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"make_static": schema.StringAttribute{
 				Computed:    true,
@@ -838,9 +838,9 @@ func iPDHCPServerLeaseApply(ctx context.Context, obj client.Object, m *IPDHCPSer
 	}
 	if v, ok := obj["mac-address"]; ok {
 		if v != "" {
-			m.MACAddress = types.StringValue(v)
+			m.MACAddress = newMACValue(v)
 		} else {
-			m.MACAddress = types.StringNull()
+			m.MACAddress = newMACNull()
 		}
 	}
 	if v, ok := obj["make-static"]; ok {

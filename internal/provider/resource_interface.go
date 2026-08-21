@@ -51,7 +51,7 @@ type InterfaceModel struct {
 	LastLinkUpTime       types.String `tfsdk:"last_link_up_time"`
 	Link                 types.Int64  `tfsdk:"link"`
 	LinkDowns            types.Int64  `tfsdk:"link_downs"`
-	MACAddress           types.String `tfsdk:"mac_address"`
+	MACAddress           macValue     `tfsdk:"mac_address"`
 	MTU                  types.String `tfsdk:"mtu"`
 	Name                 types.String `tfsdk:"name"`
 	Nodefname            types.String `tfsdk:"nodefname"`
@@ -184,10 +184,10 @@ func (r *InterfaceResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Description: "",
 			},
 			"mac_address": schema.StringAttribute{
-				Computed:      true,
-				Description:   "",
-				Validators:    []validator.String{schemautil.IsMAC()},
-				PlanModifiers: []planmodifier.String{schemautil.NormalizeMAC()},
+				CustomType:  macType{},
+				Computed:    true,
+				Description: "",
+				Validators:  []validator.String{schemautil.IsMAC()},
 			},
 			"mtu": schema.StringAttribute{
 				Optional:    true,
@@ -625,9 +625,9 @@ func interfaceApply(ctx context.Context, obj client.Object, m *InterfaceModel) {
 	}
 	if v, ok := obj["mac-address"]; ok {
 		if v != "" {
-			m.MACAddress = types.StringValue(v)
+			m.MACAddress = newMACValue(v)
 		} else {
-			m.MACAddress = types.StringNull()
+			m.MACAddress = newMACNull()
 		}
 	}
 	if v, ok := obj["mtu"]; ok {
