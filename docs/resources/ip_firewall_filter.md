@@ -7,11 +7,19 @@ description: |-
 
 # Resource: routeros_ip_firewall_filter
 
-IP firewall filter rule. Ordered top-down by `position` (sort key, not
-identity). Position is persisted on the device via [tf:pos=N] in the
-comment so destroy+apply rebuilds the same order.
-Safety: refuses an unconditional chain=input/forward action=drop|reject|
-tarpit rule unless `lockout_ack = true`.
+IP firewall filter rule, ordered one of two ways.
+
+`position` is a top-down sort key (not an identity), ordering this rule only against other rules
+managed by the same apply. It is persisted on the device via `[tf:pos=N]` in the comment, so a
+destroy and re-apply rebuilds the same order.
+
+`place_before` takes a RouterOS `.id` and orders the rule against any rule on the device, including
+one owned by a different Terraform state or shipped as a RouterOS default. The two are mutually
+exclusive.
+
+Safety: refuses an unconditional `chain=input`/`forward` `action=drop|reject|tarpit` rule unless
+`lockout_ack = true`. Note that the guard reads a rule's own content, not its position: a rule that
+passes it can still be placed above an accept rule that Terraform does not manage.
 
 
 ## Example Usage
@@ -140,6 +148,9 @@ This resource supports the following arguments:
 * `per_connection_classifier` - (Optional) Type: `string`.
 * `port` - (Optional) Type: `string`.
 * `position` - (Optional) Type: `int`. Sort key for placement in the ordered chain. Lower = higher in the chain. Persisted on the device via a [tf:pos=N] prefix in the comment so destroy+apply rebuilds the same order.
+* `place_before` - (Optional) Type: `string`. RouterOS `.id` (e.g. `*3`) of the rule this one is inserted before, typically from a `data "routeros_ip_firewall_filter"` lookup. Unlike `position`, which only orders rules managed by the same apply, this orders against any rule on the device. Mutually exclusive with `position`.
+
+  Two limits worth knowing. The anchor is resolved once, when `place_before` changes: if someone reorders the chain by hand, or a rule is inserted between the anchor and this one, the next plan reports no changes. And RouterOS reuses an `.id` after the rule holding it is deleted, so a stored anchor can come to name a different rule. Pin the anchor with a data-source lookup on a stable field such as `comment` rather than hardcoding an `.id`.
 * `priority` - (Optional) Type: `string`.
 * `protocol` - (Optional) Type: `string`.
 * `psd` - (Optional) Type: `string`.

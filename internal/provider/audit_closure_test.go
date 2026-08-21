@@ -24,6 +24,50 @@ func schemaOf(t *testing.T, r resource.Resource) resource.SchemaResponse {
 	return *resp
 }
 
+// queue_tree and queue_simple both declare place_before as Computed-only (no Optional), so the framework
+// forbids ever setting it from config - plan.PlaceBefore is always Unknown pre-apply, making the Move() call
+// that reads it permanently dead code. ip_firewall_filter's place_before must be genuinely settable from HCL.
+func TestFirewallFilterPlaceBeforeIsSettable(t *testing.T) {
+	attrs := schemaOf(t, NewIPFirewallFilterResource()).Schema.Attributes
+	att, ok := attrs["place_before"]
+	if !ok {
+		t.Fatalf("routeros_ip_firewall_filter is missing place_before")
+	}
+	if !att.IsOptional() {
+		t.Errorf("place_before must be Optional so it can be set from config; found Computed-only (matches the " +
+			"dead-code bug in queue_tree/queue_simple)")
+	}
+}
+
+// position and place_before order a rule against two different scopes and always run in a fixed internal
+// sequence (position then place_before), so combining them would silently make place_before win with no
+// indication that position's request was overridden. Test that setting both is rejected, and that setting
+// either alone is not.
+func TestFirewallFilterPositionAndPlaceBeforeAreMutuallyExclusive(t *testing.T) {
+	cases := []struct {
+		name         string
+		position     types.Int64
+		placeBefore  types.String
+		wantConflict bool
+	}{
+		{"neither set", types.Int64Null(), types.StringNull(), false},
+		{"position only", types.Int64Value(100), types.StringNull(), false},
+		{"place_before only", types.Int64Null(), types.StringValue("*5"), false},
+		{"both set", types.Int64Value(100), types.StringValue("*5"), true},
+		{"position unknown, place_before set", types.Int64Unknown(), types.StringValue("*5"), false},
+		{"place_before empty is not set", types.Int64Value(100), types.StringValue(""), false},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			m := IPFirewallFilterModel{Position: tc.position, PlaceBefore: tc.placeBefore}
+			got := firewallFilterPositionConflictsWithPlaceBefore(m)
+			if got != tc.wantConflict {
+				t.Errorf("conflict = %v, want %v", got, tc.wantConflict)
+			}
+		})
+	}
+}
+
 // /caps-man/configuration was suspected of the same dotted sub-object defect as
 // the wifi menus, because it exposes a `channel` section. It is not affected:
 // it never flattened any sub-object member into a top-level attribute, so there
@@ -497,6 +541,76 @@ func TestIPDNSStaticTypeIsCaseSensitive(t *testing.T) {
 	for _, bad := range []string{"a", "srv", "bogus"} {
 		if check(bad) {
 			t.Errorf("type accepted %q; the device answers 400 for it", bad)
+		}
+	}
+}
+
+// An unmatched data-source lookup interpolates to "". A move with no
+// destination sends the rule to the bottom of the chain -- confirmed on 7.23.2,
+// where POST move {"numbers":"*E"} returns [] and drops the rule past the
+// defconf drop -- so an empty place_before must never reach the wire.
+func TestFirewallPlaceBeforeEmptyIsNotAnAnchor(t *testing.T) {
+	for _, tc := range []struct {
+		name string
+		v    types.String
+		want bool
+	}{
+		{"real id", types.StringValue("*5"), true},
+		{"empty", types.StringValue(""), false},
+		{"blank", types.StringValue("   "), false},
+		{"null", types.StringNull(), false},
+		{"unknown", types.StringUnknown(), false},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			if got := firewallPlaceBeforeSet(tc.v); got != tc.want {
+				t.Errorf("firewallPlaceBeforeSet = %v, want %v", got, tc.want)
+			}
+		})
+	}
+}
+
+// position is Optional+Computed, so dropping it from HCL leaves the prior value
+// in the plan and ValidateConfig -- which sees only config -- never fires. Both
+// ordering engines would then write order for the same rule.
+func TestFirewallPlaceBeforeSuppressesPositionOrdering(t *testing.T) {
+	src := readResource(t, "resource_ip_firewall_filter.go")
+	const guard = "!plan.Position.IsNull() && !plan.Position.IsUnknown() && !firewallPlaceBeforeSet(plan.PlaceBefore)"
+	if n := strings.Count(src, guard); n != 2 {
+		t.Errorf("found %d position blocks guarded against place_before, want 2 (Create and Update)", n)
+	}
+	if strings.Contains(src, `c.Move(ctx, "/ip/firewall/filter", obj[".id"]`) {
+		t.Error("Create still moves after Add; RouterOS takes place-before as an add argument")
+	}
+	if !strings.Contains(src, `body["place-before"] = plan.PlaceBefore.ValueString()`) {
+		t.Error("Create does not send place-before with the add")
+	}
+}
+
+func TestFirewallPlaceBeforeRejectsAnythingButAnID(t *testing.T) {
+	attrs := schemaOf(t, NewIPFirewallFilterResource()).Schema.Attributes
+	att, ok := attrs["place_before"].(schema.StringAttribute)
+	if !ok || len(att.Validators) == 0 {
+		t.Fatal("place_before has no validator")
+	}
+	check := func(v string) bool {
+		req := validator.StringRequest{Path: path.Root("place_before"), ConfigValue: types.StringValue(v)}
+		for _, val := range att.Validators {
+			resp := &validator.StringResponse{}
+			val.ValidateString(context.Background(), req, resp)
+			if resp.Diagnostics.HasError() {
+				return false
+			}
+		}
+		return true
+	}
+	for _, good := range []string{"*3", "*B", "*1a"} {
+		if !check(good) {
+			t.Errorf("place_before rejected %q", good)
+		}
+	}
+	for _, bad := range []string{"3", "defconf: drop all", "*", "*zz"} {
+		if check(bad) {
+			t.Errorf("place_before accepted %q", bad)
 		}
 	}
 }
