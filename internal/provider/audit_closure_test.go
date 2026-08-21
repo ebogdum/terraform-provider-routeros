@@ -7,7 +7,11 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
 func schemaOf(t *testing.T, r resource.Resource) resource.SchemaResponse {
@@ -54,6 +58,27 @@ func TestEthernetSwitchAttrs(t *testing.T) {
 	for _, a := range []string{"name", "mirror_source", "mirror_target", "cpu_flow_control"} {
 		if _, ok := attrs[a]; !ok {
 			t.Errorf("routeros_interface_ethernet_switch is missing %q", a)
+		}
+	}
+}
+
+// start_time previously carried a OneOf(["startup"]) validator, rejecting every HH:MM:SS
+// time that ROS accepts. Check validator accepts a time, so the restriction can't return.
+func TestSchedulerStartTimeAcceptsConcreteTime(t *testing.T) {
+	attrs := schemaOf(t, NewSystemSchedulerResource()).Schema.Attributes
+	att, ok := attrs["start_time"].(schema.StringAttribute)
+	if !ok {
+		t.Fatalf("routeros_system_scheduler.start_time missing or not a StringAttribute")
+	}
+	req := validator.StringRequest{
+		Path:        path.Root("start_time"),
+		ConfigValue: types.StringValue("23:57:05"),
+	}
+	for _, v := range att.Validators {
+		resp := &validator.StringResponse{}
+		v.ValidateString(context.Background(), req, resp)
+		if resp.Diagnostics.HasError() {
+			t.Errorf("start_time rejected a concrete HH:MM:SS value: %v", resp.Diagnostics)
 		}
 	}
 }
