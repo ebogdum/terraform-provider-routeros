@@ -20,6 +20,7 @@ resource "routeros_interface_ethernet_switch" "switch_example" {
   # fasttrack_hw = "replace-me"
   # icmp_reply_on_error = "replace-me"
   # ipv6_hw = "replace-me"
+  # l3_hw_offloading = "replace-me"
 }
 ```
 
@@ -33,6 +34,7 @@ This resource supports the following arguments:
 * `fasttrack_hw` - (Optional) Type: `string`. Enables or disables FastTrack HW Offloading. Keep it enabled unless HW TCAM memory reservation is required, e.g., for dynamic switch ACL rules creation. Not all switch chips support FastTrack HW Offloading (see hw-supports-fasttrack ).
 * `icmp_reply_on_error` - (Optional) Type: `string`. Since the hardware cannot send ICMP messages, the packet must be redirected to the CPU to send an ICMP reply in case of an error (e.g., "Time Exceeded", "Fragmentation required", etc.). Enabling icmp-reply-on-error helps with network diagnostics but may open potential vulnerabilities for DDoS attacks. Disabling icmp-reply-on-error silently drops the packets on the hardware level in case of an error.
 * `ipv6_hw` - (Optional) Type: `string`. Enables or disables IPv6 Hardware Offloading. Since IPv6 routes occupy a lot of HW memory, enable it only if IPv6 traffic speed is significant enough to benefit from hardware routing.
+* `l3_hw_offloading` - (Optional) Type: `string`. Enables or disables Layer 3 Hardware Offloading on the switch chip. Only switch chips that support L3HW carry this property: a board without it (a hAP ax^3, for example) answers `unknown parameter l3-hw-offloading` when you set it. RouterOS also turns the property off by itself if the switch driver reports an error, which shows up as a diff on the next plan.
 * `mirror_source` - (Optional) Type: `string`. Port whose traffic is mirrored, or `none` (the default).
 * `mirror_target` - (Optional) Type: `string`. Port that receives mirrored traffic, or `none` (the default).
 * `name` - (Optional) Type: `string`. Switch name as reported by RouterOS, e.g. `switch1`.
