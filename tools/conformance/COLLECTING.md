@@ -32,13 +32,18 @@ has the parts.
 | Argument names accepted by `set` and `add` | Interface names, SSIDs, comments |
 | Command names (`print`, `move`, `reset`) | Firewall rules, routes, DNS entries |
 | Property names appearing in rows | Row contents |
-| How many rows a menu has | Which rows, or anything in them |
-| Board model, RouterOS version, architecture, firmware | Serial number, licence, identity |
+| Whether a menu holds `none` / `one` / `many` rows | How many, or which |
+| Board model, RouterOS version, architecture, firmware | Serial number, licence, system identity |
 
-Row *counts* are included because "this menu has 8 rows" is what distinguishes a
-per-port collection from a settings singleton — a distinction the provider
-currently gets wrong on `/interface/ethernet/poe`. If even that is more than you
-want to share, pass `--no-rows`.
+Row presence is bucketed to `none`, `one` or `many` on purpose. Whether a menu
+holds one row or several is what separates a settings singleton from a
+per-port collection — a distinction the provider gets wrong on
+`/interface/ethernet/poe` — but the exact number is nobody's business: how many
+firewall connections or bridge hosts you have describes your network. Pass
+`--no-rows` to skip reading rows altogether.
+
+After a full run against a hAP ax³ the only digit anywhere in the output is the
+collector version.
 
 `--with-enums` additionally records the value sets RouterOS offers for
 enum-shaped arguments, such as `auto` / `high` / `low`. Those come from the
@@ -51,28 +56,35 @@ name must match `[A-Za-z0-9._-]+`, so a value cannot ride along inside one.
 
 ## Running it
 
-Needs Python 3 and SSH key access. No password is read or stored.
+Python 3, no dependencies. It talks REST by default — the same API the provider
+uses — so a username and password is all you need.
 
 ```sh
-ROUTEROS_HOST=192.168.88.1 ROUTEROS_USER=admin \
-  python3 tools/conformance/collect_schema.py > my-board.json
+ROUTEROS_HOST=192.168.88.1 ROUTEROS_USER=admin ROUTEROS_PASSWORD=... \
+  python3 tools/conformance/collect_schema.py -o my-board.json
 ```
 
 or, from the repository root:
 
 ```sh
-ROUTEROS_HOST=192.168.88.1 make collect > my-board.json
+ROUTEROS_HOST=192.168.88.1 ROUTEROS_PASSWORD=... make collect COLLECT_ARGS="-o my-board.json"
 ```
 
-A full tree is around 30 seconds and 300 KB.
+A full tree is about 30 seconds and 320 KB. If the `www` service is switched
+off, `--transport ssh` uses the console over an SSH key instead; it collects the
+same menus and arguments but fewer row property names, and takes several
+minutes.
 
 Useful flags:
 
 ```sh
---check        # print a summary instead of JSON, to see what it would send
---no-rows      # skip reading rows entirely
---with-enums   # also record enum value sets (slower)
+--check          # print a summary instead of JSON, to see what it would send
+--no-rows        # skip reading rows entirely
 --root /interface/ethernet   # one subtree only
+--transport ssh  # console over SSH instead of REST
+--insecure       # accept a self-signed certificate on https
+--jobs N         # concurrent requests, default 4
+-o FILE          # write here instead of stdout
 ```
 
 Look before you send:
@@ -82,9 +94,9 @@ ROUTEROS_HOST=192.168.88.1 python3 tools/conformance/collect_schema.py --check
 ```
 
 ```
-RB5009UPr+S+  7.23.3 (stable)  arm64  firmware 7.19.6
-437 menus, 4228 settable arguments, 1370 row properties
-155 menus have at least one row
+RB5009UPr+S+  7.23.3 (stable)  arm64  firmware 7.19.6  (via rest)
+437 menus, 4228 settable arguments, 1685 row properties
+171 menus hold rows
 ```
 
 ## Sending it

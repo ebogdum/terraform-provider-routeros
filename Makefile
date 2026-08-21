@@ -55,7 +55,7 @@ audit:
 	python3 tools/conformance/schema_audit.py all
 
 # Dump a device's menu tree for hardware the maintainers do not have.
-# Names and structure only, no configuration values. See COLLECTING.md.
+# Names and structure only: no values, no counts. See COLLECTING.md.
 .PHONY: collect
 collect:
 	@python3 tools/conformance/collect_schema.py $(COLLECT_ARGS)
