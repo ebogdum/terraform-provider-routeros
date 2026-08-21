@@ -7,6 +7,103 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.0.0] - 2026-08-21
+
+A major version because several changes reject configuration that 3.x accepted.
+Every behavioural claim below was verified against a live RouterOS 7.23.2 device.
+
+### Breaking
+
+- **`router` now forces replacement.** It selects which device a resource lives
+  on, so it belongs to the resource's identity. On all 384 resources that
+  declare it, it carried no plan modifier, so re-pointing one produced an
+  in-place update: a PATCH aimed at the new device carrying the old device's
+  `.id`, which edits an unrelated object if that `.id` exists there and 404s if
+  it does not.
+- **`routeros_disk`: 42 attributes are read-only.** They are names RouterOS 7.23
+  does not accept, so writing one was a guaranteed 400. Their working
+  equivalents already exist as separate attributes -- `swap` beside
+  `swap_enabled`, `tmpfs_max_size` beside `tmpfs`, `mount_read_only` beside
+  `read_only`, `type` beside `raid_and_type`. `raid_role` is among them:
+  `raid-role` is not a property of `/disk` at all, so its `OneOf(["spare"])`
+  described a value that never existed.
+- **Data sources over menus holding a secret mark `records` sensitive.** An
+  output referencing one now needs `sensitive = true`. 50 data sources are
+  affected, including `user`, `ppp_secret`, `radius`, `snmp_community`,
+  `ip_ipsec_identity`, `certificate` and `interface_wireguard`.
+- **`routeros_snmp_community` protocol names are case-sensitive.**
+  `authentication_protocol` takes `MD5`/`SHA1` and `encryption_protocol` takes
+  `DES`/`AES`. The lower-case spellings were accepted at plan and rejected by
+  the device.
+- **`routeros_system_scheduler.start_time` refuses spellings RouterOS
+  rewrites.** `23:57`, `0:0:0`, `24:00:00` and `1d00:00:00` are accepted by the
+  device but stored as something else, which surfaces as an inconsistent result
+  after apply. `HH:MM:SS` and `startup` are accepted.
+
+### Added
+
+- `routeros_interface_wifi_security_multi_passphrase`, resource and data source,
+  for PPSK groups (#9).
+- `place_before` on `routeros_ip_firewall_filter`, ordering a rule against any
+  rule on the device rather than only those managed by the same apply (#18).
+- `l3_hw_offloading` on `routeros_interface_ethernet_switch` (#12).
+- `proplist` on 51 data sources. The documentation had described this argument
+  for some time; no data source implemented it.
+- A device schema collector, `tools/conformance/collect_schema.py`, and
+  `COLLECTING.md`. It records a router's menu tree -- names and structure only,
+  no values and no counts -- so the provider can be checked against hardware the
+  maintainers do not own.
+- A board matrix. Three boards on RouterOS 7.23 spell one concept three ways:
+  a hAP ax^3 has `mirror-source` and `mirror-target`, an RB5009UPr+S+ calls it
+  `mirror-egress-target`, a CRS305-1G-4S+ has only `mirror-target`. Names are
+  resolved per board before a write, and a property the board is known not to
+  have is refused with the reason.
+- Writes are checked against the menu's own argument list before being sent, so
+  RouterOS's opaque 400 becomes a diagnostic naming the board, the attribute and
+  what the menu does accept. A router that does not expose `/console/inspect`
+  behaves as before.
+
+### Fixed
+
+- **Filter values containing a space matched nothing** (#20). RouterOS reads `+`
+  in a query literally, so `url.Values.Encode`'s form encoding made every data
+  source filter with a space return no records, silently.
+- **`mac_address` case** (#24). RouterOS stores every MAC upper-case, so a
+  lower-case config failed with "inconsistent result after apply". MAC
+  attributes now compare semantically; the config keeps its own spelling.
+  Hyphen-separated and bare-hex MACs are accepted, as the device accepts them.
+- **`routeros_ip_dns_static` address and type** (#22). Setting `address` on a
+  non-A/AAAA record was silently dropped on create and, on update, rewrote the
+  record to type `A` and destroyed its type-specific fields.
+- **`routeros_ip_dns_static` required `name`** (#11), while its own description
+  and documentation said "requires either name or regexp". A regexp-only entry,
+  which RouterOS accepts, could not be expressed.
+- **A position-only update left Computed attributes unknown** (#14).
+- **`system_scheduler.start_time` rejected every value except `startup`** (#16).
+- **The ordering engine could send a rule to the bottom of the chain.**
+  `PlaceOrdered` resolved "sorts last among managed rules" to an empty move
+  destination, which RouterOS reads as "send this to the bottom of the menu" --
+  past every rule Terraform does not manage. On a firewall that puts an accept
+  below the drops.
+- **Durations and addresses compare semantically.** RouterOS rewrites `120` to
+  `2m` and `00:05:00` to `5m`, so 109 attributes failed on create whenever the
+  spelling differed. `ParseDuration` also now accepts the clock form the device
+  itself prints.
+- **`routeros_ipv6_neighbor.router` could not be set.** It was declared
+  Computed-only with the custom type meant for that menu's `router-ros` bool.
+- **The schema audit could report a result it never measured.** With no
+  ssh-agent loaded it classified every menu as absent, printed `AUDIT CLEAN` and
+  exited 0. It now aborts. It also could not see a misnamed read key, which is
+  how `poe-v` -- RouterOS calls it `poe-voltage`, and it is an enum, not a bool
+  -- went unnoticed.
+
+### Thanks
+
+@holmesb for eight pull requests and the reports behind them, and @gmatiukhin
+for the RB5009UPr+S+ and CRS305-1G-4S+ schema dumps in #8, which are the reason
+the board matrix exists.
+
+
 ## [3.0.5] - 2026-08-07
 
 ### Fixed
