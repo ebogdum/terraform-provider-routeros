@@ -53,7 +53,7 @@ func TestAddRefusesAnArgumentTheMenuDoesNotAccept(t *testing.T) {
 	f := &capFake{args: []string{"cpu-flow-control", "name", "switch-all-ports"}}
 	c := f.client(t)
 
-	_, err := c.Add(context.Background(), "/interface/ethernet/switch",
+	_, err := c.Add(context.Background(), "/some/menu",
 		Object{"name": "switch1", "l3-hw-offloading": "yes"})
 	if err == nil {
 		t.Fatal("Add accepted an argument the menu does not have")

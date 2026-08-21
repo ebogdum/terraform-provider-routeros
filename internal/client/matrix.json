@@ -1,0 +1,60 @@
+{
+  "matrix_version": 1,
+  "source": "Device schema dumps. hAP ax^3 7.23.2 collected directly; RB5009UPr+S+ and CRS305-1G-4S+ 7.23.3 from issue #8.",
+  "menus": {
+    "/interface/ethernet/switch": {
+      "mirror-source": [
+        {"boards": ["RB5009*"], "wire": "mirror-egress-target"},
+        {"boards": ["CRS3*", "CRS5*"], "absent": "this switch chip names the mirror target `mirror-target`"}
+      ],
+      "mirror-target": [
+        {"boards": ["RB5009*"], "absent": "this board names the mirror target `mirror-egress-target`"}
+      ],
+      "l3-hw-offloading": [
+        {"boards": ["!CRS3*", "!CRS5*"], "absent": "only switch chips with L3 hardware offloading carry this"}
+      ],
+      "cpu-flow-control": [
+        {"boards": ["CRS3*", "CRS5*"], "absent": "not present on this switch chip"}
+      ],
+      "fasttrack-hw": [
+        {"boards": ["*"], "absent": "not a property of this menu on RouterOS 7.23"}
+      ],
+      "autorestart": [
+        {"boards": ["*"], "absent": "lives in /interface/ethernet/switch/l3hw-settings"}
+      ],
+      "icmp-reply-on-error": [
+        {"boards": ["*"], "absent": "lives in /interface/ethernet/switch/l3hw-settings"}
+      ],
+      "ipv6-hw": [
+        {"boards": ["*"], "absent": "lives in /interface/ethernet/switch/l3hw-settings"}
+      ]
+    },
+    "/interface/ethernet/switch/port": {
+      "default-vlan-id": [
+        {"boards": ["*"], "absent": "vlan-id lives on /interface/ethernet/switch/rule"}
+      ]
+    },
+    "/ip/neighbor/discovery-settings": {
+      "lldp-poe-power": [
+        {"boards": ["CRS3*", "CRS5*"], "absent": "this board exposes lldp-dcbx instead"}
+      ]
+    },
+    "/interface/ethernet": {
+      "poe-out": [
+        {"boards": ["CRS3*", "CRS5*"], "absent": "no PoE-out on this board"}
+      ],
+      "poe-priority": [
+        {"boards": ["CRS3*", "CRS5*"], "absent": "no PoE-out on this board"}
+      ],
+      "poe-voltage": [
+        {"boards": ["CRS3*", "CRS5*"], "absent": "no PoE-out on this board"}
+      ],
+      "power-cycle-interval": [
+        {"boards": ["CRS3*", "CRS5*"], "absent": "no PoE-out on this board"}
+      ],
+      "power-cycle-ping-enabled": [
+        {"boards": ["CRS3*", "CRS5*"], "absent": "no PoE-out on this board"}
+      ]
+    }
+  }
+}
