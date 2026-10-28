@@ -357,21 +357,21 @@ func interfaceBridgeVLANApply(ctx context.Context, obj client.Object, m *Interfa
 	}
 	if v, ok := obj["tagged"]; ok {
 		if v != "" {
-			m.Tagged = types.StringValue(v)
+			m.Tagged = types.StringValue(preferSetSpelling(m.Tagged.ValueString(), v))
 		} else {
 			m.Tagged = types.StringNull()
 		}
 	}
 	if v, ok := obj["untagged"]; ok {
 		if v != "" {
-			m.Untagged = types.StringValue(v)
+			m.Untagged = types.StringValue(preferSetSpelling(m.Untagged.ValueString(), v))
 		} else {
 			m.Untagged = types.StringNull()
 		}
 	}
 	if v, ok := obj["vlan-ids"]; ok {
 		if v != "" {
-			m.VLANIds = types.StringValue(v)
+			m.VLANIds = types.StringValue(preferSetSpelling(m.VLANIds.ValueString(), v))
 		} else {
 			m.VLANIds = types.StringNull()
 		}
