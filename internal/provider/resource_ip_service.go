@@ -412,7 +412,12 @@ func ipServiceApply(ctx context.Context, obj client.Object, m *IPServiceModel) {
 	} else {
 		m.Port = types.Int64Null()
 	}
+	// RouterOS 7.24 renamed the /ip/service allow-list property on read:
+	// `address` is still accepted on write (legacy alias) but print returns
+	// `available-from`. Read whichever the device reports.
 	if v, ok := obj["address"]; ok && v != "" {
+		m.Address = types.StringValue(v)
+	} else if v, ok := obj["available-from"]; ok && v != "" {
 		m.Address = types.StringValue(v)
 	} else {
 		m.Address = types.StringNull()
